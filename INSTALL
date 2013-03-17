@@ -1,0 +1,39 @@
+Note that the -j2 option for make and ctest is for building and testing in 2 parallel threads.
+
+Download DEVSIM:
+1. git clone git://github.com/devsim/devsim.git
+2. cd devsim
+3. git submodule init
+4. git submodule update
+
+
+Install ACML for linux builds.
+1. acml-5-3-0-gfortran-64bit.tgz from http://developer.amd.com.
+2. mkdir acml
+3. tar xzvf ../acml-5-3-0-gfortran-64bit.tgz 
+4. sudo sh install-acml-5-3-0-gfortran-64bit.sh
+
+For Mac OS X, make sure that you have XCode installed which has the math libraries.  In the following instructions use setup_osx_10.6.8.sh instead.
+
+Compile SuperLU 4.3
+
+1. cd external
+2. wget http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz
+3. tar xzvf superlu_4.3.tar.gz
+4. cd SuperLU_4.3
+5. sh ../superlu_ubuntu_12.04.sh
+
+Compile SYMDIFF
+
+1. cd external/symdiff
+2. sh scripts/setup_ubuntu_12.04.sh
+3. cd linux_x86_64_release
+4. make -j2
+5. ctest -j2
+
+Compile DEVSIM
+1. sh scripts/setup_ubuntu_12.04.sh
+2. cd linux_x86_64_release
+3. ctest -j2
+
+Note that tests are based on exact text differences between files.  Different configuration options may affect results.
