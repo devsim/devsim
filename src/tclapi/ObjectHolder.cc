@@ -1,0 +1,251 @@
+/***
+DEVSIM
+Copyright 2013 Devsim LLC
+
+This file is part of DEVSIM.
+
+DEVSIM is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, version 3.
+
+DEVSIM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
+***/
+
+#include "ObjectHolder.hh"
+#include "dsAssert.hh"
+#include <tcl.h>
+#include <limits>
+
+ObjectHolder::ObjectHolder() : object_(NULL)
+{
+}
+
+ObjectHolder::ObjectHolder(const ObjectHolder &t) : object_(t.object_)
+{
+  if (object_)
+  {
+    Tcl_IncrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
+  }
+}
+
+ObjectHolder &ObjectHolder::operator=(const ObjectHolder &t)
+{
+  /// Need to stop referencing the current object
+  if (this != &t)
+  {
+    if (object_)
+    {
+      Tcl_DecrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
+    }
+
+    object_ = t.object_;
+    if (object_)
+    {
+      Tcl_IncrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
+    }
+  }
+
+  return *this;
+}
+
+ObjectHolder::~ObjectHolder()
+{
+  if (object_)
+  {
+    Tcl_DecrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
+  }
+}
+
+void ObjectHolder::clear()
+{
+  if (object_)
+  {
+    Tcl_DecrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
+  }
+  object_ = NULL;
+}
+
+ObjectHolder::ObjectHolder(void *t) : object_(t)
+{
+  if (object_)
+  {
+    Tcl_IncrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
+  }
+}
+
+std::string ObjectHolder::GetString() const
+{
+  std::string ret;
+  if (object_)
+  {
+    ret = Tcl_GetStringFromObj(reinterpret_cast<Tcl_Obj *>(object_), NULL);
+  }
+  return ret;
+}
+
+ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
+{
+  bool   ok = false;
+  double val(0.0);
+
+  if (object_)
+  {
+    ok = (TCL_OK == Tcl_GetDoubleFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &val));
+#if 0
+    if (!ok)
+    {
+      const std::string &sval = this->GetString();
+      if (sval == "MAXDOUBLE")
+      {
+        val = std::numeric_limits<double>::max();
+        ok = true;
+      }
+      else if (sval == "-MAXDOUBLE")
+      {
+        val = -std::numeric_limits<double>::max();
+        ok = true;
+      }
+    }
+#endif
+  }
+
+  return std::make_pair(ok, val);
+}
+
+ObjectHolder::BooleanEntry_t ObjectHolder::GetBoolean() const
+{
+  bool   ok = false;
+  bool   val= false;
+
+  if (object_)
+  {
+    int ret = 0;
+    ok = (TCL_OK == Tcl_GetBooleanFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &ret));
+    val = (ret == 1);
+#if 0
+    if (!ok)
+    {
+      const std::string &sval = this->GetString();
+      if (sval == "MAXDOUBLE")
+      {
+        val = std::numeric_limits<double>::max();
+        ok = true;
+      }
+      else if (sval == "-MAXDOUBLE")
+      {
+        val = -std::numeric_limits<double>::max();
+        ok = true;
+      }
+    }
+#endif
+  }
+
+  return std::make_pair(ok, val);
+}
+
+
+ObjectHolder::IntegerEntry_t ObjectHolder::GetInteger() const
+{
+  bool   ok = false;
+  int    val= 0;
+
+  if (object_)
+  {
+    ok = (TCL_OK == Tcl_GetIntFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &val));
+  }
+
+  return std::make_pair(ok, val);
+}
+
+bool ObjectHolder::GetListOfObjects(std::vector<ObjectHolder> &objs) const
+{
+  bool ok = false;
+  objs.clear();
+
+  Tcl_Obj *ptr = NULL;
+  if (object_)
+  {
+    int len = 0;
+    int ret = Tcl_ListObjLength(NULL, reinterpret_cast<Tcl_Obj *>(object_), &len);
+
+    ok = (ret == TCL_OK);
+    if (ok)
+    {
+      objs.reserve(len);
+      for (int i = 0; i < len; ++i)
+      {
+        ret = Tcl_ListObjIndex(NULL, reinterpret_cast<Tcl_Obj *>(object_), i, &ptr);
+        dsAssert(ret == TCL_OK, "UNEXPECTED");
+        objs.push_back(ObjectHolder(ptr));
+      }
+    }
+  }
+
+  return ok;
+}
+
+const void *ObjectHolder::GetObject() const
+{
+  return object_;
+}
+
+void *ObjectHolder::GetObject()
+{
+  return object_;
+}
+
+ObjectHolder::ObjectHolder(const std::string &s)
+{
+  object_ = Tcl_NewStringObj(s.c_str(), s.size());
+  Tcl_IncrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
+}
+
+ObjectHolder::ObjectHolder(double v)
+{
+  object_ = Tcl_NewDoubleObj(v);
+  Tcl_IncrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
+}
+
+ObjectHolder::ObjectHolder(int v)
+{
+  object_ = Tcl_NewIntObj(v);
+  Tcl_IncrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
+}
+
+
+ObjectHolder::ObjectHolder(ObjectHolderList_t &list)
+{
+  Tcl_Obj *listPtr = NULL;
+  listPtr = Tcl_NewListObj(0, NULL);
+  Tcl_IncrRefCount(listPtr);
+  for (ObjectHolderList_t::iterator it = list.begin(); it != list.end(); ++it)
+  {
+    Tcl_Obj *obj = reinterpret_cast<Tcl_Obj *>(it->GetObject());
+    Tcl_IncrRefCount(obj);
+    Tcl_ListObjAppendElement(NULL, listPtr, obj);
+  }
+  object_ = listPtr;
+}
+
+ObjectHolder::ObjectHolder(ObjectHolderMap_t &map)
+{
+  Tcl_Obj *mapPtr = NULL;
+  mapPtr = Tcl_NewDictObj();
+  Tcl_IncrRefCount(mapPtr);
+  for (ObjectHolderMap_t::iterator it = map.begin(); it != map.end(); ++it)
+  {
+    const std::string s = it->first;
+    Tcl_Obj *key = Tcl_NewStringObj(s.c_str(), s.size());
+    Tcl_Obj *val = reinterpret_cast<Tcl_Obj *>((it->second).GetObject());
+    Tcl_DictObjPut(NULL, mapPtr, key, val);
+  }
+  object_ = mapPtr;
+}
+
+

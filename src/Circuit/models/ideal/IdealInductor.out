@@ -1,0 +1,72 @@
+External Node: vtop
+External Node: vbot
+Internal Node: I
+Parameter Node: L "Inductance" 1
+adding model: vl (L * I)
+adding model: vdiff (vbot - vtop)
+adding equation: evtop I ddt 0
+adding equation: evbot (-I) ddt 0
+adding equation: eI vdiff ddt vl
+External Nodes:
+	vtop
+	vbot
+
+Internal Nodes:
+	I
+
+Equations:
+    eI
+    dc  vdiff
+    td  vl
+  Derivatives wrt External Nodes:
+Creating derivative d_vdiff_d_vtop
+  dc,vtop  d_vdiff_d_vtop
+  td,vtop  0
+Creating derivative d_vdiff_d_vbot
+  dc,vbot  d_vdiff_d_vbot
+  td,vbot  0
+
+Derivatives wrt Internal Nodes:
+  dc,I  0
+Creating derivative d_vl_d_I
+  td,I  d_vl_d_I
+
+    evbot
+    dc  (-I)
+    td  0
+  Derivatives wrt External Nodes:
+  dc,vtop  0
+  td,vtop  0
+  dc,vbot  0
+  td,vbot  0
+
+Derivatives wrt Internal Nodes:
+  dc,I  (-1)
+  td,I  0
+
+    evtop
+    dc  I
+    td  0
+  Derivatives wrt External Nodes:
+  dc,vtop  0
+  td,vtop  0
+  dc,vbot  0
+  td,vbot  0
+
+Derivatives wrt Internal Nodes:
+  dc,I  1
+  td,I  0
+
+
+Models:
+	vl	(I * L)
+	vdiff	(vbot - vtop)
+	d_vdiff_d_vtop	(-1)
+	d_vdiff_d_vbot	1
+	d_vl_d_I	L
+
+Ref count (I * L) 1
+Ref count (vbot - vtop) 1
+Reusing derivative d_vdiff_d_vtop
+Reusing derivative d_vdiff_d_vbot
+Reusing derivative d_vl_d_I

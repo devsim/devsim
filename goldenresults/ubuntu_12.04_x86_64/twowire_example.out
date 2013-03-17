@@ -1,0 +1,87 @@
+
+----------------------------------------
+
+ DEVSIM
+
+ Version: Beta 0.01
+
+ Copyright 2009-2013 Devsim LLC
+
+----------------------------------------
+
+
+Physical group name air has 0 Tetrahedra.
+Physical group name air has 7689 Triangles.
+Physical group name air has 11633 Lines.
+Physical group name air has 3943 Points.
+Physical group name air_left_interface has 0 Tetrahedra.
+Physical group name air_left_interface has 0 Triangles.
+Physical group name air_left_interface has 62 Lines.
+Physical group name air_left_interface has 62 Points.
+Physical group name air_right_interface has 0 Tetrahedra.
+Physical group name air_right_interface has 0 Triangles.
+Physical group name air_right_interface has 62 Lines.
+Physical group name air_right_interface has 62 Points.
+Physical group name bottom has 0 Tetrahedra.
+Physical group name bottom has 0 Triangles.
+Physical group name bottom has 0 Lines.
+Physical group name bottom has 1 Points.
+Physical group name left has 0 Tetrahedra.
+Physical group name left has 630 Triangles.
+Physical group name left has 976 Lines.
+Physical group name left has 347 Points.
+Physical group name right has 0 Tetrahedra.
+Physical group name right has 624 Triangles.
+Physical group name right has 967 Lines.
+Physical group name right has 344 Points.
+Device twowire has 4510 coordinates with max index 4510
+group air has 3943 nodes.
+Region air has 3943 nodes.
+Region air has 3943 nodes.
+group left has 347 nodes.
+Region left has 347 nodes.
+Region left has 347 nodes.
+group right has 344 nodes.
+Region right has 344 nodes.
+Region right has 344 nodes.
+group bottom has 1 nodes.
+Contact bottom in region air with 1 nodes
+group air_left_interface has 62 nodes.
+Adding interface air_left with 62, 62 nodes
+group air_right_interface has 62 nodes.
+Adding interface air_right with 62, 62 nodes
+Region "air" on device "twowire" has equations 0:3942
+Region "left" on device "twowire" has equations 3943:4289
+Region "right" on device "twowire" has equations 4290:4633
+Device "twowire" has equations 0:4633
+number of equations 4634
+Iteration: 0
+  Device: "twowire"	RelError: 3.00000e+00	AbsError: 9.59905e-03
+    Region: "air"	RelError: 1.00000e+00	AbsError: 8.06505e-03
+      Equation: "Az_Equation"	RelError: 1.00000e+00	AbsError: 8.06505e-03
+    Region: "left"	RelError: 1.00000e+00	AbsError: 9.59905e-03
+      Equation: "Az_Equation"	RelError: 1.00000e+00	AbsError: 9.59905e-03
+    Region: "right"	RelError: 1.00000e+00	AbsError: 9.49732e-03
+      Equation: "Az_Equation"	RelError: 1.00000e+00	AbsError: 9.49732e-03
+Iteration: 1
+  Device: "twowire"	RelError: 3.80672e-10	AbsError: 2.93751e-16
+    Region: "air"	RelError: 3.80569e-10	AbsError: 2.93751e-16
+      Equation: "Az_Equation"	RelError: 3.80569e-10	AbsError: 2.93751e-16
+    Region: "left"	RelError: 4.98486e-14	AbsError: 2.86248e-16
+      Equation: "Az_Equation"	RelError: 4.98486e-14	AbsError: 2.86248e-16
+    Region: "right"	RelError: 5.25844e-14	AbsError: 2.91843e-16
+      Equation: "Az_Equation"	RelError: 5.25844e-14	AbsError: 2.91843e-16
+Iteration: 2
+  Device: "twowire"	RelError: 2.95746e-12	AbsError: 3.16091e-18
+    Region: "air"	RelError: 2.95656e-12	AbsError: 2.95924e-18
+      Equation: "Az_Equation"	RelError: 2.95656e-12	AbsError: 2.95924e-18
+    Region: "left"	RelError: 4.95148e-16	AbsError: 3.16091e-18
+      Equation: "Az_Equation"	RelError: 4.95148e-16	AbsError: 3.16091e-18
+    Region: "right"	RelError: 4.07969e-16	AbsError: 2.69944e-18
+      Equation: "Az_Equation"	RelError: 4.07969e-16	AbsError: 2.69944e-18
+ElementNodeVolume 2.002482e+02
+NodeVolume 4.004963e+02
+ElementNodeVolume 1.570720e-02
+NodeVolume 3.141441e-02
+ElementNodeVolume 1.569389e-02
+NodeVolume 3.138777e-02

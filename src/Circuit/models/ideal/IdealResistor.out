@@ -1,0 +1,54 @@
+External Node: vtop
+External Node: vbot
+Parameter Node: R "Resistance" 1
+adding model: G (1 * pow(R,(-1)))
+adding model: ir (G * (vtop - vbot))
+adding equation: evtop ir ddt 0
+adding equation: evbot (-ir) ddt 0
+External Nodes:
+	vtop
+	vbot
+
+Internal Nodes:
+
+Equations:
+    evbot
+    dc  (-ir)
+    td  0
+  Derivatives wrt External Nodes:
+Creating derivative d_ir_d_vtop
+  dc,vtop  (-d_ir_d_vtop)
+  td,vtop  0
+Creating derivative d_ir_d_vbot
+  dc,vbot  (-d_ir_d_vbot)
+  td,vbot  0
+
+Derivatives wrt Internal Nodes:
+
+    evtop
+    dc  ir
+    td  0
+  Derivatives wrt External Nodes:
+Reusing derivative d_ir_d_vtop
+  dc,vtop  d_ir_d_vtop
+  td,vtop  0
+Reusing derivative d_ir_d_vbot
+  dc,vbot  d_ir_d_vbot
+  td,vbot  0
+
+Derivatives wrt Internal Nodes:
+
+
+Models:
+	G	pow(R,(-1))
+	ir	((vtop - vbot) * G)
+	d_ir_d_vtop	G
+	d_ir_d_vbot	(-G)
+
+Ref count pow(R,(-1)) 1
+Ref count ((vtop - vbot) * G) 1
+Ref count (vtop - vbot) 1
+Reusing derivative d_ir_d_vtop
+Reusing derivative d_ir_d_vbot
+Reusing derivative d_ir_d_vtop
+Reusing derivative d_ir_d_vbot

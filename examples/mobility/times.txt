@@ -1,0 +1,34 @@
+jsanchez-laptop
+2010-01-18
+641.932u 54.995s 11:03.33 105.0%        0+0k 0+50856io 0pf+0w
+2010-01-19
+641.796u 34.214s 10:45.59 104.7%        0+0k 0+48464io 0pf+0w
+2010-01-21
+635.427u 45.358s 10:46.31 105.3%        0+0k 64+50832io 0pf+0w
+2010-01-23
+2 threads
+535.645u 39.058s 9:06.13 105.2% 0+0k 888+50616io 0pf+0w
+1 thread
+486.262u 7.476s 8:13.87 99.9%   0+0k 0+50576io 0pf+0w
+
+2 threads (not waking up main thread till done.)
+537.221u 33.854s 8:54.40 106.8%       0+0k 880+50648io 0pf+0w
+
+2 threads (minimum task size 1024)
+523.712u 21.493s 8:35.47 105.7% 0+0k 0+50624io 0pf+0w
+
+# Wed Feb  3 22:13:38 CST 2010
+# previous timing improvements due to matrix compression and thread wake up strategy
+enable pow(double, int)
+1 thread 
+475.505u 9.220s 8:05.24 99.8%   0+0k 872+50568io 0pf+0w
+2 thread
+506.747u 22.417s 8:27.87 104.1% 0+0k 0+50504io 0pf+0w
+
+# reuse symbolic
+1 thread
+458.088u 8.936s 7:47.92 99.8%   0+0k 872+50536io 0pf+0w
+456.644u 8.988s 7:46.02 99.9%   0+0k 0+50536io 0pf+0w
+2 thread
+488.554u 21.917s 8:08.50 104.4% 0+0k 0+50576io 0pf+0w
+

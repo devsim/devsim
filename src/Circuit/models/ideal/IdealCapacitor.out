@@ -1,0 +1,51 @@
+External Node: vtop
+External Node: vbot
+Parameter Node: C "Capacitance" 1
+adding model: iq (C * (vtop - vbot))
+adding equation: evtop 0 ddt iq
+adding equation: evbot 0 ddt (-iq)
+External Nodes:
+	vtop
+	vbot
+
+Internal Nodes:
+
+Equations:
+    evbot
+    dc  0
+    td  (-iq)
+  Derivatives wrt External Nodes:
+  dc,vtop  0
+Creating derivative d_iq_d_vtop
+  td,vtop  (-d_iq_d_vtop)
+  dc,vbot  0
+Creating derivative d_iq_d_vbot
+  td,vbot  (-d_iq_d_vbot)
+
+Derivatives wrt Internal Nodes:
+
+    evtop
+    dc  0
+    td  iq
+  Derivatives wrt External Nodes:
+  dc,vtop  0
+Reusing derivative d_iq_d_vtop
+  td,vtop  d_iq_d_vtop
+  dc,vbot  0
+Reusing derivative d_iq_d_vbot
+  td,vbot  d_iq_d_vbot
+
+Derivatives wrt Internal Nodes:
+
+
+Models:
+	iq	(C * (vtop - vbot))
+	d_iq_d_vtop	C
+	d_iq_d_vbot	(-C)
+
+Ref count (C * (vtop - vbot)) 1
+Ref count (vtop - vbot) 1
+Reusing derivative d_iq_d_vtop
+Reusing derivative d_iq_d_vbot
+Reusing derivative d_iq_d_vtop
+Reusing derivative d_iq_d_vbot

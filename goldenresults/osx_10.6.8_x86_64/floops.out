@@ -1,0 +1,47 @@
+
+----------------------------------------
+
+ DEVSIM
+
+ Version: Beta 0.01
+
+ Copyright 2009-2013 Devsim LLC
+
+----------------------------------------
+
+
+Adding 6 nodes
+Adding 9 edges with 0 duplicates removed
+Adding 4 triangles  with 0 duplicate removed
+Contact bot in region MyRegion with 2 nodes
+Contact top in region MyRegion with 2 nodes
+NodeVolume
+2.50000e-01
+2.50000e-01
+5.00000e-01
+5.00000e-01
+2.50000e-01
+2.50000e-01
+EdgeCouple
+5.00000e-01
+5.00000e-01
+0.00000e+00
+5.00000e-01
+1.00000e+00
+5.00000e-01
+0.00000e+00
+5.00000e-01
+5.00000e-01
+Region "MyRegion" on device "MyDevice" has equations 0:5
+Device "MyDevice" has equations 0:5
+number of equations 6
+Iteration: 0
+  Device: "MyDevice"	RelError: 1.00000e+00	AbsError: 2.50000e+01
+    Region: "MyRegion"	RelError: 1.00000e+00	AbsError: 2.50000e+01
+      Equation: "PotentialEquation"	RelError: 1.00000e+00	AbsError: 2.50000e+01
+Iteration: 1
+  Device: "MyDevice"	RelError: 0.00000e+00	AbsError: 0.00000e+00
+    Region: "MyRegion"	RelError: 0.00000e+00	AbsError: 0.00000e+00
+      Equation: "PotentialEquation"	RelError: 0.00000e+00	AbsError: 0.00000e+00
+4.3143749999999996e-12
+-4.3143749999999996e-12

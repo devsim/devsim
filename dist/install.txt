@@ -1,0 +1,14 @@
+devsim.zip
+
+This is the DEVSIM distribution in a zip format.  Extract the files from
+the archive into your preferred directory, e.g. c:\.  Product
+documentation is available in the devsim\doc directory.  You may need to
+install the Visual C++ 2008 SP1 Redistributable package below. 
+
+vcredist_x86.exe
+
+This is the Visual C++ 2008 SP1 Redistributable package.  It contains
+system libraries required for running programs compiled in Visual C++.
+It is provided for your convenience.  This package may already installed
+be installed on your system.
+
