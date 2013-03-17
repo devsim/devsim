@@ -1,4 +1,19 @@
-Note that the -j2 option for make and ctest is for building and testing in 2 parallel threads.
+Supported Platforms:
+ubuntu 12.04 64 bit
+Mac OS X 10.6.8 64 bit
+
+
+There are the required dependencies for ubuntu 12.04.
+sudo apt-get install cmake git python2.7-dev g++-4.6 gcc-4.6 gfortran-4.6 make tcl8.5-dev python2.7 flex bison tcl8.5
+
+For Mac OS X, the developer tools should be installed (Xcode 3.2.6), these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
+https://developer.apple.com/technologies/tools
+https://developer.apple.com/performance/accelerateframework.html
+
+For Mac OS X, Python 2.7.3 is required and may be downloaded from 
+http://www.python.org/download
+
+Note that the -j2 option for make and ctest is for building and testing in 2 parallel threads.  This number can be changed to run as many simultaneous processes as desired.
 
 Download DEVSIM:
 1. git clone git://github.com/devsim/devsim.git
