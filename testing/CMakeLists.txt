@@ -113,6 +113,7 @@ set_tests_properties("mos_2d_restart2" PROPERTIES DEPENDS mos_2d)
 set_tests_properties("sqlite2" PROPERTIES DEPENDS sqlite1)
 set_tests_properties("sqlite3" PROPERTIES DEPENDS sqlite2)
 set_tests_properties("mesh4" PROPERTIES DEPENDS mesh3)
+set_tests_properties("trimesh2" PROPERTIES DEPENDS trimesh1)
 
 ADD_TEST("mesh3_comp" ${DIFF} --brief ${RUNDIR}/mesh3.msh ${GOLDENDIR}/mesh3.msh)
 set_tests_properties("mesh3_comp" PROPERTIES DEPENDS mesh3)
