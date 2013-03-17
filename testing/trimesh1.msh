@@ -1,0 +1,47 @@
+begin_device MyDevice
+begin_coordinates
+0 0 0
+1 0 0
+0 1 0
+1 1 0
+0 2 0
+1 2 0
+end_coordinates
+begin_region MyRegion Si
+begin_nodes
+0
+1
+2
+3
+4
+5
+end_nodes
+begin_edges
+0 1
+0 2
+0 3
+1 3
+2 3
+2 4
+2 5
+4 5
+3 5
+end_edges
+begin_triangles
+0 2 3
+0 1 3
+2 4 5
+2 3 5
+end_triangles
+end_region
+begin_contact top MyRegion
+begin_nodes
+4 5
+end_nodes
+end_contact
+begin_contact bot MyRegion
+begin_nodes
+0 1
+end_nodes
+end_contact
+end_device
