@@ -4,7 +4,7 @@
 It is licensed under the [LGPL Version 3.0](http://www.gnu.org/copyleft/lesser.html), meaning you can link against it with your own software.  Example scripts are provided under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 ### Software Features:
-* [Documentation](http://github.com/devsim/devsim/blob/master/doc/devsim.pdf)
+* [Documentation](https://github.com/devsim/devsim/blob/master/doc/devsim.pdf?raw=true)
 * Python and Tcl scripting 
 * DC, small-signal AC, impedance field method, transient
 * User specified partial differential equations (PDE).
