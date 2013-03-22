@@ -1,10 +1,10 @@
 Supported Platforms:
-ubuntu 12.04 64 bit
+ubuntu 12.04 32/64 bit
 Mac OS X 10.6.8 64 bit
 
 
 There are the required dependencies for ubuntu 12.04.
-sudo apt-get install cmake git python2.7-dev g++-4.6 gcc-4.6 gfortran-4.6 make tcl8.5-dev python2.7 flex bison tcl8.5
+sudo apt-get install cmake git python2.7-dev g++ gcc gfortran make tcl8.5  tcl8.5-dev tclthread python2.7 python2.7-dev flex bison sqlite3 libsqlite3-dev zlib1g-dev libsqlite3-tcl
 
 For Mac OS X, the developer tools should be installed (Xcode 3.2.6), these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
 https://developer.apple.com/technologies/tools
@@ -22,11 +22,18 @@ Download DEVSIM:
 4. git submodule update
 
 
-Install ACML for linux builds.
+Install ACML for linux 64bit.
 1. acml-5-3-0-gfortran-64bit.tgz from http://developer.amd.com.
 2. mkdir acml
 3. tar xzvf ../acml-5-3-0-gfortran-64bit.tgz 
 4. sudo sh install-acml-5-3-0-gfortran-64bit.sh
+
+Install ACML for linux 32bit.
+1. acml-4-4-0-gfortran-32bit.tgz from http://developer.amd.com.
+2. mkdir acml
+3. tar xzvf ../acml-4-4-0-gfortran-32bit.tgz 
+4. sudo sh install-acml-4-4-0-gfortran-32bit.sh
+
 
 For Mac OS X, make sure that you have XCode installed which has the math libraries.  In the following instructions use setup_osx_10.6.8.sh instead.
 

@@ -1,0 +1,1807 @@
+
+----------------------------------------
+
+ DEVSIM
+
+ Version: Beta 0.01
+
+ Copyright 2009-2013 Devsim LLC
+
+----------------------------------------
+
+
+Physical group name body_contact has 0 Tetrahedra.
+Physical group name body_contact has 0 Triangles.
+Physical group name body_contact has 49 Lines.
+Physical group name body_contact has 50 Points.
+Physical group name bulk has 0 Tetrahedra.
+Physical group name bulk has 4255 Triangles.
+Physical group name bulk has 6503 Lines.
+Physical group name bulk has 2249 Points.
+Physical group name bulk_oxide_interface has 0 Tetrahedra.
+Physical group name bulk_oxide_interface has 0 Triangles.
+Physical group name bulk_oxide_interface has 100 Lines.
+Physical group name bulk_oxide_interface has 101 Points.
+Physical group name drain_contact has 0 Tetrahedra.
+Physical group name drain_contact has 0 Triangles.
+Physical group name drain_contact has 27 Lines.
+Physical group name drain_contact has 28 Points.
+Physical group name gate has 0 Tetrahedra.
+Physical group name gate has 57 Triangles.
+Physical group name gate has 95 Lines.
+Physical group name gate has 39 Points.
+Physical group name gate_contact has 0 Tetrahedra.
+Physical group name gate_contact has 0 Triangles.
+Physical group name gate_contact has 4 Lines.
+Physical group name gate_contact has 5 Points.
+Physical group name gate_oxide_interface has 0 Tetrahedra.
+Physical group name gate_oxide_interface has 0 Triangles.
+Physical group name gate_oxide_interface has 5 Lines.
+Physical group name gate_oxide_interface has 6 Points.
+Physical group name oxide has 0 Tetrahedra.
+Physical group name oxide has 1207 Triangles.
+Physical group name oxide has 1872 Lines.
+Physical group name oxide has 666 Points.
+Physical group name source_contact has 0 Tetrahedra.
+Physical group name source_contact has 0 Triangles.
+Physical group name source_contact has 27 Lines.
+Physical group name source_contact has 28 Points.
+Device mos2d has 2847 coordinates with max index 2847
+group bulk has 2249 nodes.
+Region bulk has 2249 nodes.
+Region bulk has 2249 nodes.
+group gate has 39 nodes.
+Region gate has 39 nodes.
+Region gate has 39 nodes.
+group oxide has 666 nodes.
+Region oxide has 666 nodes.
+Region oxide has 666 nodes.
+group body_contact has 50 nodes.
+Contact body in region bulk with 50 nodes
+group drain_contact has 28 nodes.
+Contact drain in region bulk with 28 nodes
+group gate_contact has 5 nodes.
+Contact gate in region gate with 5 nodes
+group source_contact has 28 nodes.
+Contact source in region bulk with 28 nodes
+group bulk_oxide_interface has 101 nodes.
+Warning, contact "source" shares a node with interface "bulk_oxide"
+Warning, contact "drain" shares a node with interface "bulk_oxide"
+Adding interface bulk_oxide with 101, 101 nodes
+group gate_oxide_interface has 6 nodes.
+Adding interface gate_oxide with 6, 6 nodes
+bulk body
+bulk drain
+gate gate
+bulk source
+Region "bulk" on device "mos2d" has equations 0:2248
+Region "gate" on device "mos2d" has equations 2249:2287
+Region "oxide" on device "mos2d" has equations 2288:2953
+Device "mos2d" has equations 0:2953
+number of equations 2954
+Iteration: 0
+  Device: "mos2d"	RelError: 3.00000e+00	AbsError: 2.62012e-01
+    Region: "bulk"	RelError: 1.00000e+00	AbsError: 2.16122e-01
+      Equation: "PotentialEquation"	RelError: 1.00000e+00	AbsError: 2.16122e-01
+    Region: "gate"	RelError: 1.00000e+00	AbsError: 2.62012e-01
+      Equation: "PotentialEquation"	RelError: 1.00000e+00	AbsError: 2.62012e-01
+    Region: "oxide"	RelError: 1.00000e+00	AbsError: 2.61732e-01
+      Equation: "PotentialEquation"	RelError: 1.00000e+00	AbsError: 2.61732e-01
+Iteration: 1
+  Device: "mos2d"	RelError: 1.49679e+00	AbsError: 2.60773e-01
+    Region: "bulk"	RelError: 4.99020e-01	AbsError: 2.14804e-01
+      Equation: "PotentialEquation"	RelError: 4.99020e-01	AbsError: 2.14804e-01
+    Region: "gate"	RelError: 4.98963e-01	AbsError: 2.60773e-01
+      Equation: "PotentialEquation"	RelError: 4.98963e-01	AbsError: 2.60773e-01
+    Region: "oxide"	RelError: 4.98808e-01	AbsError: 2.60485e-01
+      Equation: "PotentialEquation"	RelError: 4.98808e-01	AbsError: 2.60485e-01
+Iteration: 2
+  Device: "mos2d"	RelError: 2.18169e+00	AbsError: 1.41155e-01
+    Region: "bulk"	RelError: 1.55131e+00	AbsError: 1.41155e-01
+      Equation: "PotentialEquation"	RelError: 1.55131e+00	AbsError: 1.41155e-01
+    Region: "gate"	RelError: 3.16582e-01	AbsError: 1.32593e-01
+      Equation: "PotentialEquation"	RelError: 3.16582e-01	AbsError: 1.32593e-01
+    Region: "oxide"	RelError: 3.13793e-01	AbsError: 8.39856e-02
+      Equation: "PotentialEquation"	RelError: 3.13793e-01	AbsError: 8.39856e-02
+Iteration: 3
+  Device: "mos2d"	RelError: 3.95275e+01	AbsError: 8.14615e-02
+    Region: "bulk"	RelError: 3.90731e+01	AbsError: 8.14615e-02
+      Equation: "PotentialEquation"	RelError: 3.90731e+01	AbsError: 8.14615e-02
+    Region: "gate"	RelError: 2.29097e-01	AbsError: 7.00000e-02
+      Equation: "PotentialEquation"	RelError: 2.29097e-01	AbsError: 7.00000e-02
+    Region: "oxide"	RelError: 2.25324e-01	AbsError: 6.51495e-02
+      Equation: "PotentialEquation"	RelError: 2.25324e-01	AbsError: 6.51495e-02
+Iteration: 4
+  Device: "mos2d"	RelError: 1.50737e+02	AbsError: 7.89878e-02
+    Region: "bulk"	RelError: 1.50392e+02	AbsError: 7.89878e-02
+      Equation: "PotentialEquation"	RelError: 1.50392e+02	AbsError: 7.89878e-02
+    Region: "gate"	RelError: 1.75024e-01	AbsError: 6.48239e-02
+      Equation: "PotentialEquation"	RelError: 1.75024e-01	AbsError: 6.48239e-02
+    Region: "oxide"	RelError: 1.70099e-01	AbsError: 5.92624e-02
+      Equation: "PotentialEquation"	RelError: 1.70099e-01	AbsError: 5.92624e-02
+Iteration: 5
+  Device: "mos2d"	RelError: 1.82821e+03	AbsError: 7.62736e-02
+    Region: "bulk"	RelError: 1.82794e+03	AbsError: 7.62736e-02
+      Equation: "PotentialEquation"	RelError: 1.82794e+03	AbsError: 7.62736e-02
+    Region: "gate"	RelError: 1.37182e-01	AbsError: 5.88866e-02
+      Equation: "PotentialEquation"	RelError: 1.37182e-01	AbsError: 5.88866e-02
+    Region: "oxide"	RelError: 1.30784e-01	AbsError: 5.24208e-02
+      Equation: "PotentialEquation"	RelError: 1.30784e-01	AbsError: 5.24208e-02
+Iteration: 6
+  Device: "mos2d"	RelError: 1.75376e+02	AbsError: 7.37354e-02
+    Region: "bulk"	RelError: 1.75168e+02	AbsError: 7.37354e-02
+      Equation: "PotentialEquation"	RelError: 1.75168e+02	AbsError: 7.37354e-02
+    Region: "gate"	RelError: 1.08015e-01	AbsError: 5.19808e-02
+      Equation: "PotentialEquation"	RelError: 1.08015e-01	AbsError: 5.19808e-02
+    Region: "oxide"	RelError: 9.96468e-02	AbsError: 4.43609e-02
+      Equation: "PotentialEquation"	RelError: 9.96468e-02	AbsError: 4.43609e-02
+Iteration: 7
+  Device: "mos2d"	RelError: 1.32380e+02	AbsError: 7.20749e-02
+    Region: "bulk"	RelError: 1.32224e+02	AbsError: 7.20749e-02
+      Equation: "PotentialEquation"	RelError: 1.32224e+02	AbsError: 7.20749e-02
+    Region: "gate"	RelError: 8.34915e-02	AbsError: 4.38395e-02
+      Equation: "PotentialEquation"	RelError: 8.34915e-02	AbsError: 4.38395e-02
+    Region: "oxide"	RelError: 7.24849e-02	AbsError: 3.47907e-02
+      Equation: "PotentialEquation"	RelError: 7.24849e-02	AbsError: 3.47907e-02
+Iteration: 8
+  Device: "mos2d"	RelError: 1.87614e+03	AbsError: 6.95617e-02
+    Region: "bulk"	RelError: 1.87604e+03	AbsError: 6.95617e-02
+      Equation: "PotentialEquation"	RelError: 1.87604e+03	AbsError: 6.95617e-02
+    Region: "gate"	RelError: 6.11043e-02	AbsError: 3.41726e-02
+      Equation: "PotentialEquation"	RelError: 6.11043e-02	AbsError: 3.41726e-02
+    Region: "oxide"	RelError: 4.68846e-02	AbsError: 2.36103e-02
+      Equation: "PotentialEquation"	RelError: 4.68846e-02	AbsError: 2.36103e-02
+Iteration: 9
+  Device: "mos2d"	RelError: 6.99142e+01	AbsError: 6.34464e-02
+    Region: "bulk"	RelError: 6.98460e+01	AbsError: 6.34464e-02
+      Equation: "PotentialEquation"	RelError: 6.98460e+01	AbsError: 6.34464e-02
+    Region: "gate"	RelError: 3.93513e-02	AbsError: 2.29087e-02
+      Equation: "PotentialEquation"	RelError: 3.93513e-02	AbsError: 2.29087e-02
+    Region: "oxide"	RelError: 2.88057e-02	AbsError: 1.49363e-02
+      Equation: "PotentialEquation"	RelError: 2.88057e-02	AbsError: 1.49363e-02
+Iteration: 10
+  Device: "mos2d"	RelError: 6.75434e+01	AbsError: 5.07996e-02
+    Region: "bulk"	RelError: 6.75200e+01	AbsError: 5.07996e-02
+      Equation: "PotentialEquation"	RelError: 6.75200e+01	AbsError: 5.07996e-02
+    Region: "gate"	RelError: 2.33454e-02	AbsError: 1.39156e-02
+      Equation: "PotentialEquation"	RelError: 2.33454e-02	AbsError: 1.39156e-02
+    Region: "oxide"	RelError: 7.10672e-06	AbsError: 2.84960e-06
+      Equation: "PotentialEquation"	RelError: 7.10672e-06	AbsError: 2.84960e-06
+Iteration: 11
+  Device: "mos2d"	RelError: 2.53501e+01	AbsError: 3.63570e-02
+    Region: "bulk"	RelError: 2.53500e+01	AbsError: 3.63570e-02
+      Equation: "PotentialEquation"	RelError: 2.53500e+01	AbsError: 3.63570e-02
+    Region: "gate"	RelError: 1.37683e-10	AbsError: 8.20674e-11
+      Equation: "PotentialEquation"	RelError: 1.37683e-10	AbsError: 8.20674e-11
+    Region: "oxide"	RelError: 4.28352e-06	AbsError: 1.71758e-06
+      Equation: "PotentialEquation"	RelError: 4.28352e-06	AbsError: 1.71758e-06
+Iteration: 12
+  Device: "mos2d"	RelError: 1.22763e+01	AbsError: 2.58894e-02
+    Region: "bulk"	RelError: 1.22763e+01	AbsError: 2.58894e-02
+      Equation: "PotentialEquation"	RelError: 1.22763e+01	AbsError: 2.58894e-02
+    Region: "gate"	RelError: 2.07123e-11	AbsError: 1.23458e-11
+      Equation: "PotentialEquation"	RelError: 2.07123e-11	AbsError: 1.23458e-11
+    Region: "oxide"	RelError: 6.44397e-07	AbsError: 2.58387e-07
+      Equation: "PotentialEquation"	RelError: 6.44397e-07	AbsError: 2.58387e-07
+Iteration: 13
+  Device: "mos2d"	RelError: 9.72935e-01	AbsError: 1.39565e-02
+    Region: "bulk"	RelError: 9.72935e-01	AbsError: 1.39565e-02
+      Equation: "PotentialEquation"	RelError: 9.72935e-01	AbsError: 1.39565e-02
+    Region: "gate"	RelError: 5.04581e-12	AbsError: 3.00761e-12
+      Equation: "PotentialEquation"	RelError: 5.04581e-12	AbsError: 3.00761e-12
+    Region: "oxide"	RelError: 1.56979e-07	AbsError: 6.29446e-08
+      Equation: "PotentialEquation"	RelError: 1.56979e-07	AbsError: 6.29446e-08
+Iteration: 14
+  Device: "mos2d"	RelError: 7.23825e-02	AbsError: 8.35414e-05
+    Region: "bulk"	RelError: 7.23824e-02	AbsError: 8.35414e-05
+      Equation: "PotentialEquation"	RelError: 7.23824e-02	AbsError: 8.35414e-05
+    Region: "gate"	RelError: 3.81915e-13	AbsError: 2.27644e-13
+      Equation: "PotentialEquation"	RelError: 3.81915e-13	AbsError: 2.27644e-13
+    Region: "oxide"	RelError: 1.18851e-08	AbsError: 4.76562e-09
+      Equation: "PotentialEquation"	RelError: 1.18851e-08	AbsError: 4.76562e-09
+Iteration: 15
+  Device: "mos2d"	RelError: 1.08673e-05	AbsError: 1.58135e-08
+    Region: "bulk"	RelError: 1.08673e-05	AbsError: 1.58135e-08
+      Equation: "PotentialEquation"	RelError: 1.08673e-05	AbsError: 1.58135e-08
+    Region: "gate"	RelError: 1.91360e-16	AbsError: 1.14063e-16
+      Equation: "PotentialEquation"	RelError: 1.91360e-16	AbsError: 1.14063e-16
+    Region: "oxide"	RelError: 1.35297e-12	AbsError: 5.42508e-13
+      Equation: "PotentialEquation"	RelError: 1.35297e-12	AbsError: 5.42508e-13
+Iteration: 16
+  Device: "mos2d"	RelError: 6.83956e-13	AbsError: 7.53861e-15
+    Region: "bulk"	RelError: 6.69168e-13	AbsError: 1.14679e-15
+      Equation: "PotentialEquation"	RelError: 6.69168e-13	AbsError: 1.14679e-15
+    Region: "gate"	RelError: 2.49302e-16	AbsError: 1.48600e-16
+      Equation: "PotentialEquation"	RelError: 2.49302e-16	AbsError: 1.48600e-16
+    Region: "oxide"	RelError: 1.45387e-14	AbsError: 7.53861e-15
+      Equation: "PotentialEquation"	RelError: 1.45387e-14	AbsError: 7.53861e-15
+Region "bulk" on device "mos2d" has equations 0:2248
+Region "gate" on device "mos2d" has equations 2249:2287
+Region "oxide" on device "mos2d" has equations 2288:2953
+Device "mos2d" has equations 0:2953
+number of equations 2954
+Iteration: 0
+  Device: "mos2d"	RelError: 2.64359e-14	AbsError: 7.53861e-15
+    Region: "bulk"	RelError: 1.16276e-14	AbsError: 7.84859e-16
+      Equation: "PotentialEquation"	RelError: 1.16276e-14	AbsError: 7.84859e-16
+    Region: "gate"	RelError: 2.69604e-16	AbsError: 1.60704e-16
+      Equation: "PotentialEquation"	RelError: 2.69604e-16	AbsError: 1.60704e-16
+    Region: "oxide"	RelError: 1.45387e-14	AbsError: 7.53861e-15
+      Equation: "PotentialEquation"	RelError: 1.45387e-14	AbsError: 7.53861e-15
+Warning: Replacing equation with equation of the same name.
+Region: gate, Equation: PotentialEquation, Variable: Potential
+Warning: Replacing equation with equation of the same name.
+Region: bulk, Equation: PotentialEquation, Variable: Potential
+Replacing Triangle Edge Model ElectricField_x in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_y in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_x:Potential@en0 in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_x:Potential@en1 in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_x:Potential@en2 in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_y:Potential@en0 in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_y:Potential@en1 in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_y:Potential@en2 in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_mag in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_mag:Potential@en0 in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_mag:Potential@en1 in region gate of material Silicon
+Replacing Triangle Edge Model ElectricField_mag:Potential@en2 in region gate of material Silicon
+Warning: Replacing equation with equation of the same name.
+Region: gate, Equation: ElectronContinuityEquation, Variable: Electrons
+Replacing Triangle Edge Model ElectricField_x in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_y in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_x:Potential@en0 in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_x:Potential@en1 in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_x:Potential@en2 in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_y:Potential@en0 in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_y:Potential@en1 in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_y:Potential@en2 in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_mag in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_mag:Potential@en0 in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_mag:Potential@en1 in region bulk of material Silicon
+Replacing Triangle Edge Model ElectricField_mag:Potential@en2 in region bulk of material Silicon
+Warning: Replacing equation with equation of the same name.
+Region: bulk, Equation: ElectronContinuityEquation, Variable: Electrons
+Warning: Replacing Contact Equation with Contact Equation of the same name.
+Contact: body, Equation: ElectronContinuityEquation, Variable: Electrons
+Warning: Replacing Contact Equation with Contact Equation of the same name.
+Contact: drain, Equation: ElectronContinuityEquation, Variable: Electrons
+Warning: Replacing Contact Equation with Contact Equation of the same name.
+Contact: source, Equation: ElectronContinuityEquation, Variable: Electrons
+Region "bulk" on device "mos2d" has equations 0:6746
+Region "gate" on device "mos2d" has equations 6747:6863
+Region "oxide" on device "mos2d" has equations 6864:7529
+Device "mos2d" has equations 0:7529
+number of equations 7530
+Iteration: 0
+  Device: "mos2d"	RelError: 2.02051e-13	AbsError: 5.74393e+05
+    Region: "bulk"	RelError: 1.75838e-13	AbsError: 1.22847e+05
+      Equation: "ElectronContinuityEquation"	RelError: 3.25905e-14	AbsError: 1.00319e+05
+      Equation: "HoleContinuityEquation"	RelError: 3.35689e-14	AbsError: 2.25280e+04
+      Equation: "PotentialEquation"	RelError: 1.09679e-13	AbsError: 8.37013e-16
+    Region: "gate"	RelError: 1.16742e-14	AbsError: 5.74393e+05
+      Equation: "ElectronContinuityEquation"	RelError: 5.74628e-15	AbsError: 5.74393e+05
+      Equation: "HoleContinuityEquation"	RelError: 5.73501e-15	AbsError: 5.73501e-15
+      Equation: "PotentialEquation"	RelError: 1.92930e-16	AbsError: 1.15001e-16
+    Region: "oxide"	RelError: 1.45387e-14	AbsError: 7.53861e-15
+      Equation: "PotentialEquation"	RelError: 1.45387e-14	AbsError: 7.53861e-15
+last end 0.000000e+00 5.000000e-01
+setting to last bias 5.000000e-01
+setting next bias 5.000000e-01
+Region "bulk" on device "mos2d" has equations 0:6746
+Region "gate" on device "mos2d" has equations 6747:6863
+Region "oxide" on device "mos2d" has equations 6864:7529
+Device "mos2d" has equations 0:7529
+number of equations 7530
+Iteration: 0
+  Device: "mos2d"	RelError: 1.96472e+02	AbsError: 4.03869e+17
+    Region: "bulk"	RelError: 1.96237e+02	AbsError: 4.03869e+17
+      Equation: "ElectronContinuityEquation"	RelError: 4.97432e-01	AbsError: 4.03869e+17
+      Equation: "HoleContinuityEquation"	RelError: 1.95680e+02	AbsError: 6.74284e+10
+      Equation: "PotentialEquation"	RelError: 6.03505e-02	AbsError: 2.57556e-02
+    Region: "gate"	RelError: 1.18952e-01	AbsError: 1.62993e+17
+      Equation: "ElectronContinuityEquation"	RelError: 1.63354e-03	AbsError: 1.62993e+17
+      Equation: "HoleContinuityEquation"	RelError: 1.62822e-03	AbsError: 1.63183e-03
+      Equation: "PotentialEquation"	RelError: 1.15690e-01	AbsError: 7.79815e-02
+    Region: "oxide"	RelError: 1.15690e-01	AbsError: 7.79804e-02
+      Equation: "PotentialEquation"	RelError: 1.15690e-01	AbsError: 7.79804e-02
+Iteration: 1
+  Device: "mos2d"	RelError: 1.39118e+00	AbsError: 4.05444e+17
+    Region: "bulk"	RelError: 1.18768e+00	AbsError: 5.00937e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.79215e-01	AbsError: 5.00937e+16
+      Equation: "HoleContinuityEquation"	RelError: 9.87429e-01	AbsError: 6.39960e+10
+      Equation: "PotentialEquation"	RelError: 2.10383e-02	AbsError: 3.19130e-03
+    Region: "gate"	RelError: 1.04786e-01	AbsError: 4.05444e+17
+      Equation: "ElectronContinuityEquation"	RelError: 4.07095e-03	AbsError: 4.05444e+17
+      Equation: "HoleContinuityEquation"	RelError: 2.00242e-03	AbsError: 2.00644e-03
+      Equation: "PotentialEquation"	RelError: 9.87123e-02	AbsError: 7.38251e-02
+    Region: "oxide"	RelError: 9.87114e-02	AbsError: 7.38233e-02
+      Equation: "PotentialEquation"	RelError: 9.87114e-02	AbsError: 7.38233e-02
+Iteration: 2
+  Device: "mos2d"	RelError: 2.17552e-01	AbsError: 4.05446e+17
+    Region: "bulk"	RelError: 4.21984e-02	AbsError: 1.73682e+16
+      Equation: "ElectronContinuityEquation"	RelError: 9.72021e-03	AbsError: 1.73682e+16
+      Equation: "HoleContinuityEquation"	RelError: 3.01155e-02	AbsError: 7.12362e+09
+      Equation: "PotentialEquation"	RelError: 2.36269e-03	AbsError: 6.97423e-05
+    Region: "gate"	RelError: 9.07076e-02	AbsError: 4.05446e+17
+      Equation: "ElectronContinuityEquation"	RelError: 4.05446e-03	AbsError: 4.05446e+17
+      Equation: "HoleContinuityEquation"	RelError: 2.00531e-03	AbsError: 2.00531e-03
+      Equation: "PotentialEquation"	RelError: 8.46479e-02	AbsError: 6.91602e-02
+    Region: "oxide"	RelError: 8.46463e-02	AbsError: 6.91584e-02
+      Equation: "PotentialEquation"	RelError: 8.46463e-02	AbsError: 6.91584e-02
+Iteration: 3
+  Device: "mos2d"	RelError: 1.45385e-01	AbsError: 5.97605e+14
+    Region: "bulk"	RelError: 3.76142e-04	AbsError: 5.97605e+14
+      Equation: "ElectronContinuityEquation"	RelError: 2.34512e-04	AbsError: 5.97605e+14
+      Equation: "HoleContinuityEquation"	RelError: 7.72673e-05	AbsError: 1.80971e+08
+      Equation: "PotentialEquation"	RelError: 6.43630e-05	AbsError: 1.97245e-06
+    Region: "gate"	RelError: 7.25094e-02	AbsError: 3.11400e+14
+      Equation: "ElectronContinuityEquation"	RelError: 3.11401e-06	AbsError: 3.11400e+14
+      Equation: "HoleContinuityEquation"	RelError: 5.40764e-06	AbsError: 5.40764e-06
+      Equation: "PotentialEquation"	RelError: 7.25009e-02	AbsError: 6.38661e-02
+    Region: "oxide"	RelError: 7.24992e-02	AbsError: 6.38640e-02
+      Equation: "PotentialEquation"	RelError: 7.24992e-02	AbsError: 6.38640e-02
+Iteration: 4
+  Device: "mos2d"	RelError: 1.23139e-01	AbsError: 8.68282e+14
+    Region: "bulk"	RelError: 1.61877e-05	AbsError: 6.96495e+12
+      Equation: "ElectronContinuityEquation"	RelError: 9.86457e-06	AbsError: 6.96493e+12
+      Equation: "HoleContinuityEquation"	RelError: 2.69768e-06	AbsError: 1.18473e+07
+      Equation: "PotentialEquation"	RelError: 3.62546e-06	AbsError: 6.98517e-08
+    Region: "gate"	RelError: 6.15711e-02	AbsError: 8.68282e+14
+      Equation: "ElectronContinuityEquation"	RelError: 8.68275e-06	AbsError: 8.68282e+14
+      Equation: "HoleContinuityEquation"	RelError: 8.67693e-06	AbsError: 8.67686e-06
+      Equation: "PotentialEquation"	RelError: 6.15537e-02	AbsError: 5.77793e-02
+    Region: "oxide"	RelError: 6.15519e-02	AbsError: 5.77769e-02
+      Equation: "PotentialEquation"	RelError: 6.15519e-02	AbsError: 5.77769e-02
+Iteration: 5
+  Device: "mos2d"	RelError: 1.02573e-01	AbsError: 5.95853e+15
+    Region: "bulk"	RelError: 9.40556e-07	AbsError: 1.46908e+11
+      Equation: "ElectronContinuityEquation"	RelError: 5.98268e-07	AbsError: 1.46907e+11
+      Equation: "HoleContinuityEquation"	RelError: 1.25348e-07	AbsError: 6.38462e+05
+      Equation: "PotentialEquation"	RelError: 2.16941e-07	AbsError: 3.24488e-09
+    Region: "gate"	RelError: 5.13465e-02	AbsError: 5.95853e+15
+      Equation: "ElectronContinuityEquation"	RelError: 5.95889e-05	AbsError: 5.95853e+15
+      Equation: "HoleContinuityEquation"	RelError: 5.95678e-05	AbsError: 5.95714e-05
+      Equation: "PotentialEquation"	RelError: 5.12274e-02	AbsError: 5.06824e-02
+    Region: "oxide"	RelError: 5.12252e-02	AbsError: 5.06796e-02
+      Equation: "PotentialEquation"	RelError: 5.12252e-02	AbsError: 5.06796e-02
+Iteration: 6
+  Device: "mos2d"	RelError: 8.21192e-02	AbsError: 5.95784e+15
+    Region: "bulk"	RelError: 6.11657e-08	AbsError: 3.29176e+10
+      Equation: "ElectronContinuityEquation"	RelError: 4.33051e-08	AbsError: 3.29176e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.05577e-08	AbsError: 2.26736e+04
+      Equation: "PotentialEquation"	RelError: 7.30296e-09	AbsError: 2.73308e-10
+    Region: "gate"	RelError: 4.11205e-02	AbsError: 5.95784e+15
+      Equation: "ElectronContinuityEquation"	RelError: 5.95784e-05	AbsError: 5.95784e+15
+      Equation: "HoleContinuityEquation"	RelError: 5.95781e-05	AbsError: 5.95781e-05
+      Equation: "PotentialEquation"	RelError: 4.10013e-02	AbsError: 4.22995e-02
+    Region: "oxide"	RelError: 4.09987e-02	AbsError: 4.22961e-02
+      Equation: "PotentialEquation"	RelError: 4.09987e-02	AbsError: 4.22961e-02
+Iteration: 7
+  Device: "mos2d"	RelError: 6.08077e-02	AbsError: 1.67205e+14
+    Region: "bulk"	RelError: 1.70541e-09	AbsError: 1.59725e+09
+      Equation: "ElectronContinuityEquation"	RelError: 8.53036e-10	AbsError: 1.59725e+09
+      Equation: "HoleContinuityEquation"	RelError: 4.36849e-10	AbsError: 1.31877e+03
+      Equation: "PotentialEquation"	RelError: 4.15521e-10	AbsError: 1.13088e-11
+    Region: "gate"	RelError: 3.04071e-02	AbsError: 1.67205e+14
+      Equation: "ElectronContinuityEquation"	RelError: 1.67206e-06	AbsError: 1.67205e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.70015e-06	AbsError: 1.70015e-06
+      Equation: "PotentialEquation"	RelError: 3.04038e-02	AbsError: 3.23500e-02
+    Region: "oxide"	RelError: 3.04006e-02	AbsError: 3.23460e-02
+      Equation: "PotentialEquation"	RelError: 3.04006e-02	AbsError: 3.23460e-02
+Iteration: 8
+  Device: "mos2d"	RelError: 3.84603e-02	AbsError: 4.02271e+13
+    Region: "bulk"	RelError: 1.05505e-10	AbsError: 4.20239e+07
+      Equation: "ElectronContinuityEquation"	RelError: 5.64106e-11	AbsError: 4.20235e+07
+      Equation: "HoleContinuityEquation"	RelError: 1.53564e-11	AbsError: 3.61423e+02
+      Equation: "PotentialEquation"	RelError: 3.37384e-11	AbsError: 3.97584e-13
+    Region: "gate"	RelError: 1.92324e-02	AbsError: 4.02271e+13
+      Equation: "ElectronContinuityEquation"	RelError: 4.02271e-07	AbsError: 4.02271e+13
+      Equation: "HoleContinuityEquation"	RelError: 3.96331e-07	AbsError: 3.96331e-07
+      Equation: "PotentialEquation"	RelError: 1.92316e-02	AbsError: 2.08639e-02
+    Region: "oxide"	RelError: 1.92279e-02	AbsError: 2.08594e-02
+      Equation: "PotentialEquation"	RelError: 1.92279e-02	AbsError: 2.08594e-02
+Iteration: 9
+  Device: "mos2d"	RelError: 2.04303e-02	AbsError: 4.07369e+13
+    Region: "bulk"	RelError: 5.41300e-12	AbsError: 1.85239e+06
+      Equation: "ElectronContinuityEquation"	RelError: 2.34347e-12	AbsError: 1.85210e+06
+      Equation: "HoleContinuityEquation"	RelError: 1.46238e-12	AbsError: 2.87181e+02
+      Equation: "PotentialEquation"	RelError: 1.60714e-12	AbsError: 3.78906e-14
+    Region: "gate"	RelError: 1.02179e-02	AbsError: 4.07369e+13
+      Equation: "ElectronContinuityEquation"	RelError: 4.07368e-07	AbsError: 4.07369e+13
+      Equation: "HoleContinuityEquation"	RelError: 4.26052e-07	AbsError: 4.26052e-07
+      Equation: "PotentialEquation"	RelError: 1.02171e-02	AbsError: 1.11987e-02
+    Region: "oxide"	RelError: 1.02124e-02	AbsError: 1.11932e-02
+      Equation: "PotentialEquation"	RelError: 1.02124e-02	AbsError: 1.11932e-02
+Iteration: 10
+  Device: "mos2d"	RelError: 4.68714e-07	AbsError: 2.33746e+13
+    Region: "bulk"	RelError: 5.82655e-13	AbsError: 1.35296e+05
+      Equation: "ElectronContinuityEquation"	RelError: 2.03429e-13	AbsError: 1.34770e+05
+      Equation: "HoleContinuityEquation"	RelError: 1.94532e-13	AbsError: 5.25921e+02
+      Equation: "PotentialEquation"	RelError: 1.84695e-13	AbsError: 5.02663e-15
+    Region: "gate"	RelError: 4.68713e-07	AbsError: 2.33746e+13
+      Equation: "ElectronContinuityEquation"	RelError: 2.33746e-07	AbsError: 2.33746e+13
+      Equation: "HoleContinuityEquation"	RelError: 2.29446e-07	AbsError: 2.29446e-07
+      Equation: "PotentialEquation"	RelError: 5.52050e-09	AbsError: 6.05088e-09
+    Region: "oxide"	RelError: 2.60606e-13	AbsError: 2.85629e-13
+      Equation: "PotentialEquation"	RelError: 2.60606e-13	AbsError: 2.85629e-13
+Iteration: 11
+  Device: "mos2d"	RelError: 1.50181e-13	AbsError: 8.04942e+04
+    Region: "bulk"	RelError: 8.53690e-14	AbsError: 8.04942e+04
+      Equation: "ElectronContinuityEquation"	RelError: 2.46059e-14	AbsError: 8.02027e+04
+      Equation: "HoleContinuityEquation"	RelError: 2.22849e-14	AbsError: 2.91519e+02
+      Equation: "PotentialEquation"	RelError: 3.84781e-14	AbsError: 5.51039e-16
+    Region: "gate"	RelError: 5.44442e-14	AbsError: 9.06091e+03
+      Equation: "ElectronContinuityEquation"	RelError: 9.06091e-17	AbsError: 9.06091e+03
+      Equation: "HoleContinuityEquation"	RelError: 5.37178e-14	AbsError: 5.37178e-14
+      Equation: "PotentialEquation"	RelError: 6.35846e-16	AbsError: 6.96934e-16
+    Region: "oxide"	RelError: 1.03676e-14	AbsError: 5.37579e-15
+      Equation: "PotentialEquation"	RelError: 1.03676e-14	AbsError: 5.37579e-15
+Succeeded
+body	0.0	-1.93614275679e-29	7.51874537709e-15	7.51874537709e-15
+drain	0.0	7.26133734408e-14	4.0242014755e-31	7.26133734408e-14
+gate	0.5	1.91056511289e-13	3.83969670264e-33	1.91056511289e-13
+source	0.0	-9.54859420691e-15	4.45950180678e-31	-9.54859420691e-15
+last end 0.000000e+00 5.000000e-01
+Region "bulk" on device "mos2d" has equations 0:6746
+Region "gate" on device "mos2d" has equations 6747:6863
+Region "oxide" on device "mos2d" has equations 6864:7529
+Device "mos2d" has equations 0:7529
+number of equations 7530
+Iteration: 0
+  Device: "mos2d"	RelError: 2.00511e+03	AbsError: 2.00277e+17
+    Region: "bulk"	RelError: 2.00503e+03	AbsError: 2.00277e+17
+      Equation: "ElectronContinuityEquation"	RelError: 9.99000e+02	AbsError: 1.99974e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.99000e+02	AbsError: 3.03237e+14
+      Equation: "PotentialEquation"	RelError: 7.02988e+00	AbsError: 4.09542e-02
+    Region: "gate"	RelError: 3.93410e-04	AbsError: 1.93978e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.94372e-04	AbsError: 1.93978e+16
+      Equation: "HoleContinuityEquation"	RelError: 1.94447e-04	AbsError: 1.94842e-04
+      Equation: "PotentialEquation"	RelError: 4.59180e-06	AbsError: 5.03271e-06
+    Region: "oxide"	RelError: 7.84571e-02	AbsError: 4.09542e-02
+      Equation: "PotentialEquation"	RelError: 7.84571e-02	AbsError: 4.09542e-02
+Iteration: 1
+  Device: "mos2d"	RelError: 1.21881e+01	AbsError: 7.56975e+16
+    Region: "bulk"	RelError: 1.21336e+01	AbsError: 7.56975e+16
+      Equation: "ElectronContinuityEquation"	RelError: 9.99000e-01	AbsError: 7.56758e+16
+      Equation: "HoleContinuityEquation"	RelError: 9.98737e-01	AbsError: 2.17608e+13
+      Equation: "PotentialEquation"	RelError: 1.01359e+01	AbsError: 3.07668e-02
+    Region: "gate"	RelError: 2.40370e-05	AbsError: 1.18353e+15
+      Equation: "ElectronContinuityEquation"	RelError: 1.18595e-05	AbsError: 1.18353e+15
+      Equation: "HoleContinuityEquation"	RelError: 1.18970e-05	AbsError: 1.19213e-05
+      Equation: "PotentialEquation"	RelError: 2.80555e-07	AbsError: 3.07494e-07
+    Region: "oxide"	RelError: 5.43979e-02	AbsError: 3.07632e-02
+      Equation: "PotentialEquation"	RelError: 5.43979e-02	AbsError: 3.07632e-02
+Iteration: 2
+  Device: "mos2d"	RelError: 1.00535e+03	AbsError: 5.47863e+16
+    Region: "bulk"	RelError: 1.00531e+03	AbsError: 5.47863e+16
+      Equation: "ElectronContinuityEquation"	RelError: 6.01517e+00	AbsError: 5.47837e+16
+      Equation: "HoleContinuityEquation"	RelError: 9.99000e+02	AbsError: 2.58219e+12
+      Equation: "PotentialEquation"	RelError: 2.92631e-01	AbsError: 2.58953e-02
+    Region: "gate"	RelError: 3.06286e-05	AbsError: 1.51047e+15
+      Equation: "ElectronContinuityEquation"	RelError: 1.51357e-05	AbsError: 1.51047e+15
+      Equation: "HoleContinuityEquation"	RelError: 1.51354e-05	AbsError: 1.51666e-05
+      Equation: "PotentialEquation"	RelError: 3.57491e-07	AbsError: 3.91818e-07
+    Region: "oxide"	RelError: 4.43237e-02	AbsError: 2.55769e-02
+      Equation: "PotentialEquation"	RelError: 4.43237e-02	AbsError: 2.55769e-02
+Iteration: 3
+  Device: "mos2d"	RelError: 1.70272e+00	AbsError: 3.76641e+17
+    Region: "bulk"	RelError: 1.68789e+00	AbsError: 3.76641e+17
+      Equation: "ElectronContinuityEquation"	RelError: 5.77092e-01	AbsError: 3.76640e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.98068e-01	AbsError: 1.08461e+12
+      Equation: "PotentialEquation"	RelError: 1.12729e-01	AbsError: 9.17105e-03
+    Region: "gate"	RelError: 1.34661e-05	AbsError: 6.64070e+14
+      Equation: "ElectronContinuityEquation"	RelError: 6.65441e-06	AbsError: 6.64070e+14
+      Equation: "HoleContinuityEquation"	RelError: 6.65455e-06	AbsError: 6.66828e-06
+      Equation: "PotentialEquation"	RelError: 1.57174e-07	AbsError: 1.72266e-07
+    Region: "oxide"	RelError: 1.48182e-02	AbsError: 9.16533e-03
+      Equation: "PotentialEquation"	RelError: 1.48182e-02	AbsError: 9.16533e-03
+Iteration: 4
+  Device: "mos2d"	RelError: 1.21425e+00	AbsError: 4.00231e+17
+    Region: "bulk"	RelError: 1.20927e+00	AbsError: 4.00231e+17
+      Equation: "ElectronContinuityEquation"	RelError: 6.69185e-01	AbsError: 4.00230e+17
+      Equation: "HoleContinuityEquation"	RelError: 4.81874e-01	AbsError: 6.69924e+11
+      Equation: "PotentialEquation"	RelError: 5.82156e-02	AbsError: 2.77792e-03
+    Region: "gate"	RelError: 5.36298e-06	AbsError: 2.64475e+14
+      Equation: "ElectronContinuityEquation"	RelError: 2.65020e-06	AbsError: 2.64475e+14
+      Equation: "HoleContinuityEquation"	RelError: 2.65017e-06	AbsError: 2.65564e-06
+      Equation: "PotentialEquation"	RelError: 6.25955e-08	AbsError: 6.86060e-08
+    Region: "oxide"	RelError: 4.97104e-03	AbsError: 2.73970e-03
+      Equation: "PotentialEquation"	RelError: 4.97104e-03	AbsError: 2.73970e-03
+Iteration: 5
+  Device: "mos2d"	RelError: 2.04525e-01	AbsError: 5.50202e+16
+    Region: "bulk"	RelError: 2.00448e-01	AbsError: 5.50202e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.03765e-01	AbsError: 5.50199e+16
+      Equation: "HoleContinuityEquation"	RelError: 6.73221e-02	AbsError: 3.15209e+11
+      Equation: "PotentialEquation"	RelError: 2.93616e-02	AbsError: 2.17689e-03
+    Region: "gate"	RelError: 7.44730e-06	AbsError: 3.67262e+14
+      Equation: "ElectronContinuityEquation"	RelError: 3.68020e-06	AbsError: 3.67262e+14
+      Equation: "HoleContinuityEquation"	RelError: 3.68018e-06	AbsError: 3.68778e-06
+      Equation: "PotentialEquation"	RelError: 8.69233e-08	AbsError: 9.52698e-08
+    Region: "oxide"	RelError: 4.06874e-03	AbsError: 2.12081e-03
+      Equation: "PotentialEquation"	RelError: 4.06874e-03	AbsError: 2.12081e-03
+Iteration: 6
+  Device: "mos2d"	RelError: 7.38727e-02	AbsError: 4.21104e+16
+    Region: "bulk"	RelError: 7.28167e-02	AbsError: 4.21104e+16
+      Equation: "ElectronContinuityEquation"	RelError: 5.14964e-02	AbsError: 4.21104e+16
+      Equation: "HoleContinuityEquation"	RelError: 2.02288e-02	AbsError: 8.28462e+09
+      Equation: "PotentialEquation"	RelError: 1.09148e-03	AbsError: 5.86880e-04
+    Region: "gate"	RelError: 1.50807e-06	AbsError: 7.43691e+13
+      Equation: "ElectronContinuityEquation"	RelError: 7.45228e-07	AbsError: 7.43691e+13
+      Equation: "HoleContinuityEquation"	RelError: 7.45240e-07	AbsError: 7.46780e-07
+      Equation: "PotentialEquation"	RelError: 1.76019e-08	AbsError: 1.92920e-08
+    Region: "oxide"	RelError: 1.05450e-03	AbsError: 5.69239e-04
+      Equation: "PotentialEquation"	RelError: 1.05450e-03	AbsError: 5.69239e-04
+Iteration: 7
+  Device: "mos2d"	RelError: 7.18116e-03	AbsError: 2.86369e+15
+    Region: "bulk"	RelError: 7.09554e-03	AbsError: 2.86369e+15
+      Equation: "ElectronContinuityEquation"	RelError: 5.32294e-03	AbsError: 2.86369e+15
+      Equation: "HoleContinuityEquation"	RelError: 1.68383e-03	AbsError: 7.88872e+08
+      Equation: "PotentialEquation"	RelError: 8.87637e-05	AbsError: 4.80750e-05
+    Region: "gate"	RelError: 9.96489e-08	AbsError: 4.91411e+12
+      Equation: "ElectronContinuityEquation"	RelError: 4.92426e-08	AbsError: 4.91411e+12
+      Equation: "HoleContinuityEquation"	RelError: 4.92432e-08	AbsError: 4.93449e-08
+      Equation: "PotentialEquation"	RelError: 1.16308e-09	AbsError: 1.27476e-09
+    Region: "oxide"	RelError: 8.55252e-05	AbsError: 4.66289e-05
+      Equation: "PotentialEquation"	RelError: 8.55252e-05	AbsError: 4.66289e-05
+Iteration: 8
+  Device: "mos2d"	RelError: 2.77113e-04	AbsError: 2.55347e+14
+    Region: "bulk"	RelError: 2.72923e-04	AbsError: 2.55347e+14
+      Equation: "ElectronContinuityEquation"	RelError: 1.75759e-04	AbsError: 2.55347e+14
+      Equation: "HoleContinuityEquation"	RelError: 7.80443e-05	AbsError: 2.07349e+08
+      Equation: "PotentialEquation"	RelError: 1.91195e-05	AbsError: 2.20364e-06
+    Region: "gate"	RelError: 6.61278e-09	AbsError: 3.26106e+11
+      Equation: "ElectronContinuityEquation"	RelError: 3.26780e-09	AbsError: 3.26106e+11
+      Equation: "HoleContinuityEquation"	RelError: 3.26780e-09	AbsError: 3.27455e-09
+      Equation: "PotentialEquation"	RelError: 7.71829e-11	AbsError: 8.45940e-11
+    Region: "oxide"	RelError: 4.18354e-06	AbsError: 2.14182e-06
+      Equation: "PotentialEquation"	RelError: 4.18354e-06	AbsError: 2.14182e-06
+Iteration: 9
+  Device: "mos2d"	RelError: 5.22354e-05	AbsError: 1.60320e+13
+    Region: "bulk"	RelError: 5.20466e-05	AbsError: 1.60320e+13
+      Equation: "ElectronContinuityEquation"	RelError: 4.64522e-05	AbsError: 1.60320e+13
+      Equation: "HoleContinuityEquation"	RelError: 3.44993e-06	AbsError: 2.32924e+07
+      Equation: "PotentialEquation"	RelError: 2.14448e-06	AbsError: 9.06311e-08
+    Region: "gate"	RelError: 2.60597e-10	AbsError: 1.28512e+10
+      Equation: "ElectronContinuityEquation"	RelError: 1.28777e-10	AbsError: 1.28512e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.28778e-10	AbsError: 1.29044e-10
+      Equation: "PotentialEquation"	RelError: 3.04169e-12	AbsError: 3.33376e-12
+    Region: "oxide"	RelError: 1.88541e-07	AbsError: 8.79421e-08
+      Equation: "PotentialEquation"	RelError: 1.88541e-07	AbsError: 8.79421e-08
+Iteration: 10
+  Device: "mos2d"	RelError: 2.25752e-05	AbsError: 4.85040e+12
+    Region: "bulk"	RelError: 2.25232e-05	AbsError: 4.85040e+12
+      Equation: "ElectronContinuityEquation"	RelError: 2.08964e-05	AbsError: 4.85039e+12
+      Equation: "HoleContinuityEquation"	RelError: 9.96306e-07	AbsError: 7.12484e+06
+      Equation: "PotentialEquation"	RelError: 6.30580e-07	AbsError: 2.58166e-08
+    Region: "gate"	RelError: 5.35408e-11	AbsError: 2.64125e+09
+      Equation: "ElectronContinuityEquation"	RelError: 2.64579e-11	AbsError: 2.64125e+09
+      Equation: "HoleContinuityEquation"	RelError: 2.64580e-11	AbsError: 2.65080e-11
+      Equation: "PotentialEquation"	RelError: 6.24852e-13	AbsError: 6.84856e-13
+    Region: "oxide"	RelError: 5.19289e-08	AbsError: 2.50738e-08
+      Equation: "PotentialEquation"	RelError: 5.19289e-08	AbsError: 2.50738e-08
+Iteration: 11
+  Device: "mos2d"	RelError: 1.15402e-05	AbsError: 2.34638e+12
+    Region: "bulk"	RelError: 1.15143e-05	AbsError: 2.34638e+12
+      Equation: "ElectronContinuityEquation"	RelError: 1.09721e-05	AbsError: 2.34638e+12
+      Equation: "HoleContinuityEquation"	RelError: 4.91271e-07	AbsError: 7.07745e+05
+      Equation: "PotentialEquation"	RelError: 5.09854e-08	AbsError: 1.27378e-08
+    Region: "gate"	RelError: 3.12665e-11	AbsError: 1.54189e+09
+      Equation: "ElectronContinuityEquation"	RelError: 1.54507e-11	AbsError: 1.54189e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.54508e-11	AbsError: 1.54827e-11
+      Equation: "PotentialEquation"	RelError: 3.64934e-13	AbsError: 3.99976e-13
+    Region: "oxide"	RelError: 2.58418e-08	AbsError: 1.23729e-08
+      Equation: "PotentialEquation"	RelError: 2.58418e-08	AbsError: 1.23729e-08
+Iteration: 12
+  Device: "mos2d"	RelError: 5.76704e-06	AbsError: 8.94776e+11
+    Region: "bulk"	RelError: 5.75798e-06	AbsError: 8.94776e+11
+      Equation: "ElectronContinuityEquation"	RelError: 5.52187e-06	AbsError: 8.94775e+11
+      Equation: "HoleContinuityEquation"	RelError: 1.66780e-07	AbsError: 7.87630e+05
+      Equation: "PotentialEquation"	RelError: 6.93275e-08	AbsError: 4.33987e-09
+    Region: "gate"	RelError: 1.44772e-11	AbsError: 7.13934e+08
+      Equation: "ElectronContinuityEquation"	RelError: 7.15409e-12	AbsError: 7.13934e+08
+      Equation: "HoleContinuityEquation"	RelError: 7.15416e-12	AbsError: 7.16894e-12
+      Equation: "PotentialEquation"	RelError: 1.68910e-13	AbsError: 1.85129e-13
+    Region: "oxide"	RelError: 9.04237e-09	AbsError: 4.20833e-09
+      Equation: "PotentialEquation"	RelError: 9.04237e-09	AbsError: 4.20833e-09
+Iteration: 13
+  Device: "mos2d"	RelError: 2.79130e-06	AbsError: 5.36072e+11
+    Region: "bulk"	RelError: 2.78717e-06	AbsError: 5.36072e+11
+      Equation: "ElectronContinuityEquation"	RelError: 2.69545e-06	AbsError: 5.36071e+11
+      Equation: "HoleContinuityEquation"	RelError: 7.82247e-08	AbsError: 1.87934e+05
+      Equation: "PotentialEquation"	RelError: 1.35044e-08	AbsError: 2.02912e-09
+    Region: "gate"	RelError: 5.71824e-12	AbsError: 2.81986e+08
+      Equation: "ElectronContinuityEquation"	RelError: 2.82569e-12	AbsError: 2.81986e+08
+      Equation: "HoleContinuityEquation"	RelError: 2.82575e-12	AbsError: 2.83159e-12
+      Equation: "PotentialEquation"	RelError: 6.67943e-14	AbsError: 7.32080e-14
+    Region: "oxide"	RelError: 4.11989e-09	AbsError: 1.99723e-09
+      Equation: "PotentialEquation"	RelError: 4.11989e-09	AbsError: 1.99723e-09
+Iteration: 14
+  Device: "mos2d"	RelError: 1.43314e-06	AbsError: 2.12804e+11
+    Region: "bulk"	RelError: 1.43179e-06	AbsError: 2.12804e+11
+      Equation: "ElectronContinuityEquation"	RelError: 1.40192e-06	AbsError: 2.12804e+11
+      Equation: "HoleContinuityEquation"	RelError: 2.51822e-08	AbsError: 5.25042e+04
+      Equation: "PotentialEquation"	RelError: 4.68269e-09	AbsError: 6.53464e-10
+    Region: "gate"	RelError: 1.33193e-12	AbsError: 6.56827e+07
+      Equation: "ElectronContinuityEquation"	RelError: 6.58184e-13	AbsError: 6.56827e+07
+      Equation: "HoleContinuityEquation"	RelError: 6.58132e-13	AbsError: 6.59492e-13
+      Equation: "PotentialEquation"	RelError: 1.56095e-14	AbsError: 1.71083e-14
+    Region: "oxide"	RelError: 1.35428e-09	AbsError: 6.08239e-10
+      Equation: "PotentialEquation"	RelError: 1.35428e-09	AbsError: 6.08239e-10
+Iteration: 15
+  Device: "mos2d"	RelError: 7.40017e-07	AbsError: 1.04028e+11
+    Region: "bulk"	RelError: 7.39668e-07	AbsError: 1.04028e+11
+      Equation: "ElectronContinuityEquation"	RelError: 7.32439e-07	AbsError: 1.04028e+11
+      Equation: "HoleContinuityEquation"	RelError: 6.52302e-09	AbsError: 1.04399e+04
+      Equation: "PotentialEquation"	RelError: 7.05847e-10	AbsError: 1.69184e-10
+    Region: "gate"	RelError: 3.74933e-13	AbsError: 1.84922e+07
+      Equation: "ElectronContinuityEquation"	RelError: 1.85304e-13	AbsError: 1.84922e+07
+      Equation: "HoleContinuityEquation"	RelError: 1.85263e-13	AbsError: 1.85645e-13
+      Equation: "PotentialEquation"	RelError: 4.36610e-15	AbsError: 4.78534e-15
+    Region: "oxide"	RelError: 3.48994e-10	AbsError: 1.69184e-10
+      Equation: "PotentialEquation"	RelError: 3.48994e-10	AbsError: 1.69184e-10
+Iteration: 16
+  Device: "mos2d"	RelError: 3.56444e-07	AbsError: 5.34062e+10
+    Region: "bulk"	RelError: 3.56220e-07	AbsError: 5.34062e+10
+      Equation: "ElectronContinuityEquation"	RelError: 3.51831e-07	AbsError: 5.34062e+10
+      Equation: "HoleContinuityEquation"	RelError: 4.14512e-09	AbsError: 3.55846e+03
+      Equation: "PotentialEquation"	RelError: 2.43904e-10	AbsError: 1.07098e-10
+    Region: "gate"	RelError: 7.37072e-14	AbsError: 3.63589e+06
+      Equation: "ElectronContinuityEquation"	RelError: 3.64340e-14	AbsError: 3.63589e+06
+      Equation: "HoleContinuityEquation"	RelError: 3.63255e-14	AbsError: 3.64005e-14
+      Equation: "PotentialEquation"	RelError: 9.47758e-16	AbsError: 1.03876e-15
+    Region: "oxide"	RelError: 2.23200e-10	AbsError: 1.00244e-10
+      Equation: "PotentialEquation"	RelError: 2.23200e-10	AbsError: 1.00244e-10
+Iteration: 17
+  Device: "mos2d"	RelError: 1.99246e-07	AbsError: 2.81174e+10
+    Region: "bulk"	RelError: 1.99193e-07	AbsError: 2.81174e+10
+      Equation: "ElectronContinuityEquation"	RelError: 1.97969e-07	AbsError: 2.81174e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.06784e-09	AbsError: 1.83153e+03
+      Equation: "PotentialEquation"	RelError: 1.55707e-10	AbsError: 2.76699e-11
+    Region: "gate"	RelError: 5.85812e-14	AbsError: 2.89328e+06
+      Equation: "ElectronContinuityEquation"	RelError: 2.89926e-14	AbsError: 2.89328e+06
+      Equation: "HoleContinuityEquation"	RelError: 2.89656e-14	AbsError: 2.90254e-14
+      Equation: "PotentialEquation"	RelError: 6.22982e-16	AbsError: 6.82806e-16
+    Region: "oxide"	RelError: 5.29133e-11	AbsError: 2.35710e-11
+      Equation: "PotentialEquation"	RelError: 5.29133e-11	AbsError: 2.35710e-11
+Iteration: 18
+  Device: "mos2d"	RelError: 8.95084e-08	AbsError: 1.33512e+10
+    Region: "bulk"	RelError: 8.94538e-08	AbsError: 1.33512e+10
+      Equation: "ElectronContinuityEquation"	RelError: 8.83775e-08	AbsError: 1.33512e+10
+      Equation: "HoleContinuityEquation"	RelError: 9.79621e-10	AbsError: 1.34648e+03
+      Equation: "PotentialEquation"	RelError: 9.67296e-11	AbsError: 2.52966e-11
+    Region: "gate"	RelError: 2.03210e-14	AbsError: 1.00011e+06
+      Equation: "ElectronContinuityEquation"	RelError: 1.00218e-14	AbsError: 1.00011e+06
+      Equation: "HoleContinuityEquation"	RelError: 1.00510e-14	AbsError: 1.00717e-14
+      Equation: "PotentialEquation"	RelError: 2.48223e-16	AbsError: 2.72058e-16
+    Region: "oxide"	RelError: 5.45787e-11	AbsError: 2.45125e-11
+      Equation: "PotentialEquation"	RelError: 5.45787e-11	AbsError: 2.45125e-11
+Iteration: 19
+  Device: "mos2d"	RelError: 5.41758e-08	AbsError: 7.62618e+09
+    Region: "bulk"	RelError: 5.41548e-08	AbsError: 7.62618e+09
+      Equation: "ElectronContinuityEquation"	RelError: 5.36945e-08	AbsError: 7.62618e+09
+      Equation: "HoleContinuityEquation"	RelError: 4.09582e-10	AbsError: 8.00830e+02
+      Equation: "PotentialEquation"	RelError: 5.07227e-11	AbsError: 1.06243e-11
+    Region: "gate"	RelError: 3.13844e-14	AbsError: 1.54459e+06
+      Equation: "ElectronContinuityEquation"	RelError: 1.54778e-14	AbsError: 1.54459e+06
+      Equation: "HoleContinuityEquation"	RelError: 1.54939e-14	AbsError: 1.55259e-14
+      Equation: "PotentialEquation"	RelError: 4.12745e-16	AbsError: 4.52377e-16
+    Region: "oxide"	RelError: 2.09008e-11	AbsError: 9.45680e-12
+      Equation: "PotentialEquation"	RelError: 2.09008e-11	AbsError: 9.45680e-12
+Iteration: 20
+  Device: "mos2d"	RelError: 2.53162e-08	AbsError: 3.59383e+09
+    Region: "bulk"	RelError: 2.53010e-08	AbsError: 3.59383e+09
+      Equation: "ElectronContinuityEquation"	RelError: 2.50203e-08	AbsError: 3.59383e+09
+      Equation: "HoleContinuityEquation"	RelError: 2.65319e-10	AbsError: 5.37692e+02
+      Equation: "PotentialEquation"	RelError: 1.53754e-11	AbsError: 6.86478e-12
+    Region: "gate"	RelError: 1.05344e-14	AbsError: 5.17283e+05
+      Equation: "ElectronContinuityEquation"	RelError: 5.18352e-15	AbsError: 5.17283e+05
+      Equation: "HoleContinuityEquation"	RelError: 5.22003e-15	AbsError: 5.23081e-15
+      Equation: "PotentialEquation"	RelError: 1.30831e-16	AbsError: 1.43393e-16
+    Region: "oxide"	RelError: 1.52019e-11	AbsError: 6.82755e-12
+      Equation: "PotentialEquation"	RelError: 1.52019e-11	AbsError: 6.82755e-12
+Iteration: 21
+  Device: "mos2d"	RelError: 1.48170e-08	AbsError: 2.08444e+09
+    Region: "bulk"	RelError: 1.48105e-08	AbsError: 2.08444e+09
+      Equation: "ElectronContinuityEquation"	RelError: 1.46761e-08	AbsError: 2.08444e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.23908e-10	AbsError: 5.50912e+02
+      Equation: "PotentialEquation"	RelError: 1.04542e-11	AbsError: 3.21159e-12
+    Region: "gate"	RelError: 1.01150e-14	AbsError: 4.94156e+05
+      Equation: "ElectronContinuityEquation"	RelError: 4.95177e-15	AbsError: 4.94156e+05
+      Equation: "HoleContinuityEquation"	RelError: 4.97593e-15	AbsError: 4.98621e-15
+      Equation: "PotentialEquation"	RelError: 1.87276e-16	AbsError: 2.05260e-16
+    Region: "oxide"	RelError: 6.48562e-12	AbsError: 2.93449e-12
+      Equation: "PotentialEquation"	RelError: 6.48562e-12	AbsError: 2.93449e-12
+Iteration: 22
+  Device: "mos2d"	RelError: 7.47081e-09	AbsError: 9.86880e+08
+    Region: "bulk"	RelError: 7.46677e-09	AbsError: 9.86880e+08
+      Equation: "ElectronContinuityEquation"	RelError: 7.39222e-09	AbsError: 9.86880e+08
+      Equation: "HoleContinuityEquation"	RelError: 7.04606e-11	AbsError: 2.80324e+02
+      Equation: "PotentialEquation"	RelError: 4.08475e-12	AbsError: 1.82375e-12
+    Region: "gate"	RelError: 3.86643e-15	AbsError: 1.86999e+05
+      Equation: "ElectronContinuityEquation"	RelError: 1.87386e-15	AbsError: 1.86999e+05
+      Equation: "HoleContinuityEquation"	RelError: 1.89128e-15	AbsError: 1.89519e-15
+      Equation: "PotentialEquation"	RelError: 1.01291e-16	AbsError: 1.11022e-16
+    Region: "oxide"	RelError: 4.04405e-12	AbsError: 1.81628e-12
+      Equation: "PotentialEquation"	RelError: 4.04405e-12	AbsError: 1.81628e-12
+Succeeded
+body	0.0	-1.55891927938e-15	-4.66100342456e-14	-4.81689535249e-14
+drain	0.1	0.628240306927	5.37874692925e-17	0.628240306927
+gate	0.5	8.08068485663e-13	1.63541459262e-32	8.08068485663e-13
+source	0.0	-0.628240307027	-5.10638452509e-19	-0.628240307027
+last end 1.000000e-01 5.000000e-01
+Region "bulk" on device "mos2d" has equations 0:6746
+Region "gate" on device "mos2d" has equations 6747:6863
+Region "oxide" on device "mos2d" has equations 6864:7529
+Device "mos2d" has equations 0:7529
+number of equations 7530
+Iteration: 0
+  Device: "mos2d"	RelError: 2.00473e+03	AbsError: 2.32901e+17
+    Region: "bulk"	RelError: 2.00466e+03	AbsError: 2.32901e+17
+      Equation: "ElectronContinuityEquation"	RelError: 9.99000e+02	AbsError: 2.32591e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.99000e+02	AbsError: 3.10505e+14
+      Equation: "PotentialEquation"	RelError: 6.66288e+00	AbsError: 4.09665e-02
+    Region: "gate"	RelError: 3.01080e-04	AbsError: 1.48476e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.48761e-04	AbsError: 1.48476e+16
+      Equation: "HoleContinuityEquation"	RelError: 1.48805e-04	AbsError: 1.49090e-04
+      Equation: "PotentialEquation"	RelError: 3.51413e-06	AbsError: 3.85157e-06
+    Region: "oxide"	RelError: 6.49750e-02	AbsError: 4.09542e-02
+      Equation: "PotentialEquation"	RelError: 6.49750e-02	AbsError: 4.09542e-02
+Iteration: 1
+  Device: "mos2d"	RelError: 1.09919e+01	AbsError: 1.68556e+17
+    Region: "bulk"	RelError: 1.09459e+01	AbsError: 1.68556e+17
+      Equation: "ElectronContinuityEquation"	RelError: 9.98682e-01	AbsError: 1.68538e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.98718e-01	AbsError: 1.84053e+13
+      Equation: "PotentialEquation"	RelError: 8.94851e+00	AbsError: 3.07632e-02
+    Region: "gate"	RelError: 6.93670e-06	AbsError: 3.41026e+14
+      Equation: "ElectronContinuityEquation"	RelError: 3.41681e-06	AbsError: 3.41026e+14
+      Equation: "HoleContinuityEquation"	RelError: 3.43893e-06	AbsError: 3.44553e-06
+      Equation: "PotentialEquation"	RelError: 8.09634e-08	AbsError: 8.87379e-08
+    Region: "oxide"	RelError: 4.59835e-02	AbsError: 3.07632e-02
+      Equation: "PotentialEquation"	RelError: 4.59835e-02	AbsError: 3.07632e-02
+Iteration: 2
+  Device: "mos2d"	RelError: 1.00157e+03	AbsError: 7.01409e+16
+    Region: "bulk"	RelError: 1.00154e+03	AbsError: 7.01409e+16
+      Equation: "ElectronContinuityEquation"	RelError: 2.44477e+00	AbsError: 7.01401e+16
+      Equation: "HoleContinuityEquation"	RelError: 9.99000e+02	AbsError: 8.17549e+11
+      Equation: "PotentialEquation"	RelError: 9.08268e-02	AbsError: 2.58137e-02
+    Region: "gate"	RelError: 5.82619e-06	AbsError: 2.87357e+14
+      Equation: "ElectronContinuityEquation"	RelError: 2.87910e-06	AbsError: 2.87357e+14
+      Equation: "HoleContinuityEquation"	RelError: 2.87909e-06	AbsError: 2.88463e-06
+      Equation: "PotentialEquation"	RelError: 6.80018e-08	AbsError: 7.45317e-08
+    Region: "oxide"	RelError: 3.75506e-02	AbsError: 2.55172e-02
+      Equation: "PotentialEquation"	RelError: 3.75506e-02	AbsError: 2.55172e-02
+Iteration: 3
+  Device: "mos2d"	RelError: 1.39129e+00	AbsError: 4.38452e+17
+    Region: "bulk"	RelError: 1.37853e+00	AbsError: 4.38452e+17
+      Equation: "ElectronContinuityEquation"	RelError: 3.62307e-01	AbsError: 4.38452e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.97631e-01	AbsError: 1.18349e+11
+      Equation: "PotentialEquation"	RelError: 1.85893e-02	AbsError: 9.20815e-03
+    Region: "gate"	RelError: 5.15998e-06	AbsError: 2.54499e+14
+      Equation: "ElectronContinuityEquation"	RelError: 2.54987e-06	AbsError: 2.54499e+14
+      Equation: "HoleContinuityEquation"	RelError: 2.54988e-06	AbsError: 2.55478e-06
+      Equation: "PotentialEquation"	RelError: 6.02260e-08	AbsError: 6.60092e-08
+    Region: "oxide"	RelError: 1.27559e-02	AbsError: 9.16533e-03
+      Equation: "PotentialEquation"	RelError: 1.27559e-02	AbsError: 9.16533e-03
+Iteration: 4
+  Device: "mos2d"	RelError: 9.42694e-01	AbsError: 4.08940e+17
+    Region: "bulk"	RelError: 9.41693e-01	AbsError: 4.08940e+17
+      Equation: "ElectronContinuityEquation"	RelError: 5.09900e-01	AbsError: 4.08940e+17
+      Equation: "HoleContinuityEquation"	RelError: 3.56225e-01	AbsError: 7.15230e+11
+      Equation: "PotentialEquation"	RelError: 7.55677e-02	AbsError: 2.87134e-03
+    Region: "gate"	RelError: 1.16197e-06	AbsError: 5.73102e+13
+      Equation: "ElectronContinuityEquation"	RelError: 5.74203e-07	AbsError: 5.73102e+13
+      Equation: "HoleContinuityEquation"	RelError: 5.74209e-07	AbsError: 5.75312e-07
+      Equation: "PotentialEquation"	RelError: 1.35623e-08	AbsError: 1.48646e-08
+    Region: "oxide"	RelError: 1.00005e-03	AbsError: 5.54947e-04
+      Equation: "PotentialEquation"	RelError: 1.00005e-03	AbsError: 5.54947e-04
+Iteration: 5
+  Device: "mos2d"	RelError: 2.08492e-01	AbsError: 6.29083e+16
+    Region: "bulk"	RelError: 2.06102e-01	AbsError: 6.29083e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.06819e-01	AbsError: 6.29080e+16
+      Equation: "HoleContinuityEquation"	RelError: 5.92289e-02	AbsError: 3.37095e+11
+      Equation: "PotentialEquation"	RelError: 4.00537e-02	AbsError: 1.67405e-03
+    Region: "gate"	RelError: 4.78337e-06	AbsError: 2.35924e+14
+      Equation: "ElectronContinuityEquation"	RelError: 2.36378e-06	AbsError: 2.35924e+14
+      Equation: "HoleContinuityEquation"	RelError: 2.36377e-06	AbsError: 2.36831e-06
+      Equation: "PotentialEquation"	RelError: 5.58303e-08	AbsError: 6.11914e-08
+    Region: "oxide"	RelError: 2.38564e-03	AbsError: 1.45349e-03
+      Equation: "PotentialEquation"	RelError: 2.38564e-03	AbsError: 1.45349e-03
+Iteration: 6
+  Device: "mos2d"	RelError: 3.94863e-02	AbsError: 3.03646e+16
+    Region: "bulk"	RelError: 3.91268e-02	AbsError: 3.03646e+16
+      Equation: "ElectronContinuityEquation"	RelError: 2.93730e-02	AbsError: 3.03646e+16
+      Equation: "HoleContinuityEquation"	RelError: 5.52183e-03	AbsError: 3.60075e+10
+      Equation: "PotentialEquation"	RelError: 4.23188e-03	AbsError: 2.37462e-04
+    Region: "gate"	RelError: 5.06617e-07	AbsError: 2.49868e+13
+      Equation: "ElectronContinuityEquation"	RelError: 2.50349e-07	AbsError: 2.49868e+13
+      Equation: "HoleContinuityEquation"	RelError: 2.50355e-07	AbsError: 2.50836e-07
+      Equation: "PotentialEquation"	RelError: 5.91311e-09	AbsError: 6.48091e-09
+    Region: "oxide"	RelError: 3.59071e-04	AbsError: 2.32004e-04
+      Equation: "PotentialEquation"	RelError: 3.59071e-04	AbsError: 2.32004e-04
+Iteration: 7
+  Device: "mos2d"	RelError: 1.19504e-02	AbsError: 1.17061e+16
+    Region: "bulk"	RelError: 1.18762e-02	AbsError: 1.17061e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.01341e-02	AbsError: 1.17061e+16
+      Equation: "HoleContinuityEquation"	RelError: 1.29071e-03	AbsError: 3.90246e+09
+      Equation: "PotentialEquation"	RelError: 4.51370e-04	AbsError: 4.94487e-05
+    Region: "gate"	RelError: 9.71444e-08	AbsError: 4.79130e+12
+      Equation: "ElectronContinuityEquation"	RelError: 4.80052e-08	AbsError: 4.79130e+12
+      Equation: "HoleContinuityEquation"	RelError: 4.80053e-08	AbsError: 4.80977e-08
+      Equation: "PotentialEquation"	RelError: 1.13384e-09	AbsError: 1.24272e-09
+    Region: "oxide"	RelError: 7.41125e-05	AbsError: 4.85959e-05
+      Equation: "PotentialEquation"	RelError: 7.41125e-05	AbsError: 4.85959e-05
+Iteration: 8
+  Device: "mos2d"	RelError: 6.88093e-04	AbsError: 3.11768e+14
+    Region: "bulk"	RelError: 6.87113e-04	AbsError: 3.11768e+14
+      Equation: "ElectronContinuityEquation"	RelError: 4.42498e-04	AbsError: 3.11767e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.19285e-04	AbsError: 1.06272e+09
+      Equation: "PotentialEquation"	RelError: 1.25330e-04	AbsError: 3.25673e-06
+    Region: "gate"	RelError: 9.26919e-10	AbsError: 4.57169e+10
+      Equation: "ElectronContinuityEquation"	RelError: 4.58049e-10	AbsError: 4.57169e+10
+      Equation: "HoleContinuityEquation"	RelError: 4.58051e-10	AbsError: 4.58933e-10
+      Equation: "PotentialEquation"	RelError: 1.08188e-11	AbsError: 1.18576e-11
+    Region: "oxide"	RelError: 9.79486e-07	AbsError: 6.36681e-07
+      Equation: "PotentialEquation"	RelError: 9.79486e-07	AbsError: 6.36681e-07
+Iteration: 9
+  Device: "mos2d"	RelError: 1.63244e-04	AbsError: 1.00781e+13
+    Region: "bulk"	RelError: 1.63068e-04	AbsError: 1.00781e+13
+      Equation: "ElectronContinuityEquation"	RelError: 1.10420e-04	AbsError: 1.00779e+13
+      Equation: "HoleContinuityEquation"	RelError: 2.77178e-05	AbsError: 2.08451e+08
+      Equation: "PotentialEquation"	RelError: 2.49302e-05	AbsError: 7.55445e-07
+    Region: "gate"	RelError: 1.77659e-10	AbsError: 8.76643e+09
+      Equation: "ElectronContinuityEquation"	RelError: 8.77928e-11	AbsError: 8.76643e+09
+      Equation: "HoleContinuityEquation"	RelError: 8.77930e-11	AbsError: 8.79217e-11
+      Equation: "PotentialEquation"	RelError: 2.07351e-12	AbsError: 2.27264e-12
+    Region: "oxide"	RelError: 1.75363e-07	AbsError: 8.07633e-08
+      Equation: "PotentialEquation"	RelError: 1.75363e-07	AbsError: 8.07633e-08
+Iteration: 10
+  Device: "mos2d"	RelError: 3.93162e-05	AbsError: 3.52994e+12
+    Region: "bulk"	RelError: 3.93015e-05	AbsError: 3.52994e+12
+      Equation: "ElectronContinuityEquation"	RelError: 2.65690e-05	AbsError: 3.52989e+12
+      Equation: "HoleContinuityEquation"	RelError: 6.90972e-06	AbsError: 4.84148e+07
+      Equation: "PotentialEquation"	RelError: 5.82280e-06	AbsError: 1.88328e-07
+    Region: "gate"	RelError: 2.75780e-12	AbsError: 1.36023e+08
+      Equation: "ElectronContinuityEquation"	RelError: 1.36284e-12	AbsError: 1.36023e+08
+      Equation: "HoleContinuityEquation"	RelError: 1.36271e-12	AbsError: 1.36534e-12
+      Equation: "PotentialEquation"	RelError: 3.22397e-14	AbsError: 3.53355e-14
+    Region: "oxide"	RelError: 1.46141e-08	AbsError: 7.20646e-09
+      Equation: "PotentialEquation"	RelError: 1.46141e-08	AbsError: 7.20646e-09
+Iteration: 11
+  Device: "mos2d"	RelError: 9.31068e-06	AbsError: 1.19315e+12
+    Region: "bulk"	RelError: 9.30083e-06	AbsError: 1.19315e+12
+      Equation: "ElectronContinuityEquation"	RelError: 6.35335e-06	AbsError: 1.19314e+12
+      Equation: "HoleContinuityEquation"	RelError: 1.66604e-06	AbsError: 1.05538e+07
+      Equation: "PotentialEquation"	RelError: 1.28144e-06	AbsError: 4.53632e-08
+    Region: "gate"	RelError: 1.63400e-11	AbsError: 8.05914e+08
+      Equation: "ElectronContinuityEquation"	RelError: 8.07464e-12	AbsError: 8.05914e+08
+      Equation: "HoleContinuityEquation"	RelError: 8.07463e-12	AbsError: 8.09016e-12
+      Equation: "PotentialEquation"	RelError: 1.90743e-13	AbsError: 2.09059e-13
+    Region: "oxide"	RelError: 9.83683e-09	AbsError: 4.47761e-09
+      Equation: "PotentialEquation"	RelError: 9.83683e-09	AbsError: 4.47761e-09
+Iteration: 12
+  Device: "mos2d"	RelError: 2.81317e-06	AbsError: 5.36799e+11
+    Region: "bulk"	RelError: 2.81016e-06	AbsError: 5.36799e+11
+      Equation: "ElectronContinuityEquation"	RelError: 2.13054e-06	AbsError: 5.36797e+11
+      Equation: "HoleContinuityEquation"	RelError: 3.99391e-07	AbsError: 2.28781e+06
+      Equation: "PotentialEquation"	RelError: 2.80226e-07	AbsError: 1.08654e-08
+    Region: "gate"	RelError: 2.34938e-12	AbsError: 1.15936e+08
+      Equation: "ElectronContinuityEquation"	RelError: 1.16106e-12	AbsError: 1.15936e+08
+      Equation: "HoleContinuityEquation"	RelError: 1.16099e-12	AbsError: 1.16269e-12
+      Equation: "PotentialEquation"	RelError: 2.73300e-14	AbsError: 2.99547e-14
+    Region: "oxide"	RelError: 3.00657e-09	AbsError: 1.46077e-09
+      Equation: "PotentialEquation"	RelError: 3.00657e-09	AbsError: 1.46077e-09
+Iteration: 13
+  Device: "mos2d"	RelError: 8.42097e-07	AbsError: 1.99609e+11
+    Region: "bulk"	RelError: 8.41205e-07	AbsError: 1.99609e+11
+      Equation: "ElectronContinuityEquation"	RelError: 6.98004e-07	AbsError: 1.99609e+11
+      Equation: "HoleContinuityEquation"	RelError: 9.41955e-08	AbsError: 3.89174e+05
+      Equation: "PotentialEquation"	RelError: 4.90047e-08	AbsError: 2.55932e-09
+    Region: "gate"	RelError: 1.32578e-13	AbsError: 6.54697e+06
+      Equation: "ElectronContinuityEquation"	RelError: 6.55657e-14	AbsError: 6.54697e+06
+      Equation: "HoleContinuityEquation"	RelError: 6.54444e-14	AbsError: 6.55403e-14
+      Equation: "PotentialEquation"	RelError: 1.56778e-15	AbsError: 1.71834e-15
+    Region: "oxide"	RelError: 8.92009e-10	AbsError: 4.33391e-10
+      Equation: "PotentialEquation"	RelError: 8.92009e-10	AbsError: 4.33391e-10
+Iteration: 14
+  Device: "mos2d"	RelError: 2.63140e-07	AbsError: 6.03535e+10
+    Region: "bulk"	RelError: 2.62898e-07	AbsError: 6.03535e+10
+      Equation: "ElectronContinuityEquation"	RelError: 2.31021e-07	AbsError: 6.03534e+10
+      Equation: "HoleContinuityEquation"	RelError: 2.20838e-08	AbsError: 7.66744e+04
+      Equation: "PotentialEquation"	RelError: 9.79348e-09	AbsError: 5.99352e-10
+    Region: "gate"	RelError: 3.62282e-13	AbsError: 1.78686e+07
+      Equation: "ElectronContinuityEquation"	RelError: 1.79030e-13	AbsError: 1.78686e+07
+      Equation: "HoleContinuityEquation"	RelError: 1.78997e-13	AbsError: 1.79341e-13
+      Equation: "PotentialEquation"	RelError: 4.25529e-15	AbsError: 4.66391e-15
+    Region: "oxide"	RelError: 2.41450e-10	AbsError: 1.16370e-10
+      Equation: "PotentialEquation"	RelError: 2.41450e-10	AbsError: 1.16370e-10
+Iteration: 15
+  Device: "mos2d"	RelError: 8.69230e-08	AbsError: 3.37597e+10
+    Region: "bulk"	RelError: 8.68551e-08	AbsError: 3.37597e+10
+      Equation: "ElectronContinuityEquation"	RelError: 8.00127e-08	AbsError: 3.37597e+10
+      Equation: "HoleContinuityEquation"	RelError: 5.12030e-09	AbsError: 1.32880e+04
+      Equation: "PotentialEquation"	RelError: 1.72205e-09	AbsError: 1.38775e-10
+    Region: "gate"	RelError: 7.77944e-14	AbsError: 3.83931e+06
+      Equation: "ElectronContinuityEquation"	RelError: 3.84670e-14	AbsError: 3.83931e+06
+      Equation: "HoleContinuityEquation"	RelError: 3.84220e-14	AbsError: 3.84959e-14
+      Equation: "PotentialEquation"	RelError: 9.05454e-16	AbsError: 9.92401e-16
+    Region: "oxide"	RelError: 6.78788e-11	AbsError: 3.29796e-11
+      Equation: "PotentialEquation"	RelError: 6.78788e-11	AbsError: 3.29796e-11
+Iteration: 16
+  Device: "mos2d"	RelError: 4.73406e-08	AbsError: 1.16429e+10
+    Region: "bulk"	RelError: 4.72310e-08	AbsError: 1.16429e+10
+      Equation: "ElectronContinuityEquation"	RelError: 4.47757e-08	AbsError: 1.16429e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.95710e-09	AbsError: 4.96868e+03
+      Equation: "PotentialEquation"	RelError: 4.98182e-10	AbsError: 5.09861e-11
+    Region: "gate"	RelError: 1.81569e-13	AbsError: 8.95352e+06
+      Equation: "ElectronContinuityEquation"	RelError: 8.97075e-14	AbsError: 8.95352e+06
+      Equation: "HoleContinuityEquation"	RelError: 8.96652e-14	AbsError: 8.98378e-14
+      Equation: "PotentialEquation"	RelError: 2.19594e-15	AbsError: 2.40682e-15
+    Region: "oxide"	RelError: 1.09400e-10	AbsError: 5.05006e-11
+      Equation: "PotentialEquation"	RelError: 1.09400e-10	AbsError: 5.05006e-11
+Iteration: 17
+  Device: "mos2d"	RelError: 2.65949e-08	AbsError: 5.64892e+09
+    Region: "bulk"	RelError: 2.65578e-08	AbsError: 5.64892e+09
+      Equation: "ElectronContinuityEquation"	RelError: 2.56776e-08	AbsError: 5.64892e+09
+      Equation: "HoleContinuityEquation"	RelError: 6.61507e-10	AbsError: 1.99331e+03
+      Equation: "PotentialEquation"	RelError: 2.18718e-10	AbsError: 1.72403e-11
+    Region: "gate"	RelError: 5.48234e-14	AbsError: 2.68948e+06
+      Equation: "ElectronContinuityEquation"	RelError: 2.69389e-14	AbsError: 2.68948e+06
+      Equation: "HoleContinuityEquation"	RelError: 2.72140e-14	AbsError: 2.72587e-14
+      Equation: "PotentialEquation"	RelError: 6.70407e-16	AbsError: 7.34788e-16
+    Region: "oxide"	RelError: 3.69854e-11	AbsError: 1.69550e-11
+      Equation: "PotentialEquation"	RelError: 3.69854e-11	AbsError: 1.69550e-11
+Iteration: 18
+  Device: "mos2d"	RelError: 1.47344e-08	AbsError: 3.10503e+09
+    Region: "bulk"	RelError: 1.47110e-08	AbsError: 3.10503e+09
+      Equation: "ElectronContinuityEquation"	RelError: 1.41142e-08	AbsError: 3.10503e+09
+      Equation: "HoleContinuityEquation"	RelError: 4.18426e-10	AbsError: 1.63227e+03
+      Equation: "PotentialEquation"	RelError: 1.78415e-10	AbsError: 1.09101e-11
+    Region: "gate"	RelError: 3.70041e-14	AbsError: 1.81534e+06
+      Equation: "ElectronContinuityEquation"	RelError: 1.81832e-14	AbsError: 1.81534e+06
+      Equation: "HoleContinuityEquation"	RelError: 1.83937e-14	AbsError: 1.84239e-14
+      Equation: "PotentialEquation"	RelError: 4.27172e-16	AbsError: 4.68197e-16
+    Region: "oxide"	RelError: 2.33869e-11	AbsError: 1.07917e-11
+      Equation: "PotentialEquation"	RelError: 2.33869e-11	AbsError: 1.07917e-11
+Iteration: 19
+  Device: "mos2d"	RelError: 9.08781e-09	AbsError: 1.92258e+09
+    Region: "bulk"	RelError: 9.07732e-09	AbsError: 1.92258e+09
+      Equation: "ElectronContinuityEquation"	RelError: 8.83214e-09	AbsError: 1.92258e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.86769e-10	AbsError: 7.89309e+02
+      Equation: "PotentialEquation"	RelError: 5.84069e-11	AbsError: 4.86872e-12
+    Region: "gate"	RelError: 1.59030e-14	AbsError: 7.81864e+05
+      Equation: "ElectronContinuityEquation"	RelError: 7.83147e-15	AbsError: 7.81864e+05
+      Equation: "HoleContinuityEquation"	RelError: 7.85143e-15	AbsError: 7.86432e-15
+      Equation: "PotentialEquation"	RelError: 2.20081e-16	AbsError: 2.41216e-16
+    Region: "oxide"	RelError: 1.04729e-11	AbsError: 4.80153e-12
+      Equation: "PotentialEquation"	RelError: 1.04729e-11	AbsError: 4.80153e-12
+Succeeded
+body	0.0	-1.74083060013e-15	-7.46558857219e-14	-7.6396716322e-14
+drain	0.2	1.01037241843	5.72693789206e-17	1.01037241843
+gate	0.5	8.05332612319e-13	1.62986560014e-32	8.05332612319e-13
+source	0.0	-1.01037241811	-1.09205348975e-18	-1.01037241811
+last end 2.000000e-01 5.000000e-01
+Region "bulk" on device "mos2d" has equations 0:6746
+Region "gate" on device "mos2d" has equations 6747:6863
+Region "oxide" on device "mos2d" has equations 6864:7529
+Device "mos2d" has equations 0:7529
+number of equations 7530
+Iteration: 0
+  Device: "mos2d"	RelError: 2.02019e+03	AbsError: 2.66376e+17
+    Region: "bulk"	RelError: 2.02014e+03	AbsError: 2.66376e+17
+      Equation: "ElectronContinuityEquation"	RelError: 9.99000e+02	AbsError: 2.66044e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.99000e+02	AbsError: 3.32687e+14
+      Equation: "PotentialEquation"	RelError: 2.21361e+01	AbsError: 4.09673e-02
+    Region: "gate"	RelError: 2.75735e-04	AbsError: 1.35996e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.36240e-04	AbsError: 1.35996e+16
+      Equation: "HoleContinuityEquation"	RelError: 1.36277e-04	AbsError: 1.36520e-04
+      Equation: "PotentialEquation"	RelError: 3.21829e-06	AbsError: 3.52734e-06
+    Region: "oxide"	RelError: 5.57831e-02	AbsError: 4.09542e-02
+      Equation: "PotentialEquation"	RelError: 5.57831e-02	AbsError: 4.09542e-02
+Iteration: 1
+  Device: "mos2d"	RelError: 2.76169e+01	AbsError: 1.29607e+17
+    Region: "bulk"	RelError: 2.75757e+01	AbsError: 1.29607e+17
+      Equation: "ElectronContinuityEquation"	RelError: 9.98077e-01	AbsError: 1.29589e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.98701e-01	AbsError: 1.76562e+13
+      Equation: "PotentialEquation"	RelError: 2.55789e+01	AbsError: 3.07632e-02
+    Region: "gate"	RelError: 4.52252e-06	AbsError: 2.22161e+14
+      Equation: "ElectronContinuityEquation"	RelError: 2.22559e-06	AbsError: 2.22161e+14
+      Equation: "HoleContinuityEquation"	RelError: 2.24415e-06	AbsError: 2.24816e-06
+      Equation: "PotentialEquation"	RelError: 5.27855e-08	AbsError: 5.78544e-08
+    Region: "oxide"	RelError: 4.12272e-02	AbsError: 3.07632e-02
+      Equation: "PotentialEquation"	RelError: 4.12272e-02	AbsError: 3.07632e-02
+Iteration: 2
+  Device: "mos2d"	RelError: 1.00098e+03	AbsError: 5.01573e+16
+    Region: "bulk"	RelError: 1.00095e+03	AbsError: 5.01573e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.83438e+00	AbsError: 5.01568e+16
+      Equation: "HoleContinuityEquation"	RelError: 9.99000e+02	AbsError: 4.75251e+11
+      Equation: "PotentialEquation"	RelError: 1.13655e-01	AbsError: 2.58613e-02
+    Region: "gate"	RelError: 4.95554e-07	AbsError: 2.44445e+13
+      Equation: "ElectronContinuityEquation"	RelError: 2.44883e-07	AbsError: 2.44445e+13
+      Equation: "HoleContinuityEquation"	RelError: 2.44888e-07	AbsError: 2.45326e-07
+      Equation: "PotentialEquation"	RelError: 5.78396e-09	AbsError: 6.33939e-09
+    Region: "oxide"	RelError: 3.22833e-02	AbsError: 2.49445e-02
+      Equation: "PotentialEquation"	RelError: 3.22833e-02	AbsError: 2.49445e-02
+Iteration: 3
+  Device: "mos2d"	RelError: 1.48244e+00	AbsError: 1.54794e+17
+    Region: "bulk"	RelError: 1.47124e+00	AbsError: 1.54794e+17
+      Equation: "ElectronContinuityEquation"	RelError: 4.55156e-01	AbsError: 1.54793e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.97759e-01	AbsError: 1.41059e+11
+      Equation: "PotentialEquation"	RelError: 1.83239e-02	AbsError: 9.58291e-03
+    Region: "gate"	RelError: 3.11663e-06	AbsError: 1.53738e+14
+      Equation: "ElectronContinuityEquation"	RelError: 1.54013e-06	AbsError: 1.53738e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.54013e-06	AbsError: 1.54288e-06
+      Equation: "PotentialEquation"	RelError: 3.63764e-08	AbsError: 3.98696e-08
+    Region: "oxide"	RelError: 1.11975e-02	AbsError: 9.16533e-03
+      Equation: "PotentialEquation"	RelError: 1.11975e-02	AbsError: 9.16533e-03
+Iteration: 4
+  Device: "mos2d"	RelError: 7.32890e-01	AbsError: 1.06378e+17
+    Region: "bulk"	RelError: 7.32089e-01	AbsError: 1.06378e+17
+      Equation: "ElectronContinuityEquation"	RelError: 3.49129e-01	AbsError: 1.06377e+17
+      Equation: "HoleContinuityEquation"	RelError: 2.55729e-01	AbsError: 5.85614e+11
+      Equation: "PotentialEquation"	RelError: 1.27231e-01	AbsError: 1.72399e-03
+    Region: "gate"	RelError: 6.77664e-07	AbsError: 3.34278e+13
+      Equation: "ElectronContinuityEquation"	RelError: 3.34876e-07	AbsError: 3.34278e+13
+      Equation: "HoleContinuityEquation"	RelError: 3.34879e-07	AbsError: 3.35478e-07
+      Equation: "PotentialEquation"	RelError: 7.90950e-09	AbsError: 8.66904e-09
+    Region: "oxide"	RelError: 8.00406e-04	AbsError: 5.99065e-04
+      Equation: "PotentialEquation"	RelError: 8.00406e-04	AbsError: 5.99065e-04
+Iteration: 5
+  Device: "mos2d"	RelError: 3.14512e-01	AbsError: 8.01344e+16
+    Region: "bulk"	RelError: 3.12351e-01	AbsError: 8.01344e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.84172e-01	AbsError: 8.01340e+16
+      Equation: "HoleContinuityEquation"	RelError: 2.74511e-02	AbsError: 4.14904e+11
+      Equation: "PotentialEquation"	RelError: 1.00728e-01	AbsError: 1.86386e-03
+    Region: "gate"	RelError: 4.63538e-06	AbsError: 2.28655e+14
+      Equation: "ElectronContinuityEquation"	RelError: 2.29064e-06	AbsError: 2.28655e+14
+      Equation: "HoleContinuityEquation"	RelError: 2.29063e-06	AbsError: 2.29474e-06
+      Equation: "PotentialEquation"	RelError: 5.41028e-08	AbsError: 5.92982e-08
+    Region: "oxide"	RelError: 2.15625e-03	AbsError: 1.49329e-03
+      Equation: "PotentialEquation"	RelError: 2.15625e-03	AbsError: 1.49329e-03
+Iteration: 6
+  Device: "mos2d"	RelError: 3.99044e-02	AbsError: 4.00818e+15
+    Region: "bulk"	RelError: 3.98217e-02	AbsError: 4.00818e+15
+      Equation: "ElectronContinuityEquation"	RelError: 1.93903e-02	AbsError: 4.00812e+15
+      Equation: "HoleContinuityEquation"	RelError: 5.48479e-03	AbsError: 6.20791e+10
+      Equation: "PotentialEquation"	RelError: 1.49466e-02	AbsError: 1.49819e-04
+    Region: "gate"	RelError: 1.45550e-07	AbsError: 7.17941e+12
+      Equation: "ElectronContinuityEquation"	RelError: 7.19227e-08	AbsError: 7.17941e+12
+      Equation: "HoleContinuityEquation"	RelError: 7.19280e-08	AbsError: 7.20568e-08
+      Equation: "PotentialEquation"	RelError: 1.69881e-09	AbsError: 1.86195e-09
+    Region: "oxide"	RelError: 8.25925e-05	AbsError: 5.91251e-05
+      Equation: "PotentialEquation"	RelError: 8.25925e-05	AbsError: 5.91251e-05
+Iteration: 7
+  Device: "mos2d"	RelError: 4.03838e-03	AbsError: 3.00409e+14
+    Region: "bulk"	RelError: 4.03729e-03	AbsError: 3.00409e+14
+      Equation: "ElectronContinuityEquation"	RelError: 2.41377e-03	AbsError: 3.00404e+14
+      Equation: "HoleContinuityEquation"	RelError: 3.54952e-04	AbsError: 5.35715e+09
+      Equation: "PotentialEquation"	RelError: 1.26857e-03	AbsError: 1.62878e-05
+    Region: "gate"	RelError: 6.53571e-10	AbsError: 3.22391e+10
+      Equation: "ElectronContinuityEquation"	RelError: 3.22969e-10	AbsError: 3.22391e+10
+      Equation: "HoleContinuityEquation"	RelError: 3.22974e-10	AbsError: 3.23553e-10
+      Equation: "PotentialEquation"	RelError: 7.62836e-12	AbsError: 8.36090e-12
+    Region: "oxide"	RelError: 1.09070e-06	AbsError: 6.33813e-07
+      Equation: "PotentialEquation"	RelError: 1.09070e-06	AbsError: 6.33813e-07
+Iteration: 8
+  Device: "mos2d"	RelError: 4.19922e-04	AbsError: 5.29204e+13
+    Region: "bulk"	RelError: 4.19521e-04	AbsError: 5.29204e+13
+      Equation: "ElectronContinuityEquation"	RelError: 2.41765e-04	AbsError: 5.29198e+13
+      Equation: "HoleContinuityEquation"	RelError: 3.92362e-05	AbsError: 5.88405e+08
+      Equation: "PotentialEquation"	RelError: 1.38520e-04	AbsError: 1.45620e-06
+    Region: "gate"	RelError: 8.31403e-10	AbsError: 4.10115e+10
+      Equation: "ElectronContinuityEquation"	RelError: 4.10850e-10	AbsError: 4.10115e+10
+      Equation: "HoleContinuityEquation"	RelError: 4.10850e-10	AbsError: 4.11586e-10
+      Equation: "PotentialEquation"	RelError: 9.70386e-12	AbsError: 1.06357e-11
+    Region: "oxide"	RelError: 4.00492e-07	AbsError: 1.85239e-07
+      Equation: "PotentialEquation"	RelError: 4.00492e-07	AbsError: 1.85239e-07
+Iteration: 9
+  Device: "mos2d"	RelError: 6.12754e-05	AbsError: 2.13674e+13
+    Region: "bulk"	RelError: 6.11613e-05	AbsError: 2.13674e+13
+      Equation: "ElectronContinuityEquation"	RelError: 3.64820e-05	AbsError: 2.13673e+13
+      Equation: "HoleContinuityEquation"	RelError: 3.97727e-06	AbsError: 8.50470e+07
+      Equation: "PotentialEquation"	RelError: 2.07020e-05	AbsError: 1.60180e-07
+    Region: "gate"	RelError: 2.03435e-10	AbsError: 1.00350e+10
+      Equation: "ElectronContinuityEquation"	RelError: 1.00530e-10	AbsError: 1.00350e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.00530e-10	AbsError: 1.00710e-10
+      Equation: "PotentialEquation"	RelError: 2.37444e-12	AbsError: 2.60245e-12
+    Region: "oxide"	RelError: 1.13916e-07	AbsError: 5.23393e-08
+      Equation: "PotentialEquation"	RelError: 1.13916e-07	AbsError: 5.23393e-08
+Iteration: 10
+  Device: "mos2d"	RelError: 2.07016e-05	AbsError: 6.37751e+12
+    Region: "bulk"	RelError: 2.06158e-05	AbsError: 6.37751e+12
+      Equation: "ElectronContinuityEquation"	RelError: 1.45151e-05	AbsError: 6.37749e+12
+      Equation: "HoleContinuityEquation"	RelError: 1.59259e-06	AbsError: 1.82288e+07
+      Equation: "PotentialEquation"	RelError: 4.50812e-06	AbsError: 4.65089e-08
+    Region: "gate"	RelError: 1.25259e-10	AbsError: 6.18016e+09
+      Equation: "ElectronContinuityEquation"	RelError: 6.18984e-11	AbsError: 6.18016e+09
+      Equation: "HoleContinuityEquation"	RelError: 6.18986e-11	AbsError: 6.19956e-11
+      Equation: "PotentialEquation"	RelError: 1.46196e-12	AbsError: 1.60236e-12
+    Region: "oxide"	RelError: 8.57524e-08	AbsError: 4.10531e-08
+      Equation: "PotentialEquation"	RelError: 8.57524e-08	AbsError: 4.10531e-08
+Iteration: 11
+  Device: "mos2d"	RelError: 5.98479e-06	AbsError: 1.91681e+12
+    Region: "bulk"	RelError: 5.95083e-06	AbsError: 1.91681e+12
+      Equation: "ElectronContinuityEquation"	RelError: 5.17795e-06	AbsError: 1.91681e+12
+      Equation: "HoleContinuityEquation"	RelError: 6.27320e-07	AbsError: 7.43794e+05
+      Equation: "PotentialEquation"	RelError: 1.45561e-07	AbsError: 1.63980e-08
+    Region: "gate"	RelError: 4.62221e-11	AbsError: 2.28056e+09
+      Equation: "ElectronContinuityEquation"	RelError: 2.28413e-11	AbsError: 2.28056e+09
+      Equation: "HoleContinuityEquation"	RelError: 2.28413e-11	AbsError: 2.28771e-11
+      Equation: "PotentialEquation"	RelError: 5.39410e-13	AbsError: 5.91211e-13
+    Region: "oxide"	RelError: 3.39167e-08	AbsError: 1.60326e-08
+      Equation: "PotentialEquation"	RelError: 3.39167e-08	AbsError: 1.60326e-08
+Iteration: 12
+  Device: "mos2d"	RelError: 3.05352e-06	AbsError: 1.13362e+12
+    Region: "bulk"	RelError: 3.03006e-06	AbsError: 1.13362e+12
+      Equation: "ElectronContinuityEquation"	RelError: 2.27144e-06	AbsError: 1.13362e+12
+      Equation: "HoleContinuityEquation"	RelError: 4.20663e-07	AbsError: 1.64232e+06
+      Equation: "PotentialEquation"	RelError: 3.37953e-07	AbsError: 1.10229e-08
+    Region: "gate"	RelError: 3.70606e-11	AbsError: 1.82853e+09
+      Equation: "ElectronContinuityEquation"	RelError: 1.83140e-11	AbsError: 1.82853e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.83140e-11	AbsError: 1.83427e-11
+      Equation: "PotentialEquation"	RelError: 4.32646e-13	AbsError: 4.74194e-13
+    Region: "oxide"	RelError: 2.34252e-08	AbsError: 1.09002e-08
+      Equation: "PotentialEquation"	RelError: 2.34252e-08	AbsError: 1.09002e-08
+Iteration: 13
+  Device: "mos2d"	RelError: 1.34681e-06	AbsError: 2.30478e+11
+    Region: "bulk"	RelError: 1.33990e-06	AbsError: 2.30478e+11
+      Equation: "ElectronContinuityEquation"	RelError: 9.89965e-07	AbsError: 2.30477e+11
+      Equation: "HoleContinuityEquation"	RelError: 1.23765e-07	AbsError: 1.15287e+06
+      Equation: "PotentialEquation"	RelError: 2.26172e-07	AbsError: 3.24366e-09
+    Region: "gate"	RelError: 1.08154e-11	AbsError: 5.33616e+08
+      Equation: "ElectronContinuityEquation"	RelError: 5.34452e-12	AbsError: 5.33616e+08
+      Equation: "HoleContinuityEquation"	RelError: 5.34453e-12	AbsError: 5.35290e-12
+      Equation: "PotentialEquation"	RelError: 1.26319e-13	AbsError: 1.38450e-13
+    Region: "oxide"	RelError: 6.89860e-09	AbsError: 3.19658e-09
+      Equation: "PotentialEquation"	RelError: 6.89860e-09	AbsError: 3.19658e-09
+Iteration: 14
+  Device: "mos2d"	RelError: 5.12685e-07	AbsError: 1.19044e+11
+    Region: "bulk"	RelError: 5.09814e-07	AbsError: 1.19044e+11
+      Equation: "ElectronContinuityEquation"	RelError: 4.35140e-07	AbsError: 1.19044e+11
+      Equation: "HoleContinuityEquation"	RelError: 5.10123e-08	AbsError: 2.55909e+05
+      Equation: "PotentialEquation"	RelError: 2.36618e-08	AbsError: 1.33757e-09
+    Region: "gate"	RelError: 4.72388e-12	AbsError: 2.33030e+08
+      Equation: "ElectronContinuityEquation"	RelError: 2.33447e-12	AbsError: 2.33030e+08
+      Equation: "HoleContinuityEquation"	RelError: 2.33428e-12	AbsError: 2.33846e-12
+      Equation: "PotentialEquation"	RelError: 5.51276e-14	AbsError: 6.04218e-14
+    Region: "oxide"	RelError: 2.86612e-09	AbsError: 1.32166e-09
+      Equation: "PotentialEquation"	RelError: 2.86612e-09	AbsError: 1.32166e-09
+Iteration: 15
+  Device: "mos2d"	RelError: 2.55685e-07	AbsError: 2.18506e+10
+    Region: "bulk"	RelError: 2.54932e-07	AbsError: 2.18506e+10
+      Equation: "ElectronContinuityEquation"	RelError: 1.90309e-07	AbsError: 2.18504e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.33183e-08	AbsError: 2.64108e+05
+      Equation: "PotentialEquation"	RelError: 5.13046e-08	AbsError: 3.49459e-10
+    Region: "gate"	RelError: 1.35401e-12	AbsError: 6.67972e+07
+      Equation: "ElectronContinuityEquation"	RelError: 6.69169e-13	AbsError: 6.67972e+07
+      Equation: "HoleContinuityEquation"	RelError: 6.69032e-13	AbsError: 6.70230e-13
+      Equation: "PotentialEquation"	RelError: 1.58066e-14	AbsError: 1.73245e-14
+    Region: "oxide"	RelError: 7.51129e-10	AbsError: 3.45048e-10
+      Equation: "PotentialEquation"	RelError: 7.51129e-10	AbsError: 3.45048e-10
+Iteration: 16
+  Device: "mos2d"	RelError: 1.02927e-07	AbsError: 8.13168e+09
+    Region: "bulk"	RelError: 1.02705e-07	AbsError: 8.13168e+09
+      Equation: "ElectronContinuityEquation"	RelError: 8.34000e-08	AbsError: 8.13158e+09
+      Equation: "HoleContinuityEquation"	RelError: 3.94588e-09	AbsError: 9.16455e+04
+      Equation: "PotentialEquation"	RelError: 1.53592e-08	AbsError: 1.04090e-10
+    Region: "gate"	RelError: 3.98840e-13	AbsError: 1.96772e+07
+      Equation: "ElectronContinuityEquation"	RelError: 1.97124e-13	AbsError: 1.96772e+07
+      Equation: "HoleContinuityEquation"	RelError: 1.97064e-13	AbsError: 1.97417e-13
+      Equation: "PotentialEquation"	RelError: 4.65151e-15	AbsError: 5.09819e-15
+    Region: "oxide"	RelError: 2.21171e-10	AbsError: 1.01563e-10
+      Equation: "PotentialEquation"	RelError: 2.21171e-10	AbsError: 1.01563e-10
+Iteration: 17
+  Device: "mos2d"	RelError: 4.82523e-08	AbsError: 5.28052e+09
+    Region: "bulk"	RelError: 4.81600e-08	AbsError: 5.28052e+09
+      Equation: "ElectronContinuityEquation"	RelError: 3.64469e-08	AbsError: 5.28046e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.64947e-09	AbsError: 5.27167e+04
+      Equation: "PotentialEquation"	RelError: 1.00636e-08	AbsError: 4.33595e-11
+    Region: "gate"	RelError: 1.60170e-13	AbsError: 7.89318e+06
+      Equation: "ElectronContinuityEquation"	RelError: 7.90732e-14	AbsError: 7.89318e+06
+      Equation: "HoleContinuityEquation"	RelError: 7.92197e-14	AbsError: 7.93617e-14
+      Equation: "PotentialEquation"	RelError: 1.87745e-15	AbsError: 2.05774e-15
+    Region: "oxide"	RelError: 9.22079e-11	AbsError: 4.23427e-11
+      Equation: "PotentialEquation"	RelError: 9.22079e-11	AbsError: 4.23427e-11
+Iteration: 18
+  Device: "mos2d"	RelError: 2.04668e-08	AbsError: 2.71121e+09
+    Region: "bulk"	RelError: 2.04514e-08	AbsError: 2.71121e+09
+      Equation: "ElectronContinuityEquation"	RelError: 1.59426e-08	AbsError: 2.71119e+09
+      Equation: "HoleContinuityEquation"	RelError: 4.98723e-10	AbsError: 2.20110e+04
+      Equation: "PotentialEquation"	RelError: 4.01007e-09	AbsError: 1.70268e-11
+    Region: "gate"	RelError: 1.92649e-14	AbsError: 9.47203e+05
+      Equation: "ElectronContinuityEquation"	RelError: 9.48900e-15	AbsError: 9.47203e+05
+      Equation: "HoleContinuityEquation"	RelError: 9.48512e-15	AbsError: 9.50211e-15
+      Equation: "PotentialEquation"	RelError: 2.90823e-16	AbsError: 3.18752e-16
+    Region: "oxide"	RelError: 1.53674e-11	AbsError: 7.05683e-12
+      Equation: "PotentialEquation"	RelError: 1.53674e-11	AbsError: 7.05683e-12
+Iteration: 19
+  Device: "mos2d"	RelError: 1.01886e-08	AbsError: 1.82518e+09
+    Region: "bulk"	RelError: 1.01725e-08	AbsError: 1.82518e+09
+      Equation: "ElectronContinuityEquation"	RelError: 7.93220e-09	AbsError: 1.82517e+09
+      Equation: "HoleContinuityEquation"	RelError: 2.96313e-10	AbsError: 1.02977e+04
+      Equation: "PotentialEquation"	RelError: 1.94397e-09	AbsError: 7.73523e-12
+    Region: "gate"	RelError: 2.46212e-14	AbsError: 1.21643e+06
+      Equation: "ElectronContinuityEquation"	RelError: 1.21861e-14	AbsError: 1.21643e+06
+      Equation: "HoleContinuityEquation"	RelError: 1.21165e-14	AbsError: 1.21382e-14
+      Equation: "PotentialEquation"	RelError: 3.18546e-16	AbsError: 3.49136e-16
+    Region: "oxide"	RelError: 1.60699e-11	AbsError: 7.37942e-12
+      Equation: "PotentialEquation"	RelError: 1.60699e-11	AbsError: 7.37942e-12
+Iteration: 20
+  Device: "mos2d"	RelError: 5.12982e-09	AbsError: 9.16761e+08
+    Region: "bulk"	RelError: 5.12716e-09	AbsError: 9.16761e+08
+      Equation: "ElectronContinuityEquation"	RelError: 4.16995e-09	AbsError: 9.16756e+08
+      Equation: "HoleContinuityEquation"	RelError: 9.77020e-11	AbsError: 4.51708e+03
+      Equation: "PotentialEquation"	RelError: 8.59509e-10	AbsError: 3.30668e-12
+    Region: "gate"	RelError: 1.53379e-15	AbsError: 6.65034e+04
+      Equation: "ElectronContinuityEquation"	RelError: 6.65974e-16	AbsError: 6.65034e+04
+      Equation: "HoleContinuityEquation"	RelError: 7.53806e-16	AbsError: 7.54871e-16
+      Equation: "PotentialEquation"	RelError: 1.14014e-16	AbsError: 1.24963e-16
+    Region: "oxide"	RelError: 2.65687e-12	AbsError: 1.24092e-12
+      Equation: "PotentialEquation"	RelError: 2.65687e-12	AbsError: 1.24092e-12
+Succeeded
+body	0.0	-1.85443860984e-15	-9.85988196295e-14	-1.00453258239e-13
+drain	0.3	1.33882632218	5.99408148246e-17	1.33882632218
+gate	0.5	5.48432028676e-13	1.10881099456e-32	5.48432028676e-13
+source	0.0	-1.33882632226	-1.82655600494e-18	-1.33882632226
+last end 3.000000e-01 5.000000e-01
+Region "bulk" on device "mos2d" has equations 0:6746
+Region "gate" on device "mos2d" has equations 6747:6863
+Region "oxide" on device "mos2d" has equations 6864:7529
+Device "mos2d" has equations 0:7529
+number of equations 7530
+Iteration: 0
+  Device: "mos2d"	RelError: 2.00865e+03	AbsError: 2.72742e+17
+    Region: "bulk"	RelError: 2.00860e+03	AbsError: 2.72742e+17
+      Equation: "ElectronContinuityEquation"	RelError: 9.99000e+02	AbsError: 2.72384e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.99000e+02	AbsError: 3.58089e+14
+      Equation: "PotentialEquation"	RelError: 1.06022e+01	AbsError: 4.09679e-02
+    Region: "gate"	RelError: 2.63362e-04	AbsError: 1.29911e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.30127e-04	AbsError: 1.29911e+16
+      Equation: "HoleContinuityEquation"	RelError: 1.30161e-04	AbsError: 1.30377e-04
+      Equation: "PotentialEquation"	RelError: 3.07388e-06	AbsError: 3.36907e-06
+    Region: "oxide"	RelError: 4.88803e-02	AbsError: 4.09542e-02
+      Equation: "PotentialEquation"	RelError: 4.88803e-02	AbsError: 4.09542e-02
+Iteration: 1
+  Device: "mos2d"	RelError: 1.01469e+01	AbsError: 1.62993e+17
+    Region: "bulk"	RelError: 1.01091e+01	AbsError: 1.62993e+17
+      Equation: "ElectronContinuityEquation"	RelError: 9.98062e-01	AbsError: 1.62976e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.98713e-01	AbsError: 1.70241e+13
+      Equation: "PotentialEquation"	RelError: 8.11230e+00	AbsError: 3.07632e-02
+    Region: "gate"	RelError: 1.54747e-06	AbsError: 7.54980e+13
+      Equation: "ElectronContinuityEquation"	RelError: 7.56235e-07	AbsError: 7.54980e+13
+      Equation: "HoleContinuityEquation"	RelError: 7.73171e-07	AbsError: 7.74456e-07
+      Equation: "PotentialEquation"	RelError: 1.80615e-08	AbsError: 1.97960e-08
+    Region: "oxide"	RelError: 3.78637e-02	AbsError: 3.07632e-02
+      Equation: "PotentialEquation"	RelError: 3.78637e-02	AbsError: 3.07632e-02
+Iteration: 2
+  Device: "mos2d"	RelError: 1.00018e+03	AbsError: 7.36311e+16
+    Region: "bulk"	RelError: 1.00015e+03	AbsError: 7.36311e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.11158e+00	AbsError: 7.36309e+16
+      Equation: "HoleContinuityEquation"	RelError: 9.99000e+02	AbsError: 2.32517e+11
+      Equation: "PotentialEquation"	RelError: 3.49647e-02	AbsError: 2.58811e-02
+    Region: "gate"	RelError: 2.03154e-07	AbsError: 1.00250e+13
+      Equation: "ElectronContinuityEquation"	RelError: 1.00392e-07	AbsError: 1.00250e+13
+      Equation: "HoleContinuityEquation"	RelError: 1.00391e-07	AbsError: 1.00533e-07
+      Equation: "PotentialEquation"	RelError: 2.37113e-09	AbsError: 2.59885e-09
+    Region: "oxide"	RelError: 2.91611e-02	AbsError: 2.57386e-02
+      Equation: "PotentialEquation"	RelError: 2.91611e-02	AbsError: 2.57386e-02
+Iteration: 3
+  Device: "mos2d"	RelError: 1.29581e+00	AbsError: 1.66718e+17
+    Region: "bulk"	RelError: 1.28583e+00	AbsError: 1.66718e+17
+      Equation: "ElectronContinuityEquation"	RelError: 2.59096e-01	AbsError: 1.66717e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.97143e-01	AbsError: 3.87170e+11
+      Equation: "PotentialEquation"	RelError: 2.95938e-02	AbsError: 9.37203e-03
+    Region: "gate"	RelError: 2.65031e-06	AbsError: 1.30752e+14
+      Equation: "ElectronContinuityEquation"	RelError: 1.30969e-06	AbsError: 1.30752e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.30969e-06	AbsError: 1.31187e-06
+      Equation: "PotentialEquation"	RelError: 3.09336e-08	AbsError: 3.39042e-08
+    Region: "oxide"	RelError: 9.97838e-03	AbsError: 9.16533e-03
+      Equation: "PotentialEquation"	RelError: 9.97838e-03	AbsError: 9.16533e-03
+Iteration: 4
+  Device: "mos2d"	RelError: 2.56998e-01	AbsError: 1.10305e+17
+    Region: "bulk"	RelError: 2.56094e-01	AbsError: 1.10305e+17
+      Equation: "ElectronContinuityEquation"	RelError: 1.57149e-01	AbsError: 1.10304e+17
+      Equation: "HoleContinuityEquation"	RelError: 2.49974e-02	AbsError: 8.42560e+11
+      Equation: "PotentialEquation"	RelError: 7.39470e-02	AbsError: 1.61995e-03
+    Region: "gate"	RelError: 2.38672e-06	AbsError: 1.17748e+14
+      Equation: "ElectronContinuityEquation"	RelError: 1.17943e-06	AbsError: 1.17748e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.17943e-06	AbsError: 1.18139e-06
+      Equation: "PotentialEquation"	RelError: 2.78571e-08	AbsError: 3.05322e-08
+    Region: "oxide"	RelError: 9.02191e-04	AbsError: 6.55699e-04
+      Equation: "PotentialEquation"	RelError: 9.02191e-04	AbsError: 6.55699e-04
+Iteration: 5
+  Device: "mos2d"	RelError: 1.88501e-01	AbsError: 7.94835e+16
+    Region: "bulk"	RelError: 1.87235e-01	AbsError: 7.94835e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.22118e-01	AbsError: 7.94830e+16
+      Equation: "HoleContinuityEquation"	RelError: 1.98800e-02	AbsError: 4.47341e+11
+      Equation: "PotentialEquation"	RelError: 4.52362e-02	AbsError: 1.46605e-03
+    Region: "gate"	RelError: 2.85306e-06	AbsError: 1.40754e+14
+      Equation: "ElectronContinuityEquation"	RelError: 1.40988e-06	AbsError: 1.40754e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.40988e-06	AbsError: 1.41222e-06
+      Equation: "PotentialEquation"	RelError: 3.33000e-08	AbsError: 3.64978e-08
+    Region: "oxide"	RelError: 1.26321e-03	AbsError: 1.01197e-03
+      Equation: "PotentialEquation"	RelError: 1.26321e-03	AbsError: 1.01197e-03
+Iteration: 6
+  Device: "mos2d"	RelError: 2.38002e-02	AbsError: 1.36634e+16
+    Region: "bulk"	RelError: 2.36255e-02	AbsError: 1.36634e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.52520e-02	AbsError: 1.36633e+16
+      Equation: "HoleContinuityEquation"	RelError: 3.56668e-03	AbsError: 4.74704e+10
+      Equation: "PotentialEquation"	RelError: 4.80686e-03	AbsError: 2.43376e-04
+    Region: "gate"	RelError: 3.71972e-07	AbsError: 1.83509e+13
+      Equation: "ElectronContinuityEquation"	RelError: 1.83814e-07	AbsError: 1.83509e+13
+      Equation: "HoleContinuityEquation"	RelError: 1.83816e-07	AbsError: 1.84122e-07
+      Equation: "PotentialEquation"	RelError: 4.34153e-09	AbsError: 4.75846e-09
+    Region: "oxide"	RelError: 1.74336e-04	AbsError: 1.38815e-04
+      Equation: "PotentialEquation"	RelError: 1.74336e-04	AbsError: 1.38815e-04
+Iteration: 7
+  Device: "mos2d"	RelError: 2.41426e-03	AbsError: 7.45760e+14
+    Region: "bulk"	RelError: 2.41090e-03	AbsError: 7.45760e+14
+      Equation: "ElectronContinuityEquation"	RelError: 1.98040e-03	AbsError: 7.45757e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.52248e-04	AbsError: 2.99482e+09
+      Equation: "PotentialEquation"	RelError: 2.78256e-04	AbsError: 7.32173e-06
+    Region: "gate"	RelError: 3.42375e-09	AbsError: 1.68907e+11
+      Equation: "ElectronContinuityEquation"	RelError: 1.69188e-09	AbsError: 1.68907e+11
+      Equation: "HoleContinuityEquation"	RelError: 1.69191e-09	AbsError: 1.69473e-09
+      Equation: "PotentialEquation"	RelError: 3.99609e-11	AbsError: 4.37984e-11
+    Region: "oxide"	RelError: 3.35760e-06	AbsError: 2.68579e-06
+      Equation: "PotentialEquation"	RelError: 3.35760e-06	AbsError: 2.68579e-06
+Iteration: 8
+  Device: "mos2d"	RelError: 1.02455e-03	AbsError: 3.98194e+13
+    Region: "bulk"	RelError: 1.02434e-03	AbsError: 3.98194e+13
+      Equation: "ElectronContinuityEquation"	RelError: 8.35829e-04	AbsError: 3.98181e+13
+      Equation: "HoleContinuityEquation"	RelError: 6.11605e-05	AbsError: 1.31027e+09
+      Equation: "PotentialEquation"	RelError: 1.27351e-04	AbsError: 3.20287e-06
+    Region: "gate"	RelError: 4.48978e-10	AbsError: 2.21501e+10
+      Equation: "ElectronContinuityEquation"	RelError: 2.21869e-10	AbsError: 2.21501e+10
+      Equation: "HoleContinuityEquation"	RelError: 2.21869e-10	AbsError: 2.22238e-10
+      Equation: "PotentialEquation"	RelError: 5.24024e-12	AbsError: 5.74347e-12
+    Region: "oxide"	RelError: 2.11910e-07	AbsError: 1.71094e-07
+      Equation: "PotentialEquation"	RelError: 2.11910e-07	AbsError: 1.71094e-07
+Iteration: 9
+  Device: "mos2d"	RelError: 4.18480e-04	AbsError: 1.11471e+13
+    Region: "bulk"	RelError: 4.18360e-04	AbsError: 1.11471e+13
+      Equation: "ElectronContinuityEquation"	RelError: 3.44183e-04	AbsError: 1.11466e+13
+      Equation: "HoleContinuityEquation"	RelError: 2.48067e-05	AbsError: 4.99213e+08
+      Equation: "PotentialEquation"	RelError: 4.93706e-05	AbsError: 1.31024e-06
+    Region: "gate"	RelError: 2.01954e-10	AbsError: 9.96328e+09
+      Equation: "ElectronContinuityEquation"	RelError: 9.97985e-11	AbsError: 9.96328e+09
+      Equation: "HoleContinuityEquation"	RelError: 9.97985e-11	AbsError: 9.99645e-11
+      Equation: "PotentialEquation"	RelError: 2.35720e-12	AbsError: 2.58357e-12
+    Region: "oxide"	RelError: 1.19984e-07	AbsError: 5.58805e-08
+      Equation: "PotentialEquation"	RelError: 1.19984e-07	AbsError: 5.58805e-08
+Iteration: 10
+  Device: "mos2d"	RelError: 1.70910e-04	AbsError: 5.33804e+12
+    Region: "bulk"	RelError: 1.70842e-04	AbsError: 5.33804e+12
+      Equation: "ElectronContinuityEquation"	RelError: 1.40958e-04	AbsError: 5.33784e+12
+      Equation: "HoleContinuityEquation"	RelError: 1.01748e-05	AbsError: 1.98363e+08
+      Equation: "PotentialEquation"	RelError: 1.97089e-05	AbsError: 5.31790e-07
+    Region: "gate"	RelError: 1.26493e-10	AbsError: 6.24043e+09
+      Equation: "ElectronContinuityEquation"	RelError: 6.25081e-11	AbsError: 6.24043e+09
+      Equation: "HoleContinuityEquation"	RelError: 6.25081e-11	AbsError: 6.26120e-11
+      Equation: "PotentialEquation"	RelError: 1.47645e-12	AbsError: 1.61824e-12
+    Region: "oxide"	RelError: 6.77687e-08	AbsError: 3.21587e-08
+      Equation: "PotentialEquation"	RelError: 6.77687e-08	AbsError: 3.21587e-08
+Iteration: 11
+  Device: "mos2d"	RelError: 6.91547e-05	AbsError: 2.26134e+12
+    Region: "bulk"	RelError: 6.91460e-05	AbsError: 2.26134e+12
+      Equation: "ElectronContinuityEquation"	RelError: 5.72595e-05	AbsError: 2.26126e+12
+      Equation: "HoleContinuityEquation"	RelError: 4.11553e-06	AbsError: 7.84276e+07
+      Equation: "PotentialEquation"	RelError: 7.77094e-06	AbsError: 2.14174e-07
+    Region: "gate"	RelError: 2.15779e-11	AbsError: 1.06453e+09
+      Equation: "ElectronContinuityEquation"	RelError: 1.06630e-11	AbsError: 1.06453e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.06630e-11	AbsError: 1.06807e-11
+      Equation: "PotentialEquation"	RelError: 2.51829e-13	AbsError: 2.76013e-13
+    Region: "oxide"	RelError: 8.77317e-09	AbsError: 4.24348e-09
+      Equation: "PotentialEquation"	RelError: 8.77317e-09	AbsError: 4.24348e-09
+Iteration: 12
+  Device: "mos2d"	RelError: 2.80096e-05	AbsError: 1.04789e+12
+    Region: "bulk"	RelError: 2.79945e-05	AbsError: 1.04789e+12
+      Equation: "ElectronContinuityEquation"	RelError: 2.31239e-05	AbsError: 1.04786e+12
+      Equation: "HoleContinuityEquation"	RelError: 1.65906e-06	AbsError: 3.22730e+07
+      Equation: "PotentialEquation"	RelError: 3.21160e-06	AbsError: 8.64224e-08
+    Region: "gate"	RelError: 2.65888e-11	AbsError: 1.31175e+09
+      Equation: "ElectronContinuityEquation"	RelError: 1.31394e-11	AbsError: 1.31175e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.31391e-11	AbsError: 1.31610e-11
+      Equation: "PotentialEquation"	RelError: 3.10349e-13	AbsError: 3.40152e-13
+    Region: "oxide"	RelError: 1.50104e-08	AbsError: 7.02704e-09
+      Equation: "PotentialEquation"	RelError: 1.50104e-08	AbsError: 7.02704e-09
+Iteration: 13
+  Device: "mos2d"	RelError: 1.12543e-05	AbsError: 4.18112e+11
+    Region: "bulk"	RelError: 1.12528e-05	AbsError: 4.18112e+11
+      Equation: "ElectronContinuityEquation"	RelError: 9.33144e-06	AbsError: 4.18099e+11
+      Equation: "HoleContinuityEquation"	RelError: 6.70489e-07	AbsError: 1.26053e+07
+      Equation: "PotentialEquation"	RelError: 1.25084e-06	AbsError: 3.48435e-08
+    Region: "gate"	RelError: 3.55113e-12	AbsError: 1.75189e+08
+      Equation: "ElectronContinuityEquation"	RelError: 1.75480e-12	AbsError: 1.75189e+08
+      Equation: "HoleContinuityEquation"	RelError: 1.75490e-12	AbsError: 1.75782e-12
+      Equation: "PotentialEquation"	RelError: 4.14301e-14	AbsError: 4.54087e-14
+    Region: "oxide"	RelError: 1.53307e-09	AbsError: 7.58156e-10
+      Equation: "PotentialEquation"	RelError: 1.53307e-09	AbsError: 7.58156e-10
+Iteration: 14
+  Device: "mos2d"	RelError: 4.55711e-06	AbsError: 1.83282e+11
+    Region: "bulk"	RelError: 4.55474e-06	AbsError: 1.83282e+11
+      Equation: "ElectronContinuityEquation"	RelError: 3.76537e-06	AbsError: 1.83276e+11
+      Equation: "HoleContinuityEquation"	RelError: 2.70474e-07	AbsError: 5.21303e+06
+      Equation: "PotentialEquation"	RelError: 5.18891e-07	AbsError: 1.40611e-08
+    Region: "gate"	RelError: 4.25845e-12	AbsError: 2.10093e+08
+      Equation: "ElectronContinuityEquation"	RelError: 2.10443e-12	AbsError: 2.10093e+08
+      Equation: "HoleContinuityEquation"	RelError: 2.10442e-12	AbsError: 2.10792e-12
+      Equation: "PotentialEquation"	RelError: 4.96060e-14	AbsError: 5.43697e-14
+    Region: "oxide"	RelError: 2.36174e-09	AbsError: 1.10247e-09
+      Equation: "PotentialEquation"	RelError: 2.36174e-09	AbsError: 1.10247e-09
+Iteration: 15
+  Device: "mos2d"	RelError: 1.83241e-06	AbsError: 7.34486e+10
+    Region: "bulk"	RelError: 1.83205e-06	AbsError: 7.34486e+10
+      Equation: "ElectronContinuityEquation"	RelError: 1.51861e-06	AbsError: 7.34465e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.09078e-07	AbsError: 2.05915e+06
+      Equation: "PotentialEquation"	RelError: 2.04366e-07	AbsError: 5.66478e-09
+    Region: "gate"	RelError: 8.44745e-13	AbsError: 4.16841e+07
+      Equation: "ElectronContinuityEquation"	RelError: 4.17534e-13	AbsError: 4.16841e+07
+      Equation: "HoleContinuityEquation"	RelError: 4.17381e-13	AbsError: 4.18076e-13
+      Equation: "PotentialEquation"	RelError: 9.82926e-15	AbsError: 1.07732e-14
+    Region: "oxide"	RelError: 3.52452e-10	AbsError: 1.73480e-10
+      Equation: "PotentialEquation"	RelError: 3.52452e-10	AbsError: 1.73480e-10
+Iteration: 16
+  Device: "mos2d"	RelError: 7.40473e-07	AbsError: 3.13324e+10
+    Region: "bulk"	RelError: 7.40155e-07	AbsError: 3.13324e+10
+      Equation: "ElectronContinuityEquation"	RelError: 6.12288e-07	AbsError: 3.13316e+10
+      Equation: "HoleContinuityEquation"	RelError: 4.39662e-08	AbsError: 8.43786e+05
+      Equation: "PotentialEquation"	RelError: 8.39003e-08	AbsError: 2.28506e-09
+    Region: "gate"	RelError: 5.86446e-13	AbsError: 2.89362e+07
+      Equation: "ElectronContinuityEquation"	RelError: 2.89843e-13	AbsError: 2.89362e+07
+      Equation: "HoleContinuityEquation"	RelError: 2.89854e-13	AbsError: 2.90336e-13
+      Equation: "PotentialEquation"	RelError: 6.74872e-15	AbsError: 7.39681e-15
+    Region: "oxide"	RelError: 3.17697e-10	AbsError: 1.48306e-10
+      Equation: "PotentialEquation"	RelError: 3.17697e-10	AbsError: 1.48306e-10
+Iteration: 17
+  Device: "mos2d"	RelError: 2.98174e-07	AbsError: 1.24175e+10
+    Region: "bulk"	RelError: 2.98088e-07	AbsError: 1.24175e+10
+      Equation: "ElectronContinuityEquation"	RelError: 2.46878e-07	AbsError: 1.24172e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.77312e-08	AbsError: 3.37128e+05
+      Equation: "PotentialEquation"	RelError: 3.34784e-08	AbsError: 9.21103e-10
+    Region: "gate"	RelError: 1.94691e-13	AbsError: 9.60696e+06
+      Equation: "ElectronContinuityEquation"	RelError: 9.62294e-14	AbsError: 9.60696e+06
+      Equation: "HoleContinuityEquation"	RelError: 9.61260e-14	AbsError: 9.62858e-14
+      Equation: "PotentialEquation"	RelError: 2.33569e-15	AbsError: 2.55999e-15
+    Region: "oxide"	RelError: 8.54669e-11	AbsError: 3.98573e-11
+      Equation: "PotentialEquation"	RelError: 8.54669e-11	AbsError: 3.98573e-11
+Iteration: 18
+  Device: "mos2d"	RelError: 1.20274e-07	AbsError: 5.12878e+09
+    Region: "bulk"	RelError: 1.20235e-07	AbsError: 5.12878e+09
+      Equation: "ElectronContinuityEquation"	RelError: 9.95411e-08	AbsError: 5.12864e+09
+      Equation: "HoleContinuityEquation"	RelError: 7.14847e-09	AbsError: 1.36353e+05
+      Equation: "PotentialEquation"	RelError: 1.35455e-08	AbsError: 3.71405e-10
+    Region: "gate"	RelError: 7.03772e-14	AbsError: 3.48923e+06
+      Equation: "ElectronContinuityEquation"	RelError: 3.49503e-14	AbsError: 3.48923e+06
+      Equation: "HoleContinuityEquation"	RelError: 3.46990e-14	AbsError: 3.47567e-14
+      Equation: "PotentialEquation"	RelError: 7.27900e-16	AbsError: 7.97804e-16
+    Region: "oxide"	RelError: 3.83865e-11	AbsError: 1.79603e-11
+      Equation: "PotentialEquation"	RelError: 3.83865e-11	AbsError: 1.79603e-11
+Iteration: 19
+  Device: "mos2d"	RelError: 4.85136e-08	AbsError: 2.02150e+09
+    Region: "bulk"	RelError: 4.84946e-08	AbsError: 2.02150e+09
+      Equation: "ElectronContinuityEquation"	RelError: 4.01336e-08	AbsError: 2.02145e+09
+      Equation: "HoleContinuityEquation"	RelError: 2.88206e-09	AbsError: 5.51640e+04
+      Equation: "PotentialEquation"	RelError: 5.47897e-09	AbsError: 1.49763e-10
+    Region: "gate"	RelError: 4.08372e-14	AbsError: 2.01528e+06
+      Equation: "ElectronContinuityEquation"	RelError: 2.01863e-14	AbsError: 2.01528e+06
+      Equation: "HoleContinuityEquation"	RelError: 2.01797e-14	AbsError: 2.02133e-14
+      Equation: "PotentialEquation"	RelError: 4.71159e-16	AbsError: 5.16408e-16
+    Region: "oxide"	RelError: 1.89615e-11	AbsError: 8.84266e-12
+      Equation: "PotentialEquation"	RelError: 1.89615e-11	AbsError: 8.84266e-12
+Iteration: 20
+  Device: "mos2d"	RelError: 1.95357e-08	AbsError: 8.08491e+08
+    Region: "bulk"	RelError: 1.95314e-08	AbsError: 8.08491e+08
+      Equation: "ElectronContinuityEquation"	RelError: 1.61814e-08	AbsError: 8.08469e+08
+      Equation: "HoleContinuityEquation"	RelError: 1.16209e-09	AbsError: 2.20908e+04
+      Equation: "PotentialEquation"	RelError: 2.18792e-09	AbsError: 6.03648e-11
+    Region: "gate"	RelError: 6.82726e-15	AbsError: 3.37964e+05
+      Equation: "ElectronContinuityEquation"	RelError: 3.38526e-15	AbsError: 3.37964e+05
+      Equation: "HoleContinuityEquation"	RelError: 3.30720e-15	AbsError: 3.31270e-15
+      Equation: "PotentialEquation"	RelError: 1.34790e-16	AbsError: 1.47736e-16
+    Region: "oxide"	RelError: 4.29414e-12	AbsError: 2.02916e-12
+      Equation: "PotentialEquation"	RelError: 4.29414e-12	AbsError: 2.02916e-12
+Iteration: 21
+  Device: "mos2d"	RelError: 7.89046e-09	AbsError: 3.16124e+08
+    Region: "bulk"	RelError: 7.88651e-09	AbsError: 3.16124e+08
+      Equation: "ElectronContinuityEquation"	RelError: 6.52404e-09	AbsError: 3.16115e+08
+      Equation: "HoleContinuityEquation"	RelError: 4.68477e-10	AbsError: 8.99880e+03
+      Equation: "PotentialEquation"	RelError: 8.93995e-10	AbsError: 2.43492e-11
+    Region: "gate"	RelError: 8.01914e-15	AbsError: 3.89203e+05
+      Equation: "ElectronContinuityEquation"	RelError: 3.89850e-15	AbsError: 3.89203e+05
+      Equation: "HoleContinuityEquation"	RelError: 3.95436e-15	AbsError: 3.96094e-15
+      Equation: "PotentialEquation"	RelError: 1.66272e-16	AbsError: 1.82241e-16
+    Region: "oxide"	RelError: 3.93821e-12	AbsError: 1.83657e-12
+      Equation: "PotentialEquation"	RelError: 3.93821e-12	AbsError: 1.83657e-12
+Succeeded
+body	0.0	-1.94485563063e-15	-1.07476552141e-13	-1.09421407772e-13
+drain	0.4	1.65013681063	6.29275036638e-17	1.65013681063
+gate	0.5	5.48432028676e-13	1.10881099456e-32	5.48432028676e-13
+source	0.0	-1.65013681056	-2.73432146124e-18	-1.65013681056
+last end 4.000000e-01 5.000000e-01
+setting to last bias 5.000000e-01
+setting next bias 5.000000e-01
+Region "bulk" on device "mos2d" has equations 0:6746
+Region "gate" on device "mos2d" has equations 6747:6863
+Region "oxide" on device "mos2d" has equations 6864:7529
+Device "mos2d" has equations 0:7529
+number of equations 7530
+Iteration: 0
+  Device: "mos2d"	RelError: 2.01567e+03	AbsError: 3.17676e+17
+    Region: "bulk"	RelError: 2.01563e+03	AbsError: 3.17676e+17
+      Equation: "ElectronContinuityEquation"	RelError: 9.99000e+02	AbsError: 3.17295e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.99000e+02	AbsError: 3.80564e+14
+      Equation: "PotentialEquation"	RelError: 1.76269e+01	AbsError: 4.09679e-02
+    Region: "gate"	RelError: 2.56927e-04	AbsError: 1.26753e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.26948e-04	AbsError: 1.26753e+16
+      Equation: "HoleContinuityEquation"	RelError: 1.26980e-04	AbsError: 1.27175e-04
+      Equation: "PotentialEquation"	RelError: 2.99876e-06	AbsError: 3.28674e-06
+    Region: "oxide"	RelError: 4.50517e-02	AbsError: 4.09542e-02
+      Equation: "PotentialEquation"	RelError: 4.50517e-02	AbsError: 4.09542e-02
+Iteration: 1
+  Device: "mos2d"	RelError: 3.86860e+00	AbsError: 1.22027e+17
+    Region: "bulk"	RelError: 3.83376e+00	AbsError: 1.22027e+17
+      Equation: "ElectronContinuityEquation"	RelError: 9.97838e-01	AbsError: 1.22011e+17
+      Equation: "HoleContinuityEquation"	RelError: 9.98839e-01	AbsError: 1.63274e+13
+      Equation: "PotentialEquation"	RelError: 1.83709e+00	AbsError: 3.07632e-02
+    Region: "gate"	RelError: 1.02295e-06	AbsError: 4.96681e+13
+      Equation: "ElectronContinuityEquation"	RelError: 4.97444e-07	AbsError: 4.96681e+13
+      Equation: "HoleContinuityEquation"	RelError: 5.13564e-07	AbsError: 5.14353e-07
+      Equation: "PotentialEquation"	RelError: 1.19395e-08	AbsError: 1.30861e-08
+    Region: "oxide"	RelError: 3.48331e-02	AbsError: 3.07632e-02
+      Equation: "PotentialEquation"	RelError: 3.48331e-02	AbsError: 3.07632e-02
+Iteration: 2
+  Device: "mos2d"	RelError: 1.15487e+01	AbsError: 1.52825e+17
+    Region: "bulk"	RelError: 1.15226e+01	AbsError: 1.52825e+17
+      Equation: "ElectronContinuityEquation"	RelError: 3.47040e-01	AbsError: 1.52824e+17
+      Equation: "HoleContinuityEquation"	RelError: 1.11448e+01	AbsError: 2.22522e+11
+      Equation: "PotentialEquation"	RelError: 3.07587e-02	AbsError: 2.58964e-02
+    Region: "gate"	RelError: 2.65964e-07	AbsError: 1.31258e+13
+      Equation: "ElectronContinuityEquation"	RelError: 1.31430e-07	AbsError: 1.31258e+13
+      Equation: "HoleContinuityEquation"	RelError: 1.31430e-07	AbsError: 1.31602e-07
+      Equation: "PotentialEquation"	RelError: 3.10422e-09	AbsError: 3.40235e-09
+    Region: "oxide"	RelError: 2.60969e-02	AbsError: 2.54913e-02
+      Equation: "PotentialEquation"	RelError: 2.60969e-02	AbsError: 2.54913e-02
+Iteration: 3
+  Device: "mos2d"	RelError: 9.99770e-01	AbsError: 1.01859e+17
+    Region: "bulk"	RelError: 9.90768e-01	AbsError: 1.01859e+17
+      Equation: "ElectronContinuityEquation"	RelError: 2.15216e-01	AbsError: 1.01859e+17
+      Equation: "HoleContinuityEquation"	RelError: 7.65741e-01	AbsError: 1.75750e+11
+      Equation: "PotentialEquation"	RelError: 9.81051e-03	AbsError: 9.47717e-03
+    Region: "gate"	RelError: 2.63230e-06	AbsError: 1.29879e+14
+      Equation: "ElectronContinuityEquation"	RelError: 1.30079e-06	AbsError: 1.29879e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.30079e-06	AbsError: 1.30279e-06
+      Equation: "PotentialEquation"	RelError: 3.07233e-08	AbsError: 3.36738e-08
+    Region: "oxide"	RelError: 8.99869e-03	AbsError: 9.16533e-03
+      Equation: "PotentialEquation"	RelError: 8.99869e-03	AbsError: 9.16533e-03
+Iteration: 4
+  Device: "mos2d"	RelError: 3.37495e-01	AbsError: 5.42190e+16
+    Region: "bulk"	RelError: 3.36772e-01	AbsError: 5.42190e+16
+      Equation: "ElectronContinuityEquation"	RelError: 2.75491e-01	AbsError: 5.42185e+16
+      Equation: "HoleContinuityEquation"	RelError: 3.96403e-02	AbsError: 4.64992e+11
+      Equation: "PotentialEquation"	RelError: 2.16406e-02	AbsError: 2.04463e-03
+    Region: "gate"	RelError: 1.76775e-06	AbsError: 8.72219e+13
+      Equation: "ElectronContinuityEquation"	RelError: 8.73559e-07	AbsError: 8.72219e+13
+      Equation: "HoleContinuityEquation"	RelError: 8.73559e-07	AbsError: 8.74901e-07
+      Equation: "PotentialEquation"	RelError: 2.06326e-08	AbsError: 2.26140e-08
+    Region: "oxide"	RelError: 7.21030e-04	AbsError: 6.30735e-04
+      Equation: "PotentialEquation"	RelError: 7.21030e-04	AbsError: 6.30735e-04
+Iteration: 5
+  Device: "mos2d"	RelError: 1.81281e-01	AbsError: 8.69842e+16
+    Region: "bulk"	RelError: 1.80274e-01	AbsError: 8.69842e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.49062e-01	AbsError: 8.69840e+16
+      Equation: "HoleContinuityEquation"	RelError: 1.62422e-02	AbsError: 1.63518e+11
+      Equation: "PotentialEquation"	RelError: 1.49697e-02	AbsError: 1.28403e-03
+    Region: "gate"	RelError: 2.70844e-06	AbsError: 1.33636e+14
+      Equation: "ElectronContinuityEquation"	RelError: 1.33842e-06	AbsError: 1.33636e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.33841e-06	AbsError: 1.34047e-06
+      Equation: "PotentialEquation"	RelError: 3.16119e-08	AbsError: 3.46478e-08
+    Region: "oxide"	RelError: 1.00440e-03	AbsError: 8.63766e-04
+      Equation: "PotentialEquation"	RelError: 1.00440e-03	AbsError: 8.63766e-04
+Iteration: 6
+  Device: "mos2d"	RelError: 5.58062e-02	AbsError: 5.44809e+16
+    Region: "bulk"	RelError: 5.56774e-02	AbsError: 5.44809e+16
+      Equation: "ElectronContinuityEquation"	RelError: 4.94754e-02	AbsError: 5.44808e+16
+      Equation: "HoleContinuityEquation"	RelError: 2.74657e-03	AbsError: 3.87636e+10
+      Equation: "PotentialEquation"	RelError: 3.45536e-03	AbsError: 1.96446e-04
+    Region: "gate"	RelError: 3.41387e-07	AbsError: 1.68442e+13
+      Equation: "ElectronContinuityEquation"	RelError: 1.68701e-07	AbsError: 1.68442e+13
+      Equation: "HoleContinuityEquation"	RelError: 1.68702e-07	AbsError: 1.68962e-07
+      Equation: "PotentialEquation"	RelError: 3.98455e-09	AbsError: 4.36721e-09
+    Region: "oxide"	RelError: 1.28534e-04	AbsError: 1.17627e-04
+      Equation: "PotentialEquation"	RelError: 1.28534e-04	AbsError: 1.17627e-04
+Iteration: 7
+  Device: "mos2d"	RelError: 2.02307e-02	AbsError: 2.01983e+16
+    Region: "bulk"	RelError: 2.01884e-02	AbsError: 2.01983e+16
+      Equation: "ElectronContinuityEquation"	RelError: 1.80122e-02	AbsError: 2.01982e+16
+      Equation: "HoleContinuityEquation"	RelError: 1.29706e-03	AbsError: 1.06492e+10
+      Equation: "PotentialEquation"	RelError: 8.79157e-04	AbsError: 4.14737e-05
+    Region: "gate"	RelError: 6.10460e-08	AbsError: 3.01204e+12
+      Equation: "ElectronContinuityEquation"	RelError: 3.01667e-08	AbsError: 3.01204e+12
+      Equation: "HoleContinuityEquation"	RelError: 3.01667e-08	AbsError: 3.02131e-08
+      Equation: "PotentialEquation"	RelError: 7.12507e-10	AbsError: 7.80932e-10
+    Region: "oxide"	RelError: 4.22189e-05	AbsError: 4.03266e-05
+      Equation: "PotentialEquation"	RelError: 4.22189e-05	AbsError: 4.03266e-05
+Iteration: 8
+  Device: "mos2d"	RelError: 2.49605e-03	AbsError: 6.10648e+14
+    Region: "bulk"	RelError: 2.49505e-03	AbsError: 6.10648e+14
+      Equation: "ElectronContinuityEquation"	RelError: 2.16870e-03	AbsError: 6.10645e+14
+      Equation: "HoleContinuityEquation"	RelError: 1.16571e-04	AbsError: 2.55514e+09
+      Equation: "PotentialEquation"	RelError: 2.09781e-04	AbsError: 6.37023e-06
+    Region: "gate"	RelError: 1.89657e-09	AbsError: 9.35777e+10
+      Equation: "ElectronContinuityEquation"	RelError: 9.37216e-10	AbsError: 9.35777e+10
+      Equation: "HoleContinuityEquation"	RelError: 9.37217e-10	AbsError: 9.38658e-10
+      Equation: "PotentialEquation"	RelError: 2.21361e-11	AbsError: 2.42619e-11
+    Region: "oxide"	RelError: 9.96466e-07	AbsError: 8.96933e-07
+      Equation: "PotentialEquation"	RelError: 9.96466e-07	AbsError: 8.96933e-07
+Iteration: 9
+  Device: "mos2d"	RelError: 6.47523e-04	AbsError: 2.58610e+13
+    Region: "bulk"	RelError: 6.47315e-04	AbsError: 2.58610e+13
+      Equation: "ElectronContinuityEquation"	RelError: 5.64572e-04	AbsError: 2.58604e+13
+      Equation: "HoleContinuityEquation"	RelError: 3.05150e-05	AbsError: 6.08321e+08
+      Equation: "PotentialEquation"	RelError: 5.22273e-05	AbsError: 1.64040e-06
+    Region: "gate"	RelError: 2.99386e-10	AbsError: 1.47735e+10
+      Equation: "ElectronContinuityEquation"	RelError: 1.47946e-10	AbsError: 1.47735e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.47946e-10	AbsError: 1.48157e-10
+      Equation: "PotentialEquation"	RelError: 3.49430e-12	AbsError: 3.82989e-12
+    Region: "oxide"	RelError: 2.08221e-07	AbsError: 9.86221e-08
+      Equation: "PotentialEquation"	RelError: 2.08221e-07	AbsError: 9.86221e-08
+Iteration: 10
+  Device: "mos2d"	RelError: 1.65117e-04	AbsError: 1.55622e+13
+    Region: "bulk"	RelError: 1.64927e-04	AbsError: 1.55622e+13
+      Equation: "ElectronContinuityEquation"	RelError: 1.42437e-04	AbsError: 1.55620e+13
+      Equation: "HoleContinuityEquation"	RelError: 7.70190e-06	AbsError: 1.55387e+08
+      Equation: "PotentialEquation"	RelError: 1.47880e-05	AbsError: 4.09795e-07
+    Region: "gate"	RelError: 3.32057e-10	AbsError: 1.63839e+10
+      Equation: "ElectronContinuityEquation"	RelError: 1.64091e-10	AbsError: 1.63839e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.64091e-10	AbsError: 1.64343e-10
+      Equation: "PotentialEquation"	RelError: 3.87575e-12	AbsError: 4.24796e-12
+    Region: "oxide"	RelError: 1.89057e-07	AbsError: 9.00428e-08
+      Equation: "PotentialEquation"	RelError: 1.89057e-07	AbsError: 9.00428e-08
+Iteration: 11
+  Device: "mos2d"	RelError: 4.06984e-05	AbsError: 7.51652e+12
+    Region: "bulk"	RelError: 4.06625e-05	AbsError: 7.51652e+12
+      Equation: "ElectronContinuityEquation"	RelError: 3.54513e-05	AbsError: 7.51648e+12
+      Equation: "HoleContinuityEquation"	RelError: 1.90770e-06	AbsError: 3.63476e+07
+      Equation: "PotentialEquation"	RelError: 3.30346e-06	AbsError: 1.00673e-07
+    Region: "gate"	RelError: 6.71116e-11	AbsError: 3.31132e+09
+      Equation: "ElectronContinuityEquation"	RelError: 3.31641e-11	AbsError: 3.31132e+09
+      Equation: "HoleContinuityEquation"	RelError: 3.31642e-11	AbsError: 3.32151e-11
+      Equation: "PotentialEquation"	RelError: 7.83327e-13	AbsError: 8.58553e-13
+    Region: "oxide"	RelError: 3.59055e-08	AbsError: 1.75379e-08
+      Equation: "PotentialEquation"	RelError: 3.59055e-08	AbsError: 1.75379e-08
+Iteration: 12
+  Device: "mos2d"	RelError: 1.14109e-05	AbsError: 4.44926e+12
+    Region: "bulk"	RelError: 1.13541e-05	AbsError: 4.44926e+12
+      Equation: "ElectronContinuityEquation"	RelError: 8.72279e-06	AbsError: 4.44925e+12
+      Equation: "HoleContinuityEquation"	RelError: 1.02083e-06	AbsError: 1.28556e+07
+      Equation: "PotentialEquation"	RelError: 1.61044e-06	AbsError: 2.70222e-08
+    Region: "gate"	RelError: 9.69007e-11	AbsError: 4.78114e+09
+      Equation: "ElectronContinuityEquation"	RelError: 4.78849e-11	AbsError: 4.78114e+09
+      Equation: "HoleContinuityEquation"	RelError: 4.78849e-11	AbsError: 4.79585e-11
+      Equation: "PotentialEquation"	RelError: 1.13091e-12	AbsError: 1.23951e-12
+    Region: "oxide"	RelError: 5.67708e-08	AbsError: 2.68736e-08
+      Equation: "PotentialEquation"	RelError: 5.67708e-08	AbsError: 2.68736e-08
+Iteration: 13
+  Device: "mos2d"	RelError: 2.67373e-06	AbsError: 2.15646e+12
+    Region: "bulk"	RelError: 2.66197e-06	AbsError: 2.15646e+12
+      Equation: "ElectronContinuityEquation"	RelError: 2.13089e-06	AbsError: 2.15646e+12
+      Equation: "HoleContinuityEquation"	RelError: 2.17735e-07	AbsError: 2.64623e+06
+      Equation: "PotentialEquation"	RelError: 3.13348e-07	AbsError: 5.98750e-09
+    Region: "gate"	RelError: 2.10112e-11	AbsError: 1.03671e+09
+      Equation: "ElectronContinuityEquation"	RelError: 1.03830e-11	AbsError: 1.03671e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.03829e-11	AbsError: 1.03988e-11
+      Equation: "PotentialEquation"	RelError: 2.45290e-13	AbsError: 2.68846e-13
+    Region: "oxide"	RelError: 1.17323e-08	AbsError: 5.70144e-09
+      Equation: "PotentialEquation"	RelError: 1.17323e-08	AbsError: 5.70144e-09
+Iteration: 14
+  Device: "mos2d"	RelError: 1.16251e-06	AbsError: 1.20438e+12
+    Region: "bulk"	RelError: 1.14817e-06	AbsError: 1.20438e+12
+      Equation: "ElectronContinuityEquation"	RelError: 6.20284e-07	AbsError: 1.20437e+12
+      Equation: "HoleContinuityEquation"	RelError: 2.57475e-07	AbsError: 1.68667e+06
+      Equation: "PotentialEquation"	RelError: 2.70407e-07	AbsError: 6.81351e-09
+    Region: "gate"	RelError: 2.49226e-11	AbsError: 1.22969e+09
+      Equation: "ElectronContinuityEquation"	RelError: 1.23159e-11	AbsError: 1.22969e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.23159e-11	AbsError: 1.23349e-11
+      Equation: "PotentialEquation"	RelError: 2.90844e-13	AbsError: 3.18775e-13
+    Region: "oxide"	RelError: 1.43220e-08	AbsError: 6.78173e-09
+      Equation: "PotentialEquation"	RelError: 1.43220e-08	AbsError: 6.78173e-09
+Iteration: 15
+  Device: "mos2d"	RelError: 4.70453e-07	AbsError: 6.16979e+11
+    Region: "bulk"	RelError: 4.66176e-07	AbsError: 6.16979e+11
+      Equation: "ElectronContinuityEquation"	RelError: 3.17760e-07	AbsError: 6.16978e+11
+      Equation: "HoleContinuityEquation"	RelError: 7.82860e-08	AbsError: 4.28881e+05
+      Equation: "PotentialEquation"	RelError: 7.01302e-08	AbsError: 2.05848e-09
+    Region: "gate"	RelError: 7.52068e-12	AbsError: 3.71063e+08
+      Equation: "ElectronContinuityEquation"	RelError: 3.71634e-12	AbsError: 3.71063e+08
+      Equation: "HoleContinuityEquation"	RelError: 3.71664e-12	AbsError: 3.72236e-12
+      Equation: "PotentialEquation"	RelError: 8.77045e-14	AbsError: 9.61272e-14
+    Region: "oxide"	RelError: 4.27002e-09	AbsError: 2.05848e-09
+      Equation: "PotentialEquation"	RelError: 4.27002e-09	AbsError: 2.05848e-09
+Iteration: 16
+  Device: "mos2d"	RelError: 2.98651e-07	AbsError: 3.37653e+11
+    Region: "bulk"	RelError: 2.95138e-07	AbsError: 3.37653e+11
+      Equation: "ElectronContinuityEquation"	RelError: 1.73900e-07	AbsError: 3.37653e+11
+      Equation: "HoleContinuityEquation"	RelError: 6.30710e-08	AbsError: 3.32696e+05
+      Equation: "PotentialEquation"	RelError: 5.81676e-08	AbsError: 1.66870e-09
+    Region: "gate"	RelError: 6.23521e-12	AbsError: 3.07653e+08
+      Equation: "ElectronContinuityEquation"	RelError: 3.08126e-12	AbsError: 3.07653e+08
+      Equation: "HoleContinuityEquation"	RelError: 3.08119e-12	AbsError: 3.08593e-12
+      Equation: "PotentialEquation"	RelError: 7.27585e-14	AbsError: 7.97459e-14
+    Region: "oxide"	RelError: 3.50683e-09	AbsError: 1.66433e-09
+      Equation: "PotentialEquation"	RelError: 3.50683e-09	AbsError: 1.66433e-09
+Iteration: 17
+  Device: "mos2d"	RelError: 1.40348e-07	AbsError: 1.75962e+11
+    Region: "bulk"	RelError: 1.38907e-07	AbsError: 1.75962e+11
+      Equation: "ElectronContinuityEquation"	RelError: 9.06248e-08	AbsError: 1.75962e+11
+      Equation: "HoleContinuityEquation"	RelError: 2.61061e-08	AbsError: 1.24673e+05
+      Equation: "PotentialEquation"	RelError: 2.21767e-08	AbsError: 6.88469e-10
+    Region: "gate"	RelError: 2.50585e-12	AbsError: 1.23633e+08
+      Equation: "ElectronContinuityEquation"	RelError: 1.23823e-12	AbsError: 1.23633e+08
+      Equation: "HoleContinuityEquation"	RelError: 1.23834e-12	AbsError: 1.24025e-12
+      Equation: "PotentialEquation"	RelError: 2.92775e-14	AbsError: 3.20892e-14
+    Region: "oxide"	RelError: 1.43797e-09	AbsError: 6.88469e-10
+      Equation: "PotentialEquation"	RelError: 1.43797e-09	AbsError: 6.88469e-10
+Iteration: 18
+  Device: "mos2d"	RelError: 7.96451e-08	AbsError: 9.46331e+10
+    Region: "bulk"	RelError: 7.87585e-08	AbsError: 9.46331e+10
+      Equation: "ElectronContinuityEquation"	RelError: 4.87384e-08	AbsError: 9.46330e+10
+      Equation: "HoleContinuityEquation"	RelError: 1.59733e-08	AbsError: 7.84126e+04
+      Equation: "PotentialEquation"	RelError: 1.40468e-08	AbsError: 4.21499e-10
+    Region: "gate"	RelError: 1.60199e-12	AbsError: 7.90559e+07
+      Equation: "ElectronContinuityEquation"	RelError: 7.91774e-13	AbsError: 7.90559e+07
+      Equation: "HoleContinuityEquation"	RelError: 7.91610e-13	AbsError: 7.92827e-13
+      Equation: "PotentialEquation"	RelError: 1.86035e-14	AbsError: 2.03901e-14
+    Region: "oxide"	RelError: 8.84983e-10	AbsError: 4.21499e-10
+      Equation: "PotentialEquation"	RelError: 8.84983e-10	AbsError: 4.21499e-10
+Iteration: 19
+  Device: "mos2d"	RelError: 4.11613e-08	AbsError: 4.99737e+10
+    Region: "bulk"	RelError: 4.07148e-08	AbsError: 4.99737e+10
+      Equation: "ElectronContinuityEquation"	RelError: 2.57377e-08	AbsError: 4.99737e+10
+      Equation: "HoleContinuityEquation"	RelError: 8.07314e-09	AbsError: 3.83423e+04
+      Equation: "PotentialEquation"	RelError: 6.90398e-09	AbsError: 2.12963e-10
+    Region: "gate"	RelError: 7.70566e-13	AbsError: 3.80258e+07
+      Equation: "ElectronContinuityEquation"	RelError: 3.80843e-13	AbsError: 3.80258e+07
+      Equation: "HoleContinuityEquation"	RelError: 3.80765e-13	AbsError: 3.81350e-13
+      Equation: "PotentialEquation"	RelError: 8.95837e-15	AbsError: 9.81868e-15
+    Region: "oxide"	RelError: 4.45706e-10	AbsError: 2.12963e-10
+      Equation: "PotentialEquation"	RelError: 4.45706e-10	AbsError: 2.12963e-10
+Iteration: 20
+  Device: "mos2d"	RelError: 2.18356e-08	AbsError: 2.65821e+10
+    Region: "bulk"	RelError: 2.16004e-08	AbsError: 2.65821e+10
+      Equation: "ElectronContinuityEquation"	RelError: 1.36904e-08	AbsError: 2.65821e+10
+      Equation: "HoleContinuityEquation"	RelError: 4.24762e-09	AbsError: 2.02977e+04
+      Equation: "PotentialEquation"	RelError: 3.66231e-09	AbsError: 1.12065e-10
+    Region: "gate"	RelError: 4.31114e-13	AbsError: 2.12653e+07
+      Equation: "ElectronContinuityEquation"	RelError: 2.12980e-13	AbsError: 2.12653e+07
+      Equation: "HoleContinuityEquation"	RelError: 2.13059e-13	AbsError: 2.13387e-13
+      Equation: "PotentialEquation"	RelError: 5.07576e-15	AbsError: 5.56321e-15
+    Region: "oxide"	RelError: 2.34769e-10	AbsError: 1.12065e-10
+      Equation: "PotentialEquation"	RelError: 2.34769e-10	AbsError: 1.12065e-10
+Iteration: 21
+  Device: "mos2d"	RelError: 1.18066e-08	AbsError: 1.41416e+10
+    Region: "bulk"	RelError: 1.16758e-08	AbsError: 1.41416e+10
+      Equation: "ElectronContinuityEquation"	RelError: 7.28327e-09	AbsError: 1.41416e+10
+      Equation: "HoleContinuityEquation"	RelError: 2.36015e-09	AbsError: 1.12960e+04
+      Equation: "PotentialEquation"	RelError: 2.03243e-09	AbsError: 6.22663e-11
+    Region: "gate"	RelError: 2.24093e-13	AbsError: 1.10543e+07
+      Equation: "ElectronContinuityEquation"	RelError: 1.10712e-13	AbsError: 1.10543e+07
+      Equation: "HoleContinuityEquation"	RelError: 1.10756e-13	AbsError: 1.10926e-13
+      Equation: "PotentialEquation"	RelError: 2.62490e-15	AbsError: 2.87699e-15
+    Region: "oxide"	RelError: 1.30514e-10	AbsError: 6.22663e-11
+      Equation: "PotentialEquation"	RelError: 1.30514e-10	AbsError: 6.22663e-11
+Iteration: 22
+  Device: "mos2d"	RelError: 6.10317e-09	AbsError: 7.48393e+09
+    Region: "bulk"	RelError: 6.03812e-09	AbsError: 7.48393e+09
+      Equation: "ElectronContinuityEquation"	RelError: 3.85441e-09	AbsError: 7.48393e+09
+      Equation: "HoleContinuityEquation"	RelError: 1.17597e-09	AbsError: 5.61909e+03
+      Equation: "PotentialEquation"	RelError: 1.00774e-09	AbsError: 3.10233e-11
+    Region: "gate"	RelError: 1.20366e-13	AbsError: 5.94829e+06
+      Equation: "ElectronContinuityEquation"	RelError: 5.95744e-14	AbsError: 5.94829e+06
+      Equation: "HoleContinuityEquation"	RelError: 5.93926e-14	AbsError: 5.94839e-14
+      Equation: "PotentialEquation"	RelError: 1.39933e-15	AbsError: 1.53371e-15
+    Region: "oxide"	RelError: 6.49321e-11	AbsError: 3.10233e-11
+      Equation: "PotentialEquation"	RelError: 6.49321e-11	AbsError: 3.10233e-11
+Succeeded
+body	0.0	-2.02054031805e-15	-9.82501803716e-14	-1.0027072069e-13
+drain	0.5	1.95136358761	6.62306912269e-17	1.95136358761
+gate	0.5	7.32291289852e-13	1.48172067603e-32	7.32291289852e-13
+source	0.0	-1.9513635865	-3.83604392667e-18	-1.9513635865
