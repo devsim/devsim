@@ -2,9 +2,13 @@ Supported Platforms:
 ubuntu 12.04 32/64 bit
 Mac OS X 10.6.8 64 bit
 
+If you have any issues with installation, please contact Devsim LLC through the github website:
+https://github.com/devsim/devsim/issues
 
 There are the required dependencies for ubuntu 12.04.
-sudo apt-get install cmake git python2.7-dev g++ gcc gfortran make tcl8.5  tcl8.5-dev tclthread python2.7 python2.7-dev flex bison sqlite3 libsqlite3-dev zlib1g-dev libsqlite3-tcl
+sudo apt-get install cmake git python2.7-dev g++ gcc gfortran make tcl8.5 tcl8.5-dev tcl-dev tclthread python2.7 python2.7-dev flex bison sqlite3 libsqlite3-dev zlib1g-dev libsqlite3-tcl
+
+Note that tcl-dev package must be specified explicitly so that libtclstub.a is a symlink to tcl8.5-dev. Then SYMDIFF will compile properly.
 
 For Mac OS X, the developer tools should be installed (Xcode 3.2.6), these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
 https://developer.apple.com/technologies/tools
@@ -56,6 +60,7 @@ Compile SYMDIFF
 Compile DEVSIM
 1. sh scripts/setup_ubuntu_12.04.sh
 2. cd linux_x86_64_release
-3. ctest -j2
+3. make -j2
+4. ctest -j2
 
 Note that tests are based on exact text differences between files.  Different configuration options may affect results.
