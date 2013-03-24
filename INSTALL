@@ -1,12 +1,17 @@
 Supported Platforms:
-ubuntu 12.04 32/64 bit
+Ubuntu 12.04 32/64 bit
+Redhat 6.4 32/64 bit
 Mac OS X 10.6.8 64 bit
+
+Substitute redhat_6.4 for ubuntu_12.04 for Redhat 6.4 installations in the instructions below.
 
 If you have any issues with installation, please contact Devsim LLC through the github website:
 https://github.com/devsim/devsim/issues
 
 There are the required dependencies for ubuntu 12.04.
 sudo apt-get install cmake git python2.7-dev g++ gcc gfortran make tcl8.5 tcl8.5-dev tcl-dev tclthread python2.7 python2.7-dev flex bison sqlite3 libsqlite3-dev zlib1g-dev libsqlite3-tcl
+
+Similar dependencies are required for Redhat 6.4.
 
 Note that tcl-dev package must be specified explicitly so that libtclstub.a is a symlink to tcl8.5-dev. Then SYMDIFF will compile properly.
 
@@ -63,4 +68,7 @@ Compile DEVSIM
 3. make -j2
 4. ctest -j2
 
-Note that tests are based on exact text differences between files.  Different configuration options may affect results.
+Note that tests are based on exact text differences between files.  Different configuration options may affect results.  The following two tests will fail for the Redhat 6.4 configuration:
+thread_1 (Failed)
+fpetest2 (Timeout)
+

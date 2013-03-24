@@ -69,7 +69,18 @@ PROJECT (DEVSIM)
 #
 #
 
-# Ubuntu 12.04 64 bit
+IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+ADD_DEFINITIONS(-DTCL_THREADS -pthread -fvisibility=hidden)
+ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+IF (APPLE)
+SET (CMAKE_EXE_LINKER_FLAGS "-framework CoreFoundation")
+# don't use flat namespace, otherwise people can change out dynamic libraries
+#SET (CMAKE_EXE_LINKER_FLAGS "-framework CoreFoundation -flat_namespace")
+ADD_DEFINITIONS(-DTCL_THREADS -fvisibility=hidden)
+ENDIF (APPLE)
+
+# Ubuntu 12.04 32/64 bit
 IF (${DEVSIM_CONFIG} STREQUAL "ubuntu_12.04")
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
@@ -103,9 +114,44 @@ SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 ENDIF (${DEVSIM_CONFIG} STREQUAL "ubuntu_12.04")
 
-IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-ADD_DEFINITIONS(-DTCL_THREADS -pthread -fvisibility=hidden)
-ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+# Redhat 6.4 64 bit (not tested on 32 bit)
+IF (${DEVSIM_CONFIG} STREQUAL "redhat_6.4")
+SET (FLEX /usr/bin/flex)
+SET (BISON /usr/bin/bison)
+SET (PYTHON_INCLUDE /usr/include/python2.6)
+# use /opt/acml5.3.0/util/cpuid.exe to find support
+# ACML 5.3 available at developer.amd.com
+SET (ZLIB_INCLUDE /usr/include)
+IF (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
+# please put the correct path for libgfortran, if you know it
+SET (BLAS_ARCHIVE /opt/acml4.4.0/gfortran32/lib/libacml.a /usr/lib/gcc/i686-linux-gnu/4.6/libgfortran.a)
+SET (ZLIB_ARCHIVE /usr/lib/libz.so)
+SET (SQLITE3_ARCHIVE /usr/lib/libsqlite3.so)
+SET (TCL_STUB /usr/lib64/libtclstub8.5.a)
+SET (TCL_ARCHIVE "/usr/lib/libtcl8.5.so" -ldl)
+SET (PYTHON_ARCHIVE /usr/lib/libpython2.6.so)
+ELSE (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
+SET (BLAS_ARCHIVE /opt/acml5.3.0/gfortran64/lib/libacml.a /usr/lib/gcc/x86_64-redhat-linux/4.4.4/libgfortran.a)
+SET (ZLIB_ARCHIVE /usr/lib64/libz.so)
+SET (SQLITE3_ARCHIVE /usr/lib64/libsqlite3.so)
+SET (TCL_STUB /usr/lib64/libtclstub8.5.a)
+SET (TCL_ARCHIVE "/usr/lib64/libtcl8.5.so" -ldl)
+SET (PYTHON_ARCHIVE /usr/lib64/libpython2.6.so)
+ENDIF (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
+
+
+SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
+SET (SUPERLULOCATE  ${EXTERNAL_LIB}/SuperLU_4.3)
+SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
+SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/lib/libsuperlu_4.3.a)
+SET (TCL_INCLUDE "/usr/include/tcl8.5")
+SET (PTHREAD_LIB -lpthread)
+SET (SQLITE3_INCLUDE /usr/include)
+
+SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
+SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
+ENDIF (${DEVSIM_CONFIG} STREQUAL "redhat_6.4")
+
 
 IF (${DEVSIM_CONFIG} STREQUAL "osx_10.6.8")
 SET (FLEX /usr/bin/flex)
@@ -130,12 +176,6 @@ SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 ENDIF (${DEVSIM_CONFIG} STREQUAL "osx_10.6.8")
 
 
-IF (APPLE)
-SET (CMAKE_EXE_LINKER_FLAGS "-framework CoreFoundation")
-# don't use flat namespace, otherwise people can change out dynamic libraries
-#SET (CMAKE_EXE_LINKER_FLAGS "-framework CoreFoundation -flat_namespace")
-ADD_DEFINITIONS(-DTCL_THREADS -fvisibility=hidden)
-ENDIF (APPLE)
 
 
 ADD_DEFINITIONS(-DDEVSIM_VERSION_STRING="\\"Beta 0.01\\"")

@@ -106,6 +106,8 @@ FOREACH(I ${NEWTESTS})
     ADD_TEST("${I}" ${RUNDIFFTEST} "${DEVSIM} ${I}.tcl" ${GOLDENDIR} ${I}.out ${RUNDIR} ${OUTPUTDIR})
 ENDFOREACH(I)
 
+# on redhat 6.4 this test fails on the Tcl platform
+set_tests_properties("fpetest2" PROPERTIES TIMEOUT 5)
 set_tests_properties("mos_2d_temtest" PROPERTIES DEPENDS mos_2d)
 set_tests_properties("mos_2d_temtest2" PROPERTIES DEPENDS mos_2d)
 set_tests_properties("mos_2d_restart" PROPERTIES DEPENDS mos_2d)

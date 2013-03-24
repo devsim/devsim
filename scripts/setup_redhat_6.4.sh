@@ -1,4 +1,4 @@
-DEVSIM_CONFIG=ubuntu_12.04
+DEVSIM_CONFIG=redhat_6.4
 for TYPE in debug release; do
 ARCH=`uname -m`
 #  for ARCH in i386 x86_64; do
