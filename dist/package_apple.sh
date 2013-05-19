@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-for ARCH in i386 x86_64; do
+for ARCH in x86_64; do
 PLATFORM=osx
 SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
 SRC_BIN=${SRC_DIR}/devsim_py
@@ -22,7 +22,7 @@ cp ${SRC_BIN} ${DIST_VER}_unstripped
 
 
 mkdir -p ${DIST_DIR}/doc
-cp ../manual/devsim.pdf ${DIST_DIR}/doc
+cp ../doc/devsim.pdf ${DIST_DIR}/doc
 
 
 #### Python files and the examples
@@ -42,4 +42,4 @@ done
 
 
 tar czf ${DIST_VER}.tgz ${DIST_DIR}
-
+done

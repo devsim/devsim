@@ -68,7 +68,37 @@ Compile DEVSIM
 3. make -j2
 4. ctest -j2
 
+There are 2 executables are created:
+linux_x86_64_release/src/main/devsim is a Tcl interpreter (deprecated)
+linux_x86_64_release/src/main/devsim_py is a Python interpreter
+
+If there are issues during the build, try using:
+make VERBOSE=1
+
+in order to see what the build process is doing at the point of failure.
+
 Note that tests are based on exact text differences between files.  Different configuration options may affect results.  The following two tests will fail for the Redhat 6.4 configuration:
 thread_1 (Failed)
 fpetest2 (Timeout)
+
+Many of the tests are written in Tcl, because that was the original
+interpreter.
+cd testing
+../linux_x86_64_release/src/main/devsim sqlite1.tcl
+
+The devsim_py examples import modules with a relative path, so you'd want
+to do:
+cd examples/diode
+../../linux_x86_64_release/src/main/devsim_py diode_2d.py
+
+You can see how tests are run in:
+testing/CMakeLists.txt
+
+You can see the actual commands run during the test using:
+ctest -V
+
+or more specifically:
+ctest -V -R sqlite1
+
+There are package_linux.sh and package_apple.sh scripts in the dist directories that make a self contained distribution from a build.
 

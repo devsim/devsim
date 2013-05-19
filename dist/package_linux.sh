@@ -22,7 +22,7 @@ cp ${SRC_BIN} ${DIST_VER}_unstripped
 
 
 mkdir -p ${DIST_DIR}/doc
-cp ../manual/devsim.pdf ${DIST_DIR}/doc
+cp ../doc/devsim.pdf ${DIST_DIR}/doc
 
 
 #### Python files and the examples
