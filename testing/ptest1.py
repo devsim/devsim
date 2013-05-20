@@ -13,8 +13,6 @@
 # limitations under the License.
 
 from cap_mesh import *
-import sys
-sys.path.append('../python_packages')
 
 region_name = "MyRegion"
 device_name = "MyDevice"
@@ -23,7 +21,7 @@ material_name = "Oxide"
 mesh_name = cap_mesh(region_name, material_name)
 create_device(mesh=mesh_name, device=device_name)
 
-from simple_physics import *
+from python_packages.simple_physics import *
 
 SetOxideParameters(device_name, region_name, 300)
 CreateOxidePotentialOnly(device_name, region_name)

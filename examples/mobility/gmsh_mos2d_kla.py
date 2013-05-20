@@ -16,10 +16,8 @@
 #set_parameter -name threads_task_size -value 1024
 import gmsh_mos2d_create
 from ds import *
-import sys
-sys.path.append('../../python_packages')
-from simple_physics import *
-from ramp import *
+from python_packages.simple_physics import *
+from python_packages.ramp import *
 from Klaassen import *
 from mos_physics import *
 

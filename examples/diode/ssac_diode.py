@@ -14,9 +14,7 @@
 
 #### Small Signal simulation
 from ds import *
-import sys
-sys.path.append('../../python_packages')
-from simple_physics import *
+from python_packages.simple_physics import *
 
 #This requires a circuit element to integrated current
 circuit_element(name="V1", n1=GetContactBiasName("top"), n2=0, value=0.0, acreal=1.0, acimag=0.0)

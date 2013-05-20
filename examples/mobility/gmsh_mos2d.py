@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-sys.path.append('../../python_packages')
-from simple_physics import *
-from ramp import *
+from python_packages.simple_physics import *
+from python_packages.ramp import *
 
 import gmsh_mos2d_create
 device = "mos2d"

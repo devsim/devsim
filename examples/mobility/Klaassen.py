@@ -13,9 +13,7 @@
 # limitations under the License.
 
 from ds import *
-import sys
-sys.path.append('../../python_packages')
-from model_create import *
+from python_packages.model_create import *
 
 def Set_Mobility_Parameters(device, region):
   #As
