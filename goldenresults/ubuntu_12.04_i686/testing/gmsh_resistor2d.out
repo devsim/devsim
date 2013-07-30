@@ -1,0 +1,173 @@
+
+----------------------------------------
+
+ DEVSIM
+
+ Version: Beta 0.01
+
+ Copyright 2009-2013 Devsim LLC
+
+----------------------------------------
+
+
+Physical group name Base has 0 Tetrahedra.
+Physical group name Base has 0 Triangles.
+Physical group name Base has 19 Lines.
+Physical group name Base has 20 Points.
+Physical group name Bulk has 0 Tetrahedra.
+Physical group name Bulk has 922 Triangles.
+Physical group name Bulk has 1422 Lines.
+Physical group name Bulk has 501 Points.
+Physical group name Emitter has 0 Tetrahedra.
+Physical group name Emitter has 0 Triangles.
+Physical group name Emitter has 20 Lines.
+Physical group name Emitter has 21 Points.
+Device resistor2d has 501 coordinates with max index 501
+group Bulk has 501 nodes.
+Region Bulk has 501 nodes.
+Region Bulk has 501 nodes.
+group Emitter has 21 nodes.
+Contact bot in region Bulk with 21 nodes
+group Base has 20 nodes.
+Contact top in region Bulk with 20 nodes
+Replacing Node Model contactcharge_node in region Bulk of material Silicon
+Replacing Edge Model contactcharge_edge in region Bulk of material Silicon
+Region "Bulk" on device "resistor2d" has equations 0:500
+Device "resistor2d" has equations 0:500
+number of equations 501
+Iteration: 0
+  Device: "resistor2d"	RelError: 1.00000e+00	AbsError: 1.18743e-01
+    Region: "Bulk"	RelError: 1.00000e+00	AbsError: 1.18743e-01
+      Equation: "PotentialEquation"	RelError: 1.00000e+00	AbsError: 1.18743e-01
+Iteration: 1
+  Device: "resistor2d"	RelError: 4.97370e-01	AbsError: 1.17501e-01
+    Region: "Bulk"	RelError: 4.97370e-01	AbsError: 1.17501e-01
+      Equation: "PotentialEquation"	RelError: 4.97370e-01	AbsError: 1.17501e-01
+Iteration: 2
+  Device: "resistor2d"	RelError: 3.29472e-01	AbsError: 1.16081e-01
+    Region: "Bulk"	RelError: 3.29472e-01	AbsError: 1.16081e-01
+      Equation: "PotentialEquation"	RelError: 3.29472e-01	AbsError: 1.16081e-01
+Iteration: 3
+  Device: "resistor2d"	RelError: 2.31573e-01	AbsError: 1.05765e-01
+    Region: "Bulk"	RelError: 2.31573e-01	AbsError: 1.05765e-01
+      Equation: "PotentialEquation"	RelError: 2.31573e-01	AbsError: 1.05765e-01
+Iteration: 4
+  Device: "resistor2d"	RelError: 1.66626e-01	AbsError: 5.69775e-02
+    Region: "Bulk"	RelError: 1.66626e-01	AbsError: 5.69775e-02
+      Equation: "PotentialEquation"	RelError: 1.66626e-01	AbsError: 5.69775e-02
+Iteration: 5
+  Device: "resistor2d"	RelError: 1.26192e-01	AbsError: 4.83838e-02
+    Region: "Bulk"	RelError: 1.26192e-01	AbsError: 4.83838e-02
+      Equation: "PotentialEquation"	RelError: 1.26192e-01	AbsError: 4.83838e-02
+Iteration: 6
+  Device: "resistor2d"	RelError: 9.35477e-02	AbsError: 3.95692e-02
+    Region: "Bulk"	RelError: 9.35477e-02	AbsError: 3.95692e-02
+      Equation: "PotentialEquation"	RelError: 9.35477e-02	AbsError: 3.95692e-02
+Iteration: 7
+  Device: "resistor2d"	RelError: 6.44444e-02	AbsError: 2.91367e-02
+    Region: "Bulk"	RelError: 6.44444e-02	AbsError: 2.91367e-02
+      Equation: "PotentialEquation"	RelError: 6.44444e-02	AbsError: 2.91367e-02
+Iteration: 8
+  Device: "resistor2d"	RelError: 5.18778e-02	AbsError: 2.47384e-02
+    Region: "Bulk"	RelError: 5.18778e-02	AbsError: 2.47384e-02
+      Equation: "PotentialEquation"	RelError: 5.18778e-02	AbsError: 2.47384e-02
+Iteration: 9
+  Device: "resistor2d"	RelError: 4.56700e-05	AbsError: 2.17782e-05
+    Region: "Bulk"	RelError: 4.56700e-05	AbsError: 2.17782e-05
+      Equation: "PotentialEquation"	RelError: 4.56700e-05	AbsError: 2.17782e-05
+Iteration: 10
+  Device: "resistor2d"	RelError: 7.72659e-09	AbsError: 3.68450e-09
+    Region: "Bulk"	RelError: 7.72659e-09	AbsError: 3.68450e-09
+      Equation: "PotentialEquation"	RelError: 7.72659e-09	AbsError: 3.68450e-09
+Iteration: 11
+  Device: "resistor2d"	RelError: 2.85038e-16	AbsError: 1.35923e-16
+    Region: "Bulk"	RelError: 2.85038e-16	AbsError: 1.35923e-16
+      Equation: "PotentialEquation"	RelError: 2.85038e-16	AbsError: 1.35923e-16
+Warning: Replacing equation with equation of the same name.
+Region: Bulk, Equation: PotentialEquation, Variable: Potential
+EDGEMODEL resistor2d Bulk vdiff "((Potential@n0 - Potential@n1) * pow(V_t,(-1)))"
+EDGEMODEL resistor2d Bulk vdiff:Potential@n0 "pow(V_t,(-1))"
+EDGEMODEL resistor2d Bulk vdiff:Potential@n1 "(-vdiff:Potential@n0)"
+EDGEMODEL resistor2d Bulk Bern01 "B(vdiff)"
+EDGEMODEL resistor2d Bulk Bern01:Potential@n0 "(dBdx(vdiff) * vdiff:Potential@n0)"
+EDGEMODEL resistor2d Bulk Bern01:Potential@n1 "(-Bern01:Potential@n0)"
+EDGEMODEL resistor2d Bulk Bern10 "(Bern01 + vdiff)"
+EDGEMODEL resistor2d Bulk Bern10:Potential@n0 "(Bern01:Potential@n0 + vdiff:Potential@n0)"
+EDGEMODEL resistor2d Bulk Bern10:Potential@n1 "(Bern01:Potential@n1 + vdiff:Potential@n1)"
+EDGEMODEL resistor2d Bulk ElectronCurrent "(ElectronCharge * V_t * mu_n * ((Electrons@n1 * Bern10) - (Bern01 * Electrons@n0)) * EdgeInverseLength)"
+EDGEMODEL resistor2d Bulk ElectronCurrent:Electrons@n0 "((ElectronCharge * V_t * mu_n * (-(Bern01 * Electrons@n0) + (Bern10 * Electrons@n1)) * EdgeInverseLength:Electrons@n0) + (ElectronCharge * V_t * mu_n * (-Bern01 - (Bern01:Electrons@n0 * Electrons@n0) + (Bern10 * Electrons@n1:Electrons@n0) + (Bern10:Electrons@n0 * Electrons@n1)) * EdgeInverseLength))"
+EDGEMODEL resistor2d Bulk ElectronCurrent:Electrons@n1 "((ElectronCharge * V_t * mu_n * (-(Bern01 * Electrons@n0) + (Bern10 * Electrons@n1)) * EdgeInverseLength:Electrons@n1) + (ElectronCharge * V_t * mu_n * (-(Bern01 * Electrons@n0:Electrons@n1) - (Bern01:Electrons@n1 * Electrons@n0) + (Bern10:Electrons@n1 * Electrons@n1) + Bern10) * EdgeInverseLength))"
+EDGEMODEL resistor2d Bulk ElectronCurrent:Potential@n0 "((ElectronCharge * V_t * mu_n * (-(Bern01 * Electrons@n0) + (Bern10 * Electrons@n1)) * EdgeInverseLength:Potential@n0) + (ElectronCharge * V_t * mu_n * (-(Bern01 * Electrons@n0:Potential@n0) - (Bern01:Potential@n0 * Electrons@n0) + (Bern10 * Electrons@n1:Potential@n0) + (Bern10:Potential@n0 * Electrons@n1)) * EdgeInverseLength))"
+EDGEMODEL resistor2d Bulk ElectronCurrent:Potential@n1 "((ElectronCharge * V_t * mu_n * (-(Bern01 * Electrons@n0) + (Bern10 * Electrons@n1)) * EdgeInverseLength:Potential@n1) + (ElectronCharge * V_t * mu_n * (-(Bern01 * Electrons@n0:Potential@n1) - (Bern01:Potential@n1 * Electrons@n0) + (Bern10 * Electrons@n1:Potential@n1) + (Bern10:Potential@n1 * Electrons@n1)) * EdgeInverseLength))"
+EDGEMODEL resistor2d Bulk HoleCurrent "(-ElectronCharge * V_t * mu_p * ((Holes@n1 * Bern01) - (Bern10 * Holes@n0)) * EdgeInverseLength)"
+EDGEMODEL resistor2d Bulk HoleCurrent:Holes@n0 "(-(ElectronCharge * V_t * mu_p * (-(Bern10 * Holes@n0) + (Bern01 * Holes@n1)) * EdgeInverseLength:Holes@n0) - (ElectronCharge * V_t * mu_p * (-Bern10 - (Bern10:Holes@n0 * Holes@n0) + (Bern01 * Holes@n1:Holes@n0) + (Bern01:Holes@n0 * Holes@n1)) * EdgeInverseLength))"
+EDGEMODEL resistor2d Bulk HoleCurrent:Holes@n1 "(-(ElectronCharge * V_t * mu_p * (-(Bern10 * Holes@n0) + (Bern01 * Holes@n1)) * EdgeInverseLength:Holes@n1) - (ElectronCharge * V_t * mu_p * (-(Bern10 * Holes@n0:Holes@n1) - (Bern10:Holes@n1 * Holes@n0) + (Bern01:Holes@n1 * Holes@n1) + Bern01) * EdgeInverseLength))"
+EDGEMODEL resistor2d Bulk HoleCurrent:Potential@n0 "(-(ElectronCharge * V_t * mu_p * (-(Bern10 * Holes@n0) + (Bern01 * Holes@n1)) * EdgeInverseLength:Potential@n0) - (ElectronCharge * V_t * mu_p * (-(Bern10 * Holes@n0:Potential@n0) - (Bern10:Potential@n0 * Holes@n0) + (Bern01 * Holes@n1:Potential@n0) + (Bern01:Potential@n0 * Holes@n1)) * EdgeInverseLength))"
+EDGEMODEL resistor2d Bulk HoleCurrent:Potential@n1 "(-(ElectronCharge * V_t * mu_p * (-(Bern10 * Holes@n0) + (Bern01 * Holes@n1)) * EdgeInverseLength:Potential@n1) - (ElectronCharge * V_t * mu_p * (-(Bern10 * Holes@n0:Potential@n1) - (Bern10:Potential@n1 * Holes@n0) + (Bern01 * Holes@n1:Potential@n1) + (Bern01:Potential@n1 * Holes@n1)) * EdgeInverseLength))"
+Region "Bulk" on device "resistor2d" has equations 0:1502
+Device "resistor2d" has equations 0:1502
+number of equations 1503
+drop tolerance_ 0.5 dropped 13380 kept 4288 outofrange 0 drop % 75.7301
+GMRES back vectors 50/50 linear iterations 79/100 relative tolerance 6.98063e-21/1e-20 linear convergence 0
+Iteration: 0
+  Device: "resistor2d"	RelError: 1.09820e-14	AbsError: 5.37600e+03
+    Region: "Bulk"	RelError: 1.09820e-14	AbsError: 5.37600e+03
+      Equation: "ElectronContinuityEquation"	RelError: 5.37600e-15	AbsError: 5.37600e+03
+      Equation: "HoleContinuityEquation"	RelError: 5.40012e-15	AbsError: 5.40012e-13
+      Equation: "PotentialEquation"	RelError: 2.05843e-16	AbsError: 9.81582e-17
+top	0.0	-2.3285138506636414e-14	-1.1401141232974976e-30	-2.3285138506636414e-14
+bot	0.0	-2.2948707623086688e-14	-1.1157615442738105e-30	-2.2948707623086688e-14
+Region "Bulk" on device "resistor2d" has equations 0:1502
+Device "resistor2d" has equations 0:1502
+number of equations 1503
+drop tolerance_ 0.5 dropped 13380 kept 4288 outofrange 0 drop % 75.7301
+GMRES back vectors 50/50 linear iterations 100/100 relative tolerance 10.5963/1e-20 linear convergence 1
+Iteration: 0
+  Device: "resistor2d"	RelError: 7.90907e-02	AbsError: 1.00181e+03
+    Region: "Bulk"	RelError: 7.90907e-02	AbsError: 1.00181e+03
+      Equation: "ElectronContinuityEquation"	RelError: 1.00177e-15	AbsError: 1.00177e+03
+      Equation: "HoleContinuityEquation"	RelError: 7.48774e-15	AbsError: 7.48774e-13
+      Equation: "PotentialEquation"	RelError: 7.90907e-02	AbsError: 4.09542e-02
+drop tolerance_ 0.5 dropped 13382 kept 4286 outofrange 0 drop % 75.7415
+GMRES back vectors 50/50 linear iterations 100/100 relative tolerance 0.560071/1e-20 linear convergence 1
+Iteration: 1
+  Device: "resistor2d"	RelError: 5.60782e-02	AbsError: 1.22206e+03
+    Region: "Bulk"	RelError: 5.60782e-02	AbsError: 1.22206e+03
+      Equation: "ElectronContinuityEquation"	RelError: 1.22203e-15	AbsError: 1.22203e+03
+      Equation: "HoleContinuityEquation"	RelError: 1.03271e-14	AbsError: 1.03271e-12
+      Equation: "PotentialEquation"	RelError: 5.60782e-02	AbsError: 3.07632e-02
+drop tolerance_ 0.5 dropped 13380 kept 4288 outofrange 0 drop % 75.7301
+GMRES back vectors 50/50 linear iterations 100/100 relative tolerance 0.400536/1e-20 linear convergence 1
+Iteration: 2
+  Device: "resistor2d"	RelError: 4.51298e-02	AbsError: 6.24423e+02
+    Region: "Bulk"	RelError: 4.51298e-02	AbsError: 6.24423e+02
+      Equation: "ElectronContinuityEquation"	RelError: 6.24397e-16	AbsError: 6.24397e+02
+      Equation: "HoleContinuityEquation"	RelError: 5.29213e-15	AbsError: 5.29213e-13
+      Equation: "PotentialEquation"	RelError: 4.51298e-02	AbsError: 2.58302e-02
+drop tolerance_ 0.5 dropped 13380 kept 4288 outofrange 0 drop % 75.7301
+GMRES back vectors 50/50 linear iterations 100/100 relative tolerance 0.0976612/1e-20 linear convergence 1
+Iteration: 3
+  Device: "resistor2d"	RelError: 1.58883e-02	AbsError: 3.17538e+02
+    Region: "Bulk"	RelError: 1.58883e-02	AbsError: 3.17538e+02
+      Equation: "ElectronContinuityEquation"	RelError: 3.17529e-16	AbsError: 3.17529e+02
+      Equation: "HoleContinuityEquation"	RelError: 1.52376e-15	AbsError: 1.52376e-13
+      Equation: "PotentialEquation"	RelError: 1.58883e-02	AbsError: 9.16533e-03
+drop tolerance_ 0.5 dropped 13380 kept 4288 outofrange 0 drop % 75.7301
+GMRES back vectors 50/50 linear iterations 100/100 relative tolerance 4.26024e-06/1e-20 linear convergence 1
+Iteration: 4
+  Device: "resistor2d"	RelError: 1.80504e-07	AbsError: 1.70907e+02
+    Region: "Bulk"	RelError: 1.80504e-07	AbsError: 1.70907e+02
+      Equation: "ElectronContinuityEquation"	RelError: 1.70907e-16	AbsError: 1.70907e+02
+      Equation: "HoleContinuityEquation"	RelError: 2.16115e-16	AbsError: 2.16115e-14
+      Equation: "PotentialEquation"	RelError: 1.80504e-07	AbsError: 9.51149e-08
+drop tolerance_ 0.5 dropped 13380 kept 4288 outofrange 0 drop % 75.7301
+GMRES back vectors 50/50 linear iterations 100/100 relative tolerance 2.84372e-10/1e-20 linear convergence 1
+Iteration: 5
+  Device: "resistor2d"	RelError: 1.14580e-11	AbsError: 1.75627e+02
+    Region: "Bulk"	RelError: 1.14580e-11	AbsError: 1.75627e+02
+      Equation: "ElectronContinuityEquation"	RelError: 1.75627e-16	AbsError: 1.75627e+02
+      Equation: "HoleContinuityEquation"	RelError: 2.16196e-16	AbsError: 2.16196e-14
+      Equation: "PotentialEquation"	RelError: 1.14576e-11	AbsError: 5.80812e-12
+top	0.1	6.421900970875007	3.210950485437501e-16	6.421900970875007
+bot	0.0	-6.421900970874961	-3.210950485437478e-16	-6.421900970874961
+Volume 1.0032803103529684e-10

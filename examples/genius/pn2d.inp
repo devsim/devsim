@@ -1,0 +1,80 @@
+#==============================================================================
+# Genius example: PN Diode simulation
+# On the first step, we will generate simulation structure for the diode.
+# Then the generated CGNS file will be used on later steps.
+#==============================================================================
+
+
+
+GLOBAL    T=300 DopingScale=1e18  Z.Width=1.0
+
+#------------------------------------------------------------------------------
+# Create an initial simulation mesh
+MESH      Type = S_Tri3 triangle="pzADq30"
+
+X.MESH    WIDTH=1.0   N.SPACES=5
+X.MESH    WIDTH=1.0   N.SPACES=5
+X.MESH    WIDTH=1.0   N.SPACES=5
+
+
+Y.MESH    DEPTH=1.0  N.SPACES=5
+Y.MESH    DEPTH=1.0  N.SPACES=5
+Y.MESH    DEPTH=1.0  N.SPACES=5
+
+
+#------------------------------------------------------------------------------
+# Specify silicon and metal regions.
+REGION    Label=Silicon  Material=Si
+
+# Specify boundary face
+FACE      Label=Anode    Location=TOP   x.min=0 x.max=1.0
+FACE      Label=Cathode  Location=BOT
+
+#------------------------------------------------------------------------------
+# doping profile
+DOPING Type=Analytic
+PROFILE   Type=Uniform    Ion=Donor     N.PEAK=1E18  X.MIN=0.0 X.MAX=3.0  \
+          Y.min=0.0 Y.max=3.0        Z.MIN=0.0 Z.MAX=3.0
+
+PROFILE   Type=Analytic   Ion=Acceptor  N.PEAK=1E19  X.MIN=0.0 X.MAX=1.0  \
+          Z.MIN=0.0 Z.MAX=1.0 \
+	  Y.min=0.0 Y.max=0.0 X.CHAR=0.2  Z.CHAR=0.2 Y.JUNCTION=0.5
+
+#------------------------------------------------------------------------------
+# boundary condition
+BOUNDARY ID=Anode   Type=Ohmic RES=1000
+BOUNDARY ID=Cathode Type=Ohmic
+
+vsource Type = VSIN   ID = Vs   Tdelay=0 Vamp=1.0 Freq=1e6  # 1MHz
+
+# refine by doping
+REFINE.C  Variable=Doping error.fraction=0.7 Measure=signedlog
+
+# refine by potential
+METHOD    Type=Poisson NS=Basic
+SOLVE
+REFINE.C  Variable=Potential error.fraction=0.7
+
+PLOT
+
+# get initial condition by poisson's equation
+METHOD    Type=Poisson NS=Basic
+SOLVE
+
+# solver diode forward IV
+MODEL     Region=Silicon Mobility.Force=EQF
+METHOD    Type=DDML1 NS=Basic LS=MUMPS MaxIt=20
+SOLVE     TYpe=EQ
+EXPORT   CGNSFILE=pn2d.cgns
+
+
+HOOK      Load=vtk
+SOLVE     TYpe=DC Vscan=Anode Vstart=0 Vstep=0.1 Vstop=1.0 out.prefix=diode2d_iv
+
+#ATTACH    Electrode=Anode Vapp=Vs
+#HOOK      Load=vtk
+#SOLVE     Type=tran Tstart=0.0 Tstep=0.1e-6 Tstop=3e-6 
+
+# export result
+EXPORT   VTKFILE=pn2d.vtk  ascii=true
+#EXPORT   bcinfo=bc.inc

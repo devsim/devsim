@@ -1,0 +1,6 @@
+These examples are from the Genius TCAD Device Simulator from Cogenda.
+(http://www.cogenda.com)
+pn2d.inp
+nmos1_tri.inp
+
+Modifications were made to create compatible meshes in DEVSIM.

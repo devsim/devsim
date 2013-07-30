@@ -1,0 +1,24 @@
+
+----------------------------------------
+
+ DEVSIM
+
+ Version: Beta 0.01
+
+ Copyright 2009-2013 Devsim LLC
+
+----------------------------------------
+
+
+bot
+ (region: MyRegion)
+ (contact: top)
+ (contact: bot)
+while evaluating node model test1 on Device: MyDevice on Region: MyRegion
+There was a Invalid floating point exception while evaluating log((-1))
+while evaluating model test1: expression log((-1)) evaluates to invalid
+DEVSIM FATAL
+while evaluating node model test2 on Device: MyDevice on Region: MyRegion
+There was a Divide-by-zero floating point exception while evaluating log(x)
+while evaluating model test2: expression log(x) evaluates to invalid
+DEVSIM FATAL

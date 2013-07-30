@@ -1,0 +1,74 @@
+#==============================================================================
+# GENIUS Example. Build NMOS with Triangle mesh
+#==============================================================================
+
+GLOBAL    T=300 DopingScale=1e18 Z.Width=1.0
+
+# Create an initial simulation mesh
+
+MESH      Type = S_Tri3  Triangle="pzAQ"
+
+
+X.MESH    WIDTH=0.6  N.SPACES=6
+X.MESH    WIDTH=0.4  N.SPACES=10
+X.MESH    WIDTH=1.0  N.SPACES=18
+X.MESH    WIDTH=0.4  N.SPACES=10
+X.MESH    WIDTH=0.6  N.SPACES=6
+
+Y.MESH    Y.TOP=0.025 DEPTH=0.025 N.SPACES=2
+Y.MESH    DEPTH=0.2  N.SPACES=6
+Y.MESH    DEPTH=0.3  N.SPACES=6
+Y.MESH    DEPTH=0.5  N.SPACES=4
+Y.MESH    DEPTH=1.0  N.SPACES=4
+
+
+# Eliminate some unnecessary substrate nodes
+ELIMINATE    Direction=Y  Y.TOP=1.1
+
+SPREAD    Location=Left  Width=0.625 Upper=0 Lower=2 Thickness=0.1 Encroach=1
+SPREAD    Location=Right Width=0.625 Upper=0 Lower=2 Thickness=0.1 Encroach=1
+
+# Specify oxide and silicon regions
+REGION    Label=NSilicon  Material=Si
+REGION    Label=NOxide    IY.MAX=2 Material=Ox
+REGION    Label=NSource   X.min=0.0 X.MAX=0.5  IY.MAX=2 Material=Elec
+REGION    Label=NDrain    X.MIN=2.5 X.MAX=3.0  IY.MAX=2 Material=Elec
+
+FACE      Label=SUB Location=BOTTOM
+FACE      Label=GATE  Location=Top  X.MIN=0.7 X.MAX=2.3
+
+DOPING    Type=analytic
+PROFILE   Type=Uniform Ion=Acceptor  N.PEAK=3E15 X.MIN=0.0  \
+          X.MAX=3.0 Y.TOP=0 Y.BOTTOM=2.5 Z.MIN=0 Z.MAX=3.0
+PROFILE   Type=analytic   Ion=Acceptor  N.PEAK=2E16 X.MIN=0.0  \
+          X.MAX=3.0 Y.TOP=0 Y.CHAR=0.25 Z.MIN=0 Z.MAX=3.0
+PROFILE   Type=analytic   Ion=Donor  N.PEAK=2E20  Y.Junction=0.34   \
+          X.MIN=0.0  X.MAX=0.5   XY.RATIO=.75   Z.MIN=0 Z.MAX=3.0
+PROFILE   Type=analytic   Ion=Donor  N.PEAK=2E20  Y.Junction=0.34   \
+          X.MIN=2.5  X.MAX=3.0   XY.RATIO=.75   Z.MIN=0 Z.MAX=3.0
+
+BOUNDARY ID=NOxide_to_NSilicon Type=InsulatorInterface  QF=1e10
+BOUNDARY ID=SUB Type=Ohmic
+BOUNDARY ID=GATE Type=Gate Work=4.17
+
+#Vsource Type = VDC    ID = GND    Tdelay=0   Vconst=0
+#InterConnect ID=SS ConnectTo=NSource ConnectTo=SUB
+#ATTACH    Elec=SS    Vapp=GND
+PLOT
+
+#EXPORT   VTKFILE=nmos_tri0.vtk
+#REFINE.C   Variable=Potential cell.fraction=0.2
+#EXPORT   VTKFILE=nmos_tri1.vtk
+
+#METHOD    Type=Poisson
+#SOLVE
+#REFINE.C    Variable=Potential cell.fraction=0.2
+
+METHOD    Type=Poisson
+SOLVE
+
+#PMI       Region=NSilicon type=band model=Schenk
+METHOD    Type=DDML1 NS=Basic NS=linesearch LS=LU damping=potential
+SOLVE     Type=EQU
+
+EXPORT    VTKFILE=nmos_tri.vtk CGNSFILE=nmos_tri.cgns
