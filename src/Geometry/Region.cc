@@ -39,6 +39,9 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "MaterialDB.hh"
 #include "GlobalData.hh"
 
+#include "Interface.hh"
+#include "InterfaceNodeModel.hh"
+
 #include "dsAssert.hh"
 
 #include <algorithm>
@@ -1498,6 +1501,23 @@ void Region::SetMaterial(const std::string &new_material)
       {
         this->SignalCallbacks(parameter_name);
       }
+    }
+  }
+
+  //// Mark all interface models as being out of date
+  //// contact models already belong to region
+  //// Should do this when parameters change as well
+  const Device::InterfaceList_t &iml = GetDevice()->GetInterfaceList();
+  for (Device::InterfaceList_t::const_iterator it = iml.begin(); it != iml.end(); ++it)
+  {
+    Interface *interface = it->second;
+    if ((interface->GetRegion0() == this) || (interface->GetRegion1() == this))
+    {
+        const Interface::NameToInterfaceNodeModelMap_t &iml = interface->GetInterfaceNodeModelList();
+        for (Interface::NameToInterfaceNodeModelMap_t::const_iterator it = iml.begin(); it != iml.end(); ++it)
+        {
+          it->second->MarkOld();
+        }
     }
   }
 

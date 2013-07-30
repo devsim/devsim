@@ -3,6 +3,7 @@
 #include "GmshReader.hh"
 #include "GmshLoader.hh"
 #include "MeshKeeper.hh"
+#include "MeshLoaderUtility.hh"
 #include "OutputStream.hh"
 #include <sstream>
 #include <vector>
@@ -17,7 +18,7 @@ bool processElement(dsMesh::GmshLoader &, const std::vector<int> &);
 //%token HELP
 %token <dval> FLOAT
 %token <ival> INT
-%token <str>  WORD
+%token <str>  WORD MESHFORMAT
 %token EOL
 %token        BEG_MESHFORMAT    END_MESHFORMAT
 %token        BEG_PHYSICALNAMES END_PHYSICALNAMES
@@ -32,8 +33,19 @@ all : | meshformat
     ;
 
 meshformat :
-        BEG_MESHFORMAT EOL INT INT INT EOL END_MESHFORMAT EOL
-        | BEG_MESHFORMAT EOL FLOAT INT INT EOL END_MESHFORMAT EOL
+        BEG_MESHFORMAT EOL MESHFORMAT EOL END_MESHFORMAT EOL
+        {
+          if ( 
+            ($3 != "2.2 0 8") &&
+            ($3 != "2.1 0 8")
+          )
+          {
+            std::ostringstream os;
+            os << "ERROR: MeshFormat " << $3 << " not supported\n";
+            Gmsherror(os.str().c_str());
+            YYABORT;
+          }
+        }
         | meshformat physicalnames
         | meshformat nodes
         | meshformat elements
@@ -42,47 +54,32 @@ meshformat :
 
 physicalnames :
         BEG_PHYSICALNAMES EOL INT EOL
-        | physicalnames INT WORD EOL
-        {
-          if ($2 < 1)
-          {
-            std::ostringstream os;
-            os << "ERROR: PhysicalName mapping " << $2 << " to " << $3 << " must refer to a positive index\n";
-            Gmsherror(os.str().c_str());
-            YYABORT;
-          }
-          else if (dsGmshParse::GmshLoader->HasPhysicalName($2))
-          {
-            std::ostringstream os;
-            os << "ERROR: PhysicalName mapping" << $2 << " to " << $3 << " cannot be used since " << $2 << " already maps to " << dsGmshParse::GmshLoader->GetPhysicalName($2)<< "\n";
-            Gmsherror(os.str().c_str());
-            YYABORT;
-          }
-          else
-          {
-            dsGmshParse::GmshLoader->AddPhysicalName($2, $3);
-          }
-        }
         | physicalnames INT INT WORD EOL
         {
-          //// This is the new Gmsh format 2.1 0 8 requirement for dimensionality of region
-          if ($3 < 1)
+          if (($2 < 0) || ($2 > 3))
           {
             std::ostringstream os;
-            os << "ERROR: PhysicalName mapping " << $3 << " to " << $4 << " must refer to a positive index\n";
+            os << "ERROR: PhysicalName mapping " << $3 << " to " << $4 << " cannot have dimension " << $2 << "\n";
             Gmsherror(os.str().c_str());
             YYABORT;
           }
-          else if (dsGmshParse::GmshLoader->HasPhysicalName($3))
+          else if ($3 < 1)
           {
             std::ostringstream os;
-            os << "ERROR: PhysicalName mapping" << $3 << " to " << $4 << " cannot be used since " << $3 << " already maps to " << dsGmshParse::GmshLoader->GetPhysicalName($3)<< "\n";
+            os << "ERROR: PhysicalName mapping " << $3 << " to " << $4 << " dimension " << $2 << " must refer to a positive index\n";
+            Gmsherror(os.str().c_str());
+            YYABORT;
+          }
+          else if (dsGmshParse::GmshLoader->HasPhysicalName($2, $3))
+          {
+            std::ostringstream os;
+            os << "ERROR: PhysicalName mapping" << $3 << " to " << $4 << " dimension " << $2 << " cannot be used since " << $3 << " already maps to " << dsGmshParse::GmshLoader->GetPhysicalName($2, $3)<< "\n";
             Gmsherror(os.str().c_str());
             YYABORT;
           }
           else
           {
-            dsGmshParse::GmshLoader->AddPhysicalName($3, $4);
+            dsGmshParse::GmshLoader->AddPhysicalName($2, $3, $4);
           }
         }
         | physicalnames END_PHYSICALNAMES EOL
@@ -188,7 +185,7 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
 
   const int element_number = ilist[1];
 
-  dsMesh::GmshElement::ElementType_t element_enum = dsMesh::GmshElement::UNKNOWN;
+  dsMesh::Shapes::ElementType_t element_enum = dsMesh::Shapes::UNKNOWN;
 
 /*
   const char *TypeNames[] =
@@ -204,22 +201,22 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
   switch (element_number)
   {
     case 15:
-      element_enum = dsMesh::GmshElement::POINT;
+      element_enum = dsMesh::Shapes::POINT;
       break;
     case 1:
-      element_enum = dsMesh::GmshElement::LINE;
+      element_enum = dsMesh::Shapes::LINE;
       break;
     case 2:
-      element_enum = dsMesh::GmshElement::TRIANGLE;
+      element_enum = dsMesh::Shapes::TRIANGLE;
       break;
     case 4:
-      element_enum = dsMesh::GmshElement::TETRAHEDRON;
+      element_enum = dsMesh::Shapes::TETRAHEDRON;
       break;
     default:
       break;
   };
 
-  if (element_enum == dsMesh::GmshElement::UNKNOWN)
+  if (element_enum == dsMesh::Shapes::UNKNOWN)
   {
     std::ostringstream os;
     os << "ERROR: Unable to process element of type " << element_number << "\n";
@@ -297,10 +294,10 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
 
   const size_t indexes_size = indexes.size();
   if (
-      ((element_enum == dsMesh::GmshElement::POINT) && (indexes_size == 1)) ||
-      ((element_enum == dsMesh::GmshElement::LINE) && (indexes_size == 2)) ||
-      ((element_enum == dsMesh::GmshElement::TRIANGLE) && (indexes_size == 3)) ||
-      ((element_enum == dsMesh::GmshElement::TETRAHEDRON) && (indexes_size == 4))
+      ((element_enum == dsMesh::Shapes::POINT) && (indexes_size == 1)) ||
+      ((element_enum == dsMesh::Shapes::LINE) && (indexes_size == 2)) ||
+      ((element_enum == dsMesh::Shapes::TRIANGLE) && (indexes_size == 3)) ||
+      ((element_enum == dsMesh::Shapes::TETRAHEDRON) && (indexes_size == 4))
      )
   {
     gmsh.AddElement(dsMesh::GmshElement(element_index, physical_number, element_enum, indexes));

@@ -53,8 +53,8 @@ add_2d_region(mesh=device, material="metal", region="m1" , yl=y1  , yh=y2  , xl=
 add_2d_region(mesh=device, material="metal", region="m2" , yl=y3  , yh=y4  , xl=x2  , xh=x3)
 
 # must be air since contacts don't have any equations
-add_2d_contact(mesh=device, name="bot", region="air", yl=y1, yh=y2, xl=x1, xh=x4)
-add_2d_contact(mesh=device, name="top", region="air", yl=y3, yh=y4, xl=x2, xh=x3)
+add_2d_contact(mesh=device, name="bot", region="air", yl=y1, yh=y2, xl=x1, xh=x4, material="metal")
+add_2d_contact(mesh=device, name="top", region="air", yl=y3, yh=y4, xl=x2, xh=x3, material="metal")
 finalize_mesh(mesh=device)
 create_device(mesh=device, device=device)
 

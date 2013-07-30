@@ -45,8 +45,8 @@ set region MyRegion
 create_1d_mesh -mesh dog
 add_1d_mesh_line -mesh dog -pos 0 -ps 0.1 -tag top
 add_1d_mesh_line -mesh dog -pos 1 -ps 0.1 -tag bot
-add_1d_contact   -mesh dog -name top -tag top
-add_1d_contact   -mesh dog -name bot -tag bot
+add_1d_contact   -mesh dog -name top -tag top -material metal
+add_1d_contact   -mesh dog -name bot -tag bot -material metal
 add_1d_region    -mesh dog -material Si -region $region -tag1 top -tag2 bot
 finalize_mesh -mesh dog
 create_device -mesh dog -device $device

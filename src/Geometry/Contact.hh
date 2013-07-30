@@ -62,10 +62,12 @@ class Contact {
       typedef std::map<std::string, ContactEquationPtr> ContactEquationPtrMap_t;
 
       ~Contact();
-      Contact(const std::string &, RegionPtr, const ConstNodeList_t &/*n*/);
+      Contact(const std::string &, RegionPtr, const ConstNodeList_t &/*n*/, const std::string &/*material*/);
 
       ConstRegionPtr     GetRegion() const;
       const std::string &GetName() const;
+      const std::string &GetMaterialName() const;
+      void  SetMaterial(const std::string &/*material_name*/);
       const ConstNodeList_t     &GetNodes() const;
       const ConstEdgeList_t     &GetEdges() const;
       const ConstTriangleList_t &GetTriangles() const;
@@ -87,6 +89,7 @@ class Contact {
         Contact(const Contact &);
         Contact &operator=(const Contact &);
         std::string             name;
+        std::string             materialName;
         RegionPtr               region;
         ConstNodeList_t         contactnodes;
         mutable ConstEdgeList_t     contactedges;

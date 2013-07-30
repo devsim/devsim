@@ -21,8 +21,8 @@ region="Bulk"
 #this reads in the gmsh format
 create_gmsh_mesh (mesh="diode2d", file="gmsh_diode2d.msh")
 add_gmsh_region  (mesh="diode2d", gmsh_name="Bulk",    region="Bulk", material="Silicon")
-add_gmsh_contact (mesh="diode2d", gmsh_name="Base",    region="Bulk", name="top")
-add_gmsh_contact (mesh="diode2d", gmsh_name="Emitter", region="Bulk", name="bot")
+add_gmsh_contact (mesh="diode2d", gmsh_name="Base",    region="Bulk", material="metal", name="top")
+add_gmsh_contact (mesh="diode2d", gmsh_name="Emitter", region="Bulk", material="metal", name="bot")
 finalize_mesh    (mesh="diode2d")
 create_device    (mesh="diode2d", device=device)
 

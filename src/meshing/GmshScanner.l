@@ -33,9 +33,9 @@ UTF8   {U81}|{U82}|{U83}|{U84}|{U85}
 
 <*>[\n]	{++dsGmshParse::meshlineno; return EOL;}
 
-<*>{float1}|{float2}|{float3}    {Gmshlval.dval = atof(yytext); return FLOAT;}
+<NODES_SEC>{float1}|{float2}|{float3}    {Gmshlval.dval = atof(yytext); return FLOAT;}
 
-<*>{integer}   {Gmshlval.dval = atof(yytext); Gmshlval.ival = atof(yytext); return INT;}
+<PHYSICALNAMES_SEC,NODES_SEC,ELEMENTS_SEC>{integer}   {Gmshlval.dval = atof(yytext); Gmshlval.ival = atof(yytext); return INT;}
 
 <INITIAL>^\$MeshFormat {
 		yy_push_state(MESHFORMAT_SEC);
@@ -46,6 +46,11 @@ UTF8   {U81}|{U82}|{U83}|{U84}|{U85}
 		yy_pop_state();
 		return END_MESHFORMAT;
 	    }
+
+<MESHFORMAT_SEC>^[0-9. ]+ {
+		Gmshlval.str = yytext;
+                return MESHFORMAT;
+            }
 
 <INITIAL>^\$PhysicalNames {
 		yy_push_state(PHYSICALNAMES_SEC);
@@ -78,7 +83,7 @@ UTF8   {U81}|{U82}|{U83}|{U84}|{U85}
 		return END_ELEMENTS;
 	    }
 
-<*>\"([A-Za-z]|{UTF8})([A-Za-z_0-9:@]|{UTF8})*\" {
+<PHYSICALNAMES_SEC>\"([A-Za-z]|{UTF8})([A-Za-z_0-9:@]|{UTF8})*\" {
                 std::string temp(yytext);
                 //// Get rid of the quotation marks
                 temp = temp.substr(1, temp.size()-2);
@@ -86,7 +91,7 @@ UTF8   {U81}|{U82}|{U83}|{U84}|{U85}
 		return WORD;
             }
 
-<*>([A-Za-z]|{UTF8})([A-Za-z_0-9:@]|{UTF8})*  {
+<PHYSICALNAMES_SEC>([A-Za-z]|{UTF8})([A-Za-z_0-9:@]|{UTF8})*  {
 		Gmshlval.str = yytext;
 		return WORD;
 	    }

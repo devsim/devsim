@@ -27,6 +27,8 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "Edge.hh"
 #include "Node.hh"
 #include "Triangle.hh"
+#include "NodeModel.hh"
+#include "EdgeModel.hh"
 #include <string>
 #include <vector>
 
@@ -44,8 +46,8 @@ template <typename T> void deleteMapPointers(std::map<std::string, T *> &x)
 }
 }
 
-Contact::Contact(const std::string &nm, RegionPtr r, const ConstNodeList_t &cnv)
-    : name(nm), region(r), contactnodes(cnv)
+Contact::Contact(const std::string &nm, RegionPtr r, const ConstNodeList_t &cnv, const std::string &mname)
+    : name(nm), region(r), contactnodes(cnv), materialName(mname)
 {
 }
 
@@ -57,6 +59,35 @@ ConstRegionPtr Contact::GetRegion() const
 const std::string &Contact::GetName() const
 {
     return name;
+}
+
+const std::string &Contact::GetMaterialName() const
+{
+    return materialName;
+}
+
+void Contact::SetMaterial(const std::string &new_material)
+{
+  /*
+    for now just invalidate any models that are on the region and on the contact
+  */
+  const Region::NodeModelList_t &nml = GetRegion()->GetNodeModelList();
+  for (Region::NodeModelList_t::const_iterator it = nml.begin(); it != nml.end(); ++it)
+  {
+    if (&(it->second->GetContact()) == this)
+    {
+      it->second->MarkOld();
+    }
+  }
+  const Region::EdgeModelList_t &eml = GetRegion()->GetEdgeModelList();
+  for (Region::EdgeModelList_t::const_iterator it = eml.begin(); it != eml.end(); ++it)
+  {
+    if (&(it->second->GetContact()) == this)
+    {
+      it->second->MarkOld();
+    }
+  }
+  materialName = new_material;
 }
 
 const ConstNodeList &Contact::GetNodes() const

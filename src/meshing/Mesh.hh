@@ -44,5 +44,6 @@ class Mesh {
         std::string name;
         bool finalized;
 };
+
 }
 #endif

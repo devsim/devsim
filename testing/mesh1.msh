@@ -39,12 +39,12 @@ begin_edges
 9 10
 end_edges
 end_region
-begin_contact top MyRegion
+begin_contact top MyRegion metal
 begin_nodes
 0
 end_nodes
 end_contact
-begin_contact bot MyRegion
+begin_contact bot MyRegion metal
 begin_nodes
 10
 end_nodes

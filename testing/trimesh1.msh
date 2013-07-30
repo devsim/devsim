@@ -34,12 +34,12 @@ begin_triangles
 2 3 5
 end_triangles
 end_region
-begin_contact top MyRegion
+begin_contact top MyRegion metal
 begin_nodes
 4 5
 end_nodes
 end_contact
-begin_contact bot MyRegion
+begin_contact bot MyRegion metal
 begin_nodes
 0 1
 end_nodes

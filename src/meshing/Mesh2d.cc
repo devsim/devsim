@@ -331,10 +331,11 @@ bool Mesh2d::Finalize_(std::string &errorString)
                 }
 
                 const std::string &r  = mc.GetRegion();
+                const std::string &m  = mc.GetMaterial();
 
                 if (!meshLoader->IsMeshContact(nm))
                 {
-                    meshLoader->AddContact(new MeshContact(nm, r));
+                    meshLoader->AddContact(new MeshContact(nm, r, m));
                 }
 
                 CoordinateToNode_t::iterator cn = CoordinateToNode.find(r);

@@ -9,7 +9,7 @@ If you have any issues with installation, please contact Devsim LLC through the 
 https://github.com/devsim/devsim/issues
 
 There are the required dependencies for ubuntu 12.04.
-sudo apt-get install cmake git python2.7-dev g++ gcc gfortran make tcl8.5 tcl8.5-dev tcl-dev tclthread python2.7 python2.7-dev flex bison sqlite3 libsqlite3-dev zlib1g-dev libsqlite3-tcl
+sudo apt-get install cmake git python2.7-dev g++ gcc gfortran make tcl8.5 tcl8.5-dev tcl-dev tclthread python2.7 python2.7-dev flex bison sqlite3 libsqlite3-dev zlib1g-dev libsqlite3-tcl cgns-convert libcgns-dev libcgns2 
 
 Similar dependencies are required for Redhat 6.4.
 
@@ -54,6 +54,20 @@ Compile SuperLU 4.3
 4. cd SuperLU_4.3
 5. sh ../superlu_ubuntu_12.04.sh
 
+Compile CGNS:
+
+1. cd external
+2. wget http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4.tar.gz
+3. tar xzvf cgnslib_3.1.4.tar.gz
+4. cd cgnslib_3.1.4
+5. mkdir cmake
+6. cd cmake 
+7. cmake -DBUILD_CGNSTOOLS=ON -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib ..
+8. make -j2
+9. make install
+
+Note that BUILD_CGNSTOOLS are optional and may be disabled with BUILD_CGNSTOOLS=OFF.
+
 Compile SYMDIFF
 
 1. cd external/symdiff
@@ -69,7 +83,7 @@ Compile DEVSIM
 4. ctest -j2
 
 There are 2 executables are created:
-linux_x86_64_release/src/main/devsim is a Tcl interpreter (deprecated)
+linux_x86_64_release/src/main/devsim_tcl is a Tcl interpreter (deprecated)
 linux_x86_64_release/src/main/devsim_py is a Python interpreter
 
 If there are issues during the build, try using:
@@ -84,7 +98,7 @@ fpetest2 (Timeout)
 Many of the tests are written in Tcl, because that was the original
 interpreter.
 cd testing
-../linux_x86_64_release/src/main/devsim sqlite1.tcl
+../linux_x86_64_release/src/main/devsim_tcl sqlite1.tcl
 
 The devsim_py examples import modules with a relative path, so you'd want
 to do:

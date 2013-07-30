@@ -1,14 +1,14 @@
 $MeshFormat
-2 0 8
+2.1 0 8
 $EndMeshFormat
 $PhysicalNames
 6
-1 "air"
-2 "left"
-3 "right"
-4 "air_left_interface"
-5 "air_right_interface"
-6 "bottom"
+2 1 "air"
+2 2 "left"
+2 3 "right"
+1 4 "air_left_interface"
+1 5 "air_right_interface"
+0 6 "bottom"
 $EndPhysicalNames
 $Nodes
 4510

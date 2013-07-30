@@ -28,9 +28,11 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 namespace dsMesh {
 class Solution;
 typedef Solution *SolutionPtr;
+typedef std::map<std::string, SolutionPtr> MeshSolutionList_t;
 
 class Equation;
 typedef Equation *EquationPtr;
+typedef std::map<std::string, EquationPtr> MeshEquationList_t;
 
 class MeshCoordinate;
 class MeshNode;
@@ -52,6 +54,12 @@ class MeshInterface;
 typedef MeshRegion *MeshRegionPtr;
 typedef MeshContact *MeshContactPtr;
 typedef MeshInterface *MeshInterfacePtr;
+
+typedef std::vector<MeshNode>        MeshNodeList_t;
+typedef std::vector<MeshEdge>        MeshEdgeList_t;
+typedef std::vector<MeshTriangle>    MeshTriangleList_t;
+typedef std::vector<MeshTetrahedron> MeshTetrahedronList_t;
+
 
 class Solution {
     public:
@@ -414,7 +422,7 @@ class MeshTetrahedron
 
 class MeshCoordinate {
     public:
-        MeshCoordinate(double x, double y=0.0, double z=0.0)
+        MeshCoordinate(double x=0.0, double y=0.0, double z=0.0)
         : xpos(x), ypos(y), zpos(z)
         {
         }
@@ -506,8 +514,7 @@ class MeshInterface {
             solutionList[sp->GetName()] = sp;
         }
 
-        typedef std::map<std::string, SolutionPtr > SolutionList_t;
-        const SolutionList_t &GetSolutionList() const
+        const MeshSolutionList_t &GetSolutionList() const
         {
             return solutionList;
         }
@@ -523,8 +530,7 @@ class MeshInterface {
         }
 
 
-        typedef std::map<std::string, EquationPtr> EquationList_t;
-        const EquationList_t &GetEquationList() const
+        const MeshEquationList_t &GetEquationList() const
         {
             return equationList;
         }
@@ -534,13 +540,13 @@ class MeshInterface {
         std::string region0;
         std::string region1;
         NodePairList_t nodePairs;
-        SolutionList_t       solutionList;
-        EquationList_t       equationList;
+        MeshSolutionList_t       solutionList;
+        MeshEquationList_t       equationList;
 };
 
 class MeshContact {
     public:
-        MeshContact(const std::string &n, const std::string &r) : name(n), region(r)
+        MeshContact(const std::string &n, const std::string &r, const std::string &m) : name(n), region(r), material(m)
         {
         }
 
@@ -564,8 +570,12 @@ class MeshContact {
             return region;
         }
 
-        typedef std::vector<MeshNode> NodeList_t;
-        const NodeList_t &GetNodes()
+        const std::string &GetMaterial() const
+        {
+            return material;
+        }
+
+        const MeshNodeList_t &GetNodes()
         {
             return nodes;
         }
@@ -581,8 +591,7 @@ class MeshContact {
         }
 
 
-        typedef std::map<std::string, EquationPtr> EquationList_t;
-        const EquationList_t &GetEquationList() const
+        const MeshEquationList_t &GetEquationList() const
         {
             return equationList;
         }
@@ -590,8 +599,9 @@ class MeshContact {
     private:
         std::string name;
         std::string region;
+        std::string material;
         std::vector<MeshNode> nodes;
-        EquationList_t        equationList;
+        MeshEquationList_t        equationList;
 };
 
 class MeshRegion {
@@ -649,27 +659,22 @@ class MeshRegion {
             return !tetrahedra.empty();
         }
 
-        typedef std::vector<MeshNode>        NodeList_t;
-        typedef std::vector<MeshEdge>        EdgeList_t;
-        typedef std::vector<MeshTriangle>    TriangleList_t;
-        typedef std::vector<MeshTetrahedron> TetrahedronList_t;
-
-        const NodeList_t &GetNodes() const
+        const MeshNodeList_t &GetNodes() const
         {
             return nodes;
         }
 
-        const EdgeList_t &GetEdges() const
+        const MeshEdgeList_t &GetEdges() const
         {
             return edges;
         }
 
-        const TriangleList_t &GetTriangles() const
+        const MeshTriangleList_t &GetTriangles() const
         {
             return triangles;
         }
 
-        const TetrahedronList_t &GetTetrahedra() const
+        const MeshTetrahedronList_t &GetTetrahedra() const
         {
             return tetrahedra;
         }
@@ -684,8 +689,7 @@ class MeshRegion {
             solutionList[sp->GetName()] = sp;
         }
 
-        typedef std::map<std::string, SolutionPtr> SolutionList_t;
-        const SolutionList_t &GetSolutionList() const
+        const MeshSolutionList_t &GetSolutionList() const
         {
             return solutionList;
         }
@@ -701,8 +705,7 @@ class MeshRegion {
         }
 
 
-        typedef std::map<std::string, EquationPtr> EquationList_t;
-        const EquationList_t &GetEquationList() const
+        const MeshEquationList_t &GetEquationList() const
         {
             return equationList;
         }
@@ -715,13 +718,14 @@ class MeshRegion {
         std::string         name;
         std::string         material;
         //// These correspond to coordinate indices
-        std::vector<MeshNode>        nodes;
-        std::vector<MeshEdge>        edges;
-        std::vector<MeshTriangle>    triangles;
-        std::vector<MeshTetrahedron> tetrahedra;
-        SolutionList_t       solutionList;
-        EquationList_t       equationList;
+        MeshNodeList_t        nodes;
+        MeshEdgeList_t        edges;
+        MeshTriangleList_t    triangles;
+        MeshTetrahedronList_t tetrahedra;
+        MeshSolutionList_t       solutionList;
+        MeshEquationList_t       equationList;
 };
+
 }
 #endif
 

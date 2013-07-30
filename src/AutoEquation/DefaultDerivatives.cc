@@ -53,6 +53,9 @@ Eqo::EqObjPtr CreateDefaultDerivatives()
 //        "define(parallel(x,y), dparallel_dx(x, y), dparallel_dx(y, x));"
         "define(kahan3(a, b, c), 1, 1, 1);"
         "define(kahan4(a, b, c, d), 1, 1, 1, 1);"
+        "define(asinh(x), ((1 + (x^2))^(-1/2)));"
+        "define(acosh(x), (((x^2) - 1)^(-1/2)));"
+        "define(atanh(x), ((1 - (x^2))^(-1)));"
         );
 
     Eqo::EqObjPtr testeq = EvalExpr::evaluateExpression(expr, terrors);

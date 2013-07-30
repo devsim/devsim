@@ -69,10 +69,10 @@ create_gmsh_mesh -file gmsh_mos3d.msh -mesh mos3d
 add_gmsh_region    -mesh mos3d -gmsh_name "bulk"    -region "bulk" -material Silicon
 add_gmsh_region    -mesh mos3d -gmsh_name "oxide"    -region "oxide" -material Silicon
 add_gmsh_region    -mesh mos3d -gmsh_name "gate"    -region "gate" -material Silicon
-add_gmsh_contact   -mesh mos3d -gmsh_name "drain_contact"  -region "bulk" -name "drain"
-add_gmsh_contact   -mesh mos3d -gmsh_name "source_contact" -region "bulk" -name "source"
-add_gmsh_contact   -mesh mos3d -gmsh_name "body_contact"   -region "bulk" -name "body"
-add_gmsh_contact   -mesh mos3d -gmsh_name "gate_contact"   -region "gate" -name "gate"
+add_gmsh_contact   -mesh mos3d -gmsh_name "drain_contact"  -region "bulk" -name "drain" -material "metal"
+add_gmsh_contact   -mesh mos3d -gmsh_name "source_contact" -region "bulk" -name "source" -material "metal"
+add_gmsh_contact   -mesh mos3d -gmsh_name "body_contact"   -region "bulk" -name "body" -material "metal"
+add_gmsh_contact   -mesh mos3d -gmsh_name "gate_contact"   -region "gate" -name "gate" -material "metal"
 add_gmsh_interface -mesh mos3d -gmsh_name "gate_oxide_interface" -region0 "gate" -region1 "oxide" -name "gate_oxide"
 add_gmsh_interface -mesh mos3d -gmsh_name "bulk_oxide_interface" -region0 "bulk" -region1 "oxide" -name "bulk_oxide"
 finalize_mesh -mesh mos3d

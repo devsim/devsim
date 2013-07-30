@@ -34,8 +34,8 @@ create_1d_mesh -mesh dog
 add_1d_mesh_line -mesh dog -pos 0 -ps 0.1 -tag top
 add_1d_mesh_line -mesh dog -pos 0.5 -ps 0.1 -tag mid
 add_1d_mesh_line -mesh dog -pos 1 -ps 0.1 -tag bot
-add_1d_contact   -mesh dog -name top -tag top
-add_1d_contact   -mesh dog -name bot -tag bot
+add_1d_contact   -mesh dog -name top -tag top -material "metal"
+add_1d_contact   -mesh dog -name bot -tag bot -material "metal"
 add_1d_interface -mesh dog -name MyInt -tag mid
 add_1d_region    -mesh dog -material Si -region MySi1 -tag1 top -tag2 mid
 add_1d_region    -mesh dog -material Ox -region MySi2 -tag1 mid -tag2 bot

@@ -81,8 +81,8 @@ DevsimLoader::~DevsimLoader() {
 namespace {
 void processNodes(const MeshRegion &mr, const Device::CoordinateList_t &clist, std::vector<const Node *> &nlist)
 {
-  const MeshRegion::NodeList_t &nl = mr.GetNodes();
-  MeshRegion::NodeList_t::const_iterator nit = nl.begin();
+  const MeshNodeList_t &nl = mr.GetNodes();
+  MeshNodeList_t::const_iterator nit = nl.begin();
   for (size_t ni = 0; nit != nl.end(); ++nit, ++ni)
   {
     const size_t index = nit->Index();
@@ -94,10 +94,10 @@ void processNodes(const MeshRegion &mr, const Device::CoordinateList_t &clist, s
 
 size_t processEdges(const MeshRegion &mr, const std::vector<const Node *> &nlist, std::vector<const Edge *> &elist)
 {
-  MeshRegion::EdgeList_t el = mr.GetEdges();
+  MeshEdgeList_t el = mr.GetEdges();
   size_t edgeduplicate = 0;
   std::sort(el.begin(), el.end());
-  MeshRegion::EdgeList_t::iterator elnewend = std::unique(el.begin(), el.end());
+  MeshEdgeList_t::iterator elnewend = std::unique(el.begin(), el.end());
   if (elnewend != el.end())
   {
     edgeduplicate = el.size();
@@ -105,7 +105,7 @@ size_t processEdges(const MeshRegion &mr, const std::vector<const Node *> &nlist
     edgeduplicate -= el.size();
   }
 
-  MeshRegion::EdgeList_t::const_iterator eit = el.begin();
+  MeshEdgeList_t::const_iterator eit = el.begin();
   for (size_t ei = 0; eit != el.end(); ++eit, ++ei)
   {
     const size_t index0 = eit->Index0();
@@ -120,10 +120,10 @@ size_t processEdges(const MeshRegion &mr, const std::vector<const Node *> &nlist
 
 size_t processTriangles(const MeshRegion &mr, const std::vector<const Node *> &nlist, std::vector<const Triangle *> &triangle_list)
 {
-  MeshRegion::TriangleList_t tl = mr.GetTriangles();
+  MeshTriangleList_t tl = mr.GetTriangles();
   size_t triangleduplicate = 0;
   std::sort(tl.begin(), tl.end());
-  MeshRegion::TriangleList_t::iterator tlnewend = std::unique(tl.begin(), tl.end());
+  MeshTriangleList_t::iterator tlnewend = std::unique(tl.begin(), tl.end());
 
   if (tlnewend != tl.end())
   {
@@ -132,7 +132,7 @@ size_t processTriangles(const MeshRegion &mr, const std::vector<const Node *> &n
     triangleduplicate -= tl.size();
   }
 
-  MeshRegion::TriangleList_t::const_iterator tit = tl.begin();
+  MeshTriangleList_t::const_iterator tit = tl.begin();
   for (size_t ti = 0; tit != tl.end(); ++tit, ++ti)
   {
     const size_t index0 = tit->Index0();
@@ -152,9 +152,9 @@ size_t processTetrahedra(const MeshRegion &mr, const std::vector<const Node *> &
 {
   size_t tetrahedronduplicate = 0;
 
-  MeshRegion::TetrahedronList_t tl = mr.GetTetrahedra();
+  MeshTetrahedronList_t tl = mr.GetTetrahedra();
   std::sort(tl.begin(), tl.end());
-  MeshRegion::TetrahedronList_t::iterator tlnewend = std::unique(tl.begin(), tl.end());
+  MeshTetrahedronList_t::iterator tlnewend = std::unique(tl.begin(), tl.end());
 
   if (tlnewend != tl.end())
   {
@@ -163,7 +163,7 @@ size_t processTetrahedra(const MeshRegion &mr, const std::vector<const Node *> &
     tetrahedronduplicate -= tl.size();
   }
 
-  MeshRegion::TetrahedronList_t::const_iterator tit = tl.begin();
+  MeshTetrahedronList_t::const_iterator tit = tl.begin();
   for (size_t ti = 0; tit != tl.end(); ++tit, ++ti)
   {
       const size_t index0 = tit->Index0();
@@ -368,6 +368,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       const std::string &cname = it->first;
       MeshContact &cnt = *(it->second);
       const std::string &rname = cnt.GetRegion();
+      const std::string &mname = cnt.GetMaterial();
 
       std::string errorString;
 
@@ -385,8 +386,8 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
 
       ConstNodeList_t &nl = node_map[rname];
 
-      const MeshContact::NodeList_t &mcl = cnt.GetNodes();
-      for (MeshContact::NodeList_t::const_iterator cit = mcl.begin(); cit != mcl.end(); ++cit)
+      const MeshNodeList_t &mcl = cnt.GetNodes();
+      for (MeshNodeList_t::const_iterator cit = mcl.begin(); cit != mcl.end(); ++cit)
       {
         size_t index = cit->Index();
         if (index < nl.size())
@@ -408,7 +409,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       }
       else
       {
-        dp->AddContact(new Contact(cname, rp, cnl));
+        dp->AddContact(new Contact(cname, rp, cnl, mname));
         std::ostringstream os; 
         os << "Contact " << cname << " in region " << rname << " with " << cnl.size() << " nodes" << "\n";
         OutputStream::WriteOut(OutputStream::INFO, os.str());
@@ -515,7 +516,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
   {
     const std::string  &rname = it->first;
     const MeshRegion   &mr = *(it->second);
-    const MeshRegion::SolutionList_t &sl = mr.GetSolutionList();
+    const MeshSolutionList_t &sl = mr.GetSolutionList();
 
     const RegionPtr rp = dp->GetRegion(rname);
 
@@ -533,7 +534,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       break;
     }
 
-    for (MeshRegion::SolutionList_t::const_iterator sit = sl.begin(); sit != sl.end(); ++sit)
+    for (MeshSolutionList_t::const_iterator sit = sl.begin(); sit != sl.end(); ++sit)
     {
       const std::string &sname = sit->first;
 
@@ -668,7 +669,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
 ///////TODO: TETRAHEDRONEDGE (error out on data or non-uniform)
       }
     }
-    for (MeshRegion::SolutionList_t::const_iterator sit = sl.begin(); sit != sl.end(); ++sit)
+    for (MeshSolutionList_t::const_iterator sit = sl.begin(); sit != sl.end(); ++sit)
     {
 //      const std::string &sname = sit->first;
       const Solution    &sol   = *(sit->second);
@@ -694,8 +695,8 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       }
     }
 
-    const MeshRegion::EquationList_t &el = mr.GetEquationList();
-    for (MeshRegion::EquationList_t::const_iterator eit = el.begin(); eit != el.end(); ++eit)
+    const MeshEquationList_t &el = mr.GetEquationList();
+    for (MeshEquationList_t::const_iterator eit = el.begin(); eit != el.end(); ++eit)
     {
       const Equation &equation   = *(eit->second);
       {
@@ -717,8 +718,8 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
     MeshInterface &mint = *(it->second);
     const InterfacePtr ip = dp->GetInterface(iname);
 
-    const MeshInterface::SolutionList_t &sl = mint.GetSolutionList();
-    for (MeshInterface::SolutionList_t::const_iterator sit = sl.begin(); sit != sl.end(); ++sit)
+    const MeshSolutionList_t &sl = mint.GetSolutionList();
+    for (MeshSolutionList_t::const_iterator sit = sl.begin(); sit != sl.end(); ++sit)
     {
       const std::string &sname = sit->first;
 //      const Solution    &sol   = *(sit->second);
@@ -742,9 +743,9 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
     MeshInterface &mint = *(it->second);
 //    const InterfacePtr ip = dp->GetInterface(iname);
 
-    const MeshInterface::SolutionList_t &sl = mint.GetSolutionList();
+    const MeshSolutionList_t &sl = mint.GetSolutionList();
 
-    for (MeshRegion::SolutionList_t::const_iterator sit = sl.begin(); sit != sl.end(); ++sit)
+    for (MeshSolutionList_t::const_iterator sit = sl.begin(); sit != sl.end(); ++sit)
     {
 //      const std::string &sname = sit->first;
       const Solution    &sol   = *(sit->second);
@@ -773,8 +774,8 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       }
     }
 
-    const MeshInterface::EquationList_t &el = mint.GetEquationList();
-    for (MeshInterface::EquationList_t::const_iterator eit = el.begin(); eit != el.end(); ++eit)
+    const MeshEquationList_t &el = mint.GetEquationList();
+    for (MeshEquationList_t::const_iterator eit = el.begin(); eit != el.end(); ++eit)
     {
       const Equation &equation   = *(eit->second);
       {
@@ -792,8 +793,8 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
   for (MeshContactList_t::iterator it = contactList.begin(); it != contactList.end(); ++it)
   {
     MeshContact &cnt = *(it->second);
-    const MeshContact::EquationList_t &el = cnt.GetEquationList();
-    for (MeshContact::EquationList_t::const_iterator eit = el.begin(); eit != el.end(); ++eit)
+    const MeshEquationList_t &el = cnt.GetEquationList();
+    for (MeshEquationList_t::const_iterator eit = el.begin(); eit != el.end(); ++eit)
     {
       const Equation &equation   = *(eit->second);
       {
@@ -899,7 +900,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
       }
       else
       {
-        const MeshRegion::NodeList_t &nl = region.GetNodes();
+        const MeshNodeList_t &nl = region.GetNodes();
         nnodes = nl.size();
         if (nl.size() > ncoords)
         {
@@ -910,7 +911,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
         }
         else
         {
-          for (MeshRegion::NodeList_t::const_iterator nit = nl.begin(); nit != nl.end(); ++nit)
+          for (MeshNodeList_t::const_iterator nit = nl.begin(); nit != nl.end(); ++nit)
           {
             if (nit->Index() >= ncoords)
             {
@@ -932,8 +933,8 @@ bool DevsimLoader::Finalize_(std::string &errorString)
       }
       else
       {
-        const MeshRegion::EdgeList_t &nl = region.GetEdges();
-        for (MeshRegion::EdgeList_t::const_iterator nit = nl.begin(); nit != nl.end(); ++nit)
+        const MeshEdgeList_t &nl = region.GetEdges();
+        for (MeshEdgeList_t::const_iterator nit = nl.begin(); nit != nl.end(); ++nit)
         {
           if (nit->Index0() >= nnodes)
           {
@@ -954,8 +955,8 @@ bool DevsimLoader::Finalize_(std::string &errorString)
 
       if (region.HasTriangles())
       {
-        const MeshRegion::TriangleList_t &nl = region.GetTriangles();
-        for (MeshRegion::TriangleList_t::const_iterator nit = nl.begin(); nit != nl.end(); ++nit)
+        const MeshTriangleList_t &nl = region.GetTriangles();
+        for (MeshTriangleList_t::const_iterator nit = nl.begin(); nit != nl.end(); ++nit)
         {
 
           if (nit->Index0() >= nnodes)

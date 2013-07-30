@@ -25,6 +25,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "CheckFunctions.hh"
 #include "MaterialDB.hh"
 #include "Device.hh"
+#include "Contact.hh"
 
 #include "Validate.hh"
 #include "dsAssert.hh"
@@ -84,7 +85,8 @@ getParameterCmd(CommandHandler &data)
         static dsGetArgs::Option setoption[] =
         {
             {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-            {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
+            {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
+            {"contact",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
             {"material", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
             {NULL,  NULL,    dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
         };
@@ -95,7 +97,8 @@ getParameterCmd(CommandHandler &data)
         static dsGetArgs::Option getoption[] =
         {
             {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-            {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
+            {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
+            {"contact",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
             {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
         };
         option = getoption;
@@ -129,6 +132,7 @@ getParameterCmd(CommandHandler &data)
 
     const std::string &deviceName = data.GetStringOption("device");
     std::string regionName;
+    std::string contactName;
     if (commandName != "get_dimension")
     {
       //// nasty hack
@@ -137,12 +141,26 @@ getParameterCmd(CommandHandler &data)
 
     Device *dev = NULL;
     Region *reg = NULL;
+    Contact *contact = NULL;
 
-    if (!regionName.empty())
+
+    if (!regionName.empty() && !contactName.empty())
+    {
+      errorString += "region and contact cannot be specified at same time\n";
+    }
+
+    if (!regionName.empty() || !contactName.empty())
     {
       if (!deviceName.empty())
       {
-        errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
+        if (!regionName.empty())
+        {
+          errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
+        }
+        else if (!contactName.empty())
+        {
+          errorString = ValidateDeviceAndContact(deviceName, contactName, dev, contact);
+        }
       }
       else
       {
@@ -247,12 +265,28 @@ getParameterCmd(CommandHandler &data)
     {
       const std::string &materialName = data.GetStringOption("material");
       dsAssert(!materialName.empty(), "UNEXPECTED");
-      reg->SetMaterial(materialName);
+      if (reg)
+      {
+        reg->SetMaterial(materialName);
+      }
+      else if (contact)
+      {
+        contact->SetMaterial(materialName);
+      }
       data.SetEmptyResult();
     }
     else if (commandName == "get_material")
     {
-      const std::string &material_name = reg->GetMaterialName();
+    
+      std::string material_name;
+      if (reg)
+      {
+         material_name = reg->GetMaterialName();
+      }
+      else if (contact)
+      {
+         material_name = contact->GetMaterialName();
+      }
       data.SetStringResult(material_name);
     }
     else if (commandName == "get_dimension")

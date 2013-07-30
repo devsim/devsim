@@ -378,7 +378,7 @@ tetrahedra : BEG_TETRAHEDRON
         tetrahedra END_TETRAHEDRON ;
         ;
 
-contact : BEG_CONTACT WORD WORD  {
+contact : BEG_CONTACT WORD WORD WORD  {
             if (dsDevsimParse::MeshContact)
             {
                 std::ostringstream os;
@@ -395,7 +395,7 @@ contact : BEG_CONTACT WORD WORD  {
             }
             else
             {
-                dsDevsimParse::MeshContact = new dsMesh::MeshContact($2, $3);
+                dsDevsimParse::MeshContact = new dsMesh::MeshContact($2, $3, $4);
             }
         } |
         contact END_CONTACT  {

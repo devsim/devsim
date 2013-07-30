@@ -102,12 +102,14 @@ class MeshInterface1d {
 
 class MeshContact1d {
     public:
-        MeshContact1d(const std::string &, const std::string &);
+        MeshContact1d(const std::string &, const std::string &, const std::string &);
         const std::string &GetName();
+        const std::string &GetMaterial();
         const std::string &GetTag();
     private:
         /// Rely on the default copy constructor and assignment operator
         std::string name;
+        std::string material;
         std::string tag;
 };
 

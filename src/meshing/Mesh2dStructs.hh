@@ -213,7 +213,7 @@ class MeshInterface2d {
 class MeshContact2d {
     public:
         //// We will use overlaps to detect interface connections
-        MeshContact2d(const std::string &/*name*/, const std::string &/*region*/);
+        MeshContact2d(const std::string &/*name*/, const std::string &/*material*/, const std::string &/*region*/);
         const std::string &GetName() const
         {
             return name;
@@ -221,6 +221,11 @@ class MeshContact2d {
         const std::string &GetRegion() const
         {
             return Region;
+        }
+
+        const std::string &GetMaterial() const
+        {
+            return material;
         }
 
         void AddBoundingBox(const MeshContact2d &);
@@ -234,6 +239,7 @@ class MeshContact2d {
         MeshContact2d();
     private:
         std::string name;
+        std::string material;
         std::string Region;
         BoundingBoxList_t  bboxes_;
 };

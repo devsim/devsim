@@ -51,8 +51,8 @@ add_2d_region    -mesh dog -material Silicon -region r2 -xl $xmin -xh $xmax -yl 
 #bounding box is optional
 add_2d_interface -mesh dog -name i0 -region0 r0 -region1 r1
 add_2d_interface -mesh dog -name i1 -region0 r1 -region1 r2 -xl 0 -xh 1 -yl $ymid2 -yh $ymid2 -bloat 1.0e-10
-add_2d_contact -mesh dog -name top -region r0 -yl $ymin -yh $ymin -bloat 1.0e-10
-add_2d_contact -mesh dog -name bot -region r2 -yl $ymax -yh $ymax -bloat 1.0e-10
+add_2d_contact -mesh dog -name top -region r0 -yl $ymin -yh $ymin -bloat 1.0e-10 -material metal
+add_2d_contact -mesh dog -name bot -region r2 -yl $ymax -yh $ymax -bloat 1.0e-10 -material metal
 #contact can only apply interface
 finalize_mesh -mesh dog
 create_device -mesh dog -device $device

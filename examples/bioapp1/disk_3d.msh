@@ -1,15 +1,15 @@
 $MeshFormat
-2 0 8
+2.1 0 8
 $EndMeshFormat
 $PhysicalNames
 7
-1 "top"
-2 "bot"
-3 "dielectric_solution"
-4 "dna_solution"
-5 "dna"
-6 "solution"
-7 "dielectric"
+2 1 "top"
+2 2 "bot"
+2 3 "dielectric_solution"
+2 4 "dna_solution"
+3 5 "dna"
+3 6 "solution"
+3 7 "dielectric"
 $EndPhysicalNames
 $Nodes
 3342

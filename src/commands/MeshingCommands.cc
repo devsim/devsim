@@ -35,6 +35,8 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "dsAssert.hh"
 #include "GmshReader.hh"
 #include "GmshLoader.hh"
+#include "GeniusReader.hh"
+#include "GeniusLoader.hh"
 
 #include <sstream>
 
@@ -311,16 +313,58 @@ add1dInterfaceCmd(CommandHandler &data)
     }
     else
     {
-        if (commandName == "add_1d_interface")
-        {
-            m1dp->AddInterface(dsMesh::MeshInterface1d(name, tagName));
-            data.SetEmptyResult();
-        }
-        else if (commandName == "add_1d_contact")
-        {
-            m1dp->AddContact(dsMesh::MeshContact1d(name, tagName));
-            data.SetEmptyResult();
-        }
+      m1dp->AddInterface(dsMesh::MeshInterface1d(name, tagName));
+      data.SetEmptyResult();
+    }
+}
+
+void 
+add1dContactCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    
+    dsGetArgs::Option option[] = {
+        {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
+        {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"material", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"tag",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL,  dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL,  NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &meshName = data.GetStringOption("mesh");
+    const std::string &name = data.GetStringOption("name");
+    const std::string &material = data.GetStringOption("material");
+    const std::string &tagName  = data.GetStringOption("tag");
+
+    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
+    dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
+    dsMesh::Mesh1dPtr m1dp = dynamic_cast<dsMesh::Mesh1dPtr>(mp);
+    if (!m1dp)
+    {
+        std::ostringstream os;
+        os << meshName << " is not a 1D mesh\n";
+        data.SetErrorResult(os.str());
+        return;
+    }
+    else
+    {
+      m1dp->AddContact(dsMesh::MeshContact1d(name, material, tagName));
+      data.SetEmptyResult();
     }
 }
 
@@ -409,6 +453,7 @@ add2dContactCmd(CommandHandler &data)
     dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"material", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"region",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"xl", "-MAXDOUBLE", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL, NULL},
         {"xh", "MAXDOUBLE",  dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL, NULL},
@@ -432,6 +477,7 @@ add2dContactCmd(CommandHandler &data)
     const std::string &meshName = data.GetStringOption("mesh");
     const std::string &name = data.GetStringOption("name");
     const std::string &regionName  = data.GetStringOption("region");
+    const std::string &materialName = data.GetStringOption("material");
     const double xl = data.GetDoubleOption("xl");
     const double xh = data.GetDoubleOption("xh");
     const double yl = data.GetDoubleOption("yl");
@@ -450,7 +496,7 @@ add2dContactCmd(CommandHandler &data)
     }
     else
     {
-        dsMesh::MeshContact2dPtr cp(new dsMesh::MeshContact2d(name, regionName)); 
+        dsMesh::MeshContact2dPtr cp(new dsMesh::MeshContact2d(name, materialName, regionName)); 
         m2dp->AddContact(cp);
         dsMesh::BoundingBox bb(xl, xh, yl, yh, bl);
         cp->AddBoundingBox(bb);
@@ -735,6 +781,214 @@ writeDevicesCmd(CommandHandler &data)
 }
 
 void 
+createGeniusMeshCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+//    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    dsGetArgs::Option option[] =
+    {
+        {"mesh", "",   dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshCannotExist},
+        {"file", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {NULL,   NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &fileName = data.GetStringOption("file");
+    const std::string &meshName = data.GetStringOption("mesh");
+
+    bool ret = dsGeniusParse::LoadMeshes(fileName, meshName, errorString);
+    if (!ret)
+    {
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
+    dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
+    dsMesh::GeniusLoaderPtr gmp = dynamic_cast<dsMesh::GeniusLoaderPtr>(mp);
+    if (!gmp)
+    {
+        std::ostringstream os;
+        os << meshName << " is not a genius mesh\n";
+        data.SetErrorResult(os.str());
+        return;
+    }
+
+    ObjectHolderMap_t out;
+    out["mesh_info"] = gmp->GetMeshInfo();
+    out["messages"] = ObjectHolder(errorString); 
+    data.SetObjectResult(ObjectHolder(out));
+
+}
+
+void 
+addGeniusInterfaceCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    
+    dsGetArgs::Option option[] = {
+        {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
+        {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"genius_name",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"region0",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"region1",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL,  dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL,  NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &meshName = data.GetStringOption("mesh");
+    const std::string &name = data.GetStringOption("name");
+    const std::string &geniusName  = data.GetStringOption("genius_name");
+    const std::string &regionName0  = data.GetStringOption("region0");
+    const std::string &regionName1  = data.GetStringOption("region1");
+
+    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
+    dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
+    dsMesh::GeniusLoaderPtr gmp = dynamic_cast<dsMesh::GeniusLoaderPtr>(mp);
+    if (!gmp)
+    {
+        std::ostringstream os;
+        os << meshName << " is not a genius mesh\n";
+        data.SetErrorResult(os.str());
+        return;
+    }
+    else
+    {
+      gmp->MapNameToInterface(geniusName, name, regionName0, regionName1);
+      data.SetEmptyResult();
+    }
+}
+
+void 
+addGeniusContactCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    
+    dsGetArgs::Option option[] = {
+        {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
+        {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"material",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"genius_name",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"region",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL,  dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL,  NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &meshName = data.GetStringOption("mesh");
+    const std::string &name = data.GetStringOption("name");
+    const std::string &geniusName  = data.GetStringOption("genius_name");
+    const std::string &regionName  = data.GetStringOption("region");
+    const std::string &materialName  = data.GetStringOption("material");
+
+    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
+    dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
+    dsMesh::GeniusLoaderPtr gmp = dynamic_cast<dsMesh::GeniusLoaderPtr>(mp);
+    if (!gmp)
+    {
+        std::ostringstream os;
+        os << meshName << " is not a genius mesh\n";
+        data.SetErrorResult(os.str());
+        return;
+    }
+    else
+    {
+      gmp->MapNameToContact(geniusName, name, regionName, materialName);
+      data.SetEmptyResult();
+    }
+}
+
+void 
+addGeniusRegionCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    
+    dsGetArgs::Option option[] = {
+        {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
+        {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"genius_name",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"material",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL,  dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL,  NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &meshName = data.GetStringOption("mesh");
+    const std::string &geniusName  = data.GetStringOption("genius_name");
+    const std::string &regionName  = data.GetStringOption("region");
+    const std::string &materialName  = data.GetStringOption("material");
+
+    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
+    dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
+    dsMesh::GeniusLoaderPtr gmp = dynamic_cast<dsMesh::GeniusLoaderPtr>(mp);
+    if (!gmp)
+    {
+        std::ostringstream os;
+        os << meshName << " is not a genius mesh\n";
+        data.SetErrorResult(os.str());
+        return;
+    }
+    else
+    {
+      gmp->MapNameToRegion(geniusName, regionName, materialName);
+      data.SetEmptyResult();
+    }
+}
+
+void 
 createGmshMeshCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -839,6 +1093,7 @@ addGmshContactCmd(CommandHandler &data)
     dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"material",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"gmsh_name",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"region",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {NULL,  NULL,  dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL,  NULL}
@@ -859,6 +1114,7 @@ addGmshContactCmd(CommandHandler &data)
     const std::string &name = data.GetStringOption("name");
     const std::string &gmshName  = data.GetStringOption("gmsh_name");
     const std::string &regionName  = data.GetStringOption("region");
+    const std::string &materialName  = data.GetStringOption("material");
 
     dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
     dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
@@ -872,7 +1128,7 @@ addGmshContactCmd(CommandHandler &data)
     }
     else
     {
-      gmp->MapPhysicalNameToContact(gmshName, name, regionName);
+      gmp->MapPhysicalNameToContact(gmshName, name, regionName, materialName);
       data.SetEmptyResult();
     }
 }
@@ -932,7 +1188,7 @@ Commands MeshingCommands[] = {
     {"finalize_mesh",     finalizeMeshCmd},
     {"add_1d_mesh_line",  add1dMeshLineCmd},
     {"add_1d_interface",  add1dInterfaceCmd},
-    {"add_1d_contact",    add1dInterfaceCmd},
+    {"add_1d_contact",    add1dContactCmd},
     {"add_1d_region",     add1dRegionCmd},
     {"create_2d_mesh",    create1dMeshCmd},
     {"add_2d_mesh_line",  add2dMeshLineCmd},
@@ -946,6 +1202,10 @@ Commands MeshingCommands[] = {
     {"add_gmsh_contact", addGmshContactCmd},
     {"add_gmsh_interface", addGmshInterfaceCmd},
     {"add_gmsh_region", addGmshRegionCmd},
+    {"create_genius_mesh", createGeniusMeshCmd},
+    {"add_genius_contact", addGeniusContactCmd},
+    {"add_genius_interface", addGeniusInterfaceCmd},
+    {"add_genius_region", addGeniusRegionCmd},
     {NULL, NULL}
 };
 }

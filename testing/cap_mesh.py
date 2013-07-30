@@ -26,7 +26,7 @@ def cap_mesh(region_name, material_name):
     add_1d_mesh_line(mesh = "cap1", pos=p, ps = s, tag = t)
 
   for t in ('top', 'bot'):
-    add_1d_contact(  mesh = "cap1", name=t, tag=t)
+    add_1d_contact(  mesh = "cap1", name=t, tag=t, material="metal")
 
   add_1d_region(   mesh = "cap1", material=material_name, region=region_name, tag1 ="top" , tag2 = "bot")
   finalize_mesh(mesh="cap1")

@@ -22,7 +22,7 @@ for p, s, t in ((0.0, 0.1, "top"), (1.0, 0.1, "bot")):
   add_1d_mesh_line(mesh ="dog", pos=p, ps = s, tag = t)
 
 for t in ('top', 'bot'):
-  add_1d_contact(  mesh ="dog", name=t, tag=t)
+  add_1d_contact(  mesh ="dog", name=t, tag=t, material="metal")
 
 add_1d_region(   mesh ="dog", material="Si", region = region, tag1 ="top" , tag2 ="bot")
 finalize_mesh(mesh="dog")

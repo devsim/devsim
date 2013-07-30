@@ -56,8 +56,8 @@ add_2d_region    -mesh dog -material Si -region $region
 add_2d_region    -mesh dog -material Si -region air1 -xl -1e-8 -xh 0
 add_2d_region    -mesh dog -material Si -region air2 -xl 1.0e-5 -xh 1.001e-5
 
-add_2d_contact   -mesh dog -name top -region $region -xl 0 -xh 0 -bloat 1e-10
-add_2d_contact   -mesh dog -name bot -region $region -xl 1e-5 -xh 1e-5 -bloat 1e-10
+add_2d_contact   -mesh dog -name top -region $region -xl 0 -xh 0 -bloat 1e-10 -material metal
+add_2d_contact   -mesh dog -name bot -region $region -xl 1e-5 -xh 1e-5 -bloat 1e-10 -material metal
 
 finalize_mesh -mesh dog
 create_device -mesh dog -device $device

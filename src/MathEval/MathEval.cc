@@ -77,6 +77,9 @@ namespace Eqomfp {
   {"dBdx",      derBernoulli, "dBdx(obj)  -- derivative Bernoulli wrt arg"},
   {"step",      step,         "step(obj)  -- step function"},
   {"sgn",       sgn,          "sgn(obj)   -- sign function"},
+  {"acosh",     atanh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
+  {"asinh",     asinh,        "asinh(obj)   -- inverse hyperbolic sine function"},
+  {"atanh",     atanh,        "atanh(obj)   -- inverse hyperbolic tangent function"},
 #ifdef WIN32
   {"erf",       boost::math::erf,          "erf(obj)   -- error function"},
   {"erfc",      boost::math::erfc,          "erf(obj)   -- error function"},

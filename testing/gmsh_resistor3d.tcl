@@ -16,8 +16,8 @@ source dio2_physics.tcl
 
 create_gmsh_mesh -file gmsh_diode3d.msh -mesh diode3d
 add_gmsh_region -mesh diode3d -gmsh_name Bulk -region Bulk -material Silicon
-add_gmsh_contact -mesh diode3d -gmsh_name Base -region Bulk -name top
-add_gmsh_contact -mesh diode3d -gmsh_name Emitter -region Bulk -name bot
+add_gmsh_contact -mesh diode3d -gmsh_name Base -region Bulk -name top -material metal
+add_gmsh_contact -mesh diode3d -gmsh_name Emitter -region Bulk -name bot -material metal
 finalize_mesh -mesh diode3d
 create_device -mesh diode3d -device resistor3d
 write_devices -file gmsh_resistor3d_out.msh

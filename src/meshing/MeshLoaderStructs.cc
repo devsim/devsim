@@ -52,21 +52,21 @@ const char * Solution::ModelTypeString[] = {
 
 MeshContact::~MeshContact()
 {
-//    DeletePointersFromMap<SolutionList_t>(solutionList);
-    DeletePointersFromMap<EquationList_t>(equationList);
+//    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
+    DeletePointersFromMap<MeshEquationList_t>(equationList);
 }
 
 
 MeshInterface::~MeshInterface()
 {
-    DeletePointersFromMap<SolutionList_t>(solutionList);
-    DeletePointersFromMap<EquationList_t>(equationList);
+    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
+    DeletePointersFromMap<MeshEquationList_t>(equationList);
 }
 
 MeshRegion::~MeshRegion()
 {
-    DeletePointersFromMap<SolutionList_t>(solutionList);
-    DeletePointersFromMap<EquationList_t>(equationList);
+    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
+    DeletePointersFromMap<MeshEquationList_t>(equationList);
 }
 }
 

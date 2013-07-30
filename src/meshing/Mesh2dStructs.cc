@@ -100,8 +100,8 @@ MeshInterface2d::MeshInterface2d(const std::string &i, const std::string &r0, co
 {
 }
 
-MeshContact2d::MeshContact2d(const std::string &c, const std::string &r)
-    : name(c), Region(r)
+MeshContact2d::MeshContact2d(const std::string &c, const std::string &m, const std::string &r)
+    : name(c), material(m), Region(r)
 {
 }
 

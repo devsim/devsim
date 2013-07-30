@@ -463,7 +463,7 @@ bool Mesh1d::Instantiate_(const std::string &DeviceName, std::string &errorStrin
             }
             ConstNodeList_t cnp;
             cnp.push_back(np);
-            Contact *ctop = new Contact(contacts[i].GetName(), rp, cnp); // pass dev pointer
+            Contact *ctop = new Contact(contacts[i].GetName(), rp, cnp, contacts[i].GetMaterial()); // pass dev pointer
             dev->AddContact(ctop); // make implicit part of contact constructor
         }
     }

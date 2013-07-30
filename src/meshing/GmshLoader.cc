@@ -31,181 +31,20 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "Triangle.hh"
 #include "Tetrahedron.hh"
 #include "ModelCreate.hh"
+#include "MeshLoaderUtility.hh"
 
 #include <sstream>
 
 namespace dsMesh {
+
 namespace {
-#if 0
-template <typename T> void DeletePointersFromVector(T &x)
-{
-    typename T::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete *it;
-    }
-}
-
-template <typename T> void DeletePointersFromMap(T &x)
-{
-    typename T::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete it->second;
-    }
-}
-#endif
-}
-
-void GmshShapes::DecomposeAndUniquify()
-{
-  std::sort(Tetrahedra.begin(), Tetrahedra.end());
-  MeshTetrahedronList_t::iterator tetnewend = std::unique(Tetrahedra.begin(), Tetrahedra.end());
-  Tetrahedra.erase(tetnewend, Tetrahedra.end());
-
-  for (MeshTetrahedronList_t::iterator it = Tetrahedra.begin(); it != Tetrahedra.end(); ++it)
-  {
-    const MeshTetrahedron &tet = *it;
-    size_t i0 = tet.Index0();
-    size_t i1 = tet.Index1();
-    size_t i2 = tet.Index2();
-    size_t i3 = tet.Index3();
-
-    Triangles.push_back(MeshTriangle(i0, i1, i2));
-    Triangles.push_back(MeshTriangle(i0, i1, i3));
-    Triangles.push_back(MeshTriangle(i0, i2, i3));
-    Triangles.push_back(MeshTriangle(i1, i2, i3));
-  }
-
-  std::sort(Triangles.begin(), Triangles.end());
-  MeshTriangleList_t::iterator trinewend = std::unique(Triangles.begin(), Triangles.end());
-  Triangles.erase(trinewend, Triangles.end());
-
-  for (MeshTriangleList_t::iterator it = Triangles.begin(); it != Triangles.end(); ++it)
-  {
-    const MeshTriangle &tri = *it;
-    size_t i0 = tri.Index0();
-    size_t i1 = tri.Index1();
-    size_t i2 = tri.Index2();
-
-    Lines.push_back(MeshEdge(i0, i1));
-    Lines.push_back(MeshEdge(i0, i2));
-    Lines.push_back(MeshEdge(i1, i2));
-  }
-
-  std::sort(Lines.begin(), Lines.end());
-  MeshEdgeList_t::iterator linewend = std::unique(Lines.begin(), Lines.end());
-  Lines.erase(linewend, Lines.end());
-
-  for (MeshEdgeList_t::iterator it = Lines.begin(); it != Lines.end(); ++it)
-  {
-    const MeshEdge &edge = *it;
-    size_t i0 = edge.Index0();
-    size_t i1 = edge.Index1();
-
-    Points.push_back(MeshNode(i0));
-    Points.push_back(MeshNode(i1));
-  }
-
-  std::sort(Points.begin(), Points.end());
-  MeshNodeList_t::iterator nonewend = std::unique(Points.begin(), Points.end());
-  Points.erase(nonewend, Points.end());
-}
-
-//#include <iostream>
-void GmshShapes::AddShape(GmshElement::ElementType_t element_type, const NodeIndexes_t &node_indexes)
-{
-  if (element_type == GmshElement::POINT)
-  {
-    Points.push_back(MeshNode(node_indexes[0]));
-  }
-  else if (element_type == GmshElement::LINE)
-  {
-    Lines.push_back(MeshEdge(node_indexes[0], node_indexes[1]));
-  }
-  else if (element_type == GmshElement::TRIANGLE)
-  {
-    Triangles.push_back(MeshTriangle(node_indexes[0], node_indexes[1], node_indexes[2]));
-  }
-  else if (element_type == GmshElement::TETRAHEDRON)
-  {
-    Tetrahedra.push_back(MeshTetrahedron(node_indexes[0], node_indexes[1], node_indexes[2], node_indexes[3]));
-  }
-}
-
-size_t GmshShapes::GetDimension() const
-{
-  size_t dimension = 0;
-
-  if (!Tetrahedra.empty())
-  {
-    dimension = 3;
-  }
-  else if (!Triangles.empty())
-  {
-    dimension = 2;
-  }
-  else if (!Lines.empty())
-  {
-    dimension = 1;
-  }
-  else if (!Points.empty())
-  {
-    dimension = 0;
-  }
-
-  return dimension;
-}
-  
-size_t GmshShapes::GetNumberOfTypes() const
-{
-  size_t num_types = 0;
-
-  if (!Tetrahedra.empty())
-  {
-    ++num_types;
-  }
-
-  if (!Triangles.empty())
-  {
-    ++num_types;
-  }
-
-  if (!Lines.empty())
-  {
-    ++num_types;
-  }
-
-  if (!Points.empty())
-  {
-    ++num_types;
-  }
-
-  return num_types;
-}
-
-GmshLoader::GmshLoader(const std::string &n) : Mesh(n), dimension(0), maxCoordinateIndex(0)
-{
-    //// Arbitrary number
-    meshCoordinateList.reserve(1000);
-}
-;
-GmshLoader::~GmshLoader() {
-#if 0
-  DeletePointersFromVector<MeshCoordinateList_t>(meshCoordinateList);
-  DeletePointersFromMap<MeshRegionList_t>(regionList);
-      DeletePointersFromMap<MeshInterfaceList_t>(interfaceList);
-      DeletePointersFromMap<MeshContactList_t>(contactList);
-#endif
-}
-
-void GmshLoader::processNodes(const GmshShapes::MeshNodeList_t &mnlist, const std::vector<Coordinate *> &clist, std::vector<Node *> &node_list)
+void processNodes(const MeshNodeList_t &mnlist, const std::vector<Coordinate *> &clist, std::vector<Node *> &node_list)
 {
 
   node_list.clear();
   node_list.resize(clist.size());
 
-  MeshRegion::NodeList_t::const_iterator mnit = mnlist.begin();
+  MeshNodeList_t::const_iterator mnit = mnlist.begin();
   for (; mnit != mnlist.end(); ++mnit)
   {
     const size_t index = mnit->Index();
@@ -219,10 +58,10 @@ void GmshLoader::processNodes(const GmshShapes::MeshNodeList_t &mnlist, const st
   }
 }
 
-void GmshLoader::processEdges(const GmshShapes::MeshEdgeList_t &tl, const std::vector<Node *> &nlist, std::vector<const Edge *> &edge_list)
+void processEdges(const MeshEdgeList_t &tl, const std::vector<Node *> &nlist, std::vector<const Edge *> &edge_list)
 {
 
-  MeshRegion::EdgeList_t::const_iterator tit = tl.begin();
+  MeshEdgeList_t::const_iterator tit = tl.begin();
   for (size_t ti = 0; tit != tl.end(); ++tit, ++ti)
   {
   
@@ -240,10 +79,10 @@ void GmshLoader::processEdges(const GmshShapes::MeshEdgeList_t &tl, const std::v
   }
 }
 
-void GmshLoader::processTriangles(const GmshShapes::MeshTriangleList_t &tl, const std::vector<Node *> &nlist, std::vector<const Triangle *> &triangle_list)
+void processTriangles(const MeshTriangleList_t &tl, const std::vector<Node *> &nlist, std::vector<const Triangle *> &triangle_list)
 {
 
-  MeshRegion::TriangleList_t::const_iterator tit = tl.begin();
+  MeshTriangleList_t::const_iterator tit = tl.begin();
   for (size_t ti = 0; tit != tl.end(); ++tit, ++ti)
   {
   
@@ -264,10 +103,10 @@ void GmshLoader::processTriangles(const GmshShapes::MeshTriangleList_t &tl, cons
   }
 }
 
-void GmshLoader::processTetrahedra(const GmshShapes::MeshTetrahedronList_t &tl, const std::vector<Node *> &nlist, std::vector<const Tetrahedron *> &tetrahedron_list)
+void processTetrahedra(const MeshTetrahedronList_t &tl, const std::vector<Node *> &nlist, std::vector<const Tetrahedron *> &tetrahedron_list)
 {
 
-  MeshRegion::TetrahedronList_t::const_iterator tit = tl.begin();
+  MeshTetrahedronList_t::const_iterator tit = tl.begin();
   for (size_t ti = 0; tit != tl.end(); ++tit, ++ti)
   {
   
@@ -298,16 +137,34 @@ void GmshLoader::processTetrahedra(const GmshShapes::MeshTetrahedronList_t &tl, 
       tetrahedron_list.push_back(tp);
   }
 }
+}
+
+GmshLoader::GmshLoader(const std::string &n) : Mesh(n), dimension(0), maxCoordinateIndex(0)
+{
+    //// Arbitrary number
+    meshCoordinateList.reserve(1000);
+    //// handle dimensions 1,2,3
+    physicalDimensionIndexNameMap.resize(4);
+}
+;
+GmshLoader::~GmshLoader() {
+#if 0
+  DeletePointersFromVector<MeshCoordinateList_t>(meshCoordinateList);
+  DeletePointersFromMap<MeshRegionList_t>(regionList);
+      DeletePointersFromMap<MeshInterfaceList_t>(interfaceList);
+      DeletePointersFromMap<MeshContactList_t>(contactList);
+#endif
+}
 
 
-void GmshLoader::GetUniqueNodesFromPhysicalNames(const std::vector<std::string> &pnames, GmshShapes::MeshNodeList_t &mnlist)
+void GmshLoader::GetUniqueNodesFromPhysicalNames(const std::vector<std::string> &pnames, MeshNodeList_t &mnlist)
 {
   mnlist.clear();
   for (std::vector<std::string>::const_iterator pit = pnames.begin(); pit != pnames.end(); ++pit)
   {
     const std::string &pname = *pit;
 
-    const GmshShapes::MeshNodeList_t &pnlist = gmshShapesMap[pname].Points;
+    const MeshNodeList_t &pnlist = gmshShapesMap[pname].Points;
     {
     std::ostringstream os; 
     os << "group " << pname << " has " << pnlist.size() << " nodes.\n";
@@ -315,74 +172,74 @@ void GmshLoader::GetUniqueNodesFromPhysicalNames(const std::vector<std::string> 
     }
 
 
-    for (GmshShapes::MeshNodeList_t::const_iterator nit = pnlist.begin(); nit != pnlist.end(); ++nit)
+    for (MeshNodeList_t::const_iterator nit = pnlist.begin(); nit != pnlist.end(); ++nit)
     {
       mnlist.push_back(*nit);
     }
   }
   /// Remove overlapping nodes
   std::sort(mnlist.begin(), mnlist.end());
-  GmshShapes::MeshNodeList_t::iterator elnewend = std::unique(mnlist.begin(), mnlist.end());
+  MeshNodeList_t::iterator elnewend = std::unique(mnlist.begin(), mnlist.end());
   mnlist.erase(elnewend, mnlist.end());
 }
 
-void GmshLoader::GetUniqueTetrahedraFromPhysicalNames(const std::vector<std::string> &pnames, GmshShapes::MeshTetrahedronList_t &mnlist)
+void GmshLoader::GetUniqueTetrahedraFromPhysicalNames(const std::vector<std::string> &pnames, MeshTetrahedronList_t &mnlist)
 {
   mnlist.clear();
   for (std::vector<std::string>::const_iterator pit = pnames.begin(); pit != pnames.end(); ++pit)
   {
     const std::string &pname = *pit;
 
-    const GmshShapes::MeshTetrahedronList_t &pnlist = gmshShapesMap[pname].Tetrahedra;
+    const MeshTetrahedronList_t &pnlist = gmshShapesMap[pname].Tetrahedra;
 
-    for (GmshShapes::MeshTetrahedronList_t::const_iterator nit = pnlist.begin(); nit != pnlist.end(); ++nit)
+    for (MeshTetrahedronList_t::const_iterator nit = pnlist.begin(); nit != pnlist.end(); ++nit)
     {
       mnlist.push_back(*nit);
     }
   }
   /// Remove overlapping nodes
   std::sort(mnlist.begin(), mnlist.end());
-  GmshShapes::MeshTetrahedronList_t::iterator elnewend = std::unique(mnlist.begin(), mnlist.end());
+  MeshTetrahedronList_t::iterator elnewend = std::unique(mnlist.begin(), mnlist.end());
   mnlist.erase(elnewend, mnlist.end());
 }
 
-void GmshLoader::GetUniqueTrianglesFromPhysicalNames(const std::vector<std::string> &pnames, GmshShapes::MeshTriangleList_t &mnlist)
+void GmshLoader::GetUniqueTrianglesFromPhysicalNames(const std::vector<std::string> &pnames, MeshTriangleList_t &mnlist)
 {
   mnlist.clear();
   for (std::vector<std::string>::const_iterator pit = pnames.begin(); pit != pnames.end(); ++pit)
   {
     const std::string &pname = *pit;
 
-    const GmshShapes::MeshTriangleList_t &pnlist = gmshShapesMap[pname].Triangles;
+    const MeshTriangleList_t &pnlist = gmshShapesMap[pname].Triangles;
 
-    for (GmshShapes::MeshTriangleList_t::const_iterator nit = pnlist.begin(); nit != pnlist.end(); ++nit)
+    for (MeshTriangleList_t::const_iterator nit = pnlist.begin(); nit != pnlist.end(); ++nit)
     {
       mnlist.push_back(*nit);
     }
   }
   /// Remove overlapping nodes
   std::sort(mnlist.begin(), mnlist.end());
-  GmshShapes::MeshTriangleList_t::iterator elnewend = std::unique(mnlist.begin(), mnlist.end());
+  MeshTriangleList_t::iterator elnewend = std::unique(mnlist.begin(), mnlist.end());
   mnlist.erase(elnewend, mnlist.end());
 }
 
-void GmshLoader::GetUniqueEdgesFromPhysicalNames(const std::vector<std::string> &pnames, GmshShapes::MeshEdgeList_t &mnlist)
+void GmshLoader::GetUniqueEdgesFromPhysicalNames(const std::vector<std::string> &pnames, MeshEdgeList_t &mnlist)
 {
   mnlist.clear();
   for (std::vector<std::string>::const_iterator pit = pnames.begin(); pit != pnames.end(); ++pit)
   {
     const std::string &pname = *pit;
 
-    const GmshShapes::MeshEdgeList_t &pnlist = gmshShapesMap[pname].Lines;
+    const MeshEdgeList_t &pnlist = gmshShapesMap[pname].Lines;
 
-    for (GmshShapes::MeshEdgeList_t::const_iterator nit = pnlist.begin(); nit != pnlist.end(); ++nit)
+    for (MeshEdgeList_t::const_iterator nit = pnlist.begin(); nit != pnlist.end(); ++nit)
     {
       mnlist.push_back(*nit);
     }
   }
   /// Remove overlapping nodes
   std::sort(mnlist.begin(), mnlist.end());
-  GmshShapes::MeshEdgeList_t::iterator elnewend = std::unique(mnlist.begin(), mnlist.end());
+  MeshEdgeList_t::iterator elnewend = std::unique(mnlist.begin(), mnlist.end());
   mnlist.erase(elnewend, mnlist.end());
 }
 
@@ -424,10 +281,10 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
 
   //// For each name in the region map, we create a list of nodes which are indexes
   {
-    GmshShapes::MeshNodeList_t        mesh_nodes;
-    GmshShapes::MeshTetrahedronList_t mesh_tetrahedra;
-    GmshShapes::MeshTriangleList_t    mesh_triangles;
-    GmshShapes::MeshEdgeList_t        mesh_edges;
+    MeshNodeList_t        mesh_nodes;
+    MeshTetrahedronList_t mesh_tetrahedra;
+    MeshTriangleList_t    mesh_triangles;
+    MeshEdgeList_t        mesh_edges;
 
     ConstTetrahedronList              tetrahedronList;
     ConstTriangleList                 triangleList;
@@ -511,7 +368,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
 
   //// Now process the contact
   {
-    GmshShapes::MeshNodeList_t mesh_nodes;
+    MeshNodeList_t mesh_nodes;
     ConstNodeList cnodes;
     for (MapToContactInfo_t::const_iterator cit = contactMap.begin(); cit != contactMap.end(); ++cit)
     {
@@ -520,6 +377,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       const GmshContactInfo &cinfo   = cit->second;
 
       const std::string &regionName = cinfo.region;
+      const std::string &materialName = cinfo.material;
 
       if (!RegionNameToNodeMap.count(regionName))
       {
@@ -558,7 +416,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       }
 
       cnodes.clear();
-      for (GmshShapes::MeshNodeList_t::const_iterator tnit = mesh_nodes.begin(); tnit != mesh_nodes.end(); ++tnit)
+      for (MeshNodeList_t::const_iterator tnit = mesh_nodes.begin(); tnit != mesh_nodes.end(); ++tnit)
       {
         size_t cindex = tnit->Index();
 
@@ -595,7 +453,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
         continue;
       }
 
-      dp->AddContact(new Contact(contactName, regionptr, cnodes));
+      dp->AddContact(new Contact(contactName, regionptr, cnodes, materialName));
       std::ostringstream os; 
       os << "Contact " << contactName << " in region " << regionName << " with " << cnodes.size() << " nodes" << "\n";
       OutputStream::WriteOut(OutputStream::INFO, os.str());
@@ -605,7 +463,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
   {
     ConstNodeList inodes0;
     ConstNodeList inodes1;
-    GmshShapes::MeshNodeList_t mesh_nodes;
+    MeshNodeList_t mesh_nodes;
     for (MapToInterfaceInfo_t::const_iterator iit = interfaceMap.begin(); iit != interfaceMap.end(); ++iit)
     {
       mesh_nodes.clear();
@@ -670,7 +528,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
 
       inodes0.clear();
       inodes1.clear();
-      for (GmshShapes::MeshNodeList_t::const_iterator tnit = mesh_nodes.begin(); tnit != mesh_nodes.end(); ++tnit)
+      for (MeshNodeList_t::const_iterator tnit = mesh_nodes.begin(); tnit != mesh_nodes.end(); ++tnit)
       {
         size_t iindex = tnit->Index();
 
@@ -750,11 +608,12 @@ bool GmshLoader::Finalize_(std::string &errorString)
     const GmshElement &elem = elementList[i];
 
     const size_t physical_number = elem.physical_number;
-    const GmshElement::ElementType_t element_type = elem.element_type;
-    //// guaranteed by parser that physical number is specified
+    const size_t dimension = elem.element_type;
+    const Shapes::ElementType_t element_type = elem.element_type;
     std::string physicalName; 
-    PhysicalIndexToName_t::const_iterator pit = physicalNameMap.find(physical_number);
-    if (pit != physicalNameMap.end())
+    const PhysicalIndexToName_t &physicalIndexNameMap = physicalDimensionIndexNameMap[dimension];
+    PhysicalIndexToName_t::const_iterator pit = physicalIndexNameMap.find(physical_number);
+    if (pit != physicalIndexNameMap.end())
     {
       physicalName = pit->second;
     }
@@ -769,9 +628,9 @@ bool GmshLoader::Finalize_(std::string &errorString)
   }
 
   
-  for (GmshShapesMap_t::iterator it = gmshShapesMap.begin(); it != gmshShapesMap.end(); ++it)
+  for (ShapesMap_t::iterator it = gmshShapesMap.begin(); it != gmshShapesMap.end(); ++it)
   {
-    GmshShapes &shapes = it->second;
+    Shapes &shapes = it->second;
 
     if (shapes.GetNumberOfTypes() != 1)
     {
@@ -804,11 +663,12 @@ bool GmshLoader::Finalize_(std::string &errorString)
   return ret;
 }
 
-bool GmshLoader::HasPhysicalName(const size_t i) const
+bool GmshLoader::HasPhysicalName(const size_t d, const size_t i) const
 {
   bool ret = false;
-  PhysicalIndexToName_t::const_iterator it = physicalNameMap.find(i);
-  if (it != physicalNameMap.end())
+  const PhysicalIndexToName_t &physicalIndexNameMap = physicalDimensionIndexNameMap[d];
+  PhysicalIndexToName_t::const_iterator it = physicalIndexNameMap.find(i);
+  if (it != physicalIndexNameMap.end())
   {
     ret = !((it->second).empty());
   }

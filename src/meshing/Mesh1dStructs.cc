@@ -102,8 +102,13 @@ const std::string &MeshInterface1d::GetTag()
     return tag;
 }
 
-MeshContact1d::MeshContact1d(const std::string &n, const std::string &t) : name(n), tag(t)
+MeshContact1d::MeshContact1d(const std::string &n, const std::string &m, const std::string &t) : name(n), material(m), tag(t)
 {
+}
+
+const std::string &MeshContact1d::GetMaterial()
+{
+    return material;
 }
 
 const std::string &MeshContact1d::GetName()

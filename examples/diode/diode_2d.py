@@ -41,8 +41,8 @@ def createMesh(device, region):
   add_2d_region(mesh="dio", material="Si", region="air1", xl=-1e-8,  xh=0)
   add_2d_region(mesh="dio", material="Si", region="air2", xl=1.0e-5, xh=1.001e-5)
 
-  add_2d_contact(mesh="dio", name="top", region=region, yl=0.8e-5, yh=1e-5, xl=0, xh=0, bloat=1e-10)
-  add_2d_contact(mesh="dio", name="bot", region=region, xl=1e-5,   xh=1e-5, bloat=1e-10)
+  add_2d_contact(mesh="dio", name="top", material="metal", region=region, yl=0.8e-5, yh=1e-5, xl=0, xh=0, bloat=1e-10)
+  add_2d_contact(mesh="dio", name="bot", material="metal", region=region, xl=1e-5,   xh=1e-5, bloat=1e-10)
 
   finalize_mesh(mesh="dio")
   create_device(mesh="dio", device=device)

@@ -314,7 +314,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
     {
       const std::string &cname = cit->first;
       const Contact     &cnt   = *(cit->second);
-      myfile << "begin_contact \"" << cname << "\" \"" << cnt.GetRegion()->GetName() << "\"\n";
+      myfile << "begin_contact \"" << cname << "\" \"" << cnt.GetRegion()->GetName() << "\" \"" << cnt.GetMaterialName() << "\"\n";
 
       const ConstNodeList_t &ctnodes = cnt.GetNodes();
 

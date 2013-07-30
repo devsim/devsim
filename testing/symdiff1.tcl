@@ -19,6 +19,9 @@ puts [format "\"%s\"\n\"%s\"\n\"%s\"\n\n" $arg [symdiff -expr "$arg;"] [symdiff 
 callSymdiff "min(x*b, x+b)"
 callSymdiff "min(x*b, x+!b)"
 callSymdiff "max(x*b, x+b)"
+callSymdiff "asinh(x)"
+callSymdiff "acosh(x)"
+callSymdiff "atanh(x)"
 
 callSymdiff "exp(0)"
 callSymdiff "simplify(exp(0))"

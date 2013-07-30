@@ -1,5 +1,6 @@
 SET (CXX_SRCS
     MeshLoaderStructs.cc
+    MeshLoaderUtility.cc
     DevsimRestartWriter.cc
     DevsimReader.cc
     DevsimParser.cc
@@ -7,11 +8,13 @@ SET (CXX_SRCS
     DevsimLoader.cc
     DevsimWriter.cc
     GmshLoader.cc
-    MeshKeeper.cc
-    Mesh.cc
     GmshReader.cc
     GmshParser.cc
     GmshScanner.cc
+    GeniusLoader.cc
+    GeniusReader.cc
+    MeshKeeper.cc
+    Mesh.cc
     MeshWriter.cc
     FloodsWriter.cc
     MeshUtil.cc
@@ -35,6 +38,7 @@ INCLUDE_DIRECTORIES (
     ../AutoEquation
     ../Equation
     ../common_api
+    ${CGNS_INCLUDE}
 )
 
 IF (WIN32)

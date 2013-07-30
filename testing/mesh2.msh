@@ -50,12 +50,12 @@ begin_edges
 4 5
 end_edges
 end_region
-begin_contact top MySiRegion
+begin_contact top MySiRegion metal
 begin_nodes
 0
 end_nodes
 end_contact
-begin_contact bot MyOxRegion
+begin_contact bot MyOxRegion metal
 begin_nodes
 5
 end_nodes

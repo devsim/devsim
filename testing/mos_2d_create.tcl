@@ -94,10 +94,10 @@ add_2d_region -mesh mos -material Oxide -region oxide -xl $x_gate_left -xh $x_ga
 #add_2d_region -mesh mos -material Air -region air_left -xl $x_device_left -xh $x_bulk_left -yl $y_bulk_bottom -yh $y_bulk_top
 #add_2d_region -mesh mos -material Air -region air_right -xl $x_bulk_right -xh $x_device_right -yl $y_bulk_bottom -yh $y_bulk_top
 
-add_2d_contact -mesh mos -name gate -region gate -yl $y_gate_top -yh $y_gate_top
-add_2d_contact -mesh mos -name body -region bulk -yl $y_bulk_bottom -yh $y_bulk_bottom
-add_2d_contact -mesh mos -name source -region bulk -yl $y_bulk_top -yh $y_bulk_top -xl $x_device_left -xh $x_gate_left
-add_2d_contact -mesh mos -name drain -region bulk -yl $y_bulk_top -yh $y_bulk_top -xl $x_gate_right -xh $x_device_right
+add_2d_contact -mesh mos -name gate -region gate -yl $y_gate_top -yh $y_gate_top -material metal
+add_2d_contact -mesh mos -name body -region bulk -yl $y_bulk_bottom -yh $y_bulk_bottom -material metal
+add_2d_contact -mesh mos -name source -region bulk -yl $y_bulk_top -yh $y_bulk_top -xl $x_device_left -xh $x_gate_left -material metal
+add_2d_contact -mesh mos -name drain -region bulk -yl $y_bulk_top -yh $y_bulk_top -xl $x_gate_right -xh $x_device_right -material metal
 
 add_2d_interface -mesh mos -name gate_oxide -region0 gate -region1 oxide
 add_2d_interface -mesh mos -name bulk_oxide -region0 bulk -region1 oxide
