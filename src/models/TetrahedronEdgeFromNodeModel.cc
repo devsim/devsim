@@ -30,12 +30,12 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 // TODO:"TEST THIS"
 
 TetrahedronEdgeFromNodeModel::TetrahedronEdgeFromNodeModel(const std::string &en0, const std::string &en1, const std::string &en2, const std::string &en3, const std::string &nodemodel, RegionPtr rp)
-    : TetrahedronEdgeModel(en0, rp, TetrahedronEdgeModel::NODISPLAY), nodeModelName(nodemodel), edgeModel1Name(en1), edgeModel2Name(en2), edgeModel3Name(en3)
+    : TetrahedronEdgeModel(en0, rp, TetrahedronEdgeModel::SCALAR), nodeModelName(nodemodel), edgeModel1Name(en1), edgeModel2Name(en2), edgeModel3Name(en3)
 {
   RegisterCallback(nodemodel);
-  new TetrahedronEdgeSubModel(en1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(en2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(en3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel(en1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel(en2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel(en3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
 }
 
 

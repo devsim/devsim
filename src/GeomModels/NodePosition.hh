@@ -35,6 +35,8 @@ class NodePosition : public NodeModel
 
       WeakNodeModelPtr yposition;
       WeakNodeModelPtr zposition;
+      WeakNodeModelPtr node_index;
+      WeakNodeModelPtr coordinate_index;
 };
 
 #endif

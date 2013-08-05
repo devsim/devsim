@@ -94,7 +94,9 @@ namespace Eqomfp {
   {"InvFermi",     InvFermi,        "InvFermi(obj)  -- inverse of the Fermi Integral"},
   {"dInvFermidx",  dInvFermidx,     "dInvFermidx(obj)  -- derivative of InvFermi Integral"},
   {"!",  logical_not,     "!obj  -- Logical Not"},
-  {"sum", sum, "Summation"},
+  {"vec_sum",   vec_sum, "Vector Summation"},
+  {"vec_max",   vec_max, "Vector Maximum"},
+  {"vec_min",   vec_min, "Vector Minimum"},
   {NULL, NULL, NULL}
   };
 

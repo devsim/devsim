@@ -943,13 +943,13 @@ setNodeValuesCmd(CommandHandler &data)
     if (initializer.empty())
     {
         std::ostringstream os;
-        os << "-from " << name << " is empty\n";
+        os << "-init_from " << name << " is empty\n";
         errorString += os.str();
     }
     else if (nm_initializer == NULL)
     {
         std::ostringstream os;
-        os << "-from " << nm_initializer << " does not exist\n";
+        os << "-init_from " << nm_initializer << " does not exist\n";
         errorString += os.str();
     }
 
@@ -962,6 +962,85 @@ setNodeValuesCmd(CommandHandler &data)
     else
     {
       std::tr1::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(*nm_initializer);
+      data.SetEmptyResult();
+    }
+}
+
+void 
+setNodeValueCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    using namespace dsGetArgs;
+    static dsGetArgs::Option option[] =
+    {
+        {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
+        {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"name",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"index", "-1", dsGetArgs::Types::INTEGER, dsGetArgs::Types::OPTIONAL, NULL},
+        {"value", "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::REQUIRED,  NULL},
+        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &deviceName = data.GetStringOption("device");
+    const std::string &regionName = data.GetStringOption("region");
+    const std::string &name = data.GetStringOption("name");
+    const int index = data.GetIntegerOption("index");
+    const double value = data.GetIntegerOption("value");
+
+    Device *dev = NULL;
+    Region *reg = NULL;
+
+    errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
+
+    if (!errorString.empty())
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    ConstNodeModelPtr nm_name        = reg->GetNodeModel(name);
+
+    if (nm_name == NULL)
+    {
+        std::ostringstream os;
+        os << "Model " << name << " does not exist\n";
+        errorString += os.str();
+    }
+    else if ((index < -1) || ((index != -1) && (index >= nm_name->GetRegion().GetNumberNodes())))
+    {
+        std::ostringstream os;
+        os << "-index " << index << " does not exist\n";
+        errorString += os.str();
+    }
+    else if (index == -1)
+    {
+      std::tr1::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(value);
+    }
+    else
+    {
+      std::tr1::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetNodeValue(index, value);
+    }
+
+
+    if (!errorString.empty())
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+    else
+    {
       data.SetEmptyResult();
     }
 }
@@ -1970,6 +2049,7 @@ Commands ModelCommands[] = {
     {"print_node_values",    printNodeValuesCmd},
     {"register_function",     registerFunctionCmd},
     {"set_node_values",      setNodeValuesCmd},
+    {"set_node_value",      setNodeValueCmd},
     {"symdiff",               symdiffCmd},
     {"vector_gradient",      createEdgeFromNodeModelCmd},
     {"cylindrical_edge_couple",  createCylindricalCmd},
@@ -1987,7 +2067,6 @@ Commands ModelCommands[] = {
 
 //TODO:  "get dependency list of models"
 //TODO:  "Evaluate expression"
-//TODO:  "Add ; if not present"
 
 //TODO: set_node_value
 //TODO: set_edge_value

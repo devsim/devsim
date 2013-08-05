@@ -3655,6 +3655,10 @@ begin_node_model "SurfaceArea"
 BUILTIN
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "elec_temperature"
 UNIFORM 3.000000000000000e+02
 end_node_model
@@ -5299,6 +5303,10 @@ begin_node_model "nd"
 UNIFORM 1.000000000000000e+18
 end_node_model
 
+begin_node_model "node_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "potential"
 DATA
 -5.235348067763782e+00
@@ -5852,6 +5860,10 @@ BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 

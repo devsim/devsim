@@ -44,6 +44,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <sstream>
 #include <numeric>
+#include <algorithm>
 
 namespace MEE {
 
@@ -796,8 +797,7 @@ ModelExprData ModelExprEval::EvaluateExternalMath(const std::string &name, margv
     }
     //// Apply similar refactoring for interface evaluation
 
-    //// This is the only function that can turn a vector into a scalar, and doesn't care if original data is edge or node
-    if (name == "sum")
+    if (name == "vec_sum")
     {
       double sum = 0.0;
       if (all_doubles && output.empty())
@@ -809,6 +809,32 @@ ModelExprData ModelExprEval::EvaluateExternalMath(const std::string &name, margv
         sum = std::accumulate(output.begin(), output.end(), 0.0);
       }
       out = ModelExprData(sum, data_ref);
+    }
+    else if (name == "vec_max")
+    {
+      double max = 0.0;
+      if (all_doubles && output.empty())
+      {
+        max = res;
+      }
+      else
+      {
+        max = *(std::max_element(output.begin(), output.end()));
+      }
+      out = ModelExprData(max, data_ref);
+    }
+    else if (name == "vec_min")
+    {
+      double min = 0.0;
+      if (all_doubles && output.empty())
+      {
+        min = res;
+      }
+      else
+      {
+        min = *(std::min_element(output.begin(), output.end()));
+      }
+      out = ModelExprData(min, data_ref);
     }
     else if (all_doubles && output.empty())
     {

@@ -260,7 +260,7 @@ node_model -device $device -region $region -name "noisesource" -equation "4*Elec
 
 node_model -device $device -region $region -name "vfield" -equation "($rv*$rv+$iv*$iv);"
 
-node_model -device $device -region $region -name "noise" -equation "sum(vfield * noisesource * NodeVolume);"
+node_model -device $device -region $region -name "noise" -equation "vec_sum(vfield * noisesource * NodeVolume);"
 
 print_node_values -device $device -region $region -name noisesource
 print_node_values -device $device -region $region -name vfield

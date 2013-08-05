@@ -262,11 +262,23 @@ begin_node_model "SurfaceArea"
 BUILTIN
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "node_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "x"
 BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 
@@ -417,11 +429,23 @@ begin_node_model "SurfaceArea"
 BUILTIN
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "node_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "x"
 BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 
@@ -828,11 +852,23 @@ begin_node_model "SurfaceArea"
 BUILTIN
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "node_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "x"
 BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 
@@ -1019,11 +1055,23 @@ begin_node_model "SurfaceArea"
 BUILTIN
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "node_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "x"
 BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 
@@ -1408,11 +1456,23 @@ begin_node_model "SurfaceArea"
 BUILTIN
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "node_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "x"
 BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 

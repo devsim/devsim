@@ -30,15 +30,10 @@ NodePosition::~NodePosition()
 NodePosition::NodePosition(RegionPtr rp)
     : NodeModel("x", rp, NodeModel::SCALAR)
 {
-    if (rp->GetDimension() > 1)
-    {
-        yposition = NodeSolution::CreateNodeSolution("y", rp, this->GetSelfPtr());
-    }
-
-    if (rp->GetDimension() > 2)
-    {
-        zposition = NodeSolution::CreateNodeSolution("z", rp, this->GetSelfPtr());
-    }
+  yposition = NodeSolution::CreateNodeSolution("y", rp, this->GetSelfPtr());
+  zposition = NodeSolution::CreateNodeSolution("z", rp, this->GetSelfPtr());
+  node_index = NodeSolution::CreateNodeSolution("node_index", rp, this->GetSelfPtr());
+  coordinate_index = NodeSolution::CreateNodeSolution("coordinate_index", rp, this->GetSelfPtr());
 }
 
 void NodePosition::calcNodeScalarValues() const
@@ -47,23 +42,22 @@ void NodePosition::calcNodeScalarValues() const
     std::vector<double> nx(nl.size());
     std::vector<double> ny(nl.size());
     std::vector<double> nz(nl.size());
+    std::vector<double> ni(nl.size());
+    std::vector<double> ci(nl.size());
     for (size_t i = 0; i < nx.size(); ++i)
     {
         const Vector &pos = nl[i]->Position();
         nx[i] = pos.Getx();
         ny[i] = pos.Gety();
         nz[i] = pos.Getz();
+        ni[i] = i;
+        ci[i] = nl[i]->GetCoordinate().GetIndex();
     }
     SetValues(nx);
-    if (GetRegion().GetDimension() > 1)
-    {
-        yposition.lock()->SetValues(ny);
-    }
-
-    if (GetRegion().GetDimension() > 2)
-    {
-        zposition.lock()->SetValues(nz);
-    }
+    yposition.lock()->SetValues(ny);
+    zposition.lock()->SetValues(nz);
+    node_index.lock()->SetValues(ni);
+    coordinate_index.lock()->SetValues(ci);
 }
 
 void NodePosition::setInitialValues()

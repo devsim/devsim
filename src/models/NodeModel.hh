@@ -78,12 +78,7 @@ class NodeModel {
 
         void InitializeValues();
 
-        // Only for debugging at this point
-        // Maybe only friends should do this
-        // perhaps equations
-        // Maybe user's should be able to change at their pleasure
-        // This is a non-const method
-//      void SetNodeValue(size_t, double);
+        void SetNodeValue(size_t, double);
         void SetValues(const NodeScalarList &);
         void SetValues(const NodeModel &);
         void SetValues(const double &);

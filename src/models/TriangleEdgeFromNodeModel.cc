@@ -31,11 +31,11 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 
 TriangleEdgeFromNodeModel::TriangleEdgeFromNodeModel(const std::string &edgemodel0, const std::string &edgemodel1, const std::string &edgemodel2, const std::string &nodemodel, RegionPtr rp)
-    : TriangleEdgeModel(edgemodel0, rp, TriangleEdgeModel::NODISPLAY), nodeModelName(nodemodel), edgeModel1Name(edgemodel1), edgeModel2Name(edgemodel2)
+    : TriangleEdgeModel(edgemodel0, rp, TriangleEdgeModel::SCALAR), nodeModelName(nodemodel), edgeModel1Name(edgemodel1), edgeModel2Name(edgemodel2)
 {
   RegisterCallback(nodemodel);
-  new TriangleEdgeSubModel(edgeModel1Name, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
-  new TriangleEdgeSubModel(edgeModel2Name, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
+  new TriangleEdgeSubModel(edgeModel1Name, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
+  new TriangleEdgeSubModel(edgeModel2Name, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
 }
 
 //// Need to figure out the deleter situation from sub models

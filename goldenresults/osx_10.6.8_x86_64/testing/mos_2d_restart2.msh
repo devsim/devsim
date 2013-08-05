@@ -8445,11 +8445,23 @@ begin_node_model "SurfaceArea"
 BUILTIN
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "node_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "x"
 BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 
@@ -35580,6 +35592,10 @@ begin_node_model "contactcharge_node"
 COMMAND node_model -device "mymos" -region "bulk" -display_type "scalar" -name "contactcharge_node" -equation "(ElectronCharge * IntrinsicCharge);"
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "drainnodeelectrons"
 COMMAND contact_node_model -device "mymos" -contact "drain" -display_type "scalar" -name "drainnodeelectrons" -equation "(ifelse ((NetDoping > 0), (Electrons - celec_drain), (Electrons - (pow(chole_drain,(-1)) * pow(n_i,2)))));"
 end_node_model
@@ -35602,6 +35618,10 @@ end_node_model
 
 begin_node_model "drainnodemodel:Potential"
 COMMAND contact_node_model -device "mymos" -contact "drain" -display_type "scalar" -name "drainnodemodel:Potential" -equation "1;"
+end_node_model
+
+begin_node_model "node_index"
+DATAPARENT "x"
 end_node_model
 
 begin_node_model "sourcenodeelectrons"
@@ -35633,6 +35653,10 @@ BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 
@@ -37475,6 +37499,10 @@ begin_node_model "contactcharge_node"
 COMMAND node_model -device "mymos" -region "gate" -display_type "scalar" -name "contactcharge_node" -equation "(ElectronCharge * IntrinsicCharge);"
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "gatenodeelectrons"
 COMMAND contact_node_model -device "mymos" -contact "gate" -display_type "scalar" -name "gatenodeelectrons" -equation "(ifelse ((NetDoping > 0), (Electrons - celec_gate), (Electrons - (pow(chole_gate,(-1)) * pow(n_i,2)))));"
 end_node_model
@@ -37499,11 +37527,19 @@ begin_node_model "gatenodemodel:Potential"
 COMMAND contact_node_model -device "mymos" -contact "gate" -display_type "scalar" -name "gatenodemodel:Potential" -equation "1;"
 end_node_model
 
+begin_node_model "node_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "x"
 BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 
@@ -38690,11 +38726,23 @@ begin_node_model "SurfaceArea"
 BUILTIN
 end_node_model
 
+begin_node_model "coordinate_index"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "node_index"
+DATAPARENT "x"
+end_node_model
+
 begin_node_model "x"
 BUILTIN
 end_node_model
 
 begin_node_model "y"
+DATAPARENT "x"
+end_node_model
+
+begin_node_model "z"
 DATAPARENT "x"
 end_node_model
 

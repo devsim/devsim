@@ -63,20 +63,20 @@ Warning, contact "NDrain_to_NSilicon@NDrain" shares a node with interface "NDrai
 Warning, contact "NDrain_to_NSilicon@NDrain" shares a node with interface "NDrain_to_NSilicon"
 Warning, contact "NDrain_to_NSilicon@NDrain" shares a node with interface "NDrain_to_NSilicon"
 Adding interface NDrain_to_NSilicon with 6, 6 nodes
-Warning, contact "NSilicon_to_NSource@NSilicon" shares a node with interface "NOxide_to_NSilicon"
-Warning, interface "NDrain_to_NSilicon" shares a node with interface "NOxide_to_NSilicon"
+Warning, contact "NSilicon_to_NSource@NSource" shares a node with interface "NOxide_to_NSilicon"
+Warning, interface "NDrain_to_NOxide" shares a node with interface "NOxide_to_NSilicon"
 Warning, contact "NDrain_to_NSilicon@NDrain" shares a node with interface "NOxide_to_NSilicon"
 Adding interface NOxide_to_NSilicon with 41, 41 nodes
 Warning, interface "NOxide_to_NSilicon" shares a node with interface "NOxide_to_NSource"
-Warning, contact "NSilicon_to_NSource@NSilicon" shares a node with interface "NOxide_to_NSource"
+Warning, contact "NSilicon_to_NSource@NSource" shares a node with interface "NOxide_to_NSource"
 Adding interface NOxide_to_NSource with 3, 3 nodes
-Warning, contact "NSilicon_to_NSource@NSilicon" shares a node with interface "NSilicon_to_NSource"
-Warning, contact "NSilicon_to_NSource@NSilicon" shares a node with interface "NSilicon_to_NSource"
-Warning, contact "NSilicon_to_NSource@NSilicon" shares a node with interface "NSilicon_to_NSource"
-Warning, contact "NSilicon_to_NSource@NSilicon" shares a node with interface "NSilicon_to_NSource"
+Warning, contact "NSilicon_to_NSource@NSource" shares a node with interface "NSilicon_to_NSource"
+Warning, contact "NSilicon_to_NSource@NSource" shares a node with interface "NSilicon_to_NSource"
+Warning, contact "NSilicon_to_NSource@NSource" shares a node with interface "NSilicon_to_NSource"
+Warning, contact "NSilicon_to_NSource@NSource" shares a node with interface "NSilicon_to_NSource"
 Warning, interface "NOxide_to_NSilicon" shares a node with interface "NSilicon_to_NSource"
-Warning, contact "NSilicon_to_NSource@NSilicon" shares a node with interface "NSilicon_to_NSource"
-Warning, contact "NSilicon_to_NSource@NSilicon" shares a node with interface "NSilicon_to_NSource"
+Warning, contact "NSilicon_to_NSource@NSource" shares a node with interface "NSilicon_to_NSource"
+Warning, contact "NSilicon_to_NSource@NSource" shares a node with interface "NSilicon_to_NSource"
 Adding interface NSilicon_to_NSource with 6, 6 nodes
 magic_number 738
 NDrain potential.unit V

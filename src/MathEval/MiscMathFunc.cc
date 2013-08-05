@@ -30,7 +30,17 @@ double derfcdx(double x)
     return -M_2_SQRTPI*exp(-x*x);
 }
 
-double sum(double x)
+double vec_sum(double x)
+{
+  return x;
+}
+
+double vec_max(double x)
+{
+  return x;
+}
+
+double vec_min(double x)
 {
   return x;
 }

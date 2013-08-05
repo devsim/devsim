@@ -185,6 +185,7 @@ void NodeModel::SetValues(const double &v)
     isuniform = false;
     values.clear();
     values.resize(length);
+    GetContactIndexes(); // safety
     for (std::vector<size_t>::iterator it = atcontact.begin(); it != atcontact.end(); ++it)
     {
       values[*it] = v;
@@ -215,6 +216,44 @@ const std::vector<size_t> & NodeModel::GetContactIndexes() const
   }
 
   return atcontact;
+}
+
+/*
+  if uniform desired then use SetNodeValues above
+*/
+void NodeModel::SetNodeValue(size_t index, double value)
+{
+  if (index >= length)
+  {
+    return;
+  }
+
+  //// Set values
+  //// unsets uniformity
+  GetScalarValues();
+
+  if (isuniform)
+  {
+    isuniform = false;
+    uniform_value = 0.0;
+  }
+
+  if (mycontact)
+  {
+    GetContactIndexes(); // safety
+    if (std::find(atcontact.begin(), atcontact.end(), index) != atcontact.end())
+    {
+      values[index] = value;
+    }
+  }
+  else
+  {
+    values[index] = value;
+  }
+
+  MarkOld();
+  uptodate = true;
+
 }
 
 void NodeModel::MarkOld()

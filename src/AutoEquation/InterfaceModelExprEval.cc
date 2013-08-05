@@ -35,6 +35,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "EngineAPI.hh"
 #include <numeric>
+#include <algorithm>
 
 namespace IMEE {
 
@@ -660,10 +661,20 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateExternalMath(const std::s
       emath.EvaluateMathFunc(name, dargs, vargs, resultstr, output, vlen);
       if (resultstr.empty())
       {
-        if (name == "sum")
+        if (name == "vec_sum")
         {
           double sum = std::accumulate(output.begin(), output.end(), 0.0);
           out = InterfaceModelExprData(sum);
+        }
+        else if (name == "vec_max")
+        {
+          double max = *(std::max_element(output.begin(), output.end()));
+          out = InterfaceModelExprData(max);
+        }
+        else if (name == "vec_min")
+        {
+          double min = *(std::min_element(output.begin(), output.end()));
+          out = InterfaceModelExprData(min);
         }
         else
         {

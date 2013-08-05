@@ -23,7 +23,9 @@ double derfdx(double);
 
 double derfcdx(double);
 
-double sum(double);
+double vec_sum(double);
+double vec_max(double);
+double vec_min(double);
 
 double dot2dfunc(double, double, double, double);
 

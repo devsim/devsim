@@ -23,10 +23,13 @@ Not replacing built in Node model NSurfaceNormal_x
 Not replacing built in Node model NSurfaceNormal_y
 Not replacing built in Node model NodeVolume
 Not replacing built in Node model SurfaceArea
+Not replacing built in Node model coordinate_index
+Not replacing built in Node model node_index
 Not replacing built in Edge model unitx
 Not replacing built in Edge model unity
 Not replacing built in Node model x
 Not replacing built in Node model y
+Not replacing built in Node model z
 NodeVolume
 2.50000e-01
 2.50000e-01
