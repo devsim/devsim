@@ -3,6 +3,7 @@ SET (CXX_SRCS
     NodeVolume.cc
     EdgeCouple.cc
     EdgeLength.cc
+    EdgeIndex.cc
     EdgeInverseLength.cc
     ModelCreate.cc
     AtContactNode.cc

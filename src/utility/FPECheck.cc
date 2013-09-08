@@ -48,8 +48,10 @@ void FPECheck::InitializeFPE()
 #ifndef WIN32
     signal(SIGFPE, fpehandle);
     ////// THIS IS TO CAUSE THE FPE TO TRIGGER A SIGNAL
-//    int x=fegetexcept();
-//    feenableexcept(x| FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
+#if 0
+    int x=fegetexcept();
+    feenableexcept(x| FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
+#endif
 #endif
 
 #ifdef linux

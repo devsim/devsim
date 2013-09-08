@@ -18,8 +18,8 @@ import gmsh_mos2d_create
 from ds import *
 from python_packages.simple_physics import *
 from python_packages.ramp import *
-from Klaassen import *
-from mos_physics import *
+from python_packages.Klaassen import *
+from python_packages.mos_physics import *
 
 # TODO: write out mesh, and then read back in as separate test
 device = "mos2d"

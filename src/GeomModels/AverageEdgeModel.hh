@@ -68,6 +68,7 @@ class AverageEdgeModel : public EdgeModel
         void  calcEdgeScalarValues() const;
         void  setInitialValues();
 
+        const std::string   originalEdgeModelName;
         const std::string   nodeModelName;
         const std::string   edgeModel1Name;
         const std::string   variableName;

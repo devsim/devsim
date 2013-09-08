@@ -86,3 +86,11 @@ element_from_edge_model(edge_model="HoleCurrent",     device=device, region=regi
 
 write_devices(file="gmsh_diode3d_dd.dat", type="tecplot")
 
+#element_from_node_model(node_model="node_index", device=device, region=region)
+#en0 = map(lambda x : int(x), get_element_model_values(name="node_index@en0", device=device, region=region))
+#en1 = map(lambda x : int(x), get_element_model_values(name="node_index@en1", device=device, region=region))
+#en2 = map(lambda x : int(x), get_element_model_values(name="node_index@en2", device=device, region=region))
+#en3 = map(lambda x : int(x), get_element_model_values(name="node_index@en3", device=device, region=region))
+#for i in range(len(en0)):
+#  print "%d %d %d %d" % (en0[i], en1[i], en2[i], en3[i])
+

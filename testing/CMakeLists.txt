@@ -72,7 +72,7 @@ ENDIF (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
 ENDIF (APPLE)
 
 ENABLE_TESTING()
-#### todo create platform based golden results and remove arch from filename
+
 SET (NEWPYTESTS
   cap2
   equation1
@@ -82,7 +82,9 @@ SET (NEWPYTESTS
   sqlite3
   testfunc
   utf8_2
+  laux1
 )
+
 FOREACH(I ${NEWPYTESTS})
     ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_PY} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
 ENDFOREACH(I)
@@ -104,6 +106,7 @@ kahan
 FOREACH(I ${NEWTESTS})
     ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_TCL} ${I}.tcl" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
 ENDFOREACH(I)
+
 
 # on redhat 6.4 this test fails on the Tcl platform
 set_tests_properties("testing/fpetest2" PROPERTIES TIMEOUT 5)
@@ -136,7 +139,7 @@ set_tests_properties("testing/mesh2d_tecplot_comp" PROPERTIES DEPENDS testing/me
 ADD_TEST("testing/noise_res_2d_flps_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/noise_res_2d.flps ${GOLDENDIR}/testing/noise_res_2d.flps)
 set_tests_properties("testing/noise_res_2d_flps_comp" PROPERTIES DEPENDS testing/noise_res_2d)
 ADD_TEST("testing/mos_2d_dd_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mos_2d_dd.msh ${GOLDENDIR}/testing/mos_2d_dd.msh)
-set_tests_properties("testing/mos_2d_dd_comp" PROPERTIES DEPENDS testing/mos2d)
+set_tests_properties("testing/mos_2d_dd_comp" PROPERTIES DEPENDS testing/mos_2d)
 ADD_TEST("testing/mos_2d_restart2_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mos_2d_restart2.msh ${GOLDENDIR}/testing/mos_2d_restart2.msh)
 set_tests_properties("testing/mos_2d_restart2_comp" PROPERTIES DEPENDS testing/mos_2d_restart2)
 ADD_TEST("testing/gmsh_resistor3d_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/gmsh_resistor3d.dat ${GOLDENDIR}/testing/gmsh_resistor3d.dat)
@@ -202,3 +205,8 @@ set_tests_properties("${GENIUS_DIR}/pn2d_comp" PROPERTIES DEPENDS "${GENIUS_DIR}
 set_tests_properties("${GENIUS_DIR}/genius_diode2d" PROPERTIES DEPENDS "${GENIUS_DIR}/pn2d_comp")
 
 
+
+#need numpy, so can't run on all platforms
+ADD_TEST("testing/laux1" ${RUNDIFFTEST} "${DEVSIM_PY} laux1.py" ${GOLDENDIR}/testing laux1.out ${RUNDIR} ${OUTPUTDIR})
+# this is weird since it is dependent on one of our tcl tests
+set_tests_properties("testing/laux1" PROPERTIES DEPENDS testing/trimesh2)

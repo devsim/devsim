@@ -5879,6 +5879,10 @@ begin_edge_model "EdgeLength"
 BUILTIN
 end_edge_model
 
+begin_edge_model "edge_index"
+BUILTIN
+end_edge_model
+
 begin_edge_model "unitx"
 BUILTIN
 end_edge_model

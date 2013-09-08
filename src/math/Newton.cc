@@ -492,7 +492,10 @@ bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemetho
 
   LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::PERMUTATIONSONLY, dsMathEnum::DC, 1.0);
 
-  for (int iter = 0; (iter < maxiter) && (!converged); ++iter)
+  int divergence_count = 0;
+  double last_rel_err = 0.0;
+  double last_abs_err = 0.0;
+  for (int iter = 0; (iter < maxiter) && (!converged) && (divergence_count < 5); ++iter)
   {
     std::ostringstream os; 
 
@@ -592,6 +595,20 @@ bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemetho
 //            dsErrors::EquationMathErrorInfo(equation, OutputStream::INFO);
           }
         }
+
+        /* if are our is higher than our convergence criteria and it is running away*/
+        bool diverged = ((devrerr > relLimit) && (devrerr > last_rel_err))
+           || ((devaerr > absLimit) && (devaerr > last_abs_err));
+        if (diverged)
+        {
+          divergence_count += 1;
+        }
+        else
+        {
+          divergence_count = 0;
+        }
+        last_rel_err = devrerr;
+        last_abs_err = devaerr;
 
         converged = converged && (devrerr < relLimit) && (devaerr < absLimit);
       }

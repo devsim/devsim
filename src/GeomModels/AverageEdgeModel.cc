@@ -55,6 +55,7 @@ AverageEdgeModel::~AverageEdgeModel()
 AverageEdgeModel::AverageEdgeModel(const std::string &emodel, const std::string &nmodel, AverageType_t atype, RegionPtr rp)
     :
         EdgeModel(emodel, rp, EdgeModel::SCALAR),
+        originalEdgeModelName(emodel),
         nodeModelName(nmodel),
         averageType(atype)
 {
@@ -70,6 +71,7 @@ AverageEdgeModel::AverageEdgeModel(const std::string &emodel, const std::string 
 AverageEdgeModel::AverageEdgeModel(const std::string &emodel, const std::string &nmodel, const std::string &deriv, AverageType_t atype, RegionPtr rp)
     :
         EdgeModel(emodel + ":" + deriv + "@n0", rp, EdgeModel::SCALAR),
+        originalEdgeModelName(emodel),
         nodeModelName(nmodel),
         edgeModel1Name(emodel + ":" + deriv + "@n1"),
         variableName(deriv),
@@ -369,7 +371,8 @@ AverageEdgeModel::AverageType_t AverageEdgeModel::GetTypeName(const std::string 
 
 void AverageEdgeModel::Serialize(std::ostream &of) const
 {
-  of << "COMMAND edge_average_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -node_model \"" << nodeModelName << "\"" << " -edge_model \"" << GetName() << "\" -average_type \"" << AverageTypeNames[averageType].str << "\"";
+  // originalEdgeModelName is for the derivative case
+  of << "COMMAND edge_average_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -node_model \"" << nodeModelName << "\"" << " -edge_model \"" << originalEdgeModelName << "\" -average_type \"" << AverageTypeNames[averageType].str << "\"";
 
   if (!variableName.empty())
   {

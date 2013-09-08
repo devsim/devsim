@@ -24,6 +24,7 @@ Not replacing built in Node model NSurfaceNormal_y
 Not replacing built in Node model NodeVolume
 Not replacing built in Node model SurfaceArea
 Not replacing built in Node model coordinate_index
+Not replacing built in Edge model edge_index
 Not replacing built in Node model node_index
 Not replacing built in Edge model unitx
 Not replacing built in Edge model unity

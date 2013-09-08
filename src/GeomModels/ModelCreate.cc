@@ -21,6 +21,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "NodeVolume.hh"
 #include "EdgeCouple.hh"
 #include "EdgeLength.hh"
+#include "EdgeIndex.hh"
 #include "EdgeInverseLength.hh"
 #include "NodePosition.hh"
 #include "AtContactNode.hh"
@@ -39,6 +40,7 @@ void CreateDefaultModels(RegionPtr rp)
 {
     new EdgeCouple(rp);
     new EdgeLength(rp);
+    new EdgeIndex(rp);
     new NodeVolume(rp);
     new EdgeInverseLength(rp);
     new NodePosition(rp);

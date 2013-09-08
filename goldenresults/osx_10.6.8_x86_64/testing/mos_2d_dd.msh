@@ -8477,6 +8477,10 @@ begin_edge_model "EdgeLength"
 BUILTIN
 end_edge_model
 
+begin_edge_model "edge_index"
+BUILTIN
+end_edge_model
+
 begin_edge_model "unitx"
 BUILTIN
 end_edge_model
@@ -35804,6 +35808,10 @@ begin_edge_model "drainnodeholecurrent"
 COMMAND contact_edge_model -device "mymos" -contact "drain" -name "drainnodeholecurrent" -equation "HoleCurrent;" -display_type "vector"
 end_edge_model
 
+begin_edge_model "edge_index"
+BUILTIN
+end_edge_model
+
 begin_edge_model "sourcenodeelectroncurrent"
 COMMAND edge_model -device "mymos" -region "bulk" -name "sourcenodeelectroncurrent" -equation "ElectronCurrent;" -display_type "scalar"
 end_edge_model
@@ -37671,6 +37679,10 @@ begin_edge_model "contactcharge_edge"
 COMMAND edge_model -device "mymos" -region "gate" -name "contactcharge_edge" -equation "(ElectronCharge * ElectricField);" -display_type "scalar"
 end_edge_model
 
+begin_edge_model "edge_index"
+BUILTIN
+end_edge_model
+
 begin_edge_model "gatenodeelectroncurrent"
 COMMAND edge_model -device "mymos" -region "gate" -name "gatenodeelectroncurrent" -equation "ElectronCurrent;" -display_type "scalar"
 end_edge_model
@@ -38788,6 +38800,10 @@ end_edge_model
 
 begin_edge_model "PotentialEdgeFlux:Potential@n1"
 COMMAND edge_model -device "mymos" -region "oxide" -name "PotentialEdgeFlux:Potential@n1" -equation "(-PotentialEdgeFlux:Potential@n0);" -display_type "scalar"
+end_edge_model
+
+begin_edge_model "edge_index"
+BUILTIN
 end_edge_model
 
 begin_edge_model "unitx"

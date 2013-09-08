@@ -174,11 +174,23 @@ inline double derBernoulliExp(const double x)
 
 inline double derBernoulli3(double x)
 {
-//    return 1.0/(exp(x) - 1.0) - x * exp(-x) / ((exp(x) - 1.0)*(exp(x)-1.0));
+//    return 1.0/(exp(x) - 1.0) - x * exp(x) / ((exp(x) - 1.0)*(exp(x)-1.0));
+    //return (ex*(1.0-x) - 1.0) / pow((ex - 1.0),2.0);
+    // The first expression blows up, so this one behaves better
+    // since the pow function goes to zero instead of infinity
+    //return (ex*(1.0-x) - 1.0) * pow((ex - 1.0), -2.0);
     const double ex = exp(x);
-    return (ex*(1.0-x) - 1.0) / pow((ex - 1.0),2.0);
+    const double ex1 = ex - 1;
+    if (ex != ex1)
+    { 
+      //return (1.0 - x * ex / ex1) / ex1;
+      return (ex*(1.0-x) - 1.0) / pow((ex - 1.0),2.0);
+    }
+    else
+    {
+      return (1.0-x) / ex;
+    }
 }
-
 
 double derBernoulli(const double x)
 {
