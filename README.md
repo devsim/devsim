@@ -1,3 +1,4 @@
+### Intro:
 **DEVSIM** - TCAD Device Simulator
 
 **DEVSIM** is a tool for TCAD Device Simulation, using finite volume methods.  The source code is provided by Devsim LLC ([http://www.devsim.com](http://www.devsim.com)).
@@ -17,5 +18,12 @@ It is licensed under the [LGPL Version 3.0](http://www.gnu.org/copyleft/lesser.h
 Please see INSTALL file for installation instructions.  Please see 
 NOTICE and LICENSE files for copyright and license information.
 
+### Documentation:
 Documentation available in doc/devsim.pdf.
 
+### Website:
+The official website is here:
+http://www.devsim.org
+
+### Mailing List:
+http://groups.yahoo.com/neo/groups/devsim/info
