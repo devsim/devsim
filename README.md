@@ -1,4 +1,4 @@
-### Intro:
+### Introduction:
 **DEVSIM** - TCAD Device Simulator
 
 **DEVSIM** is a tool for TCAD Device Simulation, using finite volume methods.  The source code is provided by Devsim LLC ([http://www.devsim.com](http://www.devsim.com)).
