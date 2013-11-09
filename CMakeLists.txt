@@ -121,6 +121,7 @@ ENDIF (${DEVSIM_CONFIG} STREQUAL "ubuntu_12.04")
 
 # Redhat 6.4 64 bit (not tested on 32 bit)
 IF (${DEVSIM_CONFIG} STREQUAL "redhat_6.4")
+ADD_DEFINITIONS(-std=c++0x)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
 SET (PYTHON_INCLUDE /usr/include/python2.6)
