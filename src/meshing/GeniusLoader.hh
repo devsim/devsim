@@ -22,7 +22,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "Mesh.hh"
 #include "MeshLoaderStructs.hh"
 #include "MeshLoaderUtility.hh"
-#include "dsmemory.hh"
+#include <memory>
 #include <vector>
 #include <map>
 #include <string>
@@ -41,10 +41,10 @@ class GeniusLoader;
 typedef GeniusLoader *GeniusLoaderPtr;
 
 struct GeniusRegion;
-typedef std::tr1::shared_ptr<GeniusRegion> GeniusRegionPtr;
-typedef std::tr1::weak_ptr<GeniusRegion> GeniusRegionWeakPtr;
+typedef std::shared_ptr<GeniusRegion> GeniusRegionPtr;
+typedef std::weak_ptr<GeniusRegion> GeniusRegionWeakPtr;
 struct GeniusBoundary;
-typedef std::tr1::shared_ptr<GeniusBoundary> GeniusBoundaryPtr;
+typedef std::shared_ptr<GeniusBoundary> GeniusBoundaryPtr;
 
 struct GeniusInterfaceInfo {
   GeniusInterfaceInfo(const std::string &iname, const std::string &rname0, const std::string &rname1) : interface(iname), region0(rname0), region1(rname1) {}

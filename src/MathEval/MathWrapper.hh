@@ -19,13 +19,13 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef MATHWRAPPER_HH
 #define MATHWRAPPER_HH
-#include "dsmemory.hh"
+#include <memory>
 #include <vector>
 #include <string>
 
 namespace Eqomfp {
 class MathWrapper;
-typedef std::tr1::shared_ptr<MathWrapper> MathWrapperPtr;
+typedef std::shared_ptr<MathWrapper> MathWrapperPtr;
 
 typedef double (*unaryfuncptr)(double);
 typedef double (*binaryfuncptr)(double, double);

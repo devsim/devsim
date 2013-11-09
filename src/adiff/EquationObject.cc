@@ -20,7 +20,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "EquationObject.hh"
 #include "dsAssert.hh"
-#include "dsmemory.hh"
+#include <memory>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -33,7 +33,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 
 namespace Eqo {
-typedef std::tr1::shared_ptr<EquationObject> EqObjPtr;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 
 std::map<std::string, EqObjPtr> variableMap;
 

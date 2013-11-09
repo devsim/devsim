@@ -26,9 +26,9 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <list>
 #include <vector>
 
-#include "dsmemory.hh"
+#include <memory>
 class myworker;
-typedef std::tr1::shared_ptr<myworker> myworker_ptr;
+typedef std::shared_ptr<myworker> myworker_ptr;
 
 class myqueue
 {

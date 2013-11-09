@@ -68,7 +68,7 @@ InterfaceModelExprData::InterfaceModelExprData(const InterfaceModelExprData &x) 
 
 InterfaceModelExprData::InterfaceModelExprData(const InterfaceNodeScalarData &x) : val(0.0), type(NODEDATA) {
     InterfaceNodeScalarData *foo = new InterfaceNodeScalarData(x);
-    nsd = std::tr1::shared_ptr<InterfaceNodeScalarData>(foo);
+    nsd = std::shared_ptr<InterfaceNodeScalarData>(foo);
 };
 
 InterfaceModelExprData &InterfaceModelExprData::operator=(const InterfaceModelExprData &x)

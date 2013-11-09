@@ -20,7 +20,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef TRIANGLE_EDGE_MODEL_HH
 #define TRIANGLE_EDGE_MODEL_HH
 
-#include "dsmemory.hh"
+#include <memory>
 #include <string>
 #include <vector>
 #include <iosfwd>
@@ -37,14 +37,14 @@ typedef Edge *EdgePtr;
 typedef const Edge *ConstEdgePtr;
 
 class EdgeModel;
-typedef std::tr1::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::tr1::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
+typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
+typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
 
 class TriangleEdgeModel;
-typedef std::tr1::weak_ptr<TriangleEdgeModel>         WeakTriangleEdgeModelPtr;
-typedef std::tr1::weak_ptr<const TriangleEdgeModel>   WeakConstTriangleEdgeModelPtr;
-typedef std::tr1::shared_ptr<TriangleEdgeModel>       TriangleEdgeModelPtr;
-typedef std::tr1::shared_ptr<const TriangleEdgeModel> ConstTriangleEdgeModelPtr;
+typedef std::weak_ptr<TriangleEdgeModel>         WeakTriangleEdgeModelPtr;
+typedef std::weak_ptr<const TriangleEdgeModel>   WeakConstTriangleEdgeModelPtr;
+typedef std::shared_ptr<TriangleEdgeModel>       TriangleEdgeModelPtr;
+typedef std::shared_ptr<const TriangleEdgeModel> ConstTriangleEdgeModelPtr;
 
 class Triangle;
 typedef Triangle *TrianglePtr;

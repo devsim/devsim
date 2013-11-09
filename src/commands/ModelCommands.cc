@@ -122,7 +122,7 @@ createNodeSolutionCmd(CommandHandler &data)
     ConstNodeModelPtr existingNodeModel = reg->GetNodeModel(name);
     ConstEdgeModelPtr existingEdgeModel = reg->GetEdgeModel(name);
 
-    if (existingEdgeModel != NULL)
+    if (existingEdgeModel.get())
     {
         errorString = "Name ";
         errorString += name;
@@ -933,7 +933,7 @@ setNodeValuesCmd(CommandHandler &data)
     ConstNodeModelPtr nm_name        = reg->GetNodeModel(name);
     ConstNodeModelPtr nm_initializer = reg->GetNodeModel(initializer);
 
-    if (nm_name == NULL)
+    if (!nm_name.get())
     {
         std::ostringstream os;
         os << "Model " << name << " does not exist\n";
@@ -946,7 +946,7 @@ setNodeValuesCmd(CommandHandler &data)
         os << "-init_from " << name << " is empty\n";
         errorString += os.str();
     }
-    else if (nm_initializer == NULL)
+    else if (!nm_initializer.get())
     {
         std::ostringstream os;
         os << "-init_from " << nm_initializer << " does not exist\n";
@@ -961,7 +961,7 @@ setNodeValuesCmd(CommandHandler &data)
     }
     else
     {
-      std::tr1::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(*nm_initializer);
+      std::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(*nm_initializer);
       data.SetEmptyResult();
     }
 }
@@ -1012,7 +1012,7 @@ setNodeValueCmd(CommandHandler &data)
 
     ConstNodeModelPtr nm_name        = reg->GetNodeModel(name);
 
-    if (nm_name == NULL)
+    if (!nm_name.get())
     {
         std::ostringstream os;
         os << "Model " << name << " does not exist\n";
@@ -1026,11 +1026,11 @@ setNodeValueCmd(CommandHandler &data)
     }
     else if (index == -1)
     {
-      std::tr1::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(value);
+      std::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(value);
     }
     else
     {
-      std::tr1::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetNodeValue(index, value);
+      std::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetNodeValue(index, value);
     }
 
 
@@ -1107,7 +1107,7 @@ printNodeValuesCmd(CommandHandler &data)
 
   ConstNodeModelPtr nm_name        = reg->GetNodeModel(name);
 
-  if (nm_name == NULL)
+  if (!nm_name.get())
   {
       std::ostringstream os;
       os << "Node Model " << name << " does not exist\n";
@@ -1192,7 +1192,7 @@ printEdgeValuesCmd(CommandHandler &data)
 
   ConstEdgeModelPtr nm_name        = reg->GetEdgeModel(name);
 
-  if (nm_name == NULL)
+  if (!nm_name.get())
   {
     std::ostringstream os;
     os << "Edge Model " << name << " does not exist\n";
@@ -1407,7 +1407,7 @@ getInterfaceValuesCmd(CommandHandler &data)
 
   ConstInterfaceNodeModelPtr imp = interface->GetInterfaceNodeModel(name);
 
-  if (imp == NULL)
+  if (!imp.get())
   {
     std::ostringstream os;
     os << "Interface Node Model " << name << " does not exist\n";

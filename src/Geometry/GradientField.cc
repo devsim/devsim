@@ -47,8 +47,8 @@ void GradientField::CalcMatrices2d() const
   ConstNodeModelPtr ux = myregion_->GetNodeModel("x");
   ConstNodeModelPtr uy = myregion_->GetNodeModel("y");
 
-  dsAssert(ux, "UNEXPECTED");
-  dsAssert(uy, "UNEXPECTED");
+  dsAssert(ux.get(), "UNEXPECTED");
+  dsAssert(uy.get(), "UNEXPECTED");
 
   const NodeScalarList &xvec = ux->GetScalarValues();
   const NodeScalarList &yvec = uy->GetScalarValues();
@@ -99,9 +99,9 @@ void GradientField::CalcMatrices3d() const
   ConstNodeModelPtr uy = myregion_->GetNodeModel("y");
   ConstNodeModelPtr uz = myregion_->GetNodeModel("y");
 
-  dsAssert(ux, "UNEXPECTED");
-  dsAssert(uy, "UNEXPECTED");
-  dsAssert(uz, "UNEXPECTED");
+  dsAssert(ux.get(), "UNEXPECTED");
+  dsAssert(uy.get(), "UNEXPECTED");
+  dsAssert(uz.get(), "UNEXPECTED");
 
   const NodeScalarList &xvec = ux->GetScalarValues();
   const NodeScalarList &yvec = uy->GetScalarValues();

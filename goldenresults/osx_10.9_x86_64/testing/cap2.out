@@ -1,0 +1,149 @@
+
+----------------------------------------
+
+ DEVSIM
+
+ Version: Beta 0.01
+
+ Copyright 2009-2013 Devsim LLC
+
+----------------------------------------
+
+
+mid
+bot
+ (region: MySiRegion)
+ (contact: top)
+ (region: MyOxRegion)
+ (interface: MySiOx)
+ (contact: bot)
+Region "MyOxRegion" on device "MyDevice" has equations 0:5
+Region "MySiRegion" on device "MyDevice" has equations 6:11
+Device "MyDevice" has equations 0:11
+number of equations 12
+Iteration: 0
+  Device: "MyDevice"	RelError: 2.00000e+00	AbsError: 1.00000e+00
+    Region: "MyOxRegion"	RelError: 1.00000e+00	AbsError: 7.40000e-01
+      Equation: "PotentialEquation"	RelError: 1.00000e+00	AbsError: 7.40000e-01
+    Region: "MySiRegion"	RelError: 1.00000e+00	AbsError: 1.00000e+00
+      Equation: "PotentialEquation"	RelError: 1.00000e+00	AbsError: 1.00000e+00
+Iteration: 1
+  Device: "MyDevice"	RelError: 5.75615e-16	AbsError: 2.27861e-16
+    Region: "MyOxRegion"	RelError: 2.87808e-16	AbsError: 2.12978e-16
+      Equation: "PotentialEquation"	RelError: 2.87808e-16	AbsError: 2.12978e-16
+    Region: "MySiRegion"	RelError: 2.87808e-16	AbsError: 2.27861e-16
+      Equation: "PotentialEquation"	RelError: 2.87808e-16	AbsError: 2.27861e-16
+5.10822e-13
+-5.10822e-13
+PotentialEdgeFlux
+5.10822e-13
+5.10822e-13
+5.10822e-13
+5.10822e-13
+5.10822e-13
+PotentialEdgeFlux
+5.10822e-13
+5.10822e-13
+5.10822e-13
+5.10822e-13
+5.10822e-13
+PotentialEdgeFlux
+4.60200e-14
+4.60200e-14
+4.60200e-14
+4.60200e-14
+4.60200e-14
+PotentialEdgeFlux
+1.30980e-13
+1.30980e-13
+1.30980e-13
+1.30980e-13
+1.30980e-13
+Region "MyOxRegion" on device "MyDevice" has equations 0:5
+Region "MySiRegion" on device "MyDevice" has equations 6:11
+Device "MyDevice" has equations 0:11
+number of equations 12
+Iteration: 0
+  Device: "MyDevice"	RelError: 9.60000e-01	AbsError: 2.40000e-01
+    Region: "MyOxRegion"	RelError: 4.80000e-01	AbsError: 2.40000e-01
+      Equation: "PotentialEquation"	RelError: 4.80000e-01	AbsError: 2.40000e-01
+    Region: "MySiRegion"	RelError: 4.80000e-01	AbsError: 2.40000e-01
+      Equation: "PotentialEquation"	RelError: 4.80000e-01	AbsError: 2.40000e-01
+Iteration: 1
+  Device: "MyDevice"	RelError: 5.56214e-16	AbsError: 1.16948e-16
+    Region: "MyOxRegion"	RelError: 3.61301e-16	AbsError: 1.11243e-16
+      Equation: "PotentialEquation"	RelError: 3.61301e-16	AbsError: 1.11243e-16
+    Region: "MySiRegion"	RelError: 1.94913e-16	AbsError: 1.16948e-16
+      Equation: "PotentialEquation"	RelError: 1.94913e-16	AbsError: 1.16948e-16
+PotentialEdgeFlux
+8.85000e-14
+8.85000e-14
+8.85000e-14
+8.85000e-14
+8.85000e-14
+PotentialEdgeFlux
+8.85000e-14
+8.85000e-14
+8.85000e-14
+8.85000e-14
+8.85000e-14
+8.85e-14
+-8.85e-14
+Device "MyDevice" Region "MyOxRegion" shadows global parameter update Permittivity
+Device "MyDevice" Region "MySiRegion" shadows global parameter update Permittivity
+Region "MyOxRegion" on device "MyDevice" has equations 0:5
+Region "MySiRegion" on device "MyDevice" has equations 6:11
+Device "MyDevice" has equations 0:11
+number of equations 12
+Iteration: 0
+  Device: "MyDevice"	RelError: 6.48649e-01	AbsError: 2.40000e-01
+    Region: "MyOxRegion"	RelError: 3.24324e-01	AbsError: 2.40000e-01
+      Equation: "PotentialEquation"	RelError: 3.24324e-01	AbsError: 2.40000e-01
+    Region: "MySiRegion"	RelError: 3.24324e-01	AbsError: 2.40000e-01
+      Equation: "PotentialEquation"	RelError: 3.24324e-01	AbsError: 2.40000e-01
+Iteration: 1
+  Device: "MyDevice"	RelError: 2.87808e-16	AbsError: 1.06489e-16
+    Region: "MyOxRegion"	RelError: 1.43904e-16	AbsError: 1.06489e-16
+      Equation: "PotentialEquation"	RelError: 1.43904e-16	AbsError: 1.06489e-16
+    Region: "MySiRegion"	RelError: 1.43904e-16	AbsError: 1.06489e-16
+      Equation: "PotentialEquation"	RelError: 1.43904e-16	AbsError: 1.06489e-16
+PotentialEdgeFlux
+5.10822e-13
+5.10822e-13
+5.10822e-13
+5.10822e-13
+5.10822e-13
+PotentialEdgeFlux
+5.10822e-13
+5.10822e-13
+5.10822e-13
+5.10822e-13
+5.10822e-13
+ElectricField
+5.20000e-01
+5.20000e-01
+5.20000e-01
+5.20000e-01
+5.20000e-01
+ElectricField
+1.48000e+00
+1.48000e+00
+1.48000e+00
+1.48000e+00
+1.48000e+00
+Potential
+1.00000e+00
+9.48000e-01
+8.96000e-01
+8.44000e-01
+7.92000e-01
+7.40000e-01
+Potential
+7.40000e-01
+5.92000e-01
+4.44000e-01
+2.96000e-01
+1.48000e-01
+0.00000e+00
+5.10822e-13
+-5.10822e-13

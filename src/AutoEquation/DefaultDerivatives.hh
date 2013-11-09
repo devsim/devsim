@@ -19,11 +19,11 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef DEFAULT_DERIVATIVES_HH
 #define DEFAULT_DERIVATIVES_HH
-#include "dsmemory.hh"
+#include <memory>
 
 namespace Eqo {
 class EquationObject;
-typedef std::tr1::shared_ptr<EquationObject> EqObjPtr;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 }
 namespace dsHelper {
 Eqo::EqObjPtr CreateDefaultDerivatives();

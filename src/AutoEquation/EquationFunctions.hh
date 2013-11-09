@@ -31,7 +31,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Eqo {
 class EquationObject;
-typedef std::tr1::shared_ptr<EquationObject> EqObjPtr;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 }
 
 class Region;

@@ -193,7 +193,7 @@ std::vector<int> *GeniusLoader::GetGeniusRegionBoundaryPoints(const std::string 
       std::ostringstream os; 
       os << "Cannot find genius region " << genius_region_name << ".\n";
       OutputStream::WriteOut(OutputStream::ERROR, os.str());
-      ret = false;
+      ret = NULL;
       break;
     }
 

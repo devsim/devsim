@@ -67,9 +67,9 @@ void TetrahedronElementField::CalcMatrices() const
   ConstEdgeModelPtr uy = myregion_->GetEdgeModel("unity");
   ConstEdgeModelPtr uz = myregion_->GetEdgeModel("unitz");
 
-  dsAssert(ux, "UNEXPECTED");
-  dsAssert(uy, "UNEXPECTED");
-  dsAssert(uz, "UNEXPECTED");
+  dsAssert(ux.get(), "UNEXPECTED");
+  dsAssert(uy.get(), "UNEXPECTED");
+  dsAssert(uz.get(), "UNEXPECTED");
 
   const EdgeScalarList &xvec = ux->GetScalarValues();
   const EdgeScalarList &yvec = uy->GetScalarValues();

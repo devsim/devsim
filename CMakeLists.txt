@@ -82,6 +82,7 @@ ENDIF (APPLE)
 
 # Ubuntu 12.04 32/64 bit
 IF (${DEVSIM_CONFIG} STREQUAL "ubuntu_12.04")
+ADD_DEFINITIONS(-std=c++0x)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
 SET (PYTHON_INCLUDE /usr/include/python2.7)
@@ -160,12 +161,12 @@ SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 ENDIF (${DEVSIM_CONFIG} STREQUAL "redhat_6.4")
 
 
-IF (${DEVSIM_CONFIG} STREQUAL "osx_10.6.8")
+IF (${DEVSIM_CONFIG} STREQUAL "osx_10.9")
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
-#Download python 2.7.3 from python.org
-SET (PYTHON_INCLUDE /Library/Frameworks/Python.framework/Versions/2.7/Headers)
-SET (PYTHON_ARCHIVE /Library/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib)
+SET (PYTHON_ARCHIVE "/usr/lib/libpython2.7.dylib")
+SET (PYTHON_INCLUDE "/usr/include/python2.7")
+
 SET (TCL_STUB /usr/lib/libtclstub8.5.a)
 SET (BLAS_ARCHIVE  /usr/lib/libblas.dylib /usr/lib/libcblas.dylib /usr/lib/liblapack.dylib)
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
@@ -182,7 +183,7 @@ SET (ZLIB_INCLUDE "/usr/include")
 SET (ZLIB_ARCHIVE "/usr/lib/libz.dylib")
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
-ENDIF (${DEVSIM_CONFIG} STREQUAL "osx_10.6.8")
+ENDIF (${DEVSIM_CONFIG} STREQUAL "osx_10.9")
 
 
 

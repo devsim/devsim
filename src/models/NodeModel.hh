@@ -20,7 +20,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef NODEMODEL_HH
 #define NODEMODEL_HH
 
-#include "dsmemory.hh"
+#include <memory>
 
 #include <string>
 #include <vector>
@@ -29,10 +29,10 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 typedef std::vector<double> NodeScalarList;
 
 class NodeModel;
-typedef std::tr1::weak_ptr<NodeModel>         WeakNodeModelPtr;
-typedef std::tr1::weak_ptr<const NodeModel>   WeakConstNodeModelPtr;
-typedef std::tr1::shared_ptr<NodeModel>       NodeModelPtr;
-typedef std::tr1::shared_ptr<const NodeModel> ConstNodeModelPtr;
+typedef std::weak_ptr<NodeModel>         WeakNodeModelPtr;
+typedef std::weak_ptr<const NodeModel>   WeakConstNodeModelPtr;
+typedef std::shared_ptr<NodeModel>       NodeModelPtr;
+typedef std::shared_ptr<const NodeModel> ConstNodeModelPtr;
 
 class Node;
 typedef Node *NodePtr;

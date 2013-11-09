@@ -26,11 +26,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include<utility>
 #include<map>
 #include<vector>
-#ifdef WIN32
 #include<unordered_map>
-#else
-#include<tr1/unordered_map>
-#endif
 
 namespace dsMath {
 class Matrix;
@@ -42,7 +38,7 @@ class CompressedMatrix : public Matrix {
         enum CompressionType {CCM, CRM};
         enum SymbolicStatus_t {NEW_SYMBOLIC, SAME_SYMBOLIC};
 
-        typedef std::tr1::unordered_map<int, int >         RowInd;
+        typedef std::unordered_map<int, int >         RowInd;
         typedef std::pair<int, int >        RowColEntry;
         typedef std::vector<RowColEntry>    RowColEntryVec;
         typedef std::vector<RowInd >        SymbolicMat;

@@ -114,25 +114,25 @@ ModelExprData::ScalarValuesType ModelExprData::GetScalarValues() const
 ModelExprData::ModelExprData(const NodeScalarData &x, const Region *r) : val(0.0), type(NODEDATA), reg(r)
 {
   NodeScalarData *foo = new NodeScalarData(x);
-  nodeScalarData = std::tr1::shared_ptr<NodeScalarData>(foo);
+  nodeScalarData = std::shared_ptr<NodeScalarData>(foo);
 };
 
 ModelExprData::ModelExprData(const EdgeScalarData &x, const Region *r) : val(0.0), type(EDGEDATA), reg(r)
 {
     EdgeScalarData *foo = new EdgeScalarData(x);
-    edgeScalarData = std::tr1::shared_ptr<EdgeScalarData>(foo);
+    edgeScalarData = std::shared_ptr<EdgeScalarData>(foo);
 };
 
 ModelExprData::ModelExprData(const TriangleEdgeScalarData &x, const Region *r) : val(0.0), type(TRIANGLEEDGEDATA), reg(r)
 {
   TriangleEdgeScalarData *foo = new TriangleEdgeScalarData(x);
-  triangleEdgeScalarData = std::tr1::shared_ptr<TriangleEdgeScalarData>(foo);
+  triangleEdgeScalarData = std::shared_ptr<TriangleEdgeScalarData>(foo);
 };
 
 ModelExprData::ModelExprData(const TetrahedronEdgeScalarData &x, const Region *r) : val(0.0), type(TETRAHEDRONEDGEDATA), reg(r)
 {
   TetrahedronEdgeScalarData *foo = new TetrahedronEdgeScalarData(x);
-  tetrahedronEdgeScalarData = std::tr1::shared_ptr<TetrahedronEdgeScalarData>(foo);
+  tetrahedronEdgeScalarData = std::shared_ptr<TetrahedronEdgeScalarData>(foo);
 };
 
 

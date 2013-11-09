@@ -69,11 +69,11 @@ class EvalType {
 
     bool inNodeModelList(const std::string &x, const Region *r) const
     {
-      return (r->GetNodeModel(x) != 0);
+      return (r->GetNodeModel(x).get());
     }
     bool inEdgeModelList(const std::string &x, const Region *r) const
     {
-      return (r->GetEdgeModel(x) != 0);
+      return (r->GetEdgeModel(x).get());
     }
 
     bool inAliasedEdgeModelList(const std::string &x, const Region *r) const
@@ -112,11 +112,11 @@ class EvalType {
 
     bool inTriangleEdgeModelList(const std::string &x, const Region *r) const
     {
-      return (r->GetTriangleEdgeModel(x) != 0);
+      return (r->GetTriangleEdgeModel(x).get());
     }
     bool inTetrahedronEdgeModelList(const std::string &x, const Region *r) const
     {
-      return (r->GetTetrahedronEdgeModel(x) != 0);
+      return (r->GetTetrahedronEdgeModel(x).get());
     }
 
     bool inInterfaceModelList(const std::string &x) const
@@ -128,20 +128,20 @@ class EvalType {
       }
 
       bool inlist = false;
-      if (interface_->GetInterfaceNodeModel(x) != 0) {
+      if (interface_->GetInterfaceNodeModel(x).get()) {
         inlist = true;
       }
       else if (x.rfind("@r0") == rpos)
       {
         std::string y(x);
         y.resize(rpos);
-        inlist = (interface_->GetRegion0()->GetNodeModel(y));
+        inlist = (interface_->GetRegion0()->GetNodeModel(y).get());
       }
       else if (x.rfind("@r1") == rpos)
       {
         std::string y(x);
         y.resize(rpos);
-        inlist = (interface_->GetRegion1()->GetNodeModel(y));
+        inlist = (interface_->GetRegion1()->GetNodeModel(y).get());
       }
 
       return inlist;
@@ -151,7 +151,7 @@ class EvalType {
     const Region    *region_;
 };
 
-std::tr1::weak_ptr<EvalType> evaltype;
+std::weak_ptr<EvalType> evaltype;
 
 /**
  * This is awful, but we need this to prototype
@@ -159,7 +159,7 @@ std::tr1::weak_ptr<EvalType> evaltype;
 /** here we assume that node models can only reference local models */
 bool inModelList(const std::string &x)
 {
-  std::tr1::shared_ptr<EvalType> et = evaltype.lock();
+  std::shared_ptr<EvalType> et = evaltype.lock();
 
   bool inlist = false; 
   if (et)
@@ -249,7 +249,7 @@ Eqo::EqObjPtr DefaultDevsimDerivative(Eqo::EqObjPtr self, Eqo::EqObjPtr foo)
 Eqo::EqObjPtr CreateExprModel(const std::string &nm, const std::string &expr, RegionPtr rp, std::string &errorstring)
 {
     EvalExpr::error_t terrors;
-    std::tr1::shared_ptr<EvalType> et = std::tr1::shared_ptr<EvalType>(new EvalType(rp));
+    std::shared_ptr<EvalType> et = std::shared_ptr<EvalType>(new EvalType(rp));
     evaltype = et;
     EngineAPI::SetModelListCallBack(inModelList);
     EngineAPI::SetDerivativeRule(DefaultDevsimDerivative);
@@ -274,7 +274,7 @@ Eqo::EqObjPtr CreateInterfaceExprModel(const std::string &nm, const std::string 
 {
     EvalExpr::error_t terrors;
 
-    std::tr1::shared_ptr<EvalType> et = std::tr1::shared_ptr<EvalType>(new EvalType(ip));
+    std::shared_ptr<EvalType> et = std::shared_ptr<EvalType>(new EvalType(ip));
     evaltype = et;
     EngineAPI::SetModelListCallBack(inModelList);
     EngineAPI::SetDerivativeRule(DefaultDevsimDerivative);

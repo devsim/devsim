@@ -63,7 +63,7 @@ SurfaceArea::SurfaceArea(RegionPtr rp)
 void SurfaceArea::calcSurfaceArea1d() const
 {
     ConstEdgeModelPtr elen = GetRegion().GetEdgeModel("EdgeLength");
-    dsAssert(elen, "UNEXPECTED");
+    dsAssert(elen.get(), "UNEXPECTED");
 
     const Device &device = *GetRegion().GetDevice();
 
@@ -158,12 +158,12 @@ void SurfaceArea::calcSurfaceArea2d() const
   const Device &device = *(region.GetDevice());
 
   ConstEdgeModelPtr elen = region.GetEdgeModel("EdgeLength");
-  dsAssert(elen, "UNEXPECTED");
+  dsAssert(elen.get(), "UNEXPECTED");
 
   ConstEdgeModelPtr ux = region.GetEdgeModel("unitx");
-  dsAssert(ux, "UNEXPECTED");
+  dsAssert(ux.get(), "UNEXPECTED");
   ConstEdgeModelPtr uy = region.GetEdgeModel("unity");
-  dsAssert(uy, "UNEXPECTED");
+  dsAssert(uy.get(), "UNEXPECTED");
 
 
 #if 0

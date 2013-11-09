@@ -44,16 +44,16 @@ void TetrahedronEdgeFromNodeModel::calcTetrahedronEdgeScalarValues() const
   const Region &reg = GetRegion();
 
   const ConstNodeModelPtr nmp = reg.GetNodeModel(nodeModelName);
-  dsAssert(nmp, "UNEXPECTED");
+  dsAssert(nmp.get(), "UNEXPECTED");
 
   const ConstTetrahedronEdgeModelPtr temp1 = reg.GetTetrahedronEdgeModel(edgeModel1Name);
-  dsAssert(temp1, "UNEXPECTED");
+  dsAssert(temp1.get(), "UNEXPECTED");
 
   const ConstTetrahedronEdgeModelPtr temp2 = reg.GetTetrahedronEdgeModel(edgeModel2Name);
-  dsAssert(temp2, "UNEXPECTED");
+  dsAssert(temp2.get(), "UNEXPECTED");
 
   const ConstTetrahedronEdgeModelPtr temp3 = reg.GetTetrahedronEdgeModel(edgeModel3Name);
-  dsAssert(temp3, "UNEXPECTED");
+  dsAssert(temp3.get(), "UNEXPECTED");
 
   const Region::TetrahedronToConstEdgeDataList_t &ttelist = reg.GetTetrahedronToEdgeDataList();
   const ConstTetrahedronList &tetrahedronList = reg.GetTetrahedronList();
@@ -94,9 +94,9 @@ void TetrahedronEdgeFromNodeModel::calcTetrahedronEdgeScalarValues() const
   }
 
   SetValues(ev0);
-  std::tr1::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(temp1)->SetValues(ev1);
-  std::tr1::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(temp2)->SetValues(ev2);
-  std::tr1::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(temp3)->SetValues(ev3);
+  std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(temp1)->SetValues(ev1);
+  std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(temp2)->SetValues(ev2);
+  std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(temp3)->SetValues(ev3);
 }
 
 void TetrahedronEdgeFromNodeModel::Serialize(std::ostream &of) const

@@ -165,7 +165,7 @@ NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
 
   {
     ConstEdgeModelPtr emx = region.GetEdgeModel("unitx");
-    dsAssert(emx, "UNEXPECTED");
+    dsAssert(emx.get(), "UNEXPECTED");
     const EdgeScalarList &ex = emx->GetScalarValues();
     for (size_t i = 0; i < number_edges; ++i)
     {
@@ -176,7 +176,7 @@ NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
   if (dimension > 1)
   {
     ConstEdgeModelPtr emy = region.GetEdgeModel("unity");
-    dsAssert(emy, "UNEXPECTED");
+    dsAssert(emy.get(), "UNEXPECTED");
     const EdgeScalarList &ey = emy->GetScalarValues();
     for (size_t i = 0; i < number_edges; ++i)
     {
@@ -187,7 +187,7 @@ NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
   if (dimension > 2)
   {
     ConstEdgeModelPtr emz = region.GetEdgeModel("unitz");
-    dsAssert(emz, "UNEXPECTED");
+    dsAssert(emz.get(), "UNEXPECTED");
     const EdgeScalarList &ez = emz->GetScalarValues();
     for (size_t i = 0; i < number_edges; ++i)
     {

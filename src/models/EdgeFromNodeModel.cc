@@ -54,7 +54,7 @@ EdgeFromNodeModel::EdgeFromNodeModel(const std::string &edgemodel0, const std::s
     dsAssert(!node1EdgeModel.expired(), "UNEXPECTED");
 
 //// This is caught by the api
-    dsAssert(rp->GetNodeModel(nodemodel), "UNEXPECTED");
+    dsAssert(rp->GetNodeModel(nodemodel).get(), "UNEXPECTED");
     RegisterCallback(nodeModelName);
 #if 0
     os << "creating EdgeFromNodeModelModel " << edgemodel0 << " with parent " << rp->GetNodeModel(nodemodel)->GetName() << "\n";
@@ -92,7 +92,7 @@ void EdgeFromNodeModel::calcEdgeScalarValues() const
     EdgeScalarList e1;
     createEdgeModelsFromNodeModel(nm->GetScalarValues(), *rp, e0, e1);
     this->SetValues(e0);
-    std::tr1::const_pointer_cast<EdgeModel, const EdgeModel>(node1EdgeModel.lock())->SetValues(e1);
+    std::const_pointer_cast<EdgeModel, const EdgeModel>(node1EdgeModel.lock())->SetValues(e1);
 }
 
 void EdgeFromNodeModel::Serialize(std::ostream &of) const

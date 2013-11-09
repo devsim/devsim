@@ -20,7 +20,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef TETRAHEDRON_EDGE_MODEL_HH
 #define TETRAHEDRON_EDGE_MODEL_HH
 
-#include "dsmemory.hh"
+#include <memory>
 
 #include <string>
 #include <vector>
@@ -39,16 +39,16 @@ typedef Edge *EdgePtr;
 typedef const Edge *ConstEdgePtr;
 
 class EdgeModel;
-typedef std::tr1::weak_ptr<EdgeModel>         WeakEdgeModelPtr;
-typedef std::tr1::weak_ptr<const EdgeModel>   WeakConstEdgeModelPtr;
-typedef std::tr1::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::tr1::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
+typedef std::weak_ptr<EdgeModel>         WeakEdgeModelPtr;
+typedef std::weak_ptr<const EdgeModel>   WeakConstEdgeModelPtr;
+typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
+typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
 
 class TetrahedronEdgeModel;
-typedef std::tr1::weak_ptr<TetrahedronEdgeModel>         WeakTetrahedronEdgeModelPtr;
-typedef std::tr1::weak_ptr<const TetrahedronEdgeModel>   WeakConstTetrahedronEdgeModelPtr;
-typedef std::tr1::shared_ptr<TetrahedronEdgeModel>       TetrahedronEdgeModelPtr;
-typedef std::tr1::shared_ptr<const TetrahedronEdgeModel> ConstTetrahedronEdgeModelPtr;
+typedef std::weak_ptr<TetrahedronEdgeModel>         WeakTetrahedronEdgeModelPtr;
+typedef std::weak_ptr<const TetrahedronEdgeModel>   WeakConstTetrahedronEdgeModelPtr;
+typedef std::shared_ptr<TetrahedronEdgeModel>       TetrahedronEdgeModelPtr;
+typedef std::shared_ptr<const TetrahedronEdgeModel> ConstTetrahedronEdgeModelPtr;
 
 
 class Tetrahedron;

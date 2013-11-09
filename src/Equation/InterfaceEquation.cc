@@ -251,7 +251,7 @@ void InterfaceEquation::NodeVolumeType1Assemble(const std::string &interfacenode
     {
       std::ostringstream os;
 
-      if (inm == NULL)
+      if (!inm.get())
       {
         os << "Interface node model " << interfacenodemodel << " is not available\n";
       }
@@ -367,7 +367,7 @@ void InterfaceEquation::NodeVolumeType1Assemble(const std::string &interfacenode
             dsAssert(eqindex != size_t(-1), "UNEXPECTED");
 
             ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(imname);
-            dsAssert(idm, "UNEXPECTED"); // Existence is checked when added to vlistd
+            dsAssert(idm.get(), "UNEXPECTED"); // Existence is checked when added to vlistd
 
             const NodeScalarList &vals = idm->GetScalarValues();
             dsAssert(vals.size() == nlist.size(), "UNEXPECTED");
@@ -422,12 +422,12 @@ void InterfaceEquation::NodeVolumeType2Assemble(const std::string &interfacenode
     dsAssert(!interfacenodemodel.empty(), "UNEXPECTED");
 
     ConstInterfaceNodeModelPtr inm = in.GetInterfaceNodeModel(interfacenodemodel);
-    dsAssert(inm != NULL, "UNEXPECTED");
+    dsAssert(inm.get(), "UNEXPECTED");
     ConstNodeModelPtr sa0 = r0.GetNodeModel(surface_area);
-    dsAssert(sa0 != NULL, "UNEXPECTED");
+    dsAssert(sa0.get(), "UNEXPECTED");
 
     ConstNodeModelPtr sa1 = r1.GetNodeModel(surface_area);
-    dsAssert(sa1 != NULL, "UNEXPECTED");
+    dsAssert(sa1.get(), "UNEXPECTED");
 
     const std::set<ConstNodePtr> &activeNodes = GetActiveNodes();
     const ConstNodeList_t &nodes0 = in.GetNodes0();
@@ -528,7 +528,7 @@ void InterfaceEquation::NodeVolumeType2Assemble(const std::string &interfacenode
             dsAssert(eqindex != size_t(-1), "UNEXPECTED");
 
             ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(imname);
-            dsAssert(idm, "UNEXPECTED"); // Existence is checked when added to vlistd
+            dsAssert(idm.get(), "UNEXPECTED"); // Existence is checked when added to vlistd
 
             const NodeScalarList &vals = idm->GetScalarValues();
             dsAssert(vals.size() == nlist.size(), "UNEXPECTED");

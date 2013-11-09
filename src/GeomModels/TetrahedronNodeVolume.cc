@@ -40,10 +40,10 @@ void TetrahedronNodeVolume::calcTetrahedronEdgeScalarValues() const
 //  const size_t dimension = r.GetDimension();
 
   ConstTetrahedronEdgeModelPtr eec = r.GetTetrahedronEdgeModel("ElementEdgeCouple");
-  dsAssert(eec != NULL, "UNEXPECTED");
+  dsAssert(eec.get(), "UNEXPECTED");
 
   ConstEdgeModelPtr elen = r.GetEdgeModel("EdgeLength");
-  dsAssert(elen != NULL, "UNEXPECTED");
+  dsAssert(elen.get(), "UNEXPECTED");
 
   TetrahedronEdgeScalarData evol = TetrahedronEdgeScalarData(*eec);
 

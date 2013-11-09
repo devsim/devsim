@@ -20,10 +20,10 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SIGNAL_HH
 #define SIGNAL_HH
 
-#include "dsmemory.hh"
+#include <memory>
 
 class Signal;
-typedef std::tr1::shared_ptr<Signal> SignalPtr;
+typedef std::shared_ptr<Signal> SignalPtr;
 
 class Signal {
    public:

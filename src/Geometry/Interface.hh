@@ -20,7 +20,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef INTERFACE_HH
 #define INTERFACE_HH
 #include "MathEnum.hh"
-#include "dsmemory.hh"
+#include <memory>
 #include <string>
 #include <vector>
 #include <map>
@@ -31,8 +31,8 @@ namespace IMEE {
 class InterfaceModelExprData;
 }
 typedef ObjectCache<IMEE::InterfaceModelExprData> InterfaceModelExprDataCache;
-typedef std::tr1::weak_ptr<InterfaceModelExprDataCache >   WeakInterfaceModelExprDataCachePtr;
-typedef std::tr1::shared_ptr<InterfaceModelExprDataCache > InterfaceModelExprDataCachePtr;
+typedef std::weak_ptr<InterfaceModelExprDataCache >   WeakInterfaceModelExprDataCachePtr;
+typedef std::shared_ptr<InterfaceModelExprDataCache > InterfaceModelExprDataCachePtr;
 
 class Node;
 class Edge;
@@ -43,8 +43,8 @@ typedef Region *RegionPtr;
 typedef const Region *ConstRegionPtr;
 
 class InterfaceNodeModel;
-typedef std::tr1::shared_ptr<InterfaceNodeModel>       InterfaceNodeModelPtr;
-typedef std::tr1::shared_ptr<const InterfaceNodeModel> ConstInterfaceNodeModelPtr;
+typedef std::shared_ptr<InterfaceNodeModel>       InterfaceNodeModelPtr;
+typedef std::shared_ptr<const InterfaceNodeModel> ConstInterfaceNodeModelPtr;
 
 class InterfaceEquation;
 typedef InterfaceEquation *InterfaceEquationPtr;

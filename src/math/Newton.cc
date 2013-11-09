@@ -435,18 +435,18 @@ bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemetho
     OutputStream::WriteOut(OutputStream::INFO, os.str());
   }
 
-  std::auto_ptr<Matrix> matrix;
-  std::auto_ptr<Preconditioner> preconditioner;
+  std::unique_ptr<Matrix> matrix;
+  std::unique_ptr<Preconditioner> preconditioner;
 
   if (dynamic_cast<IterativeLinearSolver *>(&itermethod))
   {
-    matrix = std::auto_ptr<Matrix>(new CompressedMatrix(numeqns));
-    preconditioner = std::auto_ptr<Preconditioner>(new BlockPreconditioner(numeqns, Preconditioner::NOTRANS));
+    matrix = std::unique_ptr<Matrix>(new CompressedMatrix(numeqns));
+    preconditioner = std::unique_ptr<Preconditioner>(new BlockPreconditioner(numeqns, Preconditioner::NOTRANS));
   }
   else
   {
-    matrix = std::auto_ptr<Matrix>(new CompressedMatrix(numeqns));
-    preconditioner = std::auto_ptr<Preconditioner>(new SuperLUPreconditioner(numeqns, Preconditioner::NOTRANS, Preconditioner::FULL));
+    matrix = std::unique_ptr<Matrix>(new CompressedMatrix(numeqns));
+    preconditioner = std::unique_ptr<Preconditioner>(new SuperLUPreconditioner(numeqns, Preconditioner::NOTRANS, Preconditioner::FULL));
   }
 
   DoubleVec_t rhs(numeqns);
@@ -787,8 +787,8 @@ bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
   }
 
 
-  std::auto_ptr<Matrix> matrix(new CompressedMatrix(numeqns, CompressedMatrix::COMPLEX, CompressedMatrix::CCM));
-  std::auto_ptr<Preconditioner> preconditioner(new SuperLUPreconditioner(numeqns, Preconditioner::NOTRANS, Preconditioner::FULL));
+  std::unique_ptr<Matrix> matrix(new CompressedMatrix(numeqns, CompressedMatrix::COMPLEX, CompressedMatrix::CCM));
+  std::unique_ptr<Preconditioner> preconditioner(new SuperLUPreconditioner(numeqns, Preconditioner::NOTRANS, Preconditioner::FULL));
 
   ComplexDoubleVec_t rhs(numeqns);
 
@@ -932,8 +932,8 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
   nk.InitializeSolution("dcop");
 
 
-  std::auto_ptr<Matrix> matrix(new CompressedMatrix(numeqns, CompressedMatrix::COMPLEX, CompressedMatrix::CCM));
-  std::auto_ptr<Preconditioner> preconditioner(new SuperLUPreconditioner(numeqns, Preconditioner::TRANS, SuperLUPreconditioner::FULL));
+  std::unique_ptr<Matrix> matrix(new CompressedMatrix(numeqns, CompressedMatrix::COMPLEX, CompressedMatrix::CCM));
+  std::unique_ptr<Preconditioner> preconditioner(new SuperLUPreconditioner(numeqns, Preconditioner::TRANS, SuperLUPreconditioner::FULL));
 
   ComplexDoubleVec_t rhs(numeqns);
 

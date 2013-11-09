@@ -24,7 +24,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "MeshLoaderStructs.hh"
 
 
-#include "dsmemory.hh"
+#include <memory>
 #include <vector>
 #include <string>
 #include <set>
@@ -38,13 +38,13 @@ typedef Mesh2d *Mesh2dPtr;
 class DevsimLoader;
 
 class MeshLine2d;
-typedef std::tr1::shared_ptr<MeshLine2d> MeshLine2dPtr;
+typedef std::shared_ptr<MeshLine2d> MeshLine2dPtr;
 class MeshRegion2d;
-typedef std::tr1::shared_ptr<MeshRegion2d> MeshRegion2dPtr;
+typedef std::shared_ptr<MeshRegion2d> MeshRegion2dPtr;
 class MeshInterface2d;
-typedef std::tr1::shared_ptr<MeshInterface2d> MeshInterface2dPtr;
+typedef std::shared_ptr<MeshInterface2d> MeshInterface2dPtr;
 class MeshContact2d;
-typedef std::tr1::shared_ptr<MeshContact2d> MeshContact2dPtr;
+typedef std::shared_ptr<MeshContact2d> MeshContact2dPtr;
 
 class Mesh2d : public Mesh {
     public:
@@ -92,7 +92,7 @@ class Mesh2d : public Mesh {
         std::vector<std::string>        interfaceOrder;
         std::vector<std::string>        contactOrder;
 
-        std::tr1::shared_ptr<DevsimLoader> meshLoader;
+        std::shared_ptr<DevsimLoader> meshLoader;
 
 };
 

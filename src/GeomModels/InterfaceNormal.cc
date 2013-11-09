@@ -115,8 +115,8 @@ void InterfaceNormal::calcEdgeScalarValues() const {
     ny = GetRegion().GetNodeModel("NSurfaceNormal_y");
 
     /// TODO: put missing model messages here
-    dsAssert(nx, "UNEXPECTED");
-    dsAssert(ny, "UNEXPECTED");
+    dsAssert(nx.get(), "UNEXPECTED");
+    dsAssert(ny.get(), "UNEXPECTED");
 
     nxv = nx->GetScalarValues();
     nyv = ny->GetScalarValues();
@@ -128,9 +128,9 @@ void InterfaceNormal::calcEdgeScalarValues() const {
     ny = GetRegion().GetNodeModel("NSurfaceNormal_y");
     nz = GetRegion().GetNodeModel("NSurfaceNormal_z");
 
-    dsAssert(nx, "UNEXPECTED");
-    dsAssert(ny, "UNEXPECTED");
-    dsAssert(nz, "UNEXPECTED");
+    dsAssert(nx.get(), "UNEXPECTED");
+    dsAssert(ny.get(), "UNEXPECTED");
+    dsAssert(nz.get(), "UNEXPECTED");
 
     nxv = nx->GetScalarValues();
     nyv = ny->GetScalarValues();

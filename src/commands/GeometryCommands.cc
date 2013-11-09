@@ -78,7 +78,7 @@ getRegionListCmd(CommandHandler &data)
     dsGetArgs::Option *option;
     if (commandName == "get_region_list")
     {
-      dsGetArgs::Option getregionlistoption[] = {
+      static dsGetArgs::Option getregionlistoption[] = {
           {"device", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
           {"contact", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
           {"interface", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
@@ -88,7 +88,7 @@ getRegionListCmd(CommandHandler &data)
     }
     else if (commandName == "get_interface_list" || commandName == "get_contact_list")
     {
-      dsGetArgs::Option getregionlistoption[] = {
+      static dsGetArgs::Option getregionlistoption[] = {
           {"device", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
           {NULL, NULL,   dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
       };

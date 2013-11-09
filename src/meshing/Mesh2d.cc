@@ -104,7 +104,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
 //    std::vector<MeshEdge>       edges;
     std::vector<MeshTriangle>   triangles;
 
-    meshLoader = std::tr1::shared_ptr<DevsimLoader>(new DevsimLoader(name));
+    meshLoader = std::shared_ptr<DevsimLoader>(new DevsimLoader(name));
 
     //// remove collinear points
     {

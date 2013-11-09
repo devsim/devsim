@@ -151,15 +151,15 @@ solveCmd(CommandHandler &data)
   solver.SetQRelError(charge_error);
   solver.SetMaxIter(maximum_iterations);
 
-  std::auto_ptr<dsMath::LinearSolver> linearSolver;
+  std::unique_ptr<dsMath::LinearSolver> linearSolver;
 
   if (solver_type == "direct")
   {
-    linearSolver = std::auto_ptr<dsMath::LinearSolver>(new dsMath::DirectLinearSolver);
+    linearSolver = std::unique_ptr<dsMath::LinearSolver>(new dsMath::DirectLinearSolver);
   }
   else if (solver_type == "iterative")
   {
-    linearSolver = std::auto_ptr<dsMath::LinearSolver>(new dsMath::IterativeLinearSolver);
+    linearSolver = std::unique_ptr<dsMath::LinearSolver>(new dsMath::IterativeLinearSolver);
   }
   else
   {
@@ -239,7 +239,7 @@ getContactCurrentCmd(CommandHandler &data)
 
     const std::string commandName = data.GetCommandName();
 
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
         {"equation", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"contact",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},

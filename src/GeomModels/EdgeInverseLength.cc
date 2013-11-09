@@ -34,7 +34,7 @@ EdgeModel("EdgeInverseLength", rp, EdgeModel::SCALAR)
 void EdgeInverseLength::calcEdgeScalarValues() const
 {
     ConstEdgeModelPtr elen = GetRegion().GetEdgeModel("EdgeLength");
-    dsAssert(elen, "UNEXPECTED");
+    dsAssert(elen.get(), "UNEXPECTED");
 
     const EdgeScalarList &evals = elen->GetScalarValues();
 

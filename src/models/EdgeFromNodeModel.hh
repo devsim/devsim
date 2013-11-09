@@ -21,12 +21,12 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #define EDGEFROMNODEMODEL_HH
 #include "EdgeModel.hh"
 
-#include "dsmemory.hh"
+#include <memory>
 
 class NodeModel;
-typedef std::tr1::weak_ptr<NodeModel>         WeakNodeModelPtr;
-typedef std::tr1::shared_ptr<NodeModel>       NodeModelPtr;
-typedef std::tr1::shared_ptr<const NodeModel> ConstNodeModelPtr;
+typedef std::weak_ptr<NodeModel>         WeakNodeModelPtr;
+typedef std::shared_ptr<NodeModel>       NodeModelPtr;
+typedef std::shared_ptr<const NodeModel> ConstNodeModelPtr;
 
 #include <string>
 // This class relies on a parent Node Model for it's data.  It provides conversion so that a node model may be projected onto both sides of an edge.

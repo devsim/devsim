@@ -19,9 +19,9 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef MYPACKET_HH
 #define MYPACKET_HH
-#include "dsmemory.hh"
+#include <memory>
 class mypacket;
-typedef std::tr1::shared_ptr<mypacket> mypacket_ptr;
+typedef std::shared_ptr<mypacket> mypacket_ptr;
 
 /**
  * This class is the basis for any work to be queued by

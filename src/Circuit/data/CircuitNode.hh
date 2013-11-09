@@ -20,11 +20,11 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
 
-#include "dsmemory.hh"
+#include <memory>
 
 class CircuitNode;
 
-typedef std::tr1::shared_ptr<CircuitNode> CircuitNodePtr;
+typedef std::shared_ptr<CircuitNode> CircuitNodePtr;
 
 namespace CUT {
     enum UpdateType {DEFAULT, LOGDAMP, POSITIVE};
