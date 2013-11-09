@@ -61,7 +61,7 @@ void EdgeCouple::calcEdgeScalarValues() const
 void EdgeCouple::calcEdgeCouple2d() const
 {
   ConstTriangleEdgeModelPtr eec = GetRegion().GetTriangleEdgeModel("ElementEdgeCouple");
-  dsAssert(eec, "ElementEdgeCouple missing");
+  dsAssert(eec.get(), "ElementEdgeCouple missing");
 
   std::vector<double> ev = eec->GetValuesOnEdges();
   SetValues(ev);
@@ -70,7 +70,7 @@ void EdgeCouple::calcEdgeCouple2d() const
 void EdgeCouple::calcEdgeCouple3d() const
 {
   ConstTetrahedronEdgeModelPtr eec = GetRegion().GetTetrahedronEdgeModel("ElementEdgeCouple");
-  dsAssert(eec, "ElementEdgeCouple missing");
+  dsAssert(eec.get(), "ElementEdgeCouple missing");
   std::vector<double> ev = eec->GetValuesOnEdges();
   SetValues(ev);
 

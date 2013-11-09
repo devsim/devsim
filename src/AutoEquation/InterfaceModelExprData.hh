@@ -20,7 +20,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef INTERFACE_MODEL_EXPR_DATA_HH
 #define INTERFACE_MODEL_EXPR_DATA_HH
 
-#include "dsmemory.hh"
+#include <memory>
 #include <vector>
 
 template <typename T> class ScalarData;
@@ -95,9 +95,9 @@ class InterfaceModelExprData {
     private:
         friend class InterfaceModelExprEval;
 
-        typedef std::tr1::shared_ptr<InterfaceNodeScalarData> nsd_ptr;
+        typedef std::shared_ptr<InterfaceNodeScalarData> nsd_ptr;
         // These are the types of data we can keep
-        std::tr1::shared_ptr<InterfaceNodeScalarData> nsd;
+        std::shared_ptr<InterfaceNodeScalarData> nsd;
         // This is a reference to existing data
         double             val;
         datatype           type;

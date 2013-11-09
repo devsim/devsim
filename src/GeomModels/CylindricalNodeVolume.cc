@@ -54,8 +54,8 @@ void CylindricalNodeVolume::calcNodeScalarValues() const
     ConstTriangleEdgeModelPtr eec0 = region.GetTriangleEdgeModel("ElementCylindricalNodeVolume@en0");
     ConstTriangleEdgeModelPtr eec1 = region.GetTriangleEdgeModel("ElementCylindricalNodeVolume@en1");
 
-    dsAssert(eec0, "ElementNodeVolume@en0 missing");
-    dsAssert(eec1, "ElementNodeVolume@en1 missing");
+    dsAssert(eec0.get(), "ElementNodeVolume@en0 missing");
+    dsAssert(eec1.get(), "ElementNodeVolume@en1 missing");
 
     const EdgeScalarList &nv0 = eec0->GetValuesOnEdges();
     const EdgeScalarList &nv1 = eec1->GetValuesOnEdges();

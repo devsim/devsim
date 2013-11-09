@@ -61,8 +61,8 @@ void TriangleElementField::CalcMatrices() const
   ConstEdgeModelPtr ux = myregion_->GetEdgeModel("unitx");
   ConstEdgeModelPtr uy = myregion_->GetEdgeModel("unity");
 
-  dsAssert(ux, "UNEXPECTED");
-  dsAssert(uy, "UNEXPECTED");
+  dsAssert(ux.get(), "UNEXPECTED");
+  dsAssert(uy.get(), "UNEXPECTED");
 
   const EdgeScalarList &xvec = ux->GetScalarValues();
   const EdgeScalarList &yvec = uy->GetScalarValues();
@@ -163,7 +163,7 @@ std::vector<Vector> TriangleElementField::GetTriangleElementField(const Triangle
   const size_t triangleIndex = triangle.GetIndex();
 
   ConstTriangleEdgeModelPtr eec = myregion_->GetTriangleEdgeModel("ElementEdgeCouple");
-  dsAssert(eec, "UNEXPECTED");
+  dsAssert(eec.get(), "UNEXPECTED");
   const TriangleEdgeScalarList &ecouple = eec->GetScalarValues();
 
   std::vector<double> B(2);
@@ -238,7 +238,7 @@ std::vector<std::vector<Vector> > TriangleElementField::GetTriangleElementField(
   const size_t triangleIndex = triangle.GetIndex();
 
   ConstTriangleEdgeModelPtr eec = myregion_->GetTriangleEdgeModel("ElementEdgeCouple");
-  dsAssert(eec, "UNEXPECTED");
+  dsAssert(eec.get(), "UNEXPECTED");
   const TriangleEdgeScalarList &ecouple = eec->GetScalarValues();
 
   const Region::TriangleToConstEdgeList_t &ttelist = myregion_->GetTriangleToEdgeList();

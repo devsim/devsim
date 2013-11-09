@@ -1325,8 +1325,8 @@ void Region::Update(const std::vector<double> &result)
             Equation *eqptr = eit->second;
             const std::string var = eqptr->GetVariable();
 
-            NodeModelPtr nm = std::tr1::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(var));
-            dsAssert(nm, "UNEXPECTED");
+            NodeModelPtr nm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(var));
+            dsAssert(nm.get(), "UNEXPECTED");
 
             //// TODO: An equation should know already the variable it is updating
             eqptr->Update(*nm, result);
@@ -1360,8 +1360,8 @@ void Region::ACUpdate(const std::vector<std::complex<double> > &result)
             Equation *eqptr = eit->second;
             const std::string var = eqptr->GetVariable();
 
-            NodeModelPtr nm = std::tr1::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(var));
-            dsAssert(nm, "UNEXPECTED");
+            NodeModelPtr nm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(var));
+            dsAssert(nm.get(), "UNEXPECTED");
 
             //// TODO: An equation should know already the variable it is updating
             eqptr->ACUpdate(*nm, result);
@@ -1401,9 +1401,9 @@ void Region::BackupSolutions(const std::string &suffix)
   for (std::vector<std::string>::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
   {
     ConstNodeModelPtr nm = GetNodeModel(*it);
-    dsAssert(nm, std::string("Node Solution: \"") + *it + "\" not available" );
+    dsAssert(nm.get(), std::string("Node Solution: \"") + *it + "\" not available" );
     std::string bname = (*it) + suffix;
-    NodeModelPtr bnm = std::tr1::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(bname));
+    NodeModelPtr bnm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(bname));
     if (!bnm)
     {
       bnm = NodeSolution::CreateNodeSolution(bname, this);
@@ -1418,11 +1418,11 @@ void Region::RestoreSolutions(const std::string &suffix)
   const std::vector<std::string> &vlist = GetVariableList();
   for (std::vector<std::string>::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
   {
-    NodeModelPtr nm = std::tr1::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(*it));
-    dsAssert(nm, "UNEXPECTED");
+    NodeModelPtr nm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(*it));
+    dsAssert(nm.get(), "UNEXPECTED");
     std::string bname = (*it) + suffix;
-    NodeModelPtr bnm = std::tr1::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(bname));
-    dsAssert(bnm, "UNEXPECTED");
+    NodeModelPtr bnm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(bname));
+    dsAssert(bnm.get(), "UNEXPECTED");
 
     nm->SetValues(*bnm);
   }

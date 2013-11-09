@@ -71,9 +71,9 @@ void VectorGradient::calc1d() const
   ConstNodeModelPtr scalarField = r.GetNodeModel(parentname_);
   ConstEdgeModelPtr edgeSign    = r.GetEdgeModel("unitx");
   ConstEdgeModelPtr edgeInv     = r.GetEdgeModel("EdgeInverseLength");
-  dsAssert(scalarField, "UNEXPECTED");
-  dsAssert(edgeSign, "UNEXPECTED");
-  dsAssert(edgeInv, "UNEXPECTED");
+  dsAssert(scalarField.get(), "UNEXPECTED");
+  dsAssert(edgeSign.get(), "UNEXPECTED");
+  dsAssert(edgeInv.get(), "UNEXPECTED");
 
   const ConstEdgeList &el = r.GetEdgeList();
 
@@ -130,7 +130,7 @@ void VectorGradient::calc2d() const
   const Region &r = GetRegion();
 
   ConstNodeModelPtr scalarField = r.GetNodeModel(parentname_);
-  dsAssert(scalarField, "UNEXPECTED");
+  dsAssert(scalarField.get(), "UNEXPECTED");
 
   const NodeScalarList &nsl = scalarField->GetScalarValues();
 
@@ -200,7 +200,7 @@ void VectorGradient::calc3d() const
   const Region &r = GetRegion();
 
   ConstNodeModelPtr scalarField = r.GetNodeModel(parentname_);
-  dsAssert(scalarField, "UNEXPECTED");
+  dsAssert(scalarField.get(), "UNEXPECTED");
 
   const NodeScalarList &nsl = scalarField->GetScalarValues();
 

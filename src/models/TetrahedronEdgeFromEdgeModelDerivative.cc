@@ -85,7 +85,7 @@ void TetrahedronEdgeFromEdgeModelDerivative::calcTetrahedronEdgeScalarValues() c
 
   for (size_t i = 0; i < 2; ++i)
   {
-    dsAssert(emp[i], "UNEXPECTED");
+    dsAssert(emp[i].get(), "UNEXPECTED");
   }
 
   ConstTetrahedronEdgeModelPtr tempx[6];
@@ -107,9 +107,9 @@ void TetrahedronEdgeFromEdgeModelDerivative::calcTetrahedronEdgeScalarValues() c
 
   for (size_t i = 0; i < 4; ++i)
   {
-    dsAssert(tempx[i], "UNEXPECTED");
-    dsAssert(tempy[i], "UNEXPECTED");
-    dsAssert(tempz[i], "UNEXPECTED");
+    dsAssert(tempx[i].get(), "UNEXPECTED");
+    dsAssert(tempy[i].get(), "UNEXPECTED");
+    dsAssert(tempz[i].get(), "UNEXPECTED");
   }
 
 
@@ -147,9 +147,9 @@ void TetrahedronEdgeFromEdgeModelDerivative::calcTetrahedronEdgeScalarValues() c
   }
   for (size_t i = 0; i < 4; ++i)
   {
-    std::tr1::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempx[i])->SetValues(evx[i]);
-    std::tr1::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempy[i])->SetValues(evy[i]);
-    std::tr1::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempz[i])->SetValues(evz[i]);
+    std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempx[i])->SetValues(evx[i]);
+    std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempy[i])->SetValues(evy[i]);
+    std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempz[i])->SetValues(evz[i]);
   }
 }
 

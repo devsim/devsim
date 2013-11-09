@@ -21,7 +21,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #define EDGEMODEL_HH
 #include "Vector.hh"
 
-#include "dsmemory.hh"
+#include <memory>
 
 #include <string>
 #include <vector>
@@ -33,10 +33,10 @@ typedef std::vector<double> NodeScalarList;
 typedef std::vector<Vector> NodeVectorList;
 
 class EdgeModel;
-typedef std::tr1::weak_ptr<EdgeModel>         WeakEdgeModelPtr;
-typedef std::tr1::weak_ptr<const EdgeModel>   WeakConstEdgeModelPtr;
-typedef std::tr1::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::tr1::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
+typedef std::weak_ptr<EdgeModel>         WeakEdgeModelPtr;
+typedef std::weak_ptr<const EdgeModel>   WeakConstEdgeModelPtr;
+typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
+typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
 
 class Contact;
 typedef Contact *ContactPtr;

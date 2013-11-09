@@ -20,7 +20,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef INTERFACEMODELEXPREVAL_HH
 #define INTERFACEMODELEXPREVAL_HH
 
-#include "dsmemory.hh"
+#include <memory>
 
 // use a map to look up values in our class
 // maybe turn this class into a template for scalars and vectors later on
@@ -35,7 +35,7 @@ class Interface;
 
 namespace Eqo {
 class EquationObject;
-typedef std::tr1::shared_ptr<EquationObject> EqObjPtr;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 }
 
 #include "InterfaceModelExprData.hh"

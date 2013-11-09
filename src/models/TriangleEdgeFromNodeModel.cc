@@ -52,14 +52,14 @@ void TriangleEdgeFromNodeModel::calcTriangleEdgeScalarValues() const
 #endif
 
   const ConstNodeModelPtr nmp = reg.GetNodeModel(nodeModelName);
-  dsAssert(nmp, "UNEXPECTED");
+  dsAssert(nmp.get(), "UNEXPECTED");
 
 
   const ConstTriangleEdgeModelPtr temp1 = reg.GetTriangleEdgeModel(edgeModel1Name);
-  dsAssert(temp1, "UNEXPECTED");
+  dsAssert(temp1.get(), "UNEXPECTED");
 
   const ConstTriangleEdgeModelPtr temp2 = reg.GetTriangleEdgeModel(edgeModel2Name);
-  dsAssert(temp2, "UNEXPECTED");
+  dsAssert(temp2.get(), "UNEXPECTED");
 
   const Region::TriangleToConstEdgeList_t &ttelist = reg.GetTriangleToEdgeList();
   const ConstTriangleList &triangleList = reg.GetTriangleList();
@@ -98,8 +98,8 @@ void TriangleEdgeFromNodeModel::calcTriangleEdgeScalarValues() const
 
   SetValues(ev0);
   //// TODO: take care of const problem once and for all
-  std::tr1::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(temp1)->SetValues(ev1);
-  std::tr1::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(temp2)->SetValues(ev2);
+  std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(temp1)->SetValues(ev1);
+  std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(temp2)->SetValues(ev2);
 }
 
 void TriangleEdgeFromNodeModel::Serialize(std::ostream &of) const

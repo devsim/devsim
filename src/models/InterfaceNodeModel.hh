@@ -23,15 +23,15 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <vector>
 
-#include "dsmemory.hh"
+#include <memory>
 
 typedef std::vector<double> NodeScalarList;
 
 class InterfaceNodeModel;
-typedef std::tr1::weak_ptr<InterfaceNodeModel>       WeakInterfaceNodeModelPtr;
-typedef std::tr1::weak_ptr<const InterfaceNodeModel> WeakConstInterfaceNodeModelPtr;
-typedef std::tr1::shared_ptr<InterfaceNodeModel>       InterfaceNodeModelPtr;
-typedef std::tr1::shared_ptr<const InterfaceNodeModel> ConstInterfaceNodeModelPtr;
+typedef std::weak_ptr<InterfaceNodeModel>       WeakInterfaceNodeModelPtr;
+typedef std::weak_ptr<const InterfaceNodeModel> WeakConstInterfaceNodeModelPtr;
+typedef std::shared_ptr<InterfaceNodeModel>       InterfaceNodeModelPtr;
+typedef std::shared_ptr<const InterfaceNodeModel> ConstInterfaceNodeModelPtr;
 
 class Interface;
 typedef Interface *InterfacePtr;

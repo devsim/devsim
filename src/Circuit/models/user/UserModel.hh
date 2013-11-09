@@ -23,7 +23,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <utility>
 #include <string>
 #include <vector>
-#include "dsmemory.hh"
+#include <memory>
 
 class InstanceModel;
 class NodeKeeper;

@@ -59,7 +59,7 @@ AverageEdgeModel::AverageEdgeModel(const std::string &emodel, const std::string 
         nodeModelName(nmodel),
         averageType(atype)
 {
-    dsAssert(rp->GetNodeModel(nmodel), "UNEXPECTED");
+    dsAssert(rp->GetNodeModel(nmodel).get(), "UNEXPECTED");
     RegisterCallback(nodeModelName);
 
     if ((averageType == GRADIENT) || (averageType == NEGATIVE_GRADIENT))
@@ -216,7 +216,7 @@ void AverageEdgeModel::calcEdgeScalarValues() const
             break;
       }
       this->SetValues(esl0);
-      std::tr1::const_pointer_cast<EdgeModel, const EdgeModel>(node1EdgeModel.lock())->SetValues(esl1);
+      std::const_pointer_cast<EdgeModel, const EdgeModel>(node1EdgeModel.lock())->SetValues(esl1);
     }
 }
 

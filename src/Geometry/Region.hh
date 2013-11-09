@@ -21,7 +21,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #define REGION_HH
 #include "MathEnum.hh"
 
-#include "dsmemory.hh"
+#include <memory>
 
 #include <cstddef>
 #include <string>
@@ -39,32 +39,32 @@ namespace MEE {
 class ModelExprData;
 }
 typedef ObjectCache<MEE::ModelExprData> ModelExprDataCache;
-typedef std::tr1::weak_ptr<ModelExprDataCache >   WeakModelExprDataCachePtr;
-typedef std::tr1::shared_ptr<ModelExprDataCache > ModelExprDataCachePtr;
+typedef std::weak_ptr<ModelExprDataCache >   WeakModelExprDataCachePtr;
+typedef std::shared_ptr<ModelExprDataCache > ModelExprDataCachePtr;
 
 class Device;
 typedef Device *DevicePtr;
 typedef const Device *ConstDevicePtr;
 
 class NodeModel;
-typedef std::tr1::weak_ptr<NodeModel>         WeakNodeModelPtr;
-typedef std::tr1::shared_ptr<NodeModel>       NodeModelPtr;
-typedef std::tr1::shared_ptr<const NodeModel> ConstNodeModelPtr;
+typedef std::weak_ptr<NodeModel>         WeakNodeModelPtr;
+typedef std::shared_ptr<NodeModel>       NodeModelPtr;
+typedef std::shared_ptr<const NodeModel> ConstNodeModelPtr;
 
 class EdgeModel;
-typedef std::tr1::weak_ptr<EdgeModel>         WeakEdgeModelPtr;
-typedef std::tr1::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::tr1::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
+typedef std::weak_ptr<EdgeModel>         WeakEdgeModelPtr;
+typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
+typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
 
 class TriangleEdgeModel;
-typedef std::tr1::weak_ptr<TriangleEdgeModel>         WeakTriangleEdgeModelPtr;
-typedef std::tr1::shared_ptr<TriangleEdgeModel>       TriangleEdgeModelPtr;
-typedef std::tr1::shared_ptr<const TriangleEdgeModel> ConstTriangleEdgeModelPtr;
+typedef std::weak_ptr<TriangleEdgeModel>         WeakTriangleEdgeModelPtr;
+typedef std::shared_ptr<TriangleEdgeModel>       TriangleEdgeModelPtr;
+typedef std::shared_ptr<const TriangleEdgeModel> ConstTriangleEdgeModelPtr;
 
 class TetrahedronEdgeModel;
-typedef std::tr1::weak_ptr<TetrahedronEdgeModel>         WeakTetrahedronEdgeModelPtr;
-typedef std::tr1::shared_ptr<TetrahedronEdgeModel>       TetrahedronEdgeModelPtr;
-typedef std::tr1::shared_ptr<const TetrahedronEdgeModel> ConstTetrahedronEdgeModelPtr;
+typedef std::weak_ptr<TetrahedronEdgeModel>         WeakTetrahedronEdgeModelPtr;
+typedef std::shared_ptr<TetrahedronEdgeModel>       TetrahedronEdgeModelPtr;
+typedef std::shared_ptr<const TetrahedronEdgeModel> ConstTetrahedronEdgeModelPtr;
 
 class Edge;
 typedef Edge *EdgePtr;

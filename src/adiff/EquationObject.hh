@@ -20,7 +20,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef EQUATIONOBJECT_H
 #define EQUATIONOBJECT_H
 
-#include "dsmemory.hh"
+#include <memory>
 #include "dsAssert.hh"
 #include <iostream>
 #include <string>
@@ -30,7 +30,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Eqo {
 class EquationObject;
-typedef std::tr1::shared_ptr<EquationObject> EqObjPtr;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 inline EqObjPtr con(double x);
 /**
  Enumerated type quickly tells what type the derived class is.  May
@@ -56,17 +56,17 @@ const char * const EqObjNames[] = {
 };
 
 
-typedef std::tr1::shared_ptr<EquationObject> EqObjPtr;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 std::set<std::string> UniteReferencedType(EqObjType, const std::vector<EqObjPtr> &x);
 std::set<std::string> UniteReferencedType(EqObjType, const EqObjPtr &op1, const EqObjPtr &op2);
 
 /**
    This is the abstract base class which provides the interface for all objects.
 */
-class EquationObject : public std::tr1::enable_shared_from_this<EquationObject>
+class EquationObject : public std::enable_shared_from_this<EquationObject>
 {
    public:
-      typedef std::tr1::shared_ptr<EquationObject> EqObjPtr;
+      typedef std::shared_ptr<EquationObject> EqObjPtr;
 
       virtual std::vector<EqObjPtr> getArgs() = 0;
 

@@ -191,7 +191,7 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
   else if (interpolation_type == TriangleEdgeModel::COUPLE)
   {
     ConstTriangleEdgeModelPtr couple_ptr = region.GetTriangleEdgeModel("ElementEdgeCouple");
-    dsAssert(couple_ptr, "UNEXPECTED");
+    dsAssert(couple_ptr.get(), "UNEXPECTED");
     const TriangleEdgeScalarList &element_edge_couples = couple_ptr->GetScalarValues();
 
     std::vector<double> scales(number_nodes);

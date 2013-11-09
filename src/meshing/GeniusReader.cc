@@ -232,7 +232,7 @@ bool ReadGeniusFile(const std::string &fname, const std::string &meshName, std::
         if (narrays == 1)
         {
           cg_array_info(narrays, char_buf, &dtype, &dim, &vlen);
-          if ((dtype == Integer) && (vlen == ncoord));
+          if ((dtype == Integer) && (vlen == ncoord))
           {
             rinfo.global_node_index.resize(vlen);
             cg_array_read_as(narrays, dtype, &rinfo.global_node_index[0]);

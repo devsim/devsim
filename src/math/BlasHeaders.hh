@@ -22,7 +22,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 typedef std::complex<double> doublecomplex;
 
-#ifdef linux
+#ifdef __linux__
 extern "C"
 {
 

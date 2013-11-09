@@ -190,7 +190,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
   else if (interpolation_type == TetrahedronEdgeModel::COUPLE)
   {
     ConstTetrahedronEdgeModelPtr couple_ptr = region.GetTetrahedronEdgeModel("ElementEdgeCouple");
-    dsAssert(couple_ptr, "UNEXPECTED");
+    dsAssert(couple_ptr.get(), "UNEXPECTED");
     const TetrahedronEdgeScalarList &element_edge_couples = couple_ptr->GetScalarValues();
 
     std::vector<double> scales(number_nodes);

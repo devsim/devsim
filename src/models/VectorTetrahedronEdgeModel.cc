@@ -37,13 +37,13 @@ void VectorTetrahedronEdgeModel::calcTetrahedronEdgeScalarValues() const
   const Region &reg = GetRegion();
 
   const ConstTetrahedronEdgeModelPtr emp = reg.GetTetrahedronEdgeModel(elementEdgeModelName);
-  dsAssert(emp, "UNEXPECTED");
+  dsAssert(emp.get(), "UNEXPECTED");
 
   const ConstTetrahedronEdgeModelPtr tempy = reg.GetTetrahedronEdgeModel(y_ModelName);
-  dsAssert(tempy, "UNEXPECTED");
+  dsAssert(tempy.get(), "UNEXPECTED");
 
   const ConstTetrahedronEdgeModelPtr tempz = reg.GetTetrahedronEdgeModel(z_ModelName);
-  dsAssert(tempz, "UNEXPECTED");
+  dsAssert(tempz.get(), "UNEXPECTED");
 
   const ConstTetrahedronList &tl = GetRegion().GetTetrahedronList();
 
@@ -66,8 +66,8 @@ void VectorTetrahedronEdgeModel::calcTetrahedronEdgeScalarValues() const
   }
 
   SetValues(evx);
-  std::tr1::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempy)->SetValues(evy);
-  std::tr1::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempz)->SetValues(evz);
+  std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempy)->SetValues(evy);
+  std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempz)->SetValues(evz);
 }
 
 void VectorTetrahedronEdgeModel::Serialize(std::ostream &of) const

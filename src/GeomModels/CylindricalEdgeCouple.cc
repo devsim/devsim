@@ -59,7 +59,7 @@ void CylindricalEdgeCouple::calcEdgeScalarValues() const
 void CylindricalEdgeCouple::calcCylindricalEdgeCouple2d() const
 {
   ConstTriangleEdgeModelPtr eec = GetRegion().GetTriangleEdgeModel("ElementCylindricalEdgeCouple");
-  dsAssert(eec, "ElementCylindricalEdgeCouple missing");
+  dsAssert(eec.get(), "ElementCylindricalEdgeCouple missing");
 
   std::vector<double> ev = eec->GetValuesOnEdges();
   SetValues(ev);

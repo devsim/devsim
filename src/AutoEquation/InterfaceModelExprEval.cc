@@ -507,7 +507,7 @@ namespace {
                 {
                     hasInvalid = true;
                 }
-                else if ((type == InterfaceModelExprData::NODEDATA))
+                else if (type == InterfaceModelExprData::NODEDATA)
                 {
                     hasNodeData = true;
                 }

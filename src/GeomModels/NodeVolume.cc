@@ -52,9 +52,9 @@ void NodeVolume::calcNodeScalarValues() const
   if (dimension == 1)
   {
     ConstEdgeModelPtr ec = r.GetEdgeModel("EdgeCouple");
-    dsAssert(ec, "UNEXPECTED");
+    dsAssert(ec.get(), "UNEXPECTED");
     ConstEdgeModelPtr elen = r.GetEdgeModel("EdgeLength");
-    dsAssert(elen, "UNEXPECTED");
+    dsAssert(elen.get(), "UNEXPECTED");
 
     EdgeScalarData evol = EdgeScalarData(*ec);
     evol *= *elen;
@@ -81,14 +81,14 @@ void NodeVolume::calcNodeScalarValues() const
   else if (dimension == 2)
   {
     ConstTriangleEdgeModelPtr eec = GetRegion().GetTriangleEdgeModel("ElementNodeVolume");
-    dsAssert(eec, "ElementNodeVolume missing");
+    dsAssert(eec.get(), "ElementNodeVolume missing");
 
     eec->GetScalarValuesOnNodes(TriangleEdgeModel::SUM, nv);
   }
   else if (dimension == 3)
   {
     ConstTetrahedronEdgeModelPtr eec = GetRegion().GetTetrahedronEdgeModel("ElementNodeVolume");
-    dsAssert(eec, "UNEXPECTED");
+    dsAssert(eec.get(), "UNEXPECTED");
     eec->GetScalarValuesOnNodes(TetrahedronEdgeModel::SUM, nv);
   }
   else

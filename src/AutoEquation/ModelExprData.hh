@@ -19,33 +19,33 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef MODEL_EXPR_DATA_HH
 #define MODEL_EXPR_DATA_HH
-#include "dsmemory.hh"
+#include <memory>
 #include <vector>
 
 namespace Eqo {
 class EquationObject;
-typedef std::tr1::shared_ptr<EquationObject> EqObjPtr;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 }
 
 template <typename T> class ScalarData;
 class NodeModel;
-typedef std::tr1::shared_ptr<NodeModel>       NodeModelPtr;
-typedef std::tr1::shared_ptr<const NodeModel> ConstNodeModelPtr;
+typedef std::shared_ptr<NodeModel>       NodeModelPtr;
+typedef std::shared_ptr<const NodeModel> ConstNodeModelPtr;
 typedef ScalarData<NodeModel> NodeScalarData;
 
 class EdgeModel;
-typedef std::tr1::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::tr1::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
+typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
+typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
 typedef ScalarData<EdgeModel> EdgeScalarData;
 
 class TriangleEdgeModel;
-typedef std::tr1::shared_ptr<TriangleEdgeModel>       TriangleEdgeModelPtr;
-typedef std::tr1::shared_ptr<const TriangleEdgeModel> ConstTriangleEdgeModelPtr;
+typedef std::shared_ptr<TriangleEdgeModel>       TriangleEdgeModelPtr;
+typedef std::shared_ptr<const TriangleEdgeModel> ConstTriangleEdgeModelPtr;
 typedef ScalarData<TriangleEdgeModel> TriangleEdgeScalarData;
 
 class TetrahedronEdgeModel;
-typedef std::tr1::shared_ptr<TetrahedronEdgeModel>       TetrahedronEdgeModelPtr;
-typedef std::tr1::shared_ptr<const TetrahedronEdgeModel> ConstTetrahedronEdgeModelPtr;
+typedef std::shared_ptr<TetrahedronEdgeModel>       TetrahedronEdgeModelPtr;
+typedef std::shared_ptr<const TetrahedronEdgeModel> ConstTetrahedronEdgeModelPtr;
 typedef ScalarData<TetrahedronEdgeModel> TetrahedronEdgeScalarData;
 
 class Region;
@@ -155,10 +155,10 @@ class ModelExprData {
 //      void morph();
         typedef ModelExprData &(ModelExprData::*selfopptr)(ModelExprData &);
 
-        typedef std::tr1::shared_ptr<NodeScalarData>            nodeScalarData_ptr;
-        typedef std::tr1::shared_ptr<EdgeScalarData>            edgeScalarData_ptr;
-        typedef std::tr1::shared_ptr<TriangleEdgeScalarData>    triangleEdgeScalarData_ptr;
-        typedef std::tr1::shared_ptr<TetrahedronEdgeScalarData> tetrahedronEdgeScalarData_ptr;
+        typedef std::shared_ptr<NodeScalarData>            nodeScalarData_ptr;
+        typedef std::shared_ptr<EdgeScalarData>            edgeScalarData_ptr;
+        typedef std::shared_ptr<TriangleEdgeScalarData>    triangleEdgeScalarData_ptr;
+        typedef std::shared_ptr<TetrahedronEdgeScalarData> tetrahedronEdgeScalarData_ptr;
         // These are the types of data we can keep
         nodeScalarData_ptr            nodeScalarData;
         edgeScalarData_ptr            edgeScalarData;

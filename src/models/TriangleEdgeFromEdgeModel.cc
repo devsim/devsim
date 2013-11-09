@@ -40,10 +40,10 @@ void TriangleEdgeFromEdgeModel::calcTriangleEdgeScalarValues() const
   const Region &reg = GetRegion();
 
   const ConstEdgeModelPtr emp = reg.GetEdgeModel(edgeModelName);
-  dsAssert(emp, "UNEXPECTED");
+  dsAssert(emp.get(), "UNEXPECTED");
 
   const ConstTriangleEdgeModelPtr tempy = reg.GetTriangleEdgeModel(y_ModelName);
-  dsAssert(tempy, "UNEXPECTED");
+  dsAssert(tempy.get(), "UNEXPECTED");
 
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
 
@@ -63,7 +63,7 @@ void TriangleEdgeFromEdgeModel::calcTriangleEdgeScalarValues() const
   }
 
   SetValues(evx);
-  std::tr1::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempy)->SetValues(evy);
+  std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempy)->SetValues(evy);
 }
 
 void TriangleEdgeFromEdgeModel::Serialize(std::ostream &of) const

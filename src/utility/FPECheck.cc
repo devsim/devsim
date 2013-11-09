@@ -19,7 +19,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "FPECheck.hh"
 #include <signal.h>
-#ifdef linux
+#ifdef __linux__
 #include <fpu_control.h>
 #include <fenv.h>
 #endif
@@ -54,7 +54,7 @@ void FPECheck::InitializeFPE()
 #endif
 #endif
 
-#ifdef linux
+#ifdef __linux__
 //  http://www.wrcad.com/linux_numerics.txt
 /*
     This puts the X86 FPU in 64-bit precision mode.  The default

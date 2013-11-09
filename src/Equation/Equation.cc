@@ -285,8 +285,8 @@ void Equation::DefaultACUpdate(NodeModel &nm, const std::vector<std::complex<dou
 
     const ConstNodeList &nl = myregion->GetNodeList();
 
-    NodeModelPtr rnm = std::tr1::const_pointer_cast<NodeModel, const NodeModel>(myregion->GetNodeModel(realnodemodel));
-    NodeModelPtr inm = std::tr1::const_pointer_cast<NodeModel, const NodeModel>(myregion->GetNodeModel(imagnodemodel));
+    NodeModelPtr rnm = std::const_pointer_cast<NodeModel, const NodeModel>(myregion->GetNodeModel(realnodemodel));
+    NodeModelPtr inm = std::const_pointer_cast<NodeModel, const NodeModel>(myregion->GetNodeModel(imagnodemodel));
 
     if (!rnm)
     {
@@ -334,8 +334,8 @@ void Equation::DefaultNoiseUpdate(const std::string &outputname, const std::vect
 
     const ConstNodeList &nl = myregion->GetNodeList();
 
-    NodeModelPtr rnm = std::tr1::const_pointer_cast<NodeModel, const NodeModel>(myregion->GetNodeModel(realnodemodel));
-    NodeModelPtr inm = std::tr1::const_pointer_cast<NodeModel, const NodeModel>(myregion->GetNodeModel(imagnodemodel));
+    NodeModelPtr rnm = std::const_pointer_cast<NodeModel, const NodeModel>(myregion->GetNodeModel(realnodemodel));
+    NodeModelPtr inm = std::const_pointer_cast<NodeModel, const NodeModel>(myregion->GetNodeModel(imagnodemodel));
 
     if (!rnm)
     {

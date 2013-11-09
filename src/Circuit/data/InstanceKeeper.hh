@@ -27,7 +27,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <list>
 #include <complex>
 #include <vector>
-#include "dsmemory.hh"
+#include <memory>
 
 #include "InstanceModel.hh"
 
@@ -39,9 +39,9 @@ typedef std::vector<RHSEntry> RHSEntryVec;
 }
 
 
-typedef std::tr1::shared_ptr<InstanceModel> InstanceModelPtr;
+typedef std::shared_ptr<InstanceModel> InstanceModelPtr;
 class Signal;
-typedef std::tr1::shared_ptr<Signal> SignalPtr;
+typedef std::shared_ptr<Signal> SignalPtr;
 
 /**
  */

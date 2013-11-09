@@ -72,7 +72,7 @@ void TriangleEdgeFromEdgeModelDerivative::calcTriangleEdgeScalarValues() const
 
   for (size_t i = 0; i < 2; ++i)
   {
-    dsAssert(emp[i], "UNEXPECTED");
+    dsAssert(emp[i].get(), "UNEXPECTED");
   }
 
   ConstTriangleEdgeModelPtr tempx[3];
@@ -87,8 +87,8 @@ void TriangleEdgeFromEdgeModelDerivative::calcTriangleEdgeScalarValues() const
 
   for (size_t i = 0; i < 3; ++i)
   {
-    dsAssert(tempx[i], "UNEXPECTED");
-    dsAssert(tempy[i], "UNEXPECTED");
+    dsAssert(tempx[i].get(), "UNEXPECTED");
+    dsAssert(tempy[i].get(), "UNEXPECTED");
   }
 
 
@@ -122,8 +122,8 @@ void TriangleEdgeFromEdgeModelDerivative::calcTriangleEdgeScalarValues() const
   }
   for (size_t i = 0; i < 3; ++i)
   {
-    std::tr1::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempx[i])->SetValues(evx[i]);
-    std::tr1::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempy[i])->SetValues(evy[i]);
+    std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempx[i])->SetValues(evx[i]);
+    std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempy[i])->SetValues(evy[i]);
   }
 }
 

@@ -52,7 +52,7 @@ create1dMeshCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] =
+    static dsGetArgs::Option option[] =
     {
         {"mesh", "",   dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshCannotExist},
         {NULL,   NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
@@ -98,7 +98,7 @@ finalizeMeshCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh", "",   dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {NULL,   NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
     };
@@ -138,7 +138,7 @@ add1dMeshLineCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"tag",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
         {"pos",    "0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::REQUIRED, NULL},
@@ -203,7 +203,7 @@ add2dMeshLineCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"pos",    "0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::REQUIRED, NULL},
 /// this will default to plus spacing
@@ -279,7 +279,7 @@ add1dInterfaceCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"tag",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -327,7 +327,7 @@ add1dContactCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"material", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -377,7 +377,7 @@ add2dInterfaceCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"region0",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -450,7 +450,7 @@ add2dContactCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"material", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -512,7 +512,7 @@ add1dRegionCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"material", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -563,7 +563,7 @@ add2dRegionCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"material", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -623,7 +623,7 @@ createDeviceCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustBeFinalized},
         {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustNotBeValidDevice},
         {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
@@ -669,7 +669,7 @@ loadDevicesCmd(CommandHandler &data)
 // TODO:  "specify list of solutions to read/write"
 // TODO:  "delete device if there is a problem"
 // TODO:  "specify option to only load the mesh creator, but don't instantiate"
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"file",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, NULL},
         {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
     };
@@ -707,7 +707,7 @@ writeDevicesCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"file",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, NULL},
         {"device",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
         {"type",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
@@ -729,27 +729,27 @@ writeDevicesCmd(CommandHandler &data)
     const std::string &device   = data.GetStringOption("device");
     const std::string &type = data.GetStringOption("type");
 
-    std::auto_ptr<MeshWriter> mw;
+    std::unique_ptr<MeshWriter> mw;
 
     if (type.empty() || (type == "devsim"))
     {
-        mw = std::auto_ptr<MeshWriter>(new DevsimRestartWriter());
+        mw = std::unique_ptr<MeshWriter>(new DevsimRestartWriter());
     }
     else if (type == "devsim_data")
     {
-        mw = std::auto_ptr<MeshWriter>(new DevsimWriter());
+        mw = std::unique_ptr<MeshWriter>(new DevsimWriter());
     }
     else if (type == "floops")
     {
-        mw = std::auto_ptr<MeshWriter>(new FloodsWriter());
+        mw = std::unique_ptr<MeshWriter>(new FloodsWriter());
     }
     else if (type == "vtk")
     {
-        mw = std::auto_ptr<MeshWriter>(new VTKWriter());
+        mw = std::unique_ptr<MeshWriter>(new VTKWriter());
     }
     else if (type == "tecplot")
     {
-        mw = std::auto_ptr<MeshWriter>(new TecplotWriter());
+        mw = std::unique_ptr<MeshWriter>(new TecplotWriter());
     }
     else
     {
@@ -788,7 +788,7 @@ createGeniusMeshCmd(CommandHandler &data)
 //    const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] =
+    static dsGetArgs::Option option[] =
     {
         {"mesh", "",   dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshCannotExist},
         {"file", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -843,7 +843,7 @@ addGeniusInterfaceCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"genius_name",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -895,7 +895,7 @@ addGeniusContactCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"material",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -947,7 +947,7 @@ addGeniusRegionCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"genius_name",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -996,7 +996,7 @@ createGmshMeshCmd(CommandHandler &data)
 //    const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    dsGetArgs::Option option[] =
+    static dsGetArgs::Option option[] =
     {
         {"mesh", "",   dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshCannotExist},
         {"file", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -1038,7 +1038,7 @@ addGmshInterfaceCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"gmsh_name",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -1090,7 +1090,7 @@ addGmshContactCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"material",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -1142,7 +1142,7 @@ addGmshRegionCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     
-    dsGetArgs::Option option[] = {
+    static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshMustNotBeFinalized},
         {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"gmsh_name",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
