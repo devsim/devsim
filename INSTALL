@@ -1,7 +1,7 @@
 Supported Platforms:
 Ubuntu 12.04 32/64 bit
 Redhat 6.4 32/64 bit
-Mac OS X 10.6.8 64 bit
+Mac OS X 10.9 64 bit
 
 Substitute redhat_6.4 for ubuntu_12.04 for Redhat 6.4 installations in the instructions below.
 
@@ -16,7 +16,7 @@ sudo yum install bison cmake flex gcc gcc-c++ gcc-gfortran git make python pytho
 
 Note that tcl-dev package must be specified explicitly so that libtclstub.a is a symlink to tcl8.5-dev. Then SYMDIFF will compile properly.  The "python-numpy" package is required for laux1.py test.
 
-For Mac OS X, the developer tools should be installed (Xcode 3.2.6), these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
+For Mac OS X, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
 https://developer.apple.com/technologies/tools
 https://developer.apple.com/performance/accelerateframework.html
 
