@@ -36,7 +36,7 @@ do
 #echo "!!!!!!!!!!!!!!!!!!! non repository files in $i"
 #exit 1
 #fi
-(cd $i; git clean -f -d -x)
+(cd ../$i; git clean -f -d -x )
 rsync -aP --delete ../$i ${DIST_DIR}
 done
 
