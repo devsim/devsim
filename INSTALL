@@ -20,9 +20,6 @@ For Mac OS X, the Xcode command line developer tools should be installed, these 
 https://developer.apple.com/technologies/tools
 https://developer.apple.com/performance/accelerateframework.html
 
-For Mac OS X, Python 2.7.3 is required and may be downloaded from 
-http://www.python.org/download
-
 Note that the -j2 option for make and ctest is for building and testing in 2 parallel threads.  This number can be changed to run as many simultaneous processes as desired.
 
 Download DEVSIM:
