@@ -23,6 +23,9 @@ cp ${SRC_BIN} ${DIST_VER}_unstripped
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
+for i in INSTALL NOTICE LICENSE COPYING RELEASE; do
+cp ../$i ${DIST_DIR}
+done
 
 
 #### Python files and the examples
@@ -40,6 +43,9 @@ done
 #mkdir -p ${DIST_DIR}/lib/shared
 #\cp -a /usr/lib/libstdc++.so* ${DIST_DIR}/lib/shared
 
+echo "Available from:\
+http://www.github.com/devsim/devsim" > ${DIST_DIR}/VERSION
+git rev-parse --verify HEAD >> ${DIST_DIR}/VERSION
 
 tar czf ${DIST_VER}.tgz ${DIST_DIR}
 
