@@ -29,13 +29,14 @@ done
 
 
 #### Python files and the examples
-for i in python_packages examples
+for i in python_packages examples testing
 do
 #local_files=`git status --no-ignore ../${i} | wc -l`
 #if [ $local_files -ne 0 ]; then
 #echo "!!!!!!!!!!!!!!!!!!! non repository files in $i"
 #exit 1
 #fi
+(cd $i; git clean -f -d -x)
 rsync -aP --delete ../$i ${DIST_DIR}
 done
 
