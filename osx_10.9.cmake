@@ -15,7 +15,7 @@ SET (BLAS_ARCHIVE  /usr/lib/libblas.dylib /usr/lib/libcblas.dylib /usr/lib/libla
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 SET (SUPERLULOCATE  ${EXTERNAL_LIB}/SuperLU_4.3)
 SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
-SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/lib/libsuperlu_4.3_${CMAKE_OSX_ARCHITECTURES}.a)
+SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/lib/libsuperlu_4.3_x86_64.a)
 SET (TCL_INCLUDE "/usr/include")
 SET (TCL_ARCHIVE "/usr/lib/libtcl8.5.dylib" -ldl)
 SET (SQLITE3_ARCHIVE /usr/lib/libsqlite3.dylib)
