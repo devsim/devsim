@@ -9,6 +9,8 @@ It is licensed under the [LGPL Version 3.0](http://www.gnu.org/copyleft/lesser.h
 * Red Hat 6.5
 * Ubuntu 12.04 (LTS)
 
+Binary releases are currently available from [Sourceforge](https://sourceforge.net/projects/devsim/).
+
 ### Software Features:
 * [Documentation](https://github.com/devsim/devsim/blob/master/doc/devsim.pdf?raw=true)
 * Python and Tcl scripting 
