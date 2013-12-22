@@ -1,24 +1,33 @@
 #!/bin/bash
 set -e
+if ! [ $1 ]; then
+  echo "must specify dir name"
+  exit 2;
+fi
 ARCH=`uname -m`
 PLATFORM=linux
 SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
-SRC_BIN=${SRC_DIR}/devsim_py
-DIST_DIR=devsim_${PLATFORM}_${ARCH}
+#DIST_DIR=devsim_${PLATFORM}_${ARCH}
+DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
 DIST_DATE=`date +%Y%m%d`
 DIST_VER=${DIST_DIR}_${DIST_DATE}
 
 # make the bin directory and copy binary in
-mkdir -p ${DIST_BIN}
 # we need the wrapper script for libstdc++
-cp ${SRC_BIN} ${DIST_DIR}/bin/devsim.bin
-cp devsim.sh ${DIST_DIR}/bin/devsim
-chmod +x ${DIST_DIR}/bin/devsim
+#cp devsim.sh ${DIST_DIR}/bin/devsim
+#chmod +x ${DIST_DIR}/bin/devsim
+mkdir -p ${DIST_BIN}
+#for i in devsim_py devsim_tcl
+#do
+#cp ${SRC_DIR}/$i ${DIST_DIR}/bin/
+cp ${SRC_DIR}/devsim_py ${DIST_DIR}/bin/devsim
+cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl
 # strip unneeded symbols
-strip --strip-unneeded ${DIST_DIR}/bin/devsim.bin
+#strip --strip-unneeded ${DIST_DIR}/bin/$i
+#done
 # keep a copy of unstripped binary
-cp ${SRC_BIN} ${DIST_VER}_unstripped
+#cp ${SRC_BIN} ${DIST_VER}_unstripped
 
 
 mkdir -p ${DIST_DIR}/doc
@@ -44,9 +53,13 @@ done
 #mkdir -p ${DIST_DIR}/lib/shared
 #\cp -a /usr/lib/libstdc++.so* ${DIST_DIR}/lib/shared
 
-echo "Available from:\
-http://www.github.com/devsim/devsim" > ${DIST_DIR}/VERSION
-git rev-parse --verify HEAD >> ${DIST_DIR}/VERSION
+COMMIT=`git rev-parse --verify HEAD`
+cat <<EOF > ${DIST_DIR}/VERSION
+Package released as:
+${DIST_VER}.tgz
 
+Source available from:
+http://www.github.com/devsim/devsim 
+commit ${COMMIT}
+EOF
 tar czf ${DIST_VER}.tgz ${DIST_DIR}
-

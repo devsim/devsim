@@ -1,4 +1,4 @@
-DEVSIM_CONFIG=redhat_6.4
+DEVSIM_CONFIG="redhat_6.5"
 CC=/usr/bin/gcc
 CXX=/usr/bin/g++
 CMAKE_CXX_FLAGS="-std=c++0x"
@@ -12,7 +12,7 @@ ARCH=`uname -m`
       -DCMAKE_CXX_COMPILER=${CXX} \
       -DCMAKE_C_COMPILER=${CC} \
       -DDEVSIM_CONFIG=${DEVSIM_CONFIG} \
-      -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}" \
+      -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
       ..)
 #  done
 done

@@ -45,34 +45,12 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace dsValidate;
 
-//TODO: "figure out threading stuff concerning thread Id"
-#if 0
-namespace mthread {
-extern Tcl_ThreadId mthread;
-extern const char * const mthread_error;
-}
-#endif
-
 namespace dsPy {
 
 namespace {
   std::map<std::string, newcmd> CommandMap;
   ObjectHolder devsim_exception;
-//  std::vector<PyMethodDef> method_list;
 }
-
-#if 0
-void printkeys(PyObject *d)
-{
-  PyObject *key, *value;
-  Py_ssize_t pos = 0;
-
-  while (PyDict_Next(d, &pos, &key, &value)) {
-    std::cerr << PyString_AsString(key) << "\n" << "\t" << PyString_AsString(PyObject_Str(value)) << "\n";
-  }
-
-}
-#endif
 
 PyObject *
 CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs)
@@ -81,45 +59,6 @@ CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs)
   PyObject *ret = NULL;
 
   FPECheck::ClearFPE();
-
-#if 0
-  Tcl_ThreadId thisthread = Tcl_GetCurrentThread();
-  
-  if (mthread::mthread != thisthread)
-  {
-    myerror = TCL_ERROR;
-    Tcl_SetResult(interp, const_cast<char *>(mthread::mthread_error), TCL_VOLATILE);
-    return myerror;
-  }
-#endif
-#if 0
-  ObjectHolder attr_name("__name__");
-
-  PyObject *name_obj = PyObject_GetAttr(self, reinterpret_cast<PyObject *>(attr_name.GetObject()));
-  ObjectHolder name_holder(name_obj);
-  if (!name_obj)
-  {
-    PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), "UNEXPECTED");
-    return ret;
-  }
-  const std::string command_name = name_holder.GetString();
-#endif
-
-#if 0
-  PyFrameObject *frame = PyEval_GetFrame();
-  const std::string command_name = PyString_AsString(frame->f_back->f_code->co_name);
-#endif
-
-
-#if 0
-  PyObject *globals = PyEval_GetGlobals();
-  PyObject *locals = PyEval_GetLocals();
-  std::cerr << "Globals\n";
-  printkeys(globals); 
-  std::cerr << "Locals\n";
-  printkeys(locals); 
-#endif
-
 
   std::string command_name;
 
@@ -214,26 +153,6 @@ CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs)
   return ret;
 }
 
-#if 0
-void AddCommands(dsCommand::Commands *clist)
-{
-  std::vector<PyMethodDef> method_list;
-  for ( ; (clist->name) != NULL; ++clist)
-  {
-    CommandMap->operator[](clist->name) = clist->command;
-    PyMethodDef meth = {clist->name, reinterpret_cast<PyCFunction>(CmdDispatch), METH_KEYWORDS};
-    method_list.push_back(meth);
-#if 0
-    Tcl_CreateObjCommand(interp, clist->name, CmdDispatch,
-            (ClientData) cdata, (Tcl_CmdDeleteProc *) dsClientData::DeleteData);
-#endif
-  }
-  PyMethodDef meth = {NULL, NULL, 0, NULL};
-  method_list.push_back(meth);
-  Py_InitModule("ds", &method_list[0]);
-}
-#endif
-
 namespace {
 bool CreateCommand(Interpreter &interp, const std::string &name)
 {
@@ -270,26 +189,8 @@ void AddCommands(dsCommand::Commands *clistlist[])
     {
       CommandMap[clist->name] = clist->command;
       CreateCommand(interp, clist->name);
-//      chemay_assert(ok, std::string("UNEXPECTED") + interp.GetErrorString());
     }
   }
-
-#if 0
-  dsCommand::Commands **tlist = clistlist;
-  for ( ; (*tlist) != NULL; ++tlist)
-  {
-    dsCommand::Commands *clist = *tlist;
-    for ( ; (clist->name) != NULL; ++clist)
-    {
-      CommandMap[clist->name] = clist->command;
-      PyMethodDef meth = {clist->name, reinterpret_cast<PyCFunction>(CmdDispatch), METH_KEYWORDS, clist->name};
-      method_list.push_back(meth);
-    }
-  }
-  PyMethodDef meth = {NULL, NULL, 0, NULL};
-  method_list.push_back(meth);
-  Py_InitModule("ds", &method_list[0]);
-#endif
 }
 
 bool 
@@ -311,15 +212,6 @@ Commands_Init() {
         NULL
       };
       AddCommands(clistlist);
-#if 0
-      AddCommands(dsCommand::GeometryCommands);
-      AddCommands(dsCommand::MaterialCommands);
-      AddCommands(dsCommand::ModelCommands);
-      AddCommands(dsCommand::MathCommands);
-      AddCommands(dsCommand::EquationCommands);
-      AddCommands(dsCommand::MeshingCommands);
-      AddCommands(dsCommand::CircuitCommands);
-#endif
     }
 
     return ok;
