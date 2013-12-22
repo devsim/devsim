@@ -3,6 +3,8 @@ Ubuntu 12.04 32/64 bit
 Red Hat 6.5 32/64 bit
 Mac OS X 10.9 64 bit
 
+These instructions are for building the software from source.  Please visit http://www.devsim.org for information about binary availability.
+
 Substitute redhat_6.5 for ubuntu_12.04 for Red Hat 6.5 installations in the instructions below.
 
 If you have any issues with installation, please contact Devsim LLC through the github website:
