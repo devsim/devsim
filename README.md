@@ -5,9 +5,9 @@
 It is licensed under the [LGPL Version 3.0](http://www.gnu.org/copyleft/lesser.html), meaning you can link against it with your own software.  Example scripts are provided under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 ### Supported Platforms:
-* Ubuntu 12.04 32/64 bit
-* Redhat 6.4 32/64 bit
-* Mac OS X 10.9 64 bit (Mavericks)
+* Mac OS X 10.9 (Mavericks)
+* Red Hat 6.5
+* Ubuntu 12.04 (LTS)
 
 ### Software Features:
 * [Documentation](https://github.com/devsim/devsim/blob/master/doc/devsim.pdf?raw=true)

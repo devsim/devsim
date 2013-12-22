@@ -1,9 +1,9 @@
 Supported Platforms:
 Ubuntu 12.04 32/64 bit
-Redhat 6.4 32/64 bit
+Red Hat 6.5 32/64 bit
 Mac OS X 10.9 64 bit
 
-Substitute redhat_6.4 for ubuntu_12.04 for Redhat 6.4 installations in the instructions below.
+Substitute redhat_6.5 for ubuntu_12.04 for Red Hat 6.5 installations in the instructions below.
 
 If you have any issues with installation, please contact Devsim LLC through the github website:
 https://github.com/devsim/devsim/issues
@@ -11,7 +11,7 @@ https://github.com/devsim/devsim/issues
 There are the required dependencies for ubuntu 12.04.
 sudo apt-get install cmake git python2.7-dev g++ gcc gfortran make tcl8.5 tcl8.5-dev tcl-dev tclthread python2.7 python2.7-dev flex bison sqlite3 libsqlite3-dev zlib1g-dev libsqlite3-tcl cgns-convert libcgns-dev libcgns2 python-numpy
 
-Similar dependencies are required for Redhat 6.4.
+Similar dependencies are required for Red Hat 6.5.
 sudo yum install bison cmake flex gcc gcc-c++ gcc-gfortran git make python python-devel python-libs sqlite-devel tcl tcl-devel zlib-devel
 
 Note that tcl-dev package must be specified explicitly so that libtclstub.a is a symlink to tcl8.5-dev. Then SYMDIFF will compile properly.  The "python-numpy" package is required for laux1.py test.
@@ -19,6 +19,9 @@ Note that tcl-dev package must be specified explicitly so that libtclstub.a is a
 For Mac OS X, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
 https://developer.apple.com/technologies/tools
 https://developer.apple.com/performance/accelerateframework.html
+
+In addition, cmake is needed for Mac OS X.  The package may be downloaded from:
+http://www.cmake.org
 
 Note that the -j2 option for make and ctest is for building and testing in 2 parallel threads.  This number can be changed to run as many simultaneous processes as desired.
 
@@ -42,7 +45,7 @@ Install ACML for linux 32bit.
 4. sudo sh install-acml-4-4-0-gfortran-32bit.sh
 
 
-For Mac OS X, make sure that you have XCode installed which has the math libraries.  In the following instructions use setup_osx_10.6.8.sh instead.
+For Mac OS X, make sure that you have XCode installed which has the math libraries.  In the following instructions use setup_osx_10.9.sh instead.
 
 Compile SuperLU 4.3
 
@@ -89,7 +92,7 @@ make VERBOSE=1
 
 in order to see what the build process is doing at the point of failure.
 
-Note that tests are based on exact text differences between files.  Different configuration options may affect results.  The following two tests will fail for the Redhat 6.4 configuration:
+Note that tests are based on exact text differences between files.  Different configuration options may affect results.  The following two tests will fail for the Red Hat 6.5 configuration:
 thread_1 (Failed)
 fpetest2 (Timeout)
 

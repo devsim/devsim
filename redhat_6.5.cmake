@@ -1,5 +1,5 @@
-# Redhat 6.4 64 bit (not tested on 32 bit)
-#IF (${DEVSIM_CONFIG} STREQUAL "redhat_6.4")
+# Redhat 6.5 64 bit (not tested on 32 bit)
+#IF (${DEVSIM_CONFIG} STREQUAL "redhat_6.5")
 ADD_DEFINITIONS(-DTCL_THREADS -pthread -fvisibility=hidden)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
@@ -39,5 +39,5 @@ SET (CGNS_INCLUDE ${EXTERNAL_LIB}/cgnslib/include)
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 
-#ENDIF (${DEVSIM_CONFIG} STREQUAL "redhat_6.4")
+#ENDIF (${DEVSIM_CONFIG} STREQUAL "redhat_6.5")
 

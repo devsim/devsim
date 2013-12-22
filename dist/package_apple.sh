@@ -1,24 +1,32 @@
 #!/bin/bash
 set -e
+if ! [ $1 ]; then
+  echo "must specify dir name"
+  exit 2;
+fi
 for ARCH in x86_64; do
 PLATFORM=osx
 SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
-SRC_BIN=${SRC_DIR}/devsim_py
-DIST_DIR=devsim_${PLATFORM}_${ARCH}
+#DIST_DIR=devsim_${PLATFORM}_${ARCH}
+DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
 DIST_DATE=`date +%Y%m%d`
 DIST_VER=${DIST_DIR}_${DIST_DATE}
 
 # make the bin directory and copy binary in
-mkdir -p ${DIST_BIN}
 # Assume libstdc++ is a standard part of the system
 #http://developer.apple.com/library/mac/#documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/CPPROverview.html
-cp ${SRC_BIN} ${DIST_DIR}/bin/devsim
-
+mkdir -p ${DIST_BIN}
+#for i in devsim_py devsim_tcl
+#do
+#cp ${SRC_DIR}/$i ${DIST_DIR}/bin/
+cp ${SRC_DIR}/devsim_py ${DIST_DIR}/bin/devsim
+cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl
 # strip unneeded symbols
-strip -arch all -u -r ${DIST_DIR}/bin/devsim
+#strip -arch all -u -r ${DIST_DIR}/bin/$i
+#done
 # keep a copy of unstripped binary
-cp ${SRC_BIN} ${DIST_VER}_unstripped
+#cp ${SRC_BIN} ${DIST_VER}_unstripped
 
 
 mkdir -p ${DIST_DIR}/doc
@@ -44,9 +52,14 @@ done
 #mkdir -p ${DIST_DIR}/lib/shared
 #\cp -a /usr/lib/libstdc++*dylib devsim/lib/shared
 
-echo "Available from:\
-http://www.github.com/devsim/devsim" > ${DIST_DIR}/VERSION
-git rev-parse --verify HEAD >> ${DIST_DIR}/VERSION
+COMMIT=`git rev-parse --verify HEAD`
+cat <<EOF > ${DIST_DIR}/VERSION
+Package released as:
+${DIST_VER}.tgz
 
+Source available from:
+http://www.github.com/devsim/devsim 
+commit ${COMMIT}
+EOF
 tar czf ${DIST_VER}.tgz ${DIST_DIR}
 done

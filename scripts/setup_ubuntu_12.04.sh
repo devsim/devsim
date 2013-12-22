@@ -1,4 +1,4 @@
-DEVSIM_CONFIG=ubuntu_12.04
+DEVSIM_CONFIG="ubuntu_12.04"
 CC=/usr/bin/gcc
 CXX=/usr/bin/g++
 CMAKE_CXX_FLAGS="-std=c++0x"

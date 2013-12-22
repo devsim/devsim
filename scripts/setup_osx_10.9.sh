@@ -1,4 +1,4 @@
-DEVSIM_CONFIG=osx_10.9
+DEVSIM_CONFIG="osx_10.9"
 CC=/usr/bin/gcc
 CXX=/usr/bin/g++
 CMAKE_CXX_FLAGS=""
