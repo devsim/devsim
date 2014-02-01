@@ -131,11 +131,11 @@ class Device
         return contactList;
     }
 
-    const RegionPtr GetRegion(const std::string &);
+    RegionPtr GetRegion(const std::string &);
 
-    const InterfacePtr GetInterface(const std::string &) const ;
+    InterfacePtr GetInterface(const std::string &) const ;
 
-    const ContactPtr GetContact(const std::string &) const;
+    ContactPtr GetContact(const std::string &) const;
 
     size_t GetNumberOfInterfacesOnCoordinate(const Coordinate &);
     size_t GetNumberOfContactsOnCoordinate(const Coordinate &);
