@@ -71,12 +71,21 @@ void zrotg(std::complex<double> *, std::complex<double> *, std::complex<double> 
 extern "C"
 {
 //// Using the ACML convention
+#if 0
 #define dgetrf DGETRF
 #define dgetrs DGETRS
 #define drotg  DROTG
 #define zgetrf ZGETRF
 #define zgetrs ZGETRS
 #define zrotg  ZROTG
+#else
+#define dgetrf dgetrf_
+#define dgetrs dgetrs_
+#define drotg  drotg_
+#define zgetrf zgetrf_
+#define zgetrs zgetrs_
+#define zrotg  zrotg_
+#endif
 
 void dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
 void dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info, int trans_len);

@@ -1,0 +1,25 @@
+devsim.zip
+
+This is the DEVSIM distribution in a zip format.  Extract the files from
+the archive into your preferred directory, e.g. c:\.  Product
+documentation is available in the devsim\doc directory.
+
+DEVSIM also depends on ActiveTcl 8.5.15.0 and ActivePython 2.7.8.10.
+They are available at:
+http://www.activestate.com
+
+You may need to install the Visual C++ 2013 Redistributable package for
+your architecture.  It is available from here:
+
+http://www.microsoft.com/en-us/download/details.aspx?id=40784
+
+It contains system libraries required for running programs compiled in
+Visual C++.  This package may already installed
+be installed on your system.
+
+Note that your PATH should have the following paths:
+C:\Python27;C:\Tcl\bin;C:\devsim
+
+Many of the examples require your PYTHONPATH to contain the DEVSIM directory:
+C:\Python27\Lib;C:\devsim
+
