@@ -35,8 +35,10 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 //// TODO: This will be removed when parallelized
 #include "MathPacket.hh"
 
+#if 0
 #ifdef WIN32
 #include "boost/math/special_functions/erf.hpp"
+#endif
 #endif
 
 namespace Eqomfp {
@@ -80,13 +82,14 @@ namespace Eqomfp {
   {"acosh",     atanh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
   {"asinh",     asinh,        "asinh(obj)   -- inverse hyperbolic sine function"},
   {"atanh",     atanh,        "atanh(obj)   -- inverse hyperbolic tangent function"},
+#if 0
 #ifdef WIN32
   {"erf",       boost::math::erf,          "erf(obj)   -- error function"},
-  {"erfc",      boost::math::erfc,          "erf(obj)   -- error function"},
-#else
+  {"erfc",      boost::math::erfc,          "erf(obj)   -- complementary error function"},
+#endif
+#endif
   {"erf",       erf,          "erf(obj)   -- error function"},
   {"erfc",      erfc,         "erfc(obj)  -- complementary error function"},
-#endif
   {"derfdx",    derfdx,       "derfdx(obj)   -- derivative error function"},
   {"derfcdx",   derfcdx,      "derfcdx(obj)  -- derivative of complementary error function"},
   {"Fermi",     Fermi,        "Fermi(obj)  -- Fermi Integral"},

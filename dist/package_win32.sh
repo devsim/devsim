@@ -6,32 +6,32 @@ if ! [ $1 ]; then
 fi
 
 
-for ARCH in `uname -m`; do
-PLATFORM=linux
-SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
+for ARCH in win32; do
+PLATFORM=windows
+SRC_DIR=../${ARCH}/src/main/Release
 #DIST_DIR=devsim_${PLATFORM}_${ARCH}
 DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
 DIST_DATE=`date +%Y%m%d`
 DIST_VER=${DIST_DIR}_${DIST_DATE}
 
+
+
+
 # make the bin directory and copy binary in
-# we need the wrapper script for libstdc++
-#cp devsim.sh ${DIST_DIR}/bin/devsim
-#chmod +x ${DIST_DIR}/bin/devsim
 mkdir -p ${DIST_BIN}
-cp ${SRC_DIR}/devsim_py ${DIST_DIR}/bin/devsim
-cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl
-# strip unneeded symbols
-#strip --strip-unneeded ${DIST_DIR}/bin/$i
-#done
-# keep a copy of unstripped binary
-#cp ${SRC_BIN} ${DIST_VER}_unstripped
+cp ${SRC_DIR}/devsim_py.exe ${DIST_BIN}/devsim.exe
+cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl.exe
+
+
+
+
+
 
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
-for i in INSTALL NOTICE LICENSE COPYING RELEASE; do
+for i in INSTALL NOTICE LICENSE COPYING RELEASE windows.txt; do
 cp ../$i ${DIST_DIR}
 done
 
@@ -48,11 +48,11 @@ done
 COMMIT=`git rev-parse --verify HEAD`
 cat <<EOF > ${DIST_DIR}/VERSION
 Package released as:
-${DIST_VER}.tgz
+${DIST_VER}.zip
 
 Source available from:
 http://www.github.com/devsim/devsim 
 commit ${COMMIT}
 EOF
-tar czf ${DIST_VER}.tgz ${DIST_DIR}
+zip -r ${DIST_VER}.zip ${DIST_DIR}
 done

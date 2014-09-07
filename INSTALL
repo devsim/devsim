@@ -60,11 +60,11 @@ Compile SuperLU 4.3
 Compile CGNS:
 
 1. cd external
-2. wget http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4.tar.gz
-3. tar xzvf cgnslib_3.1.4.tar.gz
+2. wget http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4-2.tar.gz
+3. tar xzvf cgnslib_3.1.4-2.tar.gz
 4. cd cgnslib_3.1.4
-5. mkdir cmake
-6. cd cmake 
+5. mkdir build
+6. cd build 
 7. cmake -DBUILD_CGNSTOOLS=ON -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib ..
 8. make -j2
 9. make install

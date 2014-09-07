@@ -4,6 +4,8 @@ if ! [ $1 ]; then
   echo "must specify dir name"
   exit 2;
 fi
+
+
 for ARCH in x86_64; do
 PLATFORM=osx
 SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
@@ -13,13 +15,11 @@ DIST_BIN=${DIST_DIR}/bin
 DIST_DATE=`date +%Y%m%d`
 DIST_VER=${DIST_DIR}_${DIST_DATE}
 
+
 # make the bin directory and copy binary in
 # Assume libstdc++ is a standard part of the system
 #http://developer.apple.com/library/mac/#documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/CPPROverview.html
 mkdir -p ${DIST_BIN}
-#for i in devsim_py devsim_tcl
-#do
-#cp ${SRC_DIR}/$i ${DIST_DIR}/bin/
 cp ${SRC_DIR}/devsim_py ${DIST_DIR}/bin/devsim
 cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl
 # strip unneeded symbols
@@ -39,18 +39,11 @@ done
 #### Python files and the examples
 for i in python_packages examples testing
 do
-#local_files=`git status --no-ignore ../${i} | wc -l`
-#if [ $local_files -ne 0 ]; then
-#echo "!!!!!!!!!!!!!!!!!!! non repository files in $i"
-#exit 1
-#fi
 (cd ../$i; git clean -f -d -x )
 rsync -aP --delete ../$i ${DIST_DIR}
 done
 
-# copy the shared binary
-#mkdir -p ${DIST_DIR}/lib/shared
-#\cp -a /usr/lib/libstdc++*dylib devsim/lib/shared
+
 
 COMMIT=`git rev-parse --verify HEAD`
 cat <<EOF > ${DIST_DIR}/VERSION
