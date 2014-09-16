@@ -6,6 +6,7 @@ It is licensed under the [LGPL Version 3.0](http://www.gnu.org/copyleft/lesser.h
 
 ### Supported Platforms:
 * Mac OS X 10.9 (Mavericks)
+* Microsoft Windows
 * Red Hat 6.5
 * Ubuntu 12.04 (LTS)
 
@@ -22,11 +23,11 @@ Binary releases are currently available from [Sourceforge](https://sourceforge.n
 * 2D cylindrical coordinate simulation
 * ASCII file format with PDE embedded.
 
-Please see INSTALL file for installation instructions.  Please see 
+Please see INSTALL file for installation instructions from source.  Please see 
 NOTICE and LICENSE files for copyright and license information.
 
 ### Documentation:
-Documentation available in doc/devsim.pdf.
+Documentation available in doc/devsim.pdf.  Windows specific information is available in windows.txt.
 
 ### Website:
 The official website is here:
@@ -34,3 +35,4 @@ http://www.devsim.org
 
 ### Mailing List:
 http://groups.yahoo.com/neo/groups/devsim/info
+
