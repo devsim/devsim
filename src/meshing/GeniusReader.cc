@@ -179,7 +179,6 @@ bool ReadGeniusFile(const std::string &fname, const std::string &meshName, std::
     ZoneType_t ztype;
     int zinfo[3];
     int nd;
-    int ier;
     for (int zi = 1; zi <= nzones; ++zi)
     {
       dsMesh::GeniusRegionPtr rinfop(new dsMesh::GeniusRegion);
@@ -417,7 +416,7 @@ int processRegionElements(dsMesh::GeniusRegionPtr grp, std::string &errorString)
   int ret = 0;
   dsMesh::GeniusRegion &region = *grp;
   const std::vector<int> &edata = region.edata;
-  const int edatalen = edata.size();
+  const size_t edatalen = edata.size();
   const int nelem = region.nelem;
   size_t elem_count = 0;
   size_t eindex = 0;
