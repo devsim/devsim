@@ -3,7 +3,6 @@ SET (CXX_SRCS
     Region.cc
     Edge.cc
     Node.cc
-    Vector.cc
     Coordinate.cc
     Triangle.cc
     Contact.cc

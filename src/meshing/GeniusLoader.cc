@@ -453,7 +453,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
         dsAssert ((plen > 0), "UNEXPECTED mesh problem");
         for (size_t i = 0; i < plen; ++i)
         {
-          int pindex = points[i];
+          size_t pindex = static_cast<size_t>(points[i]);
           dsAssert ((pindex > 1) || (pindex < nlen), "UNEXPECTED mesh problem");
           ConstNodePtr np = nodeList[pindex];
           cnodes.push_back(np);
@@ -568,8 +568,8 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       inodes1.clear();
       for (size_t i = 0; i < plen; ++i)
       {
-        const int pindex0 = points0[i];
-        const int pindex1 = points1[i];
+        const size_t pindex0 = static_cast<size_t>(points0[i]);
+        const size_t pindex1 = static_cast<size_t>(points1[i]);
         dsAssert ((pindex0 > 1) || (pindex0 < nlen0), "UNEXPECTED mesh problem");
         dsAssert ((pindex1 > 1) || (pindex1 < nlen1), "UNEXPECTED mesh problem");
 

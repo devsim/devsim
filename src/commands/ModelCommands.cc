@@ -1018,7 +1018,7 @@ setNodeValueCmd(CommandHandler &data)
         os << "Model " << name << " does not exist\n";
         errorString += os.str();
     }
-    else if ((index < -1) || ((index != -1) && (index >= nm_name->GetRegion().GetNumberNodes())))
+    else if ((index < -1) || ((index != -1) && (static_cast<size_t>(index) >= nm_name->GetRegion().GetNumberNodes())))
     {
         std::ostringstream os;
         os << "-index " << index << " does not exist\n";

@@ -89,7 +89,7 @@ CmdDispatch(ClientData clientData, Tcl_Interp *interp,
     myerror = TCL_ERROR;
     Tcl_SetResult(interp, const_cast<char *>("OUT OF MEMORY"), TCL_VOLATILE);
   }
-  catch (std::exception &e)
+  catch (std::exception &)
   {
     myerror = TCL_ERROR;
     Tcl_SetResult(interp, const_cast<char *>("UNEXPECTED ERROR"), TCL_VOLATILE);
