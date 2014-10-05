@@ -26,11 +26,16 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "FPECheck.hh"
 #include "MathEval.hh"
 #include "MaterialDB.hh"
-
 #include <tcl.h>
+#include <cstdio>
 
 int main(int argc, char * argv[])
 {
+// fix incorrect Microsoft Visual C++ formatting
+#if WIN32
+    _set_output_format(_TWO_DIGIT_EXPONENT);
+#endif
+
     FPECheck::InitializeFPE();
 
 
