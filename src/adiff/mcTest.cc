@@ -30,6 +30,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <iomanip>
 #include <fstream>
+#include <cstdio>
 
 using std::cerr;
 using std::endl;
@@ -67,6 +68,11 @@ void PrintAssemblyRoutine(ofstream &, assembletype_t);
   Creates output file
   */
 int main(int argc, char *argv[]) {
+
+// fix incorrect Microsoft Visual C++ formatting
+#if WIN32
+    _set_output_format(_TWO_DIGIT_EXPONENT);
+#endif
 
 //   YY_BUFFER_STATE yyb = NULL;
 /*
