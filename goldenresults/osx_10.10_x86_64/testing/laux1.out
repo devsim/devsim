@@ -1,0 +1,84 @@
+
+----------------------------------------
+
+ DEVSIM
+
+ Version: Beta 0.01
+
+ Copyright 2009-2014 Devsim LLC
+
+----------------------------------------
+
+
+Adding 6 nodes
+Adding 9 edges with 0 duplicates removed
+Adding 4 triangles  with 0 duplicate removed
+Contact bot in region MyRegion with 2 nodes
+Contact top in region MyRegion with 2 nodes
+Not replacing built in Node model AtContactNode
+Not replacing built in Edge model EdgeCouple
+Not replacing built in Edge model EdgeInverseLength
+Not replacing built in Edge model EdgeLength
+Not replacing built in Node model NSurfaceNormal_x
+Not replacing built in Node model NSurfaceNormal_y
+Not replacing built in Node model NodeVolume
+Not replacing built in Node model SurfaceArea
+Not replacing built in Node model coordinate_index
+Not replacing built in Edge model edge_index
+Not replacing built in Node model node_index
+Not replacing built in Edge model unitx
+Not replacing built in Edge model unity
+Not replacing built in Node model x
+Not replacing built in Node model y
+Not replacing built in Node model z
+0	-0.5	0	-0.5
+3.92523e-17	-0.5	3.92523e-17	-0.5
+0	-0.5	0	-0.5
+0	-0.5	0	-0.5
+3.92523e-17	-0.5	3.92523e-17	-0.5
+0	-0.5	0	-0.5
+0	-0.5	0	-0.5
+3.92523e-17	-0.5	3.92523e-17	-0.5
+0	-0.5	0	-0.5
+0	-0.5	0	-0.5
+3.92523e-17	-0.5	3.92523e-17	-0.5
+0	-0.5	0	-0.5
+index 0
+-1	1	-1	1
+1	0	1	0
+1	0	1	0
+1	-1	1	-1
+0	1	0	1
+0	1	0	1
+-1	1	-1	1
+1	0	1	0
+1	0	1	0
+1	-1	1	-1
+0	1	0	1
+0	1	0	1
+index 1
+0	-1	0	-1
+0	-1	0	-1
+-1	1	-1	1
+-1	0	-1	0
+-1	0	-1	0
+1	-1	1	-1
+0	-1	0	-1
+0	-1	0	-1
+-1	1	-1	1
+-1	0	-1	0
+-1	0	-1	0
+1	-1	1	-1
+index 2
+1	0	1	0
+-1	1	-1	1
+0	-1	0	-1
+0	1	0	1
+1	-1	1	-1
+-1	0	-1	0
+1	0	1	0
+-1	1	-1	1
+0	-1	0	-1
+0	1	0	1
+1	-1	1	-1
+-1	0	-1	0

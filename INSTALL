@@ -1,7 +1,7 @@
 Supported Platforms:
 Ubuntu 12.04 32/64 bit
 Red Hat 6.5 32/64 bit
-Mac OS X 10.9 64 bit
+Mac OS X 10.10 64 bit
 
 These instructions are for building the software from source.  Please visit http://www.devsim.org for information about binary availability.
 
@@ -47,7 +47,7 @@ Install ACML for linux 32bit.
 4. sudo sh install-acml-4-4-0-gfortran-32bit.sh
 
 
-For Mac OS X, make sure that you have XCode installed which has the math libraries.  In the following instructions use setup_osx_10.9.sh instead.
+For Mac OS X, make sure that you have XCode installed which has the math libraries.  In the following instructions use setup_osx_10.10.sh instead.
 
 Compile SuperLU 4.3
 
