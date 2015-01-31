@@ -430,17 +430,17 @@ Region "oxide" on device "mymos" has equations 7221:7352
 Device "mymos" has equations 0:7352
 number of equations 7353
 Iteration: 0
-  Device: "mymos"	RelError: 3.52098e-10	AbsError: 2.07850e+08
-    Region: "bulk"	RelError: 3.52073e-10	AbsError: 2.07850e+08
-      Equation: "ElectronContinuityEquation"	RelError: 2.26991e-10	AbsError: 5.57460e+06
-      Equation: "HoleContinuityEquation"	RelError: 9.57711e-11	AbsError: 2.02276e+08
-      Equation: "PotentialEquation"	RelError: 2.93105e-11	AbsError: 1.51984e-11
-    Region: "gate"	RelError: 9.99999e-16	AbsError: 8.56828e+03
-      Equation: "ElectronContinuityEquation"	RelError: 8.57084e-17	AbsError: 8.56828e+03
-      Equation: "HoleContinuityEquation"	RelError: 8.22912e-16	AbsError: 8.23159e-16
-      Equation: "PotentialEquation"	RelError: 9.13784e-17	AbsError: 5.44683e-17
-    Region: "oxide"	RelError: 2.37710e-14	AbsError: 9.77230e-15
-      Equation: "PotentialEquation"	RelError: 2.37710e-14	AbsError: 9.77230e-15
+  Device: "mymos"	RelError: 2.91204e-09	AbsError: 9.91915e+08
+    Region: "bulk"	RelError: 2.91202e-09	AbsError: 9.91915e+08
+      Equation: "ElectronContinuityEquation"	RelError: 1.83687e-09	AbsError: 1.46518e+06
+      Equation: "HoleContinuityEquation"	RelError: 8.10878e-10	AbsError: 9.90450e+08
+      Equation: "PotentialEquation"	RelError: 2.64270e-10	AbsError: 1.37032e-10
+    Region: "gate"	RelError: 9.93185e-16	AbsError: 8.04246e+03
+      Equation: "ElectronContinuityEquation"	RelError: 8.04246e-17	AbsError: 8.04246e+03
+      Equation: "HoleContinuityEquation"	RelError: 8.20460e-16	AbsError: 8.20705e-16
+      Equation: "PotentialEquation"	RelError: 9.23013e-17	AbsError: 5.50177e-17
+    Region: "oxide"	RelError: 2.28787e-14	AbsError: 9.40546e-15
+      Equation: "PotentialEquation"	RelError: 2.28787e-14	AbsError: 9.40546e-15
 Replacing Triangle Edge Model ElectricField_x in region bulk of material Silicon
 Replacing Triangle Edge Model ElectricField_y in region bulk of material Silicon
 Triangle: 0 0
@@ -451,7 +451,7 @@ Edge 0 index 2 nodeindex0 1 nodeindex1 2
 Edge 1 index 1 nodeindex0 0 nodeindex1 2
 Edge 2 index 0 nodeindex0 0 nodeindex1 1
 Model: ElectricField_x
-    0    0    0
+    -6.66134e-11    -6.66134e-11    -6.66134e-11
 Model: ElectricField_x:Potential@en0
     0    100000    100000
 Model: ElectricField_x:Potential@en1
@@ -459,7 +459,7 @@ Model: ElectricField_x:Potential@en1
 Model: ElectricField_x:Potential@en2
     100000    0    -100000
 Model: ElectricField_y
-    0    0    0
+    1.29118e-26    0    0
 Model: ElectricField_y:Potential@en0
     -1e+08    1e+08    1e+08
 Model: ElectricField_y:Potential@en1
@@ -478,7 +478,7 @@ Edge 0 index 155 nodeindex0 52 nodeindex1 53
 Edge 1 index 152 nodeindex0 51 nodeindex1 53
 Edge 2 index 151 nodeindex0 51 nodeindex1 52
 Model: ElectricField_x
-    0    0    0
+    -4.44089e-11    -4.44089e-11    -4.44089e-11
 Model: ElectricField_x:Potential@en0
     100000    0    0
 Model: ElectricField_x:Potential@en1
@@ -486,7 +486,7 @@ Model: ElectricField_x:Potential@en1
 Model: ElectricField_x:Potential@en2
     0    100000    -100000
 Model: ElectricField_y
-    0    0    0
+    0    0    6.37632e-27
 Model: ElectricField_y:Potential@en0
     0    7.36081e+06    7.36081e+06
 Model: ElectricField_y:Potential@en1
@@ -559,7 +559,7 @@ Edge 0 index 792 nodeindex0 267 nodeindex1 268
 Edge 1 index 604 nodeindex0 203 nodeindex1 268
 Edge 2 index 603 nodeindex0 203 nodeindex1 267
 Model: ElectricField_x
-    0    0    0
+    4.41158e-11    4.41158e-11    4.41158e-11
 Model: ElectricField_x:Potential@en0
     0    198680    198680
 Model: ElectricField_x:Potential@en1
@@ -586,7 +586,7 @@ Edge 0 index 942 nodeindex0 317 nodeindex1 318
 Edge 1 index 754 nodeindex0 253 nodeindex1 318
 Edge 2 index 753 nodeindex0 253 nodeindex1 317
 Model: ElectricField_x
-    0.00354854    0.00354854    0.00354854
+    0.00354856    0.00354856    0.00354856
 Model: ElectricField_x:Potential@en0
     0    198680    198680
 Model: ElectricField_x:Potential@en1
@@ -648,7 +648,7 @@ Model: ElectricField_x:Potential@en1
 Model: ElectricField_x:Potential@en2
     313995    0    -313995
 Model: ElectricField_y
-    0    0    -7.785e-25
+    5.38324e-10    5.38324e-10    5.38324e-10
 Model: ElectricField_y:Potential@en0
     4.84879e+06    0    0
 Model: ElectricField_y:Potential@en1
@@ -829,7 +829,7 @@ Edge 0 index 2299 nodeindex0 774 nodeindex1 775
 Edge 1 index 2111 nodeindex0 710 nodeindex1 775
 Edge 2 index 2110 nodeindex0 710 nodeindex1 774
 Model: ElectricField_x
-    0.000256731    0.000256731    0.000256731
+    0.000256095    0.000256095    0.000256095
 Model: ElectricField_x:Potential@en0
     0    985931    985931
 Model: ElectricField_x:Potential@en1
@@ -964,7 +964,7 @@ Edge 0 index 3053 nodeindex0 1028 nodeindex1 1029
 Edge 1 index 2865 nodeindex0 964 nodeindex1 1029
 Edge 2 index 2864 nodeindex0 964 nodeindex1 1028
 Model: ElectricField_x
-    0.0679347    0.0679347    0.0679347
+    0.0679349    0.0679349    0.0679349
 Model: ElectricField_x:Potential@en0
     0    1e+06    1e+06
 Model: ElectricField_x:Potential@en1
@@ -1072,7 +1072,7 @@ Edge 0 index 3656 nodeindex0 1231 nodeindex1 1232
 Edge 1 index 3468 nodeindex0 1167 nodeindex1 1232
 Edge 2 index 3467 nodeindex0 1167 nodeindex1 1231
 Model: ElectricField_x
-    -3.34244e-06    -3.34244e-06    -3.34244e-06
+    -3.74756e-06    -3.74756e-06    -3.74756e-06
 Model: ElectricField_x:Potential@en0
     0    1e+06    1e+06
 Model: ElectricField_x:Potential@en1
@@ -1207,7 +1207,7 @@ Edge 0 index 4410 nodeindex0 1485 nodeindex1 1486
 Edge 1 index 4222 nodeindex0 1421 nodeindex1 1486
 Edge 2 index 4221 nodeindex0 1421 nodeindex1 1485
 Model: ElectricField_x
-    -0.00917235    -0.00917235    -0.00917235
+    -0.00918576    -0.00918576    -0.00918576
 Model: ElectricField_x:Potential@en0
     5.29691e-24    1e+06    1e+06
 Model: ElectricField_x:Potential@en1
@@ -1315,7 +1315,7 @@ Edge 0 index 4828 nodeindex0 1626 nodeindex1 1690
 Edge 1 index 4826 nodeindex0 1625 nodeindex1 1690
 Edge 2 index 4825 nodeindex0 1625 nodeindex1 1626
 Model: ElectricField_x
-    -3.3528e-10    -3.3528e-10    -3.3528e-10
+    5.588e-11    5.588e-11    5.588e-11
 Model: ElectricField_x:Potential@en0
     -5.79169e-11    503322    503322
 Model: ElectricField_x:Potential@en1
@@ -1377,7 +1377,7 @@ Model: ElectricField_x:Potential@en1
 Model: ElectricField_x:Potential@en2
     400370    0    -400370
 Model: ElectricField_y
-    5.7562e-10    5.7562e-10    5.7562e-10
+    8.6343e-10    8.6343e-10    8.6343e-10
 Model: ElectricField_y:Potential@en0
     2.59236e+06    0    0
 Model: ElectricField_y:Potential@en1
@@ -1396,7 +1396,7 @@ Edge 0 index 5466 nodeindex0 1841 nodeindex1 1842
 Edge 1 index 5278 nodeindex0 1777 nodeindex1 1842
 Edge 2 index 5277 nodeindex0 1777 nodeindex1 1841
 Model: ElectricField_x
-    -3.17868e-08    -3.17868e-08    -3.17868e-08
+    -3.21404e-08    -3.21404e-08    -3.21404e-08
 Model: ElectricField_x:Potential@en0
     0    318476    318476
 Model: ElectricField_x:Potential@en1
@@ -1404,7 +1404,7 @@ Model: ElectricField_x:Potential@en1
 Model: ElectricField_x:Potential@en2
     318476    0    -318476
 Model: ElectricField_y
-    0    0    0
+    -1.24059e-09    -1.24059e-09    -1.24059e-09
 Model: ElectricField_y:Potential@en0
     1.11742e+07    0    0
 Model: ElectricField_y:Potential@en1
@@ -1423,7 +1423,7 @@ Edge 0 index 5617 nodeindex0 1892 nodeindex1 1893
 Edge 1 index 5429 nodeindex0 1828 nodeindex1 1893
 Edge 2 index 5428 nodeindex0 1828 nodeindex1 1892
 Model: ElectricField_x
-    1.23753e-09    1.23753e-09    1.23753e-09
+    -5.90638e-10    -5.90638e-10    -5.90638e-10
 Model: ElectricField_x:Potential@en0
     0    253333    253333
 Model: ElectricField_x:Potential@en1
@@ -1431,7 +1431,7 @@ Model: ElectricField_x:Potential@en1
 Model: ElectricField_x:Potential@en2
     253333    0    -253333
 Model: ElectricField_y
-    0    0    2.05716e-25
+    0    0    -1.02858e-25
 Model: ElectricField_y:Potential@en0
     4.81658e+07    0    2.8952e-11
 Model: ElectricField_y:Potential@en1
@@ -1450,7 +1450,7 @@ Edge 0 index 5767 nodeindex0 1942 nodeindex1 1943
 Edge 1 index 5579 nodeindex0 1878 nodeindex1 1943
 Edge 2 index 5578 nodeindex0 1878 nodeindex1 1942
 Model: ElectricField_x
-    -0.00338334    -0.00338334    -0.00338334
+    -0.00338652    -0.00338652    -0.00338652
 Model: ElectricField_x:Potential@en0
     0    253333    253333
 Model: ElectricField_x:Potential@en1
@@ -1504,7 +1504,7 @@ Edge 0 index 6069 nodeindex0 2044 nodeindex1 2045
 Edge 1 index 5881 nodeindex0 1980 nodeindex1 2045
 Edge 2 index 5880 nodeindex0 1980 nodeindex1 2044
 Model: ElectricField_x
-    1.03219e-09    1.03219e-09    1.03219e-09
+    -1.60168e-10    -1.60168e-10    -1.60168e-10
 Model: ElectricField_x:Potential@en0
     1.15833e-22    160296    160296
 Model: ElectricField_x:Potential@en1
@@ -1531,7 +1531,7 @@ Edge 0 index 6220 nodeindex0 2095 nodeindex1 2096
 Edge 1 index 6032 nodeindex0 2031 nodeindex1 2096
 Edge 2 index 6031 nodeindex0 2031 nodeindex1 2095
 Model: ElectricField_x
-    8.49376e-11    8.49376e-11    8.49376e-11
+    -2.68969e-10    -2.68969e-10    -2.68969e-10
 Model: ElectricField_x:Potential@en0
     0    127508    127508
 Model: ElectricField_x:Potential@en1
@@ -1539,7 +1539,7 @@ Model: ElectricField_x:Potential@en1
 Model: ElectricField_x:Potential@en2
     127508    0    -127508
 Model: ElectricField_y
-    0    0    0
+    0    0    -5.13863e-26
 Model: ElectricField_y:Potential@en0
     2.09004e+07    0    0
 Model: ElectricField_y:Potential@en1
@@ -1558,7 +1558,7 @@ Edge 0 index 6371 nodeindex0 2146 nodeindex1 2147
 Edge 1 index 6183 nodeindex0 2082 nodeindex1 2147
 Edge 2 index 6182 nodeindex0 2082 nodeindex1 2146
 Model: ElectricField_x
-    1.12607e-11    1.12607e-11    1.12607e-11
+    1.91431e-10    1.91431e-10    1.91431e-10
 Model: ElectricField_x:Potential@en0
     0    101427    101427
 Model: ElectricField_x:Potential@en1
@@ -1566,7 +1566,7 @@ Model: ElectricField_x:Potential@en1
 Model: ElectricField_x:Potential@en2
     101427    0    -101427
 Model: ElectricField_y
-    0    0    0
+    0    0    -2.58203e-26
 Model: ElectricField_y:Potential@en0
     9.00901e+07    0    0
 Model: ElectricField_y:Potential@en1
@@ -1632,7 +1632,7 @@ Model: ElementEdgeCouple
 Model: ElementNodeVolume
     4.08646e-14    4.08646e-14    0
 0.536464596052924
-0.536464596052985
+0.536464596052986
 0.536464596052924
 foo:Potential@en0
 1.0
