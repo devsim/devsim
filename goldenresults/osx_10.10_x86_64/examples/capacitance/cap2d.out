@@ -530,8 +530,8 @@ Iteration: 0
     Region: "air"	RelError: 1.00000e+00	AbsError: 1.00000e+00
       Equation: "PotentialEquation"	RelError: 1.00000e+00	AbsError: 1.00000e+00
 Iteration: 1
-  Device: "MyDevice"	RelError: 1.14122e-12	AbsError: 1.66165e-13
-    Region: "air"	RelError: 1.14122e-12	AbsError: 1.66165e-13
-      Equation: "PotentialEquation"	RelError: 1.14122e-12	AbsError: 1.66165e-13
+  Device: "MyDevice"	RelError: 1.14122e-12	AbsError: 1.66111e-13
+    Region: "air"	RelError: 1.14122e-12	AbsError: 1.66111e-13
+      Equation: "PotentialEquation"	RelError: 1.14122e-12	AbsError: 1.66111e-13
 3.35017166004e-12
 -3.35017166004e-12

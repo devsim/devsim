@@ -317,7 +317,7 @@ Iteration: 7
       Equation: "ElectronContinuityEquation"	RelError: 3.85913e-14	AbsError: 1.96615e+02
       Equation: "HoleContinuityEquation"	RelError: 9.46166e-15	AbsError: 2.97837e+02
       Equation: "PotentialEquation"	RelError: 3.38600e-15	AbsError: 4.69637e-17
-  Circuit: 	RelError: 3.13772e-13	AbsError: 6.01313e-20
+  Circuit: 	RelError: 3.13837e-13	AbsError: 6.01437e-20
 Circuit Solution:
 V1.I	-1.9154e-07
 topbias	0.2

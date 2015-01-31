@@ -108,13 +108,13 @@ Region "Bulk" on device "resistor2d" has equations 0:1502
 Device "resistor2d" has equations 0:1502
 number of equations 1503
 drop tolerance_ 0.5 dropped 13380 kept 4288 outofrange 0 drop % 75.7301
-GMRES back vectors 50/50 linear iterations 77/100 relative tolerance 8.24731e-21/1e-20 linear convergence 0
+GMRES back vectors 50/50 linear iterations 78/100 relative tolerance 8.13998e-21/1e-20 linear convergence 0
 Iteration: 0
-  Device: "resistor2d"	RelError: 1.04799e-14	AbsError: 5.12000e+03
-    Region: "Bulk"	RelError: 1.04799e-14	AbsError: 5.12000e+03
+  Device: "resistor2d"	RelError: 1.04798e-14	AbsError: 5.12000e+03
+    Region: "Bulk"	RelError: 1.04798e-14	AbsError: 5.12000e+03
       Equation: "ElectronContinuityEquation"	RelError: 5.12000e-15	AbsError: 5.12000e+03
       Equation: "HoleContinuityEquation"	RelError: 5.11591e-15	AbsError: 5.11591e-13
-      Equation: "PotentialEquation"	RelError: 2.43977e-16	AbsError: 1.16343e-16
+      Equation: "PotentialEquation"	RelError: 2.43926e-16	AbsError: 1.16318e-16
 top	0.0	-9.276195676060909e-16	0.0	-9.276195676060909e-16
 bot	0.0	-1.2399382177132446e-15	0.0	-1.2399382177132446e-15
 Region "Bulk" on device "resistor2d" has equations 0:1502
