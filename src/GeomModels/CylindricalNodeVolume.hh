@@ -17,8 +17,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef NODEVOLUME_HH
-#define NODEVOLUME_HH
+#ifndef CYLINDRICALNODEVOLUME_HH
+#define CYLINDRICALNODEVOLUME_HH
 #include "NodeModel.hh"
 
 class CylindricalNodeVolume : public NodeModel
@@ -29,7 +29,6 @@ class CylindricalNodeVolume : public NodeModel
       void Serialize(std::ostream &) const;
 
     private:
-      double calcCylindricalNodeVolume(ConstNodePtr) const;
       void calcNodeScalarValues() const;
       void setInitialValues();
 };

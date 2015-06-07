@@ -37,11 +37,12 @@ ExprEquation::ExprEquation(
     const std::string &var,
     const std::string &nmodel,
     const std::string &emodel,
-    const std::string &eemodel,
     const std::string &evmodel,
+    const std::string &eemodel,
+    const std::string &eevmodel,
     const std::string &tdnmodel,
     Equation::UpdateType ut
-    ) : Equation(eqname, rp, var, ut), node_model_(nmodel), edge_model_(emodel), element_model_(eemodel), volume_model_(evmodel), time_node_model_(tdnmodel)
+    ) : Equation(eqname, rp, var, ut), node_model_(nmodel), edge_model_(emodel), edge_volume_model_(evmodel), element_model_(eemodel), volume_model_(eevmodel), time_node_model_(tdnmodel)
 {
 }
 
@@ -57,6 +58,10 @@ void ExprEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, dsMath::RHSEnt
         {
             model_cache->clear();
             Equation::EdgeCoupleAssemble(edge_model_, m, v, w);
+            if (!edge_volume_model_.empty())
+            {
+              Equation::EdgeNodeVolumeAssemble(edge_volume_model_, m, v, w);
+            }
         }
 
         if (!node_model_.empty())
@@ -112,6 +117,7 @@ void ExprEquation::Serialize(std::ostream &of) const
   of << "COMMAND equation -device \"" << GetRegion().GetDeviceName() << "\" -region \"" << GetRegion().GetName() << "\" -name \"" << GetName() << "\" -variable_name \"" << GetVariable()
     << "\" -node_model \"" << node_model_
     << "\" -edge_model \"" << edge_model_
+    << "\" -edge_volume_model \"" << edge_volume_model_
     << "\" -element_model \"" << element_model_
     << "\" -volume_model \"" << volume_model_
     << "\" -time_node_model \"" << time_node_model_ << "\"";

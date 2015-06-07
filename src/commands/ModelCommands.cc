@@ -57,6 +57,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "TriangleCylindricalNodeVolume.hh"
 #include "TriangleCylindricalEdgeCouple.hh"
 #include "CylindricalNodeVolume.hh"
+#include "CylindricalEdgeNodeVolume.hh"
 #include "CylindricalEdgeCouple.hh"
 
 #include "AverageEdgeModel.hh"
@@ -588,6 +589,7 @@ createCylindricalCmd(CommandHandler &data)
   {
     new TriangleCylindricalNodeVolume(reg);
     new CylindricalNodeVolume(reg);
+    new CylindricalEdgeNodeVolume(reg);
     data.SetEmptyResult();
   }
   else if  (commandName == "cylindrical_surface_area")

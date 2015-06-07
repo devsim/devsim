@@ -884,6 +884,14 @@ begin_edge_model "CylindricalEdgeCouple"
 DATAPARENT "ElementCylindricalEdgeCouple"
 end_edge_model
 
+begin_edge_model "CylindricalEdgeNodeVolume@n0"
+DATAPARENT "ElementCylindricalNodeVolume@en0"
+end_edge_model
+
+begin_edge_model "CylindricalEdgeNodeVolume@n1"
+DATAPARENT "CylindricalEdgeNodeVolume@n0"
+end_edge_model
+
 begin_edge_model "EdgeCouple"
 BUILTIN
 end_edge_model
@@ -1089,6 +1097,14 @@ end_node_model
 
 begin_edge_model "CylindricalEdgeCouple"
 DATAPARENT "ElementCylindricalEdgeCouple"
+end_edge_model
+
+begin_edge_model "CylindricalEdgeNodeVolume@n0"
+DATAPARENT "ElementCylindricalNodeVolume@en0"
+end_edge_model
+
+begin_edge_model "CylindricalEdgeNodeVolume@n1"
+DATAPARENT "CylindricalEdgeNodeVolume@n0"
 end_edge_model
 
 begin_edge_model "EdgeCouple"
@@ -1494,6 +1510,14 @@ end_node_model
 
 begin_edge_model "CylindricalEdgeCouple"
 DATAPARENT "ElementCylindricalEdgeCouple"
+end_edge_model
+
+begin_edge_model "CylindricalEdgeNodeVolume@n0"
+DATAPARENT "ElementCylindricalNodeVolume@en0"
+end_edge_model
+
+begin_edge_model "CylindricalEdgeNodeVolume@n1"
+DATAPARENT "CylindricalEdgeNodeVolume@n0"
 end_edge_model
 
 begin_edge_model "EdgeCouple"
