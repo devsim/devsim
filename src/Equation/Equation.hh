@@ -115,14 +115,15 @@ class Equation {
 
         /// Stuff like potential is symmetric.  It's derivative with respect to a node on either side is of opposite sign.
         /// Stuff should already be integrated w.r.t. EdgeCouple
-        void EdgeAssembleRHS(dsMath::RHSEntryVec &, const EdgeScalarData &/*rhs*/);
+        void EdgeAssembleRHS(dsMath::RHSEntryVec &, const EdgeScalarData &/*rhs*/, const double /*n0_sign*/, const double /*n1_sign*/);
 
         void TriangleEdgeAssembleRHS(dsMath::RHSEntryVec &, const TriangleEdgeScalarData &/*rhs*/, const double /*n0_sign*/, const double /*n1_sign*/);
 
         void TetrahedronEdgeAssembleRHS(dsMath::RHSEntryVec &, const TetrahedronEdgeScalarData &/*rhs*/, const double /*n0_sign*/, const double /*n1_sign*/);
 
-        void SymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const EdgeScalarData &/*der*/, const std::string &/*var*/);
-        void UnSymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const EdgeScalarData &/*der0*/, const EdgeScalarData &/*der1*/, const std::string &/*var*/);
+//        void SymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const EdgeScalarData &/*der*/, const std::string &/*var*/);
+
+        void UnSymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const EdgeScalarData &/*der0*/, const EdgeScalarData &/*der1*/, const std::string &/*var*/, const double /*n0_sign*/, const double /*n1_sign*/);
         void UnSymmetricTriangleEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const TriangleEdgeScalarData &/*der0*/, const TriangleEdgeScalarData &/*der1*/, const TriangleEdgeScalarData &/*der2*/, const std::string &/*var*/, const double /*n0_sign*/, const double /*n1_sign*/);
         void UnSymmetricTetrahedronEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const TetrahedronEdgeScalarData &/*der0*/, const TetrahedronEdgeScalarData &/*der1*/, const TetrahedronEdgeScalarData &/*der2*/, const TetrahedronEdgeScalarData &/*der3*/, const std::string &/*var*/, const double /*n0_sign*/, const double /*n1_sign*/);
         /// Stuff should already be integrated w.r.t. NodeVolume
@@ -132,7 +133,8 @@ class Equation {
         void NodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
         void NodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &/*node_volume*/);
         void EdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
-        void EdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &/*edge_couple*/);
+        void EdgeNodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
+        void EdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &/*edge_couple*/, const double n0_sign, const double n1_sign);
         void ElementEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
         void ElementNodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
         void TriangleEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &, const double, const double);

@@ -1580,6 +1580,28 @@ std::string Region::GetElementNode1VolumeModel() const
   return dbent.second.GetString();
 }
 
+std::string Region::GetEdgeNode0VolumeModel() const
+{
+  const GlobalData &ginst = GlobalData::GetInstance();
+
+  GlobalData::DBEntry_t dbent = ginst.GetDBEntryOnRegion(this, "edge_node0_volume_model");
+
+  dsAssert(dbent.first, "edge_node0_volume_model not specified\n");
+
+  return dbent.second.GetString();
+}
+
+std::string Region::GetEdgeNode1VolumeModel() const
+{
+  const GlobalData &ginst = GlobalData::GetInstance();
+
+  GlobalData::DBEntry_t dbent = ginst.GetDBEntryOnRegion(this, "edge_node1_volume_model");
+
+  dsAssert(dbent.first, "edge_node1_volume_model not specified\n");
+
+  return dbent.second.GetString();
+}
+
 ModelExprDataCachePtr Region::GetModelExprDataCache()
 {
   return modelExprDataCache.lock();

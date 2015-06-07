@@ -57,6 +57,7 @@ createEquationCmd(CommandHandler &data)
         {"variable_name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"node_model",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
         {"edge_model",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
+        {"edge_volume_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
         {"element_model",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
         {"volume_model",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
         {"time_node_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
@@ -84,6 +85,7 @@ createEquationCmd(CommandHandler &data)
     const std::string &node_model      = data.GetStringOption("node_model");
     const std::string &time_node_model = data.GetStringOption("time_node_model");
     const std::string &edge_model      = data.GetStringOption("edge_model");
+    const std::string &edge_volume_model      = data.GetStringOption("edge_volume_model");
     const std::string &elementedge_model = data.GetStringOption("element_model");
     const std::string &volume_model = data.GetStringOption("volume_model");
     /// This should be using switch list ultimately
@@ -106,6 +108,7 @@ createEquationCmd(CommandHandler &data)
     errorString += ValidateOptionalNodeModelName(dev, reg, time_node_model);
 // TODO:"Add Triangle Version"
     errorString += ValidateOptionalEdgeModelName(dev, reg, edge_model);
+    errorString += ValidateOptionalEdgeModelName(dev, reg, edge_volume_model);
 
     Equation::UpdateType updateType = Equation::DEFAULT;
     if (variable_update == "default")
@@ -141,7 +144,7 @@ createEquationCmd(CommandHandler &data)
       return;
     }
 
-    new ExprEquation(name, reg, variable_name, node_model, edge_model, elementedge_model, volume_model, time_node_model, updateType);
+    new ExprEquation(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_model, time_node_model, updateType);
     data.SetEmptyResult();
 }
 

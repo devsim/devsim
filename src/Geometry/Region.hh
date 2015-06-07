@@ -391,6 +391,8 @@ class Region
     std::string GetNodeVolumeModel() const;
     std::string GetEdgeCoupleModel() const;
     std::string GetElementEdgeCoupleModel() const;
+    std::string GetEdgeNode0VolumeModel() const;
+    std::string GetEdgeNode1VolumeModel() const;
     std::string GetElementNode0VolumeModel() const;
     std::string GetElementNode1VolumeModel() const;
 

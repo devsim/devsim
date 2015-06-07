@@ -382,7 +382,7 @@ void Equation::DefaultNoiseUpdate(const std::string &outputname, const std::vect
     }
 }
 
-void Equation::EdgeAssembleRHS(dsMath::RHSEntryVec &v, const EdgeScalarData &eflux)
+void Equation::EdgeAssembleRHS(dsMath::RHSEntryVec &v, const EdgeScalarData &eflux, const double n0_sign, const double n1_sign)
 {
     const Region &r = GetRegion();
     const size_t eqindex0 = r.GetEquationIndex(myname);
@@ -401,8 +401,8 @@ void Equation::EdgeAssembleRHS(dsMath::RHSEntryVec &v, const EdgeScalarData &efl
 
         const double rhsval = eflux[i];
 
-        v.push_back(std::make_pair(row0,  rhsval));
-        v.push_back(std::make_pair(row1, -rhsval));
+        v.push_back(std::make_pair(row0,  n0_sign*rhsval));
+        v.push_back(std::make_pair(row1,  n1_sign*rhsval));
     }
 }
 
@@ -521,7 +521,7 @@ void Equation::SymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &m, cons
 /// Inserts the entries into the matrix for the case when the sensitivity is different with respect to the same variable at the nodes opposite of the edge
 /// eder0 is derivative wrt first node
 /// eder1 is derivative wrt second node
-void Equation::UnSymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &m, const EdgeScalarData &eder0, const EdgeScalarData &eder1, const std::string &var)
+void Equation::UnSymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &m, const EdgeScalarData &eder0, const EdgeScalarData &eder1, const std::string &var, const double n0_sign, const double n1_sign)
 {
     const Region &r = GetRegion();
     const size_t eqindex0 = r.GetEquationIndex(myname);
@@ -552,10 +552,10 @@ void Equation::UnSymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &m, co
         const double ederval1 = eder1[i];
 
         /// Here we account for the fact stuff moving toward row1 has opposite sign
-        m.push_back(dsMath::RealRowColVal(row0, col0, ederval0));
-        m.push_back(dsMath::RealRowColVal(row1, col1, -ederval1));
-        m.push_back(dsMath::RealRowColVal(row0, col1, ederval1));
-        m.push_back(dsMath::RealRowColVal(row1, col0, -ederval0));
+        m.push_back(dsMath::RealRowColVal(row0, col0, n0_sign * ederval0));
+        m.push_back(dsMath::RealRowColVal(row1, col1, n1_sign * ederval1));
+        m.push_back(dsMath::RealRowColVal(row0, col1, n0_sign * ederval1));
+        m.push_back(dsMath::RealRowColVal(row1, col0, n1_sign * ederval0));
     }
 }
 
@@ -833,11 +833,29 @@ void Equation::EdgeCoupleAssemble(const std::string &model, dsMath::RealRowColVa
 {
   const std::string &couple = GetRegion().GetEdgeCoupleModel();
 
-  EdgeCoupleAssemble(model, m, v, w, couple);
+  EdgeCoupleAssemble(model, m, v, w, couple, 1.0, -1.0);
 }
 
+void Equation::EdgeNodeVolumeAssemble(const std::string &model, dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, dsMathEnum::WhatToLoad w)
+{
+  const std::string &node0model = GetRegion().GetEdgeNode0VolumeModel();
+  const std::string &node1model = GetRegion().GetEdgeNode1VolumeModel();
+
+  if (node0model == node1model)
+  {
+    EdgeCoupleAssemble(model, m, v, w, node0model, 1.0, 1.0);
+  }
+  else
+  {
+    /// necessary for cylindrical coordinate system in 2d
+    EdgeCoupleAssemble(model, m, v, w, node0model, 1.0, 0.0);
+    EdgeCoupleAssemble(model, m, v, w, node1model, 0.0, 1.0);
+  }
+}
+
+
 //// Handles the case for Unsymmetric Jacobian Assembly
-void Equation::EdgeCoupleAssemble(const std::string &model, dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple)
+void Equation::EdgeCoupleAssemble(const std::string &model, dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const double n0_sign, const double n1_sign)
 {
     const Region &r = GetRegion();
 
@@ -859,7 +877,7 @@ void Equation::EdgeCoupleAssemble(const std::string &model, dsMath::RealRowColVa
     {
         EdgeScalarData eflux = EdgeScalarData(*ef);
         eflux *= *ec;
-        EdgeAssembleRHS(v, eflux);
+        EdgeAssembleRHS(v, eflux, n0_sign, n1_sign);
     }
     else if (w == dsMathEnum::MATRIXONLY)
     {
@@ -912,7 +930,7 @@ void Equation::EdgeCoupleAssemble(const std::string &model, dsMath::RealRowColVa
           eder0 *= *ec; /// integrate wrt volume
           eder1 *= *ec; /// integrate wrt volume
 
-          UnSymmetricEdgeAssembleJacobian(m, eder0, eder1, var);
+          UnSymmetricEdgeAssembleJacobian(m, eder0, eder1, var, n0_sign, n1_sign);
         }
       }
     }

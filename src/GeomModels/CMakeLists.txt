@@ -19,6 +19,7 @@ SET (CXX_SRCS
     TriangleCylindricalNodeVolume.cc
     CylindricalEdgeCouple.cc
     CylindricalNodeVolume.cc
+    CylindricalEdgeNodeVolume.cc
     CylindricalSurfaceArea.cc
     AverageEdgeModel.cc
 )

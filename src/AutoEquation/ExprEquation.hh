@@ -43,6 +43,7 @@ class ExprEquation : public Equation
                      const std::string &, /*variable Name being solved*/
                      const std::string &, /*NodeModel Name for integrating source/sink*/
                      const std::string &, /*EdgeModel Name for integrating flux*/
+                     const std::string &, /*EdgeModel for volumes integration over edge */
                      const std::string &, /*ElementEdgeModel Name for integrating flux*/
                      const std::string &, /*ElementVolumeModel Name for integrating source*/
                      const std::string &, /*Time-dependent NodeModel Name for integrating source/sink*/
@@ -67,6 +68,7 @@ class ExprEquation : public Equation
         /// Assume that 
         std::string node_model_;
         std::string edge_model_;
+        std::string edge_volume_model_;
         std::string element_model_;
         std::string volume_model_;
         std::string time_node_model_;
