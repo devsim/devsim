@@ -999,7 +999,7 @@ setNodeValueCmd(CommandHandler &data)
     const std::string &regionName = data.GetStringOption("region");
     const std::string &name = data.GetStringOption("name");
     const int index = data.GetIntegerOption("index");
-    const double value = data.GetIntegerOption("value");
+    const double value = data.GetDoubleOption("value");
 
     Device *dev = NULL;
     Region *reg = NULL;
