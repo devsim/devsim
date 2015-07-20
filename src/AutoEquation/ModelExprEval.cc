@@ -165,9 +165,10 @@ ModelExprData ModelExprEval::EvaluateModelType(Eqo::EqObjPtr arg)
   }
   else
   {
-//      std::ostringstream os;
-//      os << "Could not find a model by the name of " << model << ", using 0.0";
-//      errors.push_back(os.str());
+    std::ostringstream os;
+    os << "Could not find a model by the name of " << model << ", using 0.0\n";
+    GeometryStream::WriteOut(OutputStream::VERBOSE1, *rp, os.str());
+
     out = ModelExprData(0.0, rp);
 
     std::string alias_model(model);
