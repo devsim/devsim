@@ -38,6 +38,11 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "GeniusReader.hh"
 #include "GeniusLoader.hh"
 
+#include "Device.hh"
+#include "Region.hh"
+#include "Interface.hh"
+#include "Contact.hh"
+
 #include <sstream>
 
 using namespace dsValidate;
@@ -1183,6 +1188,85 @@ addGmshRegionCmd(CommandHandler &data)
     }
 }
 
+/**
+Unlike the other mesh commands, this one is to be called after the device has been instantiated
+*/
+void 
+createContactFromInterfaceCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    
+    static dsGetArgs::Option option[] = {
+        {"name",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"material",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"device",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
+        {"region",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
+        {"interface",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidInterface},
+        {NULL,  NULL,  dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL,  NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    Device    *device    = NULL;
+    Contact   *contact   = NULL;
+    Interface *interface = NULL;
+    Region    *region    = NULL;
+
+    const std::string &contactName   = data.GetStringOption("name");
+    const std::string &materialName  = data.GetStringOption("material");
+    const std::string &deviceName    = data.GetStringOption("device");
+    const std::string &regionName    = data.GetStringOption("region");
+    const std::string &interfaceName = data.GetStringOption("interface");
+
+  
+    errorString = ValidateDeviceAndContact(deviceName, contactName, device, contact);
+    if (contact)
+    {
+      std::ostringstream os;
+      os << onContactonDevice(contactName, deviceName) << " already exists.\n";
+      errorString = os.str();
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    ValidateDeviceAndRegion(deviceName, regionName, device, region);
+    ValidateDeviceAndInterface(deviceName, interfaceName, device, interface);
+    if (interface->GetRegion0() == region)
+    {
+      contact = new Contact(contactName, region, interface->GetNodes0(), materialName);
+    }
+    else if (interface->GetRegion1() == region)
+    {
+      contact = new Contact(contactName, region, interface->GetNodes1(), materialName);
+    }
+    else
+    {
+      std::ostringstream os;
+      os << onInterfaceonDevice(interfaceName, deviceName) << " is not attached to region \"" << regionName << "\".\n";
+      errorString = os.str();
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    device->AddContact(contact);
+    /// maybe do the whole device?
+    region->SignalCallbacks("@@@ContactChange");
+    data.SetEmptyResult();
+}
+
 Commands MeshingCommands[] = {
     {"create_1d_mesh",    create1dMeshCmd},
     {"finalize_mesh",     finalizeMeshCmd},
@@ -1206,6 +1290,7 @@ Commands MeshingCommands[] = {
     {"add_genius_contact", addGeniusContactCmd},
     {"add_genius_interface", addGeniusInterfaceCmd},
     {"add_genius_region", addGeniusRegionCmd},
+    {"create_contact_from_interface", createContactFromInterfaceCmd},
     {NULL, NULL}
 };
 }
