@@ -5,7 +5,7 @@
 
  Version: Beta 0.01
 
- Copyright 2009-2014 Devsim LLC
+ Copyright 2009-2015 Devsim LLC
 
 ----------------------------------------
 
@@ -207,11 +207,41 @@ Device: mymos Region: gate  Contact: gate Contact Equation: PotentialEquation ED
 Device: mymos Region: gate  Contact: gate Contact Equation: PotentialEquation EDGE Model: gatenodemodel:Holes MISSING
 Device: mymos Region: gate  Interface: gate_oxide Interface Equation: PotentialEquation INTERFACE Model: continuousPotential:Electrons@r0 MISSING
 Device: mymos Region: gate  Interface: gate_oxide Interface Equation: PotentialEquation INTERFACE Model: continuousPotential:Holes@r0 MISSING
+Could not find a model by the name of EdgeInverseLength:Electrons@n0, using 0.0
+Could not find a model by the name of Bern01:Electrons@n0, using 0.0
+Could not find a model by the name of Electrons@n1:Electrons@n0, using 0.0
+Could not find a model by the name of Bern10:Electrons@n0, using 0.0
+Could not find a model by the name of EdgeInverseLength:Electrons@n1, using 0.0
+Could not find a model by the name of Electrons@n0:Electrons@n1, using 0.0
+Could not find a model by the name of Bern01:Electrons@n1, using 0.0
+Could not find a model by the name of Bern10:Electrons@n1, using 0.0
 Device: mymos Region: gate Equation: ElectronContinuityEquation EDGE Model: ElectronCurrent:Holes@n0 MISSING
 Device: mymos Region: gate Equation: ElectronContinuityEquation EDGE Model: ElectronCurrent:Holes@n1 MISSING
+Could not find a model by the name of EdgeInverseLength:Potential@n0, using 0.0
+Could not find a model by the name of Electrons@n0:Potential@n0, using 0.0
+Could not find a model by the name of Electrons@n1:Potential@n0, using 0.0
+Could not find a model by the name of EdgeInverseLength:Potential@n1, using 0.0
+Could not find a model by the name of Electrons@n0:Potential@n1, using 0.0
+Could not find a model by the name of Electrons@n1:Potential@n1, using 0.0
+Could not find a model by the name of Holes:Electrons, using 0.0
+Could not find a model by the name of Electrons:Holes, using 0.0
 Device: mymos Region: gate Equation: ElectronContinuityEquation NODE Model: USRH:Potential MISSING
 Device: mymos Region: gate Equation: HoleContinuityEquation EDGE Model: HoleCurrent:Electrons@n0 MISSING
 Device: mymos Region: gate Equation: HoleContinuityEquation EDGE Model: HoleCurrent:Electrons@n1 MISSING
+Could not find a model by the name of EdgeInverseLength:Holes@n0, using 0.0
+Could not find a model by the name of Bern10:Holes@n0, using 0.0
+Could not find a model by the name of Holes@n1:Holes@n0, using 0.0
+Could not find a model by the name of Bern01:Holes@n0, using 0.0
+Could not find a model by the name of EdgeInverseLength:Holes@n1, using 0.0
+Could not find a model by the name of Holes@n0:Holes@n1, using 0.0
+Could not find a model by the name of Bern10:Holes@n1, using 0.0
+Could not find a model by the name of Bern01:Holes@n1, using 0.0
+Could not find a model by the name of EdgeInverseLength:Potential@n0, using 0.0
+Could not find a model by the name of Holes@n0:Potential@n0, using 0.0
+Could not find a model by the name of Holes@n1:Potential@n0, using 0.0
+Could not find a model by the name of EdgeInverseLength:Potential@n1, using 0.0
+Could not find a model by the name of Holes@n0:Potential@n1, using 0.0
+Could not find a model by the name of Holes@n1:Potential@n1, using 0.0
 Device: mymos Region: gate Equation: HoleContinuityEquation NODE Model: USRH:Potential MISSING
 Device: mymos Region: gate Equation: PotentialEquation EDGE Model: PotentialEdgeFlux:Electrons@n0 MISSING
 Device: mymos Region: gate Equation: PotentialEquation EDGE Model: PotentialEdgeFlux:Electrons@n1 MISSING
