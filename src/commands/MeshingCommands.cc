@@ -1262,8 +1262,6 @@ createContactFromInterfaceCmd(CommandHandler &data)
     }
 
     device->AddContact(contact);
-    /// maybe do the whole device?
-    region->SignalCallbacks("@@@ContactChange");
     data.SetEmptyResult();
 }
 
