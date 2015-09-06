@@ -23,6 +23,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <vector>
 #include <complex>
+#include <map>
 #include <iosfwd>
 template <typename T> class ScalarData;
 class NodeModel;
@@ -38,6 +39,8 @@ typedef std::vector<double> NodeScalarList;
 class Region;
 typedef Region *RegionPtr;
 typedef const Region *ConstRegionPtr;
+
+class ObjectHolder;
 
 // This would be for getting a stamp
 // calculate stamp from first assembly
@@ -102,9 +105,12 @@ class Equation {
 
         void DevsimSerialize(std::ostream &) const;
 
+        void GetCommandOptions(std::map<std::string, ObjectHolder> &) const;
+
     protected:
 
         virtual void Serialize(std::ostream &) const = 0;
+        virtual void GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &) const = 0;
 
         // for non negative variable
         void DefaultUpdate(NodeModel &, const std::vector<double> &);

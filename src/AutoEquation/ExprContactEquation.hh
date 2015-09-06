@@ -42,9 +42,11 @@ class ExprContactEquation : public ContactEquation
             const std::string &// elementedgemodel_charge
             );
 
-            void Serialize(std::ostream &) const;
 
     private:
+        void Serialize(std::ostream &) const;
+        void GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &) const;
+
         void calcCurrent();
         void calcCharge();
 

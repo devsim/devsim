@@ -26,6 +26,8 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <set>
 #include <iosfwd>
 
+class ObjectHolder;
+
 class PermutationEntry;
 typedef std::map<size_t, PermutationEntry> PermutationMap;
 
@@ -69,10 +71,12 @@ class InterfaceEquation {
         std::set<ConstNodePtr> GetActiveNodes() const;
 
         void DevsimSerialize(std::ostream &) const;
+        void GetCommandOptions(std::map<std::string, ObjectHolder> &) const;
 
     protected:
 
         virtual void Serialize(std::ostream &) const = 0;
+        virtual void GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &) const = 0;
 
         ConstNodeList_t GetActiveNodesFromList(const Region &, const ConstNodeList_t &) const;
 

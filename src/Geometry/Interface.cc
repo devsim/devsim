@@ -73,7 +73,25 @@ void Interface::AddInterfaceEquation(InterfaceEquationPtr iep)
     }
 }
 
+void Interface::DeleteInterfaceEquation(InterfaceEquationPtr iep)
+{
+    const std::string &name = iep->GetName();
+    InterfaceEquationPtrMap_t::iterator it = interfaceEquationList.find(name);
+    if (it != interfaceEquationList.end())
+    {
+      dsAssert(iep == it->second, "UNEXPECTED");
+      std::ostringstream os; 
+      delete it->second;
+      interfaceEquationList.erase(it);
+    }
+}
+
 const Interface::InterfaceEquationPtrMap_t &Interface::GetInterfaceEquationList() const
+{
+    return interfaceEquationList;
+}
+
+Interface::InterfaceEquationPtrMap_t &Interface::GetInterfaceEquationList()
 {
     return interfaceEquationList;
 }

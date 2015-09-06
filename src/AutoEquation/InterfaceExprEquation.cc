@@ -30,6 +30,8 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "ModelExprData.hh"
 #include "InterfaceModelExprData.hh"
 
+#include "ObjectHolder.hh"
+
 #include <vector>
 #include <string>
 
@@ -107,4 +109,13 @@ void InterfaceExprEquation::Serialize(std::ostream &of) const
     << "\"";
 }
     
+void InterfaceExprEquation::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
+{
+  omap["device"] = ObjectHolder(GetInterface().GetDeviceName());
+  omap["interface"] = ObjectHolder(GetInterface().GetName());
+  omap["name"] = ObjectHolder(GetName());
+  omap["variable_name"] = ObjectHolder(GetVariable());
+  omap["interface_model"] = ObjectHolder(interface_node_model_);
+  omap["type"] = ObjectHolder(EquationTypeString[equation_type_]);
+}
 

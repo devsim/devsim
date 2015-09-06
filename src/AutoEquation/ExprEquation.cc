@@ -28,6 +28,8 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "ObjectCache.hh"
 #include "ModelExprData.hh"
 
+#include "ObjectHolder.hh"
+
 #include <vector>
 #include <string>
 
@@ -121,6 +123,20 @@ void ExprEquation::Serialize(std::ostream &of) const
     << "\" -element_model \"" << element_model_
     << "\" -volume_model \"" << volume_model_
     << "\" -time_node_model \"" << time_node_model_ << "\"";
+}
+
+void ExprEquation::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
+{
+  omap["device"] = ObjectHolder(GetRegion().GetDeviceName());
+  omap["region"] = ObjectHolder(GetRegion().GetName());
+  omap["name"]   = ObjectHolder(GetName());
+  omap["variable_name"] = ObjectHolder(GetVariable());
+  omap["node_model"] = ObjectHolder(node_model_);
+  omap["edge_model"] = ObjectHolder(edge_model_);
+  omap["edge_volume_model"] = ObjectHolder(edge_volume_model_);
+  omap["element_model"] = ObjectHolder(element_model_);
+  omap["volume_model"] = ObjectHolder(volume_model_);
+  omap["time_node_model"] = ObjectHolder(time_node_model_);
 }
 
 

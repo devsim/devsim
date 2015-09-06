@@ -29,9 +29,11 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Contact.hh"
 #include "Region.hh"
+#include "Interface.hh"
 
 #include "Validate.hh"
 #include "GlobalData.hh"
+#include "dsAssert.hh"
 #include <sstream>
 
 using namespace dsValidate;
@@ -45,9 +47,6 @@ createEquationCmd(CommandHandler &data)
 
     const std::string commandName = data.GetCommandName();
 
-//    GlobalData &gdata = GlobalData::GetInstance();
-
-// TODO:element edge models
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
@@ -75,8 +74,6 @@ createEquationCmd(CommandHandler &data)
         data.SetErrorResult(errorString);
         return;
     }
-
-//    const std::string commandName = data.GetCommandName();
 
     const std::string &name      = data.GetStringOption("name");
     const std::string &variable_name   = data.GetStringOption("variable_name");
@@ -131,13 +128,6 @@ createEquationCmd(CommandHandler &data)
         errorString += os.str();
     }
 
-    if (name.empty())
-    {
-        std::ostringstream os;
-        os << "-name cannot be empty\n";
-        errorString += os.str();
-    }
-
     if (!errorString.empty())
     {
       data.SetErrorResult(errorString);
@@ -149,19 +139,127 @@ createEquationCmd(CommandHandler &data)
 }
 
 void
+getEquationListCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    static dsGetArgs::Option option[] =
+    {
+        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
+        {"region",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
+        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &deviceName      = data.GetStringOption("device");
+    const std::string &regionName      = data.GetStringOption("region");
+
+    Device *dev = NULL;
+    Region *reg = NULL;
+
+    errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
+
+    if (!errorString.empty())
+    {
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    data.SetStringListResult(GetKeys(reg->GetEquationPtrList()));
+}
+
+void
+deleteEquationCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    static dsGetArgs::Option option[] =
+    {
+        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
+        {"region",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
+        {"name",            "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &name            = data.GetStringOption("name");
+    const std::string &deviceName      = data.GetStringOption("device");
+    const std::string &regionName      = data.GetStringOption("region");
+
+    Device *dev = NULL;
+    Region *reg = NULL;
+    Equation *eqn = NULL;
+
+    errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
+
+    if (reg && (!(reg->GetEquationPtrList().count(name))))
+    {
+      std::ostringstream os;
+      os << "Equation " << name << " does not exist\n";
+      errorString += os.str();
+    }
+    else
+    {
+      eqn = reg->GetEquationPtrList()[name];
+    }
+
+    if (!errorString.empty())
+    {
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    if (commandName == "delete_equation")
+    {
+      reg->DeleteEquation(eqn);
+      data.SetEmptyResult();
+    }
+    else if (commandName == "get_equation_command")
+    {
+      ObjectHolderMap_t omap;
+      eqn->GetCommandOptions(omap);
+      data.SetMapResult(omap);
+    }
+}
+
+void
 createInterfaceEquationCmd(CommandHandler &data)
 {
     std::string errorString;
 
     const std::string commandName = data.GetCommandName();
 
-//    GlobalData &gdata = GlobalData::GetInstance();
-
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
         {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"interface",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"interface",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidInterface},
         {"name",            "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"variable_name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"type",            "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
@@ -179,8 +277,6 @@ createInterfaceEquationCmd(CommandHandler &data)
         data.SetErrorResult(errorString);
         return;
     }
-
-//    const std::string commandName = data.GetCommandName();
 
     const std::string &name                 = data.GetStringOption("name");
     const std::string &variable_name        = data.GetStringOption("variable_name");
@@ -201,14 +297,6 @@ createInterfaceEquationCmd(CommandHandler &data)
 
     // implement in terms of ValidateNodeModeName
     errorString  = ValidateInterfaceNodeModelName(dev, interface, interface_model);
-
-    // collapse this down
-    if (name.empty())
-    {
-        std::ostringstream os;
-        os << "-name cannot be empty\n";
-        errorString += os.str();
-    }
 
     InterfaceExprEquation::EquationType et = InterfaceExprEquation::UNKNOWN;
     if (type == "continuous")
@@ -238,22 +326,126 @@ createInterfaceEquationCmd(CommandHandler &data)
 }
 
 void
+getInterfaceEquationListCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    static dsGetArgs::Option option[] =
+    {
+        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
+        {"interface",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidInterface},
+        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &deviceName           = data.GetStringOption("device");
+    const std::string &interfaceName        = data.GetStringOption("interface");
+
+    Device    *dev = NULL;
+    Interface *interface = NULL;
+
+    errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
+
+    if (!errorString.empty())
+    {
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    data.SetStringListResult(GetKeys(interface->GetInterfaceEquationList()));
+}
+
+void
+deleteInterfaceEquationCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    static dsGetArgs::Option option[] =
+    {
+        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
+        {"interface",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidInterface},
+        {"name",            "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &name                 = data.GetStringOption("name");
+    const std::string &deviceName           = data.GetStringOption("device");
+    const std::string &interfaceName        = data.GetStringOption("interface");
+
+    Device    *dev = NULL;
+    Interface *interface = NULL;
+    InterfaceEquation *ieqn = NULL;
+
+    errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
+
+    if (interface && (!(interface->GetInterfaceEquationList().count(name))))
+    {
+      std::ostringstream os;
+      os << "Interface Equation " << name << " does not exist\n";
+      errorString += os.str();
+    }
+    else
+    {
+      ieqn = interface->GetInterfaceEquationList()[name];
+    }
+
+    if (!errorString.empty())
+    {
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    if (commandName == "delete_interface_equation")
+    {
+      interface->DeleteInterfaceEquation(ieqn);
+      data.SetEmptyResult();
+    }
+    else if (commandName == "get_interface_equation_command")
+    {
+      ObjectHolderMap_t omap;
+      ieqn->GetCommandOptions(omap);
+      data.SetMapResult(omap);
+    }
+}
+
+void
 createContactEquationCmd(CommandHandler &data)
 {
     std::string errorString;
 
     const std::string commandName = data.GetCommandName();
 
-//    GlobalData &gdata = GlobalData::GetInstance();
-
-// TODO:element edge models
     using namespace dsGetArgs;
-    /// Will need someway of setting circuit node
-    /// (This would be on the contact and not the contact equation??)
+
     static dsGetArgs::Option option[] =
     {
         {"device",        "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"contact",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"contact",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidContact},
         {"name",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"variable_name", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"node_model",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
@@ -284,8 +476,6 @@ createContactEquationCmd(CommandHandler &data)
         return;
     }
 
-//    const std::string commandName = data.GetCommandName();
-
     const std::string &name                 = data.GetStringOption("name");
     const std::string &deviceName           = data.GetStringOption("device");
     const std::string &contactName          = data.GetStringOption("contact");
@@ -315,22 +505,12 @@ createContactEquationCmd(CommandHandler &data)
       return;
     }
 
-    // collapse this down
-    if (name.empty())
-    {
-        std::ostringstream os;
-        os << "-name cannot be empty\n";
-        errorString += os.str();
-    }
-
     if (!errorString.empty())
     {
       data.SetErrorResult(errorString);
       return;
     }
 
-    /// We don't verify that the equation doesn't already exist
-    /// Do we need a replace option?
     ContactEquation *ce = new ExprContactEquation(name, variable_name, contact, region,
         node_model, edge_model, element_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
     if (!circuit_node.empty())
@@ -341,11 +521,122 @@ createContactEquationCmd(CommandHandler &data)
 }
 
 void
-createCustomEquationCmd(CommandHandler &data)
+getContactEquationListCmd(CommandHandler &data)
 {
     std::string errorString;
 
-//    const std::string commandName = data.GetCommandName();
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+
+    static dsGetArgs::Option option[] =
+    {
+        {"device",        "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
+        {"contact",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidContact},
+        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &deviceName           = data.GetStringOption("device");
+    const std::string &contactName          = data.GetStringOption("contact");
+
+    Device    *dev = NULL;
+    Contact   *contact = NULL;
+
+    errorString = ValidateDeviceAndContact(deviceName, contactName, dev, contact);
+
+    if (!errorString.empty())
+    {
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    data.SetStringListResult(GetKeys(contact->GetEquationPtrList()));
+
+}
+
+void
+deleteContactEquationCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+
+    static dsGetArgs::Option option[] =
+    {
+        {"device",        "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
+        {"contact",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidContact},
+        {"name",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    };
+
+    dsGetArgs::switchList switches = NULL;
+
+    bool error = data.processOptions(option, switches, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &name                 = data.GetStringOption("name");
+    const std::string &deviceName           = data.GetStringOption("device");
+    const std::string &contactName          = data.GetStringOption("contact");
+
+    Device    *dev = NULL;
+    Region    *region = NULL;
+    Contact   *contact = NULL;
+    ContactEquation *ceqn = NULL;
+
+    errorString = ValidateDeviceAndContact(deviceName, contactName, dev, contact);
+
+
+    if (contact && (!(contact->GetEquationPtrList().count(name))))
+    {
+      std::ostringstream os;
+      os << "Contact Equation " << name << " does not exist\n";
+      errorString += os.str();
+    }
+    else
+    {
+      ceqn = contact->GetEquationPtrList()[name];
+    }
+
+    if (!errorString.empty())
+    {
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    if (commandName == "delete_contact_equation")
+    {
+      contact->DeleteEquation(ceqn);
+      data.SetEmptyResult();
+    }
+    else if (commandName == "get_contact_equation_command")
+    {
+      ObjectHolderMap_t omap;
+      ceqn->GetCommandOptions(omap);
+      data.SetMapResult(omap);
+    }
+}
+
+void
+createCustomEquationCmd(CommandHandler &data)
+{
+    std::string errorString;
 
     GlobalData &gdata = GlobalData::GetInstance();
 
@@ -370,8 +661,6 @@ createCustomEquationCmd(CommandHandler &data)
         return;
     }
 
-//    const std::string commandName = data.GetCommandName();
-
     const std::string &name                 = data.GetStringOption("name");
     const std::string &procedure            = data.GetStringOption("procedure");
 
@@ -389,9 +678,6 @@ void
 getEquationNumbersCmd(CommandHandler &data)
 {
   std::string errorString;
-
-//    const std::string commandName = data.GetCommandName();
-
 
   static dsGetArgs::Option option[] =
   {
@@ -480,16 +766,18 @@ Commands EquationCommands[] = {
     {"equation",             createEquationCmd},
     {"interface_equation",   createInterfaceEquationCmd},
     {"contact_equation",     createContactEquationCmd},
-    {"custom_equation", createCustomEquationCmd},
+    {"custom_equation",      createCustomEquationCmd},
     {"get_equation_numbers", getEquationNumbersCmd},
+    {"get_equation_list",    getEquationListCmd},
+    {"get_interface_equation_list", getInterfaceEquationListCmd},
+    {"get_contact_equation_list", getContactEquationListCmd},
+    {"delete_equation", deleteEquationCmd},
+    {"delete_interface_equation", deleteInterfaceEquationCmd},
+    {"delete_contact_equation", deleteContactEquationCmd},
+    {"get_equation_command",    deleteEquationCmd},
+    {"get_contact_equation_command", deleteContactEquationCmd},
+    {"get_interface_equation_command", deleteInterfaceEquationCmd},
     {NULL, NULL}
 };
 }
-//TODO:  "implement get_equations (change to bulk?)"
-//TODO: get_equation_list 
-//TODO: get_interface_equation_list
-//TODO: get_contact_equation_list
-//TODO: delete_interface_equation
-//TODO: delete_equation
-//TODO: delete_contact_equation
 
