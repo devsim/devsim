@@ -1192,6 +1192,7 @@ void Region::DeleteEquation(EquationPtr eq)
       it->second -= 1;
     }
   }
+  numequations = equationPointerMap.size();
 }
 
 EquationPtrMap_t &Region::GetEquationPtrList()
