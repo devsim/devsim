@@ -901,7 +901,7 @@ setNodeValuesCmd(CommandHandler &data)
         {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
         {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"name",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"init_from", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, stringCannotBeEmpty},
+        {"init_from", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
         {"values",    "", dsGetArgs::Types::LIST,   dsGetArgs::Types::OPTIONAL, NULL},
         {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
     };
