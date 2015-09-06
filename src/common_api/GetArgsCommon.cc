@@ -19,7 +19,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 
 namespace dsGetArgs {
-const char * Types::optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT"};
+const char * Types::optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT", "LIST"};
 
 GetArgs::GetArgs(optionList opts, switchList sl) : options(opts), switches(sl)
 {

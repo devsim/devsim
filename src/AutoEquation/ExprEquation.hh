@@ -51,9 +51,11 @@ class ExprEquation : public Equation
                      Equation::UpdateType/* = Equation::DEFAULT*/
                         );
 
-            void Serialize(std::ostream &) const;
 
     private:
+        void Serialize(std::ostream &) const;
+        void GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &) const;
+
         ExprEquation();
         ExprEquation(const ExprEquation &);
         ExprEquation &operator=(const ExprEquation &);

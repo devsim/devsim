@@ -209,12 +209,26 @@ ObjectHolder::IntegerEntry_t ObjectHolder::GetInteger() const
   return std::make_pair(ok, val);
 }
 
+bool ObjectHolder::IsList() const
+{
+  bool ok = false;
+  if (object_)
+  {
+    PyObject *obj = reinterpret_cast<PyObject *>(object_);
+    if (PySequence_Check(obj))
+    {
+      ok = true;
+    }
+  }
+  return ok;
+}
+
 bool ObjectHolder::GetListOfObjects(ObjectHolderList_t &objs) const
 {
   bool ok = false;
   objs.clear();
 
-  if (object_)
+  if (IsList())
   {
     PyObject *obj = reinterpret_cast<PyObject *>(object_);
     if (PySequence_Check(obj))
@@ -232,6 +246,34 @@ bool ObjectHolder::GetListOfObjects(ObjectHolderList_t &objs) const
     }
   }
 
+  return ok;
+}
+
+bool ObjectHolder::GetDoubleList(std::vector<double> &values) const
+{
+  bool ok = false;
+  values.clear();
+  ObjectHolderList_t objs;
+  ok = GetListOfObjects(objs);
+  if (ok)
+  {
+    values.resize(objs.size());
+    ok = true;
+    for (size_t i = 0; i < objs.size(); ++i)
+    {
+      const ObjectHolder::DoubleEntry_t &ent = objs[i].GetDouble();
+      if (ent.first)
+      {
+        values[i] = ent.second;
+      }
+      else
+      {
+        values.clear();
+        ok = false;
+        break;
+      }
+    }
+  }
   return ok;
 }
 

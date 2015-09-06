@@ -56,48 +56,6 @@ void CommandHandler::SetErrorResult(const std::string &errorString)
 
 
 
-#if 0
-/// make the next three functions on template function call SetListResult
-void CommandHandler::SetStringListResult(const std::vector<std::string> &list)
-{
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
-  Tcl_Obj *listPtr = NULL;
-  listPtr = Tcl_NewListObj(0, NULL);
-  for (std::vector<std::string>::const_iterator it = list.begin(); it != list.end(); ++it)
-  {
-    Tcl_ListObjAppendElement(info.interp_, listPtr, Tcl_NewStringObj(it->c_str(), -1));
-  }
-  return_code_ = TCL_OK;
-  Tcl_SetObjResult(info.interp_, listPtr);
-}
-
-void CommandHandler::SetDoubleListResult(const std::vector<double> &list)
-{
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
-  Tcl_Obj *listPtr = NULL;
-  listPtr = Tcl_NewListObj(0, NULL);
-  for (std::vector<double>::const_iterator it = list.begin(); it != list.end(); ++it)
-  {
-    Tcl_ListObjAppendElement(info.interp_, listPtr, Tcl_NewDoubleObj(*it));
-  }
-  return_code_ = TCL_OK;
-  Tcl_SetObjResult(info.interp_, listPtr);
-}
-
-void CommandHandler::SetIntListResult(const std::vector<int> &list)
-{
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
-  Tcl_Obj *listPtr = NULL;
-  listPtr = Tcl_NewListObj(0, NULL);
-  for (std::vector<int>::const_iterator it = list.begin(); it != list.end(); ++it)
-  {
-    Tcl_ListObjAppendElement(info.interp_, listPtr, Tcl_NewIntObj(*it));
-  }
-  return_code_ = TCL_OK;
-  Tcl_SetObjResult(info.interp_, listPtr);
-}
-#endif
-
 void CommandHandler::SetObjectResult(ObjectHolder obj)
 {
   dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));

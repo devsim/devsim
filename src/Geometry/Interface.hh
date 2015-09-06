@@ -103,6 +103,8 @@ class Interface {
         }
 
         void AddInterfaceEquation(InterfaceEquationPtr);
+        void DeleteInterfaceEquation(InterfaceEquationPtr);
+        InterfaceEquationPtrMap_t &GetInterfaceEquationList();
         const InterfaceEquationPtrMap_t &GetInterfaceEquationList() const;
 
         // try using a multimap first

@@ -47,7 +47,7 @@ namespace dsGetArgs
 //typedef const char * switchDefault;
 
 namespace Types {
-enum optionType {BOOLEAN = 0, STRING, INTEGER, FLOAT};
+enum optionType {BOOLEAN = 0, STRING, INTEGER, FLOAT, LIST};
 enum requiredType {OPTIONAL, REQUIRED};
 extern const char * optionTypeStrings[];
 }

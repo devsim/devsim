@@ -61,6 +61,8 @@ class ObjectHolder {
     DoubleEntry_t  GetDouble() const;
     BooleanEntry_t GetBoolean() const;
     IntegerEntry_t GetInteger() const;
+    bool           IsList() const;
+    bool           GetDoubleList(std::vector<double> &) const;
 
     bool empty()
     {

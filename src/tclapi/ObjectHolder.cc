@@ -163,13 +163,25 @@ ObjectHolder::IntegerEntry_t ObjectHolder::GetInteger() const
   return std::make_pair(ok, val);
 }
 
+bool ObjectHolder::IsList() const
+{
+  bool ok = false;
+  if (object_)
+  {
+    int len;
+    int ret = Tcl_ListObjLength(NULL, reinterpret_cast<Tcl_Obj *>(object_), &len);
+    ok = (ret == TCL_OK);
+  }
+  return ok;
+}
+
 bool ObjectHolder::GetListOfObjects(std::vector<ObjectHolder> &objs) const
 {
   bool ok = false;
   objs.clear();
 
   Tcl_Obj *ptr = NULL;
-  if (object_)
+  if (IsList())
   {
     int len = 0;
     int ret = Tcl_ListObjLength(NULL, reinterpret_cast<Tcl_Obj *>(object_), &len);
@@ -187,6 +199,34 @@ bool ObjectHolder::GetListOfObjects(std::vector<ObjectHolder> &objs) const
     }
   }
 
+  return ok;
+}
+
+bool ObjectHolder::GetDoubleList(std::vector<double> &values) const
+{
+  bool ok = false;
+  values.clear();
+  ObjectHolderList_t objs;
+  ok = GetListOfObjects(objs);
+  if (ok)
+  {
+    values.resize(objs.size());
+    ok = true;
+    for (size_t i = 0; i < objs.size(); ++i)
+    {
+      const ObjectHolder::DoubleEntry_t &ent = objs[i].GetDouble();
+      if (ent.first)
+      {
+        values[i] = ent.second;
+      }
+      else
+      {
+        values.clear();
+        ok = false;
+        break;
+      }
+    }
+  }
   return ok;
 }
 

@@ -42,7 +42,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
   hash.GetHashMap(hashmap);
   
 
-  std::string commandName = handler.GetCommandName();
+  const std::string &commandName = handler.GetCommandName();
 
   for (ObjectHolderMap_t::iterator it = hashmap.begin(); it != hashmap.end(); ++it)
   {
@@ -93,6 +93,16 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
             if (!ret.first)
             {
               notConvertibleToType(commandName, optname, Types::INTEGER, toh, error);
+              status = true;
+              break;
+            }
+          }
+          else if (type == Types::LIST)
+          {
+            bool ret = toh.IsList();
+            if (!ret)
+            {
+              notConvertibleToType(commandName, optname, Types::LIST, toh, error);
               status = true;
               break;
             }

@@ -49,9 +49,11 @@ class InterfaceExprEquation : public InterfaceEquation
                      const std::string &, /*InterfaceNodeModel Name for region*/
                      EquationType
                         );
-            void Serialize(std::ostream &) const;
 
     private:
+        void Serialize(std::ostream &) const;
+        void GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &) const;
+
         InterfaceExprEquation();
         InterfaceExprEquation(const InterfaceExprEquation &);
         InterfaceExprEquation &operator=(const InterfaceExprEquation &);

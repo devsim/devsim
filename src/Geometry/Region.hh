@@ -94,32 +94,16 @@ typedef Tetrahedron *TetrahedronPtr;
 typedef const Tetrahedron *ConstTetrahedronPtr;
 typedef std::vector<ConstTetrahedronPtr> ConstTetrahedronList;
 
-#if 0
-class Contact;
-typedef Contact *ContactPtr;
-typedef const Contact *ConstContactPtr;
-#endif
-
 class Equation;
 typedef Equation *EquationPtr;
 typedef const Equation *ConstEquationPtr;
 
-class ContactEquation;
-typedef ContactEquation *ContactEquationPtr;
-typedef const ContactEquation *ConstContactEquationPtr;
-
 typedef std::map<std::string, size_t> EquationIndMap_t;
-// keep private from most things
 typedef std::map<std::string, EquationPtr> EquationPtrMap_t;
 // Variable to equation
 typedef std::map<std::string, std::string> VariableEqnMap_t;
 
-#if 0
-typedef std::multimap<std::string, ContactEquationPtr> ContactEquationPtrMap_t;
-#endif
-
 typedef std::vector<std::string> VariableList_t;
-
 
 class PermutationEntry;
 typedef std::map<size_t, PermutationEntry> PermutationMap;
@@ -150,11 +134,6 @@ class Region
 {
       enum {DEFAULT_NUMBER_NODES=1024};
    public:
-
-#if 0
-      typedef std::multimap<std::string, ContactEquationPtr> ContactEquationPtrMap_t;
-#endif
-
       typedef std::vector<ConstEdgeList> NodeToConstEdgeList_t;
 
       typedef std::vector<ConstTriangleList> NodeToConstTriangleList_t;
@@ -172,9 +151,6 @@ class Region
       typedef std::map<std::string, EdgeModelPtr> EdgeModelList_t;
       typedef std::map<std::string, NodeModelPtr> NodeModelList_t;
       typedef std::map<std::string, std::set<std::string> > DependencyMap_t;
-
-//      typedef std::map<NodePtr, ContactPtr> NodeToContactList_t;
-//      typedef std::map<NodePtr, ConstContactPtr> NodeToConstContactList_t;
 
       Region(std::string, std::string, size_t, ConstDevicePtr);
       ~Region();
@@ -322,12 +298,6 @@ class Region
         return tetrahedronEdgeModels;
       }
 
-#if 0
-      void AddContactEquation(ContactEquationPtr);
-      // Restrict access to device at some point
-      const ContactEquationPtrMap_t &GetContactEquationList() const;
-#endif
-
       void AddEquation(EquationPtr);
       void DeleteEquation(EquationPtr);
       size_t GetEquationIndex(const std::string &) const;
@@ -434,10 +404,6 @@ class Region
       EquationPtrMap_t equationPointerMap;
       VariableEqnMap_t variableEquationMap;
 
-#if 0
-      ContactEquationPtrMap_t contactEquationPtrMap;
-#endif
-
       ConstNodeList        nodeList;
       ConstEdgeList        edgeList;
       ConstTriangleList    triangleList;
@@ -455,8 +421,6 @@ class Region
       TetrahedronToConstEdgeDataList_t tetrahedronToEdgeDataList; 
       TetrahedronToConstTriangleList_t tetrahedronToTriangleList; 
       TriangleToConstTetrahedronList_t triangleToTetrahedronList; 
-
-//      NodeToConstContactList_t  nodeToContactList; 
 
       NodeModelList_t            nodeModels;
       EdgeModelList_t            edgeModels;

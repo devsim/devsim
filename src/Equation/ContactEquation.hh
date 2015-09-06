@@ -25,6 +25,8 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <iosfwd>
 
+class ObjectHolder;
+
 class PermutationEntry;
 typedef std::map<size_t, PermutationEntry> PermutationMap;
 class Contact;
@@ -86,16 +88,18 @@ class ContactEquation {
             return *myregion;
         }
 
-        void DevsimSerialize(std::ostream &) const;
-
         const std::string &GetVariable() const
         {
           return variable;
         }
 
+        void DevsimSerialize(std::ostream &) const;
+        void GetCommandOptions(std::map<std::string, ObjectHolder> &) const;
+
     protected:
 
         virtual void Serialize(std::ostream &) const = 0;
+        virtual void GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &) const = 0;
 
         void SetCurrent(double x) {
             current = x;

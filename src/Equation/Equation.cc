@@ -1211,3 +1211,9 @@ void Equation::DevsimSerialize(std::ostream &of) const
   of << "\nend_equation\n\n";
 }
 
+void Equation::GetCommandOptions(std::map<std::string, ObjectHolder> &omap) const
+{
+  this->GetCommandOptions_Impl(omap);
+}
+
+

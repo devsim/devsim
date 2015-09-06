@@ -901,7 +901,8 @@ setNodeValuesCmd(CommandHandler &data)
         {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
         {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
         {"name",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"init_from", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"init_from", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, stringCannotBeEmpty},
+        {"values",    "", dsGetArgs::Types::LIST,   dsGetArgs::Types::OPTIONAL, NULL},
         {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
     };
 
@@ -921,6 +922,26 @@ setNodeValuesCmd(CommandHandler &data)
     const std::string &name = data.GetStringOption("name");
     const std::string &initializer = data.GetStringOption("init_from");
 
+    std::vector<double> values;
+    ObjectHolder vdata = data.GetObjectHolder("values");
+    if (vdata.IsList())
+    {
+      if (!initializer.empty())
+      {
+        std::ostringstream os;
+        os << "Options \"values\" and \"init_from\" should not be specified at the same time\n";
+        errorString += os.str();
+      }
+      bool ok = vdata.GetDoubleList(values);
+      if (!ok)
+      {
+        std::ostringstream os;
+        os << "Option \"values\" could not be converted to a list of doubles\n";
+        errorString += os.str();
+      }
+    }
+    
+
     Device *dev = NULL;
     Region *reg = NULL;
 
@@ -933,38 +954,53 @@ setNodeValuesCmd(CommandHandler &data)
     }
 
     ConstNodeModelPtr nm_name        = reg->GetNodeModel(name);
-    ConstNodeModelPtr nm_initializer = reg->GetNodeModel(initializer);
-
     if (!nm_name.get())
     {
         std::ostringstream os;
         os << "Model " << name << " does not exist\n";
         errorString += os.str();
     }
-
-    if (initializer.empty())
+    else if (!initializer.empty())
     {
-        std::ostringstream os;
-        os << "-init_from " << name << " is empty\n";
-        errorString += os.str();
-    }
-    else if (!nm_initializer.get())
-    {
-        std::ostringstream os;
-        os << "-init_from " << nm_initializer << " does not exist\n";
-        errorString += os.str();
-    }
+      ConstNodeModelPtr nm_initializer = reg->GetNodeModel(initializer);
 
+      if (initializer.empty())
+      {
+          std::ostringstream os;
+          os << "-init_from " << name << " is empty\n";
+          errorString += os.str();
+      }
+      else if (!nm_initializer.get())
+      {
+          std::ostringstream os;
+          os << "-init_from " << nm_initializer << " does not exist\n";
+          errorString += os.str();
+      }
+      else
+      {
+          std::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(*nm_initializer);
+          data.SetEmptyResult();
+      }
+    }
+    else
+    {
+      if (values.size() !=  reg->GetNumberNodes())
+      {
+          std::ostringstream os;
+          os << "values list does not have right number of nodes for region.\n";
+          errorString += os.str();
+      }
+      else
+      {
+          std::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(values);
+          data.SetEmptyResult();
+      }
+    }
 
     if (!errorString.empty())
     {
         data.SetErrorResult(errorString);
         return;
-    }
-    else
-    {
-      std::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(*nm_initializer);
-      data.SetEmptyResult();
     }
 }
 
@@ -2070,7 +2106,6 @@ Commands ModelCommands[] = {
 //TODO:  "get dependency list of models"
 //TODO:  "Evaluate expression"
 
-//TODO: set_node_value
 //TODO: set_edge_value
 //TODO: set_interface_value
 

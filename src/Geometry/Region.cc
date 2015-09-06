@@ -135,9 +135,6 @@ const TetrahedronElementField &Region::GetTetrahedronElementField() const
 
 Region::~Region()
 {
-#if 0
-    deleteMultiMapPointers(contactEquationPtrMap);
-#endif
     deleteMapPointers(equationPointerMap);
 #if 0
     //// We are now using smart pointers
@@ -1265,35 +1262,12 @@ size_t Region::GetNumberEquations() const
     return numequations;
 }
 
-#if 0
-///// Delete this
-/// Need to be able to support multiple equations for the same contact
-/// TODO: NEED TO MAKE SURE THAT TWO EQUATIONS ON CONTACT ARE NOT POSSIBLE
-void Region::AddContactEquation(ContactEquationPtr cep)
-{
-    const std::string nm  = (cep->GetContact()).GetName();
-    // Replace this with a warning
-//    dsAssert(!contactEquationPtrMap.count(nm), "UNEXPECTED");
-
-    /// need to make sure we don't have multiple equations using the same varible.  Need to also delete contact equations or make sure the contact deletes them.
-    contactEquationPtrMap.insert(std::make_pair(nm, cep));
-}
-#endif
-
 ConstDevicePtr Region::GetDevice() const
 {
     dsAssert(device != NULL, "UNEXPECTED");
     return device;
 }
 
-#if 0
-const ContactEquationPtrMap_t &Region::GetContactEquationList() const
-{
-  return contactEquationPtrMap;
-}
-#endif
-
-/// Need to store list internally and return by reference later
 std::vector<std::string> Region::GetVariableList() const
 {
     std::vector<std::string> vlist;
