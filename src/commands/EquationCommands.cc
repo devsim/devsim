@@ -178,7 +178,17 @@ getEquationListCmd(CommandHandler &data)
       return;
     }
 
-    data.SetStringListResult(GetKeys(reg->GetEquationPtrList()));
+    //// This should be in the same order as the equation index
+    const std::vector<std::string> &slist = GetKeys(reg->GetEquationPtrList());
+    std::vector<std::string> olist(slist.size());
+    for (size_t i = 0; i < slist.size(); ++i)
+    {
+      const std::string &s = slist[i]; 
+      size_t ei = reg->GetEquationIndex(s);
+      dsAssert((ei < slist.size()) && (olist[ei].empty()), "UNEXPECTED");
+      olist[ei] = s;
+    }
+    data.SetStringListResult(olist);
 }
 
 void
