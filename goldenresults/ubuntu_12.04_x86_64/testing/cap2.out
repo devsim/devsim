@@ -147,3 +147,56 @@ Potential
 0.00000e+00
 5.10822e-13
 -5.10822e-13
+Region: MyOxRegion
+Equation: PotentialEquation
+Options: {'volume_model': '', 'element_model': '', 'name': 'PotentialEquation', 'region': 'MyOxRegion', 'variable_name': 'Potential', 'node_model': '', 'edge_model': 'PotentialEdgeFlux', 'edge_volume_model': '', 'device': 'MyDevice', 'time_node_model': ''}
+Region: MySiRegion
+Equation: PotentialEquation
+Options: {'volume_model': '', 'element_model': '', 'name': 'PotentialEquation', 'region': 'MySiRegion', 'variable_name': 'Potential', 'node_model': '', 'edge_model': 'PotentialEdgeFlux', 'edge_volume_model': '', 'device': 'MyDevice', 'time_node_model': ''}
+Contact: bot
+Contact Equation: PotentialEquation
+Options: {'element_model': '', 'edge_current_model': '', 'element_current_model': '', 'node_charge_model': '', 'element_charge_model': '', 'node_current_model': '', 'circuit_node': '', 'edge_model': '', 'node_model': 'bottomnode_model', 'edge_charge_model': 'contactcharge_edge_bottom', 'contact': 'bot', 'variable_name': 'Potential', 'device': 'MyDevice', 'name': 'PotentialEquation'}
+Contact: top
+Contact Equation: PotentialEquation
+Options: {'element_model': '', 'edge_current_model': '', 'element_current_model': '', 'node_charge_model': '', 'element_charge_model': '', 'node_current_model': '', 'circuit_node': '', 'edge_model': '', 'node_model': 'topnode_model', 'edge_charge_model': 'contactcharge_edge_top', 'contact': 'top', 'variable_name': 'Potential', 'device': 'MyDevice', 'name': 'PotentialEquation'}
+Interface: MySiOx
+Interface Equation: PotentialEquation
+Options: {'interface_model': 'continuousPotential', 'name': 'PotentialEquation', 'interface': 'MySiOx', 'variable_name': 'Potential', 'device': 'MyDevice', 'type': 'continuous'}
+
+
+Region: MyOxRegion
+Region: MySiRegion
+Contact: bot
+Contact: top
+Interface: MySiOx
+Region "MyOxRegion" on device "MyDevice" has no equations.
+Region "MySiRegion" on device "MyDevice" has no equations.
+Device "MyDevice" has no equations.
+number of equations 0
+Iteration: 0
+  Device: "MyDevice"	RelError: 0.00000e+00	AbsError: 0.00000e+00
+Region "MyOxRegion" on device "MyDevice" has equations 0:5
+Region "MySiRegion" on device "MyDevice" has equations 6:11
+Device "MyDevice" has equations 0:11
+number of equations 12
+Iteration: 0
+  Device: "MyDevice"	RelError: 1.63727e-16	AbsError: 5.85103e-17
+    Region: "MyOxRegion"	RelError: 9.88350e-17	AbsError: 5.85103e-17
+      Equation: "PotentialEquation"	RelError: 9.88350e-17	AbsError: 5.85103e-17
+    Region: "MySiRegion"	RelError: 6.48917e-17	AbsError: 5.13942e-17
+      Equation: "PotentialEquation"	RelError: 6.48917e-17	AbsError: 5.13942e-17
+(1.0, 0.948, 0.896, 0.844, 0.792, 0.74)
+(1.1, 1.1, 1.1, 1.1, 1.1, 1.1)
+(1.1, 1.1, 1.1, 0.0, 1.1, 1.1)
+(0.0, 0.0, 0.0, 8.0, 0.0, 0.0)
+(1.0, 0.948, 0.896, 0.844, 0.792, 0.74)
+Region "MyOxRegion" on device "MyDevice" has equations 0:5
+Region "MySiRegion" on device "MyDevice" has equations 6:11
+Device "MyDevice" has equations 0:11
+number of equations 12
+Iteration: 0
+  Device: "MyDevice"	RelError: 1.63727e-16	AbsError: 5.85103e-17
+    Region: "MyOxRegion"	RelError: 9.88350e-17	AbsError: 5.85103e-17
+      Equation: "PotentialEquation"	RelError: 9.88350e-17	AbsError: 5.85103e-17
+    Region: "MySiRegion"	RelError: 6.48917e-17	AbsError: 5.13942e-17
+      Equation: "PotentialEquation"	RelError: 6.48917e-17	AbsError: 5.13942e-17
