@@ -2,6 +2,10 @@ Supported Platforms:
 Ubuntu 12.04 32/64 bit
 Red Hat 6.5 32/64 bit
 Mac OS X 10.10 64 bit
+Windows 7 32/64 bit
+
+For windows build, please skip these instructions and download the dependencies and instructions from:
+https://github.com/devsim/devsim_win32_deps
 
 These instructions are for building the software from source.  Please visit http://www.devsim.org for information about binary availability.
 
