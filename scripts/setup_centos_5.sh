@@ -7,7 +7,7 @@ ARCH=`uname -m`
 #  for ARCH in i386 x86_64; do
     NAME=linux_${ARCH}_${TYPE}
     mkdir ${NAME}
-    (cd $NAME; cmake \
+    (cd $NAME; cmake28 \
       -DCMAKE_BUILD_TYPE=${TYPE} \
       -DCMAKE_CXX_COMPILER=${CXX} \
       -DCMAKE_C_COMPILER=${CC} \

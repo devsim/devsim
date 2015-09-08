@@ -3,9 +3,17 @@ Ubuntu 12.04 32/64 bit
 Red Hat 6.5 32/64 bit
 Mac OS X 10.10 64 bit
 Windows 7 32/64 bit
+Centos 5.11 64 bit
 
 For windows build, please skip these instructions and download the dependencies and instructions from:
 https://github.com/devsim/devsim_win32_deps
+
+The Centos 5.11 build uses:
+Anaconda Python 2.7 (http://continuum.io)
+Intel MKL 11.3 (Free with Community License, http://www.intel.com)
+cmake28, ctest28 (From epel repositories on centos)
+
+A version of Python 2.7 would then be required on any machine running DEVSIM.
 
 These instructions are for building the software from source.  Please visit http://www.devsim.org for information about binary availability.
 
