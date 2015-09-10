@@ -7,11 +7,12 @@ It is licensed under the [LGPL Version 3.0](http://www.gnu.org/copyleft/lesser.h
 ### Supported Platforms:
 * Mac OS X 10.10 (Yosemite)
 * Microsoft Windows
-* Red Hat 6.5
+* Red Hat 5 (Centos Compatible)
+* Red Hat 6 (Centos Compatible)
 * Ubuntu 12.04 (LTS)
 * Ubuntu 14.04 (LTS)
 
-Binary releases are currently available from [Sourceforge](https://sourceforge.net/projects/devsim/).
+Binary releases are currently available from [GitHub](https://github.com/devsim/devsim/releases/latest).
 
 ### Software Features:
 * [Documentation](https://github.com/devsim/devsim/blob/master/doc/devsim.pdf?raw=true)
@@ -35,5 +36,5 @@ The official website is here:
 http://www.devsim.org
 
 ### Mailing List:
-http://groups.yahoo.com/neo/groups/devsim/info
+https://groups.google.com/d/forum/devsim
 

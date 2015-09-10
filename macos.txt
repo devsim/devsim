@@ -1,0 +1,7 @@
+
+This is the DEVSIM distribution in a zip format.  Extract the files from
+the archive into your preferred directory.  Product
+documentation is available in the devsim/doc directory.
+
+Mac OS X provides all of the necessary dependencies to run DEVSIM.
+
