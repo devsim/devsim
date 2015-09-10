@@ -1,3 +1,7 @@
+DEVSIM INSTALL Instructions:
+These instructions are for building the software from source.
+Please visit http://www.devsim.org or RELEASE for information about binary availability.
+
 Supported Platforms:
 Ubuntu 12.04 32/64 bit
 Red Hat 6.5 32/64 bit
@@ -14,8 +18,6 @@ Intel MKL 11.3 (Free with Community License, http://www.intel.com)
 cmake28, ctest28 (From epel repositories on centos)
 
 A version of Python 2.7 would then be required on any machine running DEVSIM.
-
-These instructions are for building the software from source.  Please visit http://www.devsim.org for information about binary availability.
 
 Substitute redhat_6.5 for ubuntu_12.04 for Red Hat 6.5 installations in the instructions below.
 

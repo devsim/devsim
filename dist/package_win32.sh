@@ -6,7 +6,7 @@ if ! [ $1 ]; then
 fi
 
 
-for ARCH in win32; do
+for ARCH in win64; do
 PLATFORM=windows
 SRC_DIR=../${ARCH}/src/main/Release
 #DIST_DIR=devsim_${PLATFORM}_${ARCH}
