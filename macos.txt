@@ -5,3 +5,11 @@ documentation is available in the devsim/doc directory.
 
 Mac OS X provides all of the necessary dependencies to run DEVSIM.
 
+If you wish to use
+Anaconda Python 2.7 from http://continuum.io/download
+
+The following may be done to the binary file:
+install_name_tool -change '/System/Library/Frameworks/Python.framework/Versions/2.7/Python' ~/anaconda/lib/libpython2.7.dylib devsim
+
+Then set your environment variable using:
+export PYTHONHOME=${HOME}/anaconda

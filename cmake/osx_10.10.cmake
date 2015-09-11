@@ -1,6 +1,5 @@
 #IF (APPLE)
-SET (CMAKE_EXE_LINKER_FLAGS "-framework CoreFoundation")
-# don't use flat namespace, otherwise people can change out dynamic libraries
+#SET (CMAKE_EXE_LINKER_FLAGS "-framework CoreFoundation")
 #SET (CMAKE_EXE_LINKER_FLAGS "-framework CoreFoundation -flat_namespace")
 ADD_DEFINITIONS(-DTCL_THREADS -fvisibility=hidden)
 #ENDIF (APPLE)
