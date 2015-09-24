@@ -22,6 +22,11 @@ https://github.com/devsim/devsim_tests_win64
 
 Note that it is may be necessary to set PATH and PYTHONPATH correctly.
 
+In order to some modules, such pdb, it is necessary to update the devsim
+manifest using mt.exe from the windows SDK.
+"c:\Program Files (x86)\Windows Kits\8.1\bin\x64\mt.exe" -inputresource:c:\Anaconda\python.exe;#1 -out:devsim.exe.manifest
+"c:\Program Files (x86)\Windows Kits\8.1\bin\x64\mt.exe" -manifest devsim.exe.manifest -outputresource:devsim.exe;#1
+
 If you have issues running the software, please file an issue at:
 http://github.com/devsim/devsim
 
