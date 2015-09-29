@@ -14,6 +14,7 @@ DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
 DIST_DATE=`date +%Y%m%d`
 DIST_VER=${DIST_DIR}_${DIST_DATE}
+MT_EXE="`cygpath 'c:\Program Files (x86)\Windows Kits\8.1\bin\x64\mt.exe'`"
 
 
 
@@ -22,6 +23,11 @@ DIST_VER=${DIST_DIR}_${DIST_DATE}
 mkdir -p ${DIST_BIN}
 cp ${SRC_DIR}/devsim_py.exe ${DIST_BIN}/devsim.exe
 cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl.exe
+##### update the manifest
+(cd ${DIST_BIN} &&
+"${MT_EXE}" -inputresource:"c:\Anaconda\python.exe;#1" -out:devsim.exe.manifest &&
+"${MT_EXE}" -manifest devsim.exe.manifest -outputresource:"devsim.exe;#1"
+)
 
 
 
@@ -54,5 +60,8 @@ Source available from:
 http://www.github.com/devsim/devsim 
 commit ${COMMIT}
 EOF
+
+
+
 zip -r ${DIST_VER}.zip ${DIST_DIR}
 done
