@@ -19,9 +19,18 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef CIRCUITCOMMANDS_HH
 #define CIRCUITCOMMANDS_HH
+class CommandHandler;
 namespace dsCommand {
 struct Commands;
 extern Commands CircuitCommands[];
+void addCircuitNodeCmd(CommandHandler &);
+void circuitAlterCmd(CommandHandler &);
+void circuitElementCmd(CommandHandler &);
+void circuitGetCircuitEquationNumberCmd(CommandHandler &);
+void circuitGetCircuitNodeListCmd(CommandHandler &);
+void circuitGetCircuitNodeValueCmd(CommandHandler &);
+void circuitGetCircuitSolutionListCmd(CommandHandler &);
+void circuitNodeAliasCmd(CommandHandler &);
 }
 #endif
 

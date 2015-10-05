@@ -19,9 +19,13 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef GEOMETRYCOMMANDS_HH
 #define GEOMETRYCOMMANDS_HH
+class CommandHandler;
 namespace dsCommand {
 struct Commands;
 extern Commands GeometryCommands[];
+void getDeviceListCmd(CommandHandler &);
+void getRegionListCmd(CommandHandler &);
 }
 
 #endif
+

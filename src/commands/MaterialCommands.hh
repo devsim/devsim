@@ -19,9 +19,14 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef MATERIALCOMMANDS_HH
 #define MATERIALCOMMANDS_HH
+class CommandHandler;
 namespace dsCommand {
 struct Commands;
 extern Commands MaterialCommands[];
+void addDBEntryCmd(CommandHandler &);
+void getDBEntryCmd(CommandHandler &);
+void getParameterCmd(CommandHandler &);
+void openDBCmd(CommandHandler &);
 }
 
 #endif
