@@ -367,6 +367,7 @@ ObjectHolder::ObjectHolder(ObjectHolderMap_t &map)
     Py_INCREF(val);
     PyDict_SetItemString(map_object, key.c_str(), val);
   }
+  Py_INCREF(map_object);
   object_ = map_object;
 }
 

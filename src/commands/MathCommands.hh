@@ -19,9 +19,13 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef MATHCOMMANDS_HH
 #define MATHCOMMANDS_HH
+class CommandHandler;
 namespace dsCommand {
 struct Commands;
 extern Commands MathCommands[];
+void getContactCurrentCmd(CommandHandler &);
+void getContactCurrentCmd(CommandHandler &);
+void solveCmd(CommandHandler &);
 }
 
 #endif
