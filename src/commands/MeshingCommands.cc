@@ -750,7 +750,13 @@ writeDevicesCmd(CommandHandler &data)
     }
     else if (type == "vtk")
     {
+#ifdef VTKWRITER
         mw = std::unique_ptr<MeshWriter>(new VTKWriter());
+#else
+        errorString += "VTK support was not built into this version.  Please select from \"devsim\", \"devsim_data\", \"floops\", or \"tecplot\".\n";
+        data.SetErrorResult(errorString);
+        return;
+#endif
     }
     else if (type == "tecplot")
     {
@@ -785,9 +791,22 @@ writeDevicesCmd(CommandHandler &data)
     }
 }
 
+#ifndef GENIUSREADER
+namespace {
+void NoGeniusSupport(CommandHandler &data)
+{
+    std::ostringstream os;
+    os << "Genius reader support not available in this version\n";
+    data.SetErrorResult(os.str());
+    return;
+}
+}
+#endif
+
 void 
 createGeniusMeshCmd(CommandHandler &data)
 {
+#ifdef GENIUSREADER
     std::string errorString;
 
 //    const std::string commandName = data.GetCommandName();
@@ -836,12 +855,15 @@ createGeniusMeshCmd(CommandHandler &data)
     out["mesh_info"] = gmp->GetMeshInfo();
     out["messages"] = ObjectHolder(errorString); 
     data.SetObjectResult(ObjectHolder(out));
-
+#else
+    NoGeniusSupport(data);
+#endif
 }
 
 void 
 addGeniusInterfaceCmd(CommandHandler &data)
 {
+#ifdef GENIUSREADER
     std::string errorString;
 
     const std::string commandName = data.GetCommandName();
@@ -889,11 +911,15 @@ addGeniusInterfaceCmd(CommandHandler &data)
       gmp->MapNameToInterface(geniusName, name, regionName0, regionName1);
       data.SetEmptyResult();
     }
+#else
+    NoGeniusSupport(data);
+#endif
 }
 
 void 
 addGeniusContactCmd(CommandHandler &data)
 {
+#ifdef GENIUSREADER
     std::string errorString;
 
     const std::string commandName = data.GetCommandName();
@@ -941,11 +967,15 @@ addGeniusContactCmd(CommandHandler &data)
       gmp->MapNameToContact(geniusName, name, regionName, materialName);
       data.SetEmptyResult();
     }
+#else
+    NoGeniusSupport(data);
+#endif
 }
 
 void 
 addGeniusRegionCmd(CommandHandler &data)
 {
+#ifdef GENIUSREADER
     std::string errorString;
 
     const std::string commandName = data.GetCommandName();
@@ -991,6 +1021,9 @@ addGeniusRegionCmd(CommandHandler &data)
       gmp->MapNameToRegion(geniusName, regionName, materialName);
       data.SetEmptyResult();
     }
+#else
+    NoGeniusSupport(data);
+#endif
 }
 
 void 
