@@ -33,7 +33,95 @@ class Matrix;
 class LinearSolver;
 namespace TimeMethods {
     enum TimeMethod_t {DCONLY, INTEGRATEDC, INTEGRATETR, INTEGRATEBDF1, INTEGRATEBDF2};
+    struct TimeParams {
+      TimeParams(TimeMethod_t tm, double ts, double g) : method(tm), tstep(ts), gamma(g), tdelta(0.0), a0(0.0), a1(0.0), a2(0.0), b0(1.0), b1(0.0), b2(0.0) {
+      }
+
+    // strictly dc
+    bool IsDCOnly() const {
+      return (method == DCONLY);
+    }
+    // could be dc transient too.
+    bool IsDCMethod() const {
+      return (method == DCONLY) || (method == INTEGRATEDC);
+    }
+
+    // can be dc transient too
+    bool IsTransient() const {
+      return (method != DCONLY);
+    }
+
+    bool IsIntegration() const {
+      return (method == INTEGRATEBDF1) || (method == INTEGRATETR) || (method == INTEGRATEBDF2);
+    }
+      TimeMethod_t method;
+      double tstep;
+      double gamma;
+      double tdelta;
+      double a0;
+      double a1;
+      double a2;
+      double b0;
+      double b1;
+      double b2;
+    };
+
+struct DCOnly : public TimeParams
+{
+  DCOnly() : TimeParams(DCONLY, 0.0, 0.0)
+  {
+    b0 = 1.0;
+  }
+};
+
+struct TransientDC : public TimeParams
+{
+  TransientDC() : TimeParams(INTEGRATEDC, 0.0, 0.0)
+  {
+    b0 = 1.0;
+  }
+};
+
+struct BDF1 : public TimeParams
+{
+  BDF1(double tstep, double gamma) : TimeParams(INTEGRATEBDF1, tstep, gamma)
+  {
+    tdelta = gamma * tstep;
+    const double tf = 1.0 / tdelta;
+    a0 = tf;
+    a1 = -tf;
+    b0 = 1.0;
+  }
+};
+
+struct BDF2 : public TimeParams
+{
+  BDF2(double tstep, double gamma) : TimeParams(INTEGRATEBDF2, tstep, gamma)
+  {
+    //// td for first order projection
+    tdelta = (1.0 - gamma) * tstep;
+    a0 = (2.0 - gamma) / tdelta;
+    a1 = (-1.0) / (gamma * tdelta);
+    a2 = (1.0 - gamma) / (gamma * tstep);
+    b0 = 1.0;
+  }
+};
+
+struct TR : public TimeParams
+{
+  TR(double tstep, double gamma) : TimeParams(INTEGRATETR, tstep, gamma)
+  {
+    tdelta = gamma * tstep;
+    const double tf = 2.0 / tdelta;
+    a0 = tf;
+    a1 = -tf;
+    b0 = 1.0;
+    b1 = -1.0;
+  }
+};
+
 }
+
 
 class Newton {
     public:
@@ -46,7 +134,7 @@ class Newton {
 
         //// INTEGRATE_DC means that we are just gonna Assemble I, Q when done
 
-        bool Solve(LinearSolver &, TimeMethods::TimeMethod_t, double tdelta = 0.0, double a0 = 0.0, double a1 = 0.0, double a2 = 0.0, double b0 = 1.0, double b1 = 0.0, double b2 = 0.0);
+        bool Solve(LinearSolver &, const TimeMethods::TimeParams &);
 
         bool ACSolve(LinearSolver &, double);
 
@@ -114,13 +202,8 @@ class Newton {
 
         size_t dimension;
 
-        //// Work vectors to be reused
-#if 0
-        RowColValueVec m;
-        RHSEntryVec    v;
-#endif
-
         static const double rhssign;
 };
 }
 #endif
+

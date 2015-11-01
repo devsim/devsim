@@ -415,7 +415,7 @@ void Newton::BackupSolutions()
 
 //// TODO: call backups to handle time steps
 //// TODO: return information to tclapi
-bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemethod, double tdelta, double a0, double a1, double a2, double b0, double b1, double b2)
+bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &timeinfo)
 {
 
   NodeKeeper &nk = NodeKeeper::instance();
@@ -467,25 +467,25 @@ bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemetho
   DoubleVec_t result(numeqns);
 
   DoubleVec_t rhs_constant(numeqns);
-  if ((timemethod != TimeMethods::DCONLY) && (timemethod != TimeMethods::INTEGRATEDC))
+  if (!timeinfo.IsDCMethod())
   {
     TimeData &tinst = TimeData::GetInstance();
-    if (a1 != 0.0)
+    if (timeinfo.a1 != 0.0)
     {
-      tinst.AssembleQ(TimeData::TM0, a1, rhs_constant);
+      tinst.AssembleQ(TimeData::TM0, timeinfo.a1, rhs_constant);
     }
-    if (a2 != 0.0)
+    if (timeinfo.a2 != 0.0)
     {
-      tinst.AssembleQ(TimeData::TM1, a2, rhs_constant);
+      tinst.AssembleQ(TimeData::TM1, timeinfo.a2, rhs_constant);
     }
 
-    if (b1 != 0.0)
+    if (timeinfo.b1 != 0.0)
     {
-      tinst.AssembleI(TimeData::TM0, b1, rhs_constant);
+      tinst.AssembleI(TimeData::TM0, timeinfo.b1, rhs_constant);
     }
-    if (b2 != 0.0)
+    if (timeinfo.b2 != 0.0)
     {
-      tinst.AssembleI(TimeData::TM1, b2, rhs_constant);
+      tinst.AssembleI(TimeData::TM1, timeinfo.b2, rhs_constant);
     }
   }
   
@@ -503,7 +503,7 @@ bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemetho
 
 //        std::cerr << "Begin Load Matrix\n";
     /// This is the resistive portion (always assembled
-    if (timemethod == TimeMethods::DCONLY)
+    if (timeinfo.IsDCOnly())
     {
       LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::MATRIXANDRHS, dsMathEnum::DC, 1.0);
     }
@@ -512,9 +512,9 @@ bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemetho
       LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::MATRIXANDRHS, dsMathEnum::DC, 1.0);
 
       /// This assembles the time derivative current 
-      if (a0 != 0.0)
+      if (timeinfo.a0 != 0.0)
       {
-        LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::MATRIXANDRHS, dsMathEnum::TIME, a0);
+        LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::MATRIXANDRHS, dsMathEnum::TIME, timeinfo.a0);
       }
     }
 
@@ -631,21 +631,21 @@ bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemetho
   }
 
   std::vector<double> newQ;
-  if (timemethod != TimeMethods::DCONLY)
+  if (timeinfo.IsTransient())
   {
     //// New charge based on new assemble
     newQ.resize(numeqns);
     LoadMatrixAndRHS(*matrix, newQ, permvec, dsMathEnum::RHS, dsMathEnum::TIME, 1.0);
 
     //// Check to see if your projection was correct
-    if ((timemethod == TimeMethods::INTEGRATEBDF1) || (timemethod == TimeMethods::INTEGRATETR) || (timemethod == TimeMethods::INTEGRATEBDF2))
+    if (timeinfo.IsIntegration())
     {
       /// need to make sure projection makes sense
       std::vector<double> projectQ(numeqns);
       
       TimeData &tinst = TimeData::GetInstance();
 
-      tinst.AssembleI(TimeData::TM0, tdelta, projectQ);
+      tinst.AssembleI(TimeData::TM0, timeinfo.tdelta, projectQ);
       tinst.AssembleQ(TimeData::TM0, 1.0,    projectQ);
 
       double qrel = 0.0;
@@ -694,12 +694,12 @@ bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemetho
       nk.PrintSolution("dcop");
     }
 
-    if (timemethod != TimeMethods::DCONLY)
+    if (timeinfo.IsTransient())
     {
       rhs.clear();
       rhs.resize(numeqns);
       TimeData &tinst = TimeData::GetInstance();
-      if (timemethod == TimeMethods::INTEGRATEDC)
+      if (timeinfo.IsDCMethod())
       {
         //// There is no displacement current for a dc solution
         tinst.SetI(TimeData::TM0, rhs);
@@ -740,26 +740,26 @@ bool Newton::Solve(LinearSolver &itermethod, TimeMethods::TimeMethod_t timemetho
         rhs.clear();
         rhs.resize(numeqns);
 
-        if (a0 != 0.0)
+        if (timeinfo.a0 != 0.0)
         {
-          tinst.AssembleQ(TimeData::TM0, a0, rhs);
+          tinst.AssembleQ(TimeData::TM0, timeinfo.a0, rhs);
         }
-        if (a1 != 0.0)
+        if (timeinfo.a1 != 0.0)
         {
-          tinst.AssembleQ(TimeData::TM1, a1, rhs);
+          tinst.AssembleQ(TimeData::TM1, timeinfo.a1, rhs);
         }
-        if (a2 != 0.0)
+        if (timeinfo.a2 != 0.0)
         {
-          tinst.AssembleQ(TimeData::TM2, a2, rhs);
+          tinst.AssembleQ(TimeData::TM2, timeinfo.a2, rhs);
         }
 
-        if (b1 != 0.0)
+        if (timeinfo.b1 != 0.0)
         {
-          tinst.AssembleI(TimeData::TM1, b1, rhs);
+          tinst.AssembleI(TimeData::TM1, timeinfo.b1, rhs);
         }
-        if (b2 != 0.0)
+        if (timeinfo.b2 != 0.0)
         {
-          tinst.AssembleI(TimeData::TM2, b2, rhs);
+          tinst.AssembleI(TimeData::TM2, timeinfo.b2, rhs);
         }
 
         tinst.SetI(TimeData::TM0, rhs);
