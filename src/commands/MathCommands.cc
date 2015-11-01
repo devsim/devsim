@@ -178,7 +178,7 @@ solveCmd(CommandHandler &data)
 
   if (type == "dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCONLY);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCOnly());
   }
   else if (type == "ac")
   {
@@ -190,28 +190,19 @@ solveCmd(CommandHandler &data)
   }
   else if (type == "transient_dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::INTEGRATEDC);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TransientDC());
   }
   else if (type == "transient_bdf1")
   {
-    const double td = gamma * tdelta;
-    const double tf = 1.0 / td;
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::INTEGRATEBDF1, td, tf, -tf, 0.0, 1.0, 0.0, 0.0);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF1(tdelta, gamma));
   }
   else if (type == "transient_tr")
   {
-    const double td = gamma * tdelta;
-    const double tf = 2.0 / td;
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::INTEGRATETR,   td, tf, -tf, 0.0, 1.0,-1.0, 0.0);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TR(tdelta, gamma));
   }
   else if (type == "transient_bdf2")
   {
-    //// td for first order projection
-    const double td = (1.0 - gamma) * tdelta;
-    const double a0 = (2.0 - gamma) / td;
-    const double a1 = (-1.0) / (gamma * td);
-    const double a2 = (1.0 - gamma) / (gamma * tdelta);
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::INTEGRATEBDF2, td, a0, a1, a2, 1.0, 0.0, 0.0);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF2(tdelta, gamma));
   }
 
   if (!res)
