@@ -9,6 +9,14 @@ Mac OS X 10.10 64 bit
 Windows 7 32/64 bit
 Centos 5.11 64 bit
 
+Please note that the following options are enabled by default.
+OPTION(GENIUSREADER "Build with Genius Reader" ON)
+OPTION(VTKWRITER    "Build with VTK Writer" ON)
+OPTION(TCLMAIN      "Build with TCL Interpreter" ON)
+
+By setting these options to OFF in the build directory, (CMakeCache.txt), the number of required dependencies is significantly reduced.
+
+
 For windows build, please skip these instructions and download the dependencies and instructions from:
 https://github.com/devsim/devsim_win32_deps
 
@@ -16,6 +24,7 @@ The Centos 5.11 build uses:
 Anaconda Python 2.7 (http://continuum.io)
 Intel MKL 11.3 (Free with Community License, http://www.intel.com)
 cmake28, ctest28 (From epel repositories on centos)
+
 
 A version of Python 2.7 would then be required on any machine running DEVSIM.
 

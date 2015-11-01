@@ -1,17 +1,19 @@
 SET (CXX_SRCS
-    base64.cc
     FPECheck.cc
     dsAssert.cc
     dsException.cc
     GetGlobalParameter.cc
 )
 
+IF (VTKWRITER)
+SET (CXX_SRCS ${CXX_SRCS} base64.cc)
+ENDIF (VTKWRITER)
+
 INCLUDE_DIRECTORIES (
     ../errorSystem
     ../Data
     ../common_api
     ${ZLIB_INCLUDE}
-    ${OPENSSL_INCLUDE}
 )
 
 ADD_LIBRARY (utility ${CXX_SRCS})

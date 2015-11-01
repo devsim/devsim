@@ -11,8 +11,6 @@ SET (CXX_SRCS
     GmshReader.cc
     GmshParser.cc
     GmshScanner.cc
-    GeniusLoader.cc
-    GeniusReader.cc
     MeshKeeper.cc
     Mesh.cc
     MeshWriter.cc
@@ -22,9 +20,15 @@ SET (CXX_SRCS
     Mesh1dStructs.cc
     Mesh2d.cc
     Mesh2dStructs.cc
-    VTKWriter.cc
     TecplotWriter.cc
 )
+
+IF (GENIUSREADER)
+SET (CXX_SRCS ${CXX_SRCS} GeniusReader.cc GeniusLoader.cc)
+ENDIF (GENIUSREADER)
+IF (VTKWRITER)
+SET (CXX_SRCS ${CXX_SRCS} VTKWriter.cc)
+ENDIF (VTKWRITER)
 
 INCLUDE_DIRECTORIES (
     ../utility
@@ -40,6 +44,7 @@ INCLUDE_DIRECTORIES (
     ../common_api
     ${CGNS_INCLUDE}
 )
+
 
 IF (WIN32)
 SET_SOURCE_FILES_PROPERTIES(DevsimScanner.cc DevsimParser.cc PROPERTIES GENERATED TRUE)

@@ -10,6 +10,13 @@ SET (CXX_SRCS
     CheckFunctions.cc
 )
 
+IF (VTKWRITER)
+ADD_DEFINITIONS(-DVTKWRITER)
+ENDIF (VTKWRITER)
+IF (GENIUSREADER)
+ADD_DEFINITIONS(-DGENIUSREADER)
+ENDIF (GENIUSREADER)
+
 INCLUDE_DIRECTORIES (
     ../commands
     ../common_api
@@ -28,6 +35,7 @@ INCLUDE_DIRECTORIES (
     ../GeomModels
     ../MathEval
 )
+
 
 ADD_LIBRARY (commands ${CXX_SRCS})
 

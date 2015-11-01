@@ -1,5 +1,8 @@
 PROJECT (DEVSIM)
 #cmake_minimum_required(VERSION 2.6)
+OPTION(GENIUSREADER "Build with Genius Reader" ON)
+OPTION(VTKWRITER    "Build with VTK Writer" ON)
+OPTION(TCLMAIN      "Build with TCL Interpreter" ON)
 
 
 INCLUDE(${PROJECT_SOURCE_DIR}/cmake/${DEVSIM_CONFIG}.cmake)

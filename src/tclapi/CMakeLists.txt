@@ -24,7 +24,9 @@ INCLUDE_DIRECTORIES (
 )
 
 
+IF (TCLMAIN)
 ADD_LIBRARY (tclapi_interpreter ${CXX_SRCS1})
 ADD_LIBRARY (tclapi_api ${CXX_SRCS2})
+ENDIF (TCLMAIN)
 
 
