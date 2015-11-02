@@ -63,6 +63,8 @@ solveCmd(CommandHandler &data)
     {"tdelta",       "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
     {"charge_error", "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
     {"gamma",        "1.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
+    // empty string converts to bool for python
+    {"info", "", dsGetArgs::Types::BOOLEAN, dsGetArgs::Types::OPTIONAL},
     {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
   };
 //      {"callback",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
@@ -85,6 +87,15 @@ solveCmd(CommandHandler &data)
 
   const double tdelta = data.GetDoubleOption("tdelta");
   const double gamma  = data.GetDoubleOption("gamma");
+
+  const bool convergence_info = data.GetBooleanOption("info");
+  ObjectHolderMap_t ohm;
+  ObjectHolderMap_t *p_ohm = NULL;
+  if (convergence_info)
+  {
+    p_ohm = &ohm;
+  }
+
 
   if (type == "dc")
   {
@@ -178,7 +189,7 @@ solveCmd(CommandHandler &data)
 
   if (type == "dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCOnly());
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCOnly(), p_ohm);
   }
   else if (type == "ac")
   {
@@ -190,19 +201,19 @@ solveCmd(CommandHandler &data)
   }
   else if (type == "transient_dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TransientDC());
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TransientDC(), p_ohm);
   }
   else if (type == "transient_bdf1")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF1(tdelta, gamma));
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF1(tdelta, gamma), p_ohm);
   }
   else if (type == "transient_tr")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TR(tdelta, gamma));
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TR(tdelta, gamma), p_ohm);
   }
   else if (type == "transient_bdf2")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF2(tdelta, gamma));
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF2(tdelta, gamma), p_ohm);
   }
 
   if (!res)
@@ -210,6 +221,10 @@ solveCmd(CommandHandler &data)
     std::ostringstream os;
     os << "Convergence failure!\n";
     errorString = os.str();
+  }
+  else if (p_ohm)
+  {
+    data.SetObjectResult(ObjectHolder(ohm));
   }
   else
   {
