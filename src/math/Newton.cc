@@ -73,8 +73,6 @@ size_t Newton::NumberEquationsAndSetDimension()
       std::string name = (dit->first);
       Device &dev =     *(dit->second);
       dev.SetBaseEquationNumber(eqnnum);
-      /// Must enforce that we have at least one node (as this function assumes this is the case.
-      /// TODO: this is a disaster waiting to happen
       const size_t maxnum = dev.CalcMaxEquationNumber();
 
       if (maxnum != size_t(-1))
@@ -415,9 +413,8 @@ void Newton::BackupSolutions()
 
 //// TODO: call backups to handle time steps
 //// TODO: return information to tclapi
-bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &timeinfo)
+bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &timeinfo, ObjectHolderMap_t *ohm)
 {
-
   NodeKeeper &nk = NodeKeeper::instance();
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
@@ -429,7 +426,7 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
     nk.InitializeSolution("dcop");
   }
 
-  PrintNumberEquations(numeqns);
+  PrintNumberEquations(numeqns, ohm);
 
   std::unique_ptr<Matrix> matrix;
   std::unique_ptr<Preconditioner> preconditioner;
@@ -474,8 +471,17 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
   size_t divergence_count = 0;
   double last_rel_err = 0.0;
   double last_abs_err = 0.0;
+
+  ObjectHolderList_t iteration_list;
+
   for (size_t iter = 0; (iter < maxiter) && (!converged) && (divergence_count < 5); ++iter)
   {
+    ObjectHolderMap_t iteration_map;
+    ObjectHolderMap_t *p_iteration_map = NULL;
+    if (ohm)
+    {
+      p_iteration_map = &iteration_map;
+    }
 
     rhs = rhs_constant;
 
@@ -528,18 +534,29 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
       nk.TriggerCallbacksOnNodes();
     }
 
-    PrintIteration(iter);
+    PrintIteration(iter, p_iteration_map);
     {
       converged = true;
       GlobalData::DeviceList_t::const_iterator dit  = dlist.begin();
       GlobalData::DeviceList_t::const_iterator dend = dlist.end();
+      ObjectHolderList_t dobjlist;
       for ( ; dit != dend; ++dit)
       {
         const std::string &name = dit->first;
         const Device &device = *(dit->second);
         const double devrerr = device.GetRelError();
         const double devaerr = device.GetAbsError();
-        PrintDeviceErrors(device);
+
+        if (ohm)
+        {
+          ObjectHolderMap_t dmap;
+          PrintDeviceErrors(device, &dmap);
+          dobjlist.push_back(ObjectHolder(dmap));
+        }
+        else
+        {
+          PrintDeviceErrors(device, ohm);
+        }
 
 
         /* if are our is higher than our convergence criteria and it is running away*/
@@ -558,17 +575,25 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
 
         converged = converged && (devrerr < relLimit) && (devaerr < absLimit);
       }
+      if (p_iteration_map)
+      {
+        (*p_iteration_map)["devices"] = ObjectHolder(dobjlist);
+      }
 
       if (nk.HaveNodes())
       {
         const double cirrerr = nk.GetRelError("dcop");
         const double ciraerr = nk.GetAbsError("dcop");
-        PrintCircuitErrors();
+        PrintCircuitErrors(p_iteration_map);
         converged = converged && (cirrerr < relLimit) && (ciraerr < absLimit);
       }
     }
 
     matrix->ClearMatrix();
+    if (p_iteration_map)
+    {
+      iteration_list.push_back(ObjectHolder(iteration_map));
+    }
   }
 
   std::vector<double> newQ;
@@ -613,24 +638,37 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
 
   }
 
+  if (ohm)
+  {
+    (*ohm)["iterations"] = ObjectHolder(iteration_list);
+  }
+
   return converged;
 }
 
-void Newton::PrintNumberEquations(size_t numeqns)
+void Newton::PrintNumberEquations(size_t numeqns, ObjectHolderMap_t *ohm)
 {
   std::ostringstream os; 
   os << "number of equations " << numeqns << "\n";
   OutputStream::WriteOut(OutputStream::INFO, os.str());
+  if (ohm)
+  {
+    (*ohm)["number_of_equations"] = ObjectHolder(static_cast<int>(numeqns));
+  }
 }
 
-void Newton::PrintIteration(size_t iter)
+void Newton::PrintIteration(size_t iter, ObjectHolderMap_t *ohm)
 {
   std::ostringstream os; 
   os << "Iteration: " << iter << "\n";
   OutputStream::WriteOut(OutputStream::INFO, os.str());
+  if (ohm)
+  {
+    (*ohm)["iteration"] = ObjectHolder(static_cast<int>(iter));
+  }
 }
 
-void Newton::PrintCircuitErrors()
+void Newton::PrintCircuitErrors(ObjectHolderMap_t *ohm)
 {
   NodeKeeper &nk = NodeKeeper::instance();
   const double cirrerr = nk.GetRelError("dcop");
@@ -641,13 +679,24 @@ void Newton::PrintCircuitErrors()
                "\tRelError: " << cirrerr <<
                "\tAbsError: " << ciraerr << "\n";
   OutputStream::WriteOut(OutputStream::INFO, os.str());
+  if (ohm)
+  {
+    ObjectHolderMap_t cir;
+    cir["relative_error"] = ObjectHolder(cirrerr);
+    cir["absolute_error"] = ObjectHolder(ciraerr);
+    (*ohm)["circuit"] = ObjectHolder(cir);
+  }
 }
 
-void Newton::PrintDeviceErrors(const Device &device)
+void Newton::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
 {
   const std::string &name = device.GetName();
   const double devrerr = device.GetRelError();
   const double devaerr = device.GetAbsError();
+
+  std::unique_ptr<ObjectHolderMap_t> dmap;
+  std::unique_ptr<ObjectHolderList_t> rlist;
+  std::unique_ptr<ObjectHolderList_t> elist;
 
   std::ostringstream os;
 
@@ -655,6 +704,7 @@ void Newton::PrintDeviceErrors(const Device &device)
       << std::scientific << std::setprecision(5) <<
                "\tRelError: " << devrerr <<
                "\tAbsError: " << devaerr << "\n";
+
 
   const Device::RegionList_t regions = device.GetRegionList();
   for (Device::RegionList_t::const_iterator rit = regions.begin(); rit != regions.end(); ++rit)
@@ -679,9 +729,43 @@ void Newton::PrintDeviceErrors(const Device &device)
           << std::scientific << std::setprecision(5) <<
                    "\tRelError: " << equation.GetRelError() <<
                    "\tAbsError: " << equation.GetAbsError() << "\n";
+
     }
   }
   OutputStream::WriteOut(OutputStream::INFO, os.str());
+
+  if (ohm)
+  {
+    ObjectHolderMap_t &dmap = *ohm;
+    dmap["name"] = ObjectHolder(name);
+    dmap["relative_error"] = ObjectHolder(devrerr);
+    dmap["absolute_error"] = ObjectHolder(devaerr);
+
+    ObjectHolderList_t rlist;
+    for (Device::RegionList_t::const_iterator rit = regions.begin(); rit != regions.end(); ++rit)
+    {
+      const Region &region = *(rit->second);
+      ObjectHolderMap_t rmap;
+      rmap["name"] = ObjectHolder(region.GetName());
+      rmap["relative_error"] = ObjectHolder(region.GetRelError());
+      rmap["absolute_error"] = ObjectHolder(region.GetAbsError());
+
+      ObjectHolderList_t elist;
+      const EquationPtrMap_t &equations = region.GetEquationPtrList();
+      for (EquationPtrMap_t::const_iterator eit = equations.begin(); eit != equations.end(); ++eit)
+      {
+        const Equation &equation = *(eit->second);
+        ObjectHolderMap_t emap;
+        emap["name"] = ObjectHolder(equation.GetName());
+        emap["relative_error"] = ObjectHolder(equation.GetRelError());
+        emap["absolute_error"] = ObjectHolder(equation.GetAbsError());
+        elist.push_back(ObjectHolder(emap));
+      }
+      rmap["equations"] = ObjectHolder(elist);
+      rlist.push_back(ObjectHolder(rmap));
+    }
+    dmap["regions"] = ObjectHolder(rlist);
+  }
 }
 
 void Newton::InitializeTransientAssemble(const TimeMethods::TimeParams &timeinfo, size_t numeqns, std::vector<double> &rhs_constant)

@@ -25,6 +25,10 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <cstddef>
 #include <vector>
 #include <complex>
+#include <map>
+
+class ObjectHolder;
+typedef std::map<std::string, ObjectHolder> ObjectHolderMap_t;
 
 class Device;
 /// This is the outer nonlinear solver
@@ -134,7 +138,7 @@ class Newton {
 
         //// INTEGRATE_DC means that we are just gonna Assemble I, Q when done
 
-        bool Solve(LinearSolver &, const TimeMethods::TimeParams &);
+        bool Solve(LinearSolver &, const TimeMethods::TimeParams &, ObjectHolderMap_t *ohm);
 
         bool ACSolve(LinearSolver &, double);
 
@@ -171,10 +175,10 @@ class Newton {
         bool CheckTransientProjection(const TimeMethods::TimeParams &, const std::vector<double> &);
         void UpdateTransientCurrent(const TimeMethods::TimeParams &, size_t, const std::vector<double> &, std::vector<double> &);
 
-        void PrintDeviceErrors(const Device &device);
-        void PrintCircuitErrors();
-        void PrintNumberEquations(size_t);
-        void PrintIteration(size_t);
+        void PrintDeviceErrors(const Device &device, ObjectHolderMap_t *);
+        void PrintCircuitErrors(ObjectHolderMap_t *);
+        void PrintNumberEquations(size_t, ObjectHolderMap_t *);
+        void PrintIteration(size_t, ObjectHolderMap_t *);
 
         size_t NumberEquationsAndSetDimension();
 
