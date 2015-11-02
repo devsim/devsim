@@ -429,11 +429,7 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
     nk.InitializeSolution("dcop");
   }
 
-  {
-    std::ostringstream os; 
-    os << "number of equations " << numeqns << "\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
-  }
+  PrintNumberEquations(numeqns);
 
   std::unique_ptr<Matrix> matrix;
   std::unique_ptr<Preconditioner> preconditioner;
@@ -469,35 +465,17 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
   DoubleVec_t rhs_constant(numeqns);
   if (!timeinfo.IsDCMethod())
   {
-    TimeData &tinst = TimeData::GetInstance();
-    if (timeinfo.a1 != 0.0)
-    {
-      tinst.AssembleQ(TimeData::TM0, timeinfo.a1, rhs_constant);
-    }
-    if (timeinfo.a2 != 0.0)
-    {
-      tinst.AssembleQ(TimeData::TM1, timeinfo.a2, rhs_constant);
-    }
-
-    if (timeinfo.b1 != 0.0)
-    {
-      tinst.AssembleI(TimeData::TM0, timeinfo.b1, rhs_constant);
-    }
-    if (timeinfo.b2 != 0.0)
-    {
-      tinst.AssembleI(TimeData::TM1, timeinfo.b2, rhs_constant);
-    }
+    InitializeTransientAssemble(timeinfo, numeqns, rhs_constant);
   }
   
 
   LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::PERMUTATIONSONLY, dsMathEnum::DC, 1.0);
 
-  int divergence_count = 0;
+  size_t divergence_count = 0;
   double last_rel_err = 0.0;
   double last_abs_err = 0.0;
-  for (int iter = 0; (iter < maxiter) && (!converged) && (divergence_count < 5); ++iter)
+  for (size_t iter = 0; (iter < maxiter) && (!converged) && (divergence_count < 5); ++iter)
   {
-    std::ostringstream os; 
 
     rhs = rhs_constant;
 
@@ -550,8 +528,7 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
       nk.TriggerCallbacksOnNodes();
     }
 
-
-    os << "Iteration: " << iter << "\n";
+    PrintIteration(iter);
     {
       converged = true;
       GlobalData::DeviceList_t::const_iterator dit  = dlist.begin();
@@ -562,39 +539,8 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
         const Device &device = *(dit->second);
         const double devrerr = device.GetRelError();
         const double devaerr = device.GetAbsError();
-        os << "  Device: \"" << name << "\""
-            << std::scientific << std::setprecision(5) <<
-                     "\tRelError: " << devrerr <<
-                     "\tAbsError: " << devaerr << "\n";
+        PrintDeviceErrors(device);
 
-        const Device::RegionList_t regions = device.GetRegionList();
-        for (Device::RegionList_t::const_iterator rit = regions.begin(); rit != regions.end(); ++rit)
-        {
-          const Region &region = *(rit->second);
-
-          if (region.GetNumberEquations() == 0)
-          {
-            continue;
-          }
-
-          os << "    Region: \"" << region.GetName() << "\""
-              << std::scientific << std::setprecision(5) <<
-                       "\tRelError: " << region.GetRelError() <<
-                       "\tAbsError: " << region.GetAbsError() << "\n";
-
-          const EquationPtrMap_t &equations = region.GetEquationPtrList();
-          for (EquationPtrMap_t::const_iterator eit = equations.begin(); eit != equations.end(); ++eit)
-          {
-            const Equation &equation = *(eit->second);
-            os << "      Equation: \"" << equation.GetName() << "\""
-                << std::scientific << std::setprecision(5) <<
-                         "\tRelError: " << equation.GetRelError() <<
-                         "\tAbsError: " << equation.GetAbsError() << "\n";
-
-
-//            dsErrors::EquationMathErrorInfo(equation, OutputStream::INFO);
-          }
-        }
 
         /* if are our is higher than our convergence criteria and it is running away*/
         bool diverged = ((devrerr > relLimit) && (devrerr > last_rel_err))
@@ -617,17 +563,12 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
       {
         const double cirrerr = nk.GetRelError("dcop");
         const double ciraerr = nk.GetAbsError("dcop");
-        os << "  Circuit: "
-            << std::scientific << std::setprecision(5) <<
-                     "\tRelError: " << cirrerr <<
-                     "\tAbsError: " << ciraerr << "\n";
-        /// TODO: the circuit as well as individual equations in regions need specific convergence criteria
+        PrintCircuitErrors();
         converged = converged && (cirrerr < relLimit) && (ciraerr < absLimit);
       }
     }
 
     matrix->ClearMatrix();
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
   }
 
   std::vector<double> newQ;
@@ -640,36 +581,7 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
     //// Check to see if your projection was correct
     if (timeinfo.IsIntegration())
     {
-      /// need to make sure projection makes sense
-      std::vector<double> projectQ(numeqns);
-      
-      TimeData &tinst = TimeData::GetInstance();
-
-      tinst.AssembleI(TimeData::TM0, timeinfo.tdelta, projectQ);
-      tinst.AssembleQ(TimeData::TM0, 1.0,    projectQ);
-
-      double qrel = 0.0;
-      for (size_t i = 0; i < numeqns; ++i)
-      {
-        const double qproj = projectQ[i];
-        const double qnew  = newQ[i];
-        if (qnew != 0.0)
-        {
-          const double qr = fabs(qnew - qproj)/(1.0e-20 + fabs(qnew) + fabs(qproj));
-          if (qr > qrel)
-          {
-            qrel = qr;
-          }
-        }
-      }
-      std::ostringstream os;
-      os << "Charge Relative Error " << std::scientific << std::setprecision(5) << qrel << "\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
-
-      if (qrel > qrelLimit)
-      {
-        converged = false;
-      }
+      converged = CheckTransientProjection(timeinfo, newQ);
     }
   }
 
@@ -696,81 +608,212 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
 
     if (timeinfo.IsTransient())
     {
-      rhs.clear();
-      rhs.resize(numeqns);
-      TimeData &tinst = TimeData::GetInstance();
-      if (timeinfo.IsDCMethod())
-      {
-        //// There is no displacement current for a dc solution
-        tinst.SetI(TimeData::TM0, rhs);
-        tinst.SetQ(TimeData::TM0, newQ);
-
-        tinst.ClearI(TimeData::TM1);
-        tinst.ClearI(TimeData::TM2);
-        tinst.ClearQ(TimeData::TM1);
-        tinst.ClearQ(TimeData::TM2);
-      }
-      else
-      {
-        ////// Charge
-
-        if (tinst.ExistsQ(TimeData::TM1))
-        {
-          tinst.CopyQ(TimeData::TM1, TimeData::TM2);
-        }
-        if (tinst.ExistsQ(TimeData::TM0))
-        {
-          tinst.CopyQ(TimeData::TM0, TimeData::TM1);
-        }
-
-        tinst.SetQ(TimeData::TM0, newQ);
-
-
-        ////// Current
-        if (tinst.ExistsI(TimeData::TM1))
-        {
-          tinst.CopyI(TimeData::TM1, TimeData::TM2);
-        }
-        if (tinst.ExistsI(TimeData::TM0))
-        {
-          tinst.CopyI(TimeData::TM0, TimeData::TM1);
-        }
-
-        ////// Update Current
-        rhs.clear();
-        rhs.resize(numeqns);
-
-        if (timeinfo.a0 != 0.0)
-        {
-          tinst.AssembleQ(TimeData::TM0, timeinfo.a0, rhs);
-        }
-        if (timeinfo.a1 != 0.0)
-        {
-          tinst.AssembleQ(TimeData::TM1, timeinfo.a1, rhs);
-        }
-        if (timeinfo.a2 != 0.0)
-        {
-          tinst.AssembleQ(TimeData::TM2, timeinfo.a2, rhs);
-        }
-
-        if (timeinfo.b1 != 0.0)
-        {
-          tinst.AssembleI(TimeData::TM1, timeinfo.b1, rhs);
-        }
-        if (timeinfo.b2 != 0.0)
-        {
-          tinst.AssembleI(TimeData::TM2, timeinfo.b2, rhs);
-        }
-
-        tinst.SetI(TimeData::TM0, rhs);
-      }
+      UpdateTransientCurrent(timeinfo, numeqns, newQ, rhs);
     }
+
   }
 
   return converged;
 }
 
-/// Need to be able to solve circuits, even if device doesn't exist
+void Newton::PrintNumberEquations(size_t numeqns)
+{
+  std::ostringstream os; 
+  os << "number of equations " << numeqns << "\n";
+  OutputStream::WriteOut(OutputStream::INFO, os.str());
+}
+
+void Newton::PrintIteration(size_t iter)
+{
+  std::ostringstream os; 
+  os << "Iteration: " << iter << "\n";
+  OutputStream::WriteOut(OutputStream::INFO, os.str());
+}
+
+void Newton::PrintCircuitErrors()
+{
+  NodeKeeper &nk = NodeKeeper::instance();
+  const double cirrerr = nk.GetRelError("dcop");
+  const double ciraerr = nk.GetAbsError("dcop");
+  std::ostringstream os;
+  os << "  Circuit: "
+      << std::scientific << std::setprecision(5) <<
+               "\tRelError: " << cirrerr <<
+               "\tAbsError: " << ciraerr << "\n";
+  OutputStream::WriteOut(OutputStream::INFO, os.str());
+}
+
+void Newton::PrintDeviceErrors(const Device &device)
+{
+  const std::string &name = device.GetName();
+  const double devrerr = device.GetRelError();
+  const double devaerr = device.GetAbsError();
+
+  std::ostringstream os;
+
+  os << "  Device: \"" << name << "\""
+      << std::scientific << std::setprecision(5) <<
+               "\tRelError: " << devrerr <<
+               "\tAbsError: " << devaerr << "\n";
+
+  const Device::RegionList_t regions = device.GetRegionList();
+  for (Device::RegionList_t::const_iterator rit = regions.begin(); rit != regions.end(); ++rit)
+  {
+    const Region &region = *(rit->second);
+
+    if (region.GetNumberEquations() == 0)
+    {
+      continue;
+    }
+
+    os << "    Region: \"" << region.GetName() << "\""
+        << std::scientific << std::setprecision(5) <<
+                 "\tRelError: " << region.GetRelError() <<
+                 "\tAbsError: " << region.GetAbsError() << "\n";
+
+    const EquationPtrMap_t &equations = region.GetEquationPtrList();
+    for (EquationPtrMap_t::const_iterator eit = equations.begin(); eit != equations.end(); ++eit)
+    {
+      const Equation &equation = *(eit->second);
+      os << "      Equation: \"" << equation.GetName() << "\""
+          << std::scientific << std::setprecision(5) <<
+                   "\tRelError: " << equation.GetRelError() <<
+                   "\tAbsError: " << equation.GetAbsError() << "\n";
+    }
+  }
+  OutputStream::WriteOut(OutputStream::INFO, os.str());
+}
+
+void Newton::InitializeTransientAssemble(const TimeMethods::TimeParams &timeinfo, size_t numeqns, std::vector<double> &rhs_constant)
+{
+  TimeData &tinst = TimeData::GetInstance();
+  if (timeinfo.a1 != 0.0)
+  {
+    tinst.AssembleQ(TimeData::TM0, timeinfo.a1, rhs_constant);
+  }
+  if (timeinfo.a2 != 0.0)
+  {
+    tinst.AssembleQ(TimeData::TM1, timeinfo.a2, rhs_constant);
+  }
+
+  if (timeinfo.b1 != 0.0)
+  {
+    tinst.AssembleI(TimeData::TM0, timeinfo.b1, rhs_constant);
+  }
+  if (timeinfo.b2 != 0.0)
+  {
+    tinst.AssembleI(TimeData::TM1, timeinfo.b2, rhs_constant);
+  }
+}
+
+bool Newton::CheckTransientProjection(const TimeMethods::TimeParams &timeinfo, const std::vector<double> &newQ)
+{
+  const size_t numeqns = newQ.size();
+  bool converged = true;
+  /// need to make sure projection makes sense
+  std::vector<double> projectQ(numeqns);
+  
+  TimeData &tinst = TimeData::GetInstance();
+
+  tinst.AssembleI(TimeData::TM0, timeinfo.tdelta, projectQ);
+  tinst.AssembleQ(TimeData::TM0, 1.0,    projectQ);
+
+  double qrel = 0.0;
+  for (size_t i = 0; i < numeqns; ++i)
+  {
+    const double qproj = projectQ[i];
+    const double qnew  = newQ[i];
+    if (qnew != 0.0)
+    {
+      const double qr = fabs(qnew - qproj)/(1.0e-20 + fabs(qnew) + fabs(qproj));
+      if (qr > qrel)
+      {
+        qrel = qr;
+      }
+    }
+  }
+  std::ostringstream os;
+  os << "Charge Relative Error " << std::scientific << std::setprecision(5) << qrel << "\n";
+  OutputStream::WriteOut(OutputStream::INFO, os.str());
+  if (qrel > qrelLimit)
+  {
+    converged = false;
+  }
+  return converged;
+}
+
+void Newton::UpdateTransientCurrent(const TimeMethods::TimeParams &timeinfo, size_t numeqns, const std::vector<double> &newQ, std::vector<double> &newI)
+{
+  newI.clear();
+  newI.resize(numeqns);
+  TimeData &tinst = TimeData::GetInstance();
+  if (timeinfo.IsDCMethod())
+  {
+    //// There is no displacement current for a dc solution
+    tinst.SetI(TimeData::TM0, newI);
+    tinst.SetQ(TimeData::TM0, newQ);
+
+    tinst.ClearI(TimeData::TM1);
+    tinst.ClearI(TimeData::TM2);
+    tinst.ClearQ(TimeData::TM1);
+    tinst.ClearQ(TimeData::TM2);
+  }
+  else
+  {
+    ////// Charge
+
+    if (tinst.ExistsQ(TimeData::TM1))
+    {
+      tinst.CopyQ(TimeData::TM1, TimeData::TM2);
+    }
+    if (tinst.ExistsQ(TimeData::TM0))
+    {
+      tinst.CopyQ(TimeData::TM0, TimeData::TM1);
+    }
+
+    tinst.SetQ(TimeData::TM0, newQ);
+
+
+    ////// Current
+    if (tinst.ExistsI(TimeData::TM1))
+    {
+      tinst.CopyI(TimeData::TM1, TimeData::TM2);
+    }
+    if (tinst.ExistsI(TimeData::TM0))
+    {
+      tinst.CopyI(TimeData::TM0, TimeData::TM1);
+    }
+
+    ////// Update Current
+    newI.clear();
+    newI.resize(numeqns);
+
+    if (timeinfo.a0 != 0.0)
+    {
+      tinst.AssembleQ(TimeData::TM0, timeinfo.a0, newI);
+    }
+    if (timeinfo.a1 != 0.0)
+    {
+      tinst.AssembleQ(TimeData::TM1, timeinfo.a1, newI);
+    }
+    if (timeinfo.a2 != 0.0)
+    {
+      tinst.AssembleQ(TimeData::TM2, timeinfo.a2, newI);
+    }
+
+    if (timeinfo.b1 != 0.0)
+    {
+      tinst.AssembleI(TimeData::TM1, timeinfo.b1, newI);
+    }
+    if (timeinfo.b2 != 0.0)
+    {
+      tinst.AssembleI(TimeData::TM2, timeinfo.b2, newI);
+    }
+
+    tinst.SetI(TimeData::TM0, newI);
+  }
+}
+
 bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
 {
   NodeKeeper &nk = NodeKeeper::instance();
@@ -878,13 +921,9 @@ bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
     }
   } while (0);
 
-  //// TODO: have some kind of accuracy check for iterative solvers
   return converged;
 }
 
-/// Need to be able to solve circuits, even if device doesn't exist
-//TODO: This is a blatant ripoff of the ACSolve.  Should refactor common code.
-//TODO: Another possiblity is to create class that handles the element assembly.
 bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod, double frequency)
 {
 

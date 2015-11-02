@@ -152,7 +152,7 @@ class Newton {
         {
             qrelLimit = x;
         }
-        void SetMaxIter(int x)
+        void SetMaxIter(size_t x)
         {
             maxiter = x;
         }
@@ -166,6 +166,15 @@ class Newton {
         template <typename T>
         void LoadIntoRHSPermutated(const RHSEntryVec &, std::vector<T> &, const permvec_t &, T scl = 1.0, size_t offset = 0);
     private:
+
+        void InitializeTransientAssemble(const TimeMethods::TimeParams &, size_t, std::vector<double> &);
+        bool CheckTransientProjection(const TimeMethods::TimeParams &, const std::vector<double> &);
+        void UpdateTransientCurrent(const TimeMethods::TimeParams &, size_t, const std::vector<double> &, std::vector<double> &);
+
+        void PrintDeviceErrors(const Device &device);
+        void PrintCircuitErrors();
+        void PrintNumberEquations(size_t);
+        void PrintIteration(size_t);
 
         size_t NumberEquationsAndSetDimension();
 
@@ -194,7 +203,7 @@ class Newton {
 
         Newton(const Newton &);
 
-        int    maxiter; /// The maximum number of iterations
+        size_t maxiter; /// The maximum number of iterations
         double absLimit;  /// The calculated abs error (maybe come on per device or per region basis)
         double relLimit;  /// The calculated rel error
         double qrelLimit;
