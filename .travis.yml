@@ -1,3 +1,16 @@
 
 language: cpp
 
+before_install:
+  - sudo apt-get install tcl8.5 tcl8.5-dev tcl-dev python2.7 python2.7-dev libblas3gf liblapack3gf
+  - (cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
+  - (cd external && curl -L -O http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4-2.tar.gz && tar xzf cgnslib_3.1.4-2.tar.gz)
+
+install:
+  - (cd external && mkdir -p cgnslib_3.1.4/build && cd cgnslib_3.1.4/build && cmake -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
+  - (cd external/SuperLU_4.3 && sh ../superlu_ubuntu_12.04.sh)
+  - (cd external/symdiff && bash scripts/setup_ubuntu_12.04.sh && cd linux_x86_64_release && make -j2)
+
+script:
+  - bash ./scripts/setup_ubuntu_travisci.sh
+  - (cd linux_x86_64_release && make -j2)
