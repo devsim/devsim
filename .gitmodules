@@ -1,3 +1,3 @@
 [submodule "external/symdiff"]
 	path = external/symdiff
-	url = git://github.com/devsim/symdiff.git
+	url = ../symdiff.git
