@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/devsim/devsim.svg?branch=master)](https://travis-ci.org/devsim/devsim)
+
 ### Introduction:
 **DEVSIM** - TCAD Device Simulator
 
