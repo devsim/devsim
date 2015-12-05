@@ -22,7 +22,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <cassert>
 #include <cstdio>
-#if WIN32
+#if _WIN32
 #include <Windows.h>
 #else
 #include <errno.h>
@@ -31,7 +31,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 mymutex::mymutex() : mutex(NULL)
 {
-#if WIN32
+#if _WIN32
     mutex = new CRITICAL_SECTION;
 	InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION *>(mutex));
 #else
@@ -48,7 +48,7 @@ mymutex::mymutex() : mutex(NULL)
 
 mymutex::~mymutex()
 {
-#if WIN32
+#if _WIN32
 	DeleteCriticalSection(reinterpret_cast<CRITICAL_SECTION *>(mutex));
 	delete reinterpret_cast<CRITICAL_SECTION *>(mutex);
 #else
@@ -65,7 +65,7 @@ mymutex::~mymutex()
 
 void mymutex::lock()
 {
-#if WIN32
+#if _WIN32
     EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION *>(mutex));
 #else
     // lock it
@@ -80,7 +80,7 @@ void mymutex::lock()
 
 void mymutex::unlock()
 {
-#if WIN32
+#if _WIN32
   LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION *>(mutex));
 #else
   // lock it

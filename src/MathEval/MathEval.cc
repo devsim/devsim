@@ -36,7 +36,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "MathPacket.hh"
 
 #if 0
-#ifdef WIN32
+#ifdef _WIN32
 #include "boost/math/special_functions/erf.hpp"
 #endif
 #endif
@@ -83,7 +83,7 @@ namespace Eqomfp {
   {"asinh",     asinh,        "asinh(obj)   -- inverse hyperbolic sine function"},
   {"atanh",     atanh,        "atanh(obj)   -- inverse hyperbolic tangent function"},
 #if 0
-#ifdef WIN32
+#ifdef _WIN32
   {"erf",       boost::math::erf,          "erf(obj)   -- error function"},
   {"erfc",      boost::math::erfc,          "erf(obj)   -- complementary error function"},
 #endif

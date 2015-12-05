@@ -19,7 +19,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "dsTimer.hh"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <time.h>
 #include <Windows.h>
 #else
@@ -27,7 +27,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include <sstream>
 
-#ifdef WIN32
+#ifdef _WIN32
 dsTimer::dsTimer(const std::string &msg, OutputStream::OutputType outtype) : msg_(msg), output_type_(outtype), tic_(new FILETIME)
 {
   //// Timer is initialized to now in its constructor

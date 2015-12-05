@@ -21,7 +21,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "mymutex.hh"
 #include <cassert>
 #include <cstdio>
-#ifdef WIN32
+#ifdef _WIN32
 #include "Windows.h"
 #else
 #include <errno.h>
@@ -31,7 +31,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 // TODO: "Ensure processes acquire python lock when necessary."
 mycondition::mycondition() : cond(NULL)
 {
-#if WIN32
+#if _WIN32
 	cond = new CONDITION_VARIABLE;
 	InitializeConditionVariable (reinterpret_cast<CONDITION_VARIABLE *>(cond));
 #else
@@ -47,7 +47,7 @@ mycondition::mycondition() : cond(NULL)
 
 mycondition::~mycondition()
 {
-#if WIN32
+#if _WIN32
 	///// the API doesn't specify
 #else
     pthread_cond_t *p = reinterpret_cast<pthread_cond_t *>(cond);
@@ -79,7 +79,7 @@ void mycondition::signal()
 
 void mycondition::broadcast()
 {
-#if WIN32
+#if _WIN32
     WakeAllConditionVariable(reinterpret_cast<CONDITION_VARIABLE *>(cond));
 #else
     int ret = pthread_cond_broadcast(reinterpret_cast<pthread_cond_t *>(cond));
@@ -94,7 +94,7 @@ void mycondition::broadcast()
 
 void mycondition::wait(mymutex &mutex)
 {
-#if WIN32
+#if _WIN32
   SleepConditionVariableCS(reinterpret_cast<CONDITION_VARIABLE *>(cond), reinterpret_cast<CRITICAL_SECTION *>(mutex.mutex), INFINITE);
 #else
   pthread_cond_wait(reinterpret_cast<pthread_cond_t *>(cond), reinterpret_cast<pthread_mutex_t *>(mutex.mutex));

@@ -21,7 +21,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include "mymutex.hh"
 #include "mycondition.hh"
 #include <cstdio>
-#if WIN32
+#if _WIN32
 #include <Windows.h>
 struct ThreadStuff{
   HANDLE hhandle;
@@ -35,7 +35,7 @@ struct ThreadStuff{
 /**
  * the typename is the type of the input data
  */
-#if WIN32
+#if _WIN32
 //unsigned (__stdcall threadFactory)(ClientData x)
 DWORD WINAPI threadFactory(LPVOID x)
 #else
@@ -45,7 +45,7 @@ void *(threadFactory)(void *x)
     threadBaseClass *y = (reinterpret_cast<threadBaseClass *>(x));
     y->run();
 
-#if WIN32
+#if _WIN32
 	return 0;
 #else
     pthread_exit(0);
@@ -54,13 +54,13 @@ void *(threadFactory)(void *x)
 
 #if 0
 
-#ifdef __WIN32__
+#ifdef _WIN32
 unsigned (__stdcall testfoo)(ClientData x)
 #else
 void (testfoo)(ClientData x)
 #endif
 {
-#ifdef __WIN32__
+#ifdef _WIN32
 	return 0;
 #endif
 }
@@ -72,7 +72,7 @@ threadBaseClass::~threadBaseClass()
 
 size_t threadBaseClass::getThreadId()
 {
-#if WIN32
+#if _WIN32
     ThreadStuff *p = reinterpret_cast<ThreadStuff *>(id);
 	return p->id;
 #else
@@ -83,7 +83,7 @@ size_t threadBaseClass::getThreadId()
 void threadBaseClass::start()
 {
 //#warning "fix all these up so they check errors
-#if WIN32
+#if _WIN32
 	ThreadStuff *p = new ThreadStuff;
 	id = p;
 	p->hhandle = CreateThread( 
@@ -104,7 +104,7 @@ void threadBaseClass::start()
 
 void threadBaseClass::join()
 {
-#if WIN32
+#if _WIN32
   ThreadStuff *p = reinterpret_cast<ThreadStuff *>(id);
   WaitForSingleObject(p->hhandle, INFINITE);
 #else

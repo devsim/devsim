@@ -30,7 +30,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #define yylval mclval
 #define YY_NO_UNPUT
 // For isatty
-#ifdef WIN32
+#ifdef _WIN32
 #include <io.h>
 #define YY_NO_UNISTD_H
 #else

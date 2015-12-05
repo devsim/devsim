@@ -27,7 +27,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 class NodeKeeper;
 
 // need to fix for window platform
-#ifdef __WIN32__
+#ifdef _WIN32
 #include <windows.h>
 #else
 #include <dlfcn.h>
@@ -82,7 +82,7 @@ void loadModel(const std::string &model, const std::string &file) {
     std::string mname = model + "_create";
     std::cout << "Loading: " << model << " " << file << "\n";
 
-#ifdef __WIN32__
+#ifdef _WIN32
     HINSTANCE__ *handle = LoadLibrary(file.c_str());
 #else
     void *handle = dlopen(file.c_str(), RTLD_LAZY);
@@ -94,13 +94,13 @@ void loadModel(const std::string &model, const std::string &file) {
     } else {
         std::cout << file << " not loaded successfully\n";
         std::cout << msg << "\n";
-#ifndef __WIN32__
+#ifndef _WIN32
         dlclose(handle);
 #endif
         return;
     }
 
-#ifndef __WIN32__
+#ifndef _WIN32
     void *fp = dlsym(handle, mname.c_str());
     msg = dlerror();
     if (msg == NULL) {
@@ -128,7 +128,7 @@ void loadModel(const std::string &model, const std::string &file) {
 
 void unloadModels() {
     for (size_t i=0; i < closeList.size(); ++i)
-#ifndef __WIN32__
+#ifndef _WIN32
         dlclose(closeList[i]);
 #else
 #endif

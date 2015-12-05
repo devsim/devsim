@@ -4,7 +4,7 @@
 #include "DevsimParser.hh"
 #include <sstream>
 #define YY_NO_UNPUT
-#ifdef WIN32
+#ifdef _WIN32
 #include <io.h>
 #define YY_NO_UNISTD_H
 #endif

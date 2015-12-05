@@ -70,8 +70,11 @@ void PrintAssemblyRoutine(ofstream &, assembletype_t);
 int main(int argc, char *argv[]) {
 
 // fix incorrect Microsoft Visual C++ formatting
-#if WIN32
+// https://connect.microsoft.com/VisualStudio/feedback/details/1368280
+#if 0
+#if _WIN32
     _set_output_format(_TWO_DIGIT_EXPONENT);
+#endif
 #endif
 
 //   YY_BUFFER_STATE yyb = NULL;

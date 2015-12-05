@@ -27,7 +27,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * the typename is the type of the input data
  */
-#ifdef __WIN32__
+#ifdef _WIN32
 unsigned (__stdcall threadFactory)(ClientData x)
 #else
 void (threadFactory)(ClientData x)
@@ -36,18 +36,18 @@ void (threadFactory)(ClientData x)
     threadBaseClass *y = (static_cast<threadBaseClass *>(x));
     y->run();
     Tcl_ExitThread(0);
-#ifdef __WIN32__
+#ifdef _WIN32
 	return 0;
 #endif
 }
 
-#ifdef __WIN32__
+#ifdef _WIN32
 unsigned (__stdcall testfoo)(ClientData x)
 #else
 void (testfoo)(ClientData x)
 #endif
 {
-#ifdef __WIN32__
+#ifdef _WIN32
 	return 0;
 #endif
 }
