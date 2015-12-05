@@ -23,7 +23,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 #include <fpu_control.h>
 #include <fenv.h>
 #endif
-#ifdef WIN32
+#ifdef _WIN32
 #include <Float.h>
 #endif
 #ifdef __APPLE__
@@ -34,7 +34,7 @@ along with DEVSIM.  If not, see <http://www.gnu.org/licenses/>.
 
 FPECheck::FPEFlag_t FPECheck::fpe_raised_ = 0;
 
-#ifndef WIN32
+#ifndef _WIN32
 void fpehandle(int)
 {
   assert(0);
@@ -45,7 +45,7 @@ void FPECheck::InitializeFPE()
 {
     /// Prevent the signal handler from trapping the exception and aborting
     /// This has no effect unless there is an feenableexcept
-#ifndef WIN32
+#ifndef _WIN32
     signal(SIGFPE, fpehandle);
     ////// THIS IS TO CAUSE THE FPE TO TRIGGER A SIGNAL
 #if 0
@@ -79,7 +79,7 @@ void FPECheck::InitializeFPE()
 
 void FPECheck::ClearFPE()
 {
-#ifdef WIN32
+#ifdef _WIN32
     _clearfp();
 #else
     feclearexcept(FE_ALL_EXCEPT);
@@ -89,7 +89,7 @@ void FPECheck::ClearFPE()
 
 FPECheck::FPEFlag_t FPECheck::getFPEMask()
 {
-#ifdef WIN32
+#ifdef _WIN32
   return (EM_INVALID | EM_ZERODIVIDE | EM_OVERFLOW);
 #else
   return (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
@@ -98,7 +98,7 @@ FPECheck::FPEFlag_t FPECheck::getFPEMask()
 
 FPECheck::FPEFlag_t FPECheck::getFPEFlags()
 {
-#ifdef WIN32
+#ifdef _WIN32
   return (_statusfp() & getFPEMask()) | fpe_raised_;
 #else
   return fetestexcept(getFPEMask()) | fpe_raised_;
@@ -117,7 +117,7 @@ bool FPECheck::CheckFPE(FPECheck::FPEFlag_t x)
 
 bool FPECheck::IsInvalid(FPECheck::FPEFlag_t x)
 {
-#ifdef WIN32
+#ifdef _WIN32
   return (x & EM_INVALID) != 0;
 #else
   return (x & FE_INVALID) != 0;
@@ -126,7 +126,7 @@ bool FPECheck::IsInvalid(FPECheck::FPEFlag_t x)
 
 bool FPECheck::IsDivByZero(FPECheck::FPEFlag_t x)
 {
-#ifdef WIN32
+#ifdef _WIN32
   return (x & EM_ZERODIVIDE) != 0;
 #else
   return (x & FE_DIVBYZERO) != 0;
@@ -135,7 +135,7 @@ bool FPECheck::IsDivByZero(FPECheck::FPEFlag_t x)
 
 bool FPECheck::IsInexact(FPECheck::FPEFlag_t x)
 {
-#ifdef WIN32
+#ifdef _WIN32
   return (x & EM_INEXACT) != 0;
 #else
   return (x & FE_INEXACT) != 0;
@@ -144,7 +144,7 @@ bool FPECheck::IsInexact(FPECheck::FPEFlag_t x)
 
 bool FPECheck::IsOverflow(FPECheck::FPEFlag_t x)
 {
-#ifdef WIN32
+#ifdef _WIN32
   return (x & EM_OVERFLOW) != 0;
 #else
   return (x & FE_OVERFLOW) != 0;
@@ -153,7 +153,7 @@ bool FPECheck::IsOverflow(FPECheck::FPEFlag_t x)
 
 bool FPECheck::IsUnderflow(FPECheck::FPEFlag_t x)
 {
-#ifdef WIN32
+#ifdef _WIN32
   return (x & EM_UNDERFLOW) != 0;
 #else
   return (x & FE_UNDERFLOW) != 0;

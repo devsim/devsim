@@ -77,7 +77,7 @@ bool DenseMatrix<T>::Solve(std::vector<T> &B)
   {
     if (type_ == REAL)
     {
-#ifdef WIN32
+#ifdef _WIN32
       dgetrs(&trans, &dim_, &nrhs, reinterpret_cast<double *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<double *>(&B[0]), &dim_, &info_, 1);
 #else
       dgetrs(&trans, &dim_, &nrhs, reinterpret_cast<double *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<double *>(&B[0]), &dim_, &info_);
@@ -85,7 +85,7 @@ bool DenseMatrix<T>::Solve(std::vector<T> &B)
     }
     else if (type_ == COMPLEX)
     {
-#ifdef WIN32
+#ifdef _WIN32
       zgetrs(&trans, &dim_, &nrhs, reinterpret_cast<doublecomplex *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<doublecomplex *>(&B[0]), &dim_, &info_, 1);
 #else
       zgetrs(&trans, &dim_, &nrhs, reinterpret_cast<doublecomplex *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<doublecomplex *>(&B[0]), &dim_, &info_);

@@ -67,7 +67,7 @@ void zrotg(std::complex<double> *, std::complex<double> *, std::complex<double> 
 #endif
 
 /// More specific for ACML on linux
-#ifdef WIN32
+#ifdef _WIN32
 extern "C"
 {
 //// Using the ACML convention
