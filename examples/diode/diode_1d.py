@@ -14,6 +14,7 @@
 
 from ds import *
 from python_packages.simple_physics import *
+import diode_common
 #####
 # dio1
 #
@@ -23,86 +24,30 @@ from python_packages.simple_physics import *
 # in dio2 add recombination
 #
 
-####
-#### Meshing
-####
-def createMesh(device, region):
-  create_1d_mesh(mesh="dio")
-  add_1d_mesh_line(mesh="dio", pos=0, ps=1e-7, tag="top")
-  add_1d_mesh_line(mesh="dio", pos=0.5e-5, ps=1e-9, tag="mid")
-  add_1d_mesh_line(mesh="dio", pos=1e-5, ps=1e-7, tag="bot")
-  add_1d_contact  (mesh="dio", name="top", tag="top", material="metal")
-  add_1d_contact  (mesh="dio", name="bot", tag="bot", material="metal")
-  add_1d_region   (mesh="dio", material="Si", region=region, tag1="top", tag2="bot")
-  finalize_mesh(mesh="dio")
-  create_device(mesh="dio", device=device)
-
 device="MyDevice"
 region="MyRegion"
 
-createMesh(device, region)
+diode_common.CreateMesh(device=device, region=region)
 
-####
-#### Set parameters for 300 K
-####
-SetSiliconParameters(device, region, 300)
+diode_common.SetParameters(device=device, region=region)
 set_parameter(device=device, region=region, name="taun", value=1e-8)
 set_parameter(device=device, region=region, name="taup", value=1e-8)
 
-####
-#### NetDoping
-####
-CreateNodeModel(device, region, "Acceptors", "1.0e18*step(0.5e-5-x)")
-CreateNodeModel(device, region, "Donors",    "1.0e18*step(x-0.5e-5)")
-CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
+diode_common.SetNetDoping(device=device, region=region)
+
 print_node_values(device=device, region=region, name="NetDoping")
 
-####
-#### Create Potential, Potential@n0, Potential@n1
-####
-CreateSolution(device, region, "Potential")
+diode_common.InitialSolution(device, region)
 
-####
-#### Create potential only physical models
-####
-CreateSiliconPotentialOnly(device, region)
-
-####
-#### Set up the contacts applying a bias
-####
-for i in get_contact_list(device=device):
-  set_parameter(device=device, name=GetContactBiasName(i), value=0.0)
-  CreateSiliconPotentialOnlyContact(device, region, i)
-
-
-####
-#### Initial DC solution
-####
+# Initial DC solution
 solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 
-####
-#### drift diffusion solution variables
-####
-CreateSolution(device, region, "Electrons")
-CreateSolution(device, region, "Holes")
-
-####
-#### create initial guess from dc only solution
-####
-set_node_values(device=device, region=region, name="Electrons", init_from="IntrinsicElectrons")
-set_node_values(device=device, region=region, name="Holes",     init_from="IntrinsicHoles")
-
-###
-### Set up equations
-###
-CreateSiliconDriftDiffusion(device, region)
-for i in get_contact_list(device=device):
-  CreateSiliconDriftDiffusionAtContact(device, region, i)
-
+diode_common.DriftDiffusionInitialSolution(device, region)
 ###
 ### Drift diffusion simulation at equilibrium
 ###
 solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
+
 
 ####
 #### Ramp the bias to 0.5 Volts
@@ -116,6 +61,7 @@ while v < 0.51:
   v += 0.1
 
 write_devices(file="diode_1d.dat", type="tecplot")
+
 #import matplotlib
 #import matplotlib.pyplot
 #x=get_node_model_values(device=device, region=region, name="x")

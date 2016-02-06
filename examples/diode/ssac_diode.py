@@ -15,87 +15,31 @@
 #### Small Signal simulation
 from ds import *
 from python_packages.simple_physics import *
+import diode_common
 
 #This requires a circuit element to integrated current
 circuit_element(name="V1", n1=GetContactBiasName("top"), n2=0, value=0.0, acreal=1.0, acimag=0.0)
 
 
-#####
-# dio1
-#
-# Make doping a step function
-# print dat to text file for viewing in grace
-# verify currents analytically
-# in dio2 add recombination
-#
-
-####
-#### Meshing
-####
-def createMesh(device, region):
-  create_1d_mesh(mesh="dio")
-  add_1d_mesh_line(mesh="dio", pos=0, ps=1e-7, tag="top")
-  add_1d_mesh_line(mesh="dio", pos=0.5e-5, ps=1e-8, tag="mid")
-  add_1d_mesh_line(mesh="dio", pos=1e-5, ps=1e-7, tag="bot")
-  add_1d_contact(mesh="dio", name="top", tag="top", material="metal")
-  add_1d_contact(mesh="dio", name="bot", tag="bot", material="metal")
-  add_1d_region(mesh="dio", material="Si", region=region, tag1="top", tag2="bot")
-  finalize_mesh(mesh="dio")
-  create_device(mesh="dio", device=device)
 
 
 
 device="MyDevice"
 region="MyRegion"
 
-createMesh(device, region)
+diode_common.CreateMesh2(device, region)
 
-SetSiliconParameters(device, region, 300)
+diode_common.SetParameters(device=device, region=region)
 
-CreateSolution(device, region, "Potential")
+diode_common.SetNetDoping(device=device, region=region)
 
-####
-#### NetDoping
-####
-node_model(device=device, region=region, name="Acceptors", equation="1.0e18*step(0.5e-5-x)")
-node_model(device=device, region=region, name="Donors", equation="1.0e18*step(x-0.5e-5)")
-node_model(device=device, region=region, name="NetDoping", equation="Donors-Acceptors")
-#print_node_values device=device, region=region, name="NetDoping",
+diode_common.InitialSolution(device, region, circuit_contacts="top")
 
-CreateSiliconPotentialOnly(device, region)
-
-
-CreateSiliconPotentialOnlyContact(device, region, "top", True)
-CreateSiliconPotentialOnlyContact(device, region, "bot")
-
-set_parameter(device=device, name=GetContactBiasName("bot"), value=0)
-
-
-####
-#### Initial DC solution
-####
+# Initial DC solution
 solve(type="dc", absolute_error=1.0, relative_error=1e-12, maximum_iterations=30)
 
-#print_node_values device=device, region=region, name="Potential",
-#write_devices file="dio2_potentialonly",.flps type="floops",
 
-#### need way to clear out old models and their derivatives
-
-####
-#### drift diffusion
-####
-CreateSolution(device, region, "Electrons")
-CreateSolution(device, region, "Holes")
-
-####
-#### create initial guess from dc only solution
-####
-set_node_values(device=device, region=region, name="Electrons", init_from="IntrinsicElectrons")
-set_node_values(device=device, region=region, name="Holes",     init_from="IntrinsicHoles")
-
-CreateSiliconDriftDiffusion(device, region)
-CreateSiliconDriftDiffusionAtContact(device, region, "top", True)
-CreateSiliconDriftDiffusionAtContact(device, region, "bot", False)
+diode_common.DriftDiffusionInitialSolution(device, region, circuit_contacts=["top"])
 
 v=0.0
 while v < 0.51: 
