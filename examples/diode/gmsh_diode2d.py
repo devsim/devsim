@@ -14,25 +14,17 @@
 
 from ds import *
 from python_packages.simple_physics import *
+import diode_common
 
 device="diode2d"
 region="Bulk"
 
-#this reads in the gmsh format
-create_gmsh_mesh (mesh="diode2d", file="gmsh_diode2d.msh")
-add_gmsh_region  (mesh="diode2d", gmsh_name="Bulk",    region="Bulk", material="Silicon")
-add_gmsh_contact (mesh="diode2d", gmsh_name="Base",    region="Bulk", material="metal", name="top")
-add_gmsh_contact (mesh="diode2d", gmsh_name="Emitter", region="Bulk", material="metal", name="bot")
-finalize_mesh    (mesh="diode2d")
-create_device    (mesh="diode2d", device=device)
+diode_common.Create2DGmshMesh(device, region)
 
 # this is is the devsim format
 write_devices    (file="gmsh_diode2d_out.msh")
 
-###
-### Set physical parameters
-###
-SetSiliconParameters(device, region, 300)
+diode_common.SetParameters(device=device, region=region)
 
 ####
 #### NetDoping
@@ -41,34 +33,18 @@ node_model(device=device, region=region, name="Acceptors", equation="1.0e18*step
 node_model(device=device, region=region, name="Donors"   , equation="1.0e18*step(y-0.5e-5);")
 node_model(device=device, region=region, name="NetDoping", equation="Donors-Acceptors;")
 
-CreateSiliconPotentialOnly(device, region)
-for i in get_contact_list(device=device):
-  set_parameter(device=device, name=GetContactBiasName(i), value=0.0)
-  CreateSiliconPotentialOnlyContact(device, region, i)
+diode_common.InitialSolution(device, region)
 
 
 ####
 #### Initial DC solution
 ####
-
 solve(type="dc", absolute_error=1.0, relative_error=1e-12, maximum_iterations=30)
 
-####
-#### drift diffusion
-####
-CreateSolution(device, region, "Electrons")
-CreateSolution(device, region, "Holes")
-
-####
-#### create initial guess from dc only solution
-####
-set_node_values(device=device, region=region, name="Electrons", init_from="IntrinsicElectrons")
-set_node_values(device=device, region=region, name="Holes",     init_from="IntrinsicHoles")
-
-CreateSiliconDriftDiffusion(device, region)
-for i in get_contact_list(device=device):
-  CreateSiliconDriftDiffusionAtContact(device, region, i)
-
+###
+### Drift diffusion simulation at equilibrium
+###
+diode_common.DriftDiffusionInitialSolution(device, region)
 
 solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=50)
 
