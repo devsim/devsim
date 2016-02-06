@@ -3,8 +3,8 @@
 ### Introduction:
 **DEVSIM** - TCAD Device Simulator
 
-**DEVSIM** is a tool for TCAD Device Simulation, using finite volume methods.  The source code is provided by Devsim LLC ([http://www.devsim.com](http://www.devsim.com)).
-It is licensed under the [LGPL Version 3.0](http://www.gnu.org/copyleft/lesser.html), meaning you can link against it with your own software.  Example scripts are provided under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).
+**DEVSIM** is a tool for TCAD Device Simulation, using finite volume methods.  The source code is provided by Devsim LLC.
+It is licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).  Example scripts are also provided under this license.  Other files are subject to the license terms of their copyright owners.
 
 ### Supported Platforms:
 * Mac OS X 10.10 (Yosemite)
