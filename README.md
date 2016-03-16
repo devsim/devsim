@@ -17,7 +17,7 @@ It is licensed under the [Apache 2.0 License](http://www.apache.org/licenses/L
 Binary releases are currently available from [GitHub](https://github.com/devsim/devsim/releases/latest).
 
 ### Software Features:
-* [Documentation](https://github.com/devsim/devsim/blob/master/doc/devsim.pdf?raw=true)
+* [Documentation](http://www.devsim.org/manual/)
 * Python and Tcl scripting 
 * DC, small-signal AC, impedance field method, transient
 * User specified partial differential equations (PDE).
