@@ -31,7 +31,7 @@ cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
-for i in INSTALL NOTICE LICENSE COPYING RELEASE macos.txt; do
+for i in INSTALL NOTICE LICENSE RELEASE macos.txt; do
 cp ../$i ${DIST_DIR}
 done
 

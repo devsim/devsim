@@ -33,7 +33,7 @@ skip_tags: true
 #---------------------------------#
 
 # Operating system (build VM template)
-os: Visual Studio 2015
+#os: Visual Studio 2015
 
 # scripts that are called at very beginning, before repo cloning
 init:
@@ -112,7 +112,8 @@ install:
   - appveyor DownloadFile http://downloads.activestate.com/ActiveTcl/releases/8.5.18.0/ActiveTcl8.5.18.0.298892-win32-x86_64-threaded.exe
   - ActiveTcl8.5.18.0.298892-win32-x86_64-threaded.exe --directory C:\Tcl
   # install flex
-  - C:\cygwin\setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P unzip -P wget
+  - C:\cygwin\setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P unzip -P wget -P zip
+  #- C:\cygwin\setup-x86.exe -nNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P 
   # move back to the external directory
   - cd %APPVEYOR_BUILD_FOLDER%\external
   - c:\cygwin\bin\wget -nv https://github.com/devsim/devsim_win32_deps/releases/download/1.2/devsim_win32_deps.zip
@@ -184,6 +185,8 @@ before_package:
 
 # scripts to run after build
 after_build:
+  - cd %APPVEYOR_BUILD_FOLDER%\dist
+  - c:\cygwin\bin\bash.exe package_appveyor.sh devsim
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
@@ -236,10 +239,11 @@ test_script:
 #      artifacts configuration    #
 #---------------------------------#
 
-#artifacts:
-#
-#  # pushing a single file
-#  - path: test.zip
+artifacts:
+
+  # pushing a single file
+  - path: devsim_win64.zip
+
 #
 #  # pushing a single file with environment variable in path and "Deployment name" specified
 #  - path: MyProject\bin\$(configuration)
@@ -255,6 +259,18 @@ test_script:
 #---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
+
+deploy:
+  # Deploy to GitHub Releases
+  - provider: GitHub
+    auth_token:
+      secure: YjqdXPen8Vm3K1WSpxE3Zkhb0x++KkddsDQFnweky1wL2R64G8tel9IkMmxrvvML # your encrypted token from GitHub
+    artifact: devsim_win64.zip
+    draft: true
+    prerelease: false
+    on:
+      branch: master                # release from master branch only
+      appveyor_repo_tag: false      # deploy on tag push only
 
 # providers: Local, FTP, WebDeploy, AzureCS, AzureBlob, S3, NuGet, Environment
 # provider names are case-sensitive!

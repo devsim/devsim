@@ -6,32 +6,35 @@ if ! [ $1 ]; then
 fi
 
 
-for ARCH in `uname -m`; do
-PLATFORM=linux
-SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
+for ARCH in win64; do
+PLATFORM=windows
+SRC_DIR=../${ARCH}/src/main/Release
 #DIST_DIR=devsim_${PLATFORM}_${ARCH}
 DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
 DIST_DATE=`date +%Y%m%d`
 DIST_VER=${DIST_DIR}_${DIST_DATE}
+MT_EXE="/cygdrive/c/Program Files (x86)/Windows Kits/8.1/bin/x64/mt.exe"
 
 # make the bin directory and copy binary in
-# we need the wrapper script for libstdc++
-#cp devsim.sh ${DIST_DIR}/bin/devsim
-#chmod +x ${DIST_DIR}/bin/devsim
 mkdir -p ${DIST_BIN}
-cp ${SRC_DIR}/devsim_py ${DIST_DIR}/bin/devsim
-cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl
-# strip unneeded symbols
-#strip --strip-unneeded ${DIST_DIR}/bin/$i
-#done
-# keep a copy of unstripped binary
-#cp ${SRC_BIN} ${DIST_VER}_unstripped
+cp ${SRC_DIR}/devsim_py.exe ${DIST_BIN}/devsim.exe
+cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl.exe
+##### update the manifest
+(cd ${DIST_BIN} &&
+"${MT_EXE}" -inputresource:"c:\\Miniconda-x64\\python.exe;#1" -out:devsim.exe.manifest &&
+"${MT_EXE}" -manifest devsim.exe.manifest -outputresource:"devsim.exe;#1"
+)
+
+
+
+
+
 
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
-for i in INSTALL NOTICE LICENSE RELEASE linux.txt scripts/anaconda_vars.sh scripts/anaconda_vars.csh; do
+for i in INSTALL NOTICE LICENSE RELEASE windows.txt; do
 cp ../$i ${DIST_DIR}
 done
 
@@ -40,7 +43,7 @@ done
 for i in python_packages examples testing
 do
 (cd ../$i; git clean -f -d -x )
-rsync -aP --delete ../$i ${DIST_DIR}
+cp -R ../$i ${DIST_DIR}
 done
 
 
@@ -48,11 +51,16 @@ done
 COMMIT=`git rev-parse --verify HEAD`
 cat <<EOF > ${DIST_DIR}/VERSION
 Package released as:
-${DIST_VER}.tgz
+${DIST_VER}.zip
 
 Source available from:
 http://www.github.com/devsim/devsim 
 commit ${COMMIT}
 EOF
-tar czf ${DIST_VER}.tgz ${DIST_DIR}
+
+
+
+/usr/bin/zip -r devsim_win64.zip ${DIST_DIR}
+mv devsim_win64.zip ..
 done
+
