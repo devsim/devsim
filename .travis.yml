@@ -1,16 +1,45 @@
 
 language: cpp
 
+os:
+  - linux
+  - osx
+
+branches:
+  only:
+    - master
+
 before_install:
-  - sudo apt-get install tcl8.5 tcl8.5-dev tcl-dev python2.7 python2.7-dev libblas3gf liblapack3gf
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+    sudo apt-get install tcl8.5 tcl8.5-dev tcl-dev python2.7 python2.7-dev libblas3gf liblapack3gf;
+    fi
   - (cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
   - (cd external && curl -L -O http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4-2.tar.gz && tar xzf cgnslib_3.1.4-2.tar.gz)
 
 install:
   - (cd external && mkdir -p cgnslib_3.1.4/build && cd cgnslib_3.1.4/build && cmake -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
-  - (cd external/SuperLU_4.3 && sh ../superlu_ubuntu_12.04.sh)
-  - (cd external/symdiff && bash scripts/setup_ubuntu_12.04.sh && cd linux_x86_64_release && make -j2)
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+    (cd external/SuperLU_4.3 && sh ../superlu_ubuntu_12.04.sh);
+    (cd external/symdiff && bash scripts/setup_ubuntu_12.04.sh && cd linux_x86_64_release && make -j2);
+    fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    (cd external/SuperLU_4.3 && sh ../superlu_osx_10.10.sh);
+    (cd external/symdiff && bash scripts/setup_osx_10.10.sh && cd osx_release && make -j2);
+    fi
+
 
 script:
-  - bash ./scripts/setup_ubuntu_travisci.sh
-  - (cd linux_x86_64_release && make -j2)
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+    bash ./scripts/setup_ubuntu_travisci.sh;
+    (cd linux_x86_64_release && make -j2);
+    fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    bash ./scripts/setup_osx_10.10.sh;
+    (cd osx_x86_64_release && make -j2);
+    fi
+
+#matrix:
+#  include:
+#    - os: osx
+#      osx_image: xcode7.2
+
