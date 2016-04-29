@@ -37,7 +37,7 @@ cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl.exe
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
-for i in INSTALL NOTICE LICENSE COPYING RELEASE windows.txt; do
+for i in INSTALL NOTICE LICENSE RELEASE windows.txt; do
 cp ../$i ${DIST_DIR}
 done
 
@@ -46,7 +46,7 @@ done
 for i in python_packages examples testing
 do
 (cd ../$i; git clean -f -d -x )
-rsync -aP --delete ../$i ${DIST_DIR}
+cp -R ../$i ${DIST_DIR}
 done
 
 
@@ -63,5 +63,5 @@ EOF
 
 
 
-zip -r ${DIST_VER}.zip ${DIST_DIR}
+/usr/bin/zip -r ${DIST_VER}.zip ${DIST_DIR}
 done
