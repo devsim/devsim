@@ -151,7 +151,7 @@ ModelExprData &ModelExprData::operator=(const ModelExprData &x)
 }
 
 /// need to make full copy
-ModelExprData::ModelExprData(const ModelExprData &x) : nodeScalarData(x.nodeScalarData), edgeScalarData(x.edgeScalarData), triangleEdgeScalarData(x.triangleEdgeScalarData), val(x.val), type(x.type), reg(x.reg)
+ModelExprData::ModelExprData(const ModelExprData &x) : nodeScalarData(x.nodeScalarData), edgeScalarData(x.edgeScalarData), triangleEdgeScalarData(x.triangleEdgeScalarData), tetrahedronEdgeScalarData(x.tetrahedronEdgeScalarData), val(x.val), type(x.type), reg(x.reg)
 {
 }
 
