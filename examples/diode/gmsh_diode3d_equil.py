@@ -12,25 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# this test added specifically to create a mesh for gmsh_diode3d_equil.py
+
 from ds import *
 from python_packages.simple_physics import *
 import diode_common
 
-device="diode2d"
+device="diode3d"
 region="Bulk"
 
-diode_common.Create2DGmshMesh(device, region)
+
+diode_common.Create3DGmshMesh(device, region)
 
 # this is is the devsim format
-write_devices    (file="gmsh_diode2d_out.msh")
+write_devices (file="gmsh_diode3d_out.msh")
 
 diode_common.SetParameters(device=device, region=region)
 
 ####
 #### NetDoping
 ####
-node_model(device=device, region=region, name="Acceptors", equation="1.0e18*step(0.5e-5-y);")
-node_model(device=device, region=region, name="Donors"   , equation="1.0e18*step(y-0.5e-5);")
+node_model(device=device, region=region, name="Acceptors", equation="1.0e18*step(0.5e-5-z);")
+node_model(device=device, region=region, name="Donors",    equation="1.0e18*step(z-0.5e-5);")
 node_model(device=device, region=region, name="NetDoping", equation="Donors-Acceptors;")
 
 diode_common.InitialSolution(device, region)
@@ -41,21 +44,9 @@ diode_common.InitialSolution(device, region)
 ####
 solve(type="dc", absolute_error=1.0, relative_error=1e-12, maximum_iterations=30)
 
-###
-### Drift diffusion simulation at equilibrium
-###
-diode_common.DriftDiffusionInitialSolution(device, region)
+#element_from_edge_model(edge_model="ElectricField",   device=device, region=region)
+#element_from_edge_model(edge_model="ElectricField",   device=device, region=region, derivative="Potential")
 
-solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=50)
+write_devices(file="gmsh_diode3d_equil.msh", type="devsim")
 
-v = 0.0
-while v < 0.51:
-  set_parameter(device=device, name=GetContactBiasName("top"), value=v)
-  solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
-  PrintCurrents(device, "top")
-  PrintCurrents(device, "bot")
-  v += 0.1
-
-write_devices(file="gmsh_diode2d.dat", type="tecplot")
-write_devices(file="gmsh_diode2d_dd.msh", type="devsim")
 
