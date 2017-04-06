@@ -175,8 +175,6 @@ std::vector<Vector> TetrahedronElementField::GetTetrahedronElementField(const Te
 
 }
 
-// TODO:"REVIEW CODE"
-// TODO:"TEST CODE"
 std::vector<Vector> TetrahedronElementField::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const std::vector<double> &edgedata) const
 {
   std::vector<Vector> ret(6);
@@ -233,13 +231,13 @@ std::vector<Vector> TetrahedronElementField::GetTetrahedronElementField(const Te
 //// return matrix is based as 2nd index as edge (0-5), 1st index as derivative w.r.t. node (0-3)
 //// where 2 the first triangle node off edge and 3 is the 2nd triangle node off edge
 //return as [nodeindex][edgeindex]
-// TODO:"REVIEW CODE"
-// TODO:"TEST CODE"
 std::vector<std::vector<Vector> > TetrahedronElementField::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const EdgeModel &em0, const EdgeModel &em1) const
 {
+  // sized for the 4 derivative nodes
   std::vector<std::vector<Vector> > ret(4);
   for (size_t i = 0; i < 4; ++i)
   {
+    // has 6 edges
     ret[i].resize(6);
   }
 
@@ -275,10 +273,11 @@ std::vector<std::vector<Vector> > TetrahedronElementField::GetTetrahedronElement
     {
       const ConstNodePtr node_j_ptr = nodeList[j];
 
+      // for each of the 3 edges on the node
       for (size_t k = 0; k < 3; ++k)
       {
-        ConstEdgePtr edge_ptr = edgeDataList[k]->edge;
-
+        const size_t eindex    = dense_mats_[tetrahedronIndex].edgeIndexes[i][k];
+        ConstEdgePtr edge_ptr  = edgeDataList[eindex]->edge;
         const size_t edgeIndex = edge_ptr->GetIndex();
 
         ConstNodePtr nh = edge_ptr->GetHead();
@@ -310,6 +309,7 @@ std::vector<std::vector<Vector> > TetrahedronElementField::GetTetrahedronElement
     /// for each of the derivatives
     for (size_t j = 0; j < 4; ++j)
     {
+      // the node ordering on the tetrahedron, not the element edge
       const ConstNodePtr dnode = nodeList[j];
 
       const Vector &val = 0.5 * nodeVectors[i][j];
@@ -319,7 +319,8 @@ std::vector<std::vector<Vector> > TetrahedronElementField::GetTetrahedronElement
       {
         const size_t eindex = dense_mats_[tetrahedronIndex].edgeIndexes[i][k];
 
-        ConstEdgePtr edge_ptr = edgeDataList[k]->edge;
+        const EdgeData &edata  = *edgeDataList[eindex];
+        ConstEdgePtr edge_ptr = edata.edge;
 
 //        const size_t edgeIndex = edge_ptr->GetIndex();
 
@@ -335,35 +336,13 @@ std::vector<std::vector<Vector> > TetrahedronElementField::GetTetrahedronElement
         {
           ret[1][eindex] += val;
         }
-        else
+        else if (edata.nodeopp[0] == dnode)
         {
-          ///// We are the nodes not on this edge
-          ConstNodePtr triangle_nodes[2] = {NULL, NULL};
-          for (size_t l = 0; l < 2; ++l)
-          {
-            //// TODO:
-            //// Triangle to edge list makes guarantees that node index opposite to triangle edge index is not on edge
-            //// For now we will do this hacky test
-            const Triangle &triangle = *(edgeDataList[k]->triangle[l]);
-            const ConstNodeList &nList = triangle.GetNodeList();
-            for (size_t m = 0; m < 3; ++m)
-            {
-              const ConstNodePtr ntmp = nList[m];
-              if (!((ntmp == nh) || (ntmp == nt)))
-              {
-                triangle_nodes[l] = ntmp;
-                break;
-              }  
-            }
-          }
-          if (triangle_nodes[0] == dnode)
-          {
-            ret[2][eindex] += val;
-          }
-          else if (triangle_nodes[1] == dnode)
-          {
-            ret[3][eindex] += val;
-          }
+          ret[2][eindex] += val;
+        }
+        else if (edata.nodeopp[1] == dnode)
+        {
+          ret[3][eindex] += val;
         }
       }
     }
