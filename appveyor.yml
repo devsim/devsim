@@ -15,13 +15,13 @@ version: 1.{build}-win64
 # version: 1.0.{build}-{branch}
 
 # branches to build
-branches:
-  # whitelist
-  only:
-    - master
+#branches:
+# whitelist
+#only:
+#  - master
 
 # Do not build on tags (GitHub only)
-skip_tags: true
+#skip_tags: true
 
 # Skipping commits with particular message or from user
 #skip_commits:
@@ -34,9 +34,15 @@ skip_tags: true
 
 # Operating system (build VM template)
 #os: Visual Studio 2015
+#Attempt to bypass compiler bug
+#http://stackoverflow.com/questions/39301545/strange-issue-with-abscomplex-in-visual-studio-c-2015-update-3
+#image: Visual Studio 2017
+os: Visual Studio 2017
+#image: Previous Visual Studio 2013
 
 # scripts that are called at very beginning, before repo cloning
 init:
+  #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - git config --global core.autocrlf input
 
 # clone directory
@@ -111,12 +117,14 @@ install:
   # install ActiveState Tcl
   - appveyor DownloadFile http://downloads.activestate.com/ActiveTcl/releases/8.5.18.0/ActiveTcl8.5.18.0.298892-win32-x86_64-threaded.exe
   - ActiveTcl8.5.18.0.298892-win32-x86_64-threaded.exe --directory C:\Tcl
-  # install flex
-  - C:\cygwin\setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P unzip -P wget -P zip
+  # install cygwin
+  - appveyor DownloadFile https://cygwin.com/setup-x86.exe
+  - setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P bison -P perl -P unzip -P wget -P zip
+  #- C:\cygwin\setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P unzip -P wget -P zip
   #- C:\cygwin\setup-x86.exe -nNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P 
   # move back to the external directory
   - cd %APPVEYOR_BUILD_FOLDER%\external
-  - c:\cygwin\bin\wget -nv https://github.com/devsim/devsim_win32_deps/releases/download/1.2/devsim_win32_deps.zip
+  - c:\cygwin\bin\wget --no-check-certificate -nv https://github.com/devsim/devsim_win32_deps/releases/download/1.2/devsim_win32_deps.zip
   - c:\cygwin\bin\unzip -q devsim_win32_deps.zip
   # compile symdiff
   - cd %APPVEYOR_BUILD_FOLDER%
@@ -186,7 +194,10 @@ before_package:
 # scripts to run after build
 after_build:
   - cd %APPVEYOR_BUILD_FOLDER%\dist
-  - c:\cygwin\bin\bash.exe package_appveyor.sh devsim
+  - c:\cygwin\bin\bash.exe package_appveyor.sh devsim_win64
+
+#before_deploy:
+#- c:\cygwin\bin\bash.exe package_appveyor.sh devsim_win64_%APPVEYOR_REPO_TAG_NAME%
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
@@ -240,7 +251,6 @@ test_script:
 #---------------------------------#
 
 artifacts:
-
   # pushing a single file
   - path: devsim_win64.zip
 
@@ -266,11 +276,12 @@ deploy:
     auth_token:
       secure: YjqdXPen8Vm3K1WSpxE3Zkhb0x++KkddsDQFnweky1wL2R64G8tel9IkMmxrvvML # your encrypted token from GitHub
     artifact: devsim_win64.zip
-    draft: true
+    draft: false
     prerelease: false
+    force_update: true
     on:
-      branch: master                # release from master branch only
-      appveyor_repo_tag: false      # deploy on tag push only
+      appveyor_repo_tag: true      # deploy on tag push only
+      #branch: master                # release from master branch only
 
 # providers: Local, FTP, WebDeploy, AzureCS, AzureBlob, S3, NuGet, Environment
 # provider names are case-sensitive!

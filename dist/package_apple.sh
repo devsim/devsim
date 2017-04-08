@@ -10,10 +10,11 @@ for ARCH in x86_64; do
 PLATFORM=osx
 SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
 #DIST_DIR=devsim_${PLATFORM}_${ARCH}
-DIST_DIR=$1_${ARCH}
+DIST_DIR=$1
+#DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
-DIST_DATE=`date +%Y%m%d`
-DIST_VER=${DIST_DIR}_${DIST_DATE}
+#DIST_DATE=`date +%Y%m%d`
+DIST_VER=${DIST_DIR}
 
 
 # make the bin directory and copy binary in
@@ -31,7 +32,7 @@ cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
-for i in INSTALL NOTICE LICENSE RELEASE macos.txt; do
+for i in INSTALL NOTICE LICENSE RELEASE macos.txt scripts/anaconda_vars.sh scripts/anaconda_vars.csh; do
 cp ../$i ${DIST_DIR}
 done
 
@@ -56,3 +57,4 @@ commit ${COMMIT}
 EOF
 tar czf ${DIST_VER}.tgz ${DIST_DIR}
 done
+

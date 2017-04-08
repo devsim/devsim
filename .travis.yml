@@ -5,9 +5,9 @@ os:
   - linux
   - osx
 
-branches:
-  only:
-    - master
+#branches:
+#  only:
+#    - master
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
@@ -38,8 +38,23 @@ script:
     (cd osx_x86_64_release && make -j2);
     fi
 
-#matrix:
-#  include:
-#    - os: osx
-#      osx_image: xcode7.2
+before_deploy:
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+    (cd dist && bash package_linux.sh devsim_linux_${TRAVIS_TAG});
+    fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    (cd dist && bash package_apple.sh devsim_osx_${TRAVIS_TAG});
+    fi
+
+deploy:
+  provider: releases
+  api_key:
+    secure: F2Cxh/mYSqsmCTsggWqD2frhUW5x94D2bl61zj2JHYyTUSU0KXyzFp8aQAaGzfyaoBlc9G5JlveozrwPFnJQK9Yh+IW5wj8yiDXA0s2hv/vhlmVQZ/PqOZBXDeHmmptnfZtRuMAFrZD/zm9BUwNi6/2czRFxn5JYKjb45SavV4Q=
+  file_glob: true
+  file: "dist/devsim*.tgz"
+  skip_cleanup: true
+  on:
+    repo: devsim/devsim
+    tags: true
+
 
