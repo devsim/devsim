@@ -31,42 +31,6 @@ SET (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /SAFESEH:NO")
 # windows build
 
 IF (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
-# 32 bit
-SET (THIRDPARTY ${CMAKE_SOURCE_DIR}/../devsim_win32_deps)
-SET(MKL_DIR
-"C:/Program Files (x86)/IntelSWTools/compilers_and_libraries_2016/windows/mkl/lib/ia32_win"
-)
-SET(INTEL_MKL_LINK
-${MKL_DIR}/mkl_intel_lp64.lib
-${MKL_DIR}/mkl_core.lib
-${MKL_DIR}/mkl_sequential.lib
-)
-SET (BLAS_ARCHIVE
-${INTEL_MKL_LINK}
-)
-#SET (BLAS_ARCHIVE 
-#${THIRDPARTY}/CLAPACK64/lib/lapack.lib
-#${THIRDPARTY}/CLAPACK64/lib/blas.lib
-#${THIRDPARTY}/CLAPACK64/lib/libf2c.lib
-#)
-
-SET (CGNS_ARCHIVE ${THIRDPARTY}/cgnslib/lib/cgns.lib)
-SET (CGNS_INCLUDE ${THIRDPARTY}/cgnslib/include)
-SET (PYTHON_ARCHIVE C:/Anaconda/libs/python27.lib)
-SET (PYTHON_INCLUDE C:/Anaconda/include)
-SET (SQLITE3_ARCHIVE "${THIRDPARTY}/sqlite-amalgamation-3080600/sqlite3.lib")
-SET (SQLITE3_INCLUDE "${THIRDPARTY}/sqlite-amalgamation-3080600")
-SET (SUPERLULOCATE  ${THIRDPARTY}/SuperLU_4.3)
-SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/build/Release/superlu.lib)
-SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
-SET (SYMDIFF_INCLUDE ${THIRDPARTY}/symdiff/include)
-SET (SYMDIFF_ARCHIVE ${THIRDPARTY}/symdiff/win32/src/engine/Release/symdiff_static.lib)
-SET (TCL_ARCHIVE "c:/Tcl/lib/tcl85.lib")
-SET (TCL_INCLUDE "c:/Tcl/include")
-SET (TCL_STUB    "c:/Tcl/lib/tclstub85.lib")
-SET (ZLIB_ARCHIVE "${THIRDPARTY}/zlib/lib/zlibstatic.lib")
-SET (ZLIB_INCLUDE "${THIRDPARTY}/zlib/include")
-
 ELSE (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
 # 64 bit
 SET (THIRDPARTY ${CMAKE_SOURCE_DIR}/external/devsim_win32_deps)

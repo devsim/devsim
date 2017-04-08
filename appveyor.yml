@@ -278,7 +278,6 @@ deploy:
     artifact: devsim_win64.zip
     draft: false
     prerelease: true
-    draft: false
     force_update: true
     on:
       appveyor_repo_tag: true      # deploy on tag push only
