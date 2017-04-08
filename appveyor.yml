@@ -277,7 +277,8 @@ deploy:
       secure: YjqdXPen8Vm3K1WSpxE3Zkhb0x++KkddsDQFnweky1wL2R64G8tel9IkMmxrvvML # your encrypted token from GitHub
     artifact: devsim_win64.zip
     draft: false
-    prerelease: false
+    prerelease: true
+    draft: false
     force_update: true
     on:
       appveyor_repo_tag: true      # deploy on tag push only

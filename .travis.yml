@@ -53,6 +53,8 @@ deploy:
   file_glob: true
   file: "dist/devsim*.tgz"
   skip_cleanup: true
+  prerelease: true
+  draft:      false
   on:
     repo: devsim/devsim
     tags: true
