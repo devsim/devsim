@@ -10,10 +10,11 @@ for ARCH in win64; do
 PLATFORM=windows
 SRC_DIR=../${ARCH}/src/main/Release
 #DIST_DIR=devsim_${PLATFORM}_${ARCH}
-DIST_DIR=$1_${ARCH}
+DIST_DIR=$1
+#DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
-DIST_DATE=`date +%Y%m%d`
-DIST_VER=${DIST_DIR}_${DIST_DATE}
+#DIST_DATE=`date +%Y%m%d`
+DIST_VER=${DIST_DIR}
 MT_EXE="/cygdrive/c/Program Files (x86)/Windows Kits/8.1/bin/x64/mt.exe"
 
 # make the bin directory and copy binary in
@@ -60,7 +61,7 @@ EOF
 
 
 
-/usr/bin/zip -r devsim_win64.zip ${DIST_DIR}
-mv devsim_win64.zip ..
+/usr/bin/zip -r ${DIST_DIR}.zip ${DIST_DIR}
+mv ${DIST_DIR}.zip ..
 done
 

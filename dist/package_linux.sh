@@ -1,4 +1,4 @@
-#!/bin/bash
+RC
 set -e
 if ! [ $1 ]; then
   echo "must specify dir name"
@@ -10,10 +10,11 @@ for ARCH in `uname -m`; do
 PLATFORM=linux
 SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
 #DIST_DIR=devsim_${PLATFORM}_${ARCH}
-DIST_DIR=$1_${ARCH}
+DIST_DIR=$1
+#DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
-DIST_DATE=`date +%Y%m%d`
-DIST_VER=${DIST_DIR}_${DIST_DATE}
+#DIST_DATE=`date +%Y%m%d`
+DIST_VER=${DIST_DIR}
 
 # make the bin directory and copy binary in
 # we need the wrapper script for libstdc++
@@ -56,3 +57,4 @@ commit ${COMMIT}
 EOF
 tar czf ${DIST_VER}.tgz ${DIST_DIR}
 done
+
