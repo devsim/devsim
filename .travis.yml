@@ -1,9 +1,9 @@
 
 language: cpp
 
-os:
-  - linux
-  - osx
+#os:
+#  - linux
+#  - osx
 
 matrix:
   include:
