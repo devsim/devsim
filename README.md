@@ -10,12 +10,11 @@ It is licensed under the [Apache 2.0 License](http://www.apache.org/licenses/L
 ### Supported Platforms:
 * Mac OS X 10.10 (Yosemite)
 * Microsoft Windows
-* Red Hat 5 (Centos Compatible)
 * Red Hat 6 (Centos Compatible)
 * Ubuntu 12.04 (LTS)
 * Ubuntu 14.04 (LTS)
 
-Binary releases are currently available from [GitHub](https://github.com/devsim/devsim/releases/latest).
+Binary releases are currently available from [GitHub](https://github.com/devsim/devsim/releases).
 
 ### Software Features:
 * [Documentation](http://www.devsim.org/manual/)
