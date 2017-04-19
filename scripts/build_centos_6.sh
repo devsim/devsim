@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
+# put the tag name in first argument used for distribution
+# this script assumes git clone and submodule initialization has been done
 
 # Centos Specific
 #https://fedoraproject.org/wiki/EPEL
-#pkill yum
-yum install -y epel-release
-yum install -y git cmake gcc gcc-c++ bison flex
+yum install -y epel-release git cmake gcc gcc-c++ bison flex
 #yum install -y git cmake gcc gcc-c++ gnu-fortran bison flex wget
 
 
@@ -23,11 +23,11 @@ ${HOME}/anaconda/bin/conda install -y numpy mkl
 
 cd /root
 # add max depth or copy over
-git clone https://github.com/devsim/devsim
+#git clone https://github.com/devsim/devsim
 #git clone git@github.com:devsim/devsim
 cd devsim
-git submodule init
-git submodule update
+#git submodule init
+#git submodule update
 
 # SuperLU and CGNS Download
 (cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
@@ -42,6 +42,6 @@ git submodule update
 
 bash scripts/setup_centos_6.sh
 (cd linux_x86_64_release && make -j2)
-(cd dist && bash package_linux.sh devsim_linux)
+(cd dist && bash package_linux.sh ${1})
 
 
