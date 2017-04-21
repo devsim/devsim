@@ -46,9 +46,10 @@ SET (THIRDPARTY ${CMAKE_SOURCE_DIR}/external/devsim_win32_deps)
 #${INTEL_MKL_LINK}
 #)
 SET (BLAS_ARCHIVE 
-${THIRDPARTY}/CLAPACK64/lib/lapack.lib
-${THIRDPARTY}/CLAPACK64/lib/blas.lib
-${THIRDPARTY}/CLAPACK64/lib/libf2c.lib
+#${THIRDPARTY}/CLAPACK64/lib/lapack.lib
+#${THIRDPARTY}/CLAPACK64/lib/blas.lib
+#${THIRDPARTY}/CLAPACK64/lib/libf2c.lib
+c:/Miniconda-x64/Library/lib/mkl_rt.lib
 )
 
 SET (CGNS_ARCHIVE ${THIRDPARTY}/cgnslib64/lib/cgns.lib)
