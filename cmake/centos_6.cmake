@@ -30,7 +30,7 @@ SET (MKLROOT
 SET (BLAS_ARCHIVE
 #http://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
 #requires duplicate library for 1-pass linker
- $ENV{HOME}/anaconda/lib -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl
+ $ENV{HOME}/anaconda/lib -Wl,--no-as-needed -lmkl_rt -lpthread -lm -ldl
 )
 SET (ZLIB_ARCHIVE $ENV{HOME}/anaconda/lib/libz.a)
 SET (SQLITE3_ARCHIVE $ENV{HOME}/anaconda/lib/libsqlite3.a)
