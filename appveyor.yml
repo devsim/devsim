@@ -196,7 +196,7 @@ before_package:
 # scripts to run after build
 after_build:
   - cd %APPVEYOR_BUILD_FOLDER%\dist
-  - c:\cygwin\bin\bash.exe package_appveyor.sh devsim_win64
+  - c:\cygwin\bin\bash.exe package_appveyor.sh devsim_win64_%APPVEYOR_REPO_TAG_NAME%
 
 #before_deploy:
 #- c:\cygwin\bin\bash.exe package_appveyor.sh devsim_win64_%APPVEYOR_REPO_TAG_NAME%
@@ -254,7 +254,7 @@ test_script:
 
 artifacts:
   # pushing a single file
-  - path: devsim_win64.zip
+  - path: devsim_win64_%APPVEYOR_REPO_TAG_NAME%.zip
 
 #
 #  # pushing a single file with environment variable in path and "Deployment name" specified
@@ -277,8 +277,8 @@ deploy:
   - provider: GitHub
     auth_token:
       secure: YjqdXPen8Vm3K1WSpxE3Zkhb0x++KkddsDQFnweky1wL2R64G8tel9IkMmxrvvML # your encrypted token from GitHub
-    artifact: devsim_win64.zip
-    draft: false
+    artifact: devsim_win64_%APPVEYOR_REPO_TAG_NAME%.zip
+    draft: true
     prerelease: true
     force_update: true
     on:
