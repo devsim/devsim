@@ -76,7 +76,7 @@ deploy:
   file: "dist/devsim*.tgz"
   skip_cleanup: true
   prerelease: true
-  draft:      true
+  draft:      false
   on:
     repo: devsim/devsim
     tags: true
