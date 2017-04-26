@@ -253,8 +253,7 @@ test_script:
 #---------------------------------#
 
 artifacts:
-  # pushing a single file
-  - path: devsim_win64_%APPVEYOR_REPO_TAG_NAME%.zip
+  - path: dist\*.zip
 
 #
 #  # pushing a single file with environment variable in path and "Deployment name" specified
@@ -277,7 +276,7 @@ deploy:
   - provider: GitHub
     auth_token:
       secure: YjqdXPen8Vm3K1WSpxE3Zkhb0x++KkddsDQFnweky1wL2R64G8tel9IkMmxrvvML # your encrypted token from GitHub
-    artifact: devsim_win64_%APPVEYOR_REPO_TAG_NAME%.zip
+    artifact: dist\*.zip
     draft: true
     prerelease: true
     force_update: true

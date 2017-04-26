@@ -62,6 +62,5 @@ EOF
 
 
 /usr/bin/zip -r ${DIST_DIR}.zip ${DIST_DIR}
-mv ${DIST_DIR}.zip ..
 done
 
