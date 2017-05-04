@@ -8,13 +8,11 @@ Mac OS X provides all of the necessary dependencies to run DEVSIM.
 If you wish to use
 Anaconda Python 2.7 from http://continuum.io/download
 
-The following may be done to the binary file:
-install_name_tool -change '/System/Library/Frameworks/Python.framework/Versions/2.7/Python' ~/anaconda/lib/libpython2.7.dylib devsim
-
-These commands substitute the Intel MKL math libraries in place of the Mac OS X system versions. 
-install_name_tool -change /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib ~/anaconda/lib/libmkl_rt.dylib devsim
-install_name_tool -change /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib ~/anaconda/lib/libmkl_rt.dylib devsim
-
-
-Then set your environment variable using:
+Environment variables may be set to point to the distribution
 export PYTHONHOME=${HOME}/anaconda
+export DYLD_INSERT_LIBRARIES=${HOME}/anaconda/lib/libpython2.7.dylib
+
+If you wish to use Anaconda and the Intel MKL for the BLAS and LAPACK routines:
+export DYLD_INSERT_LIBRARIES=${HOME}/anaconda/lib/libpython2.7.dylib:${HOME}/anaconda/lib/libmkl_rt.dylib
+
+
