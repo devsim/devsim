@@ -47,7 +47,7 @@ from laux_common import *
 import laux_common
 
 
-load_devices(file="gmsh_diode3d_equil.msh")
+load_devices(file="gmsh_diode3d_dd.msh")
 device = "diode3d"
 region = "Bulk"
 

@@ -62,6 +62,7 @@ element_from_edge_model(edge_model="ElectronCurrent", device=device, region=regi
 element_from_edge_model(edge_model="HoleCurrent",     device=device, region=region)
 
 write_devices(file="gmsh_diode3d_dd.dat", type="tecplot")
+write_devices(file="gmsh_diode3d_dd.msh", type="devsim")
 
 #element_from_node_model(node_model="node_index", device=device, region=region)
 #en0 = map(lambda x : int(x), get_element_model_values(name="node_index@en0", device=device, region=region))
