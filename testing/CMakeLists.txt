@@ -177,10 +177,12 @@ set_tests_properties("${BIOAPP1_DIR}/bioapp1_3d_comp" PROPERTIES DEPENDS "${BIOA
 
 SET (DIODE_DIR  examples/diode)
 SET (DIODE_PATH ${PROJECT_SOURCE_DIR}/${DIODE_DIR})
-SET (DIODE_TESTS diode_1d diode_2d gmsh_diode2d gmsh_diode3d ssac_diode)
+SET (DIODE_TESTS diode_1d diode_2d gmsh_diode2d gmsh_diode3d ssac_diode laux2d laux3d)
 FOREACH(I ${DIODE_TESTS})
     ADD_TEST("${DIODE_DIR}/${I}" ${RUNDIFFTEST} "${DEVSIM_PY} ${I}.py" ${GOLDENDIR}/${DIODE_DIR} ${I}.out ${DIODE_PATH} ${DIODE_PATH})
 ENDFOREACH(I)
+set_tests_properties("${DIODE_DIR}/laux2d" PROPERTIES DEPENDS "${DIODE_DIR}/gmsh_diode2d")
+set_tests_properties("${DIODE_DIR}/laux3d" PROPERTIES DEPENDS "${DIODE_DIR}/gmsh_diode3d")
 
 SET (MOBILITY_DIR  examples/mobility)
 SET (MOBILITY_PATH ${PROJECT_SOURCE_DIR}/${MOBILITY_DIR})
