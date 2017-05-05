@@ -3,11 +3,30 @@ These instructions are for building the software from source.
 Please visit http://www.devsim.org or RELEASE for information about binary availability.
 
 Supported Platforms:
-Ubuntu 12.04 32/64 bit
-Red Hat 6.5 32/64 bit
-Mac OS X 10.10 64 bit
-Windows 7 32/64 bit
-Centos 5.11 64 bit
+Centos, Red Hat 6
+Mac OS X
+Microsoft Windows
+Ubuntu 14, 16
+
+The following scripts encapsulate the installation of dependencies and compilation of the software.
+
+Centos, Redhat 6:
+scripts/build_centos_6.sh
+
+Mac OS X:
+scripts/build_osx.sh
+
+Ubuntu 14:
+scripts/build_ubuntu_14.sh
+
+Ubuntu 16:
+scripts/build_ubuntu_16.sh
+
+The script used for building and packaging Mac OS X and Centos distributions:
+.travis.yml
+
+The script used for building and packaging Microsoft Windows:
+appveyor.yml
 
 Please note that the following options are enabled by default.
 OPTION(GENIUSREADER "Build with Genius Reader" ON)
@@ -16,101 +35,19 @@ OPTION(TCLMAIN      "Build with TCL Interpreter" ON)
 
 By setting these options to OFF in the build directory, (CMakeCache.txt), the number of required dependencies is significantly reduced.
 
-
-For windows build, please skip these instructions and download the dependencies and instructions from:
-https://github.com/devsim/devsim_win32_deps
-
-The Centos 5.11 build uses:
-Anaconda Python 2.7 (http://continuum.io)
-Intel MKL 11.3 (Free with Community License, http://www.intel.com)
-cmake28, ctest28 (From epel repositories on centos)
-
-
 A version of Python 2.7 would then be required on any machine running DEVSIM.
 
-Substitute redhat_6.5 for ubuntu_12.04 for Red Hat 6.5 installations in the instructions below.
-
-If you have any issues with installation, please contact Devsim LLC through the github website:
+If you have any issues with installation, please contact us through the github website:
 https://github.com/devsim/devsim/issues
 
-There are the required dependencies for ubuntu 12.04.
-sudo apt-get install cmake git python2.7-dev g++ gcc gfortran make tcl8.5 tcl8.5-dev tcl-dev tclthread python2.7 python2.7-dev flex bison sqlite3 libsqlite3-dev zlib1g-dev libsqlite3-tcl cgns-convert libcgns-dev libcgns2 python-numpy
-
-Similar dependencies are required for Red Hat 6.5.
-sudo yum install bison cmake flex gcc gcc-c++ gcc-gfortran git make python python-devel python-libs sqlite-devel tcl tcl-devel zlib-devel
-
-Note that tcl-dev package must be specified explicitly so that libtclstub.a is a symlink to tcl8.5-dev. Then SYMDIFF will compile properly.  The "python-numpy" package is required for laux1.py test.
-
-For Mac OS X, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
-https://developer.apple.com/technologies/tools
-https://developer.apple.com/performance/accelerateframework.html
-
-In addition, cmake is needed for Mac OS X.  The package may be downloaded from:
-http://www.cmake.org
 
 Note that the -j2 option for make and ctest is for building and testing in 2 parallel threads.  This number can be changed to run as many simultaneous processes as desired.
 
 Download DEVSIM:
-1. git clone git://github.com/devsim/devsim.git
-2. cd devsim
-3. git submodule init
-4. git submodule update
-
-
-Install ACML for linux 64bit.
-1. acml-5-3-0-gfortran-64bit.tgz from http://developer.amd.com.
-2. mkdir acml
-3. tar xzvf ../acml-5-3-0-gfortran-64bit.tgz 
-4. sudo sh install-acml-5-3-0-gfortran-64bit.sh
-
-Install ACML for linux 32bit.
-1. acml-4-4-0-gfortran-32bit.tgz from http://developer.amd.com.
-2. mkdir acml
-3. tar xzvf ../acml-4-4-0-gfortran-32bit.tgz 
-4. sudo sh install-acml-4-4-0-gfortran-32bit.sh
-
-
-For Mac OS X, make sure that you have XCode installed which has the math libraries.  In the following instructions use setup_osx_10.10.sh instead.
-
-Compile SuperLU 4.3
-
-1. cd external
-2. wget http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz
-3. tar xzvf superlu_4.3.tar.gz
-4. cd SuperLU_4.3
-5. sh ../superlu_ubuntu_12.04.sh
-
-Compile CGNS:
-
-1. cd external
-2. wget http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4-2.tar.gz
-3. tar xzvf cgnslib_3.1.4-2.tar.gz
-4. cd cgnslib_3.1.4
-5. mkdir build
-6. cd build 
-7. cmake -DBUILD_CGNSTOOLS=ON -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib ..
-8. make -j2
-9. make install
-
-Note that BUILD_CGNSTOOLS are optional and may be disabled with BUILD_CGNSTOOLS=OFF.
-
-Compile SYMDIFF
-
-1. cd external/symdiff
-2. sh scripts/setup_ubuntu_12.04.sh
-3. cd linux_x86_64_release
-4. make -j2
-5. ctest -j2
-
-Compile DEVSIM
-1. sh scripts/setup_ubuntu_12.04.sh
-2. cd linux_x86_64_release
-3. make -j2
-4. ctest -j2
-
-There are 2 executables are created:
-linux_x86_64_release/src/main/devsim_tcl is a Tcl interpreter (deprecated)
-linux_x86_64_release/src/main/devsim_py is a Python interpreter
+git clone https://github.com/devsim/devsim.git
+cd devsim
+git submodule init
+git submodule update
 
 If there are issues during the build, try using:
 make VERBOSE=1
@@ -140,5 +77,8 @@ ctest -V
 or more specifically:
 ctest -V -R sqlite1
 
-There are package_linux.sh and package_apple.sh scripts in the dist directories that make a self contained distribution from a build.
+The following scripts can be used to package a DEVSIM distribution:
+dist/package_win32.sh
+dist/package_linux.sh
+dist/package_apple.sh
 
