@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+#For Mac OS X, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
+#https://developer.apple.com/technologies/tools
+#https://developer.apple.com/performance/accelerateframework.html
+#In addition, cmake is needed for Mac OS X.  The package may be downloaded from:
+#http://www.cmake.org
+
 # put the tag name in first argument used for distribution
 # this script assumes git clone and submodule initialization has been done
 

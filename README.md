@@ -11,7 +11,6 @@ It is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/
 * Mac OS X 10.10 (Yosemite)
 * Microsoft Windows
 * Red Hat 6 (Centos Compatible)
-* Ubuntu 12.04 (LTS)
 * Ubuntu 14.04 (LTS)
 
 Binary releases are currently available from [GitHub](https://github.com/devsim/devsim/releases).
