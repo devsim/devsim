@@ -78,11 +78,11 @@ mesh2d dio2_2d mos_2d mos_2d_restart mos_2d_restart2 noise_res noise_res_2d mos_
 gmsh_resistor2d gmsh_resistor3d
 transient_circ transient_circ2 transient_circ3 mos_2d_temtest2
 package_cap1
-sqlite1
+#sqlite1
 rename1
 symdiff1
-thread_1
-fpetest1
+#thread_1
+#fpetest1
 fpetest2
 kahan
 )
