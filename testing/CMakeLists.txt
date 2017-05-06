@@ -82,8 +82,8 @@ package_cap1
 rename1
 symdiff1
 #thread_1
-#fpetest1
-fpetest2
+fpetest1
+#fpetest2
 kahan
 )
 FOREACH(I ${NEWTESTS})
@@ -92,7 +92,7 @@ ENDFOREACH(I)
 
 
 # on redhat 6.4 this test fails on the Tcl platform
-set_tests_properties("testing/fpetest2" PROPERTIES TIMEOUT 5)
+#set_tests_properties("testing/fpetest2" PROPERTIES TIMEOUT 5)
 set_tests_properties("testing/mos_2d_temtest" PROPERTIES DEPENDS testing/mos_2d)
 set_tests_properties("testing/mos_2d_temtest2" PROPERTIES DEPENDS testing/mos_2d)
 set_tests_properties("testing/mos_2d_restart" PROPERTIES DEPENDS testing/mos_2d)
