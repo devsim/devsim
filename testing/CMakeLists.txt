@@ -1,34 +1,3 @@
-INCLUDE_DIRECTORIES (
-    ../Geometry
-    ../models
-    ../Potential
-    ../math
-    ../adiff
-    ../AutoEquation
-    ../GeomModels
-    ../Equation
-    ../tclapi
-    ../Data
-)
-
-# pass linker so order important
-SET (LIBRARIES
-    tclapi
-    potential
-    carrier
-    math
-    AutoEquation
-    adiff
-    GeomModels
-    models
-    geom
-    Data
-    meshing
-    Equation
-    GeomModels
-    geom
-)
-
 IF (WIN32)
 SET (DIFF C:/cygwin/bin/diff.exe)
 SET (DIFF_ARGS --brief -w)
@@ -72,6 +41,18 @@ ELSE (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
 SET (GOLDENDIR ${PROJECT_SOURCE_DIR}/goldenresults/${DEVSIM_CONFIG}_i686)
 ENDIF (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
 ENDIF (APPLE)
+
+IF (DEVSIM_PY_TEST_EXE)
+SET (DEVSIM_PY   ${DEVSIM_PY_TEST_EXE})
+ENDIF (DEVSIM_PY_TEST_EXE)
+
+IF (DEVSIM_TCL_TEST_EXE)
+SET (DEVSIM_TCL  ${DEVSIM_TCL_TEST_EXE})
+ENDIF (DEVSIM_TCL_TEST_EXE)
+
+IF (DEVSIM_TEST_GOLDENDIR)
+SET (GOLDENDIR  ${DEVSIM_TEST_GOLDENDIR})
+ENDIF (DEVSIM_TEST_GOLDENDIR)
 
 ENABLE_TESTING()
 
@@ -147,6 +128,8 @@ set_tests_properties("testing/mos_2d_restart2_comp" PROPERTIES DEPENDS testing/m
 ADD_TEST("testing/gmsh_resistor3d_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/gmsh_resistor3d.dat ${GOLDENDIR}/testing/gmsh_resistor3d.dat)
 set_tests_properties("testing/gmsh_resistor3d_comp" PROPERTIES DEPENDS testing/gmsh_resistor3d)
 
+#### Disable these tests
+IF (0)
 ADD_TEST("testing/mctest1" ${RUNDIFFTEST} "${MODELCOMP} < ${RUNDIR}/mctest.mc" ${GOLDENDIR}/testing mctest.out ${RUNDIR} ${OUTPUTDIR})
 ADD_TEST("testing/mctest2" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/diode.cc ${GOLDENDIR}/testing/diode.cc)
 set_tests_properties("testing/mctest2" PROPERTIES DEPENDS testing/mctest1)
@@ -158,6 +141,7 @@ ADD_TEST("testing/mctest_user2" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mctest_user.cc ${
 set_tests_properties("testing/mctest_user2" PROPERTIES DEPENDS testing/mctest_user1)
 ADD_TEST("testing/mctest_user3" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mctest_user.hh ${GOLDENDIR}/testing/mctest_user.hh)
 set_tests_properties("testing/mctest_user3" PROPERTIES DEPENDS testing/mctest_user1)
+ENDIF (0)
 
 SET (CAPACITANCE_DIR  examples/capacitance)
 SET (CAPACITANCE_PATH ${PROJECT_SOURCE_DIR}/${CAPACITANCE_DIR})
@@ -214,3 +198,5 @@ set_tests_properties("${GENIUS_DIR}/genius_diode2d" PROPERTIES DEPENDS "${GENIUS
 ADD_TEST("testing/laux1" ${RUNDIFFTEST} "${DEVSIM_PY} laux1.py" ${GOLDENDIR}/testing laux1.out ${RUNDIR} ${OUTPUTDIR})
 # this is weird since it is dependent on one of our tcl tests
 set_tests_properties("testing/laux1" PROPERTIES DEPENDS testing/trimesh2)
+
+set_tests_properties("${DIODE_DIR}/laux2d" PROPERTIES ENVIRONMENT "DYLD_INSERT_LIBRARIES=$ENV{DYLD_INSERT_LIBRARIES};PYTHONHOME=$ENV{PYTHONHOME}")
