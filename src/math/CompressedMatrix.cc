@@ -386,9 +386,6 @@ void CompressedMatrix::Finalize()
 
 void CompressedMatrix::ClearMatrix()
 {
-#ifndef NDEBUG
-  dsAssert(!Ax_.empty(), "UNEXPECTED");
-#endif
 //  compressed = false;
   size_t sz = Ax_.size();
   Ax_.clear();
