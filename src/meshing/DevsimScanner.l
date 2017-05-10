@@ -103,7 +103,7 @@ UTF8   {U81}|{U82}|{U83}|{U84}|{U85}
                 return END_NODE;
             }
 
-<REGION_SEC>^begin_edges {
+<REGION_SEC,CONTACT_SEC,INTERFACE_SEC>^begin_edges {
                 yy_push_state(EDGE_SEC);
                 return BEG_EDGE;
             }
@@ -113,7 +113,7 @@ UTF8   {U81}|{U82}|{U83}|{U84}|{U85}
                 return END_EDGE;
             }
 
-<REGION_SEC>^begin_triangles {
+<REGION_SEC,CONTACT_SEC,INTERFACE_SEC>^begin_triangles {
                 yy_push_state(TRIANGLE_SEC);
                 return BEG_TRIANGLE;
             }

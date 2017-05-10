@@ -1278,10 +1278,14 @@ createContactFromInterfaceCmd(CommandHandler &data)
     if (interface->GetRegion0() == region)
     {
       contact = new Contact(contactName, region, interface->GetNodes0(), materialName);
+      contact->AddTriangles(interface->GetTriangles0());
+      contact->AddEdges(interface->GetEdges0());
     }
     else if (interface->GetRegion1() == region)
     {
       contact = new Contact(contactName, region, interface->GetNodes1(), materialName);
+      contact->AddTriangles(interface->GetTriangles1());
+      contact->AddEdges(interface->GetEdges1());
     }
     else
     {

@@ -430,4 +430,20 @@ void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr p)
   interfaceModelExprDataCache = p;
 }
 
+void Interface::AddEdges(const ConstEdgeList &elist0, const ConstEdgeList &elist1)
+{
+  edges0 = elist0;
+  edges1 = elist1;
+  rp0->SignalCallbacks("@@@InterfaceChange");
+  rp1->SignalCallbacks("@@@InterfaceChange");
+}
+
+void Interface::AddTriangles(const ConstTriangleList &tlist0, const ConstTriangleList &tlist1)
+{
+  triangles0 = tlist0;
+  triangles1 = tlist1;
+  rp0->SignalCallbacks("@@@InterfaceChange");
+  rp1->SignalCallbacks("@@@InterfaceChange");
+}
+
 

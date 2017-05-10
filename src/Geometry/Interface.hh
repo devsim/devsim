@@ -127,6 +127,9 @@ class Interface {
 
         void Assemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
+        void AddEdges(const ConstEdgeList_t &, const ConstEdgeList_t &);
+        void AddTriangles(const ConstTriangleList_t &, const ConstTriangleList_t &);
+
         bool operator==(const Interface &oi) const
         {
           return (&oi) == this;

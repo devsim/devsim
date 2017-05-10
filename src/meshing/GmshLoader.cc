@@ -367,10 +367,16 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
   //// Now process the contact
   {
     MeshNodeList_t mesh_nodes;
+    MeshEdgeList_t mesh_edges;
+    MeshTriangleList_t mesh_triangles;
     ConstNodeList cnodes;
+    ConstEdgeList cedges;
+    ConstTriangleList ctriangles;
     for (MapToContactInfo_t::const_iterator cit = contactMap.begin(); cit != contactMap.end(); ++cit)
     {
       mesh_nodes.clear();
+      mesh_edges.clear();
+      mesh_triangles.clear();
       const std::string &contactName = cit->first;
       const GmshContactInfo &cinfo   = cit->second;
 
@@ -391,6 +397,25 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       const std::vector<std::string> &pnames = cinfo.physical_names;
 
       GetUniqueNodesFromPhysicalNames(pnames, mesh_nodes);
+      GetUniqueEdgesFromPhysicalNames(pnames, mesh_edges);
+      GetUniqueTrianglesFromPhysicalNames(pnames, mesh_triangles);
+
+      if (dimension == 2 && !mesh_triangles.empty())
+      {
+        std::ostringstream os; 
+        os << "Contact " << contactName << " region name " << regionName << " must be 2 dimensional to be a contact.\n";
+        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        ret = false;
+
+      }
+      else if (dimension == 1 && !mesh_edges.empty())
+      {
+        // mesh edges get created during mesh finalize
+        std::ostringstream os; 
+        os << "Contact " << contactName << " region name " << regionName << " must be 1 dimensional to be a contact.\n";
+        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        ret = false;
+      }
 
       Region *regionptr = dp->GetRegion(regionName);
       if (!regionptr)
@@ -414,6 +439,8 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       }
 
       cnodes.clear();
+      cedges.clear();
+      ctriangles.clear();
       for (MeshNodeList_t::const_iterator tnit = mesh_nodes.begin(); tnit != mesh_nodes.end(); ++tnit)
       {
         size_t cindex = tnit->Index();
@@ -451,7 +478,36 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
         continue;
       }
 
-      dp->AddContact(new Contact(contactName, regionptr, cnodes, materialName));
+      // All of our contact nodes should exist
+      ConstNodePtr mesh_edge_nodes[2];
+      for (MeshEdgeList_t::const_iterator tnit = mesh_edges.begin(); tnit != mesh_edges.end(); ++tnit)
+      {
+        mesh_edge_nodes[0] = nodeList[tnit->Index0()];
+        mesh_edge_nodes[1] = nodeList[tnit->Index1()];
+        ConstEdgePtr tedge = regionptr->FindEdge(mesh_edge_nodes[0], mesh_edge_nodes[1]);
+        if (tedge)
+        {
+          cedges.push_back(tedge);
+        }
+      }
+
+      ConstNodePtr mesh_triangle_nodes[3];
+      for (MeshTriangleList_t::const_iterator tnit = mesh_triangles.begin(); tnit != mesh_triangles.end(); ++tnit)
+      {
+        mesh_triangle_nodes[0] = nodeList[tnit->Index0()];
+        mesh_triangle_nodes[1] = nodeList[tnit->Index1()];
+        mesh_triangle_nodes[2] = nodeList[tnit->Index2()];
+        ConstTrianglePtr ttriangle = regionptr->FindTriangle(mesh_triangle_nodes[0], mesh_triangle_nodes[1], mesh_triangle_nodes[2]);
+        if (ttriangle)
+        {
+          ctriangles.push_back(ttriangle);
+        }
+      }
+
+      ContactPtr cp = new Contact(contactName, regionptr, cnodes, materialName);
+      dp->AddContact(cp);
+      cp->AddTriangles(ctriangles);
+      cp->AddEdges(cedges);
       std::ostringstream os; 
       os << "Contact " << contactName << " in region " << regionName << " with " << cnodes.size() << " nodes" << "\n";
       OutputStream::WriteOut(OutputStream::INFO, os.str());
@@ -459,12 +515,18 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
   }
 
   {
-    ConstNodeList inodes0;
-    ConstNodeList inodes1;
+    ConstNodeList inodes[2];
+    ConstEdgeList iedges[2];
+    ConstTriangleList itriangles[2];
     MeshNodeList_t mesh_nodes;
+    MeshEdgeList_t mesh_edges;
+    MeshTriangleList_t mesh_triangles;
     for (MapToInterfaceInfo_t::const_iterator iit = interfaceMap.begin(); iit != interfaceMap.end(); ++iit)
     {
       mesh_nodes.clear();
+      mesh_edges.clear();
+      mesh_triangles.clear();
+
       const std::string &interfaceName = iit->first;
       const GmshInterfaceInfo &iinfo   = iit->second;
 
@@ -494,10 +556,13 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       const std::vector<std::string> &pnames = iinfo.physical_names;
 
       GetUniqueNodesFromPhysicalNames(pnames, mesh_nodes);
+      GetUniqueEdgesFromPhysicalNames(pnames, mesh_edges);
+      GetUniqueTrianglesFromPhysicalNames(pnames, mesh_triangles);
 
-      Region *regionptr0 = dp->GetRegion(regionName0);
-      Region *regionptr1 = dp->GetRegion(regionName1);
-      if (!regionptr0)
+      Region *regionptr[2];
+      regionptr[0] = dp->GetRegion(regionName0);
+      regionptr[1] = dp->GetRegion(regionName1);
+      if (!regionptr[0])
       {
         std::ostringstream os; 
         os << "Interface " << interfaceName << " references non-existent region name " << regionName0 << ".\n";
@@ -505,7 +570,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
         ret = false;
         continue;
       }
-      if (!regionptr1)
+      if (!regionptr[1])
       {
         std::ostringstream os; 
         os << "Interface " << interfaceName << " references non-existent region name " << regionName1 << ".\n";
@@ -524,8 +589,30 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
         continue;
       }
 
-      inodes0.clear();
-      inodes1.clear();
+      if (dimension == 2 && !mesh_triangles.empty())
+      {
+        std::ostringstream os; 
+        os << "Interface " << interfaceName << " on regions " << regionName0 << " and " << regionName1 << " must be 2 dimensional to be interface.\n";
+        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        ret = false;
+
+      }
+      else if (dimension == 1 && !mesh_edges.empty())
+      {
+        // mesh edges get created during mesh finalize
+        std::ostringstream os; 
+        os << "Interface " << interfaceName << " on regions " << regionName0 << " and " << regionName1 << " must be 1 dimensional to be interface.\n";
+        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        ret = false;
+      }
+
+      for (size_t i = 0; i < 2; ++i)
+      {
+        inodes[i].clear();
+        iedges[i].clear();
+        itriangles[i].clear();
+      }
+
       for (MeshNodeList_t::const_iterator tnit = mesh_nodes.begin(); tnit != mesh_nodes.end(); ++tnit)
       {
         size_t iindex = tnit->Index();
@@ -539,21 +626,25 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
           continue;
         }
 
-        ConstNodePtr np0 = nodeList0[iindex];
-        ConstNodePtr np1 = nodeList1[iindex];
-        if (np0 && np1)
+        ConstNodePtr np[2];
+        np[0] = nodeList0[iindex];
+        np[1] = nodeList1[iindex];
+
+        if (np[0] && np[1])
         {
-          inodes0.push_back(np0);
-          inodes1.push_back(np1);
+          for(size_t i = 0; i < 2; ++i)
+          {
+            inodes[i].push_back(np[i]);
+          }
         }
         else
         {
           std::ostringstream os; 
-          if (!np0)
+          if (!np[0])
           {
             os << "Interface " << interfaceName << " reference coordinate " << iindex << " not on region " << regionName0 << ".\n";
           }
-          if (!np1)
+          if (!np[1])
           {
             os << "Interface " << interfaceName << " reference coordinate " << iindex << " not on region " << regionName1 << ".\n";
           }
@@ -563,7 +654,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
         }
       }
 
-      if (inodes0.empty())
+      if (inodes[0].empty())
       {
         std::ostringstream os; 
         os << "Interface " << interfaceName << " does not reference any nodes on regions " << regionName0 << " and " << regionName1 << " .\n";
@@ -572,9 +663,60 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
         continue;
       }
 
-      dp->AddInterface(new Interface(interfaceName, regionptr0, regionptr1, inodes0, inodes1));
+      // All of our contact nodes should exist
+      ConstNodePtr mesh_edge_nodes[2];
+      for (MeshEdgeList_t::const_iterator tnit = mesh_edges.begin(); tnit != mesh_edges.end(); ++tnit)
+      {
+        ConstEdgePtr tedge[2];
+
+        mesh_edge_nodes[0] = nodeList0[tnit->Index0()];
+        mesh_edge_nodes[1] = nodeList0[tnit->Index1()];
+        tedge[0]           = regionptr[0]->FindEdge(mesh_edge_nodes[0], mesh_edge_nodes[1]);
+
+        mesh_edge_nodes[0] = nodeList1[tnit->Index0()];
+        mesh_edge_nodes[1] = nodeList1[tnit->Index1()];
+        tedge[1]           = regionptr[1]->FindEdge(mesh_edge_nodes[0], mesh_edge_nodes[1]);
+
+        if (tedge[0] && tedge[1])
+        {
+          for (size_t i = 0; i < 2; ++i)
+          {
+            iedges[i].push_back(tedge[i]);
+          }
+        }
+      }
+
+      ConstNodePtr mesh_triangle_nodes[3];
+      for (MeshTriangleList_t::const_iterator tnit = mesh_triangles.begin(); tnit != mesh_triangles.end(); ++tnit)
+      {
+        ConstTrianglePtr ttriangle[2];
+
+        mesh_triangle_nodes[0] = nodeList0[tnit->Index0()];
+        mesh_triangle_nodes[1] = nodeList0[tnit->Index1()];
+        mesh_triangle_nodes[2] = nodeList0[tnit->Index2()];
+        ttriangle[0] = regionptr[0]->FindTriangle(mesh_triangle_nodes[0], mesh_triangle_nodes[1], mesh_triangle_nodes[2]);
+
+        mesh_triangle_nodes[0] = nodeList1[tnit->Index0()];
+        mesh_triangle_nodes[1] = nodeList1[tnit->Index1()];
+        mesh_triangle_nodes[2] = nodeList1[tnit->Index2()];
+        ttriangle[1] = regionptr[1]->FindTriangle(mesh_triangle_nodes[0], mesh_triangle_nodes[1], mesh_triangle_nodes[2]);
+
+        if (ttriangle[0] && ttriangle[1])
+        {
+          for (size_t i = 0; i < 2; ++i)
+          {
+            itriangles[i].push_back(ttriangle[i]);
+          }
+        }
+      }
+
+      Interface *iptr = new Interface(interfaceName, regionptr[0], regionptr[1], inodes[0], inodes[1]);
+      dp->AddInterface(iptr);
+      iptr->AddTriangles(itriangles[0], itriangles[1]);
+      iptr->AddEdges(iedges[0], iedges[1]);
+
       std::ostringstream os; 
-      os << "Adding interface " << interfaceName << " with " << inodes0.size() << ", " << inodes1.size() << " nodes" << "\n";
+      os << "Adding interface " << interfaceName << " with " << inodes[0].size() << ", " << inodes[1].size() << " nodes" << "\n";
       OutputStream::WriteOut(OutputStream::INFO, os.str());
     }
   }

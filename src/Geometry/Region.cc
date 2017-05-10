@@ -1586,3 +1586,100 @@ void Region::SetModelExprDataCache(ModelExprDataCachePtr p)
 }
 
 
+ConstEdgePtr Region::FindEdge(ConstNodePtr nh, ConstNodePtr nt) const
+{
+  ConstEdgePtr ret = NULL;
+
+  ConstEdgeList nout;
+  // need these to be sorted ranges so do sort above
+  const ConstEdgeList &nht = GetNodeToEdgeList()[nh->GetIndex()];
+  const ConstEdgeList &ntt = GetNodeToEdgeList()[nt->GetIndex()];
+
+  set_intersection(nht.begin(), nht.end(),
+    ntt.begin(), ntt.end(),
+    std::insert_iterator<ConstEdgeList>(nout, nout.begin()),
+    EdgeCompIndex()
+  );
+
+  if (!nout.empty())
+  {
+    ret = nout[0];
+  }
+
+  return ret;
+}
+
+ConstTrianglePtr Region::FindTriangle(ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2) const
+{
+  ConstTrianglePtr ret = NULL;
+
+  // need these to be sorted ranges so do sort above
+  const ConstTriangleList &tl0 = GetNodeToTriangleList()[n0->GetIndex()];
+  const ConstTriangleList &tl1 = GetNodeToTriangleList()[n1->GetIndex()];
+  const ConstTriangleList &tl2 = GetNodeToTriangleList()[n2->GetIndex()];
+
+  ConstTriangleList nout1;
+  ConstTriangleList nout2;
+
+  set_intersection(tl0.begin(), tl0.end(),
+    tl1.begin(), tl1.end(),
+    std::insert_iterator<ConstTriangleList>(nout1, nout1.begin()),
+    TriangleCompIndex()
+  );
+
+  set_intersection(nout1.begin(), nout1.end(),
+    tl2.begin(), tl2.end(),
+    std::insert_iterator<ConstTriangleList>(nout2, nout2.begin()),
+    TriangleCompIndex()
+  );
+
+  if (!nout2.empty())
+  {
+    ret = nout2[0];
+  }
+
+  return ret;
+}
+
+ConstTetrahedronPtr Region::FindTetrahedron(ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2, ConstNodePtr n3) const
+{
+  ConstTetrahedronPtr ret = NULL;
+
+  // need these to be sorted ranges so do sort above
+  const ConstTetrahedronList &tl0 = GetNodeToTetrahedronList()[n0->GetIndex()];
+  const ConstTetrahedronList &tl1 = GetNodeToTetrahedronList()[n1->GetIndex()];
+  const ConstTetrahedronList &tl2 = GetNodeToTetrahedronList()[n2->GetIndex()];
+  const ConstTetrahedronList &tl3 = GetNodeToTetrahedronList()[n3->GetIndex()];
+
+  ConstTetrahedronList nout1;
+  ConstTetrahedronList nout2;
+  ConstTetrahedronList nout3;
+
+  set_intersection(tl0.begin(), tl0.end(),
+    tl1.begin(), tl1.end(),
+    std::insert_iterator<ConstTetrahedronList>(nout1, nout1.begin()),
+    TetrahedronCompIndex()
+  );
+
+  set_intersection(nout1.begin(), nout1.end(),
+    tl2.begin(), tl2.end(),
+    std::insert_iterator<ConstTetrahedronList>(nout2, nout2.begin()),
+    TetrahedronCompIndex()
+  );
+
+  set_intersection(nout2.begin(), nout2.end(),
+    tl3.begin(), tl3.end(),
+    std::insert_iterator<ConstTetrahedronList>(nout3, nout3.begin()),
+    TetrahedronCompIndex()
+  );
+
+  if (!nout3.empty())
+  {
+    ret = nout3[0];
+  }
+
+  return ret;
+}
+
+
+
