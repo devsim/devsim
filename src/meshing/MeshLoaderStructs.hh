@@ -445,162 +445,6 @@ class MeshCoordinate {
         double zpos;
 };
 
-class MeshInterfaceNodePair
-{
-    public:
-        MeshInterfaceNodePair(size_t i, size_t j) : index0(i), index1(j) {}
-
-        size_t Index0() const
-        {
-            return index0;
-        }
-
-        size_t Index1() const
-        {
-            return index1;
-        }
-    private:
-        size_t index0;
-        size_t index1;
-};
-
-class MeshInterface {
-    public:
-        MeshInterface(const std::string &n, const std::string &r0, const std::string &r1) : name(n), region0(r0), region1(r1)
-        {
-        }
-
-        ~MeshInterface();
-
-        void AddNodePair(const MeshInterfaceNodePair &np)
-        {
-            nodePairs.push_back(np);    
-        }
-
-        bool HasNodes() {
-            return !nodePairs.empty();
-        }
-
-        const std::string &GetName() const
-        {
-            return name;
-        }
-        const std::string &GetRegion0() const
-        {
-            return region0;
-        }
-
-        const std::string &GetRegion1() const
-        {
-            return region1;
-        }
-
-
-        typedef std::vector<MeshInterfaceNodePair > NodePairList_t;
-        const NodePairList_t &GetNodePairs()
-        {
-            return nodePairs;
-        }
-
-        bool IsSolution(const std::string &n)
-        {
-            return solutionList.count(n) != 0;
-        }
-
-        void AddSolution(SolutionPtr sp)
-        {
-            solutionList[sp->GetName()] = sp;
-        }
-
-        const MeshSolutionList_t &GetSolutionList() const
-        {
-            return solutionList;
-        }
-
-        bool IsEquation(const std::string &n)
-        {
-            return equationList.count(n) != 0;
-        }
-
-        void AddEquation(EquationPtr sp)
-        {
-            equationList[sp->GetName()] = sp;
-        }
-
-
-        const MeshEquationList_t &GetEquationList() const
-        {
-            return equationList;
-        }
-
-    private:
-        std::string name;
-        std::string region0;
-        std::string region1;
-        NodePairList_t nodePairs;
-        MeshSolutionList_t       solutionList;
-        MeshEquationList_t       equationList;
-};
-
-class MeshContact {
-    public:
-        MeshContact(const std::string &n, const std::string &r, const std::string &m) : name(n), region(r), material(m)
-        {
-        }
-
-        ~MeshContact();
-
-        void AddNode(const MeshNode &n)
-        {
-            nodes.push_back(n); 
-        }
-        bool HasNodes() {
-            return !nodes.empty();
-        }
-
-        const std::string &GetName() const
-        {
-            return name;
-        }
-
-        const std::string &GetRegion() const
-        {
-            return region;
-        }
-
-        const std::string &GetMaterial() const
-        {
-            return material;
-        }
-
-        const MeshNodeList_t &GetNodes()
-        {
-            return nodes;
-        }
-
-        bool IsEquation(const std::string &n)
-        {
-            return equationList.count(n) != 0;
-        }
-
-        void AddEquation(EquationPtr sp)
-        {
-            equationList[sp->GetName()] = sp;
-        }
-
-
-        const MeshEquationList_t &GetEquationList() const
-        {
-            return equationList;
-        }
-
-    private:
-        std::string name;
-        std::string region;
-        std::string material;
-        std::vector<MeshNode> nodes;
-        MeshEquationList_t        equationList;
-};
 
 class MeshRegion {
     public:
@@ -647,12 +491,15 @@ class MeshRegion {
         bool HasNodes() const {
             return !nodes.empty();
         }
+
         bool HasEdges() const {
             return !edges.empty();
         }
+
         bool HasTriangles() const {
             return !triangles.empty();
         }
+
         bool HasTetrahedra() const {
             return !tetrahedra.empty();
         }
@@ -702,11 +549,14 @@ class MeshRegion {
             equationList[sp->GetName()] = sp;
         }
 
-
         const MeshEquationList_t &GetEquationList() const
         {
             return equationList;
         }
+
+        // break down shapes into edges and nodes
+        // Similar to the one used in the dsMesh::Shapes class
+        void DecomposeAndUniquify();
 
     private:
         MeshRegion();
@@ -722,6 +572,263 @@ class MeshRegion {
         MeshTetrahedronList_t tetrahedra;
         MeshSolutionList_t       solutionList;
         MeshEquationList_t       equationList;
+};
+
+class MeshInterfaceNodePair
+{
+    public:
+        MeshInterfaceNodePair(size_t i, size_t j) : index0(i), index1(j) {}
+
+        void SetIndex0(size_t i)
+        {
+          index0 = i;
+        }
+
+        void SetIndex1(size_t i)
+        {
+          index1 = i;
+        }
+
+        size_t Index0() const
+        {
+            return index0;
+        }
+
+        size_t Index1() const
+        {
+            return index1;
+        }
+    private:
+        size_t index0;
+        size_t index1;
+};
+
+class MeshInterface {
+    public:
+        MeshInterface(const std::string &n, const std::string &r0, const std::string &r1) : name(n), region0(r0, ""), region1(r1, "")
+        {
+        }
+
+        ~MeshInterface();
+
+        void AddNodePair(const MeshInterfaceNodePair &np)
+        {
+            nodePairs.push_back(np);    
+        }
+
+        void AddEdgePair(const MeshEdge &t0, const MeshEdge &t1)
+        {
+          region0.AddEdge(t0);
+          region1.AddEdge(t1);
+        }
+
+        void AddTrianglePair(const MeshTriangle &t0, const MeshTriangle &t1)
+        {
+          region0.AddTriangle(t0);
+          region1.AddTriangle(t1);
+        }
+
+        bool HasNodesPairs() const
+        {
+            return !nodePairs.empty();
+        }
+
+        bool HasEdges() const
+        {
+          return region0.HasEdges();
+        }
+
+        bool HasTriangles() const
+        {
+          return region0.HasTriangles();
+        }
+
+        const std::string &GetName() const
+        {
+            return name;
+        }
+        const std::string &GetRegion0() const
+        {
+            return region0.GetName();
+        }
+
+        const std::string &GetRegion1() const
+        {
+            return region1.GetName();
+        }
+
+        typedef std::vector<MeshInterfaceNodePair > NodePairList_t;
+        const NodePairList_t &GetNodePairs()
+        {
+            return nodePairs;
+        }
+
+        const MeshEdgeList_t &GetEdges0() const
+        {
+          return region0.GetEdges();
+        }
+
+        const MeshEdgeList_t &GetEdges1() const
+        {
+          return region1.GetEdges();
+        }
+
+        const MeshTriangleList_t &GetTriangles0() const
+        {
+          return region0.GetTriangles();
+        }
+
+        const MeshTriangleList_t &GetTriangles1() const
+        {
+          return region1.GetTriangles();
+        }
+
+        bool IsSolution(const std::string &n)
+        {
+            return solutionList.count(n) != 0;
+        }
+
+        void AddSolution(SolutionPtr sp)
+        {
+            solutionList[sp->GetName()] = sp;
+        }
+
+        const MeshSolutionList_t &GetSolutionList() const
+        {
+            return solutionList;
+        }
+
+        bool IsEquation(const std::string &n)
+        {
+            return equationList.count(n) != 0;
+        }
+
+        void AddEquation(EquationPtr sp)
+        {
+            equationList[sp->GetName()] = sp;
+        }
+
+        const MeshEquationList_t &GetEquationList() const
+        {
+            return equationList;
+        }
+
+        void DecomposeAndUniquify();
+
+        MeshRegion &GetMeshRegion0()
+        {
+          return region0;
+        }
+
+        MeshRegion &GetMeshRegion1()
+        {
+          return region1;
+        }
+
+    private:
+        std::string name;
+        MeshRegion region0;
+        MeshRegion region1;
+        NodePairList_t nodePairs;
+        MeshSolutionList_t       solutionList;
+        MeshEquationList_t       equationList;
+};
+
+class MeshContact {
+    public:
+        MeshContact(const std::string &n, const std::string &r, const std::string &m) : name(n), region(r, ""), material(m)
+        {
+        }
+
+        ~MeshContact();
+
+        void AddNode(const MeshNode &n)
+        {
+            region.AddNode(n); 
+        }
+
+        void AddEdge(const MeshEdge &e)
+        {
+            region.AddEdge(e);
+        }
+
+        void AddTriangle(const MeshTriangle &t)
+        {
+            region.AddTriangle(t);
+        }
+
+        bool HasNodes() const
+        {
+            return region.HasNodes();
+        }
+
+        bool HasEdges() const
+        {
+            return region.HasEdges();
+        }
+
+        bool HasTriangles()
+        {
+            return region.HasTriangles();
+        }
+
+        const std::string &GetName() const
+        {
+            return name;
+        }
+
+        const std::string &GetRegion() const
+        {
+            return region.GetName();
+        }
+
+        const std::string &GetMaterial() const
+        {
+            return material;
+        }
+
+        const MeshNodeList_t &GetNodes()
+        {
+            return region.GetNodes();
+        }
+
+        const MeshEdgeList_t &GetEdges()
+        {
+            return region.GetEdges();
+        }
+
+        const MeshTriangleList_t &GetTriangles()
+        {
+            return region.GetTriangles();
+        }
+
+        bool IsEquation(const std::string &n)
+        {
+            return equationList.count(n) != 0;
+        }
+
+        void AddEquation(EquationPtr sp)
+        {
+            equationList[sp->GetName()] = sp;
+        }
+
+        const MeshEquationList_t &GetEquationList() const
+        {
+            return equationList;
+        }
+
+        void DecomposeAndUniquify();
+
+        MeshRegion &GetMeshRegion()
+        {
+          return region;
+        }
+
+    private:
+        std::string               name;
+        std::string               material;
+        MeshRegion                region;
+        MeshEquationList_t        equationList;
 };
 
 }

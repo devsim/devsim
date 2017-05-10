@@ -255,6 +255,8 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
   else
   {
     Device &dev = *dp;
+    const size_t dimension = dev.GetDimension();
+
     myfile << "begin_device \"" << dname << "\"\n";
 
     {
@@ -273,14 +275,21 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
       const ConstNodeList &nlist = reg.GetNodeList();
       WriteNodes(myfile, nlist);
 
-      const ConstEdgeList &elist = reg.GetEdgeList();
-      WriteEdges(myfile, elist);
-
-      const ConstTriangleList &tlist = reg.GetTriangleList();
-      WriteTriangles(myfile, tlist);
-
-      const ConstTetrahedronList &tetrahedron_list = reg.GetTetrahedronList();
-      WriteTetrahedra(myfile, tetrahedron_list);
+      if (dimension == 1)
+      {
+        const ConstEdgeList &elist = reg.GetEdgeList();
+        WriteEdges(myfile, elist);
+      }
+      else if (dimension == 2)
+      {
+        const ConstTriangleList &tlist = reg.GetTriangleList();
+        WriteTriangles(myfile, tlist);
+      }
+      else if (dimension == 3)
+      {
+        const ConstTetrahedronList &tetrahedron_list = reg.GetTetrahedronList();
+        WriteTetrahedra(myfile, tetrahedron_list);
+      }
 
       const Region::NodeModelList_t &nodeModelList = reg.GetNodeModelList();
       const Region::EdgeModelList_t &edgeModelList = reg.GetEdgeModelList();
@@ -316,12 +325,44 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
 
       const ConstNodeList_t &ctnodes = cnt.GetNodes();
 
-      myfile << "begin_nodes\n";
-      for (ConstNodeList_t::const_iterator ctit = ctnodes.begin(); ctit != ctnodes.end(); ++ctit)
+      if (dimension == 1)
       {
-          myfile << (*ctit)->GetIndex() << "\n";
+        myfile << "begin_nodes\n";
+        for (ConstNodeList_t::const_iterator ctit = ctnodes.begin(); ctit != ctnodes.end(); ++ctit)
+        {
+            myfile << (*ctit)->GetIndex() << "\n";
+        }
+        myfile << "end_nodes\n\n";
       }
-      myfile << "end_nodes\n\n";
+      else if (dimension == 2)
+      {
+        const ConstEdgeList_t &itedges = cnt.GetEdges();
+        if (!itedges.empty())
+        {
+          myfile << "begin_edges\n";
+          for (size_t i = 0; i < itedges.size(); ++i)
+          {
+            myfile << itedges[i]->GetHead()->GetIndex() << "\t" << itedges[i]->GetTail()->GetIndex() << "\n";
+          }
+          myfile << "end_edges\n\n";
+        }
+      }
+      else if (dimension == 3)
+      {
+        const ConstTriangleList_t &ittriangles = cnt.GetTriangles();
+        if (!ittriangles.empty())
+        {
+          myfile << "begin_triangles\n";
+
+          for (size_t i = 0; i < ittriangles.size(); ++i)
+          {
+            const std::vector<ConstNodePtr> &triangle_nodes = ittriangles[i]->GetNodeList();
+            myfile << triangle_nodes[0]->GetIndex() << "\t" << triangle_nodes[1]->GetIndex() << "\t" << triangle_nodes[2]->GetIndex() << "\n";
+
+          }
+          myfile << "end_triangles\n\n";
+        }
+      }
 
 /*
       const Region &reg = *(cnt.GetRegion());
@@ -345,12 +386,50 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
       const ConstNodeList_t &itnodes1 = iint.GetNodes1();
       dsAssert(itnodes0.size() == itnodes1.size(), "UNEXPECTED");
 
-      myfile << "begin_nodes\n";
-      for (size_t i = 0; i < itnodes0.size(); ++i)
+      if (dimension == 1)
       {
-        myfile << itnodes0[i]->GetIndex() << "\t" << itnodes1[i]->GetIndex() << "\n";
+        myfile << "begin_nodes\n";
+        for (size_t i = 0; i < itnodes0.size(); ++i)
+        {
+          myfile << itnodes0[i]->GetIndex() << "\t" << itnodes1[i]->GetIndex() << "\n";
+        }
+        myfile << "end_nodes\n\n";
       }
-      myfile << "end_nodes\n\n";
+      else if (dimension == 2)
+      {
+        const ConstEdgeList_t &itedges0 = iint.GetEdges0();
+        const ConstEdgeList_t &itedges1 = iint.GetEdges1();
+        if (!itedges0.empty() && (itedges0.size() == itedges1.size()))
+        {
+          myfile << "begin_edges\n";
+          for (size_t i = 0; i < itedges0.size(); ++i)
+          {
+            myfile << itedges0[i]->GetHead()->GetIndex() << "\t" << itedges0[i]->GetTail()->GetIndex() << "\t"
+                   << itedges1[i]->GetHead()->GetIndex() << "\t" << itedges1[i]->GetTail()->GetIndex() << "\n";
+          }
+          myfile << "end_edges\n\n";
+        }
+      }
+      else if (dimension == 3)
+      {
+        const ConstTriangleList_t &ittriangles0 = iint.GetTriangles0();
+        const ConstTriangleList_t &ittriangles1 = iint.GetTriangles1();
+        if (!ittriangles0.empty() && (ittriangles0.size() == ittriangles1.size()))
+        {
+          myfile << "begin_triangles\n";
+
+          for (size_t i = 0; i < ittriangles0.size(); ++i)
+          {
+            const std::vector<ConstNodePtr> &triangle0_nodes = ittriangles0[i]->GetNodeList();
+            const std::vector<ConstNodePtr> &triangle1_nodes = ittriangles1[i]->GetNodeList();
+            myfile << triangle0_nodes[0]->GetIndex() << "\t" << triangle0_nodes[1] << "\t" << triangle0_nodes[2]->GetIndex() << "\t"
+                   << triangle1_nodes[0]->GetIndex() << "\t" << triangle1_nodes[1] << "\t" << triangle1_nodes[2]->GetIndex() << "\n";
+
+          }
+          myfile << "end_triangles\n\n";
+        }
+      }
+      
 
       
       const Interface::NameToInterfaceNodeModelMap_t &imlist = iint.GetInterfaceNodeModelList();

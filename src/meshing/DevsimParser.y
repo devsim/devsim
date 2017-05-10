@@ -235,9 +235,67 @@ contact_nodes : BEG_NODE
         contact_nodes END_NODE;
         ;
 
+contact_edges : BEG_EDGE
+        {
+            if (dsDevsimParse::MeshContact->HasEdges())
+            {
+                std::ostringstream os;
+                os << "ERROR: Region " << dsDevsimParse::MeshContact->GetName() << " already has edges\n";
+                Devsimerror(os.str().c_str());
+                YYABORT;
+            }
+        } |
+        contact_edges INT INT
+        {
+            int nodes[2] = {$2, $3};
+            for (size_t i = 0; i < 2; ++i)
+            {
+              if (nodes[i] < 0)
+              {
+                  std::ostringstream os;
+                  os << "ERROR: Cannot have negative contact node index " << nodes[i] << "\n";
+                  Devsimerror(os.str().c_str());
+                  YYABORT;
+              }
+            }
+
+            dsDevsimParse::MeshContact->AddEdge(dsMesh::MeshEdge($2, $3));
+        } |
+        contact_edges END_EDGE;
+        ;
+
+contact_triangles : BEG_TRIANGLE
+        {
+            if (dsDevsimParse::MeshContact->HasTriangles())
+            {
+                std::ostringstream os;
+                os << "ERROR: Region " << dsDevsimParse::MeshContact->GetName() << " already has triangles\n";
+                Devsimerror(os.str().c_str());
+                YYABORT;
+            }
+        } |
+        contact_triangles INT INT INT
+        {
+            int nodes[3] = {$2, $3, $4};
+            for (size_t i = 0; i < 3; ++i)
+            {
+              if (nodes[i] < 0)
+              {
+                  std::ostringstream os;
+                  os << "ERROR: Cannot have negative contact node index " << nodes[i] << "\n";
+                  Devsimerror(os.str().c_str());
+                  YYABORT;
+              }
+            }
+
+            dsDevsimParse::MeshContact->AddTriangle(dsMesh::MeshTriangle(nodes[0], nodes[1], nodes[2]));
+        } |
+        contact_triangles END_TRIANGLE;
+        ;
+
 interface_nodes : BEG_NODE  
         {
-            if (dsDevsimParse::MeshInterface->HasNodes())
+            if (dsDevsimParse::MeshInterface->HasNodesPairs())
             {
                 std::ostringstream os;
                 os << "ERROR: Interface " << dsDevsimParse::MeshInterface->GetName() << " already has nodes\n";
@@ -268,6 +326,65 @@ interface_nodes : BEG_NODE
         } |
         interface_nodes END_NODE ;
         ;
+
+interface_edges : BEG_EDGE  
+        {
+            if (dsDevsimParse::MeshInterface->HasEdges())
+            {
+                std::ostringstream os;
+                os << "ERROR: Interface " << dsDevsimParse::MeshInterface->GetName() << " already has edges\n";
+                Devsimerror(os.str().c_str());
+                YYABORT;
+            }
+        } |
+        interface_edges INT INT INT INT
+        {
+            int nodes[4] = {$2, $3, $4, $5};
+            for (size_t i = 0; i < 4; ++i)
+            {
+              if (nodes[i] < 0)
+              {
+                  std::ostringstream os;
+                  os << "ERROR: Cannot have negative interface node index " << nodes[i] << "\n";
+                  Devsimerror(os.str().c_str());
+                  YYABORT;
+              }
+            }
+
+            dsDevsimParse::MeshInterface->AddEdgePair(dsMesh::MeshEdge($2, $3), dsMesh::MeshEdge($4, $5));
+        } |
+        interface_edges END_EDGE ;
+        ;
+
+interface_triangles : BEG_TRIANGLE  
+        {
+            if (dsDevsimParse::MeshInterface->HasTriangles())
+            {
+                std::ostringstream os;
+                os << "ERROR: Interface " << dsDevsimParse::MeshInterface->GetName() << " already has triangles\n";
+                Devsimerror(os.str().c_str());
+                YYABORT;
+            }
+        } |
+        interface_triangles INT INT INT INT INT INT
+        {
+            int nodes[6] = {$2, $3, $4, $5, $6, $7};
+            for (size_t i = 0; i < 6; ++i)
+            {
+              if (nodes[i] < 0)
+              {
+                  std::ostringstream os;
+                  os << "ERROR: Cannot have negative interface node index " << nodes[i] << "\n";
+                  Devsimerror(os.str().c_str());
+                  YYABORT;
+              }
+            }
+
+            dsDevsimParse::MeshInterface->AddTrianglePair(dsMesh::MeshTriangle($2, $3, $4), dsMesh::MeshTriangle($5, $6, $7));
+        } |
+        interface_triangles END_TRIANGLE ;
+        ;
+
 
 edges : BEG_EDGE  
         {
@@ -430,6 +547,8 @@ contact : BEG_CONTACT WORD WORD WORD  {
             }
         } |
         contact contact_nodes |
+        contact contact_edges |
+        contact contact_triangles |
         contact contactequation
         ;
 
@@ -468,6 +587,8 @@ interface : BEG_INTERFACE WORD WORD WORD  {
             }
         } |
         interface interface_nodes |
+        interface interface_edges |
+        interface interface_triangles |
         interface interfacenodemodel |
         interface interfaceequation
         ;

@@ -310,4 +310,17 @@ const ConstTriangleList_t &Contact::GetTriangles() const
   return contacttriangles;
 }
 
+void Contact::AddEdges(const ConstEdgeList &elist)
+{
+  contactedges = elist;
+  region->SignalCallbacks("@@@ContactChange");
+}
+
+void Contact::AddTriangles(const ConstTriangleList &tlist)
+{
+  contacttriangles = tlist;
+  region->SignalCallbacks("@@@ContactChange");
+}
+
+
 

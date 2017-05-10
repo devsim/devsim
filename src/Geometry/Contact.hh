@@ -79,6 +79,9 @@ class Contact {
 
       void Assemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
+      void AddEdges(const ConstEdgeList_t &);
+      void AddTriangles(const ConstTriangleList_t &);
+
     private:
         void FindEdges() const;
         void FindTriangles() const;

@@ -250,6 +250,11 @@ class Region
         return tetrahedronToTriangleList;
       }
 
+      // Methods to search by node ptr
+      ConstEdgePtr FindEdge(ConstNodePtr, ConstNodePtr) const;
+      ConstTrianglePtr FindTriangle(ConstNodePtr, ConstNodePtr, ConstNodePtr) const;
+      ConstTetrahedronPtr FindTetrahedron(ConstNodePtr, ConstNodePtr, ConstNodePtr, ConstNodePtr) const;
+
 
       // try using a multimap first
       void RegisterCallback(const std::string &, const std::string &);

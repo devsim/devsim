@@ -287,6 +287,135 @@ bool DevsimLoader::RunCommand(const std::string &commandString, const std::vecto
   return ret;
 }
 
+
+namespace {
+void GetTriangles(MeshRegion &cnt, const RegionPtr rp, ConstTriangleList &ctl)
+{
+  ctl.clear();
+  if (!cnt.HasTriangles())
+  {
+    return;
+  }
+  const ConstNodeList &nl = rp->GetNodeList();
+
+  const MeshTriangleList_t &tlist = cnt.GetTriangles();
+  for (MeshTriangleList_t::const_iterator it = tlist.begin(); it != tlist.end(); ++it)
+  {
+    const MeshTriangle &mtri = *it;
+    size_t       mnodes[3] = {mtri.Index0(), mtri.Index1(), mtri.Index2()};
+    ConstNodePtr rnodes[3] = {NULL, NULL, NULL};
+    size_t j = 0;
+    for (size_t i = 0; i < 3; ++i)
+    {
+      if (mnodes[i] <  nl.size())
+      {
+        rnodes[i] = nl[mnodes[i]];
+        ++j;
+      }
+    }
+    if (j == 3)
+    {
+      ConstTrianglePtr tp = rp->FindTriangle(rnodes[0], rnodes[1], rnodes[2]);
+      if (tp)
+      {
+        ctl.push_back(tp);
+      }
+    }
+  }
+}
+
+void GetEdges(MeshRegion &cnt, const RegionPtr rp, ConstEdgeList &cel)
+{
+  cel.clear();
+  if (!cnt.HasEdges())
+  {
+    return;
+  }
+  const ConstNodeList &nl = rp->GetNodeList();
+
+  const MeshEdgeList_t &tlist = cnt.GetEdges();
+  for (MeshEdgeList_t::const_iterator it = tlist.begin(); it != tlist.end(); ++it)
+  {
+    const MeshEdge &medge = *it;
+    size_t       mnodes[2] = {medge.Index0(), medge.Index1()};
+    ConstNodePtr rnodes[2] = {NULL, NULL};
+    size_t j = 0;
+    for (size_t i = 0; i < 2; ++i)
+    {
+      if (mnodes[i] <  nl.size())
+      {
+        rnodes[i] = nl[mnodes[i]];
+        ++j;
+      }
+    }
+    if (j == 2)
+    {
+      ConstEdgePtr tp = rp->FindEdge(rnodes[0], rnodes[1]);
+      if (tp)
+      {
+        cel.push_back(tp);
+      }
+    }
+  }
+}
+
+void GetNodes(MeshRegion &cnt, const RegionPtr rp, ConstNodeList &cnl)
+{
+  cnl.clear();
+  if (!cnt.HasNodes())
+  {
+    return;
+  }
+  const ConstNodeList &nl = rp->GetNodeList();
+
+  const MeshNodeList_t &nlist = cnt.GetNodes();
+  for (MeshNodeList_t::const_iterator it = nlist.begin(); it != nlist.end(); ++it)
+  {
+    const MeshNode &mnode = *it;
+    size_t       mnodes = mnode.Index();
+    ConstNodePtr rnodes = NULL;
+
+    if (mnodes <  nl.size())
+    {
+      rnodes = nl[mnodes];
+      cnl.push_back(rnodes);
+    }
+  }
+}
+
+void FixNodePairs(MeshInterface &mint, ConstNodeList &cn0, ConstNodeList &cn1)
+{
+  std::map<size_t, std::pair<size_t, size_t> > mmap;
+
+  for (ConstNodeList::iterator it = cn0.begin(); it != cn0.end(); ++it)
+  {
+    mmap[(*it)->GetCoordinate().GetIndex()] = std::make_pair<size_t, size_t>((*it)->GetIndex(), size_t (-1));
+  }
+
+  for (ConstNodeList::iterator it = cn1.begin(); it != cn1.end(); ++it)
+  {
+    size_t cindex = (*it)->GetCoordinate().GetIndex();
+    std::map<size_t, std::pair<size_t, size_t> >::iterator jt = mmap.find(cindex);
+    if (jt != mmap.end())
+    {
+      (*jt).second.second = (*it)->GetIndex();
+    }
+    else
+    {
+      mmap.erase(jt);
+    }
+  }
+
+  for (std::map<size_t, std::pair<size_t, size_t> >::iterator it = mmap.begin(); it != mmap.end(); ++it)
+  {
+    if ((*it).second.second != size_t(-1))
+    {
+      mint.AddNodePair(MeshInterfaceNodePair((*it).second.first, (*it).second.second));
+    }
+  }
+}
+}
+
 bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &errorString)
 {
   bool ret = true;
@@ -344,7 +473,8 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
     for (MeshRegionList_t::iterator it = regionList.begin(); it != regionList.end(); ++it)
     {
       const std::string  &rname = it->first;
-      const MeshRegion   &mr = *(it->second);
+
+      MeshRegion   &mr = *(it->second);
 
       createRegion(mr, dp, nlist, elist, triangle_list, tetrahedron_list);
       node_map[rname] = nlist;
@@ -361,10 +491,14 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
 
   {
     ConstNodeList_t cnl;
+    ConstEdgeList_t cel;
+    ConstTriangleList_t ctl;
     for (MeshContactList_t::iterator it = contactList.begin(); it != contactList.end(); ++it)
     {
       const std::string &cname = it->first;
       MeshContact &cnt = *(it->second);
+      cnt.DecomposeAndUniquify();
+
       const std::string &rname = cnt.GetRegion();
       const std::string &mname = cnt.GetMaterial();
 
@@ -401,13 +535,20 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         }
       }
 
+      GetTriangles(cnt.GetMeshRegion(), rp, ctl);
+      GetEdges(cnt.GetMeshRegion(), rp, cel);
+
+
       if (!ret)
       {
           break;
       }
       else
       {
-        dp->AddContact(new Contact(cname, rp, cnl, mname));
+        ContactPtr cp = new Contact(cname, rp, cnl, mname);
+        dp->AddContact(cp);
+        cp->AddTriangles(ctl);
+        cp->AddEdges(cel);
         std::ostringstream os; 
         os << "Contact " << cname << " in region " << rname << " with " << cnl.size() << " nodes" << "\n";
         OutputStream::WriteOut(OutputStream::INFO, os.str());
@@ -424,10 +565,15 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
   {
     ConstNodeList_t cn0;
     ConstNodeList_t cn1;
+    ConstEdgeList_t ce0;
+    ConstEdgeList_t ce1;
+    ConstTriangleList_t ct0;
+    ConstTriangleList_t ct1;
     for (MeshInterfaceList_t::iterator it = interfaceList.begin(); it != interfaceList.end(); ++it)
     {
       const std::string &iname = it->first;
       MeshInterface &mint = *(it->second);
+      mint.DecomposeAndUniquify();
 
       const std::string &rname0 = mint.GetRegion0();
       const std::string &rname1 = mint.GetRegion1();
@@ -456,37 +602,51 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       const ConstNodeList_t &nl0 = node_map[rname0];
       const ConstNodeList_t &nl1 = node_map[rname1];
 
-      const MeshInterface::NodePairList_t &mnp = mint.GetNodePairs();
+      MeshInterface::NodePairList_t mnp = mint.GetNodePairs();
+
+      if (mnp.empty())
+      {
+        GetNodes(mint.GetMeshRegion0(), rp0, cn0);
+        GetNodes(mint.GetMeshRegion1(), rp1, cn1);
+        FixNodePairs(mint, cn0, cn1); 
+      }
+
+      if (!mnp.empty())
       {
         std::ostringstream os; 
         os << "Interface " << iname << " " << rname0 << " " << rname1 << " has " << mnp.size() << " node pairs" << "\n";
         OutputStream::WriteOut(OutputStream::INFO, os.str());
+
+        for (MeshInterface::NodePairList_t::const_iterator iit = mnp.begin(); iit != mnp.end(); ++iit)
+        {
+          size_t index0 = iit->Index0();
+          size_t index1 = iit->Index1();
+          if (index0 >= nl0.size())
+          {
+            ret = false;
+            std::ostringstream os; 
+            os << "Node index " << index0 << " for interface " << iname << " violates bounds for region " << rname0 << "\n";
+            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+          }
+          else if (index1 >= nl1.size())
+          {
+            ret = false;
+            std::ostringstream os; 
+            os << "Node index " << index1 << " for interface " << iname << " violates bounds for region " << rname1 << "\n";
+            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+          }
+          else
+          {
+            cn0.push_back(nl0[index0]);
+            cn1.push_back(nl1[index1]);
+          }
+        }
       }
 
-      for (MeshInterface::NodePairList_t::const_iterator iit = mnp.begin(); iit != mnp.end(); ++iit)
-      {
-        size_t index0 = iit->Index0();
-        size_t index1 = iit->Index1();
-        if (index0 >= nl0.size())
-        {
-          ret = false;
-          std::ostringstream os; 
-          os << "Node index " << index0 << " for interface " << iname << " violates bounds for region " << rname0 << "\n";
-          OutputStream::WriteOut(OutputStream::ERROR, os.str());
-        }
-        else if (index1 >= nl1.size())
-        {
-          ret = false;
-          std::ostringstream os; 
-          os << "Node index " << index1 << " for interface " << iname << " violates bounds for region " << rname1 << "\n";
-          OutputStream::WriteOut(OutputStream::ERROR, os.str());
-        }
-        else
-        {
-          cn0.push_back(nl0[index0]);
-          cn1.push_back(nl1[index1]);
-        }
-      }
+      GetTriangles(mint.GetMeshRegion0(), rp0, ct0);
+      GetTriangles(mint.GetMeshRegion1(), rp1, ct1);
+      GetEdges(mint.GetMeshRegion0(), rp0, ce0);
+      GetEdges(mint.GetMeshRegion1(), rp1, ce1);
 
       if (!ret)
       {
@@ -497,7 +657,10 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         std::ostringstream os; 
         os << "Adding interface " << iname << " with " << cn0.size() << ", " << cn1.size() << " nodes" << "\n";
         OutputStream::WriteOut(OutputStream::INFO, os.str());
-        dp->AddInterface(new Interface(iname, rp0, rp1, cn0, cn1));
+        Interface *ip = new Interface(iname, rp0, rp1, cn0, cn1);
+        dp->AddInterface(ip);
+        ip->AddTriangles(ct0, ct1);
+        ip->AddEdges(ce0, ce1);
       }
       cn0.clear();
       cn1.clear();
@@ -868,7 +1031,19 @@ bool DevsimLoader::Finalize_(std::string &errorString)
 
     if (it != regionList.end())
     {
-      dimension = ((*(it->second)).HasTriangles()) ? 2 : 1;
+      
+      if ((*(it->second)).HasTetrahedra())
+      {
+        dimension = 3;
+      }
+      else if ((*(it->second)).HasTriangles())
+      {
+        dimension = 2;
+      }
+      else if ((*(it->second)).HasEdges())
+      {
+        dimension = 1;
+      }
     }
 
     for ( ; it != regionList.end(); ++it)
@@ -880,7 +1055,17 @@ bool DevsimLoader::Finalize_(std::string &errorString)
       std::string  rname   = it->first;
       MeshRegion &region = *(it->second);
 
-      size_t ldim = (region.HasTriangles()) ? 2 : 1;
+      region.DecomposeAndUniquify();
+
+      size_t ldim = 1;
+      if (region.HasTetrahedra())
+      {
+        ldim = 3;
+      }
+      else if (region.HasTriangles())
+      {
+        ldim = 2;
+      }
       if (ldim != dimension)
       {
         ret = false;
