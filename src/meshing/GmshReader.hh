@@ -19,6 +19,7 @@ limitations under the License.
 #define GMSH_READER_HH
 #include <string>
 #include <cstddef>
+#include <vector>
 
 
 //TODO: ensure stack size can trigger realloc
@@ -51,7 +52,9 @@ extern std::string errors;
 
 void DeletePointers();
 
-bool LoadMeshes(const std::string &/*filename*/, const std::string&/*meshName*/, std::string &/*errorString*/);
+bool LoadMeshesFromFile(const std::string &/*filename*/, const std::string&/*meshName*/, std::string &/*errorString*/);
+bool LoadMeshesFromArgs(const std::string &/*meshName*/, const std::vector<double> &/*coordinate_list*/, const std::vector<std::string> &/*physical_names*/, const std::vector<size_t> &/*element_list*/, std::string &/*errorString*/);
+
 }
 
 #endif
