@@ -56,11 +56,17 @@ class ObjectHolder {
     typedef std::pair<bool, double> DoubleEntry_t;
     typedef std::pair<bool, bool>   BooleanEntry_t;
     typedef std::pair<bool, int>    IntegerEntry_t;
+    typedef std::pair<bool, ptrdiff_t> LongEntry_t;
     DoubleEntry_t  GetDouble() const;
     BooleanEntry_t GetBoolean() const;
     IntegerEntry_t GetInteger() const;
+    LongEntry_t    GetLong() const;
     bool           IsList() const;
     bool           GetDoubleList(std::vector<double> &) const;
+    bool           GetStringList(std::vector<std::string> &) const;
+    bool           GetIntegerList(std::vector<int> &) const;
+    bool           GetLongList(std::vector<ptrdiff_t> &) const;
+    bool           GetUnsignedLongList(std::vector<size_t> &) const;
 
     bool empty()
     {

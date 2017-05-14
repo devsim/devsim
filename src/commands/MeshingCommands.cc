@@ -1035,7 +1035,10 @@ createGmshMeshCmd(CommandHandler &data)
     static dsGetArgs::Option option[] =
     {
         {"mesh", "",   dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, meshCannotExist},
-        {"file", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
+        {"file", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
+        {"coordinates",    "", dsGetArgs::Types::LIST, dsGetArgs::Types::OPTIONAL, NULL},
+        {"physical_names", "", dsGetArgs::Types::LIST, dsGetArgs::Types::OPTIONAL, NULL},
+        {"elements",   "", dsGetArgs::Types::LIST, dsGetArgs::Types::OPTIONAL, NULL},
         {NULL,   NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
     };
 
@@ -1052,8 +1055,95 @@ createGmshMeshCmd(CommandHandler &data)
 
     const std::string &fileName = data.GetStringOption("file");
     const std::string &meshName = data.GetStringOption("mesh");
+    std::vector<double>      coordinates;
+    std::vector<std::string> physical_names;
+    std::vector<size_t>      elements;
 
-    bool ret = dsGmshParse::LoadMeshes(fileName, meshName, errorString);
+    {
+      ObjectHolder cdata = data.GetObjectHolder("coordinates");
+      if (cdata.IsList())
+      {
+        bool ok = cdata.GetDoubleList(coordinates);
+        if (!ok)
+        {
+          std::ostringstream os;
+          os << "Option \"coordinates\" could not be converted to a list of doubles\n";
+          errorString += os.str();
+        }
+      }
+    }
+
+    {
+      ObjectHolder pdata = data.GetObjectHolder("physical_names");
+      if (pdata.IsList())
+      {
+        bool ok = pdata.GetStringList(physical_names);
+        if (!ok)
+        {
+          std::ostringstream os;
+          os << "Option \"physical_names\" could not be converted to a list of strings\n";
+          errorString += os.str();
+        }
+      }
+    }
+
+    {
+      ObjectHolder edata = data.GetObjectHolder("elements");
+      if (edata.IsList())
+      {
+        bool ok = edata.GetUnsignedLongList(elements);
+        if (!ok)
+        {
+          std::ostringstream os;
+          os << "Option \"elements\" could not be converted to a list of unsigned\n";
+          errorString += os.str();
+        }
+      }
+    }
+
+    if (!errorString.empty())
+    {
+      data.SetErrorResult(errorString);
+      return;
+    }
+
+    bool load_file = (!fileName.empty());
+    size_t load_argcount = !coordinates.empty();
+    load_argcount += !physical_names.empty();
+    load_argcount += !elements.empty();
+
+    bool ret = true;
+
+    if (load_file && (load_argcount > 0))
+    {
+      std::ostringstream os;
+      os << "Option \"file\" cannot be mixed with \"coordinates\", \"elements\", and \"physical_names\"\n";
+      errorString += os.str();
+      ret = false;
+    }
+    else if (load_file)
+    {
+      ret = dsGmshParse::LoadMeshesFromFile(fileName, meshName, errorString);
+    }
+    else if (load_argcount == 3)
+    {
+      ret = dsGmshParse::LoadMeshesFromArgs(meshName, coordinates, physical_names, elements, errorString);
+    }
+    else if (load_argcount > 0)
+    {
+      std::ostringstream os;
+      os << "\"coordinates\", \"elements\", and \"physical_names\" are all required together\n";
+      errorString += os.str();
+      ret = false;
+    }
+    else
+    {
+      std::ostringstream os;
+      os << "Unable to create mesh\n";
+      errorString += os.str();
+      ret = false;
+    }
+
     if (!ret)
     {
       data.SetErrorResult(errorString);

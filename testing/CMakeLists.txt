@@ -66,11 +66,15 @@ SET (NEWPYTESTS
   testfunc
   utf8_2
   laux1
+  pythonmesh1d
 )
 
 FOREACH(I ${NEWPYTESTS})
     ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_PY} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
 ENDFOREACH(I)
+
+ADD_TEST("testing/pythonmesh1d_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/pythonmesh1d.msh ${GOLDENDIR}/testing/pythonmesh1d.msh)
+set_tests_properties("testing/pythonmesh1d_comp" PROPERTIES DEPENDS "testing/pythonmesh1d")
 
 SET (NEWTESTS res1 res2 res3 dio1_utf8 dio2 circ1 circ2 circ3 circ4
 ssac_circ ssac_cap ssac_res ssac_diode utf8_1 mesh1 mesh2 mesh3 mesh4 trimesh1 trimesh2 floops erf1 Fermi1
@@ -161,7 +165,7 @@ set_tests_properties("${BIOAPP1_DIR}/bioapp1_3d_comp" PROPERTIES DEPENDS "${BIOA
 
 SET (DIODE_DIR  examples/diode)
 SET (DIODE_PATH ${PROJECT_SOURCE_DIR}/${DIODE_DIR})
-SET (DIODE_TESTS diode_1d diode_2d gmsh_diode2d gmsh_diode3d ssac_diode laux2d laux3d)
+SET (DIODE_TESTS diode_1d diode_2d gmsh_diode2d gmsh_diode3d ssac_diode laux2d laux3d pythonmesh3d)
 FOREACH(I ${DIODE_TESTS})
     ADD_TEST("${DIODE_DIR}/${I}" ${RUNDIFFTEST} "${DEVSIM_PY} ${I}.py" ${GOLDENDIR}/${DIODE_DIR} ${I}.out ${DIODE_PATH} ${DIODE_PATH})
 ENDFOREACH(I)
@@ -170,7 +174,7 @@ set_tests_properties("${DIODE_DIR}/laux3d" PROPERTIES DEPENDS "${DIODE_DIR}/gmsh
 
 SET (MOBILITY_DIR  examples/mobility)
 SET (MOBILITY_PATH ${PROJECT_SOURCE_DIR}/${MOBILITY_DIR})
-SET (MOBILITY_TESTS gmsh_mos2d gmsh_mos2d_kla)
+SET (MOBILITY_TESTS gmsh_mos2d gmsh_mos2d_kla pythonmesh2d)
 FOREACH(I ${MOBILITY_TESTS})
     ADD_TEST("${MOBILITY_DIR}/${I}" ${RUNDIFFTEST} "${DEVSIM_PY} ${I}.py" ${GOLDENDIR}/${MOBILITY_DIR} ${I}.out ${MOBILITY_PATH} ${MOBILITY_PATH})
 ENDFOREACH(I)

@@ -120,7 +120,7 @@ int Gmshparse();
 #include "GmshLoader.hh"
 #include "MeshKeeper.hh"
 namespace dsGmshParse {
-bool LoadMeshes(const std::string &fname, const std::string &meshName, std::string &errorString)
+bool LoadMeshesFromFile(const std::string &fname, const std::string &meshName, std::string &errorString)
 {
     bool ret = false;
     dsGmshParse::errors.clear();

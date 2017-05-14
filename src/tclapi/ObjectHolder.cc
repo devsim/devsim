@@ -95,22 +95,6 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
   if (object_)
   {
     ok = (TCL_OK == Tcl_GetDoubleFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &val));
-#if 0
-    if (!ok)
-    {
-      const std::string &sval = this->GetString();
-      if (sval == "MAXDOUBLE")
-      {
-        val = std::numeric_limits<double>::max();
-        ok = true;
-      }
-      else if (sval == "-MAXDOUBLE")
-      {
-        val = -std::numeric_limits<double>::max();
-        ok = true;
-      }
-    }
-#endif
   }
 
   return std::make_pair(ok, val);
@@ -126,22 +110,6 @@ ObjectHolder::BooleanEntry_t ObjectHolder::GetBoolean() const
     int ret = 0;
     ok = (TCL_OK == Tcl_GetBooleanFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &ret));
     val = (ret == 1);
-#if 0
-    if (!ok)
-    {
-      const std::string &sval = this->GetString();
-      if (sval == "MAXDOUBLE")
-      {
-        val = std::numeric_limits<double>::max();
-        ok = true;
-      }
-      else if (sval == "-MAXDOUBLE")
-      {
-        val = -std::numeric_limits<double>::max();
-        ok = true;
-      }
-    }
-#endif
   }
 
   return std::make_pair(ok, val);
@@ -156,6 +124,19 @@ ObjectHolder::IntegerEntry_t ObjectHolder::GetInteger() const
   if (object_)
   {
     ok = (TCL_OK == Tcl_GetIntFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &val));
+  }
+
+  return std::make_pair(ok, val);
+}
+
+ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
+{
+  bool      ok = false;
+  ptrdiff_t val= 0;
+
+  if (object_)
+  {
+    ok = (TCL_OK == Tcl_GetLongFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &val));
   }
 
   return std::make_pair(ok, val);
@@ -223,6 +204,75 @@ bool ObjectHolder::GetDoubleList(std::vector<double> &values) const
         ok = false;
         break;
       }
+    }
+  }
+  return ok;
+}
+
+bool ObjectHolder::GetLongList(std::vector<ptrdiff_t> &values) const
+{
+  bool ok = false;
+  values.clear();
+  ObjectHolderList_t objs;
+  ok = GetListOfObjects(objs);
+  if (ok)
+  {
+    values.resize(objs.size());
+    ok = true;
+    for (size_t i = 0; i < objs.size(); ++i)
+    {
+      const ObjectHolder::LongEntry_t &ent = objs[i].GetLong();
+      if (ent.first)
+      {
+        values[i] = ent.second;
+      }
+      else
+      {
+        values.clear();
+        ok = false;
+        break;
+      }
+    }
+  }
+  return ok;
+}
+
+bool ObjectHolder::GetUnsignedLongList(std::vector<size_t> &values) const
+{
+  std::vector<ptrdiff_t> lvalues;
+
+  bool ok = this->GetLongList(lvalues);
+
+  if (ok)
+  {
+    values.resize(lvalues.size());
+    for (size_t i = 0; i < values.size(); ++i)
+    {
+      // no error checking for now
+      values[i] = lvalues[i];
+    }
+  }
+  else
+  {
+    values.clear();
+  }
+
+  return ok;
+}
+
+bool ObjectHolder::GetStringList(std::vector<std::string> &values) const
+{
+  bool ok = false;
+  values.clear();
+  ObjectHolderList_t objs;
+  ok = GetListOfObjects(objs);
+  if (ok)
+  {
+    values.resize(objs.size());
+    ok = true;
+    for (size_t i = 0; i < objs.size(); ++i)
+    {
+      values[i] = objs[i].GetString();
     }
   }
   return ok;
