@@ -208,6 +208,7 @@ void Contact::FindEdges() const
   else if (dimension ==3)
   {
     FindTriangles();
+    return;
   }
 
   contactedges.clear();
@@ -226,15 +227,18 @@ void Contact::FindEdges() const
   for (size_t i = 0; i < el.size(); ++i)
   {
     const Edge &edge = *el[i];
+
+    //// by definition, only one interface edge can exist in region
+    if (ett[edge.GetIndex()].size() != 1)
+    {
+      continue;
+    }
+
     if ((indexes.find(edge.GetHead()->GetIndex()) != indexes.end())
       && (indexes.find(edge.GetTail()->GetIndex()) != indexes.end())
        )
     {
-      //// by definition, only one interface edge can exist in region
-      if (ett[edge.GetIndex()].size() == 1)
-      {
-        contactedges.push_back(&edge);
-      }
+      contactedges.push_back(&edge);
     }
   }
 }
@@ -266,22 +270,25 @@ void Contact::FindTriangles() const
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Triangle &triangle = *tl[i];
+
+    const size_t triangle_index = triangle.GetIndex();
+    if (ett[triangle_index].size() != 1)
+    {
+      continue;
+    }
+
     const std::vector<ConstNodePtr> &node_list = triangle.GetNodeList();
     if ((indexes.find(node_list[0]->GetIndex()) != indexes.end())
       && (indexes.find(node_list[1]->GetIndex()) != indexes.end())
       && (indexes.find(node_list[2]->GetIndex()) != indexes.end())
       )
     {
-      const size_t triangle_index = triangle.GetIndex();
-      if (ett[triangle_index].size() == 1)
-      {
-        contacttriangles.push_back(&triangle);
+      contacttriangles.push_back(&triangle);
 
-        const ConstEdgeList &cel = ete[triangle_index];
-        for (size_t i = 0; i < cel.size(); ++i)
-        {
-          edge_indexes.insert(cel[i]->GetIndex());
-        }
+      const ConstEdgeList &cel = ete[triangle_index];
+      for (size_t i = 0; i < cel.size(); ++i)
+      {
+        edge_indexes.insert(cel[i]->GetIndex());
       }
     }
   }
