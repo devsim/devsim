@@ -214,6 +214,7 @@ void Interface::FindEdges() const
   else if (dimension ==3)
   {
     FindTriangles();
+    return;
   }
 
 
@@ -238,34 +239,38 @@ void Interface::FindEdges() const
     indexes1.insert(nodes1[i]->GetIndex());
   }
 
-  //// TODO: nodeToEdges might be more efficient, but hopefully we only have to do this once
-  //// TODO: does not account for case where a very thin region might take an edge from the interface
   for (size_t i = 0; i < el0.size(); ++i)
   {
     const Edge &edge = *el0[i];
+
+    //// by definition, only one interface edge can exist in region
+    if (ett0[edge.GetIndex()].size() != 1)
+    {
+      continue;
+    }
+
     if ((indexes0.find(edge.GetHead()->GetIndex()) != indexes0.end())
       && (indexes0.find(edge.GetTail()->GetIndex()) != indexes0.end())
        )
     {
-      //// by definition, only one interface edge can exist in region
-      if (ett0[edge.GetIndex()].size() == 1)
-      {
-        edges0.push_back(&edge);
-      }
+      edges0.push_back(&edge);
     }
   }
   for (size_t i = 0; i < el1.size(); ++i)
   {
     const Edge &edge = *el1[i];
+
+    //// by definition, only one interface edge can exist in region
+    if (ett1[edge.GetIndex()].size() != 1)
+    {
+      continue;
+    }
+
     if ((indexes1.find(edge.GetHead()->GetIndex()) != indexes1.end())
       && (indexes1.find(edge.GetTail()->GetIndex()) != indexes1.end())
        )
     {
-      //// by definition, only one interface edge can exist in region
-      if (ett1[edge.GetIndex()].size() == 1)
-      {
-        edges1.push_back(&edge);
-      }
+      edges1.push_back(&edge);
     }
   }
 }
@@ -310,44 +315,48 @@ void Interface::FindTriangles() const
   for (size_t i = 0; i < tl0.size(); ++i)
   {
     const Triangle &triangle = *tl0[i];
+    const size_t triangle_index = triangle.GetIndex();
+    if (ett0[triangle_index].size() != 1)
+    {
+      continue;
+    }
+
     const std::vector<ConstNodePtr> &node_list = triangle.GetNodeList();
     if ((indexes0.find(node_list[0]->GetIndex()) != indexes0.end())
       && (indexes0.find(node_list[1]->GetIndex()) != indexes0.end())
       && (indexes0.find(node_list[2]->GetIndex()) != indexes0.end())
     )
     {
-      const size_t triangle_index = triangle.GetIndex();
-      if (ett0[triangle_index].size() == 1)
-      {
-        triangles0.push_back(&triangle);
+      triangles0.push_back(&triangle);
 
-        const ConstEdgeList &cel = ete0[triangle_index];
-        for (size_t i = 0; i < cel.size(); ++i)
-        {
-          edge_indexes0.insert(cel[i]->GetIndex());
-        }
+      const ConstEdgeList &cel = ete0[triangle_index];
+      for (size_t i = 0; i < cel.size(); ++i)
+      {
+        edge_indexes0.insert(cel[i]->GetIndex());
       }
     }
   }
   for (size_t i = 0; i < tl1.size(); ++i)
   {
     const Triangle &triangle = *tl1[i];
+    const size_t triangle_index = triangle.GetIndex();
+    if (ett1[triangle_index].size() != 1)
+    {
+      continue;
+    }
+
     const std::vector<ConstNodePtr> &node_list = triangle.GetNodeList();
     if ((indexes1.find(node_list[0]->GetIndex()) != indexes1.end())
       && (indexes1.find(node_list[1]->GetIndex()) != indexes1.end())
       && (indexes1.find(node_list[2]->GetIndex()) != indexes1.end())
     )
     {
-      const size_t triangle_index = triangle.GetIndex();
-      if (ett1[triangle_index].size() == 1)
-      {
-        triangles1.push_back(&triangle);
+      triangles1.push_back(&triangle);
 
-        const ConstEdgeList &cel = ete1[triangle_index];
-        for (size_t i = 0; i < cel.size(); ++i)
-        {
-          edge_indexes1.insert(cel[i]->GetIndex());
-        }
+      const ConstEdgeList &cel = ete1[triangle_index];
+      for (size_t i = 0; i < cel.size(); ++i)
+      {
+        edge_indexes1.insert(cel[i]->GetIndex());
       }
     }
   }
