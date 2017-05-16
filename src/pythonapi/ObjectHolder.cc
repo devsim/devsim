@@ -183,6 +183,7 @@ ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
   bool      ok =false;
   ptrdiff_t val=0;
 
+  // a long on windows 64 bit is 32 bits
   if (object_)
   {
     PyObject *obj = reinterpret_cast<PyObject *>(object_);

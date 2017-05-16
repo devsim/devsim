@@ -50,12 +50,11 @@ class ObjectHolder {
     const void *GetObject() const;
     void *GetObject();
 
-    //// The belief is that this cannot fail
     std::string GetString() const;
 
-    typedef std::pair<bool, double> DoubleEntry_t;
-    typedef std::pair<bool, bool>   BooleanEntry_t;
-    typedef std::pair<bool, int>    IntegerEntry_t;
+    typedef std::pair<bool, double>    DoubleEntry_t;
+    typedef std::pair<bool, bool>      BooleanEntry_t;
+    typedef std::pair<bool, int>       IntegerEntry_t;
     typedef std::pair<bool, ptrdiff_t> LongEntry_t;
     DoubleEntry_t  GetDouble() const;
     BooleanEntry_t GetBoolean() const;

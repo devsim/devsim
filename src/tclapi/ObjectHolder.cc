@@ -132,7 +132,13 @@ ObjectHolder::IntegerEntry_t ObjectHolder::GetInteger() const
 ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
 {
   bool      ok = false;
+
+// a long on windows 64 bit is 32 bits
+#if _WIN64
+  long val= 0;
+#else
   ptrdiff_t val= 0;
+#endif
 
   if (object_)
   {
