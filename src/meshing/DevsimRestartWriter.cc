@@ -422,8 +422,8 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
           {
             const std::vector<ConstNodePtr> &triangle0_nodes = ittriangles0[i]->GetNodeList();
             const std::vector<ConstNodePtr> &triangle1_nodes = ittriangles1[i]->GetNodeList();
-            myfile << triangle0_nodes[0]->GetIndex() << "\t" << triangle0_nodes[1] << "\t" << triangle0_nodes[2]->GetIndex() << "\t"
-                   << triangle1_nodes[0]->GetIndex() << "\t" << triangle1_nodes[1] << "\t" << triangle1_nodes[2]->GetIndex() << "\n";
+            myfile << triangle0_nodes[0]->GetIndex() << "\t" << triangle0_nodes[1]->GetIndex() << "\t" << triangle0_nodes[2]->GetIndex() << "\t"
+                   << triangle1_nodes[0]->GetIndex() << "\t" << triangle1_nodes[1]->GetIndex() << "\t" << triangle1_nodes[2]->GetIndex() << "\n";
 
           }
           myfile << "end_triangles\n\n";
