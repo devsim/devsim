@@ -1018,10 +1018,10 @@ bool DevsimLoader::Finalize_(std::string &errorString)
 
     if (ncontacts < 2)
     {
-      ret = false;
+      //ret = false;
       std::ostringstream os; 
-      os << "There needs to be at least 2 contacts on the device and there are only " << ncontacts << "\n";
-      OutputStream::WriteOut(OutputStream::ERROR, os.str());
+      os << "There should be at least 2 contacts on the device and there are only " << ncontacts << "\n";
+      OutputStream::WriteOut(OutputStream::INFO, os.str());
     }
 
 
