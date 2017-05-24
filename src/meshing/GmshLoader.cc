@@ -163,12 +163,6 @@ void GmshLoader::GetUniqueNodesFromPhysicalNames(const std::vector<std::string> 
     const std::string &pname = *pit;
 
     const MeshNodeList_t &pnlist = gmshShapesMap[pname].Points;
-    {
-    std::ostringstream os; 
-    os << "group " << pname << " has " << pnlist.size() << " nodes.\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
-    }
-
 
     for (MeshNodeList_t::const_iterator nit = pnlist.begin(); nit != pnlist.end(); ++nit)
     {
@@ -315,13 +309,6 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       Region &region = *regionptr;
 
       GetUniqueNodesFromPhysicalNames(pnames, mesh_nodes);
-
-      {
-      std::ostringstream os; 
-      os << "Region " << regionName << " has " << mesh_nodes.size() << " nodes.\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
-      }
-
 
       std::vector<NodePtr> &nodeList = RegionNameToNodeMap[regionName];
       processNodes(mesh_nodes, coordinate_list, nodeList);

@@ -104,19 +104,23 @@ void Device::AddContact(const ContactPtr &cp)
   //// Make sure the reverse operation is done if we ever remove a contact
   const ConstNodeList_t &cnodes = cp->GetNodes();
 
-  std::ostringstream os;
+  std::map<std::string, size_t> warning_list;
   for (ConstNodeList_t::const_iterator it = cnodes.begin(); it != cnodes.end(); ++it)
   {
     const size_t ci = (*it)->GetCoordinate().GetIndex();
 
     if (coordinateIndexToContact.count(ci) &&  coordinateIndexToContact[ci].begin() != coordinateIndexToContact[ci].end())
     {
-      os << "Warning, contact \"" << (*coordinateIndexToContact[ci].begin())->GetName() << "\" shares a node with contact \"" << nm << "\"\n";
+      std::ostringstream os;
+      os << "Warning, contact \"" << (*coordinateIndexToContact[ci].begin())->GetName() << "\" shares a node with contact \"" << nm << "\"";
+      warning_list[os.str()] += 1;
     }
 
     if (coordinateIndexToInterface.count(ci) &&  coordinateIndexToInterface[ci].begin() != coordinateIndexToInterface[ci].end())
     {
-      os << "Warning, interface \"" << (*coordinateIndexToInterface[ci].begin())->GetName() << "\" shares a node with contact \"" << nm << "\"\n";
+      std::ostringstream os;
+      os << "Warning, interface \"" << (*coordinateIndexToInterface[ci].begin())->GetName() << "\" shares a node with contact \"" << nm << "\"";
+      warning_list[os.str()] += 1;
     }
 
     //// Guarantee that vector is sorted based on pointer address
@@ -124,7 +128,21 @@ void Device::AddContact(const ContactPtr &cp)
     cplist.push_back(cp);
     std::sort(cplist.begin(), cplist.end());
   }
-  GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+  if (!warning_list.empty())
+  {
+    std::ostringstream os;
+    for (std::map<std::string, size_t>::iterator it = warning_list.begin(); it != warning_list.end(); ++it)
+    {
+      os << (*it).first;
+      size_t num = (*it).second;
+      if (num > 1)
+      {
+        os << " (repeated " << num - 1 << " times)";
+      }
+      os << "\n";
+    }
+    GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+  }
 }
 
 void Device::AddInterface(const InterfacePtr &ip)
@@ -143,19 +161,23 @@ void Device::AddInterface(const InterfacePtr &ip)
   const ConstNodeList_t &inodes0 = ip->GetNodes0();
 // Tacitly assume that inodes0 coordinate index always matches those on inodes1
 //  const ConstNodeList_t &inodes1 = ip->GetNodes1();
-  std::ostringstream os;
+  std::map<std::string, size_t> warning_list;
   for (ConstNodeList_t::const_iterator it = inodes0.begin(); it != inodes0.end(); ++it)
   {
     const size_t ii = (*it)->GetCoordinate().GetIndex();
 
     if (coordinateIndexToInterface.count(ii) &&  coordinateIndexToInterface[ii].begin() != coordinateIndexToInterface[ii].end())
     {
-      os << "Warning, interface \"" << (*coordinateIndexToInterface[ii].begin())->GetName() << "\" shares a node with interface \"" << nm << "\"\n";
+      std::ostringstream os;
+      os << "Warning, interface \"" << (*coordinateIndexToInterface[ii].begin())->GetName() << "\" shares a node with interface \"" << nm << "\"";
+      warning_list[os.str()] += 1;
     }
 
     if (coordinateIndexToContact.count(ii) &&  coordinateIndexToContact[ii].begin() != coordinateIndexToContact[ii].end())
     {
-      os << "Warning, contact \"" << (*coordinateIndexToContact[ii].begin())->GetName() << "\" shares a node with interface \"" << nm << "\"\n";
+      std::ostringstream os;
+      os << "Warning, contact \"" << (*coordinateIndexToContact[ii].begin())->GetName() << "\" shares a node with interface \"" << nm << "\"";
+      warning_list[os.str()] += 1;
     }
 
     //// Guarantee that vector is sorted based on pointer address
@@ -163,7 +185,21 @@ void Device::AddInterface(const InterfacePtr &ip)
     iplist.push_back(ip);
     std::sort(iplist.begin(), iplist.end());
   }
-  GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+  if (!warning_list.empty())
+  {
+    std::ostringstream os;
+    for (std::map<std::string, size_t>::iterator it = warning_list.begin(); it != warning_list.end(); ++it)
+    {
+      os << (*it).first;
+      size_t num = (*it).second;
+      if (num > 1)
+      {
+        os << " (repeated " << num - 1 << " times)";
+      }
+      os << "\n";
+    }
+    GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+  }
 }
 
 void Device::AddCoordinate(CoordinatePtr cp)
