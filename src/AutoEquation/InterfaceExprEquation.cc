@@ -33,20 +33,22 @@ limitations under the License.
 #include <vector>
 #include <string>
 
-const char *InterfaceExprEquation::EquationTypeString[] =
+template <typename DoubleType>
+const char *InterfaceExprEquation<DoubleType>::EquationTypeString[] =
 {
   "unknown",
   "continuous",
   "fluxterm"
 };
 
-InterfaceExprEquation::InterfaceExprEquation(
+template <typename DoubleType>
+InterfaceExprEquation<DoubleType>::InterfaceExprEquation(
     const std::string &eqname,
     InterfacePtr ip,
     const std::string &var,
     const std::string &inmodel,
     EquationType et
-    ) : InterfaceEquation(eqname, var, ip), interface_node_model_(inmodel), equation_type_(et)
+    ) : InterfaceEquation<DoubleType>(eqname, var, ip), interface_node_model_(inmodel), equation_type_(et)
 {
     equation_type_ = et;
 }
@@ -55,21 +57,22 @@ InterfaceExprEquation::InterfaceExprEquation(
 /// So very inefficient due to going through whole process for each node
 /// Same goes for contact equation
 /// TODO: Put stuff into new function so a TimeAssemble can be implemented in terms of this
-void InterfaceExprEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void InterfaceExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-    ModelExprDataCachePtr model_cache0 = ModelExprDataCachePtr(new ModelExprDataCache()); 
-    Region &r0 = *const_cast<Region *>(GetInterface().GetRegion0());
+    ModelExprDataCachePtr<DoubleType> model_cache0 = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    Region &r0 = *const_cast<Region *>(InterfaceEquation<DoubleType>::GetInterface().GetRegion0());
     r0.SetModelExprDataCache(model_cache0);
 
-    ModelExprDataCachePtr model_cache1 = ModelExprDataCachePtr(new ModelExprDataCache()); 
-    Region &r1 = *const_cast<Region *>(GetInterface().GetRegion1());
+    ModelExprDataCachePtr<DoubleType> model_cache1 = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    Region &r1 = *const_cast<Region *>(InterfaceEquation<DoubleType>::GetInterface().GetRegion1());
     r1.SetModelExprDataCache(model_cache1);
 
-    InterfaceModelExprDataCachePtr interface_model_cache = InterfaceModelExprDataCachePtr(new InterfaceModelExprDataCache()); 
-    Interface &interface = const_cast<Interface &>(GetInterface());
+    InterfaceModelExprDataCachePtr<DoubleType> interface_model_cache = InterfaceModelExprDataCachePtr<DoubleType>(new InterfaceModelExprDataCache<DoubleType>()); 
+    Interface &interface = const_cast<Interface &>(InterfaceEquation<DoubleType>::GetInterface());
     interface.SetInterfaceModelExprDataCache(interface_model_cache);
 
-    const std::string &SurfaceAreaModel = GetInterface().GetSurfaceAreaModel();
+    const std::string &SurfaceAreaModel = InterfaceEquation<DoubleType>::GetInterface().GetSurfaceAreaModel();
     if (t == dsMathEnum::DC)
     {
         if (!interface_node_model_.empty())
@@ -78,11 +81,11 @@ void InterfaceExprEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, dsMat
             //// A new equation is specified for the left over equation
             if (equation_type_ == CONTINUOUS)
             {
-                NodeVolumeType1Assemble(interface_node_model_, m, v, p, w, SurfaceAreaModel);
+                InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(interface_node_model_, m, v, p, w, SurfaceAreaModel);
             }
             else if (equation_type_ == FLUXTERM)
             {
-                NodeVolumeType2Assemble(interface_node_model_, m, v, p, w, SurfaceAreaModel);
+                InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(interface_node_model_, m, v, p, w, SurfaceAreaModel);
             }
             else
             {
@@ -99,21 +102,25 @@ void InterfaceExprEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, dsMat
     }
 }
 
-void InterfaceExprEquation::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void InterfaceExprEquation<DoubleType>::Serialize(std::ostream &of) const
 {
-  of << "COMMAND interface_equation -device \"" << GetInterface().GetDeviceName() << "\" -interface \"" << GetInterface().GetName() << "\" -name \"" << GetName() << "\" -variable_name \"" << GetVariable()
+  of << "COMMAND interface_equation -device \"" << InterfaceEquation<DoubleType>::GetInterface().GetDeviceName() << "\" -interface \"" << InterfaceEquation<DoubleType>::GetInterface().GetName() << "\" -name \"" << InterfaceEquation<DoubleType>::GetName() << "\" -variable_name \"" << InterfaceEquation<DoubleType>::GetVariable()
     << "\" -interface_model \"" << interface_node_model_
     << "\" -type \"" << EquationTypeString[equation_type_]
     << "\"";
 }
     
-void InterfaceExprEquation::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
+template <typename DoubleType>
+void InterfaceExprEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
 {
-  omap["device"] = ObjectHolder(GetInterface().GetDeviceName());
-  omap["interface"] = ObjectHolder(GetInterface().GetName());
-  omap["name"] = ObjectHolder(GetName());
-  omap["variable_name"] = ObjectHolder(GetVariable());
+  omap["device"] = ObjectHolder(InterfaceEquation<DoubleType>::GetInterface().GetDeviceName());
+  omap["interface"] = ObjectHolder(InterfaceEquation<DoubleType>::GetInterface().GetName());
+  omap["name"] = ObjectHolder(InterfaceEquation<DoubleType>::GetName());
+  omap["variable_name"] = ObjectHolder(InterfaceEquation<DoubleType>::GetVariable());
   omap["interface_model"] = ObjectHolder(interface_node_model_);
   omap["type"] = ObjectHolder(EquationTypeString[equation_type_]);
 }
+
+template class InterfaceExprEquation<double>;
 

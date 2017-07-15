@@ -20,17 +20,13 @@ limitations under the License.
 #include "ScalarData.cc"
 
 //// Manual Template Instantiation
-template class ScalarData<NodeModel>;
+template class ScalarData<NodeModel, double>;
 
-template class
-ScalarData<NodeModel>& ScalarData<NodeModel>::op_equal<ScalarDataHelper::times_equal>(const double &, const ScalarDataHelper::times_equal &);
+template class ScalarData<NodeModel, double>& NodeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const double &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<NodeModel>& ScalarData<NodeModel>::op_equal<ScalarDataHelper::times_equal>(const ScalarData<NodeModel> &, const ScalarDataHelper::times_equal &);
+template class ScalarData<NodeModel, double>& NodeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const NodeScalarData<double> &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<NodeModel>& ScalarData<NodeModel>::op_equal<ScalarDataHelper::plus_equal>(const double &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<NodeModel, double>& NodeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const double &, const ScalarDataHelper::plus_equal<double> &);
 
-template class
-ScalarData<NodeModel>& ScalarData<NodeModel>::op_equal<ScalarDataHelper::plus_equal>(const ScalarData<NodeModel> &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<NodeModel, double>& NodeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const NodeScalarData<double> &, const ScalarDataHelper::plus_equal<double> &);
 

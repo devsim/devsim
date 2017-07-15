@@ -79,7 +79,7 @@ InstanceModelPtr InstanceKeeper::addInstanceModel(InstanceModel *p)
 // then be added to the matrix
 //
 // precomputation iterator can be handled later
-void InstanceKeeper::AssembleDCMatrix(dsMath::RealRowColValueVec &mat, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec &rhs)
+void InstanceKeeper::AssembleDCMatrix(dsMath::RealRowColValueVec<double> &mat, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec<double> &rhs)
 {
     InstanceModelList::iterator iter, end=instMod_.end();
 
@@ -91,7 +91,7 @@ void InstanceKeeper::AssembleDCMatrix(dsMath::RealRowColValueVec &mat, const Nod
 }
 
 // The next two are the AC terms.  Make sure they look the same as above.
-void InstanceKeeper::AssembleTRMatrix(dsMath::RealRowColValueVec *mat, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec &rhs, double scl)
+void InstanceKeeper::AssembleTRMatrix(dsMath::RealRowColValueVec<double> *mat, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec<double> &rhs, double scl)
 {
     InstanceModelList::iterator iter, end=instMod_.end();
     for (iter = instMod_.begin(); iter != end; ++iter)

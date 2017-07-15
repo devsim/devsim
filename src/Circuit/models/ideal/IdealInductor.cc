@@ -12,7 +12,7 @@ IdealInductor::IdealInductor( NodeKeeper *nk, const char *name,
        L               = 1.000000e+00;
 }
 
-void IdealInductor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec &mat, std::vector<std::pair<int, double> > &rhs)
+void IdealInductor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, std::vector<std::pair<int, double> > &rhs)
 {
    const size_t node_num_I = node_ptr_I->getNumber();
    const size_t node_num_vbot = node_ptr_vbot->getNumber();
@@ -49,25 +49,25 @@ void IdealInductor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowC
    if (!is_gnd_node_I)
    {
       if (!is_gnd_node_vtop)
-         mat.push_back(dsMath::RealRowColVal(node_num_I,node_num_vtop, eI_vtop));
+         mat.push_back(dsMath::RealRowColVal<double>(node_num_I,node_num_vtop, eI_vtop));
       if (!is_gnd_node_vbot)
-         mat.push_back(dsMath::RealRowColVal(node_num_I,node_num_vbot, eI_vbot));
+         mat.push_back(dsMath::RealRowColVal<double>(node_num_I,node_num_vbot, eI_vbot));
    }
    if (!is_gnd_node_vbot)
    {
       if (!is_gnd_node_I)
-         mat.push_back(dsMath::RealRowColVal(node_num_vbot,node_num_I, evbot_I));
+         mat.push_back(dsMath::RealRowColVal<double>(node_num_vbot,node_num_I, evbot_I));
    }
    if (!is_gnd_node_vtop)
    {
       if (!is_gnd_node_I)
-         mat.push_back(dsMath::RealRowColVal(node_num_vtop,node_num_I, evtop_I));
+         mat.push_back(dsMath::RealRowColVal<double>(node_num_vtop,node_num_I, evtop_I));
    }
 
 }
 
 
-void IdealInductor::assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec *mat, std::vector<std::pair<int, double> > &rhs)
+void IdealInductor::assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs)
 {
    const size_t node_num_I = node_ptr_I->getNumber();
 
@@ -90,7 +90,7 @@ void IdealInductor::assembleTran(const double scl, const NodeKeeper::Solution &s
 
    if (!is_gnd_node_I)
    {
-      mat->push_back(dsMath::RealRowColVal(node_num_I,node_num_I, eI_I));
+      mat->push_back(dsMath::RealRowColVal<double>(node_num_I,node_num_I, eI_I));
    }
 
 }

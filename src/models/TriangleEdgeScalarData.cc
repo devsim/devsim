@@ -20,17 +20,13 @@ limitations under the License.
 #include "ScalarData.cc"
 
 //// Manual Template Instantiation
-template class ScalarData<TriangleEdgeModel>;
+template class ScalarData<TriangleEdgeModel, double>;
 
-template class
-ScalarData<TriangleEdgeModel>& ScalarData<TriangleEdgeModel>::op_equal<ScalarDataHelper::times_equal>(const double &, const ScalarDataHelper::times_equal &);
+template class ScalarData<TriangleEdgeModel, double>& TriangleEdgeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const double &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<TriangleEdgeModel>& ScalarData<TriangleEdgeModel>::op_equal<ScalarDataHelper::times_equal>(const ScalarData<TriangleEdgeModel> &, const ScalarDataHelper::times_equal &);
+template class ScalarData<TriangleEdgeModel, double>& TriangleEdgeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const TriangleEdgeScalarData<double> &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<TriangleEdgeModel>& ScalarData<TriangleEdgeModel>::op_equal<ScalarDataHelper::plus_equal>(const double &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<TriangleEdgeModel, double>& TriangleEdgeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const double &, const ScalarDataHelper::plus_equal<double> &);
 
-template class
-ScalarData<TriangleEdgeModel>& ScalarData<TriangleEdgeModel>::op_equal<ScalarDataHelper::plus_equal>(const ScalarData<TriangleEdgeModel> &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<TriangleEdgeModel, double>& TriangleEdgeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const TriangleEdgeScalarData<double> &, const ScalarDataHelper::plus_equal<double> &);
 

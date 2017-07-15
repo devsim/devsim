@@ -18,14 +18,21 @@ limitations under the License.
 #ifndef TRIANGLE_EDGE_SCALAR_DATA_HH
 #define TRIANGLE_EDGE_SCALAR_DATA_HH
 #include <vector>
-typedef std::vector<double> TriangleEdgeScalarList;
-class TriangleEdgeModel;
+
+template<typename T>
+using TriangleEdgeScalarList = std::vector<T>;
 
 #include "ScalarData.hh"
-typedef ScalarData<TriangleEdgeModel> TriangleEdgeScalarData;
+
+class TriangleEdgeModel;
+
+template<typename T>
+using TriangleEdgeScalarData = ScalarData<TriangleEdgeModel, T>;
 
 class EdgeModel;
-typedef ScalarData<EdgeModel> EdgeScalarData;
+
+template<typename T>
+using EdgeScalarData = ScalarData<EdgeModel, T>;
 
 #endif
 

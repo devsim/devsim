@@ -24,11 +24,13 @@ limitations under the License.
 
 namespace Eqomfp {
 
-MathWrapper::~MathWrapper()
+template <typename DoubleType>
+MathWrapper<DoubleType>::~MathWrapper()
 {
 }
 
-void MathWrapper::Evaluate(const std::vector<double> &dvals, const std::vector<const std::vector<double> *> &vvals, std::string &error, std::vector<double> &result, const size_t vbeg, const size_t vend) const
+template <typename DoubleType>
+void MathWrapper<DoubleType>::Evaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::string &error, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   if (dvals.size() != this->GetNumberArguments())
   {
@@ -42,9 +44,10 @@ void MathWrapper::Evaluate(const std::vector<double> &dvals, const std::vector<c
   }
 }
 
-double MathWrapper::Evaluate(const std::vector<double> &vals, std::string &error) const
+template <typename DoubleType>
+DoubleType MathWrapper<DoubleType>::Evaluate(const std::vector<DoubleType> &vals, std::string &error) const
 {
-  double x = 0.0;
+  DoubleType x = 0.0;
 
   if (vals.size() != this->GetNumberArguments())
   {
@@ -60,13 +63,14 @@ double MathWrapper::Evaluate(const std::vector<double> &vals, std::string &error
   return x;
 }
 
-void MathWrapper1::DerivedEvaluate(const std::vector<double> &/*dvals*/, const std::vector<const std::vector<double> *> &vvals, std::vector<double> &result, const size_t vbeg, const size_t vend) const
+template <typename DoubleType>
+void MathWrapper1<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &/*dvals*/, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] != NULL, "UNEXPECTED");
 
-//  const std::vector<double> &vals = *vvals[0];
-  double       *vr = &result[vbeg];
-  const double *v0 = &((*vvals[0])[vbeg]);
+//  const std::vector<DoubleType> &vals = *vvals[0];
+  DoubleType       *vr = &result[vbeg];
+  const DoubleType *v0 = &((*vvals[0])[vbeg]);
 
 //    std::transform(vals.begin(), vals.end(), result.begin(), std::ptr_fun(funcptr_));
   for (size_t i = vbeg; i < vend; ++i)
@@ -75,20 +79,22 @@ void MathWrapper1::DerivedEvaluate(const std::vector<double> &/*dvals*/, const s
   }
 }
 
-double MathWrapper1::DerivedEvaluate(const std::vector<double> &vals) const
+template <typename DoubleType>
+DoubleType MathWrapper1<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
 {
   return funcptr_(vals[0]);
 }
 
-void MathWrapper2::DerivedEvaluate(const std::vector<double> &dvals, const std::vector<const std::vector<double> *> &vvals, std::vector<double> &result, const size_t vbeg, const size_t vend) const
+template <typename DoubleType>
+void MathWrapper2<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] || vvals[1], "UNEXPECTED");
 
   if (vvals[0] && vvals[1])
   {
-    const double *v0 = &((*vvals[0])[vbeg]);
-    const double *v1 = &((*vvals[1])[vbeg]);
-    double       *vr = &result[vbeg];
+    const DoubleType *v0 = &((*vvals[0])[vbeg]);
+    const DoubleType *v1 = &((*vvals[1])[vbeg]);
+    DoubleType       *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
@@ -98,9 +104,9 @@ void MathWrapper2::DerivedEvaluate(const std::vector<double> &dvals, const std::
   }
   else if (vvals[0])
   {
-    const double *v0 = &((*vvals[0])[vbeg]);
-    const double dval1 = dvals[1];
-    double       *vr = &result[vbeg];
+    const DoubleType *v0 = &((*vvals[0])[vbeg]);
+    const DoubleType dval1 = dvals[1];
+    DoubleType       *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
@@ -109,9 +115,9 @@ void MathWrapper2::DerivedEvaluate(const std::vector<double> &dvals, const std::
   }
   else if (vvals[1])
   {
-    const double *v1 = &((*vvals[1])[vbeg]);
-    const double dval0 = dvals[0];
-    double       *vr = &result[vbeg];
+    const DoubleType *v1 = &((*vvals[1])[vbeg]);
+    const DoubleType dval0 = dvals[0];
+    DoubleType       *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
@@ -120,16 +126,18 @@ void MathWrapper2::DerivedEvaluate(const std::vector<double> &dvals, const std::
   }
 }
 
-double MathWrapper2::DerivedEvaluate(const std::vector<double> &vals) const
+template <typename DoubleType>
+DoubleType MathWrapper2<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
 {
   return funcptr_(vals[0], vals[1]);
 }
 
-void MathWrapper3::DerivedEvaluate(const std::vector<double> &dvals, const std::vector<const std::vector<double> *> &vvals, std::vector<double> &result, const size_t vbeg, const size_t vend) const
+template <typename DoubleType>
+void MathWrapper3<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] || vvals[1] || vvals[2], "UNEXPECTED");
 
-  double vals[3];
+  DoubleType vals[3];
   for (size_t i = 0; i < 3; ++i)
   {
     vals[i] = dvals[i];
@@ -149,17 +157,19 @@ void MathWrapper3::DerivedEvaluate(const std::vector<double> &dvals, const std::
   }
 }
 
-double MathWrapper3::DerivedEvaluate(const std::vector<double> &vals) const
+template <typename DoubleType>
+DoubleType MathWrapper3<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
 {
   return funcptr_(vals[0], vals[1], vals[2]);
 }
 
 
-void MathWrapper4::DerivedEvaluate(const std::vector<double> &dvals, const std::vector<const std::vector<double> *> &vvals, std::vector<double> &result, const size_t vbeg, const size_t vend) const
+template <typename DoubleType>
+void MathWrapper4<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] || vvals[1] || vvals[2] || vvals[3], "UNEXPECTED");
 
-  double vals[4];
+  DoubleType vals[4];
   for (size_t i = 0; i < 4; ++i)
   {
     vals[i] = dvals[i];
@@ -179,16 +189,18 @@ void MathWrapper4::DerivedEvaluate(const std::vector<double> &dvals, const std::
   }
 }
 
-double MathWrapper4::DerivedEvaluate(const std::vector<double> &vals) const
+template <typename DoubleType>
+DoubleType MathWrapper4<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
 {
   return funcptr_(vals[0], vals[1], vals[2], vals[3]);
 }
 
 namespace
 {
-inline bool IsInt(double x)
+template <typename DoubleType>
+inline bool IsInt(DoubleType x)
 {
-  double y;
+  DoubleType y;
   return ((modf(x, &y) == 0) &&
           (x >= std::numeric_limits<int>::min()) &&
           (x <= std::numeric_limits<int>::max())
@@ -197,15 +209,16 @@ inline bool IsInt(double x)
 }
 
 
-void PowWrapper::DerivedEvaluate(const std::vector<double> &dvals, const std::vector<const std::vector<double> *> &vvals, std::vector<double> &result, const size_t vbeg, const size_t vend) const
+template <typename DoubleType>
+void PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] || vvals[1], "UNEXPECTED");
 
   if (vvals[0] && vvals[1])
   {
-    const double *v0 = &((*vvals[0])[vbeg]);
-    const double *v1 = &((*vvals[1])[vbeg]);
-    double       *vr = &result[vbeg];
+    const DoubleType *v0 = &((*vvals[0])[vbeg]);
+    const DoubleType *v1 = &((*vvals[1])[vbeg]);
+    DoubleType       *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
@@ -215,9 +228,9 @@ void PowWrapper::DerivedEvaluate(const std::vector<double> &dvals, const std::ve
   }
   else if (vvals[0])
   {
-    const double *v0 = &((*vvals[0])[vbeg]);
-    const double dval1 = dvals[1];
-    double       *vr = &result[vbeg];
+    const DoubleType *v0 = &((*vvals[0])[vbeg]);
+    const DoubleType dval1 = dvals[1];
+    DoubleType       *vr = &result[vbeg];
 
     if (IsInt(dval1))
     {
@@ -236,9 +249,9 @@ void PowWrapper::DerivedEvaluate(const std::vector<double> &dvals, const std::ve
   }
   else if (vvals[1])
   {
-    const double *v1 = &((*vvals[1])[vbeg]);
-    const double dval0 = dvals[0];
-    double       *vr = &result[vbeg];
+    const DoubleType *v1 = &((*vvals[1])[vbeg]);
+    const DoubleType dval0 = dvals[0];
+    DoubleType       *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
@@ -247,9 +260,10 @@ void PowWrapper::DerivedEvaluate(const std::vector<double> &dvals, const std::ve
   }
 }
 
-double PowWrapper::DerivedEvaluate(const std::vector<double> &vals) const
+template <typename DoubleType>
+DoubleType PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
 {
-  const double e = vals[1];
+  const DoubleType e = vals[1];
   if (IsInt(e))
   {
     return std::pow(vals[0], static_cast<int>(e));
@@ -260,6 +274,12 @@ double PowWrapper::DerivedEvaluate(const std::vector<double> &vals) const
   }
 }
 
+template class MathWrapper<double>;
+template class MathWrapper1<double>;
+template class MathWrapper2<double>;
+template class MathWrapper3<double>;
+template class MathWrapper4<double>;
+template class PowWrapper<double>;
 
 }///end Eqomfp
 

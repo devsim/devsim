@@ -19,6 +19,7 @@ limitations under the License.
 #define CYLINDRICALNODEVOLUME_HH
 #include "NodeModel.hh"
 
+template <typename DoubleType>
 class CylindricalNodeVolume : public NodeModel
 {
     public:

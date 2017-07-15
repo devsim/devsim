@@ -30,26 +30,27 @@ limitations under the License.
 
 namespace IMEE {
 
-const char * const InterfaceModelExprData::datatypename[] = {
+const char * const datatypename[] = {
     "nodedata",
     "double",
     "invalid"
 };
 
 /// Undefined behavior if we have a double or invalid data
-InterfaceModelExprData::ScalarValuesType InterfaceModelExprData::GetScalarValues() const
+template <typename DoubleType>
+ScalarValuesType<DoubleType> InterfaceModelExprData<DoubleType>::GetScalarValues() const
 {
-  ScalarValuesType ret;
+  ScalarValuesType<DoubleType> ret;
 
   if (type == NODEDATA)
   {
     if (nsd->IsUniform())
     {
-      ret = ScalarValuesType(nsd->GetUniformValue(), nsd->GetLength());
+      ret = ScalarValuesType<DoubleType>(nsd->GetUniformValue(), nsd->GetLength());
     }
     else
     {
-      ret = ScalarValuesType(nsd->GetScalarList());
+      ret = ScalarValuesType<DoubleType>(nsd->GetScalarList());
     }
   }
   else
@@ -60,16 +61,19 @@ InterfaceModelExprData::ScalarValuesType InterfaceModelExprData::GetScalarValues
 }
 
 //// ERROR need to make full copy of vector data
-InterfaceModelExprData::InterfaceModelExprData(const InterfaceModelExprData &x) : nsd(x.nsd), val(x.val), type(x.type)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType>::InterfaceModelExprData(const InterfaceModelExprData<DoubleType> &x) : nsd(x.nsd), val(x.val), type(x.type)
 {
 }
 
-InterfaceModelExprData::InterfaceModelExprData(const InterfaceNodeScalarData &x) : val(0.0), type(NODEDATA) {
-    InterfaceNodeScalarData *foo = new InterfaceNodeScalarData(x);
-    nsd = std::shared_ptr<InterfaceNodeScalarData>(foo);
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType>::InterfaceModelExprData(const InterfaceNodeScalarData<DoubleType> &x) : val(0.0), type(NODEDATA) {
+    InterfaceNodeScalarData<DoubleType> *foo = new InterfaceNodeScalarData<DoubleType>(x);
+    nsd = std::shared_ptr<InterfaceNodeScalarData<DoubleType>>(foo);
 };
 
-InterfaceModelExprData &InterfaceModelExprData::operator=(const InterfaceModelExprData &x)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::operator=(const InterfaceModelExprData<DoubleType> &x)
 {
     // Since this class is not derived, we don't have to copy the base part
     if (&x != this)
@@ -81,18 +85,18 @@ InterfaceModelExprData &InterfaceModelExprData::operator=(const InterfaceModelEx
     return *this;
 }
 
-
-void InterfaceModelExprData::makeUnique()
+template <typename DoubleType>
+void InterfaceModelExprData<DoubleType>::makeUnique()
 {
   if (nsd && (!nsd.unique()))
   {
-    nsd = nsd_ptr(new InterfaceNodeScalarData(*nsd));
+    nsd = nsd_ptr(new InterfaceNodeScalarData<DoubleType>(*nsd));
   }
 }
 
 
-template<typename T>
-InterfaceModelExprData &InterfaceModelExprData::op_equal(const InterfaceModelExprData &other, const T &func)
+template<typename DoubleType> template<typename T>
+InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::op_equal(const InterfaceModelExprData<DoubleType> &other, const T &func)
 {
   makeUnique();
 
@@ -116,7 +120,7 @@ InterfaceModelExprData &InterfaceModelExprData::op_equal(const InterfaceModelExp
   {
     if (other.type == NODEDATA)
     {
-      InterfaceNodeScalarData *x = new InterfaceNodeScalarData(val, other.nsd->GetLength()); 
+      InterfaceNodeScalarData<DoubleType> *x = new InterfaceNodeScalarData<DoubleType>(val, other.nsd->GetLength()); 
       nsd = nsd_ptr(x);
       nsd->op_equal(*other.nsd, func);
       type = NODEDATA;
@@ -138,20 +142,24 @@ InterfaceModelExprData &InterfaceModelExprData::op_equal(const InterfaceModelExp
 //// Make sure they are changed together
 //// In the future, we will just use function pointers so that the work
 //// isn't duplicated
-InterfaceModelExprData &InterfaceModelExprData::operator*=(const InterfaceModelExprData &other)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::operator*=(const InterfaceModelExprData<DoubleType> &other)
 {
-  this->op_equal(other, ScalarDataHelper::times_equal());
+  this->op_equal(other, ScalarDataHelper::times_equal<double>());
   return *this;
 }
 
 //// yes *= is a copy and past job of this
 //// Make sure they are changed together
-InterfaceModelExprData &InterfaceModelExprData::operator+=(const InterfaceModelExprData &other)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::operator+=(const InterfaceModelExprData<DoubleType> &other)
 {
-  this->op_equal(other, ScalarDataHelper::plus_equal());
+  this->op_equal(other, ScalarDataHelper::plus_equal<double>());
   return *this;
 }
 
+//// Manual Template Instantiation
+template class InterfaceModelExprData<double>;
 
 }
 

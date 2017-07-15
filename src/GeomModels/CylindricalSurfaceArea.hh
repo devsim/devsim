@@ -22,6 +22,7 @@ limitations under the License.
 class Contact;
 class Interface;
 
+template <typename DoubleType>
 class CylindricalSurfaceArea : public NodeModel {
     public:
         CylindricalSurfaceArea(RegionPtr /*rp*/);

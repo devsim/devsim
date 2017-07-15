@@ -1,4 +1,5 @@
 SET (CXX_SRCS
+    ModelDataHolder.cc
     NodeModel.cc
     EdgeModel.cc
     InterfaceNodeScalarData.cc

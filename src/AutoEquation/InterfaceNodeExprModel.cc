@@ -29,7 +29,8 @@ limitations under the License.
 
 
 // Must be valid equation object which is passed
-InterfaceNodeExprModel::InterfaceNodeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, InterfacePtr ip) : InterfaceNodeModel(nm, ip), equation(eq)
+template <typename DoubleType>
+InterfaceNodeExprModel<DoubleType>::InterfaceNodeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, InterfacePtr ip) : InterfaceNodeModel(nm, ip), equation(eq)
 {
 #if 0
     os << "creating InterfaceNodeExprModel " << nm << " with equation " << eq << "\n";
@@ -37,7 +38,8 @@ InterfaceNodeExprModel::InterfaceNodeExprModel(const std::string &nm, const Eqo:
   RegisterModels();
 }
 
-void InterfaceNodeExprModel::RegisterModels()
+template <typename DoubleType>
+void InterfaceNodeExprModel<DoubleType>::RegisterModels()
 {
     typedef std::set<std::string> refmodels_t;
     refmodels_t refs;
@@ -75,15 +77,16 @@ void InterfaceNodeExprModel::RegisterModels()
     }
 }
 
-void InterfaceNodeExprModel::calcNodeScalarValues() const
+template <typename DoubleType>
+void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
 {
 #if 0
         os << "updating NodeExprModel " << GetName() << " from expression " << EngineAPI::getStringValue(equation) << "\n";
 #endif
-    IMEE::InterfaceModelExprEval::error_t errors;
+    typename IMEE::InterfaceModelExprEval<DoubleType>::error_t errors;
     const Interface *ip = &(this->GetInterface());
-    IMEE::InterfaceModelExprEval mexp(ip, errors);
-    IMEE::InterfaceModelExprData out = mexp.eval_function(equation);
+    IMEE::InterfaceModelExprEval<DoubleType> mexp(ip, errors);
+    IMEE::InterfaceModelExprData<DoubleType> out = mexp.eval_function(equation);
 
     if (!errors.empty())
     {
@@ -95,7 +98,7 @@ void InterfaceNodeExprModel::calcNodeScalarValues() const
         << " on interface " << GetInterface().GetName()
         << " with expression " << EngineAPI::getStringValue(equation)
         << "\n";
-        for (IMEE::InterfaceModelExprEval::error_t::iterator it = errors.begin(); it != errors.end(); ++it)
+        for (typename IMEE::InterfaceModelExprEval<DoubleType>::error_t::iterator it = errors.begin(); it != errors.end(); ++it)
         {
             os << *it << "\n";
         }
@@ -103,40 +106,46 @@ void InterfaceNodeExprModel::calcNodeScalarValues() const
     }
 
     if (
-        (out.GetType() == IMEE::InterfaceModelExprData::NODEDATA)
+        (out.GetType() == IMEE::NODEDATA)
        )
     {
-        const IMEE::InterfaceModelExprData::ScalarValuesType &tval = out.GetScalarValues();
+        const IMEE::ScalarValuesType<DoubleType> &tval = out.GetScalarValues();
         if (tval.IsUniform())
         {
           SetValues(tval.GetScalar());
         }
         else
         {
-          NodeScalarList nsl(tval.GetVector());
+          NodeScalarList<DoubleType> nsl(tval.GetVector());
           SetValues(nsl);
         }
     }
-    else if (out.GetType() == IMEE::InterfaceModelExprData::DOUBLE)
+    else if (out.GetType() == IMEE::DOUBLE)
     {
-        const double v = out.GetDoubleValue();
+        const DoubleType v = out.GetDoubleValue();
         const Interface::ConstNodeList_t &nl = GetInterface().GetNodes0();
-        std::vector<double> nsl(nl.size(), v);
+        std::vector<DoubleType> nsl(nl.size(), v);
         SetValues(nsl);
     }
     else
     {
         std::ostringstream os; 
         os << "while evaluating model " << GetName() << ": expression "
-            << EngineAPI::getStringValue(equation) << " evaluates to a " << IMEE::InterfaceModelExprData::datatypename[out.GetType()]
+            << EngineAPI::getStringValue(equation) << " evaluates to a " << IMEE::datatypename[out.GetType()]
             << "\n";
         GeometryStream::WriteOut(OutputStream::FATAL, *ip, os.str());
     }
         
 }
 
-void InterfaceNodeExprModel::Serialize(std::ostream &of) const
+#ifndef _WIN32
+#warning "serialize extended option here"
+#endif
+template <typename DoubleType>
+void InterfaceNodeExprModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND interface_model -device \"" << GetDeviceName() << "\" -interface \"" << GetInterfaceName() << "\" -name \"" << GetName() << "\" -equation \"" << EngineAPI::getStringValue(equation) << ";\"";
 }
+
+template class InterfaceNodeExprModel<double>;
 

@@ -24,16 +24,17 @@ limitations under the License.
     This is your basic vector class providing algebraic operations for data
     1, 2, or 3 dimensions
 */
+template <typename DoubleType>
 class Vector {
     public:
-//      explicit Vector(double x = 0.0, double y = 0.0, double z = 0.0);
-        explicit Vector(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {}
+//      explicit Vector(DoubleType x = 0.0, DoubleType y = 0.0, DoubleType z = 0.0);
+        explicit Vector(DoubleType x = 0, DoubleType y = 0, DoubleType z = 0) : x(x), y(y), z(z) {}
 
-        Vector(const Vector &v) : x(v.x), y(v.y), z(v.z)
+        Vector(const Vector<DoubleType> &v) : x(v.x), y(v.y), z(v.z)
         {
         }
 
-        Vector & operator=(const Vector &v)
+        Vector & operator=(const Vector<DoubleType> &v)
         {
              x  =v.x;
              y  =v.y;
@@ -42,20 +43,20 @@ class Vector {
         }
 
 
-        Vector   operator-(const Vector &v) const
+        Vector   operator-(const Vector<DoubleType> &v) const
         {
-          Vector tmp(*this);
+          Vector<DoubleType> tmp(*this);
           tmp -= v;
           return tmp;
         }
 
         Vector   operator-() const
         {
-          Vector ret(-x, -y, -z);
+          Vector<DoubleType> ret(-x, -y, -z);
           return ret;
         }
 
-        Vector & operator-=(const Vector &v)
+        Vector & operator-=(const Vector<DoubleType> &v)
         {
           x -= v.x;
           y -= v.y;
@@ -63,14 +64,14 @@ class Vector {
           return *this;
         }
 
-        Vector   operator+(const Vector &v) const
+        Vector   operator+(const Vector<DoubleType> &v) const
         {
-          Vector tmp(*this);
+          Vector<DoubleType> tmp(*this);
           tmp += v;
           return tmp;
         }
 
-        Vector & operator+=(const Vector &v)
+        Vector & operator+=(const Vector<DoubleType> &v)
         {
           x += v.x;
           y += v.y;
@@ -78,14 +79,14 @@ class Vector {
           return *this;
         }
 
-        Vector   operator* (double d) const
+        Vector   operator* (DoubleType d) const
         {
-            Vector ret(*this);
+            Vector<DoubleType> ret(*this);
             ret *= d;
             return ret;
         }
 
-        Vector & operator*=(double d)
+        Vector & operator*=(DoubleType d)
         {
           x *= d;
           y *= d;
@@ -93,14 +94,14 @@ class Vector {
           return *this;
         }
 
-        Vector   operator/ (double d) const
+        Vector   operator/ (DoubleType d) const
         {
-            Vector ret(*this);
+            Vector<DoubleType> ret(*this);
             ret /= d;
             return ret;
         }
 
-        Vector & operator/=(double d)
+        Vector & operator/=(DoubleType d)
         {
             x /= d;
             y /= d;
@@ -108,86 +109,93 @@ class Vector {
             return *this;
         }
 
-        double magnitude() const
+        DoubleType magnitude() const
         {
           return std::sqrt(x*x + y*y + z*z);
         }
 
-        double dot_prod(const Vector &v) const
+        DoubleType dot_prod(const Vector<DoubleType> &v) const
         {
           return (x * v.x + y*v.y + z*v.z);
         }
 
-        Vector cross_prod(const Vector &v) const
+        Vector cross_prod(const Vector<DoubleType> &v) const
         {
-          const double xcomp = (y * v.z) - (z * v.y);
-          const double ycomp = (z * v.x) - (x * v.z);
-          const double zcomp = (x * v.y) - (y * v.x);
-          return Vector(xcomp, ycomp, zcomp);
+          const DoubleType xcomp = (y * v.z) - (z * v.y);
+          const DoubleType ycomp = (z * v.x) - (x * v.z);
+          const DoubleType zcomp = (x * v.y) - (y * v.x);
+          return Vector<DoubleType>(xcomp, ycomp, zcomp);
         }
 
-        const double &Getx() const
+        const DoubleType &Getx() const
         {
             return x;
         }
 
-        const double &Gety() const
+        const DoubleType &Gety() const
         {
             return y;
         }
 
-        const double &Getz() const
+        const DoubleType &Getz() const
         {
             return z;
         }
 
-        void Setx(double xn)
+        void Setx(DoubleType xn)
         {
           x = xn;
         }
-        void Sety(double yn)
+        void Sety(DoubleType yn)
         {
           y = yn;
         }
-        void Setz(double zn)
+        void Setz(DoubleType zn)
         {
           z = zn;
         }
         
     private:
-       double x;
-       double y;
-       double z;
+       DoubleType x;
+       DoubleType y;
+       DoubleType z;
 };
 
-inline Vector operator-(Vector &v1, Vector &v2)
+template <typename DoubleType>
+inline Vector<DoubleType> operator-(Vector<DoubleType> &v1, Vector<DoubleType> &v2)
 {
-   Vector vec(v1);
+   Vector<DoubleType> vec(v1);
    vec -= v2;
    return vec;
 }
 
-inline double magnitude(const Vector &vec) {
+template <typename DoubleType>
+inline DoubleType magnitude(const Vector<DoubleType> &vec) {
    return vec.magnitude();
 }
 
-inline Vector cross_prod(const Vector &v1, const Vector &v2) {
+template <typename DoubleType>
+inline Vector<DoubleType> cross_prod(const Vector<DoubleType> &v1, const Vector<DoubleType> &v2) {
     return v1.cross_prod(v2);
 }
 
-inline double dot_prod(const Vector &v1, const Vector &v2) {
+template <typename DoubleType>
+inline DoubleType dot_prod(const Vector<DoubleType> &v1, const Vector<DoubleType> &v2) {
     return v1.dot_prod(v2);
 }
 
-inline std::ostream & operator<< (std::ostream &os,  const Vector &v)
+template <typename DoubleType>
+inline std::ostream & operator<< (std::ostream &os,  const Vector<DoubleType> &v)
 {
     os << "(" << v.Getx() << ", " << v.Gety() << ", " << v.Getz() << ")";
     return os;
 }
 
-inline Vector operator*(double x, const Vector &vec)
+template <typename DoubleType>
+inline Vector<DoubleType> operator*(DoubleType x, const Vector<DoubleType> &vec)
 {
   return vec * x;
 }
 
 #endif
+

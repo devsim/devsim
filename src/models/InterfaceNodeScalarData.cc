@@ -20,17 +20,13 @@ limitations under the License.
 #include "ScalarData.cc"
 
 //// Manual Template Instantiation
-template class ScalarData<InterfaceNodeModel>;
+template class ScalarData<InterfaceNodeModel, double>;
 
-template class
-ScalarData<InterfaceNodeModel>& ScalarData<InterfaceNodeModel>::op_equal<ScalarDataHelper::times_equal>(const double &, const ScalarDataHelper::times_equal &);
+template class ScalarData<InterfaceNodeModel, double>& InterfaceNodeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const double &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<InterfaceNodeModel>& ScalarData<InterfaceNodeModel>::op_equal<ScalarDataHelper::times_equal>(const ScalarData<InterfaceNodeModel> &, const ScalarDataHelper::times_equal &);
+template class ScalarData<InterfaceNodeModel, double>& InterfaceNodeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const InterfaceNodeScalarData<double> &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<InterfaceNodeModel>& ScalarData<InterfaceNodeModel>::op_equal<ScalarDataHelper::plus_equal>(const double &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<InterfaceNodeModel, double>& InterfaceNodeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const double &, const ScalarDataHelper::plus_equal<double> &);
 
-template class
-ScalarData<InterfaceNodeModel>& ScalarData<InterfaceNodeModel>::op_equal<ScalarDataHelper::plus_equal>(const ScalarData<InterfaceNodeModel> &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<InterfaceNodeModel, double>& InterfaceNodeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const InterfaceNodeScalarData<double> &, const ScalarDataHelper::plus_equal<double> &);
 

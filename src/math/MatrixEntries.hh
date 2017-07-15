@@ -24,12 +24,24 @@ limitations under the License.
 namespace dsMath {
 
 template <typename T> class RowColVal;
-typedef RowColVal<double> RealRowColVal;
-typedef std::vector<RealRowColVal > RealRowColValueVec;
-typedef RowColVal<std::complex<double> > ComplexRowColVal;
-typedef std::vector<ComplexRowColVal > ComplexRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry>  RHSEntryVec;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
+
+template <typename DoubleType>
+using ComplexRowColVal = RowColVal<std::complex<DoubleType>>;
+
+template <typename DoubleType>
+using ComplexRowColValueVec = std::vector<ComplexRowColVal<DoubleType>>;
 
 template <typename T>
 class RowColVal

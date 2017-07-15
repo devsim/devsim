@@ -239,13 +239,12 @@ bool Mesh2d::Finalize_(std::string &errorString)
         const size_t i1 = it->Index1();
         const size_t i2 = it->Index2();
 
-        Vector v0 = coordinates[i0].GetVector();
+        Vector<double> v0 = coordinates[i0].GetVector();
         v0 += coordinates[i1].GetVector();
         v0 += coordinates[i2].GetVector();
         v0 /= 3.0;
 
 
-        //// TODO: warning if not exist
         MeshRegion2dPtr mr(FindRegion(v0.Getx(), v0.Gety()));
         if (mr)
         {

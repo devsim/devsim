@@ -23,17 +23,12 @@ limitations under the License.
 #include <memory>
 
 class NodeModel;
-typedef std::weak_ptr<NodeModel>         WeakNodeModelPtr;
-typedef std::shared_ptr<NodeModel>       NodeModelPtr;
-typedef std::shared_ptr<const NodeModel> ConstNodeModelPtr;
+using ConstNodeModelPtr = std::shared_ptr<const NodeModel>;
 
 #include <string>
 
 
-/***
- * TODO: This class needs to be broken up into several different classes
- */
-
+template <typename DoubleType>
 class AverageEdgeModel : public EdgeModel
 {
     public:
@@ -56,12 +51,12 @@ class AverageEdgeModel : public EdgeModel
 
     private:
         template <typename T>
-        void doMath(ConstNodeModelPtr, EdgeScalarList &, const T &) const;
+        void doMath(ConstNodeModelPtr, EdgeScalarList<DoubleType> &, const T &) const;
         template <typename T>
-        void doMath(ConstNodeModelPtr, ConstNodeModelPtr, EdgeScalarList &, EdgeScalarList &, const T &) const;
+        void doMath(ConstNodeModelPtr, ConstNodeModelPtr, EdgeScalarList<DoubleType> &, EdgeScalarList<DoubleType> &, const T &) const;
 
-        void doGradient(ConstNodeModelPtr, EdgeScalarList &, double) const;
-        void doGradient(ConstNodeModelPtr, ConstNodeModelPtr, EdgeScalarList &, EdgeScalarList &, double) const;
+        void doGradient(ConstNodeModelPtr, EdgeScalarList<DoubleType> &, DoubleType) const;
+        void doGradient(ConstNodeModelPtr, ConstNodeModelPtr, EdgeScalarList<DoubleType> &, EdgeScalarList<DoubleType> &, DoubleType) const;
 
         void  calcEdgeScalarValues() const;
         void  setInitialValues();

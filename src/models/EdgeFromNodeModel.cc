@@ -29,7 +29,8 @@ limitations under the License.
 #include <sstream>
 
 
-EdgeFromNodeModel::~EdgeFromNodeModel()
+template <typename DoubleType>
+EdgeFromNodeModel<DoubleType>::~EdgeFromNodeModel()
 {
   // We can't do this, it causes seg fault if the region is already gone
 #if 0
@@ -40,7 +41,8 @@ EdgeFromNodeModel::~EdgeFromNodeModel()
 #endif
 }
 
-EdgeFromNodeModel::EdgeFromNodeModel(const std::string &edgemodel0, const std::string &edgemodel1, const std::string &nodemodel, const RegionPtr rp)
+template <typename DoubleType>
+EdgeFromNodeModel<DoubleType>::EdgeFromNodeModel(const std::string &edgemodel0, const std::string &edgemodel1, const std::string &nodemodel, const RegionPtr rp)
     :
         EdgeModel(edgemodel0, rp, EdgeModel::SCALAR), // The name of this node model
         nodeModelName(nodemodel),
@@ -48,7 +50,7 @@ EdgeFromNodeModel::EdgeFromNodeModel(const std::string &edgemodel0, const std::s
 {
     // The other model is going to be set from our model
 //// TODO: issues, use soft references by name here, just like we do other node models
-    node1EdgeModel = EdgeSubModel::CreateEdgeSubModel(edgemodel1, rp, EdgeModel::SCALAR, this->GetSelfPtr());
+    node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgemodel1, rp, EdgeModel::SCALAR, this->GetSelfPtr());
     dsAssert(!node1EdgeModel.expired(), "UNEXPECTED");
 
 //// This is caught by the api
@@ -59,7 +61,8 @@ EdgeFromNodeModel::EdgeFromNodeModel(const std::string &edgemodel0, const std::s
 #endif
 }
 
-void EdgeFromNodeModel::calcEdgeScalarValues() const
+template <typename DoubleType>
+void EdgeFromNodeModel<DoubleType>::calcEdgeScalarValues() const
 {
 #if 0
         os << "updating EdgeFromNodeModel " << GetName() << " from parent " << nodeModelName << "\n";
@@ -77,7 +80,7 @@ void EdgeFromNodeModel::calcEdgeScalarValues() const
     if (!em1)
     {
       dsErrors::ReviveContainer(*rp, edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::INFO);
-      node1EdgeModel = EdgeSubModel::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::SCALAR, this->GetConstSelfPtr());
+      node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::SCALAR, this->GetConstSelfPtr());
     }
     else if (node1EdgeModel.expired())
     {
@@ -86,15 +89,18 @@ void EdgeFromNodeModel::calcEdgeScalarValues() const
     }
 
 
-    EdgeScalarList e0;
-    EdgeScalarList e1;
-    createEdgeModelsFromNodeModel(nm->GetScalarValues(), *rp, e0, e1);
+    EdgeScalarList<DoubleType> e0;
+    EdgeScalarList<DoubleType> e1;
+    createEdgeModelsFromNodeModel(nm->GetScalarValues<DoubleType>(), *rp, e0, e1);
     this->SetValues(e0);
     std::const_pointer_cast<EdgeModel, const EdgeModel>(node1EdgeModel.lock())->SetValues(e1);
 }
 
-void EdgeFromNodeModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void EdgeFromNodeModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND edge_from_node_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -node_model \"" << nodeModelName << "\"";
 }
+
+template class EdgeFromNodeModel<double>;
 

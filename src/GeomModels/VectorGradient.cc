@@ -31,13 +31,15 @@ limitations under the License.
 #include <complex>
 
 
-const char *VectorGradient::CalcTypeString[] = {
+template <typename DoubleType>
+const char *VectorGradient<DoubleType>::CalcTypeString[] = {
   "default",
   "avoidzero",
   NULL
 };
 
-VectorGradient::VectorGradient(RegionPtr rp, const std::string &name, CalcType ct)
+template <typename DoubleType>
+VectorGradient<DoubleType>::VectorGradient(RegionPtr rp, const std::string &name, CalcType ct)
     : NodeModel(name + "_gradx", rp, NodeModel::SCALAR), parentname_(name),  calctype_(ct)
 {
     /// This is the scalar we are taking the gradient of
@@ -51,19 +53,20 @@ VectorGradient::VectorGradient(RegionPtr rp, const std::string &name, CalcType c
     if (dimension == 2)
     {
       RegisterCallback("unity");
-      yfield_ = NodeSolution::CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
+      yfield_ = NodeSolution<DoubleType>::CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
     }
     else if (dimension == 3)
     {
       RegisterCallback("unity");
       RegisterCallback("unitz");
-      yfield_ = NodeSolution::CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
-      zfield_ = NodeSolution::CreateNodeSolution(name + "_gradz", rp, this->GetSelfPtr());
+      yfield_ = NodeSolution<DoubleType>::CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
+      zfield_ = NodeSolution<DoubleType>::CreateNodeSolution(name + "_gradz", rp, this->GetSelfPtr());
     }
 }
 
 
-void VectorGradient::calc1d() const
+template <typename DoubleType>
+void VectorGradient<DoubleType>::calc1d() const
 {
   const Region &r = GetRegion();
   ConstNodeModelPtr scalarField = r.GetNodeModel(parentname_);
@@ -75,18 +78,18 @@ void VectorGradient::calc1d() const
 
   const ConstEdgeList &el = r.GetEdgeList();
 
-  EdgeScalarData vgrad(*edgeSign);
+  EdgeScalarData<DoubleType> vgrad(*edgeSign);
   vgrad *= *edgeInv;
 
-  const NodeScalarList &nsl = scalarField->GetScalarValues();
+  const NodeScalarList<DoubleType> &nsl = scalarField->GetScalarValues<DoubleType>();
 
   std::vector<size_t> zlist(el.size(), 1);
 
   for (size_t i = 0; i < el.size(); ++i)
   {
     const Edge &edge = *el[i];
-    const double s0 = nsl[edge.GetHead()->GetIndex()];
-    const double s1 = nsl[edge.GetTail()->GetIndex()];
+    const DoubleType s0 = nsl[edge.GetHead()->GetIndex()];
+    const DoubleType s1 = nsl[edge.GetTail()->GetIndex()];
 
     vgrad[i] *= (s1 - s0);
 
@@ -96,13 +99,13 @@ void VectorGradient::calc1d() const
     }
   }
 
-  NodeScalarList vx(nsl.size());
+  NodeScalarList<DoubleType> vx(nsl.size());
   const Region::NodeToConstEdgeList_t &ntelist = r.GetNodeToEdgeList();
   for (size_t i = 0; i < vx.size(); ++i)
   {
     const ConstEdgeList &el = ntelist[i];
     size_t count = 0;
-    double val = 0.0;
+    DoubleType val = 0.0;
     for (ConstEdgeList::const_iterator eit = el.begin(); eit != el.end(); ++eit)
     {
       const size_t eindex = (*eit)->GetIndex();
@@ -122,7 +125,8 @@ void VectorGradient::calc1d() const
   this->SetValues(vx);
 }
 
-void VectorGradient::calc2d() const
+template <typename DoubleType>
+void VectorGradient<DoubleType>::calc2d() const
 {
 
   const Region &r = GetRegion();
@@ -130,21 +134,21 @@ void VectorGradient::calc2d() const
   ConstNodeModelPtr scalarField = r.GetNodeModel(parentname_);
   dsAssert(scalarField.get(), "UNEXPECTED");
 
-  const NodeScalarList &nsl = scalarField->GetScalarValues();
+  const NodeScalarList<DoubleType> &nsl = scalarField->GetScalarValues<DoubleType>();
 
-  NodeScalarList vx(nsl.size());
-  NodeScalarList vy(nsl.size());
+  NodeScalarList<DoubleType> vx(nsl.size());
+  NodeScalarList<DoubleType> vy(nsl.size());
 
   const GradientField &gfield = r.GetGradientField();
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
   std::vector<size_t> zlist(tl.size(), 1);
 
-  std::vector<std::complex<double> > tvals(tl.size());
+  std::vector<std::complex<DoubleType> > tvals(tl.size());
 
   for (ConstTriangleList::const_iterator tit = tl.begin(); tit != tl.end(); ++tit)
   {
-    Vector grad = gfield.GetGradient(**tit, *scalarField);
-    tvals[(*tit)->GetIndex()] = std::complex<double>(grad.Getx(), grad.Gety());
+    Vector<DoubleType> grad = gfield.GetGradient(**tit, *scalarField);
+    tvals[(*tit)->GetIndex()] = std::complex<DoubleType>(grad.Getx(), grad.Gety());
   }
 
   const Region::NodeToConstTriangleList_t &nttlist = r.GetNodeToTriangleList();
@@ -165,7 +169,7 @@ void VectorGradient::calc2d() const
 
   for (size_t i = 0; i < nsl.size(); ++i)
   {
-    std::complex<double> val = 0.0;
+    std::complex<DoubleType> val = 0.0;
     size_t count = 0;
 
     const ConstTriangleList &tlist = nttlist[i];
@@ -181,7 +185,7 @@ void VectorGradient::calc2d() const
     }
     if (count != 0)
     {
-      val /= static_cast<double>(count);
+      val /= static_cast<DoubleType>(count);
       vx[i] = val.real();
       vy[i] = val.imag();
     }
@@ -192,7 +196,8 @@ void VectorGradient::calc2d() const
 }
 
 // TODO:"REVIEW, TEST CODE"
-void VectorGradient::calc3d() const
+template <typename DoubleType>
+void VectorGradient<DoubleType>::calc3d() const
 {
 
   const Region &r = GetRegion();
@@ -200,22 +205,22 @@ void VectorGradient::calc3d() const
   ConstNodeModelPtr scalarField = r.GetNodeModel(parentname_);
   dsAssert(scalarField.get(), "UNEXPECTED");
 
-  const NodeScalarList &nsl = scalarField->GetScalarValues();
+  const NodeScalarList<DoubleType> &nsl = scalarField->GetScalarValues<DoubleType>();
 
-  NodeScalarList vx(nsl.size());
-  NodeScalarList vy(nsl.size());
-  NodeScalarList vz(nsl.size());
+  NodeScalarList<DoubleType> vx(nsl.size());
+  NodeScalarList<DoubleType> vy(nsl.size());
+  NodeScalarList<DoubleType> vz(nsl.size());
 
   const GradientField &gfield = r.GetGradientField();
   const ConstTetrahedronList &tl = GetRegion().GetTetrahedronList();
   std::vector<size_t> zlist(tl.size(), 1);
 
-  std::vector<Vector> tvals(tl.size());
+  std::vector<Vector<DoubleType>> tvals(tl.size());
 
   for (ConstTetrahedronList::const_iterator tit = tl.begin(); tit != tl.end(); ++tit)
   {
-    Vector grad = gfield.GetGradient(**tit, *scalarField);
-    tvals[(*tit)->GetIndex()] = Vector(grad.Getx(), grad.Gety(), grad.Getz());
+    Vector<DoubleType> grad = gfield.GetGradient(**tit, *scalarField);
+    tvals[(*tit)->GetIndex()] = Vector<DoubleType>(grad.Getx(), grad.Gety(), grad.Getz());
   }
 
   const Region::NodeToConstTetrahedronList_t &nttlist = r.GetNodeToTetrahedronList();
@@ -236,7 +241,7 @@ void VectorGradient::calc3d() const
 
   for (size_t i = 0; i < nsl.size(); ++i)
   {
-    Vector val(0);
+    Vector<DoubleType> val(0);
     size_t count = 0;
 
     const ConstTetrahedronList &tlist = nttlist[i];
@@ -264,7 +269,8 @@ void VectorGradient::calc3d() const
   zfield_.lock()->SetValues(vz);
 }
 
-void VectorGradient::calcNodeScalarValues() const
+template <typename DoubleType>
+void VectorGradient<DoubleType>::calcNodeScalarValues() const
 {
   const Region &r = GetRegion();
   const size_t dimension = r.GetDimension();
@@ -288,14 +294,18 @@ void VectorGradient::calcNodeScalarValues() const
 
 }
 
-void VectorGradient::setInitialValues()
+template <typename DoubleType>
+void VectorGradient<DoubleType>::setInitialValues()
 {
     DefaultInitializeValues();
 }
 
-void VectorGradient::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void VectorGradient<DoubleType>::Serialize(std::ostream &of) const
 {
   
   of << "COMMAND vector_gradient -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -calc_type \"" << CalcTypeString[calctype_] << "\" -node_model \"" << parentname_ << "\"";
 }
+
+template class VectorGradient<double>;
 

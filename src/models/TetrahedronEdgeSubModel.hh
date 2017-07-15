@@ -22,6 +22,7 @@ limitations under the License.
 // need to set general node propeties, such as positive only
 // 
 // This is modeled after NodeSolution
+template <typename DoubleType>
 class TetrahedronEdgeSubModel : public TetrahedronEdgeModel
 {
     public:
@@ -35,7 +36,6 @@ class TetrahedronEdgeSubModel : public TetrahedronEdgeModel
         static TetrahedronEdgeModelPtr CreateTetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType, ConstTetrahedronEdgeModelPtr);
 
     private:
-        double calcSolution(ConstEdgePtr) const;
         void calcTetrahedronEdgeScalarValues() const;
         // If we are an auxilary model, create our values from the parent
         mutable WeakConstTetrahedronEdgeModelPtr parentModel;

@@ -41,7 +41,8 @@ namespace IMEE {
 /// Finds the appropriate region and the name in the region
 /// Need to support the derivatives later
 /// Create Interface model derivative type
-void InterfaceModelExprEval::GetRegionAndName(const std::string &nm, std::string &name, const Region *&r)
+template <typename DoubleType>
+void InterfaceModelExprEval<DoubleType>::GetRegionAndName(const std::string &nm, std::string &name, const Region *&r)
 {
   name = nm;
 
@@ -65,26 +66,30 @@ void InterfaceModelExprEval::GetRegionAndName(const std::string &nm, std::string
   }
 }
 
-InterfaceModelExprEval::InterfaceModelExprEval(data_ref_t &vals, error_t &er) : data_ref(vals), errors(er)
+template <typename DoubleType>
+InterfaceModelExprEval<DoubleType>::InterfaceModelExprEval(data_ref_t &vals, error_t &er) : data_ref(vals), errors(er)
 {
 }
 
-InterfaceModelExprEval::~InterfaceModelExprEval()
+template <typename DoubleType>
+InterfaceModelExprEval<DoubleType>::~InterfaceModelExprEval()
 {
 }
 
-InterfaceModelExprData InterfaceModelExprEval::EvaluateConstantType(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateConstantType(Eqo::EqObjPtr arg)
 {
-  InterfaceModelExprData out;
+  InterfaceModelExprData<DoubleType> out;
 
-  out = InterfaceModelExprData(EngineAPI::getDoubleValue(arg));
+  out = InterfaceModelExprData<DoubleType>(EngineAPI::getDoubleValue(arg));
 
   return out;
 }
 
-InterfaceModelExprData InterfaceModelExprEval::EvaluateVariableType(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateVariableType(Eqo::EqObjPtr arg)
 {
-  InterfaceModelExprData out;
+  InterfaceModelExprData<DoubleType> out;
 
   GlobalData &gd  = GlobalData::GetInstance();
   MaterialDB &mdb = MaterialDB::GetInstance();
@@ -105,20 +110,20 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateVariableType(Eqo::EqObjPt
       const MaterialDB::DoubleDBEntry_t &mdbentg = mdb.GetDoubleDBEntry("global", nm);
       if (gdbent.first)
       {
-          out = InterfaceModelExprData(gdbent.second);
+          out = InterfaceModelExprData<DoubleType>(gdbent.second);
       }
       else if (mdbentr.first)
       {
-          out = InterfaceModelExprData(mdbentr.second);
+          out = InterfaceModelExprData<DoubleType>(mdbentr.second);
       }
       else if (mdbentg.first)
       {
-          out = InterfaceModelExprData(mdbentg.second);
+          out = InterfaceModelExprData<DoubleType>(mdbentg.second);
       }
       else if (nk.IsCircuitNode(nm))
       {
-        const double val = nk.GetNodeValue("dcop", nm);
-        out = InterfaceModelExprData(val);
+        const DoubleType val = nk.GetNodeValue("dcop", nm);
+        out = InterfaceModelExprData<DoubleType>(val);
       }
   }
   else
@@ -137,13 +142,13 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateVariableType(Eqo::EqObjPt
       }
       else
       {
-        out = InterfaceModelExprData(gdbent0.second);
+        out = InterfaceModelExprData<DoubleType>(gdbent0.second);
       }
     }
     else if (nk.IsCircuitNode(nm))
     {
-      const double val = nk.GetNodeValue("dcop", nm);
-      out = InterfaceModelExprData(val);
+      const DoubleType val = nk.GetNodeValue("dcop", nm);
+      out = InterfaceModelExprData<DoubleType>(val);
     }
     else
     {
@@ -179,11 +184,12 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateVariableType(Eqo::EqObjPt
  edgemodel:edgemodel
      derivative with respect to local node quantities
 */
-InterfaceModelExprData InterfaceModelExprEval::EvaluateInterfaceModelType(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateInterfaceModelType(Eqo::EqObjPtr arg)
 {
     const std::string &m= EngineAPI::getStringValue(arg);
 
-    InterfaceModelExprData out;
+    InterfaceModelExprData<DoubleType> out;
     const Region *r = NULL;
     std::string model;
 
@@ -196,11 +202,11 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateInterfaceModelType(Eqo::E
         std::ostringstream os;
         os << "Cyclic dependency while evaluating InterfaceNodeModel \"" << m;
         errors.push_back(os.str());
-        out = InterfaceModelExprData();
+        out = InterfaceModelExprData<DoubleType>();
       }
       else
       {
-        out = InterfaceModelExprData(InterfaceNodeScalarData(*inmp));
+        out = InterfaceModelExprData<DoubleType>(InterfaceNodeScalarData<DoubleType>(*inmp));
       }
     }
     else if (r)
@@ -224,11 +230,11 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateInterfaceModelType(Eqo::E
             }
 
 
-            const NodeScalarList &nvals = nm->GetScalarValues(); 
+            const NodeScalarList<DoubleType> &nvals = nm->GetScalarValues<DoubleType>(); 
 
 //          dsAssert(nodevec.size() == nvals.size(), "UNEXPECTED");
 
-            std::vector<double> data(nodevec.size());
+            std::vector<DoubleType> data(nodevec.size());
 
             for (size_t i = 0; i < nodevec.size(); ++i)
             {
@@ -237,41 +243,42 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateInterfaceModelType(Eqo::E
             }
 
 
-            out = InterfaceModelExprData(InterfaceNodeScalarData(data));
+            out = InterfaceModelExprData<DoubleType>(InterfaceNodeScalarData<DoubleType>(data));
         }
     }
 
-    if (out.GetType() == InterfaceModelExprData::INVALID)
+    if (out.GetType() == INVALID)
     {
         std::ostringstream os;
         os << "Could not find or evaluate a model by the name of " << m << ", using 0.0";
         errors.push_back(os.str());
-        out = InterfaceModelExprData(0.0);
+        out = InterfaceModelExprData<DoubleType>(0.0);
     }
 
     return out;
 }
 
-InterfaceModelExprData InterfaceModelExprEval::EvaluateProductType(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateProductType(Eqo::EqObjPtr arg)
 {
-  InterfaceModelExprData out;
+  InterfaceModelExprData<DoubleType> out;
 
   /// do a *= multiple times to return result
   std::vector<Eqo::EqObjPtr> values = EngineAPI::getArgs(arg);
   /// Rewrite this later
-  out = InterfaceModelExprData(1.0);
+  out = InterfaceModelExprData<DoubleType>(1.0);
   /// Premature optimization
   /// short circuit multiplication
   //// TODO: optimize here and in ModelExprEval for case when one of these has zero data
   for (size_t i = 0; i < values.size(); ++i)
   {
-      InterfaceModelExprData x = eval_function(values[i]);
+      InterfaceModelExprData<DoubleType> x = eval_function(values[i]);
       if (
-          (x.GetType() == InterfaceModelExprData::DOUBLE) &&
+          (x.GetType() == DOUBLE) &&
           (x.GetDoubleValue() == 0.0)
          )
       {
-          out = InterfaceModelExprData(0.0);
+          out = InterfaceModelExprData<DoubleType>(0.0);
           break;
       }
       else
@@ -283,36 +290,38 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateProductType(Eqo::EqObjPtr
   return out;
 }
 
-InterfaceModelExprData InterfaceModelExprEval::EvaluateAddType(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateAddType(Eqo::EqObjPtr arg)
 {
-  InterfaceModelExprData out;
+  InterfaceModelExprData<DoubleType> out;
 
   std::vector<Eqo::EqObjPtr> values = EngineAPI::getArgs(arg);
   out = eval_function(values[0]);
   for (size_t i = 1; i < values.size(); ++i)
   {
-      InterfaceModelExprData x = eval_function(values[i]);
+      InterfaceModelExprData<DoubleType> x = eval_function(values[i]);
       out += x;
   }
 
   return out;
 }
 
-InterfaceModelExprData InterfaceModelExprEval::EvaluateIfType(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateIfType(Eqo::EqObjPtr arg)
 {
-  InterfaceModelExprData out;
+  InterfaceModelExprData<DoubleType> out;
 
-  out = InterfaceModelExprData(0.0);
+  out = InterfaceModelExprData<DoubleType>(0.0);
   std::vector<Eqo::EqObjPtr> values = EngineAPI::getArgs(arg);
 
   dsAssert(values.size() == 2, "UNEXPECTED");
 
-  InterfaceModelExprData test = eval_function(values[0]);
-  if ((test.GetType() == InterfaceModelExprData::DOUBLE))
+  InterfaceModelExprData<DoubleType> test = eval_function(values[0]);
+  if ((test.GetType() == DOUBLE))
   {
       if (test.GetDoubleValue() == 0.0)
       {
-        out = InterfaceModelExprData(0.0);
+        out = InterfaceModelExprData<DoubleType>(0.0);
       }
       else
       {
@@ -329,17 +338,18 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateIfType(Eqo::EqObjPtr arg)
   return out;
 }
 
-InterfaceModelExprData InterfaceModelExprEval::EvaluateIfElseType(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateIfElseType(Eqo::EqObjPtr arg)
 {
-  InterfaceModelExprData out;
+  InterfaceModelExprData<DoubleType> out;
 
-  out = InterfaceModelExprData(0.0);
+  out = InterfaceModelExprData<DoubleType>(0.0);
   std::vector<Eqo::EqObjPtr> values = EngineAPI::getArgs(arg);
 
   dsAssert(values.size() == 3, "UNEXPECTED");
 
-  InterfaceModelExprData test = eval_function(values[0]);
-  if ((test.GetType() == InterfaceModelExprData::DOUBLE))
+  InterfaceModelExprData<DoubleType> test = eval_function(values[0]);
+  if ((test.GetType() == DOUBLE))
   {
       if (test.GetDoubleValue() == 0.0)
       {
@@ -364,11 +374,12 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateIfElseType(Eqo::EqObjPtr 
   return out;
 }
 
-InterfaceModelExprData InterfaceModelExprEval::EvaluateFunctionType(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateFunctionType(Eqo::EqObjPtr arg)
 {
   const EngineAPI::EqObjType etype = EngineAPI::getEnumeratedType(arg);
 
-  InterfaceModelExprData out;
+  InterfaceModelExprData<DoubleType> out;
   /// Implement for UserFuncs
   std::string nm = EngineAPI::getName(arg);
 
@@ -386,9 +397,10 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateFunctionType(Eqo::EqObjPt
   return out;
 }
 
-InterfaceModelExprData InterfaceModelExprEval::EvaluateInvalidType(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateInvalidType(Eqo::EqObjPtr arg)
 {
-  InterfaceModelExprData out;
+  InterfaceModelExprData<DoubleType> out;
 
   //out.type = INVALID;
   std::ostringstream os;
@@ -399,7 +411,8 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateInvalidType(Eqo::EqObjPtr
   return out;
 }
 
-InterfaceModelExprData InterfaceModelExprEval::eval_function(Eqo::EqObjPtr arg)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::eval_function(Eqo::EqObjPtr arg)
 {
   FPECheck::ClearFPE();
 
@@ -409,15 +422,13 @@ InterfaceModelExprData InterfaceModelExprEval::eval_function(Eqo::EqObjPtr arg)
   os << "begin eval_function " << EngineAPI::getStringValue(arg) << "\n";
 #endif
 
-  InterfaceModelExprData out;
-
-  //// TODO: Refactor so we don't become out of sync with the ModelExprEval
+  InterfaceModelExprData<DoubleType> out;
 
   bool cache_result = true;
-  InterfaceModelExprDataCachePtr cache = const_cast<Interface *>(data_ref)->GetInterfaceModelExprDataCache();
+  InterfaceModelExprDataCachePtr<DoubleType> cache = const_cast<Interface *>(data_ref)->GetInterfaceModelExprDataCache<DoubleType>();
   if (!cache)
   {
-    cache = InterfaceModelExprDataCachePtr(new InterfaceModelExprDataCache()); 
+    cache = InterfaceModelExprDataCachePtr<DoubleType>(new InterfaceModelExprDataCache<DoubleType>()); 
     const_cast<Interface *>(data_ref)->SetInterfaceModelExprDataCache(cache);
   }
 
@@ -466,15 +477,15 @@ InterfaceModelExprData InterfaceModelExprEval::eval_function(Eqo::EqObjPtr arg)
 
   if (FPECheck::CheckFPE())
   {
-    out.type = InterfaceModelExprData::INVALID;
+    //invalid
+    out = InterfaceModelExprData<DoubleType>();
     std::ostringstream os;
     os << "There was a " << FPECheck::getFPEString() << " floating point exception while evaluating " << EngineAPI::getStringValue(arg);
     errors.push_back(os.str());
     FPECheck::ClearFPE();
   }
 
-
-  if (cache_result && (out.type != InterfaceModelExprData::INVALID))
+  if (cache_result && (out.GetType() != INVALID))
   {
     cache->SetEntry(EngineAPI::getStringValue(arg), out);
   }
@@ -484,14 +495,15 @@ InterfaceModelExprData InterfaceModelExprEval::eval_function(Eqo::EqObjPtr arg)
 
 namespace {
     /// need to do a bunch of checks to find out what we are dealing with data-wise
+    template <typename DoubleType>
     struct checks {
         bool allArgsSame;
         bool hasInvalid;
         bool hasNodeData;
         bool hasDouble;
-        InterfaceModelExprData::datatype commonType;
+        datatype commonType;
 
-        void doit(const InterfaceModelExprEval::margv_t &argv)
+        void doit(const typename InterfaceModelExprEval<DoubleType>::margv_t &argv)
         {
             dsAssert(!argv.empty(), "UNEXPECTED");
             // if we have at least one invalid in arg list, we are screwed
@@ -500,16 +512,16 @@ namespace {
             hasDouble     = false;
             for (size_t i = 0; i < argv.size(); ++i)
             {
-                InterfaceModelExprData::datatype type = argv[i].GetType();
-                if (type == InterfaceModelExprData::INVALID)
+                datatype type = argv[i].GetType();
+                if (type == INVALID)
                 {
                     hasInvalid = true;
                 }
-                else if (type == InterfaceModelExprData::NODEDATA)
+                else if (type == NODEDATA)
                 {
                     hasNodeData = true;
                 }
-                else if (type == InterfaceModelExprData::DOUBLE)
+                else if (type == DOUBLE)
                 {
                     hasDouble = true;
                 }
@@ -534,12 +546,13 @@ namespace {
     };
 }
 
-InterfaceModelExprData InterfaceModelExprEval::EvaluateExternalMath(const std::string &name, const margv_t &argv)
+template <typename DoubleType>
+InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateExternalMath(const std::string &name, const margv_t &argv)
 {
   bool invalid = false;
   // if one arg is invalid, we must abort
-  InterfaceModelExprData out;
-  checks mytest;
+  InterfaceModelExprData<DoubleType> out;
+  checks<DoubleType> mytest;
   mytest.doit(argv);
   if (mytest.hasInvalid)
   {
@@ -556,47 +569,47 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateExternalMath(const std::s
   }
 
   // simplest case to handle
-  if (mytest.allArgsSame && (mytest.commonType == InterfaceModelExprData::DOUBLE))
+  if (mytest.allArgsSame && (mytest.commonType == DOUBLE))
   {
     std::string resultstr;
-    std::vector<double> dargs;
+    std::vector<DoubleType> dargs;
     dargs.reserve(argv.size());
     for (size_t i = 0; i < argv.size(); ++i)
     {
       dargs.push_back(argv[i].GetDoubleValue());
     }
-    const MathEval &emath = MathEval::GetInstance(); 
-    double res = emath.EvaluateMathFunc(name, dargs, resultstr);
+    const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
+    DoubleType res = emath.EvaluateMathFunc(name, dargs, resultstr);
     if (!resultstr.empty())
     {
       errors.push_back(resultstr);
       invalid = true;
     }
-    out = InterfaceModelExprData(res);
+    out = InterfaceModelExprData<DoubleType>(res);
   }
   else
   {
     // vector args
     // we use pointers so be extra careful
-    std::vector<double> output;
+    std::vector<DoubleType> output;
     /// default initializer for a vector of pointers is 0
-    std::vector<const std::vector<double> *> vargs(argv.size());
+    std::vector<const std::vector<DoubleType> *> vargs(argv.size());
     bool   all_doubles = true;
     size_t vlen = 0;
-    std::vector<double> dargs(argv.size());
+    std::vector<DoubleType> dargs(argv.size());
 
     std::string resultstr;
     for (size_t i=0; i < argv.size(); ++i)
     {
       // todo employ caching scheme later on
-      if (argv[i].GetType() == InterfaceModelExprData::DOUBLE)
+      if (argv[i].GetType() == DOUBLE)
       {
         dargs[i] = argv[i].GetDoubleValue();
         vargs[i] = NULL;
       }
-      else if (argv[i].GetType() != InterfaceModelExprData::INVALID)
+      else if (argv[i].GetType() != INVALID)
       {
-        InterfaceModelExprData::ScalarValuesType tval = argv[i].GetScalarValues();
+        ScalarValuesType<DoubleType> tval = argv[i].GetScalarValues();
         if (tval.IsUniform())
         {
           dargs[i] = tval.GetScalar();
@@ -630,8 +643,8 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateExternalMath(const std::s
               }
           }
 
-          const MathEval &emath = MathEval::GetInstance(); 
-          double res = emath.EvaluateMathFunc(name, dargs, resultstr);
+          const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
+          DoubleType res = emath.EvaluateMathFunc(name, dargs, resultstr);
           output[i] = res;
           if (!resultstr.empty())
           {
@@ -641,16 +654,14 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateExternalMath(const std::s
           }
       }
 #else
-    const MathEval &emath = MathEval::GetInstance(); 
+    const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
     if (all_doubles)
     {
       output.clear();
-      double res = emath.EvaluateMathFunc(name, dargs, resultstr);
+      DoubleType res = emath.EvaluateMathFunc(name, dargs, resultstr);
       if (resultstr.empty())
       {
-        InterfaceNodeScalarData *mynsd = new InterfaceNodeScalarData(res, vlen);
-        out.nsd = InterfaceModelExprData::nsd_ptr(mynsd);
-        out.type = InterfaceModelExprData::NODEDATA;
+        out = InterfaceModelExprData<DoubleType>(InterfaceNodeScalarData<DoubleType>(res, vlen));
       }
     }
     else
@@ -661,24 +672,22 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateExternalMath(const std::s
       {
         if (name == "vec_sum")
         {
-          double sum = std::accumulate(output.begin(), output.end(), 0.0);
-          out = InterfaceModelExprData(sum);
+          DoubleType sum = std::accumulate(output.begin(), output.end(), 0.0);
+          out = InterfaceModelExprData<DoubleType>(sum);
         }
         else if (name == "vec_max")
         {
-          double max = *(std::max_element(output.begin(), output.end()));
-          out = InterfaceModelExprData(max);
+          DoubleType max = *(std::max_element(output.begin(), output.end()));
+          out = InterfaceModelExprData<DoubleType>(max);
         }
         else if (name == "vec_min")
         {
-          double min = *(std::min_element(output.begin(), output.end()));
-          out = InterfaceModelExprData(min);
+          DoubleType min = *(std::min_element(output.begin(), output.end()));
+          out = InterfaceModelExprData<DoubleType>(min);
         }
         else
         {
-          InterfaceNodeScalarData *mynsd = new InterfaceNodeScalarData(output);
-          out.nsd = InterfaceModelExprData::nsd_ptr(mynsd);
-          out.type = InterfaceModelExprData::NODEDATA;
+          out = InterfaceModelExprData<DoubleType>(InterfaceNodeScalarData<DoubleType>(output));
         }
       }
     }
@@ -693,10 +702,14 @@ InterfaceModelExprData InterfaceModelExprEval::EvaluateExternalMath(const std::s
 
   if (!errors.empty())
   {
-    out.type = InterfaceModelExprData::INVALID;
+    //invalid
+    out = InterfaceModelExprData<DoubleType>();
   }
 
   return out;
 }
+
+template class InterfaceModelExprEval<double>;
+
 };
 

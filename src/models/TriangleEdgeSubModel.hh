@@ -22,6 +22,7 @@ limitations under the License.
 // need to set general node propeties, such as positive only
 // 
 // This is modeled after NodeSolution
+template <typename DoubleType>
 class TriangleEdgeSubModel : public TriangleEdgeModel
 {
     public:
@@ -35,7 +36,6 @@ class TriangleEdgeSubModel : public TriangleEdgeModel
         static TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, ConstTriangleEdgeModelPtr);
 
     private:
-        double calcSolution(ConstEdgePtr) const;
         void calcTriangleEdgeScalarValues() const;
         // If we are an auxilary model, create our values from the parent
         mutable WeakConstTriangleEdgeModelPtr parentModel;

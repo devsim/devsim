@@ -25,6 +25,7 @@ class Triangle;
 typedef Triangle *TrianglePtr;
 typedef const Triangle *ConstTrianglePtr;
 
+template <typename DoubleType>
 class TriangleCylindricalNodeVolume : public TriangleEdgeModel
 {
     public:
@@ -36,7 +37,7 @@ class TriangleCylindricalNodeVolume : public TriangleEdgeModel
         TriangleCylindricalNodeVolume();
         TriangleCylindricalNodeVolume(const TriangleCylindricalNodeVolume &);
         TriangleCylindricalNodeVolume &operator=(const TriangleCylindricalNodeVolume &);
-        std::vector<double> calcTriangleCylindricalNodeVolume(ConstTrianglePtr, const std::string &/*RAxisVariable*/, double /*RAxis0*/) const;
+        std::vector<DoubleType> calcTriangleCylindricalNodeVolume(ConstTrianglePtr, const std::string &/*RAxisVariable*/, DoubleType /*RAxis0*/) const;
         void   calcTriangleEdgeScalarValues() const;
         void   setInitialValues();
 

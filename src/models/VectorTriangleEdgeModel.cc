@@ -23,14 +23,16 @@ limitations under the License.
 #include "Vector.hh"
 
 
-VectorTriangleEdgeModel::VectorTriangleEdgeModel(const std::string &edgemodel, RegionPtr rp)
+template <typename DoubleType>
+VectorTriangleEdgeModel<DoubleType>::VectorTriangleEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName + "_y")
 {
   RegisterCallback(elementEdgeModelName);
-  new TriangleEdgeSubModel(y_ModelName, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
 }
 
-void VectorTriangleEdgeModel::calcTriangleEdgeScalarValues() const
+template <typename DoubleType>
+void VectorTriangleEdgeModel<DoubleType>::calcTriangleEdgeScalarValues() const
 {
   const Region &reg = GetRegion();
 
@@ -42,14 +44,14 @@ void VectorTriangleEdgeModel::calcTriangleEdgeScalarValues() const
 
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
 
-  std::vector<double> evx(3*tl.size());
-  std::vector<double> evy(3*tl.size());
+  std::vector<DoubleType> evx(3*tl.size());
+  std::vector<DoubleType> evy(3*tl.size());
 
   const TriangleElementField &efield = reg.GetTriangleElementField();
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Triangle &triangle = *tl[i];
-    const std::vector<Vector> &v = efield.GetTriangleElementField(triangle, *emp);
+    const std::vector<Vector<DoubleType> > &v = efield.GetTriangleElementField(triangle, *emp);
     for (size_t j = 0; j < 3; ++j)
     {
       evx[3*i + j] = v[j].Getx();
@@ -61,8 +63,12 @@ void VectorTriangleEdgeModel::calcTriangleEdgeScalarValues() const
   std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempy)->SetValues(evy);
 }
 
-void VectorTriangleEdgeModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void VectorTriangleEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND vector_element_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -element_model \"" << elementEdgeModelName << "\"";
 }
+
+template class VectorTriangleEdgeModel<double>;
+
 

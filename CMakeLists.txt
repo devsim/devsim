@@ -5,6 +5,8 @@ OPTION(VTKWRITER    "Build with VTK Writer" ON)
 OPTION(TCLMAIN      "Build with TCL Interpreter" ON)
 
 
+set (CMAKE_CXX_STANDARD 11)
+
 INCLUDE(${PROJECT_SOURCE_DIR}/cmake/${DEVSIM_CONFIG}.cmake)
 INCLUDE(${PROJECT_SOURCE_DIR}/local.cmake OPTIONAL)
 

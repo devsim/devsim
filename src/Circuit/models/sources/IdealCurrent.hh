@@ -41,9 +41,9 @@ class IdealCurrent : public InstanceModel {
 //      IdealCurrent(const char *nplus, const char *nmin, const char *value);
 
 //      void getDCStamp(Matrix::RowColEntryVec &);
-        void assembleDC(const NodeKeeper::Solution &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &);
+        void assembleDC(const NodeKeeper::Solution &, dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &);
 //      void getTranStamp(Matrix::RowColEntryVec &) {};
-        void assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec *mat, std::vector<std::pair<int, double> > &rhs) {};
+        void assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs) {};
         bool addParam(const std::string &, double);
 
     private:

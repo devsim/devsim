@@ -28,12 +28,14 @@ class mycondition;
 class mymutex;
 
 namespace Eqomfp {
-class MathWrapper;
-class MathPacket;
 
+template <typename DoubleType>
+class MathWrapper;
+
+template <typename DoubleType>
 class MathPacket {
   public:
-    MathPacket(const MathWrapper &, const std::vector<double> &, const std::vector<const std::vector<double> *> &, std::vector<double> &);
+    MathPacket(const MathWrapper<DoubleType> &, const std::vector<DoubleType> &, const std::vector<const std::vector<DoubleType> *> &, std::vector<DoubleType> &);
 
     //// We are done with this unit when this function returns.
     void operator()(const size_t rbeg, const size_t rend);
@@ -50,24 +52,25 @@ class MathPacket {
 
     MathPacket &operator=(const MathPacket &);
 
-    const MathWrapper         &wrapperClass_;
-    const std::vector<double>                       &dvals_;
-    const std::vector<const std::vector<double> *>  &vvals_;
-    std::vector<double>                             &result_;
+    const MathWrapper<DoubleType>         &wrapperClass_;
+    const std::vector<DoubleType>                       &dvals_;
+    const std::vector<const std::vector<DoubleType> *>  &vvals_;
+    std::vector<DoubleType>                             &result_;
     std::string                                      errorString_;
     FPECheck::FPEFlag_t                              fpeFlag_;
     size_t                                           num_processed_;
 };
 
 
-std::string
-MathPacketRun(const MathWrapper &, const std::vector<double> &, const std::vector<const std::vector<double> *> &, std::vector<double> &, size_t);
+template <typename DoubleType>
+std::string MathPacketRun(const MathWrapper<DoubleType> &, const std::vector<DoubleType> &, const std::vector<const std::vector<DoubleType> *> &, std::vector<DoubleType> &, size_t);
 
+template <typename DoubleType>
 class MathPacketRange : public mypacket
 {
   public:
     //// Copy so we have fpe status of each one
-    MathPacketRange(MathPacket, size_t, size_t,
+    MathPacketRange(MathPacket<DoubleType>, size_t, size_t,
         mymutex &,
         mycondition &,
         size_t &,
@@ -76,12 +79,12 @@ class MathPacketRange : public mypacket
     void run();
 
     //// intent is to join the copy with the original
-    const MathPacket &GetMathPacket();
+    const MathPacket<DoubleType> &GetMathPacket();
 
     ~MathPacketRange() {}
   private:
 
-    MathPacket mathPacket_;
+    MathPacket<DoubleType> mathPacket_;
     size_t     beg_;
     size_t     end_;
     /// Mutex to lock when updating count

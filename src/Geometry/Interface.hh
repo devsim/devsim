@@ -26,11 +26,18 @@ limitations under the License.
 
 template <typename T> class ObjectCache;
 namespace IMEE {
+template <typename T>
 class InterfaceModelExprData;
 }
-typedef ObjectCache<IMEE::InterfaceModelExprData> InterfaceModelExprDataCache;
-typedef std::weak_ptr<InterfaceModelExprDataCache >   WeakInterfaceModelExprDataCachePtr;
-typedef std::shared_ptr<InterfaceModelExprDataCache > InterfaceModelExprDataCachePtr;
+
+template <typename DoubleType>
+using InterfaceModelExprDataCache = ObjectCache<IMEE::InterfaceModelExprData<DoubleType> >;
+
+template <typename DoubleType>
+using WeakInterfaceModelExprDataCachePtr =  std::weak_ptr<InterfaceModelExprDataCache<DoubleType> >;
+
+template <typename DoubleType>
+using InterfaceModelExprDataCachePtr = std::shared_ptr<InterfaceModelExprDataCache<DoubleType> >;
 
 class Node;
 class Edge;
@@ -41,19 +48,29 @@ typedef Region *RegionPtr;
 typedef const Region *ConstRegionPtr;
 
 class InterfaceNodeModel;
-typedef std::shared_ptr<InterfaceNodeModel>       InterfaceNodeModelPtr;
-typedef std::shared_ptr<const InterfaceNodeModel> ConstInterfaceNodeModelPtr;
+using InterfaceNodeModelPtr = std::shared_ptr<InterfaceNodeModel>;
+using ConstInterfaceNodeModelPtr = std::shared_ptr<const InterfaceNodeModel>;
 
-class InterfaceEquation;
-typedef InterfaceEquation *InterfaceEquationPtr;
+class InterfaceEquationHolder;
+typedef std::map<std::string, InterfaceEquationHolder> InterfaceEquationPtrMap_t;
 
 class PermutationEntry;
 typedef std::map<size_t, PermutationEntry> PermutationMap;
+
 namespace dsMath {
 template <typename T> class RowColVal;
-typedef std::vector<RowColVal<double> > RealRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 }
 
 
@@ -62,7 +79,6 @@ typedef std::vector<RHSEntry> RHSEntryVec;
 /// todo: somehow regions must signal when they are deleted so the Interface knows it is invalid (perhaps using callback)
 class Interface {
     public:
-        typedef std::map<std::string, InterfaceEquationPtr> InterfaceEquationPtrMap_t;
         typedef std::vector<const Node *>     ConstNodeList_t;
         typedef std::vector<const Edge *>     ConstEdgeList_t;
         typedef std::vector<const Triangle *> ConstTriangleList_t;
@@ -100,8 +116,8 @@ class Interface {
             return name;
         }
 
-        void AddInterfaceEquation(InterfaceEquationPtr);
-        void DeleteInterfaceEquation(InterfaceEquationPtr);
+        void AddInterfaceEquation(InterfaceEquationHolder &);
+        void DeleteInterfaceEquation(InterfaceEquationHolder &);
         InterfaceEquationPtrMap_t &GetInterfaceEquationList();
         const InterfaceEquationPtrMap_t &GetInterfaceEquationList() const;
 
@@ -125,7 +141,7 @@ class Interface {
 
         const NameToInterfaceNodeModelMap_t &GetInterfaceNodeModelList() const;
 
-        void Assemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void Assemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         void AddEdges(const ConstEdgeList_t &, const ConstEdgeList_t &);
         void AddTriangles(const ConstTriangleList_t &, const ConstTriangleList_t &);
@@ -137,8 +153,11 @@ class Interface {
 
         std::string GetSurfaceAreaModel() const;
 
-        InterfaceModelExprDataCachePtr GetInterfaceModelExprDataCache();
-        void SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr);
+        template <typename DoubleType>
+        InterfaceModelExprDataCachePtr<DoubleType> GetInterfaceModelExprDataCache();
+
+        template <typename DoubleType>
+        void SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<DoubleType>);
 
     private:
         void FindEdges() const;
@@ -164,7 +183,7 @@ class Interface {
 
         DependencyMap_t DependencyMap;
 
-        WeakInterfaceModelExprDataCachePtr interfaceModelExprDataCache;
+        WeakInterfaceModelExprDataCachePtr<double> interfaceModelExprDataCache;
 
 };
 #endif

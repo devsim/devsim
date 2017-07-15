@@ -32,23 +32,24 @@ limitations under the License.
 #include <algorithm>
 #include <vector>
 
-//// TODO: it might be helpful to node this at node @en2 as well
-TriangleCylindricalNodeVolume::TriangleCylindricalNodeVolume(RegionPtr rp)
+template <typename DoubleType>
+TriangleCylindricalNodeVolume<DoubleType>::TriangleCylindricalNodeVolume(RegionPtr rp)
     : TriangleEdgeModel("ElementCylindricalNodeVolume@en0", rp, TriangleEdgeModel::SCALAR)
 {
-  node1Volume_ = TriangleEdgeSubModel::CreateTriangleEdgeSubModel("ElementCylindricalNodeVolume@en1", rp, TriangleEdgeModel::SCALAR, this->GetSelfPtr());
+  node1Volume_ = TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel("ElementCylindricalNodeVolume@en1", rp, TriangleEdgeModel::SCALAR, this->GetSelfPtr());
   RegisterCallback("raxis_zero");
   RegisterCallback("raxis_variable");
 }
 
-void TriangleCylindricalNodeVolume::calcTriangleEdgeScalarValues() const
+template <typename DoubleType>
+void TriangleCylindricalNodeVolume<DoubleType>::calcTriangleEdgeScalarValues() const
 {
   const Region &region = GetRegion();
 
   const size_t dimension=region.GetDimension();
   dsAssert(dimension == 2, "UNEXPECTED");
 
-  double RAxis0 = 0.0;
+  DoubleType RAxis0 = 0.0;
   std::string RAxisVariable;
 
   {
@@ -88,13 +89,13 @@ void TriangleCylindricalNodeVolume::calcTriangleEdgeScalarValues() const
   }
 
   const ConstTriangleList &el = region.GetTriangleList();
-  std::vector<double> ev0(3*el.size());
-  std::vector<double> ev1(3*el.size());
-  std::vector<double> nv(region.GetNumberNodes());
+  std::vector<DoubleType> ev0(3*el.size());
+  std::vector<DoubleType> ev1(3*el.size());
+  std::vector<DoubleType> nv(region.GetNumberNodes());
 
   for (size_t i = 0; i < el.size(); ++i)
   {
-    const std::vector<double> &v = calcTriangleCylindricalNodeVolume(el[i], RAxisVariable, RAxis0);
+    const std::vector<DoubleType> &v = calcTriangleCylindricalNodeVolume(el[i], RAxisVariable, RAxis0);
     const size_t indexi = 3*i;
     ev0[indexi]     = v[0];
     ev0[indexi + 1] = v[1];
@@ -112,16 +113,17 @@ void TriangleCylindricalNodeVolume::calcTriangleEdgeScalarValues() const
 namespace {
 // Calc volume of triangle with flat top or bottom (constant z) on at least one side
 // assume r1 and r2 are at z1
-double calcCylindricalTriangleVolumeFlat(double r0, double z0, double r1, double z1, double r2)
+template <typename DoubleType>
+DoubleType calcCylindricalTriangleVolumeFlat(DoubleType r0, DoubleType z0, DoubleType r1, DoubleType z1, DoubleType r2)
 {
-  double ret = 0.0;
-  const double z = fabs(z1 - z0);
-  const double r20_2 = pow((r2 - r0), 2.0);
-  const double r10_2 = pow((r1 - r0), 2.0);
+  DoubleType ret = 0.0;
+  const DoubleType z = fabs(z1 - z0);
+  const DoubleType r20_2 = pow((r2 - r0), 2.0);
+  const DoubleType r10_2 = pow((r1 - r0), 2.0);
 
   ret = fabs(r20_2 - r10_2) * z / 3.0;
 
-  const double r21 = fabs(r2 - r1);
+  const DoubleType r21 = fabs(r2 - r1);
   ret += r21 * r0 * z;
   ret *= M_PI; 
 
@@ -129,18 +131,19 @@ double calcCylindricalTriangleVolumeFlat(double r0, double z0, double r1, double
 }
 
 // Calc volume of arbitrary triangle swept around z axis
-double calcCylindricalTriangleVolume(std::vector<std::pair<double, double> > &pairs)
+template <typename DoubleType>
+DoubleType calcCylindricalTriangleVolume(std::vector<std::pair<DoubleType, DoubleType> > &pairs)
 {
-  double ret = 0.0;
+  DoubleType ret = 0.0;
   /// sort by height
   std::sort(pairs.begin(), pairs.end());
 
-  const double &z0 = pairs[0].first;
-  const double &r0 = pairs[0].second;
-  const double &z1 = pairs[1].first;
-  const double &r1 = pairs[1].second;
-  const double &z2 = pairs[2].first;
-  const double &r2 = pairs[2].second;
+  const DoubleType &z0 = pairs[0].first;
+  const DoubleType &r0 = pairs[0].second;
+  const DoubleType &z1 = pairs[1].first;
+  const DoubleType &r1 = pairs[1].second;
+  const DoubleType &z2 = pairs[2].first;
+  const DoubleType &r2 = pairs[2].second;
 
   if (z0 == z1)
   {
@@ -154,7 +157,7 @@ double calcCylindricalTriangleVolume(std::vector<std::pair<double, double> > &pa
   {
     //// this is the midpoint (radius) drawn directly between z0 and z2
     //// since we are sorted by increasing z, a good triangle should have a valid denominator
-    const double r3 = (z1 - z0) * (r2 - r0) / (z2 - z0) + r0;
+    const DoubleType r3 = (z1 - z0) * (r2 - r0) / (z2 - z0) + r0;
 
     ret  = calcCylindricalTriangleVolumeFlat(r0, z0, r1, z1, r3);
     ret += calcCylindricalTriangleVolumeFlat(r2, z2, r1, z1, r3);
@@ -165,31 +168,32 @@ double calcCylindricalTriangleVolume(std::vector<std::pair<double, double> > &pa
 }
 }
 
-std::vector<double> TriangleCylindricalNodeVolume::calcTriangleCylindricalNodeVolume(ConstTrianglePtr tp, const std::string &RAxisVariable, double RAxis0) const
+template <typename DoubleType>
+std::vector<DoubleType> TriangleCylindricalNodeVolume<DoubleType>::calcTriangleCylindricalNodeVolume(ConstTrianglePtr tp, const std::string &RAxisVariable, DoubleType RAxis0) const
 {
   const Region &region = GetRegion();
 
   const Triangle &triangle = *tp;
-  const std::vector<Vector> &centers = region.GetTriangleCenters();
+  const std::vector<Vector<DoubleType>> &centers = region.GetTriangleCenters();
 
   const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
   size_t tindex = triangle.GetIndex();
   const ConstEdgeList &edgeList = ttelist[tindex];
 
-  const Vector &vc = centers[triangle.GetIndex()];
+  const Vector<DoubleType> &vc = centers[triangle.GetIndex()];
 
   //// These are the returned volumes
-  std::vector<double> ret(6);
+  std::vector<DoubleType> ret(6);
 
-  double r0 = 0.0; // node 0
-  double r1 = 0.0; // triangle center
-  double r2 = 0.0; // edge midpoint
-  double r3 = 0.0; // node 1
+  DoubleType r0 = 0.0; // node 0
+  DoubleType r1 = 0.0; // triangle center
+  DoubleType r2 = 0.0; // edge midpoint
+  DoubleType r3 = 0.0; // node 1
 
-  double z0 = 0.0;
-  double z1 = 0.0;
-  double z2 = 0.0;
-  double z3 = 0.0;
+  DoubleType z0 = 0.0;
+  DoubleType z1 = 0.0;
+  DoubleType z2 = 0.0;
+  DoubleType z3 = 0.0;
 
 
 
@@ -208,11 +212,11 @@ std::vector<double> TriangleCylindricalNodeVolume::calcTriangleCylindricalNodeVo
   {
     const Edge &edge = *edgeList[i];
 
-    const Vector &p0 = edge.GetHead()->Position();
-    const Vector &p1 = edge.GetTail()->Position();
+    const Vector<DoubleType> &p0 = edge.GetHead()->Position();
+    const Vector<DoubleType> &p1 = edge.GetTail()->Position();
 
     ///// This is the midpoint along the edge
-    Vector vm = p0;
+    Vector<DoubleType> vm = p0;
     vm += p1;
     vm *= 0.5;
 
@@ -236,26 +240,29 @@ std::vector<double> TriangleCylindricalNodeVolume::calcTriangleCylindricalNodeVo
       z3 = p1.Getx();
     }
 
-    std::vector<std::pair<double, double> > pairs(3);
+    std::vector<std::pair<DoubleType, DoubleType> > pairs(3);
 
     pairs[0] = std::make_pair(z0, r0);
     pairs[1] = std::make_pair(z1, r1);
     pairs[2] = std::make_pair(z2, r2);
-    const double val0 = calcCylindricalTriangleVolume(pairs);
+    const DoubleType val0 = calcCylindricalTriangleVolume(pairs);
     ret[i]   = val0;
 
     pairs[0] = std::make_pair(z3, r3);
     pairs[1] = std::make_pair(z1, r1);
     pairs[2] = std::make_pair(z2, r2);
-    const double val1 = calcCylindricalTriangleVolume(pairs);
+    const DoubleType val1 = calcCylindricalTriangleVolume(pairs);
     ret[i+3] = val1;
   }
 
   return ret;
 }
 
-void TriangleCylindricalNodeVolume::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TriangleCylindricalNodeVolume<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND element_cylindrical_node_volume -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\"";
 }
+
+template class TriangleCylindricalNodeVolume<double>;
 

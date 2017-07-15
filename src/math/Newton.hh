@@ -160,13 +160,13 @@ class Newton {
         }
     protected:
         template <typename T>
-        void LoadIntoMatrix(const RealRowColValueVec &rcv, Matrix &matrix, T scl = 1.0, size_t offset = 0);
+        void LoadIntoMatrix(const RealRowColValueVec<double> &rcv, Matrix &matrix, T scl = 1.0, size_t offset = 0);
         template <typename T>
-        void LoadIntoMatrixPermutated(const RealRowColValueVec &rcv, Matrix &matrix, const permvec_t &, T scl = 1.0, size_t offset = 0);
+        void LoadIntoMatrixPermutated(const RealRowColValueVec<double> &rcv, Matrix &matrix, const permvec_t &, T scl = 1.0, size_t offset = 0);
         template <typename T>
-        void LoadIntoRHS(const RHSEntryVec &, std::vector<T> &, T scl = 1.0, size_t offset = 0);
+        void LoadIntoRHS(const RHSEntryVec<double> &, std::vector<T> &, T scl = 1.0, size_t offset = 0);
         template <typename T>
-        void LoadIntoRHSPermutated(const RHSEntryVec &, std::vector<T> &, const permvec_t &, T scl = 1.0, size_t offset = 0);
+        void LoadIntoRHSPermutated(const RHSEntryVec<double> &, std::vector<T> &, const permvec_t &, T scl = 1.0, size_t offset = 0);
     private:
 
         void InitializeTransientAssemble(const TimeMethods::TimeParams &, size_t, std::vector<double> &);
@@ -190,13 +190,13 @@ class Newton {
         void LoadMatrixAndRHSAC(Matrix &, ComplexDoubleVec_t &, permvec_t &, double);
         void LoadCircuitRHSAC(ComplexDoubleVec_t &);
 
-        void LoadMatrixAndRHSOnCircuit(RealRowColValueVec &, RHSEntryVec &rhs, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void LoadMatrixAndRHSOnCircuit(RealRowColValueVec<double> &, RHSEntryVec<double> &rhs, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        void AssembleContactsAndInterfaces(RealRowColValueVec &, RHSEntryVec &, permvec_t &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void AssembleContactsAndInterfaces(RealRowColValueVec<double> &, RHSEntryVec<double> &, permvec_t &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
         //// This one can't permutate anything
-        void AssembleBulk(RealRowColValueVec &, RHSEntryVec &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void AssembleBulk(RealRowColValueVec<double> &, RHSEntryVec<double> &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        void AssembleTclEquations(RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void AssembleTclEquations(RealRowColValueVec<double> &, RHSEntryVec<double> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         static const size_t DefaultMaxIter;
         static const double DefaultAbsError;

@@ -21,20 +21,57 @@ limitations under the License.
 #include <memory>
 #include <vector>
 
-template <typename T> class ScalarData;
+template <typename T, typename U> class ScalarData;
+
 class InterfaceNodeModel;
-typedef ScalarData<InterfaceNodeModel> InterfaceNodeScalarData;
+
+template<typename T>
+using InterfaceNodeScalarData = ScalarData<InterfaceNodeModel, T>;
 
 namespace IMEE {
+
+enum datatype {NODEDATA=0, DOUBLE, INVALID};
+extern const char *const datatypename[];
+
+template <typename DoubleType>
+class ScalarValuesType {
+  public:
+  ScalarValuesType() : vals(0), uval(0.0), isuniform(false), length(0) {}
+  ScalarValuesType(const std::vector<DoubleType> &v) : vals(&v), uval(0.0), isuniform(false) {length = v.size();}
+
+  ScalarValuesType(DoubleType v, size_t len) : vals(0), uval(v), isuniform(true), length(len) {}
+
+  bool IsUniform() const
+  {
+    return isuniform;
+  }
+
+  const std::vector<DoubleType> &GetVector() const {
+    return *vals;
+  }
+
+  DoubleType GetScalar() const {
+    return uval;
+  }
+
+  size_t GetLength() const {
+    return length;
+  }
+
+  private:
+    const std::vector<DoubleType> *vals;
+    DoubleType                     uval;
+    bool isuniform;
+    size_t                     length;
+};
+
+template <typename DoubleType>
 class InterfaceModelExprData {
     public:
-        /// Start with Node data.  Maybe someday allow flux integration
-        enum datatype {NODEDATA=0, DOUBLE, INVALID};
-        static const char *const datatypename[];
 
         InterfaceModelExprData(const InterfaceModelExprData &);
-        InterfaceModelExprData(double x) : val(x), type(DOUBLE) {};
-        InterfaceModelExprData(const InterfaceNodeScalarData &);
+        InterfaceModelExprData(DoubleType x) : val(x), type(DOUBLE) {};
+        InterfaceModelExprData(const InterfaceNodeScalarData<DoubleType> &);
 
         InterfaceModelExprData() : val(0.0), type(INVALID) {};
 
@@ -47,7 +84,7 @@ class InterfaceModelExprData {
         InterfaceModelExprData &operator+=(const InterfaceModelExprData &);
 
         // test or will get undefined data
-        double GetDoubleValue() const
+        DoubleType GetDoubleValue() const
         {
             return val;
         }
@@ -55,49 +92,17 @@ class InterfaceModelExprData {
             return type;
         }
 
-        class ScalarValuesType {
-          public:
-          ScalarValuesType() : vals(0), uval(0.0), isuniform(false), length(0) {}
-          ScalarValuesType(const std::vector<double> &v) : vals(&v), uval(0.0), isuniform(false) {length = v.size();}
 
-          ScalarValuesType(double v, size_t len) : vals(0), uval(v), isuniform(true), length(len) {}
-
-          bool IsUniform() const
-          {
-            return isuniform;
-          }
-
-          const std::vector<double> &GetVector() const {
-            return *vals;
-          }
-
-          double GetScalar() const {
-            return uval;
-          }
-
-          size_t GetLength() const {
-            return length;
-          }
-
-          private:
-            const std::vector<double> *vals;
-            double                     uval;
-            bool isuniform;
-            size_t                     length;
-        };
-
-        ScalarValuesType GetScalarValues() const;
+        ScalarValuesType<DoubleType> GetScalarValues() const;
 
         void makeUnique();
 
     private:
-        friend class InterfaceModelExprEval;
-
-        typedef std::shared_ptr<InterfaceNodeScalarData> nsd_ptr;
+        typedef std::shared_ptr<InterfaceNodeScalarData<DoubleType> > nsd_ptr;
         // These are the types of data we can keep
-        std::shared_ptr<InterfaceNodeScalarData> nsd;
+        std::shared_ptr<InterfaceNodeScalarData<DoubleType> > nsd;
         // This is a reference to existing data
-        double             val;
+        DoubleType         val;
         datatype           type;
 };
 }

@@ -19,11 +19,11 @@ limitations under the License.
 #include "Region.hh"
 #include "Contact.hh"
 #include "ContactEquation.hh"
+#include "ContactEquationHolder.hh"
 #include "Equation.hh"
 #include "Coordinate.hh"
 #include "Interface.hh"
 #include "InterfaceEquation.hh"
-#include "IterHelper.hh"
 #include "dsAssert.hh"
 #include "OutputStream.hh"
 #include "Node.hh"
@@ -291,32 +291,29 @@ size_t Device::CalcMaxEquationNumber()
     return maxeqnnum;
 }
 
-#if 0
-//// TODO: use functors and templates (or function pointers) to prevent replication of code
-//// When we are using the same iteration code over and over
-#endif
-void Device::ContactAssemble(dsMath::RealRowColValueVec &m, RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Device::ContactAssemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-  IterHelper::ForEachMapValue(GetContactList(), IterHelper::assdcp<Contact>(m, v, p, w, t));
-#if 0
-    ContactList_t::iterator it = contactList.begin(); 
-    const ContactList_t::iterator end = contactList.end(); 
-    for ( ; it != end; ++it)
-    {
-        IterHelper::ForEachMapValue(((*it).second)->GetContactEquationList(), IterHelper::assdcp<ContactEquation>(m, v, p, w, t));
-    }
-#endif
+  for (auto it : GetContactList())
+  {
+    it.second->Assemble(m, v, p, w, t);
+  }
 }
 
-void Device::InterfaceAssemble(dsMath::RealRowColValueVec &m, RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Device::InterfaceAssemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
 
-    IterHelper::ForEachMapValue(GetInterfaceList(), IterHelper::assdcp<Interface>(m, v, p, w, t));
+  for (auto it : GetInterfaceList())
+  {
+    it.second->Assemble(m, v, p, w, t);
+  }
 }
 
-void Device::RegionAssemble(dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Device::RegionAssemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-    IterHelper::ForEachMapValue(GetRegionList(), IterHelper::assdc<Region>(m, v, w, t));
+  for (auto it : GetRegionList())
+  {
+    it.second->Assemble(m, v, w, t);
+  }
 }
 
 void Device::Update(const std::vector<double> &result)
@@ -428,7 +425,7 @@ void Device::UpdateContacts()
     const ContactEquationPtrMap_t &celist = ((*it).second)->GetEquationPtrList();
     for (ContactEquationPtrMap_t::const_iterator cit = celist.begin(); cit != celist.end(); ++cit)
     {
-      ((*cit).second)->UpdateContact();
+      ((*cit).second).UpdateContact();
     }
   }
 }

@@ -21,6 +21,7 @@ limitations under the License.
 #include <utility>
 #include <vector>
 #include <map>
+#include <cstddef>
 
 
 class ObjectHolder;

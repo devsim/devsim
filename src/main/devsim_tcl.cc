@@ -52,7 +52,7 @@ int main(int argc, char * argv[])
     dsMesh::MeshKeeper::DestroyInstance();
     NodeKeeper::delete_instance();
     InstanceKeeper::delete_instance();
-    MathEval::DestroyInstance();
+    MathEval<double>::DestroyInstance();
     TimeData::DestroyInstance();
 }
 

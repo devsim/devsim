@@ -26,9 +26,8 @@ limitations under the License.
 #include <cmath>
 #include <ostream>
 
-// TODO:"Element Node Volume Support!!!!"
-
-ExprContactEquation::ExprContactEquation(
+template <typename DoubleType>
+ExprContactEquation<DoubleType>::ExprContactEquation(
             const std::string &eq,// nodemodel
             const std::string &var, // variable
             ContactPtr c,
@@ -42,7 +41,7 @@ ExprContactEquation::ExprContactEquation(
             const std::string &nmq,// nodemodel
             const std::string &emq ,// edgemodel
             const std::string &eemq // elementedgemodel
-            ) :  ContactEquation(eq, var, c, r),
+            ) :  ContactEquation<DoubleType>(eq, var, c, r),
                  nodemodel_int(nmi),
                  edgemodel_int(emi),
                  elementedgemodel_int(eemi),
@@ -56,22 +55,23 @@ ExprContactEquation::ExprContactEquation(
 }
 
 
-void ExprContactEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void ExprContactEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-    ModelExprDataCachePtr model_cache = ModelExprDataCachePtr(new ModelExprDataCache()); 
-    Region &r = const_cast<Region &>(GetRegion());
+    ModelExprDataCachePtr<DoubleType> model_cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    Region &r = const_cast<Region &>(ContactEquation<DoubleType>::GetRegion());
     r.SetModelExprDataCache(model_cache);
 
-    const std::string &NodeVolumeModel = GetRegion().GetNodeVolumeModel();
-    const std::string &EdgeCoupleModel = GetRegion().GetEdgeCoupleModel();
-    const std::string &ElementEdgeCoupleModel = GetRegion().GetElementEdgeCoupleModel();
+    const std::string &NodeVolumeModel = ContactEquation<DoubleType>::GetRegion().GetNodeVolumeModel();
+    const std::string &EdgeCoupleModel = ContactEquation<DoubleType>::GetRegion().GetEdgeCoupleModel();
+    const std::string &ElementEdgeCoupleModel = ContactEquation<DoubleType>::GetRegion().GetElementEdgeCoupleModel();
 
     if (w == dsMathEnum::PERMUTATIONSONLY)
     {
         if (!nodemodel_int.empty())
         {
             model_cache->clear();
-            AssembleNodeEquation(nodemodel_int, m, v, p, w, NodeVolumeModel);
+            ContactEquation<DoubleType>::AssembleNodeEquation(nodemodel_int, m, v, p, w, NodeVolumeModel);
         }
     }
     else if (t == dsMathEnum::DC)
@@ -79,38 +79,38 @@ void ExprContactEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, RHSEntr
         if (!nodemodel_int.empty())
         {
             model_cache->clear();
-            AssembleNodeEquation(nodemodel_int, m, v, p, w, NodeVolumeModel);
+            ContactEquation<DoubleType>::AssembleNodeEquation(nodemodel_int, m, v, p, w, NodeVolumeModel);
         }
 
         if (!edgemodel_int.empty())
         {
             model_cache->clear();
-            AssembleEdgeEquation(edgemodel_int, m, v, w, EdgeCoupleModel);
+            ContactEquation<DoubleType>::AssembleEdgeEquation(edgemodel_int, m, v, w, EdgeCoupleModel);
         }
 
         if (!elementedgemodel_int.empty())
         {
             model_cache->clear();
-            AssembleElementEdgeEquation(elementedgemodel_int, m, v, w, ElementEdgeCoupleModel, 1.0, -1.0);
+            ContactEquation<DoubleType>::AssembleElementEdgeEquation(elementedgemodel_int, m, v, w, ElementEdgeCoupleModel, 1.0, -1.0);
         }
 
-        const std::string &circuitnode = GetCircuitNode();
+        const std::string &circuitnode = ContactEquation<DoubleType>::GetCircuitNode();
         if (!circuitnode.empty())
         {
             if (!nodemodel_current.empty())
             {
                 model_cache->clear();
-                AssembleNodeEquationOnCircuit(nodemodel_current, m, v, w, NodeVolumeModel);
+                ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(nodemodel_current, m, v, w, NodeVolumeModel);
             }
             if (!edgemodel_current.empty())
             {
                 model_cache->clear();
-                AssembleEdgeEquationOnCircuit(edgemodel_current, m, v, w, EdgeCoupleModel);
+                ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(edgemodel_current, m, v, w, EdgeCoupleModel);
             }
             if (!elementedgemodel_current.empty())
             {
                 model_cache->clear();
-                AssembleElementEdgeEquationOnCircuit(elementedgemodel_current, m, v, w, ElementEdgeCoupleModel, 1.0, -1.0);
+                ContactEquation<DoubleType>::AssembleElementEdgeEquationOnCircuit(elementedgemodel_current, m, v, w, ElementEdgeCoupleModel, 1.0, -1.0);
             }
         }
     }
@@ -121,64 +121,67 @@ void ExprContactEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, RHSEntr
     //// Need time domain equivalent for internal models
         if (!nodemodel_int.empty())
         {
-            AssembleNodeEquation(nodemodel_int, m, v, p);
+            ContactEquation<DoubleType>::AssembleNodeEquation(nodemodel_int, m, v, p);
         }
 
         if (!edgemodel_int.empty())
         {
-            AssembleEdgeEquation(edgemodel_int, m, v, p);
+            ContactEquation<DoubleType>::AssembleEdgeEquation(edgemodel_int, m, v, p);
         }
     */
 
         //// TODO: We really rely on there being a nodemodel in DCAssemble to set permutation entries
-        const std::string &circuitnode = GetCircuitNode();
+        const std::string &circuitnode = ContactEquation<DoubleType>::GetCircuitNode();
         if (!circuitnode.empty())
         {
             if (!nodemodel_charge.empty())
             {
                 model_cache->clear();
-                AssembleNodeEquationOnCircuit(nodemodel_charge, m, v, w, NodeVolumeModel);
+                ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(nodemodel_charge, m, v, w, NodeVolumeModel);
             }
             if (!edgemodel_charge.empty())
             {
                 model_cache->clear();
-                AssembleEdgeEquationOnCircuit(edgemodel_charge, m, v, w, EdgeCoupleModel);
+                ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(edgemodel_charge, m, v, w, EdgeCoupleModel);
             }
             if (!elementedgemodel_charge.empty())
             {
                 model_cache->clear();
-                AssembleElementEdgeEquationOnCircuit(elementedgemodel_charge, m, v, w, ElementEdgeCoupleModel, 1.0, -1.0);
+                ContactEquation<DoubleType>::AssembleElementEdgeEquationOnCircuit(elementedgemodel_charge, m, v, w, ElementEdgeCoupleModel, 1.0, -1.0);
             }
         }
     }
 }
 
-void ExprContactEquation::calcCurrent()
+template <typename DoubleType>
+void ExprContactEquation<DoubleType>::calcCurrent()
 {
     /// handle cylindrical
-    double ch = integrateNodeModelOverNodes(nodemodel_current, GetRegion().GetNodeVolumeModel());
-    ch += integrateEdgeModelOverNodes(edgemodel_current, GetRegion().GetEdgeCoupleModel());
-    ch += integrateElementEdgeModelOverNodes(elementedgemodel_current, GetRegion().GetElementEdgeCoupleModel(), 1.0, -1.0);
-    SetCurrent(ch);
+    DoubleType ch = ContactEquation<DoubleType>::integrateNodeModelOverNodes(nodemodel_current, ContactEquation<DoubleType>::GetRegion().GetNodeVolumeModel());
+    ch += ContactEquation<DoubleType>::integrateEdgeModelOverNodes(edgemodel_current, ContactEquation<DoubleType>::GetRegion().GetEdgeCoupleModel());
+    ch += ContactEquation<DoubleType>::integrateElementEdgeModelOverNodes(elementedgemodel_current, ContactEquation<DoubleType>::GetRegion().GetElementEdgeCoupleModel(), 1.0, -1.0);
+    ContactEquation<DoubleType>::SetCurrent(ch);
 }
 
 // Modeled after the Expr Equation
 // Need to separate on a per contact basis
-void ExprContactEquation::calcCharge()
+template <typename DoubleType>
+void ExprContactEquation<DoubleType>::calcCharge()
 {
-    double ch = integrateNodeModelOverNodes(nodemodel_charge, GetRegion().GetNodeVolumeModel());
-    ch += integrateEdgeModelOverNodes(edgemodel_charge, GetRegion().GetEdgeCoupleModel());
-    ch += integrateElementEdgeModelOverNodes(elementedgemodel_charge, GetRegion().GetElementEdgeCoupleModel(), 1.0, -1.0);
-    SetCharge(ch);
+    DoubleType ch = ContactEquation<DoubleType>::integrateNodeModelOverNodes(nodemodel_charge, ContactEquation<DoubleType>::GetRegion().GetNodeVolumeModel());
+    ch += ContactEquation<DoubleType>::integrateEdgeModelOverNodes(edgemodel_charge, ContactEquation<DoubleType>::GetRegion().GetEdgeCoupleModel());
+    ch += ContactEquation<DoubleType>::integrateElementEdgeModelOverNodes(elementedgemodel_charge, ContactEquation<DoubleType>::GetRegion().GetElementEdgeCoupleModel(), 1.0, -1.0);
+    ContactEquation<DoubleType>::SetCharge(ch);
 }
 
-void ExprContactEquation::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void ExprContactEquation<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND contact_equation "
-        "-device \"" << GetDeviceName()
-        << "\" -contact \"" << GetContactName()
-        << "\" -name \"" << GetName()
-        << "\" -variable_name \"" <<  GetVariable()
+        "-device \"" << ContactEquation<DoubleType>::GetDeviceName()
+        << "\" -contact \"" << ContactEquation<DoubleType>::GetContactName()
+        << "\" -name \"" << ContactEquation<DoubleType>::GetName()
+        << "\" -variable_name \"" <<  ContactEquation<DoubleType>::GetVariable()
         << "\" -edge_charge_model \"" << edgemodel_charge
         << "\" -edge_current_model \"" << edgemodel_current
         << "\" -edge_model \"" << edgemodel_int
@@ -188,16 +191,17 @@ void ExprContactEquation::Serialize(std::ostream &of) const
         << "\" -node_charge_model \"" << nodemodel_charge
         << "\" -node_current_model \"" << nodemodel_current
         << "\" -node_model \"" << nodemodel_int
-        << "\" -circuit_node \"" << GetCircuitNode()
+        << "\" -circuit_node \"" << ContactEquation<DoubleType>::GetCircuitNode()
         << "\"";
 }
 
-void ExprContactEquation::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
+template <typename DoubleType>
+void ExprContactEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
 {
-  omap["device"] = ObjectHolder(GetDeviceName());
-  omap["contact"] = ObjectHolder(GetContactName());
-  omap["name"] = ObjectHolder(GetName());
-  omap["variable_name"] = ObjectHolder( GetVariable());
+  omap["device"] = ObjectHolder(ContactEquation<DoubleType>::GetDeviceName());
+  omap["contact"] = ObjectHolder(ContactEquation<DoubleType>::GetContactName());
+  omap["name"] = ObjectHolder(ContactEquation<DoubleType>::GetName());
+  omap["variable_name"] = ObjectHolder( ContactEquation<DoubleType>::GetVariable());
   omap["edge_charge_model"] = ObjectHolder(edgemodel_charge);
   omap["edge_current_model"] = ObjectHolder(edgemodel_current);
   omap["edge_model"] = ObjectHolder(edgemodel_int);
@@ -207,7 +211,7 @@ void ExprContactEquation::GetCommandOptions_Impl(std::map<std::string, ObjectHol
   omap["node_charge_model"] = ObjectHolder(nodemodel_charge);
   omap["node_current_model"] = ObjectHolder(nodemodel_current);
   omap["node_model"] = ObjectHolder(nodemodel_int);
-  omap["circuit_node"] = ObjectHolder(GetCircuitNode());
+  omap["circuit_node"] = ObjectHolder(ContactEquation<DoubleType>::GetCircuitNode());
 }
 
-
+template class ExprContactEquation<double>;

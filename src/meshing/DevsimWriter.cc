@@ -39,7 +39,7 @@ void WriteCoordinates(std::ostream &myfile, const Device::CoordinateList_t &clis
     myfile << "begin_coordinates\n";
     for (Device::CoordinateList_t::const_iterator cit = clist.begin(); cit != clist.end(); ++cit)
     {
-        const Vector &pos = (*cit)->Position();
+        const Vector<double> &pos = (*cit)->Position();
         myfile << pos.Getx() << "\t" << pos.Gety() << "\t" << pos.Getz() << "\n";
     }
     myfile << "end_coordinates\n\n";
@@ -107,8 +107,8 @@ void WriteNodeModels(std::ostream &myfile, const Region::NodeModelList_t &nmlist
 
         const NodeModel &nmodel = *(nit->second);
 
-        const NodeScalarList &vals = nmodel.GetScalarValues();
-        for (NodeScalarList::const_iterator vit = vals.begin(); vit != vals.end(); ++vit)
+        const NodeScalarList<double> &vals = nmodel.GetScalarValues<double>();
+        for (NodeScalarList<double>::const_iterator vit = vals.begin(); vit != vals.end(); ++vit)
         {
             myfile << *vit << "\n";
         }
@@ -125,8 +125,8 @@ void WriteEdgeModels(std::ostream &myfile, const Region::EdgeModelList_t &emlist
 
         const EdgeModel &emodel = *(nit->second);
 
-        const EdgeScalarList &vals = emodel.GetScalarValues();
-        for (EdgeScalarList::const_iterator vit = vals.begin(); vit != vals.end(); ++vit)
+        const EdgeScalarList<double> &vals = emodel.GetScalarValues<double>();
+        for (EdgeScalarList<double>::const_iterator vit = vals.begin(); vit != vals.end(); ++vit)
         {
             myfile << *vit << "\n";
         }

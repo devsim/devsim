@@ -102,7 +102,7 @@ void BreakLine(std::ostream &myfile, const std::string &output_string)
 
 void WriteBlock(std::ostream &os, const std::vector<double> &values)
 {
-  NodeScalarList::const_iterator it = values.begin();
+  NodeScalarList<double>::const_iterator it = values.begin();
   if (it != values.end())
   {
     os << *it;
@@ -148,11 +148,11 @@ void WriteNodeBlock(std::ostream &myfile, const Region &reg, const std::string &
   {
     if (nmp->IsUniform())
     {
-      WriteUniform(os, number_nodes, nmp->GetUniformValue());
+      WriteUniform(os, number_nodes, nmp->GetUniformValue<double>());
     }
     else
     {
-      const NodeScalarList &values = nmp->GetScalarValues();
+      const NodeScalarList<double> &values = nmp->GetScalarValues<double>();
       WriteBlock(os, values);
     }
   }
@@ -178,11 +178,11 @@ void WriteEdgeBlockScalar(std::ostream &myfile, const Region &reg, const std::st
 //    dsAssert(emp->GetDisplayType() == EdgeModel::SCALAR, "UNEXPECTED");
     if (emp->IsUniform())
     {
-      WriteUniform(os, number_nodes, emp->GetUniformValue());
+      WriteUniform(os, number_nodes, emp->GetUniformValue<double>());
     }
     else
     {
-      const NodeScalarList &values = emp->GetScalarValuesOnNodes();
+      const NodeScalarList<double> &values = emp->GetScalarValuesOnNodes<double>();
       WriteBlock(os, values);
     }
   }
@@ -211,12 +211,12 @@ void WriteTriangleEdgeBlockScalar(std::ostream &myfile, const Region &reg, const
 
     if (emp->IsUniform())
     {
-      WriteUniform(os, number_triangles, emp->GetUniformValue());
+      WriteUniform(os, number_triangles, emp->GetUniformValue<double>());
     }
     else
     {
       std::vector<double> values;
-      emp->GetScalarValuesOnElements(values);
+      emp->GetScalarValuesOnElements<double>(values);
       WriteBlock(os, values);
     }
   }
@@ -243,12 +243,12 @@ void WriteTetrahedronEdgeBlockScalar(std::ostream &myfile, const Region &reg, co
 
     if (emp->IsUniform())
     {
-      WriteUniform(os, number_tetrahedrons, emp->GetUniformValue());
+      WriteUniform(os, number_tetrahedrons, emp->GetUniformValue<double>());
     }
     else
     {
       std::vector<double> values;
-      emp->GetScalarValuesOnElements(values);
+      emp->GetScalarValuesOnElements<double>(values);
       WriteBlock(os, values);
     }
   }
@@ -283,10 +283,10 @@ void WriteEdgeBlockVector(std::ostream &myfile, const Region &reg, const std::st
   {
     dsAssert(emp->GetDisplayType() == EdgeModel::VECTOR, "UNEXPECTED");
 
-    const NodeVectorList &values = emp->GetVectorValuesOnNodes();
+    const NodeVectorList<double> &values = emp->GetVectorValuesOnNodes<double>();
     dsAssert(values.size() > 0, "UNEXPECTED");
 
-    NodeVectorList::const_iterator it = values.begin();
+    NodeVectorList<double>::const_iterator it = values.begin();
     if (it != values.end())
     {
       osx << " " << (*it).Getx();

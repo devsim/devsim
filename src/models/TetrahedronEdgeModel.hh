@@ -18,16 +18,23 @@ limitations under the License.
 #ifndef TETRAHEDRON_EDGE_MODEL_HH
 #define TETRAHEDRON_EDGE_MODEL_HH
 
+#include "ModelDataHolder.hh"
+
 #include <memory>
 
 #include <string>
 #include <vector>
 #include <iosfwd>
 
-//// Realistically, we should use a struct of the appropriate type
-typedef std::vector<double> TetrahedronEdgeScalarList;
-typedef std::vector<double> NodeScalarList;
-typedef std::vector<double> EdgeScalarList;
+template<typename T>
+using TetrahedronEdgeScalarList = std::vector<T>;
+
+template<typename T>
+using NodeScalarList = std::vector<T>;
+
+template<typename T>
+using EdgeScalarList = std::vector<T>;
+
 
 class Region;
 typedef Region *RegionPtr;
@@ -36,18 +43,11 @@ class Edge;
 typedef Edge *EdgePtr;
 typedef const Edge *ConstEdgePtr;
 
-class EdgeModel;
-typedef std::weak_ptr<EdgeModel>         WeakEdgeModelPtr;
-typedef std::weak_ptr<const EdgeModel>   WeakConstEdgeModelPtr;
-typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
-
 class TetrahedronEdgeModel;
-typedef std::weak_ptr<TetrahedronEdgeModel>         WeakTetrahedronEdgeModelPtr;
-typedef std::weak_ptr<const TetrahedronEdgeModel>   WeakConstTetrahedronEdgeModelPtr;
-typedef std::shared_ptr<TetrahedronEdgeModel>       TetrahedronEdgeModelPtr;
-typedef std::shared_ptr<const TetrahedronEdgeModel> ConstTetrahedronEdgeModelPtr;
-
+using WeakTetrahedronEdgeModelPtr = std::weak_ptr<TetrahedronEdgeModel>;
+using WeakConstTetrahedronEdgeModelPtr = std::weak_ptr<const TetrahedronEdgeModel>;
+using TetrahedronEdgeModelPtr = std::shared_ptr<TetrahedronEdgeModel>;
+using ConstTetrahedronEdgeModelPtr = std::shared_ptr<const TetrahedronEdgeModel>;
 
 class Tetrahedron;
 typedef Tetrahedron *TetrahedronPtr;
@@ -64,18 +64,19 @@ class TetrahedronEdgeModel {
             return name;
         }
 
-        // Gets the appropriate value
-        // May want to make non-virtual base member and call virtual method within
-        // Value is directed from first node in Edge to second node
-//      double GetTetrahedronScalarValue(const Tetrahedron *) const;
-        const TetrahedronEdgeScalarList &GetScalarValues() const;
+        template <typename DoubleType>
+        const TetrahedronEdgeScalarList<DoubleType> &GetScalarValues() const;
 
         enum InterpolationType {AVERAGE, COUPLE, SUM};
-        void GetScalarValuesOnNodes(TetrahedronEdgeModel::InterpolationType, std::vector<double> &) const;
 
-        void GetScalarValuesOnElements(std::vector<double> &) const;
+        template <typename DoubleType>
+        void GetScalarValuesOnNodes(TetrahedronEdgeModel::InterpolationType, std::vector<DoubleType> &) const;
 
-        EdgeScalarList GetValuesOnEdges() const;
+        template <typename DoubleType>
+        void GetScalarValuesOnElements(std::vector<DoubleType> &) const;
+
+        template <typename DoubleType>
+        EdgeScalarList<DoubleType> GetValuesOnEdges() const;
 
         void MarkOld();
 
@@ -91,8 +92,11 @@ class TetrahedronEdgeModel {
             return inprocess;
         }
 
-        void SetValues(const TetrahedronEdgeScalarList &);
-        void SetValues(const double &);
+        template <typename DoubleType>
+        void SetValues(const TetrahedronEdgeScalarList<DoubleType> &);
+
+        template <typename DoubleType>
+        void SetValues(const DoubleType &);
 
         const Region &GetRegion() const
         {
@@ -126,22 +130,17 @@ class TetrahedronEdgeModel {
 
         bool IsUniform() const;
 
-        double GetUniformValue() const;
+        template <typename DoubleType>
+        const DoubleType &GetUniformValue() const;
 
         size_t GetLength() const
         {
           return length;
         }
 
-        bool IsZero() const
-        {
-          return (IsUniform() && (uniform_value == 0.0));
-        }
+        bool IsZero() const;
 
-        bool IsOne() const
-        {
-          return (IsUniform() && (uniform_value == 1.0));
-        }
+        bool IsOne() const;
 
         void DevsimSerialize(std::ostream &) const;
 
@@ -155,8 +154,10 @@ class TetrahedronEdgeModel {
 
         void RegisterCallback(const std::string &);
 
-        void SetValues(const TetrahedronEdgeScalarList &) const;
-        void SetValues(const double &) const;
+        template <typename DoubleType>
+        void SetValues(const TetrahedronEdgeScalarList<DoubleType> &) const;
+        template <typename DoubleType>
+        void SetValues(const DoubleType &) const;
 
         void MarkOld() const;
 
@@ -165,7 +166,7 @@ class TetrahedronEdgeModel {
 
         // Actually performs the computation
         // The nonvirtual method does any required setup.
-        //virtual double calcEdgeScalarValue(EdgePtr) const = 0; 
+        //virtual DoubleType calcEdgeScalarValue(EdgePtr) const = 0; 
         virtual void calcTetrahedronEdgeScalarValues() const = 0;
 
 
@@ -180,11 +181,9 @@ class TetrahedronEdgeModel {
         WeakTetrahedronEdgeModelPtr myself;
         // need to know my region to get database data and appropriate node and edge lists
         RegionPtr   myregion;
+        mutable ModelDataHolder model_data;
         mutable bool uptodate;
         mutable bool inprocess;
-        mutable bool isuniform;
-        mutable double         uniform_value;
-        mutable TetrahedronEdgeScalarList values;
         DisplayType displayType;
         size_t length;
         static const char *DisplayTypeString[];

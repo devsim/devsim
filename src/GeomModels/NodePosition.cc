@@ -21,30 +21,33 @@ limitations under the License.
 #include "Node.hh"
 #include "Vector.hh"
 
-NodePosition::~NodePosition()
+template <typename DoubleType>
+NodePosition<DoubleType>::~NodePosition()
 {
 }
 
-NodePosition::NodePosition(RegionPtr rp)
+template <typename DoubleType>
+NodePosition<DoubleType>::NodePosition(RegionPtr rp)
     : NodeModel("x", rp, NodeModel::SCALAR)
 {
-  yposition = NodeSolution::CreateNodeSolution("y", rp, this->GetSelfPtr());
-  zposition = NodeSolution::CreateNodeSolution("z", rp, this->GetSelfPtr());
-  node_index = NodeSolution::CreateNodeSolution("node_index", rp, this->GetSelfPtr());
-  coordinate_index = NodeSolution::CreateNodeSolution("coordinate_index", rp, this->GetSelfPtr());
+  yposition = NodeSolution<DoubleType>::CreateNodeSolution("y", rp, this->GetSelfPtr());
+  zposition = NodeSolution<DoubleType>::CreateNodeSolution("z", rp, this->GetSelfPtr());
+  node_index = NodeSolution<DoubleType>::CreateNodeSolution("node_index", rp, this->GetSelfPtr());
+  coordinate_index = NodeSolution<DoubleType>::CreateNodeSolution("coordinate_index", rp, this->GetSelfPtr());
 }
 
-void NodePosition::calcNodeScalarValues() const
+template <typename DoubleType>
+void NodePosition<DoubleType>::calcNodeScalarValues() const
 {
     const ConstNodeList &nl = GetRegion().GetNodeList();
-    std::vector<double> nx(nl.size());
-    std::vector<double> ny(nl.size());
-    std::vector<double> nz(nl.size());
-    std::vector<double> ni(nl.size());
-    std::vector<double> ci(nl.size());
+    std::vector<DoubleType> nx(nl.size());
+    std::vector<DoubleType> ny(nl.size());
+    std::vector<DoubleType> nz(nl.size());
+    std::vector<DoubleType> ni(nl.size());
+    std::vector<DoubleType> ci(nl.size());
     for (size_t i = 0; i < nx.size(); ++i)
     {
-        const Vector &pos = nl[i]->Position();
+        const Vector<DoubleType> &pos = nl[i]->Position();
         nx[i] = pos.Getx();
         ny[i] = pos.Gety();
         nz[i] = pos.Getz();
@@ -58,13 +61,17 @@ void NodePosition::calcNodeScalarValues() const
     coordinate_index.lock()->SetValues(ci);
 }
 
-void NodePosition::setInitialValues()
+template <typename DoubleType>
+void NodePosition<DoubleType>::setInitialValues()
 {
     DefaultInitializeValues();
 }
 
-void NodePosition::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void NodePosition<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class NodePosition<double>;
 

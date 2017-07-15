@@ -29,9 +29,18 @@ typedef std::map<size_t, PermutationEntry> PermutationMap;
 
 namespace dsMath {
 template <typename T> class RowColVal;
-typedef std::vector<RowColVal<double> > RealRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 }
 
 /**
@@ -93,11 +102,11 @@ class Device
       size_t GetBaseEquationNumber();
       size_t CalcMaxEquationNumber();
 
-    void ContactAssemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    void ContactAssemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-    void InterfaceAssemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    void InterfaceAssemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-    void RegionAssemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    void RegionAssemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
     double GetAbsError() const
     {

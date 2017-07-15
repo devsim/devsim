@@ -735,10 +735,10 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         if (model_type == Solution::NODE)
         {
           //// This creates a uniform model with value 0.0
-          NodeModelPtr nodesol = NodeSolution::CreateNodeSolution(sname, rp);
+          NodeModelPtr nodesol = NodeSolution<double>::CreateNodeSolution(sname, rp);
           if (data_type == Solution::UNIFORM)
           {
-            nodesol->SetValues(sol.GetUniformValue());
+            nodesol->SetValues<double>(sol.GetUniformValue());
           }
           else if (data_type == Solution::DATA)
           {
@@ -752,12 +752,12 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
             }
             else
             {
-              NodeScalarList nsl(vals.size());
+              NodeScalarList<double> nsl(vals.size());
               for (size_t i = 0; i < vals.size(); ++i)
               {
                   nsl[node_list[i]->GetIndex()] = vals[i];
               }
-              nodesol->SetValues(nsl);
+              nodesol->SetValues<double>(nsl);
             }
           }
         }
@@ -765,10 +765,10 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         {
           //// This creates a uniform model with value 0.0
           //// Do we need to get the display type somehow in our data format??
-          EdgeModel *edgesol = new EdgeSubModel(sname, rp, EdgeModel::SCALAR);
+          EdgeModel *edgesol = new EdgeSubModel<double>(sname, rp, EdgeModel::SCALAR);
           if (data_type == Solution::UNIFORM)
           {
-            edgesol->SetValues(sol.GetUniformValue());
+            edgesol->SetValues<double>(sol.GetUniformValue());
           }
           else if (data_type == Solution::DATA)
           {
@@ -782,12 +782,12 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
             }
             else
             {
-              EdgeScalarList esl(vals.size());
+              EdgeScalarList<double> esl(vals.size());
               for (size_t i = 0; i < vals.size(); ++i)
               {
                 esl[edge_list[i]->GetIndex()] = vals[i];
               }
-              edgesol->SetValues(esl);
+              edgesol->SetValues<double>(esl);
             }
           }
         }
@@ -795,10 +795,10 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         {
           //// This creates a uniform model with value 0.0
           //// Do we need to get the display type somehow in our data format??
-          TriangleEdgeModel *triangleedgesol = new TriangleEdgeSubModel(sname, rp, TriangleEdgeModel::SCALAR);
+          TriangleEdgeModel *triangleedgesol = new TriangleEdgeSubModel<double>(sname, rp, TriangleEdgeModel::SCALAR);
           if (data_type == Solution::UNIFORM)
           {
-            triangleedgesol->SetValues(sol.GetUniformValue());
+            triangleedgesol->SetValues<double>(sol.GetUniformValue());
           }
           else if (data_type == Solution::DATA)
           {
@@ -812,10 +812,10 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         {
           //// This creates a uniform model with value 0.0
           //// Do we need to get the display type somehow in our data format??
-          TetrahedronEdgeModel *tetrahedronedgesol = new TetrahedronEdgeSubModel(sname, rp, TetrahedronEdgeModel::SCALAR);
+          TetrahedronEdgeModel *tetrahedronedgesol = new TetrahedronEdgeSubModel<double>(sname, rp, TetrahedronEdgeModel::SCALAR);
           if (data_type == Solution::UNIFORM)
           {
-            tetrahedronedgesol->SetValues(sol.GetUniformValue());
+            tetrahedronedgesol->SetValues<double>(sol.GetUniformValue());
           }
           else if (data_type == Solution::DATA)
           {
@@ -887,7 +887,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
 //      Solution::ModelType  model_type = sol.GetModelType();
 //      Solution::DataType   data_type  = sol.GetDataType();
       //// TODO: need to assert it was successful
-      dsHelper::ret_pair rval = dsHelper::CreateInterfaceNodeExprModel(sname, "0;", ip);
+      dsHelper::ret_pair rval = dsHelper::CreateInterfaceNodeExprModel<double>(sname, "0;", ip);
       if (!rval.first)
       {
         std::ostringstream os;

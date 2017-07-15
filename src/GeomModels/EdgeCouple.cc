@@ -22,7 +22,8 @@ limitations under the License.
 #include "TriangleEdgeModel.hh"
 #include "TetrahedronEdgeModel.hh"
 
-EdgeCouple::EdgeCouple(RegionPtr rp) :
+template <typename DoubleType>
+EdgeCouple<DoubleType>::EdgeCouple(RegionPtr rp) :
 EdgeModel("EdgeCouple", rp, EdgeModel::SCALAR)
 {
   const size_t dimension = rp->GetDimension();
@@ -33,13 +34,14 @@ EdgeModel("EdgeCouple", rp, EdgeModel::SCALAR)
 }
 
 
-void EdgeCouple::calcEdgeScalarValues() const
+template <typename DoubleType>
+void EdgeCouple<DoubleType>::calcEdgeScalarValues() const
 {
   const size_t dimension=GetRegion().GetDimension();
 
   if (dimension == 1)
   {
-    std::vector<double> ev(GetRegion().GetNumberEdges(), 1.0);
+    std::vector<DoubleType> ev(GetRegion().GetNumberEdges(), 1.0);
     SetValues(ev);
   }
   else if (dimension == 2)
@@ -56,26 +58,31 @@ void EdgeCouple::calcEdgeScalarValues() const
   }
 }
 
-void EdgeCouple::calcEdgeCouple2d() const
+template <typename DoubleType>
+void EdgeCouple<DoubleType>::calcEdgeCouple2d() const
 {
   ConstTriangleEdgeModelPtr eec = GetRegion().GetTriangleEdgeModel("ElementEdgeCouple");
   dsAssert(eec.get(), "ElementEdgeCouple missing");
 
-  std::vector<double> ev = eec->GetValuesOnEdges();
+  std::vector<DoubleType> ev = eec->GetValuesOnEdges<DoubleType>();
   SetValues(ev);
 }
 
-void EdgeCouple::calcEdgeCouple3d() const
+template <typename DoubleType>
+void EdgeCouple<DoubleType>::calcEdgeCouple3d() const
 {
   ConstTetrahedronEdgeModelPtr eec = GetRegion().GetTetrahedronEdgeModel("ElementEdgeCouple");
   dsAssert(eec.get(), "ElementEdgeCouple missing");
-  std::vector<double> ev = eec->GetValuesOnEdges();
+  std::vector<DoubleType> ev = eec->GetValuesOnEdges<DoubleType>();
   SetValues(ev);
 
 }
 
-void EdgeCouple::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void EdgeCouple<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class EdgeCouple<double>;
 

@@ -5,8 +5,8 @@ set -e
 
 # Centos Specific
 #https://fedoraproject.org/wiki/EPEL
-yum install -y epel-release git cmake gcc gcc-c++ bison flex
-#yum install -y git cmake gcc gcc-c++ gnu-fortran bison flex wget
+yum install -y epel-release git cmake gcc bison flex
+yum install -y centos-release-scl devtoolset-6-gcc-c++ cmake3
 
 
 #download install Miniconda

@@ -18,6 +18,7 @@ limitations under the License.
 #ifndef TRIANGLE_EDGE_FROM_EDGE_MODEL_DERIVATIVE_HH
 #define TRIANGLE_EDGE_FROM_EDGE_MODEL_DERIVATIVE_HH
 #include "TriangleEdgeModel.hh"
+template <typename DoubleType>
 class TriangleEdgeFromEdgeModelDerivative : public TriangleEdgeModel {
     public:
         //// Out naming convention is that the name given is the edge model

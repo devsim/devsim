@@ -25,7 +25,8 @@ namespace Eqo {
     typedef std::shared_ptr<EquationObject> EqObjPtr;
 
 }
-// need to set general node propeties, such as positive only
+
+template <typename DoubleType>
 class EdgeExprModel : public EdgeModel
 {
     public:

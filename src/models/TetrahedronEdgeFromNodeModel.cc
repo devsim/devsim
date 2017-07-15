@@ -24,20 +24,19 @@ limitations under the License.
 #include "EdgeData.hh"
 #include "dsAssert.hh"
 
-
-// TODO:"TEST THIS"
-
-TetrahedronEdgeFromNodeModel::TetrahedronEdgeFromNodeModel(const std::string &en0, const std::string &en1, const std::string &en2, const std::string &en3, const std::string &nodemodel, RegionPtr rp)
+template <typename DoubleType>
+TetrahedronEdgeFromNodeModel<DoubleType>::TetrahedronEdgeFromNodeModel(const std::string &en0, const std::string &en1, const std::string &en2, const std::string &en3, const std::string &nodemodel, RegionPtr rp)
     : TetrahedronEdgeModel(en0, rp, TetrahedronEdgeModel::SCALAR), nodeModelName(nodemodel), edgeModel1Name(en1), edgeModel2Name(en2), edgeModel3Name(en3)
 {
   RegisterCallback(nodemodel);
-  new TetrahedronEdgeSubModel(en1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
-  new TetrahedronEdgeSubModel(en2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
-  new TetrahedronEdgeSubModel(en3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(en1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(en2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(en3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
 }
 
 
-void TetrahedronEdgeFromNodeModel::calcTetrahedronEdgeScalarValues() const
+template <typename DoubleType>
+void TetrahedronEdgeFromNodeModel<DoubleType>::calcTetrahedronEdgeScalarValues() const
 {
   const Region &reg = GetRegion();
 
@@ -57,12 +56,12 @@ void TetrahedronEdgeFromNodeModel::calcTetrahedronEdgeScalarValues() const
   const ConstTetrahedronList &tetrahedronList = reg.GetTetrahedronList();
   dsAssert(tetrahedronList.size() == ttelist.size(), "UNEXPECTED");
 
-  const NodeScalarList &nsl = nmp->GetScalarValues();
+  const NodeScalarList<DoubleType> &nsl = nmp->GetScalarValues<DoubleType>();
 
-  std::vector<double> ev0(6*tetrahedronList.size());
-  std::vector<double> ev1(6*tetrahedronList.size());
-  std::vector<double> ev2(6*tetrahedronList.size());
-  std::vector<double> ev3(6*tetrahedronList.size());
+  std::vector<DoubleType> ev0(6*tetrahedronList.size());
+  std::vector<DoubleType> ev1(6*tetrahedronList.size());
+  std::vector<DoubleType> ev2(6*tetrahedronList.size());
+  std::vector<DoubleType> ev3(6*tetrahedronList.size());
 
   for (size_t i = 0; i < tetrahedronList.size(); ++i)
   {
@@ -97,8 +96,11 @@ void TetrahedronEdgeFromNodeModel::calcTetrahedronEdgeScalarValues() const
   std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(temp3)->SetValues(ev3);
 }
 
-void TetrahedronEdgeFromNodeModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TetrahedronEdgeFromNodeModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND element_from_node_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -node_model \"" << nodeModelName << "\"";
 }
+
+template class TetrahedronEdgeFromNodeModel<double>;
 

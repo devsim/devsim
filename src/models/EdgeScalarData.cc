@@ -23,25 +23,22 @@ limitations under the License.
 #include "ScalarData.cc"
 
 //// Manual Template Instantiation
-template class ScalarData<EdgeModel>;
+template class ScalarData<EdgeModel, double>;
 
-template class
-ScalarData<EdgeModel>& ScalarData<EdgeModel>::op_equal<ScalarDataHelper::times_equal>(const double &, const ScalarDataHelper::times_equal &);
+template class ScalarData<EdgeModel, double>& EdgeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const double &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<EdgeModel>& ScalarData<EdgeModel>::op_equal<ScalarDataHelper::times_equal>(const ScalarData<EdgeModel> &, const ScalarDataHelper::times_equal &);
+template class ScalarData<EdgeModel, double>& EdgeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const EdgeScalarData<double> &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<EdgeModel>& ScalarData<EdgeModel>::op_equal<ScalarDataHelper::plus_equal>(const double &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<EdgeModel, double>& EdgeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const double &, const ScalarDataHelper::plus_equal<double> &);
 
-template class
-ScalarData<EdgeModel>& ScalarData<EdgeModel>::op_equal<ScalarDataHelper::plus_equal>(const ScalarData<EdgeModel> &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<EdgeModel, double>& EdgeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const EdgeScalarData<double> &, const ScalarDataHelper::plus_equal<double> &);
 
 
 ///
 /// Creates Edge model for node value on both sides of edge
 /// Can be made more optimal by using vector on region which provides mapping from node index to edge index
-void createEdgeModelsFromNodeModel(const NodeScalarList &nm, const Region &reg, EdgeScalarList &edge0, EdgeScalarList &edge1)
+template <typename DoubleType>
+void createEdgeModelsFromNodeModel(const NodeScalarList<DoubleType> &nm, const Region &reg, EdgeScalarList<DoubleType> &edge0, EdgeScalarList<DoubleType> &edge1)
 {
     const ConstEdgeList &el = reg.GetEdgeList();
     // Just in case size was never initialized
@@ -55,3 +52,6 @@ void createEdgeModelsFromNodeModel(const NodeScalarList &nm, const Region &reg, 
         edge1[i] = nm[nlist[1]->GetIndex()];
     }
 }
+
+template void createEdgeModelsFromNodeModel(const NodeScalarList<double> &nm, const Region &reg, EdgeScalarList<double> &edge0, EdgeScalarList<double> &edge1);
+

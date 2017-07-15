@@ -19,6 +19,7 @@ limitations under the License.
 #define TRIANGLE_NODE_VOLUME_HH
 #include "TriangleEdgeModel.hh"
 
+template <typename DoubleType>
 class TriangleNodeVolume : public TriangleEdgeModel
 {
     public:

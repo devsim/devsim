@@ -23,24 +23,26 @@ limitations under the License.
 #include "Edge.hh"
 #include "Node.hh"
 
-TriangleEdgeCouple::TriangleEdgeCouple(RegionPtr rp) :
+template <typename DoubleType>
+TriangleEdgeCouple<DoubleType>::TriangleEdgeCouple(RegionPtr rp) :
 TriangleEdgeModel("ElementEdgeCouple", rp, TriangleEdgeModel::SCALAR)
 {
 }
 
 
-void TriangleEdgeCouple::calcTriangleEdgeScalarValues() const
+template <typename DoubleType>
+void TriangleEdgeCouple<DoubleType>::calcTriangleEdgeScalarValues() const
 {
   const size_t dimension=GetRegion().GetDimension();
 
   dsAssert(dimension == 2, "UNEXPECTED");
 
   const ConstTriangleList &el = GetRegion().GetTriangleList();
-  std::vector<double> ev(3*el.size());
+  std::vector<DoubleType> ev(3*el.size());
 
   for (size_t i = 0; i < el.size(); ++i)
   {
-    const Vector &v = calcTriangleEdgeCouple(el[i]);
+    const Vector<DoubleType> &v = calcTriangleEdgeCouple(el[i]);
     const size_t indexi = 3*i;
     ev[indexi]     = v.Getx();
     ev[indexi + 1] = v.Gety();
@@ -50,27 +52,28 @@ void TriangleEdgeCouple::calcTriangleEdgeScalarValues() const
   SetValues(ev);
 }
 
-Vector TriangleEdgeCouple::calcTriangleEdgeCouple(ConstTrianglePtr tp) const
+template <typename DoubleType>
+Vector<DoubleType> TriangleEdgeCouple<DoubleType>::calcTriangleEdgeCouple(ConstTrianglePtr tp) const
 {
     const Triangle &triangle = *tp;
-    const std::vector<Vector> &centers = GetRegion().GetTriangleCenters();
+    const std::vector<Vector<DoubleType>> &centers = GetRegion().GetTriangleCenters();
 
     const Region::TriangleToConstEdgeList_t &ttelist = GetRegion().GetTriangleToEdgeList();
     size_t tindex = triangle.GetIndex();
     const ConstEdgeList &edgeList = ttelist[tindex];
 
-    const Vector &vc = centers[triangle.GetIndex()];
+    const Vector<DoubleType> &vc = centers[triangle.GetIndex()];
 
-    double ec[3];
+    DoubleType ec[3];
 
     for (size_t i = 0; i < 3; ++i)
     {
       const Edge &edge = *edgeList[i];
 
-      const Vector &p0 = edge.GetHead()->Position();
-      const Vector &p1 = edge.GetTail()->Position();
+      const Vector<DoubleType> &p0 = edge.GetHead()->Position();
+      const Vector<DoubleType> &p1 = edge.GetTail()->Position();
 
-      Vector vm = p0;
+      Vector<DoubleType> vm = p0;
       vm += p1;
       vm *= 0.5;
       vm -= vc;
@@ -78,11 +81,14 @@ Vector TriangleEdgeCouple::calcTriangleEdgeCouple(ConstTrianglePtr tp) const
       // TODO: think about what happens if we are outside the triangle
     }
 
-    return Vector(ec[0], ec[1], ec[2]);
+    return Vector<DoubleType>(ec[0], ec[1], ec[2]);
 }
 
-void TriangleEdgeCouple::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TriangleEdgeCouple<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class TriangleEdgeCouple<double>;
 

@@ -18,14 +18,21 @@ limitations under the License.
 #ifndef TETRAHEDRON_EDGE_SCALAR_DATA_HH
 #define TETRAHEDRON_EDGE_SCALAR_DATA_HH
 #include <vector>
-typedef std::vector<double> TetrahedronEdgeScalarList;
-class TetrahedronEdgeModel;
+
+template<typename T>
+using TetrahedronEdgeScalarList = std::vector<T>;
 
 #include "ScalarData.hh"
-typedef ScalarData<TetrahedronEdgeModel> TetrahedronEdgeScalarData;
+
+class TetrahedronEdgeModel;
+
+template<typename T>
+using TetrahedronEdgeScalarData = ScalarData<TetrahedronEdgeModel, T>;
 
 class EdgeModel;
-typedef ScalarData<EdgeModel> EdgeScalarData;
+
+template<typename T>
+using EdgeScalarData = ScalarData<EdgeModel, T>;
 
 #endif
 

@@ -22,6 +22,7 @@ limitations under the License.
 // need to set general node propeties, such as positive only
 // 
 // This is modeled after NodeSolution
+template <typename DoubleType>
 class EdgeSubModel : public EdgeModel
 {
     public:
@@ -40,7 +41,6 @@ class EdgeSubModel : public EdgeModel
         EdgeSubModel(const EdgeSubModel &);
         EdgeSubModel &operator=(const EdgeSubModel &);
 
-        double calcSolution(ConstEdgePtr) const;
         void calcEdgeScalarValues() const;
         // If we are an auxilary model, create our values from the parent
         mutable WeakConstEdgeModelPtr parentModel;

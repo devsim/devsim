@@ -31,9 +31,18 @@ limitations under the License.
 
 namespace dsMath {
 template <typename T> class RowColVal;
-typedef std::vector<RowColVal<double> > RealRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 }
 
 
@@ -61,9 +70,9 @@ class InstanceKeeper {
         // apply the current time step to the signal
         void updateSignals(double);
 
-        void AssembleDCMatrix(dsMath::RealRowColValueVec &, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec &rhs);
+        void AssembleDCMatrix(dsMath::RealRowColValueVec<double> &, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec<double> &rhs);
         //// This is also used for the ssac
-        void AssembleTRMatrix(dsMath::RealRowColValueVec *, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec &rhs, double scl);
+        void AssembleTRMatrix(dsMath::RealRowColValueVec<double> *, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec<double> &rhs, double scl);
         void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &rhs);
 
 

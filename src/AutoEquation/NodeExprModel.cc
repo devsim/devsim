@@ -34,7 +34,8 @@ limitations under the License.
 #endif
 
 // Must be valid equation object which is passed
-NodeExprModel::NodeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, NodeModel::DisplayType dt, ContactPtr cp) : NodeModel(nm, rp, dt, cp), equation(eq)
+template <typename DoubleType>
+NodeExprModel<DoubleType>::NodeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, NodeModel::DisplayType dt, ContactPtr cp) : NodeModel(nm, rp, dt, cp), equation(eq)
 {
 #if 0
     os << "creating NodeExprModel " << nm << " with equation " << eq << "\n";
@@ -42,7 +43,8 @@ NodeExprModel::NodeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, Regi
     RegisterModels();
 }
 
-void NodeExprModel::RegisterModels()
+template <typename DoubleType>
+void NodeExprModel<DoubleType>::RegisterModels()
 {
     typedef std::set<std::string> refmodels_t;
     refmodels_t refs;
@@ -80,17 +82,18 @@ void NodeExprModel::RegisterModels()
     }
 }
 
-void NodeExprModel::calcNodeScalarValues() const
+template <typename DoubleType>
+void NodeExprModel<DoubleType>::calcNodeScalarValues() const
 {
     // need to write the calculator
 //    dsAssert(false, "UNEXPECTED");
 #if 0
         os << "updating NodeExprModel " << GetName() << " from expression " << EngineAPI::getStringValue(equation) << "\n";
 #endif
-    MEE::ModelExprEval::error_t errors;
+    typename MEE::ModelExprEval<DoubleType>::error_t errors;
     const Region *rp = &(this->GetRegion());
-    MEE::ModelExprEval mexp(rp, GetName(), errors);
-    MEE::ModelExprData out = mexp.eval_function(equation);
+    MEE::ModelExprEval<DoubleType> mexp(rp, GetName(), errors);
+    MEE::ModelExprData<DoubleType> out = mexp.eval_function(equation);
 
     if (!errors.empty())
     {
@@ -99,7 +102,7 @@ void NodeExprModel::calcNodeScalarValues() const
         " on Device: " << GetRegion().GetDeviceName() <<
         " on Region: " << GetRegion().GetName()
         << "\n";
-        for (MEE::ModelExprEval::error_t::iterator it = errors.begin(); it != errors.end(); ++it)
+        for (typename MEE::ModelExprEval<DoubleType>::error_t::iterator it = errors.begin(); it != errors.end(); ++it)
         {
             os << *it << "\n";
         }
@@ -107,42 +110,47 @@ void NodeExprModel::calcNodeScalarValues() const
     }
 
     if (
-        (out.GetType() == MEE::ModelExprData::NODEDATA)
+        (out.GetType() == MEE::NODEDATA)
        )
     {
-        const MEE::ModelExprData::ScalarValuesType &tval = out.GetScalarValues();
+        const MEE::ScalarValuesType<DoubleType> &tval = out.GetScalarValues();
         if (tval.IsUniform())
         {
           SetValues(tval.GetScalar());
         }
         else
         {
-          NodeScalarList nsl(tval.GetVector());
+          NodeScalarList<DoubleType> nsl(tval.GetVector());
           SetValues(nsl);
         }
     }
-    else if (out.GetType() == MEE::ModelExprData::DOUBLE)
+    else if (out.GetType() == MEE::DOUBLE)
     {
-        const double v = out.GetDoubleValue();
+        const DoubleType v = out.GetDoubleValue();
         SetValues(v);
     }
     else
     {
         std::ostringstream os; 
         os << "while evaluating model " << GetName() << ": expression "
-            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::ModelExprData::datatypename[out.GetType()]
+            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[out.GetType()]
             << "\n";
         GeometryStream::WriteOut(OutputStream::FATAL, *rp, os.str());
     }
         
 }
 
-void NodeExprModel::setInitialValues()
+template <typename DoubleType>
+void NodeExprModel<DoubleType>::setInitialValues()
 {
     DefaultInitializeValues();
 }
 
-void NodeExprModel::Serialize(std::ostream &of) const
+#ifndef _WIN32
+#warning "serialize extended option here"
+#endif
+template <typename DoubleType>
+void NodeExprModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND ";
 
@@ -158,4 +166,6 @@ void NodeExprModel::Serialize(std::ostream &of) const
   of << "-display_type \"" << GetDisplayTypeString() << "\" "
         "-name \"" << GetName() << "\" -equation \"" << EngineAPI::getStringValue(equation) << ";\"";
 }
+
+template class NodeExprModel<double>;
 

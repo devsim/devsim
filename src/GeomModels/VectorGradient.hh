@@ -29,6 +29,7 @@ typedef Triangle *TrianglePtr;
 typedef const Triangle *ConstTrianglePtr;
 #endif
 
+template <typename DoubleType>
 class VectorGradient : public NodeModel
 {
     public:
@@ -38,7 +39,7 @@ class VectorGradient : public NodeModel
       void Serialize(std::ostream &) const;
 
     private:
-      double calcVectorGradient(ConstNodePtr) const;
+      DoubleType calcVectorGradient(ConstNodePtr) const;
       void   calcNodeScalarValues() const;
       void   calc1d() const;
       void   calc2d() const;
@@ -54,3 +55,4 @@ class VectorGradient : public NodeModel
 };
 
 #endif
+

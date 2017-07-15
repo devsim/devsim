@@ -31,7 +31,8 @@ limitations under the License.
 #include <iterator>
 #include <utility>
 
-SurfaceArea::SurfaceArea(RegionPtr rp)
+template <typename DoubleType>
+SurfaceArea<DoubleType>::SurfaceArea(RegionPtr rp)
     : NodeModel("SurfaceArea", rp, NodeModel::SCALAR)
 {
   const size_t dimension = GetRegion().GetDimension();
@@ -45,20 +46,21 @@ SurfaceArea::SurfaceArea(RegionPtr rp)
     RegisterCallback("unitx");
     RegisterCallback("unity");
 
-    nsurf_x = NodeSolution::CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
-    nsurf_y = NodeSolution::CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
+    nsurf_x = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
+    nsurf_y = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
   }
   else if (dimension == 3)
   {
-    nsurf_x = NodeSolution::CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
-    nsurf_y = NodeSolution::CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
-    nsurf_z = NodeSolution::CreateNodeSolution("NSurfaceNormal_z", rp, this->GetSelfPtr());
+    nsurf_x = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
+    nsurf_y = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
+    nsurf_z = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_z", rp, this->GetSelfPtr());
   }
   RegisterCallback("@@@InterfaceChange");
   RegisterCallback("@@@ContactChange");
 }
 
-void SurfaceArea::calcSurfaceArea1d() const
+template <typename DoubleType>
+void SurfaceArea<DoubleType>::calcSurfaceArea1d() const
 {
     ConstEdgeModelPtr elen = GetRegion().GetEdgeModel("EdgeLength");
     dsAssert(elen.get(), "UNEXPECTED");
@@ -71,7 +73,7 @@ void SurfaceArea::calcSurfaceArea1d() const
 
     const ConstNodeList &nl = GetRegion().GetNodeList();
 
-    std::vector<double> nv(nl.size());
+    std::vector<DoubleType> nv(nl.size());
 
     for (ConstNodeList::const_iterator it = nl.begin(); it != nl.end(); ++it)
     {
@@ -81,7 +83,7 @@ void SurfaceArea::calcSurfaceArea1d() const
 
         if (cti.count(ci) || ctc.count(ci))
         {
-            const double length = 1.0;
+            const DoubleType length = 1.0;
             nv[ni] += length;
         }
     }
@@ -150,7 +152,8 @@ bool SameInterface3D(T &cti, size_t i0, size_t i1, size_t i2)
 }
 #endif
 
-void SurfaceArea::calcSurfaceArea2d() const
+template <typename DoubleType>
+void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
 {
   const Region &region = GetRegion();
   const Device &device = *(region.GetDevice());
@@ -172,7 +175,7 @@ void SurfaceArea::calcSurfaceArea2d() const
 
 
   const ConstNodeList &nl = region.GetNodeList();
-  std::vector<double> nv(nl.size());
+  std::vector<DoubleType> nv(nl.size());
 
   std::vector<size_t> edge_visited(region.GetNumberEdges());
 
@@ -182,13 +185,13 @@ void SurfaceArea::calcSurfaceArea2d() const
 
   //// This is the net surface area for the vector
   //// This is the xnormal and ynormal
-  std::vector<double> nvx(nl.size());
-  std::vector<double> nvy(nl.size());
+  std::vector<DoubleType> nvx(nl.size());
+  std::vector<DoubleType> nvy(nl.size());
 
-  const EdgeScalarList &edgeLengths = elen->GetScalarValues();
+  const EdgeScalarList<DoubleType> &edgeLengths = elen->GetScalarValues<DoubleType>();
 
-  const EdgeScalarList &unitx = ux->GetScalarValues();
-  const EdgeScalarList &unity = uy->GetScalarValues();
+  const EdgeScalarList<DoubleType> &unitx = ux->GetScalarValues<DoubleType>();
+  const EdgeScalarList<DoubleType> &unity = uy->GetScalarValues<DoubleType>();
 
   const Device::ContactList_t   &contact_list   = device.GetContactList();
   const Device::InterfaceList_t &interface_list = device.GetInterfaceList();
@@ -267,14 +270,14 @@ void SurfaceArea::calcSurfaceArea2d() const
     const size_t ni0  = node0.GetIndex();
     const size_t ni1  = node1.GetIndex();
 
-    const double length = 0.5*edgeLengths[ei];
+    const DoubleType length = 0.5*edgeLengths[ei];
     nv[ni0] += length;
     nv[ni1] += length;
 
 
-    Vector vvec(unity[ei]*length, -unitx[ei]*length, 0.0);
+    Vector<DoubleType> vvec(unity[ei]*length, -unitx[ei]*length, 0.0);
 
-    Vector un0(nvx[ni0], nvy[ni0]);
+    Vector<DoubleType> un0(nvx[ni0], nvy[ni0]);
     if (dot_prod(vvec, un0) < 0.0)
     {
       nvx[ni0] -= vvec.Getx();
@@ -286,7 +289,7 @@ void SurfaceArea::calcSurfaceArea2d() const
       nvy[ni0] += vvec.Gety();
     }
 
-    Vector un1(nvx[ni1], nvy[ni1]);
+    Vector<DoubleType> un1(nvx[ni1], nvy[ni1]);
     if (dot_prod(vvec, un1) < 0.0)
     {
       nvx[ni1] -= vvec.Getx();
@@ -303,10 +306,10 @@ void SurfaceArea::calcSurfaceArea2d() const
   }
   for (size_t i = 0; i < nv.size(); ++i)
   {
-    const double area = nv[i];
+    const DoubleType area = nv[i];
     if (area > 0.0)
     {
-      const double wt = magnitude(Vector(nvx[i], nvy[i], 0.0));
+      const DoubleType wt = magnitude(Vector<DoubleType>(nvx[i], nvy[i], 0.0));
       if (wt > 0.0)
       {
         nvx[i] /= wt;
@@ -322,11 +325,12 @@ void SurfaceArea::calcSurfaceArea2d() const
 }
 
 namespace {
-void ProcessAreaAndNormal(size_t ni0, std::vector<double> &nv, std::vector<double> &nvx, std::vector<double> &nvy, std::vector<double> &nvz, const Vector &vnormal, double volume)
+template <typename DoubleType>
+void ProcessAreaAndNormal(size_t ni0, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz, const Vector<DoubleType> &vnormal, DoubleType volume)
 {
   nv[ni0] += volume;
 
-  Vector uvec(nvx[ni0], nvy[ni0], nvz[ni0]);
+  Vector<DoubleType> uvec(nvx[ni0], nvy[ni0], nvz[ni0]);
 
   if (dot_prod(uvec, vnormal) < 0.0)
   {
@@ -344,7 +348,8 @@ void ProcessAreaAndNormal(size_t ni0, std::vector<double> &nv, std::vector<doubl
 
 }
 
-void SurfaceArea::calcSurfaceArea3d() const
+template <typename DoubleType>
+void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
 {
   const Region &region = GetRegion();
   const Device &device = *(region.GetDevice());
@@ -363,13 +368,13 @@ void SurfaceArea::calcSurfaceArea3d() const
 
   //// This is the net surface area for the vector
   //// This is the xnormal and ynormal
-  std::vector<double> nvx(nl.size());
-  std::vector<double> nvy(nl.size());
-  std::vector<double> nvz(nl.size());
+  std::vector<DoubleType> nvx(nl.size());
+  std::vector<DoubleType> nvy(nl.size());
+  std::vector<DoubleType> nvz(nl.size());
 
-  const std::vector<Vector> &triangleCenters = region.GetTriangleCenters();
+  const std::vector<Vector<DoubleType>> &triangleCenters = region.GetTriangleCenters();
 
-  std::vector<double> nv(nl.size());
+  std::vector<DoubleType> nv(nl.size());
 
   std::vector<size_t> triangle_visited(region.GetNumberTriangles());
 
@@ -446,37 +451,37 @@ void SurfaceArea::calcSurfaceArea3d() const
     const size_t &ni1 = nodeList[1]->GetIndex();
     const size_t &ni2 = nodeList[2]->GetIndex();
 
-    const Vector &triangleCenter = triangleCenters[ti];
+    const Vector<DoubleType> &triangleCenter = triangleCenters[ti];
 
-    const Vector &np0 = nodeList[0]->Position();
-    const Vector &np1 = nodeList[1]->Position();
-    const Vector &np2 = nodeList[2]->Position();
+    const Vector<DoubleType> &np0 = nodeList[0]->Position();
+    const Vector<DoubleType> &np1 = nodeList[1]->Position();
+    const Vector<DoubleType> &np2 = nodeList[2]->Position();
 
     //// vector from triangle center to edge node
     //// vector between edge nodes
     //// area is 0.5 * base * height
     //// area split between both nodes
 
-    const Vector &v01   = np0 - np1;
-    const Vector &vc01  = np0 - triangleCenter;
-    const Vector &vec01 = 0.25 * cross_prod(v01, vc01);
-    const double  vol01 = magnitude(vec01);
+    const Vector<DoubleType> &v01   = np0 - np1;
+    const Vector<DoubleType> &vc01  = np0 - triangleCenter;
+    const Vector<DoubleType> &vec01 = 0.25 * cross_prod(v01, vc01);
+    const DoubleType  vol01 = magnitude(vec01);
 
     ProcessAreaAndNormal(ni0, nv, nvx, nvy, nvz, vec01, vol01);
     ProcessAreaAndNormal(ni1, nv, nvx, nvy, nvz, vec01, vol01);
 
-    const Vector &v02   = np0 - np2;
-    const Vector &vc02  = np0 - triangleCenter;
-    const Vector &vec02 = 0.25 * cross_prod(v02, vc02);
-    const double  vol02 = magnitude(vec02);
+    const Vector<DoubleType> &v02   = np0 - np2;
+    const Vector<DoubleType> &vc02  = np0 - triangleCenter;
+    const Vector<DoubleType> &vec02 = 0.25 * cross_prod(v02, vc02);
+    const DoubleType  vol02 = magnitude(vec02);
 
     ProcessAreaAndNormal(ni0, nv, nvx, nvy, nvz, vec02, vol02);
     ProcessAreaAndNormal(ni2, nv, nvx, nvy, nvz, vec02, vol02);
 
-    const Vector &v12   = np1 - np2;
-    const Vector &vc12  = np1 - triangleCenter;
-    const Vector &vec12 = 0.25 * cross_prod(v12, vc12);
-    const double  vol12 = magnitude(vec12);
+    const Vector<DoubleType> &v12   = np1 - np2;
+    const Vector<DoubleType> &vc12  = np1 - triangleCenter;
+    const Vector<DoubleType> &vec12 = 0.25 * cross_prod(v12, vc12);
+    const DoubleType  vol12 = magnitude(vec12);
 
     ProcessAreaAndNormal(ni1, nv, nvx, nvy, nvz, vec12, vol12);
     ProcessAreaAndNormal(ni2, nv, nvx, nvy, nvz, vec12, vol12);
@@ -487,10 +492,10 @@ void SurfaceArea::calcSurfaceArea3d() const
 
   for (size_t i = 0; i < nv.size(); ++i)
   {
-    const double area = nv[i];
+    const DoubleType area = nv[i];
     if (area > 0.0)
     {
-      const double wt = magnitude(Vector(nvx[i], nvy[i], nvz[i]));
+      const DoubleType wt = magnitude(Vector<DoubleType>(nvx[i], nvy[i], nvz[i]));
       if (wt > 0.0)
       {
         nvx[i] /= wt;
@@ -505,7 +510,8 @@ void SurfaceArea::calcSurfaceArea3d() const
   nsurf_z.lock()->SetValues(nvz);
 }
 
-void SurfaceArea::calcNodeScalarValues() const
+template <typename DoubleType>
+void SurfaceArea<DoubleType>::calcNodeScalarValues() const
 {
   const size_t dimension = GetRegion().GetDimension();
 
@@ -523,13 +529,17 @@ void SurfaceArea::calcNodeScalarValues() const
   }
 }
 
-void SurfaceArea::setInitialValues()
+template <typename DoubleType>
+void SurfaceArea<DoubleType>::setInitialValues()
 {
     DefaultInitializeValues();
 }
 
-void SurfaceArea::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void SurfaceArea<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class SurfaceArea<double>;
 

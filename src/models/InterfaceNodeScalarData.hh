@@ -18,10 +18,14 @@ limitations under the License.
 #ifndef INTERFACE_NODE_SCALAR_DATA_HH
 #define INTERFACE_NODE_SCALAR_DATA_HH
 #include <vector>
-typedef std::vector<double> NodeScalarList;
+template<typename T>
+using NodeScalarList = std::vector<T>;
+
 class InterfaceNodeModel;
 
 #include "ScalarData.hh"
-typedef ScalarData<InterfaceNodeModel> InterfaceNodeScalarData;
+template<typename T>
+using InterfaceNodeScalarData = ScalarData<InterfaceNodeModel, T>;
 
 #endif
+

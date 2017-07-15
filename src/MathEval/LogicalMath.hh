@@ -17,47 +17,56 @@ limitations under the License.
 
 #ifndef LOGICAL_MATH_HH
 #define LOGICAL_MATH_HH
-inline double ifelsefunc(double x, double y, double z)
+template <typename DoubleType>
+inline DoubleType ifelsefunc(DoubleType x, DoubleType y, DoubleType z)
 {
   return (x) ? y : z;
 }
 
-inline double logical_and(double x, double y)
+template <typename DoubleType>
+inline DoubleType logical_and(DoubleType x, DoubleType y)
 {
   return (x && y);
 }
 
-inline double logical_or(double x, double y)
+template <typename DoubleType>
+inline DoubleType logical_or(DoubleType x, DoubleType y)
 {
   return (x || y);
 }
 
-inline double logical_eq(double x, double y)
+template <typename DoubleType>
+inline DoubleType logical_eq(DoubleType x, DoubleType y)
 {
   return (x == y);
 }
 
-inline double logical_lt(double x, double y)
+template <typename DoubleType>
+inline DoubleType logical_lt(DoubleType x, DoubleType y)
 {
   return (x < y);
 }
 
-inline double logical_lte(double x, double y)
+template <typename DoubleType>
+inline DoubleType logical_lte(DoubleType x, DoubleType y)
 {
   return (x <= y);
 }
 
-inline double logical_gt(double x, double y)
+template <typename DoubleType>
+inline DoubleType logical_gt(DoubleType x, DoubleType y)
 {
   return (x > y);
 }
 
-inline double logical_gte(double x, double y)
+template <typename DoubleType>
+inline DoubleType logical_gte(DoubleType x, DoubleType y)
 {
   return (x >= y);
 }
 
-inline double logical_not(double x)
+template <typename DoubleType>
+inline DoubleType logical_not(DoubleType x)
 {
   return !x;
 }

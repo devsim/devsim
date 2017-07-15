@@ -24,7 +24,8 @@ limitations under the License.
 #include "TriangleEdgeModel.hh"
 #include "TetrahedronEdgeModel.hh"
 
-NodeVolume::NodeVolume(RegionPtr rp)
+template <typename DoubleType>
+NodeVolume<DoubleType>::NodeVolume(RegionPtr rp)
     : NodeModel("NodeVolume", rp, NodeModel::SCALAR)
 {
     const size_t dimension = rp->GetDimension();
@@ -40,12 +41,13 @@ NodeVolume::NodeVolume(RegionPtr rp)
     }
 }
 
-void NodeVolume::calcNodeScalarValues() const
+template <typename DoubleType>
+void NodeVolume<DoubleType>::calcNodeScalarValues() const
 {
   const Region &r = GetRegion();
   const size_t dimension = r.GetDimension();
 
-  std::vector<double> nv(r.GetNumberNodes());
+  std::vector<DoubleType> nv(r.GetNumberNodes());
 
   if (dimension == 1)
   {
@@ -54,7 +56,7 @@ void NodeVolume::calcNodeScalarValues() const
     ConstEdgeModelPtr elen = r.GetEdgeModel("EdgeLength");
     dsAssert(elen.get(), "UNEXPECTED");
 
-    EdgeScalarData evol = EdgeScalarData(*ec);
+    EdgeScalarData<DoubleType> evol = EdgeScalarData<DoubleType>(*ec);
     evol *= *elen;
 
     //// valid only for dimension == 1
@@ -62,7 +64,7 @@ void NodeVolume::calcNodeScalarValues() const
 
     for (size_t i = 0; i < nv.size(); ++i)
     {
-      double volume = 0.0;
+      DoubleType volume = 0.0;
 
       const ConstEdgeList &el = r.GetNodeToEdgeList()[i];
 
@@ -97,13 +99,17 @@ void NodeVolume::calcNodeScalarValues() const
   SetValues(nv);
 }
 
-void NodeVolume::setInitialValues()
+template <typename DoubleType>
+void NodeVolume<DoubleType>::setInitialValues()
 {
     DefaultInitializeValues();
 }
 
-void NodeVolume::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void NodeVolume<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class NodeVolume<double>;
 

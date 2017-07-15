@@ -39,7 +39,7 @@ limitations under the License.
 #include "Tetrahedron.hh"
 
 namespace MEE {
-const char * const ModelExprData::datatypename[] = {
+const char * const datatypename[] = {
   "nodedata",
   "edgedata",
   "triangleedgedata",
@@ -53,52 +53,53 @@ const char * const ModelExprData::datatypename[] = {
 };
 
 /// Undefined behavior if we have a double or invalid data
-ModelExprData::ScalarValuesType ModelExprData::GetScalarValues() const
+template <typename DoubleType>
+ScalarValuesType<DoubleType> ModelExprData<DoubleType>::GetScalarValues() const
 {
-  ScalarValuesType ret;
+  ScalarValuesType<DoubleType> ret;
 
   if (type == NODEDATA)
   {
     if (nodeScalarData->IsUniform())
     {
-      ret = ScalarValuesType(nodeScalarData->GetUniformValue(), nodeScalarData->GetLength());
+      ret = ScalarValuesType<DoubleType>(nodeScalarData->GetUniformValue(), nodeScalarData->GetLength());
     }
     else
     {
-      ret = ScalarValuesType(nodeScalarData->GetScalarList());
+      ret = ScalarValuesType<DoubleType>(nodeScalarData->GetScalarList());
     }
   }
   else if (type == EDGEDATA)
   {
     if (edgeScalarData->IsUniform())
     {
-      ret = ScalarValuesType(edgeScalarData->GetUniformValue(), edgeScalarData->GetLength());
+      ret = ScalarValuesType<DoubleType>(edgeScalarData->GetUniformValue(), edgeScalarData->GetLength());
     }
     else
     {
-      ret = ScalarValuesType(edgeScalarData->GetScalarList());
+      ret = ScalarValuesType<DoubleType>(edgeScalarData->GetScalarList());
     }
   }
   else if (type == TRIANGLEEDGEDATA)
   {
     if (triangleEdgeScalarData->IsUniform())
     {
-      ret = ScalarValuesType(triangleEdgeScalarData->GetUniformValue(), triangleEdgeScalarData->GetLength());
+      ret = ScalarValuesType<DoubleType>(triangleEdgeScalarData->GetUniformValue(), triangleEdgeScalarData->GetLength());
     }
     else
     {
-      ret = ScalarValuesType(triangleEdgeScalarData->GetScalarList());
+      ret = ScalarValuesType<DoubleType>(triangleEdgeScalarData->GetScalarList());
     }
   }
   else if (type == TETRAHEDRONEDGEDATA)
   {
     if (tetrahedronEdgeScalarData->IsUniform())
     {
-      ret = ScalarValuesType(tetrahedronEdgeScalarData->GetUniformValue(), tetrahedronEdgeScalarData->GetLength());
+      ret = ScalarValuesType<DoubleType>(tetrahedronEdgeScalarData->GetUniformValue(), tetrahedronEdgeScalarData->GetLength());
     }
     else
     {
-      ret = ScalarValuesType(tetrahedronEdgeScalarData->GetScalarList());
+      ret = ScalarValuesType<DoubleType>(tetrahedronEdgeScalarData->GetScalarList());
     }
   }
   else
@@ -109,32 +110,36 @@ ModelExprData::ScalarValuesType ModelExprData::GetScalarValues() const
   return ret;
 }
 
-ModelExprData::ModelExprData(const NodeScalarData &x, const Region *r) : val(0.0), type(NODEDATA), reg(r)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(const NodeScalarData<DoubleType> &x, const Region *r) : val(0.0), type(NODEDATA), reg(r)
 {
-  NodeScalarData *foo = new NodeScalarData(x);
-  nodeScalarData = std::shared_ptr<NodeScalarData>(foo);
+  NodeScalarData<DoubleType> *foo = new NodeScalarData<DoubleType>(x);
+  nodeScalarData = std::shared_ptr<NodeScalarData<DoubleType>>(foo);
 };
 
-ModelExprData::ModelExprData(const EdgeScalarData &x, const Region *r) : val(0.0), type(EDGEDATA), reg(r)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(const EdgeScalarData<DoubleType> &x, const Region *r) : val(0.0), type(EDGEDATA), reg(r)
 {
-    EdgeScalarData *foo = new EdgeScalarData(x);
-    edgeScalarData = std::shared_ptr<EdgeScalarData>(foo);
+    EdgeScalarData<DoubleType> *foo = new EdgeScalarData<DoubleType>(x);
+    edgeScalarData = std::shared_ptr<EdgeScalarData<DoubleType>>(foo);
 };
 
-ModelExprData::ModelExprData(const TriangleEdgeScalarData &x, const Region *r) : val(0.0), type(TRIANGLEEDGEDATA), reg(r)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(const TriangleEdgeScalarData<DoubleType> &x, const Region *r) : val(0.0), type(TRIANGLEEDGEDATA), reg(r)
 {
-  TriangleEdgeScalarData *foo = new TriangleEdgeScalarData(x);
-  triangleEdgeScalarData = std::shared_ptr<TriangleEdgeScalarData>(foo);
+  TriangleEdgeScalarData<DoubleType> *foo = new TriangleEdgeScalarData<DoubleType>(x);
+  triangleEdgeScalarData = std::shared_ptr<TriangleEdgeScalarData<DoubleType>>(foo);
 };
 
-ModelExprData::ModelExprData(const TetrahedronEdgeScalarData &x, const Region *r) : val(0.0), type(TETRAHEDRONEDGEDATA), reg(r)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(const TetrahedronEdgeScalarData<DoubleType> &x, const Region *r) : val(0.0), type(TETRAHEDRONEDGEDATA), reg(r)
 {
-  TetrahedronEdgeScalarData *foo = new TetrahedronEdgeScalarData(x);
-  tetrahedronEdgeScalarData = std::shared_ptr<TetrahedronEdgeScalarData>(foo);
+  TetrahedronEdgeScalarData<DoubleType> *foo = new TetrahedronEdgeScalarData<DoubleType>(x);
+  tetrahedronEdgeScalarData = std::shared_ptr<TetrahedronEdgeScalarData<DoubleType>>(foo);
 };
 
-
-ModelExprData &ModelExprData::operator=(const ModelExprData &x)
+template <typename DoubleType>
+ModelExprData<DoubleType> &ModelExprData<DoubleType>::operator=(const ModelExprData<DoubleType> &x)
 {
   // Since this class is not derived, we don't have to copy the base part
   if (&x != this)
@@ -151,49 +156,55 @@ ModelExprData &ModelExprData::operator=(const ModelExprData &x)
 }
 
 /// need to make full copy
-ModelExprData::ModelExprData(const ModelExprData &x) : nodeScalarData(x.nodeScalarData), edgeScalarData(x.edgeScalarData), triangleEdgeScalarData(x.triangleEdgeScalarData), tetrahedronEdgeScalarData(x.tetrahedronEdgeScalarData), val(x.val), type(x.type), reg(x.reg)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(const ModelExprData &x) : nodeScalarData(x.nodeScalarData), edgeScalarData(x.edgeScalarData), triangleEdgeScalarData(x.triangleEdgeScalarData), tetrahedronEdgeScalarData(x.tetrahedronEdgeScalarData), val(x.val), type(x.type), reg(x.reg)
 {
 }
 
-ModelExprData::ModelExprData(double x, const Region *r)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(DoubleType x, const Region *r)
   : val(x), type(DOUBLE), reg(r)
 {
 }
 
-ModelExprData::ModelExprData(ConstNodeModelPtr x, const Region *r)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(ConstNodeModelPtr x, const Region *r)
   : val(0.0), type(NODEDATA), reg(r)
 {
-  //// TODO: optimize for uniform values
-  NodeScalarData *n = new NodeScalarData(*x);
-  nodeScalarData = nodeScalarData_ptr(n);
+  NodeScalarData<DoubleType> *n = new NodeScalarData<DoubleType>(*x);
+  nodeScalarData = nodeScalarData_ptr<DoubleType>(n);
 }
 
-ModelExprData::ModelExprData(ConstEdgeModelPtr x, const Region *r)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(ConstEdgeModelPtr x, const Region *r)
   : val(0.0), type(EDGEDATA), reg(r)
 {
-  EdgeScalarData *e = new EdgeScalarData(*x);
-  edgeScalarData = edgeScalarData_ptr(e);
+  EdgeScalarData<DoubleType> *e = new EdgeScalarData<DoubleType>(*x);
+  edgeScalarData = edgeScalarData_ptr<DoubleType>(e);
 }
 
-ModelExprData::ModelExprData(ConstTriangleEdgeModelPtr x, const Region *r)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(ConstTriangleEdgeModelPtr x, const Region *r)
   : val(0.0), type(TRIANGLEEDGEDATA), reg(r)
 {
-  TriangleEdgeScalarData *e = new TriangleEdgeScalarData(*x);
-  triangleEdgeScalarData = triangleEdgeScalarData_ptr(e);
+  TriangleEdgeScalarData<DoubleType> *e = new TriangleEdgeScalarData<DoubleType>(*x);
+  triangleEdgeScalarData = triangleEdgeScalarData_ptr<DoubleType>(e);
 }
 
-ModelExprData::ModelExprData(ConstTetrahedronEdgeModelPtr x, const Region *r)
+template <typename DoubleType>
+ModelExprData<DoubleType>::ModelExprData(ConstTetrahedronEdgeModelPtr x, const Region *r)
   : val(0.0), type(TETRAHEDRONEDGEDATA), reg(r)
 {
-  TetrahedronEdgeScalarData *e = new TetrahedronEdgeScalarData(*x);
-  tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr(e);
+  TetrahedronEdgeScalarData<DoubleType> *e = new TetrahedronEdgeScalarData<DoubleType>(*x);
+  tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr<DoubleType>(e);
 }
 
 
 namespace {
 ///// TODO: This functionality should be available elsewhere
 ///// Remove Region.hh include from above when this is done
-void convertEdgeToTriangleEdgeData(const Region &region, const std::vector<double> &edgeData, std::vector<double> &triangleData)
+template <typename DoubleType>
+void convertEdgeToTriangleEdgeData(const Region &region, const std::vector<DoubleType> &edgeData, std::vector<DoubleType> &triangleData)
 {
   const ConstTriangleList &ctl = region.GetTriangleList();
   triangleData.resize(3*ctl.size());
@@ -215,7 +226,8 @@ void convertEdgeToTriangleEdgeData(const Region &region, const std::vector<doubl
   }
 }
 
-void convertEdgeToTetrahedronEdgeData(const Region &region, const std::vector<double> &edgeData, std::vector<double> &tetrahedronData)
+template <typename DoubleType>
+void convertEdgeToTetrahedronEdgeData(const Region &region, const std::vector<DoubleType> &edgeData, std::vector<DoubleType> &tetrahedronData)
 {
   const ConstTetrahedronList &ctl = region.GetTetrahedronList();
   tetrahedronData.resize(6*ctl.size());
@@ -238,74 +250,75 @@ void convertEdgeToTetrahedronEdgeData(const Region &region, const std::vector<do
 }
 }
 
-void ModelExprData::convertToTriangleEdgeData()
+template <typename DoubleType>
+void ModelExprData<DoubleType>::convertToTriangleEdgeData()
 {
   //// TODO: check for uniform value to simplify
   if (type == EDGEDATA)
   {
     if (edgeScalarData->IsUniform())
     {
-      const double val = edgeScalarData->GetUniformValue();
+      const DoubleType val = edgeScalarData->GetUniformValue();
       size_t       len = 3 * reg->GetTriangleList().size();
       
       type = TRIANGLEEDGEDATA;
-      TriangleEdgeScalarData *e = new TriangleEdgeScalarData(val, len);
-      triangleEdgeScalarData = triangleEdgeScalarData_ptr(e);
+      TriangleEdgeScalarData<DoubleType> *e = new TriangleEdgeScalarData<DoubleType>(val, len);
+      triangleEdgeScalarData = triangleEdgeScalarData_ptr<DoubleType>(e);
       edgeScalarData.reset();
     }
     else
     {
-      std::vector<double> out;
-      const std::vector<double> &evals = edgeScalarData->GetScalarList();
+      std::vector<DoubleType> out;
+      const std::vector<DoubleType> &evals = edgeScalarData->GetScalarList();
       convertEdgeToTriangleEdgeData(*reg, evals, out);
       if (!out.empty())
       {
         type = TRIANGLEEDGEDATA;
-        TriangleEdgeScalarData *e = new TriangleEdgeScalarData(out);
-        triangleEdgeScalarData = triangleEdgeScalarData_ptr(e);
+        TriangleEdgeScalarData<DoubleType> *e = new TriangleEdgeScalarData<DoubleType>(out);
+        triangleEdgeScalarData = triangleEdgeScalarData_ptr<DoubleType>(e);
         edgeScalarData.reset();
       }
     }
   }
 }
 
-void ModelExprData::convertToTetrahedronEdgeData()
+template <typename DoubleType>
+void ModelExprData<DoubleType>::convertToTetrahedronEdgeData()
 {
-  //// TODO: check for uniform value to simplify
   if (type == EDGEDATA)
   {
     if (edgeScalarData->IsUniform())
     {
-      const double val = edgeScalarData->GetUniformValue();
+      const DoubleType val = edgeScalarData->GetUniformValue();
       size_t       len = 6 * reg->GetTriangleList().size();
       
       type = TETRAHEDRONEDGEDATA;
-      TetrahedronEdgeScalarData *e = new TetrahedronEdgeScalarData(val, len);
-      tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr(e);
+      TetrahedronEdgeScalarData<DoubleType> *e = new TetrahedronEdgeScalarData<DoubleType>(val, len);
+      tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr<DoubleType>(e);
       edgeScalarData.reset();
     }
     else
     {
-      std::vector<double> out;
-      const std::vector<double> &evals = edgeScalarData->GetScalarList();
+      std::vector<DoubleType> out;
+      const std::vector<DoubleType> &evals = edgeScalarData->GetScalarList();
       convertEdgeToTetrahedronEdgeData(*reg, evals, out);
       if (!out.empty())
       {
         type = TETRAHEDRONEDGEDATA;
-        TetrahedronEdgeScalarData *e = new TetrahedronEdgeScalarData(out);
-        tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr(e);
+        TetrahedronEdgeScalarData<DoubleType> *e = new TetrahedronEdgeScalarData<DoubleType>(out);
+        tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr<DoubleType>(e);
         edgeScalarData.reset();
       }
     }
   }
 }
 
-template<typename T>
-void ModelExprData::node_op_equal(const ModelExprData &other, const T &func)
+template <typename DoubleType> template <typename T>
+void ModelExprData<DoubleType>::node_op_equal(const ModelExprData<DoubleType> &other, const T &func)
 {
   if (!nodeScalarData.unique())
   {
-    nodeScalarData = nodeScalarData_ptr(new NodeScalarData(*nodeScalarData));
+    nodeScalarData = nodeScalarData_ptr<DoubleType>(new NodeScalarData<DoubleType>(*nodeScalarData));
   }
 
   if (other.type == DOUBLE)
@@ -322,12 +335,12 @@ void ModelExprData::node_op_equal(const ModelExprData &other, const T &func)
   }
 }
 
-template<typename T>
-void ModelExprData::edge_op_equal(const ModelExprData &other, const T &func)
+template <typename DoubleType> template <typename T>
+void ModelExprData<DoubleType>::edge_op_equal(const ModelExprData &other, const T &func)
 {
   if (!edgeScalarData.unique())
   {
-    edgeScalarData = edgeScalarData_ptr(new EdgeScalarData(*edgeScalarData));
+    edgeScalarData = edgeScalarData_ptr<DoubleType>(new EdgeScalarData<DoubleType>(*edgeScalarData));
   }
 
   if (other.type == DOUBLE)
@@ -354,12 +367,12 @@ void ModelExprData::edge_op_equal(const ModelExprData &other, const T &func)
   }
 }
 
-template<typename T>
-void ModelExprData::triangle_edge_op_equal(const ModelExprData &other, const T &func)
+template <typename DoubleType> template <typename T>
+void ModelExprData<DoubleType>::triangle_edge_op_equal(const ModelExprData &other, const T &func)
 {
   if (!triangleEdgeScalarData.unique())
   {
-    triangleEdgeScalarData = triangleEdgeScalarData_ptr(new TriangleEdgeScalarData(*triangleEdgeScalarData));
+    triangleEdgeScalarData = triangleEdgeScalarData_ptr<DoubleType>(new TriangleEdgeScalarData<DoubleType>(*triangleEdgeScalarData));
   }
 
   if (other.type == DOUBLE)
@@ -382,12 +395,12 @@ void ModelExprData::triangle_edge_op_equal(const ModelExprData &other, const T &
   }
 }
 
-template<typename T>
-void ModelExprData::tetrahedron_edge_op_equal(const ModelExprData &other, const T &func)
+template <typename DoubleType> template <typename T>
+void ModelExprData<DoubleType>::tetrahedron_edge_op_equal(const ModelExprData &other, const T &func)
 {
   if (!tetrahedronEdgeScalarData.unique())
   {
-    tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr(new TetrahedronEdgeScalarData(*tetrahedronEdgeScalarData));
+    tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr<DoubleType>(new TetrahedronEdgeScalarData<DoubleType>(*tetrahedronEdgeScalarData));
   }
 
   if (other.type == DOUBLE)
@@ -410,8 +423,8 @@ void ModelExprData::tetrahedron_edge_op_equal(const ModelExprData &other, const 
   }
 }
 
-template<typename T>
-void ModelExprData::double_op_equal(const ModelExprData &other, const T &func)
+template <typename DoubleType> template <typename T>
+void ModelExprData<DoubleType>::double_op_equal(const ModelExprData<DoubleType> &other, const T &func)
 {
   if (other.type == DOUBLE)
   {
@@ -419,29 +432,29 @@ void ModelExprData::double_op_equal(const ModelExprData &other, const T &func)
   }
   else if (other.type == NODEDATA)
   {
-    NodeScalarData *x = new NodeScalarData(val, other.nodeScalarData->GetLength()); 
-    nodeScalarData = nodeScalarData_ptr(x);
+    NodeScalarData<DoubleType> *x = new NodeScalarData<DoubleType>(val, other.nodeScalarData->GetLength()); 
+    nodeScalarData = nodeScalarData_ptr<DoubleType>(x);
     nodeScalarData->op_equal(*other.nodeScalarData, func);
     type = NODEDATA;
   }
   else if (other.type == EDGEDATA)
   {
-    EdgeScalarData *x = new EdgeScalarData(val, other.edgeScalarData->GetLength()); 
-    edgeScalarData = edgeScalarData_ptr(x);
+    EdgeScalarData<DoubleType> *x = new EdgeScalarData<DoubleType>(val, other.edgeScalarData->GetLength()); 
+    edgeScalarData = edgeScalarData_ptr<DoubleType>(x);
     edgeScalarData->op_equal(*other.edgeScalarData, func);
     type = EDGEDATA;
   }
   else if (other.type == TRIANGLEEDGEDATA)
   {
-    TriangleEdgeScalarData *x = new TriangleEdgeScalarData(val, other.triangleEdgeScalarData->GetLength()); 
-    triangleEdgeScalarData = triangleEdgeScalarData_ptr(x);
+    TriangleEdgeScalarData<DoubleType> *x = new TriangleEdgeScalarData<DoubleType>(val, other.triangleEdgeScalarData->GetLength()); 
+    triangleEdgeScalarData = triangleEdgeScalarData_ptr<DoubleType>(x);
     triangleEdgeScalarData->op_equal(*other.triangleEdgeScalarData, func);
     type = TRIANGLEEDGEDATA;
   }
   else if (other.type == TETRAHEDRONEDGEDATA)
   {
-    TetrahedronEdgeScalarData *x = new TetrahedronEdgeScalarData(val, other.tetrahedronEdgeScalarData->GetLength()); 
-    tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr(x);
+    TetrahedronEdgeScalarData<DoubleType> *x = new TetrahedronEdgeScalarData<DoubleType>(val, other.tetrahedronEdgeScalarData->GetLength()); 
+    tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr<DoubleType>(x);
     tetrahedronEdgeScalarData->op_equal(*other.tetrahedronEdgeScalarData, func);
     type = TETRAHEDRONEDGEDATA;
   }
@@ -451,8 +464,8 @@ void ModelExprData::double_op_equal(const ModelExprData &other, const T &func)
   }
 }
 
-template<typename T>
-ModelExprData &ModelExprData::op_equal(const ModelExprData &other, const T &func)
+template <typename DoubleType> template <typename T>
+ModelExprData<DoubleType> &ModelExprData<DoubleType>::op_equal(const ModelExprData<DoubleType> &other, const T &func)
 {
   switch (type) {
     case DOUBLE:
@@ -479,16 +492,21 @@ ModelExprData &ModelExprData::op_equal(const ModelExprData &other, const T &func
   return *this;
 }
 
-ModelExprData &ModelExprData::operator+=(const ModelExprData &other)
+template <typename DoubleType>
+ModelExprData<DoubleType> &ModelExprData<DoubleType>::operator+=(const ModelExprData<DoubleType> &other)
 {
-  this->op_equal(other, ScalarDataHelper::plus_equal());
+  this->op_equal(other, ScalarDataHelper::plus_equal<double>());
   return *this;
 }
 
-ModelExprData &ModelExprData::operator*=(const ModelExprData &other)
+template <typename DoubleType>
+ModelExprData<DoubleType> &ModelExprData<DoubleType>::operator*=(const ModelExprData<DoubleType> &other)
 {
-  this->op_equal(other, ScalarDataHelper::times_equal());
+  this->op_equal(other, ScalarDataHelper::times_equal<double>());
   return *this;
 }
+
+//// Manual Template Instantiation
+template class ModelExprData<double>;
 }
 

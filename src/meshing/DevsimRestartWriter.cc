@@ -32,9 +32,9 @@ limitations under the License.
 #include "TetrahedronEdgeModel.hh"
 #include "dsAssert.hh"
 #include "InterfaceNodeModel.hh"
-#include "Equation.hh"
-#include "ContactEquation.hh"
-#include "InterfaceEquation.hh"
+#include "EquationHolder.hh"
+#include "ContactEquationHolder.hh"
+#include "InterfaceEquationHolder.hh"
 #include <sstream>
 #include <fstream>
 #include <iomanip>
@@ -45,7 +45,7 @@ void WriteCoordinates(std::ostream &myfile, const Device::CoordinateList_t &clis
     myfile << "begin_coordinates\n";
     for (Device::CoordinateList_t::const_iterator cit = clist.begin(); cit != clist.end(); ++cit)
     {
-        const Vector &pos = (*cit)->Position();
+        const Vector<double> &pos = (*cit)->Position();
         myfile << pos.Getx() << "\t" << pos.Gety() << "\t" << pos.Getz() << "\n";
     }
     myfile << "end_coordinates\n\n";
@@ -163,7 +163,7 @@ void WriteEquations(std::ostream &myfile, const EquationPtrMap_t &eqlist)
 {
   for (EquationPtrMap_t::const_iterator eit = eqlist.begin(); eit != eqlist.end(); ++eit)
   {
-    (eit->second)->DevsimSerialize(myfile);
+    (eit->second).DevsimSerialize(myfile);
   }
 }
 
@@ -171,15 +171,15 @@ void WriteContactEquations(std::ostream &myfile, const ContactEquationPtrMap_t &
 {
   for (ContactEquationPtrMap_t::const_iterator eit = eqlist.begin(); eit != eqlist.end(); ++eit)
   {
-    (eit->second)->DevsimSerialize(myfile);
+    (eit->second).DevsimSerialize(myfile);
   }
 }
 
-void WriteInterfaceEquations(std::ostream &myfile, const Interface::InterfaceEquationPtrMap_t &eqlist)
+void WriteInterfaceEquations(std::ostream &myfile, const InterfaceEquationPtrMap_t &eqlist)
 {
-  for (Interface::InterfaceEquationPtrMap_t::const_iterator eit = eqlist.begin(); eit != eqlist.end(); ++eit)
+  for (InterfaceEquationPtrMap_t::const_iterator eit = eqlist.begin(); eit != eqlist.end(); ++eit)
   {
-    (eit->second)->DevsimSerialize(myfile);
+    (eit->second).DevsimSerialize(myfile);
   }
 }
 
@@ -439,7 +439,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
 #endif
       WriteInterfaceNodeModels(myfile, imlist);
 
-      Interface::InterfaceEquationPtrMap_t interface_equation_list = iint.GetInterfaceEquationList();
+      InterfaceEquationPtrMap_t interface_equation_list = iint.GetInterfaceEquationList();
 
       WriteInterfaceEquations(myfile, interface_equation_list);
 

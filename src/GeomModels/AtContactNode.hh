@@ -18,6 +18,7 @@ limitations under the License.
 #ifndef ATCONTACTNODE_HH
 #define ATCONTACTNODE_HH
 #include "NodeModel.hh"
+template <typename DoubleType>
 class AtContactNode : public NodeModel
 {
     public:
@@ -25,7 +26,7 @@ class AtContactNode : public NodeModel
       void Serialize(std::ostream &) const;
 
     private:
-      double calcNodeVolume(ConstNodePtr) const;
+      DoubleType calcNodeVolume(ConstNodePtr) const;
       void calcNodeScalarValues() const;
       void setInitialValues();
 };

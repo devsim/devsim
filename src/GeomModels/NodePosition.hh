@@ -18,6 +18,7 @@ limitations under the License.
 #ifndef NODEPOSITION_HH
 #define NODEPOSITION_HH
 #include "NodeModel.hh"
+template <typename DoubleType>
 class NodePosition : public NodeModel
 {
     public:
@@ -27,7 +28,7 @@ class NodePosition : public NodeModel
       void Serialize(std::ostream &) const;
 
     private:
-      double calcNodePosition(ConstNodePtr) const;
+      DoubleType calcNodePosition(ConstNodePtr) const;
       void calcNodeScalarValues() const;
       void setInitialValues();
 

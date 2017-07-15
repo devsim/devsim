@@ -17,17 +17,24 @@ limitations under the License.
 
 #ifndef EDGE_SCALAR_DATA_HH
 #define EDGE_SCALAR_DATA_HH
-#include "ScalarData.hh"
 #include <vector>
-typedef std::vector<double> EdgeScalarList;
+
+template<typename T>
+using EdgeScalarList = std::vector<T>;
+
+template<typename T>
+using NodeScalarList = std::vector<T>;
+
+#include "ScalarData.hh"
+
 class EdgeModel;
 
-typedef ScalarData<EdgeModel> EdgeScalarData;
-
-typedef std::vector<double> NodeScalarList;
+template<typename T>
+using EdgeScalarData = ScalarData<EdgeModel, T>;
 
 class Region;
 
-void createEdgeModelsFromNodeModel(const NodeScalarList &, const Region &, EdgeScalarList &, EdgeScalarList &);
+template <typename DoubleType>
+void createEdgeModelsFromNodeModel(const NodeScalarList<DoubleType> &, const Region &, EdgeScalarList<DoubleType> &, EdgeScalarList<DoubleType> &);
 
 #endif

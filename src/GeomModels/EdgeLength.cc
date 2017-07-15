@@ -22,16 +22,18 @@ limitations under the License.
 #include "Edge.hh"
 #include "Node.hh"
 
-EdgeLength::EdgeLength(RegionPtr rp) :
+template <typename DoubleType>
+EdgeLength<DoubleType>::EdgeLength(RegionPtr rp) :
 EdgeModel("EdgeLength", rp, EdgeModel::SCALAR)
 {
 }
 
 
-void EdgeLength::calcEdgeScalarValues() const
+template <typename DoubleType>
+void EdgeLength<DoubleType>::calcEdgeScalarValues() const
 {
     const ConstEdgeList &el = GetRegion().GetEdgeList();
-    std::vector<double> ev(el.size());
+    std::vector<DoubleType> ev(el.size());
     for (size_t i = 0; i < ev.size(); ++i)
     {
         ev[i] = calcEdgeLength(el[i]);
@@ -39,16 +41,20 @@ void EdgeLength::calcEdgeScalarValues() const
     SetValues(ev);
 }
 
-double EdgeLength::calcEdgeLength(ConstEdgePtr ep) const
+template <typename DoubleType>
+DoubleType EdgeLength<DoubleType>::calcEdgeLength(ConstEdgePtr ep) const
 {
-    Vector vm = ep->GetNodeList()[0]->Position();
+    Vector<DoubleType> vm = ep->GetNodeList()[0]->Position();
     vm -= ep->GetNodeList()[1]->Position();
-    const double val = vm.magnitude();
+    const DoubleType val = vm.magnitude();
     return val;
 }
 
-void EdgeLength::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void EdgeLength<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class EdgeLength<double>;
 

@@ -23,6 +23,7 @@ class Node;
 typedef Node *NodePtr;
 typedef const Node *ConstNodePtr;
 
+template <typename DoubleType>
 class SurfaceArea : public NodeModel
 {
     public:

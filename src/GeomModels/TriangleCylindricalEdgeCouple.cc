@@ -26,7 +26,8 @@ limitations under the License.
 #include "GeometryStream.hh"
 #include "ObjectHolder.hh"
 
-TriangleCylindricalEdgeCouple::TriangleCylindricalEdgeCouple(RegionPtr rp) :
+template <typename DoubleType>
+TriangleCylindricalEdgeCouple<DoubleType>::TriangleCylindricalEdgeCouple(RegionPtr rp) :
 TriangleEdgeModel("ElementCylindricalEdgeCouple", rp, TriangleEdgeModel::SCALAR)
 {
   RegisterCallback("raxis_zero");
@@ -34,7 +35,8 @@ TriangleEdgeModel("ElementCylindricalEdgeCouple", rp, TriangleEdgeModel::SCALAR)
 }
 
 
-void TriangleCylindricalEdgeCouple::calcTriangleEdgeScalarValues() const
+template <typename DoubleType>
+void TriangleCylindricalEdgeCouple<DoubleType>::calcTriangleEdgeScalarValues() const
 {
   const Region &region = GetRegion();
 
@@ -42,7 +44,7 @@ void TriangleCylindricalEdgeCouple::calcTriangleEdgeScalarValues() const
 
   dsAssert(dimension == 2, "UNEXPECTED");
 
-  double RAxis0 = 0.0;
+  DoubleType RAxis0 = 0.0;
   std::string RAxisVariable;
 
   {
@@ -82,11 +84,11 @@ void TriangleCylindricalEdgeCouple::calcTriangleEdgeScalarValues() const
   }
 
   const ConstTriangleList &el = region.GetTriangleList();
-  std::vector<double> ev(3*el.size());
+  std::vector<DoubleType> ev(3*el.size());
 
   for (size_t i = 0; i < el.size(); ++i)
   {
-    const Vector &v = calcTriangleCylindricalEdgeCouple(el[i], RAxisVariable, RAxis0);
+    const Vector<DoubleType> &v = calcTriangleCylindricalEdgeCouple(el[i], RAxisVariable, RAxis0);
     const size_t indexi = 3*i;
     ev[indexi]     = v.Getx();
     ev[indexi + 1] = v.Gety();
@@ -96,23 +98,24 @@ void TriangleCylindricalEdgeCouple::calcTriangleEdgeScalarValues() const
   SetValues(ev);
 }
 
-Vector TriangleCylindricalEdgeCouple::calcTriangleCylindricalEdgeCouple(ConstTrianglePtr tp, const std::string &RAxisVariable, double RAxis0) const
+template <typename DoubleType>
+Vector<DoubleType> TriangleCylindricalEdgeCouple<DoubleType>::calcTriangleCylindricalEdgeCouple(ConstTrianglePtr tp, const std::string &RAxisVariable, DoubleType RAxis0) const
 {
   const Region &region = GetRegion();
 
   const Triangle &triangle = *tp;
-  const std::vector<Vector> &centers = region.GetTriangleCenters();
+  const std::vector<Vector<DoubleType>> &centers = region.GetTriangleCenters();
 
   const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
   size_t tindex = triangle.GetIndex();
   const ConstEdgeList &edgeList = ttelist[tindex];
 
-  const Vector &vc = centers[triangle.GetIndex()];
+  const Vector<DoubleType> &vc = centers[triangle.GetIndex()];
 
-  double ec[3];
+  DoubleType ec[3];
 
-  double r0 = 0.0;
-  double r1 = 0.0;
+  DoubleType r0 = 0.0;
+  DoubleType r1 = 0.0;
 
 
   if (RAxisVariable == "x")
@@ -128,11 +131,11 @@ Vector TriangleCylindricalEdgeCouple::calcTriangleCylindricalEdgeCouple(ConstTri
   {
     const Edge &edge = *edgeList[i];
 
-    const Vector &p0 = edge.GetHead()->Position();
-    const Vector &p1 = edge.GetTail()->Position();
+    const Vector<DoubleType> &p0 = edge.GetHead()->Position();
+    const Vector<DoubleType> &p1 = edge.GetTail()->Position();
 
     ///// This is the midpoint along the edge
-    Vector vm = p0;
+    Vector<DoubleType> vm = p0;
     vm += p1;
     vm *= 0.5;
 
@@ -150,16 +153,19 @@ Vector TriangleCylindricalEdgeCouple::calcTriangleCylindricalEdgeCouple(ConstTri
 
     //// equivalent to pi * (r1^2 - r0^2) / cos_theta
     //// r*cos_theta = s  where s is the coordinate along the line
-    const double val = M_PI * (r1 + r0) * vm.magnitude();
+    const DoubleType val = M_PI * (r1 + r0) * vm.magnitude();
 
     ec[i] = fabs(val);
   }
 
-  return Vector(ec[0], ec[1], ec[2]);
+  return Vector<DoubleType>(ec[0], ec[1], ec[2]);
 }
 
-void TriangleCylindricalEdgeCouple::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TriangleCylindricalEdgeCouple<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND element_cylindrical_edge_couple -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\"";
 }
+
+template class TriangleCylindricalEdgeCouple<double>;
 

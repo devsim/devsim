@@ -351,7 +351,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       for (std::map<std::string, std::vector<double> >::iterator sit = genius_region.solutions.begin(); sit != genius_region.solutions.end(); ++sit)
       {
         const std::string &sname = sit->first;
-        NodeSolution *nodesol = new NodeSolution(sname, &region);
+        NodeSolution<double> *nodesol = new NodeSolution<double>(sname, &region);
 
         std::vector<double> &nval = sit->second;
         const size_t nlen = nval.size();

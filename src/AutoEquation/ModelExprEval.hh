@@ -30,33 +30,33 @@ typedef Region *RegionPtr;
 #include "ModelExprData.hh"
 
 namespace MEE {
+template <typename DoubleType>
 class ModelExprEval {
     public:
         enum ExpectedType {UNKNOWN = 0, NODE, EDGE, TRIANGLEEDGE, TETRAHEDRONEDGE};
-        typedef std::vector<ModelExprData> margv_t;
+        typedef std::vector<ModelExprData<DoubleType> > margv_t;
         typedef std::list<std::string> error_t;
         /// need to generalize to contact and interface equations as well
         typedef const Region * data_ref_t;
         /// we are given a reference to our callbacks
         /// could just as soon be a class which is called back for these variables
         ModelExprEval(data_ref_t &, const std::string &, error_t &);
-//      ModelExprEval(data_ref_t &, error_t &, double); // for creation from double
         ~ModelExprEval();
 
-        ModelExprData eval_function(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> eval_function(Eqo::EqObjPtr);
     private:
-        ModelExprData EvaluateAddType(Eqo::EqObjPtr);
-        ModelExprData EvaluateProductType(Eqo::EqObjPtr);
-        ModelExprData EvaluateVariableType(Eqo::EqObjPtr);
-        ModelExprData EvaluateConstantType(Eqo::EqObjPtr);
-        ModelExprData EvaluateModelType(Eqo::EqObjPtr);
-        ModelExprData EvaluateIfType(Eqo::EqObjPtr);
-        ModelExprData EvaluateIfElseType(Eqo::EqObjPtr);
-        ModelExprData EvaluateFunctionType(Eqo::EqObjPtr);
-        ModelExprData EvaluateInvalidType(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateAddType(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateProductType(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateVariableType(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateConstantType(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateModelType(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateIfType(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateIfElseType(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateFunctionType(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateInvalidType(Eqo::EqObjPtr);
         ///  Handles math functions (log, pow, exp, . . .)
-        ModelExprData EvaluateExternalMath(const std::string &, margv_t &);
-//      ModelExprData createModelExprData(Eqo::EqObjPtr);
+        ModelExprData<DoubleType> EvaluateExternalMath(const std::string &, margv_t &);
+//      ModelExprData<DoubleType> createModelExprData(Eqo::EqObjPtr);
         data_ref_t              &data_ref; // reference to data for variables
         const std::string       model;     // model being evaluated
         error_t                 &errors;

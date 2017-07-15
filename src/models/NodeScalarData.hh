@@ -18,10 +18,13 @@ limitations under the License.
 #ifndef NODE_SCALAR_DATA_HH
 #define NODE_SCALAR_DATA_HH
 #include <vector>
-typedef std::vector<double> NodeScalarList;
-class NodeModel;
+
+template<typename T>
+using NodeScalarList = std::vector<T>;
 
 #include "ScalarData.hh"
-typedef ScalarData<NodeModel> NodeScalarData;
+class NodeModel;
+template<typename T>
+using NodeScalarData = ScalarData<NodeModel, T>;
 
 #endif

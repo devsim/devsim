@@ -19,6 +19,7 @@ limitations under the License.
 #define EDGELENGTH_HH
 #include "EdgeModel.hh"
 // Coupling length
+template <typename DoubleType>
 class EdgeLength : public EdgeModel {
     public:
         EdgeLength(RegionPtr);
@@ -29,7 +30,8 @@ class EdgeLength : public EdgeModel {
         EdgeLength();
         EdgeLength(const EdgeLength &);
         EdgeLength &operator=(const EdgeLength &);
-        double calcEdgeLength(ConstEdgePtr) const;
+        DoubleType calcEdgeLength(ConstEdgePtr) const;
         void calcEdgeScalarValues() const;
 };
 #endif
+

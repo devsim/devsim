@@ -56,7 +56,7 @@ std::string MissingEquationIndex(const Region &region, const std::string &equati
   return os.str();
 }
 
-std::string MissingContactEquationModel(const Region &region, const ContactEquation &contact_equation, const std::string &model_name, ModelInfo::ModelType model_type, OutputStream::OutputType error_level) {
+std::string MissingContactEquationModel(const Region &region, const ContactEquation<double> &contact_equation, const std::string &model_name, ModelInfo::ModelType model_type, OutputStream::OutputType error_level) {
   std::ostringstream os;
   os << FormatContactEquationOnContactName(region, contact_equation.GetContact(), contact_equation.GetName())
         << " " <<
@@ -85,7 +85,7 @@ std::string SolutionVariableNonPositive(const Region &region, const std::string 
   return os.str();
 }
 
-std::string MissingCircuitNodeOnContactEquation(const ContactEquation &contact_equation,  const std::string &circuit_node, OutputStream::OutputType error_level)
+std::string MissingCircuitNodeOnContactEquation(const ContactEquation<double> &contact_equation,  const std::string &circuit_node, OutputStream::OutputType error_level)
 {
   std::ostringstream os;
   os << FormatContactEquationOnContactName(contact_equation.GetRegion(), contact_equation.GetContact(), contact_equation.GetName());
@@ -94,7 +94,7 @@ std::string MissingCircuitNodeOnContactEquation(const ContactEquation &contact_e
   return os.str();
 }
 
-std::string EquationMathErrorInfo(const Equation &equation, OutputStream::OutputType error_level)
+std::string EquationMathErrorInfo(const Equation<double> &equation, OutputStream::OutputType error_level)
 {
   std::ostringstream os;
   os << "Device: " << equation.GetRegion().GetDevice()->GetName() << "\t"
@@ -116,7 +116,7 @@ std::string CreateModelOnRegion(const Region &region, const std::string &model_n
   return os.str();
 }
 
-std::string MissingInterfaceEquationModel(const Region &region, const InterfaceEquation &interface_equation, const std::string &model_name, OutputStream::OutputType error_level)
+std::string MissingInterfaceEquationModel(const Region &region, const InterfaceEquation<double> &interface_equation, const std::string &model_name, OutputStream::OutputType error_level)
 {
   std::ostringstream os; 
   os << FormatInterfaceEquationOnInterfaceName(region, interface_equation.GetInterface(), interface_equation.GetName())

@@ -25,64 +25,118 @@ class EquationObject;
 typedef std::shared_ptr<EquationObject> EqObjPtr;
 }
 
-template <typename T> class ScalarData;
+template <typename T, typename U> class ScalarData;
+
 class NodeModel;
-typedef std::shared_ptr<NodeModel>       NodeModelPtr;
-typedef std::shared_ptr<const NodeModel> ConstNodeModelPtr;
-typedef ScalarData<NodeModel> NodeScalarData;
+
+using ConstNodeModelPtr = std::shared_ptr<const NodeModel>;
+
+template<typename T>
+using NodeScalarData = ScalarData<NodeModel, T>;
 
 class EdgeModel;
-typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
-typedef ScalarData<EdgeModel> EdgeScalarData;
+
+using ConstEdgeModelPtr = std::shared_ptr<const EdgeModel>;
+
+template<typename T>
+using EdgeScalarData = ScalarData<EdgeModel, T>;
 
 class TriangleEdgeModel;
-typedef std::shared_ptr<TriangleEdgeModel>       TriangleEdgeModelPtr;
-typedef std::shared_ptr<const TriangleEdgeModel> ConstTriangleEdgeModelPtr;
-typedef ScalarData<TriangleEdgeModel> TriangleEdgeScalarData;
+
+using ConstTriangleEdgeModelPtr = std::shared_ptr<const TriangleEdgeModel>;
+
+template<typename T>
+using TriangleEdgeScalarData = ScalarData<TriangleEdgeModel, T>;
 
 class TetrahedronEdgeModel;
-typedef std::shared_ptr<TetrahedronEdgeModel>       TetrahedronEdgeModelPtr;
-typedef std::shared_ptr<const TetrahedronEdgeModel> ConstTetrahedronEdgeModelPtr;
-typedef ScalarData<TetrahedronEdgeModel> TetrahedronEdgeScalarData;
+
+using ConstTetrahedronEdgeModelPtr = std::shared_ptr<const TetrahedronEdgeModel>;
+
+template<typename T>
+using TetrahedronEdgeScalarData = ScalarData<TetrahedronEdgeModel, T>;
 
 class Region;
 
 namespace MEE {
+template <typename DoubleType>
+class ScalarValuesType {
+  public:
+  ScalarValuesType() : vals(0), uval(0.0), isuniform(false), length(0) {}
+  ScalarValuesType(const std::vector<DoubleType> &v) : vals(&v), uval(0.0), isuniform(false) {length = v.size();}
+
+  ScalarValuesType(DoubleType v, size_t len) : vals(0), uval(v), isuniform(true), length(len) {}
+
+  bool IsUniform() const
+  {
+    return isuniform;
+  }
+
+  const std::vector<DoubleType> &GetVector() const {
+    return *vals;
+  }
+
+  DoubleType GetScalar() const {
+    return uval;
+  }
+
+  size_t GetLength() const {
+    return length;
+  }
+
+  private:
+    const std::vector<DoubleType> *vals;
+    DoubleType                     uval;
+    bool isuniform;
+    size_t                     length;
+};
+
+enum datatype {
+  NODEDATA=0,
+  EDGEDATA,
+  TRIANGLEEDGEDATA,
+  TETRAHEDRONEDGEDATA,
+  DOUBLE,
+  INVALID
+};
+
+extern const char *const datatypename[];
+
+template<typename T>
+using nodeScalarData_ptr = std::shared_ptr<NodeScalarData<T> >;
+
+template<typename T>
+using edgeScalarData_ptr = std::shared_ptr<EdgeScalarData<T> >;
+
+template<typename T>
+using triangleEdgeScalarData_ptr = std::shared_ptr<TriangleEdgeScalarData<T> >;
+
+template<typename T>
+using tetrahedronEdgeScalarData_ptr = std::shared_ptr<TetrahedronEdgeScalarData<T> >;
+
+template <typename DoubleType>
 class ModelExprData {
     public:
-        enum datatype {
-          NODEDATA=0,
-          EDGEDATA,
-          TRIANGLEEDGEDATA,
-          TETRAHEDRONEDGEDATA,
-          DOUBLE,
-          INVALID
-        };
-
-        static const char *const datatypename[];
         explicit ModelExprData(const Region *r = NULL) : val(0.0), type(INVALID), reg(r) {};
-        ModelExprData(double x, const Region *r);
+        ModelExprData(DoubleType x, const Region *r);
         ModelExprData(ConstNodeModelPtr x, const Region *r);
         ModelExprData(ConstEdgeModelPtr x, const Region *r);
         ModelExprData(ConstTriangleEdgeModelPtr x, const Region *r);
         ModelExprData(ConstTetrahedronEdgeModelPtr x, const Region *r);
-        ModelExprData(const NodeScalarData &, const Region *);
-        ModelExprData(const EdgeScalarData &, const Region *);
-        ModelExprData(const TriangleEdgeScalarData &, const Region *);
-        ModelExprData(const TetrahedronEdgeScalarData &, const Region *);
+        ModelExprData(const NodeScalarData<DoubleType> &, const Region *);
+        ModelExprData(const EdgeScalarData<DoubleType> &, const Region *);
+        ModelExprData(const TriangleEdgeScalarData<DoubleType> &, const Region *);
+        ModelExprData(const TetrahedronEdgeScalarData<DoubleType> &, const Region *);
 
         ModelExprData(const ModelExprData &);
         ModelExprData &operator=(const ModelExprData &);
 
         template <typename T>
-        ModelExprData &op_equal(const ModelExprData &, const T &);
-
-        ModelExprData &operator*=(const ModelExprData &);
-        ModelExprData &operator+=(const ModelExprData &);
+        ModelExprData<DoubleType> &op_equal(const ModelExprData<DoubleType> &, const T &);
+        ModelExprData<DoubleType> &operator*=(const ModelExprData &);
+        ModelExprData<DoubleType> &operator+=(const ModelExprData &);
 
         // test or will get undefined data
-        double GetDoubleValue() const
+        DoubleType GetDoubleValue() const
         {
             return val;
         }
@@ -90,38 +144,8 @@ class ModelExprData {
             return type;
         }
 
-        class ScalarValuesType {
-          public:
-          ScalarValuesType() : vals(0), uval(0.0), isuniform(false), length(0) {}
-          ScalarValuesType(const std::vector<double> &v) : vals(&v), uval(0.0), isuniform(false) {length = v.size();}
 
-          ScalarValuesType(double v, size_t len) : vals(0), uval(v), isuniform(true), length(len) {}
-
-          bool IsUniform() const
-          {
-            return isuniform;
-          }
-
-          const std::vector<double> &GetVector() const {
-            return *vals;
-          }
-
-          double GetScalar() const {
-            return uval;
-          }
-
-          size_t GetLength() const {
-            return length;
-          }
-
-          private:
-            const std::vector<double> *vals;
-            double                     uval;
-            bool isuniform;
-            size_t                     length;
-        };
-
-        ScalarValuesType GetScalarValues() const;
+        ScalarValuesType<DoubleType> GetScalarValues() const;
 
         void convertToTriangleEdgeData();
         void convertToTetrahedronEdgeData();
@@ -138,11 +162,6 @@ class ModelExprData {
         template <typename T>
         void double_op_equal(const ModelExprData &, const T &);
 
-
-
-
-        friend class ModelExprEval;
-
         /// use member function pointer to make sure that we don't do
         /// redundant operations
 /** Address this in the future when it makes sense to do so
@@ -151,22 +170,18 @@ class ModelExprData {
 */
 
 //      void morph();
-        typedef ModelExprData &(ModelExprData::*selfopptr)(ModelExprData &);
+        typedef ModelExprData<DoubleType> &(ModelExprData<DoubleType>::*selfopptr)(ModelExprData<DoubleType> &);
 
-        typedef std::shared_ptr<NodeScalarData>            nodeScalarData_ptr;
-        typedef std::shared_ptr<EdgeScalarData>            edgeScalarData_ptr;
-        typedef std::shared_ptr<TriangleEdgeScalarData>    triangleEdgeScalarData_ptr;
-        typedef std::shared_ptr<TetrahedronEdgeScalarData> tetrahedronEdgeScalarData_ptr;
         // These are the types of data we can keep
-        nodeScalarData_ptr            nodeScalarData;
-        edgeScalarData_ptr            edgeScalarData;
-        triangleEdgeScalarData_ptr    triangleEdgeScalarData;
-        tetrahedronEdgeScalarData_ptr tetrahedronEdgeScalarData;
-        double   val;
+        nodeScalarData_ptr<DoubleType>            nodeScalarData;
+        edgeScalarData_ptr<DoubleType>            edgeScalarData;
+        triangleEdgeScalarData_ptr<DoubleType>    triangleEdgeScalarData;
+        tetrahedronEdgeScalarData_ptr<DoubleType> tetrahedronEdgeScalarData;
+        DoubleType   val;
 
         datatype type;
         const    Region *          reg;
-
 };
 }
 #endif
+

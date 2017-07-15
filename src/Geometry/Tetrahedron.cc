@@ -31,16 +31,16 @@ Tetrahedron::Tetrahedron(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNode
     nodes[3]=n3;
 }
 
-Vector GetCenter(const std::vector<ConstNodePtr> &nodes)
+Vector<double> GetCenter(const std::vector<ConstNodePtr> &nodes)
 {
-  const Vector &v0 = nodes[0]->Position();
+  const Vector<double> &v0 = nodes[0]->Position();
 
-  static std::vector<Vector> vecs(3);
+  static std::vector<Vector<double> > vecs(3);
   static std::vector<double> B(3);
 
   for (size_t i = 0; i < 3; ++i)
   {
-    Vector &v = vecs[i];
+    Vector<double> &v = vecs[i];
     v = nodes[i + 1]->Position();
     v -= v0;
     B[i] = 0.5*dot_prod(v, v);
@@ -50,7 +50,7 @@ Vector GetCenter(const std::vector<ConstNodePtr> &nodes)
   dsMath::RealDenseMatrix M(3);
   for (size_t i = 0; i < 3; ++i)
   {
-    const Vector &v = vecs[i];
+    const Vector<double> &v = vecs[i];
     M(i, 0) = v.Getx();
     M(i, 1) = v.Gety();
     M(i, 2) = v.Getz();
@@ -68,12 +68,12 @@ Vector GetCenter(const std::vector<ConstNodePtr> &nodes)
     OutputStream::WriteOut(OutputStream::FATAL, "BAD TETRAHEDRON");
   }
 
-  Vector ret(B[0], B[1], B[2]);
+  Vector<double> ret(B[0], B[1], B[2]);
   ret += v0;
   return ret;
 }
 
-Vector GetCenter(const Tetrahedron &tet)
+Vector<double> GetCenter(const Tetrahedron &tet)
 {
   const std::vector<ConstNodePtr> &nodes = tet.GetNodeList();
 

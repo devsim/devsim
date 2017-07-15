@@ -23,32 +23,38 @@ limitations under the License.
 
 namespace Eqomfp {
 
-const MathPacket &MathPacketRange::GetMathPacket()
+template <typename DoubleType>
+const MathPacket<DoubleType> &MathPacketRange<DoubleType>::GetMathPacket()
 {
   return mathPacket_;
 }
 
-FPECheck::FPEFlag_t MathPacket::getFPEFlag() const
+template <typename DoubleType>
+FPECheck::FPEFlag_t MathPacket<DoubleType>::getFPEFlag() const
 {
   return fpeFlag_;
 }
 
-const std::string &MathPacket::getErrorString() const
+template <typename DoubleType>
+const std::string &MathPacket<DoubleType>::getErrorString() const
 {
   return errorString_;
 }
 
-size_t MathPacket::getNumberProcessed() const
+template <typename DoubleType>
+size_t MathPacket<DoubleType>::getNumberProcessed() const
 {
   return num_processed_;
 }
 
-MathPacket::MathPacket(const MathWrapper &wrapper, const std::vector<double> &dvals, const std::vector<const std::vector<double> *> &vvals, std::vector<double> &result) : wrapperClass_(wrapper), dvals_(dvals), vvals_(vvals), result_(result), fpeFlag_(FPECheck::getClearedFlag()), num_processed_(0)
+template <typename DoubleType>
+MathPacket<DoubleType>::MathPacket(const MathWrapper<DoubleType> &wrapper, const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result) : wrapperClass_(wrapper), dvals_(dvals), vvals_(vvals), result_(result), fpeFlag_(FPECheck::getClearedFlag()), num_processed_(0)
 {
 }
 
 //http://software.intel.com/en-us/forums/intel-threading-building-blocks/topic/70959/
-void MathPacket::join(const MathPacket &omp)
+template <typename DoubleType>
+void MathPacket<DoubleType>::join(const MathPacket &omp)
 {
   fpeFlag_        = FPECheck::combineFPEFlags(fpeFlag_, omp.fpeFlag_);
   num_processed_ += omp.num_processed_;
@@ -58,7 +64,8 @@ void MathPacket::join(const MathPacket &omp)
   }
 }
 
-void MathPacket::operator()(size_t vbeg, size_t vend)
+template <typename DoubleType>
+void MathPacket<DoubleType>::operator()(size_t vbeg, size_t vend)
 {
   fpeFlag_ = FPECheck::getClearedFlag();
   ///// This should not be called in the main thread!!!!!
@@ -71,7 +78,8 @@ void MathPacket::operator()(size_t vbeg, size_t vend)
 }
 
 
-std::string MathPacketRun(const MathWrapper &func, const std::vector<double> &dvals, const std::vector<const std::vector<double> *> &vvals, std::vector<double> &result, size_t vlen)
+template <typename DoubleType>
+std::string MathPacketRun(const MathWrapper<DoubleType> &func, const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, size_t vlen)
 {
   std::string errorString;
 
@@ -83,7 +91,7 @@ std::string MathPacketRun(const MathWrapper &func, const std::vector<double> &dv
 
   if ((num_threads > 1) && vlen > task_size)
   {
-    Eqomfp::MathPacket MyPacket(func, dvals, vvals, result);
+    Eqomfp::MathPacket<DoubleType> MyPacket(func, dvals, vvals, result);
 
     mymutex     cmutex;
     mycondition ccondition;
@@ -98,7 +106,7 @@ std::string MathPacketRun(const MathWrapper &func, const std::vector<double> &dv
     size_t e = (step == 0) ? vlen : step;
     while (b < e)
     {
-      mypacket_ptr packet = mypacket_ptr(new MathPacketRange(MyPacket, b, e, cmutex, ccondition, num_processed, vlen));
+      mypacket_ptr packet = mypacket_ptr(new MathPacketRange<DoubleType>(MyPacket, b, e, cmutex, ccondition, num_processed, vlen));
       packets.push_back(packet);
 
       b = e;
@@ -123,7 +131,7 @@ std::string MathPacketRun(const MathWrapper &func, const std::vector<double> &dv
 
     for (size_t i = 0; i < packets.size(); ++i)
     {
-      MyPacket.join(static_cast<MathPacketRange &>(*packets[i]).GetMathPacket());
+      MyPacket.join(static_cast<MathPacketRange<DoubleType> &>(*packets[i]).GetMathPacket());
     }
 
     errorString += MyPacket.getErrorString();
@@ -142,7 +150,8 @@ std::string MathPacketRun(const MathWrapper &func, const std::vector<double> &dv
   return errorString;
 }
 
-MathPacketRange::MathPacketRange(MathPacket mp, size_t b, size_t e,
+template <typename DoubleType>
+MathPacketRange<DoubleType>::MathPacketRange(MathPacket<DoubleType> mp, size_t b, size_t e,
     mymutex &mutex,
     mycondition &cond,
     size_t &count,
@@ -151,7 +160,8 @@ MathPacketRange::MathPacketRange(MathPacket mp, size_t b, size_t e,
 }
 
 
-void MathPacketRange::run()
+template <typename DoubleType>
+void MathPacketRange<DoubleType>::run()
 {
   mathPacket_(beg_, end_);
 
@@ -164,5 +174,7 @@ void MathPacketRange::run()
   mutex_.unlock();
 }
 
+template class MathPacket<double>;
+template std::string MathPacketRun(const MathWrapper<double> &, const std::vector<double> &, const std::vector<const std::vector<double> *> &, std::vector<double> &, size_t);
 }
 

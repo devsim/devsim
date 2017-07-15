@@ -33,7 +33,8 @@ namespace Eqo {
 */
 
 
-class ExprEquation : public Equation
+template <typename DoubleType>
+class ExprEquation : public Equation<DoubleType>
 {
     public:
         ExprEquation(const std::string &, /*Equation Name we are giving ourself*/
@@ -46,7 +47,7 @@ class ExprEquation : public Equation
                      const std::string &, /*ElementVolumeModel Name for integrating source*/
                      const std::string &, /*Time-dependent NodeModel Name for integrating source/sink*/
                         //// Some day we may have edge time dependent model
-                     Equation::UpdateType/* = Equation::DEFAULT*/
+                     typename Equation<DoubleType>::UpdateType/* = Equation::DEFAULT*/
                         );
 
 
@@ -58,11 +59,11 @@ class ExprEquation : public Equation
         ExprEquation(const ExprEquation &);
         ExprEquation &operator=(const ExprEquation &);
 
-        void DerivedAssemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        void UpdateValues(NodeModel &, const std::vector<double> &);
-        void ACUpdateValues(NodeModel &, const std::vector<std::complex<double> > &);
-        void NoiseUpdateValues(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<double> > &);
+        void UpdateValues(NodeModel &, const std::vector<DoubleType> &);
+        void ACUpdateValues(NodeModel &, const std::vector<std::complex<DoubleType> > &);
+        void NoiseUpdateValues(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &);
 
         /// Need to decide if we are going to contain equations or models?
         /// Assume that 

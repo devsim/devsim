@@ -18,13 +18,16 @@ limitations under the License.
 #ifndef TETRAHEDRON_ELEMENT_FIELD_HH
 #define TETRAHEDRON_ELEMENT_FIELD_HH
 
+template <typename T>
 class Vector;
 #include <vector>
 #include <cstddef>
 
 class Region;
 class Tetrahedron;
+
 class EdgeModel;
+
 class TetrahedronEdgeModel;
 
 namespace dsMath {
@@ -51,11 +54,11 @@ class TetrahedronElementField {
     ~TetrahedronElementField();
 
     //// Gets the weighted average for a given edge index (0, 1, 2)
-    std::vector<Vector> GetTetrahedronElementField(const Tetrahedron &, const TetrahedronEdgeModel &) const;
-    std::vector<Vector> GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &) const;
-    std::vector<Vector> GetTetrahedronElementField(const Tetrahedron &, const std::vector<double> &) const;
+    std::vector<Vector<double> > GetTetrahedronElementField(const Tetrahedron &, const TetrahedronEdgeModel &) const;
+    std::vector<Vector<double> > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &) const;
+    std::vector<Vector<double> > GetTetrahedronElementField(const Tetrahedron &, const std::vector<double> &) const;
     //// Gets the weighted average for a given edge index (0, 1, 2) w.r.t. given node index (0, 1, 2)
-    std::vector<std::vector<Vector> > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &, const EdgeModel &) const;
+    std::vector<std::vector<Vector<double> > > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &, const EdgeModel &) const;
 
   private:
     TetrahedronElementField();

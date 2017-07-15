@@ -537,9 +537,9 @@ void print_hh(ofstream &out) {
    }
    out << ");\n\n";
 out <<
-"       void assembleDC(const NodeKeeper::Solution &, dsMath::RealRowColValueVec &, std::vector<std::pair<int, double> > &);\n"
+"       void assembleDC(const NodeKeeper::Solution &, dsMath::RealRowColValueVec<double> &, std::vector<std::pair<int, double> > &);\n"
 
-"       void assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec *mat, std::vector<std::pair<int, double> > &rhs);\n"
+"       void assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs);\n"
 "       bool addParam(const std::string &, double);\n"
 "    private:\n"
 "       " << ClassName << "();\n"
@@ -714,12 +714,12 @@ void PrintAssemblyRoutine(ofstream &out, assembletype_t atype)
 if (atype == DCASSEMBLE)
 {
    out <<
-"void " << ClassName << "::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec &mat, std::vector<std::pair<int, double> > &rhs)\n";
+"void " << ClassName << "::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, std::vector<std::pair<int, double> > &rhs)\n";
 }
 else if (atype == ACASSEMBLE)
 {
    out <<
-"void " << ClassName << "::assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec *mat, std::vector<std::pair<int, double> > &rhs)\n";
+"void " << ClassName << "::assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs)\n";
 }
 
    out <<
@@ -811,7 +811,7 @@ else if (atype == ACASSEMBLE)
       }
 
       bos[MATRIX] <<
-"      mat" << op1 << "push_back(dsMath::RealRowColVal(" << nodeNbrName(tmpname) << ","
+"      mat" << op1 << "push_back(dsMath::RealRowColVal<double>(" << nodeNbrName(tmpname) << ","
          << nodeNbrName(*lit) << ", " << nm << "));\n";
    }
    bos[MATRIX] <<

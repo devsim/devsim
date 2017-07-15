@@ -87,7 +87,7 @@ void IdealVoltage::getDCStamp(Matrix::RowColEntryVec &vec)
 #endif
 
 // I should separate out rhs assembly from dc assembly
-void IdealVoltage::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec &vec, dsMath::RHSEntryVec &rhs)
+void IdealVoltage::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &vec, dsMath::RHSEntryVec<double> &rhs)
 {
     v_ = sig_->getVoltage();
     const double G = 1.0;
@@ -112,14 +112,14 @@ void IdealVoltage::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowCo
 
     if (!np_->isGROUND())
     {
-        vec.push_back(dsMath::RealRowColVal(rp, rI, G));
-        vec.push_back(dsMath::RealRowColVal(rI, rp, G));
+        vec.push_back(dsMath::RealRowColVal<double>(rp, rI, G));
+        vec.push_back(dsMath::RealRowColVal<double>(rI, rp, G));
         rhs.push_back(std::make_pair(rp,I));
     }
     if (!nm_->isGROUND())
     {
-        vec.push_back(dsMath::RealRowColVal(rm, rI, -G));
-        vec.push_back(dsMath::RealRowColVal(rI, rm, -G));
+        vec.push_back(dsMath::RealRowColVal<double>(rm, rI, -G));
+        vec.push_back(dsMath::RealRowColVal<double>(rI, rm, -G));
         rhs.push_back(std::make_pair(rm,-I));
     }
     rhs.push_back(std::make_pair(rI,V));

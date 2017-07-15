@@ -25,13 +25,15 @@ limitations under the License.
 #include "EdgeData.hh"
 #include "Triangle.hh"
 
-TetrahedronEdgeCouple::TetrahedronEdgeCouple(RegionPtr rp) :
+template <typename DoubleType>
+TetrahedronEdgeCouple<DoubleType>::TetrahedronEdgeCouple(RegionPtr rp) :
 TetrahedronEdgeModel("ElementEdgeCouple", rp, TetrahedronEdgeModel::SCALAR)
 {
 }
 
 
-void TetrahedronEdgeCouple::calcTetrahedronEdgeScalarValues() const
+template <typename DoubleType>
+void TetrahedronEdgeCouple<DoubleType>::calcTetrahedronEdgeScalarValues() const
 {
   const size_t dimension=GetRegion().GetDimension();
 
@@ -40,10 +42,11 @@ void TetrahedronEdgeCouple::calcTetrahedronEdgeScalarValues() const
   calcTetrahedronEdgeCouple();
 }
 
-void TetrahedronEdgeCouple::calcTetrahedronEdgeCouple() const
+template <typename DoubleType>
+void TetrahedronEdgeCouple<DoubleType>::calcTetrahedronEdgeCouple() const
 {
-  const std::vector<Vector> tetrahedronCenters = GetRegion().GetTetrahedronCenters();
-  const std::vector<Vector> triangleCenters    = GetRegion().GetTriangleCenters();
+  const std::vector<Vector<DoubleType>> tetrahedronCenters = GetRegion().GetTetrahedronCenters();
+  const std::vector<Vector<DoubleType>> triangleCenters    = GetRegion().GetTriangleCenters();
   const Region::TetrahedronToConstEdgeDataList_t &ttelist = GetRegion().GetTetrahedronToEdgeDataList();
 
   const ConstTetrahedronList &tetrahedronList = GetRegion().GetTetrahedronList();
@@ -53,30 +56,30 @@ void TetrahedronEdgeCouple::calcTetrahedronEdgeCouple() const
   const Region::TetrahedronToConstTriangleList_t &tetrahedronToTriangleList = GetRegion().GetTetrahedronToTriangleList();
 
   //// Make this part of region, if useful
-  std::vector<Vector> edgeCenters(edgeList.size());
+  std::vector<Vector<DoubleType>> edgeCenters(edgeList.size());
   for (size_t i = 0; i < edgeList.size(); ++i)
   { 
       const Edge &edge = *(edgeList[i]);
-      Vector edgeCenter = edge.GetHead()->Position();
+      Vector<DoubleType> edgeCenter = edge.GetHead()->Position();
       edgeCenter += edge.GetTail()->Position();
       edgeCenter *= 0.5;
       edgeCenters[i] = edgeCenter;
   }
 
 
-  Vector faceToTetCenter[4];
+  Vector<DoubleType> faceToTetCenter[4];
 
-  std::vector<double> ev(6*tetrahedronList.size());
+  std::vector<DoubleType> ev(6*tetrahedronList.size());
 
   for (size_t ti = 0; ti < tetrahedronList.size(); ++ti)
   {
-    const Vector &tetrahedronCenter = tetrahedronCenters[ti];
+    const Vector<DoubleType> &tetrahedronCenter = tetrahedronCenters[ti];
 
     const ConstTriangleList &triangleList = tetrahedronToTriangleList[ti];
     /// A tet only has 4 triangles
     for (size_t i = 0; i < 4; ++i)
     {
-      Vector v1 = triangleCenters[triangleList[i]->GetIndex()];
+      Vector<DoubleType> v1 = triangleCenters[triangleList[i]->GetIndex()];
       v1 -= tetrahedronCenter;
       faceToTetCenter[i] = v1;
     }
@@ -88,23 +91,26 @@ void TetrahedronEdgeCouple::calcTetrahedronEdgeCouple() const
 
 //      const Edge &edge = *(edgedata.edge);
 
-//      const Vector &edgeCenter = edgeCenters[edge.GetIndex()];
+//      const Vector<DoubleType> &edgeCenter = edgeCenters[edge.GetIndex()];
 
-      Vector v0 = tetrahedronCenter;
+      Vector<DoubleType> v0 = tetrahedronCenter;
       v0 -= edgeCenters[edgedata.edge->GetIndex()];
 
 
       /// The edgeCouple is from center of Tetrahedron to each triangle side to the tetrahedron edge index
-      const Vector &v1 = faceToTetCenter[edgedata.triangle_index[0]];
-      const Vector &v2 = faceToTetCenter[edgedata.triangle_index[1]];
+      const Vector<DoubleType> &v1 = faceToTetCenter[edgedata.triangle_index[0]];
+      const Vector<DoubleType> &v2 = faceToTetCenter[edgedata.triangle_index[1]];
       ev[6*ti + ei] = 0.5 * (magnitude(cross_prod(v0, v1)) + magnitude(cross_prod(v0, v2)));
     }
   }
 
   SetValues(ev);
 }
-void TetrahedronEdgeCouple::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TetrahedronEdgeCouple<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class TetrahedronEdgeCouple<double>;
 

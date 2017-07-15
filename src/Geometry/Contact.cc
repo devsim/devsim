@@ -18,10 +18,9 @@ limitations under the License.
 #include "Contact.hh"
 #include "Region.hh"
 #include "Node.hh"
-#include "ContactEquation.hh"
+#include "ContactEquationHolder.hh"
 #include "GeometryStream.hh"
 #include "dsAssert.hh"
-#include "IterHelper.hh"
 #include "Edge.hh"
 #include "Node.hh"
 #include "Triangle.hh"
@@ -100,20 +99,22 @@ const std::string &Contact::GetDeviceName() const
 
 Contact::~Contact()
 {
+#if 0
   deleteMapPointers(contactEquationPtrMap);
+#endif
 }
 
 ///// Copied from region version
 // number equations by order they are entered
-void Contact::AddEquation(ContactEquationPtr eq)
+void Contact::AddEquation(ContactEquationHolder &eq)
 {
   // Replace this with a warning
-  const std::string nm  = eq->GetName();
-  const std::string var = eq->GetVariable();
+  const std::string nm  = eq.GetName();
+  const std::string var = eq.GetVariable();
 
   if (contactEquationPtrMap.count(nm))
   {
-    ContactEquationPtr oeq = contactEquationPtrMap[nm];
+    ContactEquationHolder &oeq = contactEquationPtrMap[nm];
     if (oeq == eq)
     {
       std::ostringstream os; 
@@ -124,11 +125,11 @@ void Contact::AddEquation(ContactEquationPtr eq)
     }
     else
     {
-      if (oeq->GetVariable() != var)
+      if (oeq.GetVariable() != var)
       {
         std::ostringstream os; 
         os << "Warning: Adding a new Contact Equation by the same name with a different variable will remove mapping to other variable.\n"
-            "Region: " << this->GetName() << ", Equation: " << nm << ", Old variable: " << oeq->GetVariable() << ", New Variable: " << var << "\n";
+            "Region: " << this->GetName() << ", Equation: " << nm << ", Old variable: " << oeq.GetVariable() << ", New Variable: " << var << "\n";
         GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
 
         variableEquationMap.erase(var);
@@ -141,7 +142,6 @@ void Contact::AddEquation(ContactEquationPtr eq)
             "Contact: " << this->GetName() << ", Equation: " << nm << ", Variable: " << var << "\n";
         GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
       }
-      delete oeq;
       contactEquationPtrMap[nm] = eq;
         /// the contactEquationIndexMap doesn't change
     }
@@ -167,13 +167,12 @@ void Contact::AddEquation(ContactEquationPtr eq)
 
 //// Deletes the equation and its associated variable
 //// Decrements the equation index for all other equations
-void Contact::DeleteEquation(ContactEquationPtr eq)
+void Contact::DeleteEquation(ContactEquationHolder &eq)
 {
-  // Replace this with a warning
-  const std::string nm  = eq->GetName();
+  const std::string nm  = eq.GetName();
   dsAssert(contactEquationPtrMap.count(nm) != 0, "UNEXPECTED");
 
-  const std::string var = eq->GetVariable();
+  const std::string var = eq.GetVariable();
   dsAssert(variableEquationMap.count(var) != 0, "UNEXPECTED");
 
   contactEquationPtrMap.erase(nm);
@@ -190,9 +189,12 @@ const ContactEquationPtrMap_t &Contact::GetEquationPtrList() const
   return contactEquationPtrMap;
 }
 
-void Contact::Assemble(dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Contact::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-  IterHelper::ForEachMapValue(GetEquationPtrList(), IterHelper::assdcp<ContactEquation>(m, v, p, w, t));
+  for (auto it : GetEquationPtrList())
+  {
+    it.second.Assemble(m, v, p, w, t);
+  }
 }
 
 void Contact::FindEdges() const

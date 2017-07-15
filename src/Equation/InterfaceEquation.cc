@@ -16,6 +16,7 @@ limitations under the License.
 ***/
 
 #include "InterfaceEquation.hh"
+#include "InterfaceEquationHolder.hh"
 #include "Interface.hh"
 #include "Region.hh"
 #include "Device.hh"
@@ -26,25 +27,27 @@ limitations under the License.
 #include "Permutation.hh"
 #include "MatrixEntries.hh"
 #include "GeometryStream.hh"
-#include "ContactEquation.hh"
+#include "ContactEquationHolder.hh"
 #include "dsAssert.hh"
 #include "EquationErrors.hh"
 #include <string>
 #include <vector>
 #include <set>
 
-InterfaceEquation::InterfaceEquation(const std::string &nm, const std::string &var, InterfacePtr ip)
+template <typename DoubleType>
+InterfaceEquation<DoubleType>::InterfaceEquation(const std::string &nm, const std::string &var, InterfacePtr ip)
     : myname(nm), variable(var), myinterface(ip)
 {
-///  Need to come up with registration scheme to device or region
-    ip->AddInterfaceEquation(this);
+    InterfaceEquationHolder tmp(this);
+    ip->AddInterfaceEquation(tmp);
 }
 
 ///// TODO: Regress
 ///// If a contact for this equation on this region already exists, we 
 ///// will skip this node
 ///// If an interface for this equation on this region already exists, we skip out on that
-ConstNodeList_t InterfaceEquation::GetActiveNodesFromList(const Region &region, const ConstNodeList_t &inputnodes) const
+template <typename DoubleType>
+ConstNodeList_t InterfaceEquation<DoubleType>::GetActiveNodesFromList(const Region &region, const ConstNodeList_t &inputnodes) const
 {
   ConstNodeList_t ret;
 
@@ -84,9 +87,9 @@ ConstNodeList_t InterfaceEquation::GetActiveNodesFromList(const Region &region, 
           Region::ContactEquationPtrMap_t::const_iterator cepmend = cpair.second;
           for ( ; cepmit != cepmend; ++cepmit)
 #endif
-          for (Contact::ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
+          for (ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
           {
-           if ((cepmit->second)->GetName() == eqname)
+           if ((cepmit->second).GetName() == eqname)
            {
              addToList = false;
              break;
@@ -133,7 +136,7 @@ ConstNodeList_t InterfaceEquation::GetActiveNodesFromList(const Region &region, 
         else if (region == *(interface.GetRegion0()) ||
          region == *(interface.GetRegion1()))
         {
-          const Interface::InterfaceEquationPtrMap_t &iepm = interface.GetInterfaceEquationList();
+          const InterfaceEquationPtrMap_t &iepm = interface.GetInterfaceEquationList();
           if (iepm.find(eqname) != iepm.end())
           {
             addToList = false;
@@ -152,7 +155,8 @@ ConstNodeList_t InterfaceEquation::GetActiveNodesFromList(const Region &region, 
   return ret;
 }
 
-std::set<ConstNodePtr> InterfaceEquation::GetActiveNodes() const
+template <typename DoubleType>
+std::set<ConstNodePtr> InterfaceEquation<DoubleType>::GetActiveNodes() const
 {
   const ConstNodeList_t &inodes0 = GetInterface().GetNodes0();
   ConstNodeList_t onodes0 = GetActiveNodesFromList(*GetInterface().GetRegion0(), inodes0);
@@ -173,12 +177,14 @@ std::set<ConstNodePtr> InterfaceEquation::GetActiveNodes() const
 
 
 // Should make permutation collection a separate step
-void InterfaceEquation::Assemble(dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void InterfaceEquation<DoubleType>::Assemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
     DerivedAssemble(m, v, p, w, t);
 }
 
-InterfaceEquation::~InterfaceEquation()
+template <typename DoubleType>
+InterfaceEquation<DoubleType>::~InterfaceEquation()
 {
 }
 
@@ -193,7 +199,8 @@ struct vlistdata {
 };
 }
 
-void InterfaceEquation::NodeVolumeType1Assemble(const std::string &interfacenodemodel, dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, const std::string &/*surface_area*/)
+template <typename DoubleType>
+void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &interfacenodemodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, const std::string &/*surface_area*/)
 {
     const Interface &in = GetInterface();
     const Region &r0 = *in.GetRegion0();
@@ -271,7 +278,7 @@ void InterfaceEquation::NodeVolumeType1Assemble(const std::string &interfacenode
 
     /// we will permute out bulk equations for node1 into node0
     /// we will assemble our interface equation at node1
-    const NodeScalarList rhs = inm->GetScalarValues();
+    const NodeScalarList<DoubleType> rhs = inm->GetScalarValues<DoubleType>();
     dsAssert(rhs.size() == nodes1.size(), "UNEXPECTED");
     for (size_t i = 0; i < nodes0.size(); ++i)
     {
@@ -291,7 +298,7 @@ void InterfaceEquation::NodeVolumeType1Assemble(const std::string &interfacenode
         dsAssert(row0 != size_t(-1), "UNEXPECTED");
         dsAssert(row1 != size_t(-1), "UNEXPECTED");
 
-        /// We will need to check later that we don't double permute from another equation
+        /// We will need to check later that we don't DoubleType permute from another equation
         /// That is why we need to encode the contact or interface ptr into the permutation entry (error checking).
         if (w == dsMathEnum::PERMUTATIONSONLY)
         {
@@ -367,7 +374,7 @@ void InterfaceEquation::NodeVolumeType1Assemble(const std::string &interfacenode
             ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(imname);
             dsAssert(idm.get(), "UNEXPECTED"); // Existence is checked when added to vlistd
 
-            const NodeScalarList &vals = idm->GetScalarValues();
+            const NodeScalarList<DoubleType> &vals = idm->GetScalarValues<DoubleType>();
             dsAssert(vals.size() == nlist.size(), "UNEXPECTED");
 
             for (size_t i = 0; i < nlist.size(); ++i)
@@ -377,9 +384,9 @@ void InterfaceEquation::NodeVolumeType1Assemble(const std::string &interfacenode
 
                 // as stated previously, we are assembling into the second region
                 const size_t row1 = r1.GetEquationNumber(eqindex1, nodes1[i]);
-                const double val = vals[i];
+                const DoubleType val = vals[i];
 
-                m.push_back(dsMath::RealRowColVal(row1, col, val));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(row1, col, val));
             }
         }
     }
@@ -392,7 +399,8 @@ void InterfaceEquation::NodeVolumeType1Assemble(const std::string &interfacenode
     }
 }
 
-void InterfaceEquation::NodeVolumeType2Assemble(const std::string &interfacenodemodel, dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, const std::string &surface_area)
+template <typename DoubleType>
+void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &interfacenodemodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, const std::string &surface_area)
 {
     //// special short cut
     if (w == dsMathEnum::PERMUTATIONSONLY)
@@ -436,13 +444,13 @@ void InterfaceEquation::NodeVolumeType2Assemble(const std::string &interfacenode
 
     /// we will permute out bulk equations for node1 into node0
     /// we will assemble our interface equation at node1
-    const NodeScalarList rhs = inm->GetScalarValues();
+    const NodeScalarList<DoubleType> rhs = inm->GetScalarValues<DoubleType>();
     dsAssert(rhs.size() == nodes1.size(), "UNEXPECTED");
 
     if ((w == dsMathEnum::RHS) || (w == dsMathEnum::MATRIXANDRHS))
     {
-        const NodeScalarList &sa0vals = sa0->GetScalarValues();
-        const NodeScalarList &sa1vals = sa1->GetScalarValues();
+        const NodeScalarList<DoubleType> &sa0vals = sa0->GetScalarValues<DoubleType>();
+        const NodeScalarList<DoubleType> &sa1vals = sa1->GetScalarValues<DoubleType>();
 
         for (size_t i = 0; i < nodes0.size(); ++i)
         {
@@ -463,10 +471,10 @@ void InterfaceEquation::NodeVolumeType2Assemble(const std::string &interfacenode
             dsAssert(row0 != size_t(-1), "UNEXPECTED");
             dsAssert(row1 != size_t(-1), "UNEXPECTED");
 
-            const double rval = rhs[i];
+            const DoubleType rval = rhs[i];
 
-            const double val0 =  rval * sa0vals[node0->GetIndex()];
-            const double val1 = -rval * sa1vals[node0->GetIndex()];
+            const DoubleType val0 =  rval * sa0vals[node0->GetIndex()];
+            const DoubleType val1 = -rval * sa1vals[node0->GetIndex()];
 
             v.push_back(std::make_pair(row0, val0));
             v.push_back(std::make_pair(row1, val1));
@@ -528,11 +536,11 @@ void InterfaceEquation::NodeVolumeType2Assemble(const std::string &interfacenode
             ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(imname);
             dsAssert(idm.get(), "UNEXPECTED"); // Existence is checked when added to vlistd
 
-            const NodeScalarList &vals = idm->GetScalarValues();
+            const NodeScalarList<DoubleType> &vals = idm->GetScalarValues<DoubleType>();
             dsAssert(vals.size() == nlist.size(), "UNEXPECTED");
 
-            const NodeScalarList &sa0vals = sa0->GetScalarValues();
-            const NodeScalarList &sa1vals = sa1->GetScalarValues();
+            const NodeScalarList<DoubleType> &sa0vals = sa0->GetScalarValues<DoubleType>();
+            const NodeScalarList<DoubleType> &sa1vals = sa1->GetScalarValues<DoubleType>();
 
             for (size_t i = 0; i < nlist.size(); ++i)
             {
@@ -551,13 +559,13 @@ void InterfaceEquation::NodeVolumeType2Assemble(const std::string &interfacenode
                 const size_t row0 = r0.GetEquationNumber(eqindex0, node0);
                 const size_t row1 = r1.GetEquationNumber(eqindex1, node1);
 
-                const double rval = vals[i];
+                const DoubleType rval = vals[i];
 
-                const double val0 =  rval * sa0vals[node0->GetIndex()];
-                const double val1 = -rval * sa1vals[node1->GetIndex()];
+                const DoubleType val0 =  rval * sa0vals[node0->GetIndex()];
+                const DoubleType val1 = -rval * sa1vals[node1->GetIndex()];
 
-                m.push_back(dsMath::RealRowColVal(row0, col, +val0));
-                m.push_back(dsMath::RealRowColVal(row1, col, +val1));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(row0, col, +val0));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(row1, col, +val1));
             }
         }
     }
@@ -570,15 +578,19 @@ void InterfaceEquation::NodeVolumeType2Assemble(const std::string &interfacenode
     }
 }
 
-void InterfaceEquation::DevsimSerialize(std::ostream &of) const
+template <typename DoubleType>
+void InterfaceEquation<DoubleType>::DevsimSerialize(std::ostream &of) const
 {
   of << "begin_equation \"" << this->GetName() << "\"\n";
   this->Serialize(of);
   of << "\nend_equation\n\n";
 }
 
-void InterfaceEquation::GetCommandOptions(std::map<std::string, ObjectHolder> &omap) const
+template <typename DoubleType>
+void InterfaceEquation<DoubleType>::GetCommandOptions(std::map<std::string, ObjectHolder> &omap) const
 {
   this->GetCommandOptions_Impl(omap);
 }
+
+template class InterfaceEquation<double>;
 

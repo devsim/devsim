@@ -36,27 +36,27 @@ limitations under the License.
  */
 void CreateDefaultModels(RegionPtr rp)
 {
-    new EdgeCouple(rp);
-    new EdgeLength(rp);
-    new EdgeIndex(rp);
-    new NodeVolume(rp);
-    new EdgeInverseLength(rp);
-    new NodePosition(rp);
-    new AtContactNode(rp);
-    new SurfaceArea(rp);
-    new UnitVec(rp);
+    new EdgeCouple<double>(rp);
+    new EdgeLength<double>(rp);
+    new EdgeIndex<double>(rp);
+    new NodeVolume<double>(rp);
+    new EdgeInverseLength<double>(rp);
+    new NodePosition<double>(rp);
+    new AtContactNode<double>(rp);
+    new SurfaceArea<double>(rp);
+    new UnitVec<double>(rp);
 
     const size_t dimension = rp->GetDimension();
 
     if (dimension == 2)
     {
-      new TriangleEdgeCouple(rp);
-      new TriangleNodeVolume(rp);
+      new TriangleEdgeCouple<double>(rp);
+      new TriangleNodeVolume<double>(rp);
     }
     else if (dimension == 3)
     {
-      new TetrahedronEdgeCouple(rp);
-      new TetrahedronNodeVolume(rp);
+      new TetrahedronEdgeCouple<double>(rp);
+      new TetrahedronNodeVolume<double>(rp);
     }
 }
 

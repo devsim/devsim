@@ -18,13 +18,16 @@ limitations under the License.
 #ifndef TRIANGLE_ELEMENT_FIELD_HH
 #define TRIANGLE_ELEMENT_FIELD_HH
 
+template <typename T>
 class Vector;
 #include <vector>
 #include <cstddef>
 
 class Region;
 class Triangle;
+
 class EdgeModel;
+
 class TriangleEdgeModel;
 
 namespace dsMath {
@@ -46,10 +49,10 @@ class TriangleElementField {
 
     ~TriangleElementField();
 
-    std::vector<Vector> GetTriangleElementField(const Triangle &, const TriangleEdgeModel &) const;
-    std::vector<Vector> GetTriangleElementField(const Triangle &, const EdgeModel &) const;
-    std::vector<Vector> GetTriangleElementField(const Triangle &, const std::vector<double> &) const;
-    std::vector<std::vector<Vector> > GetTriangleElementField(const Triangle &, const EdgeModel &, const EdgeModel &) const;
+    std::vector<Vector<double> > GetTriangleElementField(const Triangle &, const TriangleEdgeModel &) const;
+    std::vector<Vector<double> > GetTriangleElementField(const Triangle &, const EdgeModel &) const;
+    std::vector<Vector<double> > GetTriangleElementField(const Triangle &, const std::vector<double> &) const;
+    std::vector<std::vector<Vector<double> > > GetTriangleElementField(const Triangle &, const EdgeModel &, const EdgeModel &) const;
 
   private:
     TriangleElementField();

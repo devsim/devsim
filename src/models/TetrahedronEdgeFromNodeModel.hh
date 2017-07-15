@@ -18,6 +18,7 @@ limitations under the License.
 #ifndef TETRAHEDRON_EDGE_FROM_NODE_MODEL_HH
 #define TETRAHEDRON_EDGE_FROM_NODE_MODEL_HH
 #include "TetrahedronEdgeModel.hh"
+template <typename DoubleType>
 class TetrahedronEdgeFromNodeModel : public TetrahedronEdgeModel {
     public:
         //// Out naming convention is that the name given is the edge model

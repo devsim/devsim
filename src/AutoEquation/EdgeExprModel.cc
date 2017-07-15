@@ -30,7 +30,8 @@ limitations under the License.
 
 
 // Must be valid equation object which is passed
-EdgeExprModel::EdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, EdgeModel::DisplayType dt, ContactPtr cp) : EdgeModel(nm, rp, dt, cp), equation(eq)
+template <typename DoubleType>
+EdgeExprModel<DoubleType>::EdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, EdgeModel::DisplayType dt, ContactPtr cp) : EdgeModel(nm, rp, dt, cp), equation(eq)
 {
 #if 0
     os << "creating EdgeExprModel " << nm << " with equation " << eq << "\n";
@@ -38,7 +39,8 @@ EdgeExprModel::EdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, Regi
     RegisterModels();
 }
 
-void EdgeExprModel::RegisterModels()
+template <typename DoubleType>
+void EdgeExprModel<DoubleType>::RegisterModels()
 {
     typedef std::set<std::string> refmodels_t;
     refmodels_t refs;
@@ -76,17 +78,18 @@ void EdgeExprModel::RegisterModels()
     }
 }
 
-void EdgeExprModel::calcEdgeScalarValues() const
+template <typename DoubleType>
+void EdgeExprModel<DoubleType>::calcEdgeScalarValues() const
 {
     // need to write the calculator
 //    dsAssert(false, "UNEXPECTED");
 #if 0
         os << "updating EdgeExprModel " << GetName() << " from expression " << EngineAPI::getStringValue(equation) << "\n";
 #endif
-    MEE::ModelExprEval::error_t errors;
+    typename MEE::ModelExprEval<DoubleType>::error_t errors;
     const Region *rp = &(this->GetRegion());
-    MEE::ModelExprEval mexp(rp, GetName(), errors);
-    MEE::ModelExprData out = mexp.eval_function(equation);
+    MEE::ModelExprEval<DoubleType> mexp(rp, GetName(), errors);
+    MEE::ModelExprData<DoubleType> out = mexp.eval_function(equation);
 
     if (!errors.empty())
     {
@@ -95,7 +98,7 @@ void EdgeExprModel::calcEdgeScalarValues() const
         " on Device: " << GetRegion().GetDeviceName() <<
         " on Region: " << GetRegion().GetName()
         << "\n";
-        for (MEE::ModelExprEval::error_t::iterator it = errors.begin(); it != errors.end(); ++it)
+        for (typename MEE::ModelExprEval<DoubleType>::error_t::iterator it = errors.begin(); it != errors.end(); ++it)
         {
             os << *it << "\n";
         }
@@ -103,37 +106,41 @@ void EdgeExprModel::calcEdgeScalarValues() const
     }
 
     if (
-        (out.GetType() == MEE::ModelExprData::EDGEDATA)
+        (out.GetType() == MEE::EDGEDATA)
        )
     {
-        const MEE::ModelExprData::ScalarValuesType &tval = out.GetScalarValues();
+        const MEE::ScalarValuesType<DoubleType> &tval = out.GetScalarValues();
         if (tval.IsUniform())
         {
           SetValues(tval.GetScalar());
         }
         else
         {
-          EdgeScalarList nsl(tval.GetVector());
+          EdgeScalarList<DoubleType> nsl(tval.GetVector());
           SetValues(nsl);
         }
     }
-    else if (out.GetType() == MEE::ModelExprData::DOUBLE)
+    else if (out.GetType() == MEE::DOUBLE)
     {
-        const double v = out.GetDoubleValue();
+        const DoubleType v = out.GetDoubleValue();
         SetValues(v);
     }
     else
     {
         std::ostringstream os; 
         os << "while evaluating model " << GetName() << ": expression "
-            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::ModelExprData::datatypename[out.GetType()]
+            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[out.GetType()]
             << "\n";
         GeometryStream::WriteOut(OutputStream::FATAL, *rp, os.str());
     }
         
 }
 
-void EdgeExprModel::Serialize(std::ostream &of) const
+#ifndef _WIN32
+#warning "serialize extended option here"
+#endif
+template <typename DoubleType>
+void EdgeExprModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND ";
 
@@ -149,4 +156,6 @@ void EdgeExprModel::Serialize(std::ostream &of) const
   of << "-name \"" << GetName() << "\" -equation \"" << EngineAPI::getStringValue(equation) << ";\" -display_type \"" << GetDisplayTypeString() << "\"";
 
 }
+
+template class EdgeExprModel<double>;
 

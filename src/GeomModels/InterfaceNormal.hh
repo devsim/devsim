@@ -28,6 +28,7 @@ class Edge;
 typedef Edge *EdgePtr;
 typedef const Edge *ConstEdgePtr;
 
+template <typename DoubleType>
 class InterfaceNormal : public EdgeModel
 {
     public:

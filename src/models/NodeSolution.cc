@@ -27,7 +27,8 @@ limitations under the License.
 
 #include <sstream>
 
-NodeSolution::NodeSolution(const std::string &nm, RegionPtr rp)
+template <typename DoubleType>
+NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp)
     :
         NodeModel(nm, rp, NodeModel::SCALAR),
         parentModel()
@@ -37,7 +38,8 @@ NodeSolution::NodeSolution(const std::string &nm, RegionPtr rp)
 #endif
 }
 
-NodeSolution::NodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp)
+template <typename DoubleType>
+NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp)
     :
         // dirty hack
         NodeModel(nm, rp, NodeModel::SCALAR),
@@ -50,19 +52,22 @@ NodeSolution::NodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp
 #endif
 }
 
-NodeModelPtr NodeSolution::CreateNodeSolution(const std::string &nm, RegionPtr rp)
+template <typename DoubleType>
+NodeModelPtr NodeSolution<DoubleType>::CreateNodeSolution(const std::string &nm, RegionPtr rp)
 {
   NodeModel *p = new NodeSolution(nm, rp);
   return p->GetSelfPtr();
 }
 
-NodeModelPtr NodeSolution::CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp)
+template <typename DoubleType>
+NodeModelPtr NodeSolution<DoubleType>::CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp)
 {
   NodeModel *p = new NodeSolution(nm, rp, nmp);
   return p->GetSelfPtr();
 }
 
-void NodeSolution::calcNodeScalarValues() const
+template <typename DoubleType>
+void NodeSolution<DoubleType>::calcNodeScalarValues() const
 {
     if (!parentModelName.empty())
     {
@@ -72,7 +77,7 @@ void NodeSolution::calcNodeScalarValues() const
         ConstNodeModelPtr nmp = GetRegion().GetNodeModel(parentModelName);
         if (!parentModel.expired())
         {
-          parentModel.lock()->GetScalarValues();
+          parentModel.lock()->template GetScalarValues<DoubleType>();
         }
         else if (nmp)
         {
@@ -87,12 +92,14 @@ void NodeSolution::calcNodeScalarValues() const
     }
 }
 
-void NodeSolution::setInitialValues()
+template <typename DoubleType>
+void NodeSolution<DoubleType>::setInitialValues()
 {
     DefaultInitializeValues();
 }
 
-void NodeSolution::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void NodeSolution<DoubleType>::Serialize(std::ostream &of) const
 {
   if (!parentModelName.empty())
   {
@@ -100,16 +107,18 @@ void NodeSolution::Serialize(std::ostream &of) const
   }
   else if (this->IsUniform())
   {
-    of << "UNIFORM " << GetUniformValue() << "";
+    of << "UNIFORM " << GetUniformValue<DoubleType>() << "";
   }
   else
   {
     of << "DATA";
-    const NodeScalarList &vals = this->GetScalarValues();
+    const NodeScalarList<DoubleType> &vals = this->GetScalarValues<DoubleType>();
     for (size_t i = 0; i < vals.size(); ++i)
     {
       of << "\n" << vals[i];
     }
   }
 }
+
+template class NodeSolution<double>;
 
