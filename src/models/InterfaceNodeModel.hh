@@ -18,18 +18,22 @@ limitations under the License.
 #ifndef INTERFACENODEMODEL_HH
 #define INTERFACENODEMODEL_HH
 
+#include "ModelDataHolder.hh"
+
 #include <string>
 #include <vector>
 
 #include <memory>
 
-typedef std::vector<double> NodeScalarList;
+template<typename T>
+using NodeScalarList = std::vector<T>;
 
 class InterfaceNodeModel;
-typedef std::weak_ptr<InterfaceNodeModel>       WeakInterfaceNodeModelPtr;
-typedef std::weak_ptr<const InterfaceNodeModel> WeakConstInterfaceNodeModelPtr;
-typedef std::shared_ptr<InterfaceNodeModel>       InterfaceNodeModelPtr;
-typedef std::shared_ptr<const InterfaceNodeModel> ConstInterfaceNodeModelPtr;
+
+using WeakInterfaceNodeModelPtr = std::weak_ptr<InterfaceNodeModel>;
+using WeakConstInterfaceNodeModelPtr = std::weak_ptr<const InterfaceNodeModel>;
+using InterfaceNodeModelPtr = std::shared_ptr<InterfaceNodeModel>;
+using ConstInterfaceNodeModelPtr = std::shared_ptr<const InterfaceNodeModel>;
 
 class Interface;
 typedef Interface *InterfacePtr;
@@ -45,7 +49,8 @@ class InterfaceNodeModel {
         }
 
         // should collapse this with setNodeScalarValue
-        const NodeScalarList &GetScalarValues() const;
+        template <typename DoubleType>
+        const NodeScalarList<DoubleType> &GetScalarValues() const;
 
         // recalculate since dependency is invalid
         void MarkOld();
@@ -64,7 +69,10 @@ class InterfaceNodeModel {
 
         void InitializeValues();
 
-        void SetValues(const NodeScalarList &);
+        template <typename DoubleType>
+        void SetValues(const NodeScalarList<DoubleType> &);
+
+        template <typename DoubleType>
         void SetValues(const InterfaceNodeModel &);
 
         const Interface &GetInterface() const
@@ -84,22 +92,17 @@ class InterfaceNodeModel {
 
         bool IsUniform() const;
 
-        double GetUniformValue() const;
+        template <typename DoubleType>
+        const DoubleType &GetUniformValue() const;
 
         size_t GetLength() const
         {
           return length;
         }
 
-        bool IsZero() const
-        {
-          return (IsUniform() && (uniform_value == 0.0));
-        }
+        bool IsZero() const;
 
-        bool IsOne() const
-        {
-          return (IsUniform() && (uniform_value == 1.0));
-        }
+        bool IsOne() const;
 
         void DevsimSerialize(std::ostream &) const;
 
@@ -114,8 +117,11 @@ class InterfaceNodeModel {
         void RegisterCallback(const std::string &);
 
         // logically const as is used by the lazy evaluated model values
-        void SetValues(const NodeScalarList &) const;
-        void SetValues(const double &) const;
+        template <typename DoubleType>
+        void SetValues(const NodeScalarList<DoubleType> &) const;
+
+        template <typename DoubleType>
+        void SetValues(const DoubleType &) const;
 
         void MarkOld() const;
 
@@ -123,7 +129,7 @@ class InterfaceNodeModel {
 
     private:
         void CalculateValues() const;
-        //virtual double calcNodeScalarValue(NodePtr) = 0; 
+        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0; 
         virtual void   calcNodeScalarValues() const = 0; 
 
         InterfaceNodeModel();
@@ -133,11 +139,10 @@ class InterfaceNodeModel {
         std::string name;
         WeakInterfaceNodeModelPtr myself;
         InterfacePtr   myinterface;
+        mutable ModelDataHolder model_data;
         mutable bool uptodate;
         mutable bool inprocess;
-        mutable bool isuniform;
-        mutable double         uniform_value;
-        mutable      NodeScalarList values;
         size_t length;
 };
 #endif
+

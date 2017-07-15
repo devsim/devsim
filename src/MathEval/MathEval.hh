@@ -26,15 +26,16 @@ limitations under the License.
 
 class ObjectHolder;
 
+template <typename DoubleType>
 class MathEval {
 // first is function name
 // second is args
 // third is error string
   public:
-    double EvaluateMathFunc(const std::string &, std::vector<double> &, std::string &) const ;
-    void   EvaluateMathFunc(const std::string &, std::vector<double> &, const std::vector<const std::vector<double> *> &, std::string &, std::vector<double> &, size_t vlen) const;
+    DoubleType EvaluateMathFunc(const std::string &, std::vector<DoubleType> &, std::string &) const ;
+    void   EvaluateMathFunc(const std::string &, std::vector<DoubleType> &, const std::vector<const std::vector<DoubleType> *> &, std::string &, std::vector<DoubleType> &, size_t vlen) const;
 
-    void   EvaluateTclMathFunc(const std::string &, std::vector<double> &, const std::vector<const std::vector<double> *> &, std::string &, std::vector<double> &) const;
+    void   EvaluateTclMathFunc(const std::string &, std::vector<DoubleType> &, const std::vector<const std::vector<DoubleType> *> &, std::string &, std::vector<DoubleType> &) const;
 
     static MathEval &GetInstance();
     static void DestroyInstance();
@@ -49,24 +50,13 @@ class MathEval {
     MathEval(const MathEval &);
 
     static MathEval *instance_;
-    //// TODO: real pointer, not smart pointer (delete in destructor for this class
-    std::map<std::string, Eqomfp::MathWrapperPtr> FuncPtrMap_;
-//    std::map<std::string, binaryfuncptr>     binaryFuncPtrMap_;
-//    std::map<std::string, ternaryfuncptr>    ternaryFuncPtrMap_;
-//    std::map<std::string, quaternaryfuncptr> quaternaryFuncPtrMap_;
+    std::map<std::string, Eqomfp::MathWrapperPtr<DoubleType>> FuncPtrMap_;
 
-    //// This has priority
     typedef std::map<std::string, size_t> tclMathFuncMap_t;
     tclMathFuncMap_t                      tclMathFuncMap_;
     mutable std::vector<ObjectHolder>     tclObjVector;
 
-#if 0
-    unaryfuncptr   GetUnaryFuncPtr(const std::string &x) const;
-    binaryfuncptr  GetBinaryFuncPtr(const std::string &x) const;
-    ternaryfuncptr GetTernaryFuncPtr(const std::string &x) const;
-    quaternaryfuncptr GetQuaternaryFuncPtr(const std::string &x) const;
-#endif
-
     void InitializeBuiltInMathFunc();
 };
 #endif
+

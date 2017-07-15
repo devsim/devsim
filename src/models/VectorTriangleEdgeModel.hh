@@ -18,6 +18,7 @@ limitations under the License.
 #ifndef VECTOR_TRIANGLE_EDGE_FROM_EDGE_MODEL_HH
 #define VECTOR_TRIANGLE_EDGE_FROM_EDGE_MODEL_HH
 #include "TriangleEdgeModel.hh"
+template <typename DoubleType>
 class VectorTriangleEdgeModel : public TriangleEdgeModel {
     public:
         //// Out naming convention is that the name given is the edge model

@@ -19,6 +19,7 @@ limitations under the License.
 #define EDGEINDEX_HH
 #include "EdgeModel.hh"
 // Coupling length
+template <typename DoubleType>
 class EdgeIndex : public EdgeModel {
     public:
         EdgeIndex(RegionPtr);
@@ -29,7 +30,8 @@ class EdgeIndex : public EdgeModel {
         EdgeIndex();
         EdgeIndex(const EdgeIndex &);
         EdgeIndex &operator=(const EdgeIndex &);
-        double calcEdgeIndex(ConstEdgePtr) const;
+        DoubleType calcEdgeIndex(ConstEdgePtr) const;
         void calcEdgeScalarValues() const;
 };
 #endif
+

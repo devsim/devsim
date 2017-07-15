@@ -23,7 +23,8 @@ limitations under the License.
 #include "EdgeData.hh"
 #include "Edge.hh"
 
-TetrahedronNodeVolume::TetrahedronNodeVolume(RegionPtr rp)
+template <typename DoubleType>
+TetrahedronNodeVolume<DoubleType>::TetrahedronNodeVolume(RegionPtr rp)
     : TetrahedronEdgeModel("ElementNodeVolume", rp, TetrahedronEdgeModel::SCALAR)
 {
     ///// 1/3 * base area time perpendicular distance to 3rd node
@@ -32,7 +33,8 @@ TetrahedronNodeVolume::TetrahedronNodeVolume(RegionPtr rp)
     RegisterCallback("ElementEdgeCouple");
 }
 
-void TetrahedronNodeVolume::calcTetrahedronEdgeScalarValues() const
+template <typename DoubleType>
+void TetrahedronNodeVolume<DoubleType>::calcTetrahedronEdgeScalarValues() const
 {
   const Region &r = GetRegion();
 //  const size_t dimension = r.GetDimension();
@@ -43,16 +45,16 @@ void TetrahedronNodeVolume::calcTetrahedronEdgeScalarValues() const
   ConstEdgeModelPtr elen = r.GetEdgeModel("EdgeLength");
   dsAssert(elen.get(), "UNEXPECTED");
 
-  TetrahedronEdgeScalarData evol = TetrahedronEdgeScalarData(*eec);
+  TetrahedronEdgeScalarData<DoubleType> evol = TetrahedronEdgeScalarData<DoubleType>(*eec);
 
 
   //// 1./3. * edgecouple * (0.5 * edgelength)
   evol *= (1.0/6.0);
 
-  const EdgeScalarList &edge_lengths = elen->GetScalarValues();
+  const EdgeScalarList<DoubleType> &edge_lengths = elen->GetScalarValues<DoubleType>();
 
   const ConstTetrahedronList &tl = GetRegion().GetTetrahedronList();
-  std::vector<double> ev(6 * tl.size());
+  std::vector<DoubleType> ev(6 * tl.size());
 
 
   const Region::TetrahedronToConstEdgeDataList_t &ttelist = GetRegion().GetTetrahedronToEdgeDataList();
@@ -64,7 +66,7 @@ void TetrahedronNodeVolume::calcTetrahedronEdgeScalarValues() const
 //    dsAssert(edgeDataList.size() == 6, "UNEXPECTED");
     for (size_t teindex = 0; teindex < edgeDataList.size(); ++teindex)
     {
-      double vol = edge_lengths[edgeDataList[teindex]->edge->GetIndex()];
+      DoubleType vol = edge_lengths[edgeDataList[teindex]->edge->GetIndex()];
 
       const size_t oindex = 6*tindex + teindex;
 
@@ -75,8 +77,11 @@ void TetrahedronNodeVolume::calcTetrahedronEdgeScalarValues() const
   SetValues(ev);
 }
 
-void TetrahedronNodeVolume::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TetrahedronNodeVolume<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class TetrahedronNodeVolume<double>;
 

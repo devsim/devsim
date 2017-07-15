@@ -22,14 +22,16 @@ limitations under the License.
 #include "EdgeModel.hh"
 #include "Edge.hh"
 
-TriangleNodeVolume::TriangleNodeVolume(RegionPtr rp)
+template <typename DoubleType>
+TriangleNodeVolume<DoubleType>::TriangleNodeVolume(RegionPtr rp)
     : TriangleEdgeModel("ElementNodeVolume", rp, TriangleEdgeModel::SCALAR)
 {
     RegisterCallback("EdgeLength");
     RegisterCallback("ElementEdgeCouple");
 }
 
-void TriangleNodeVolume::calcTriangleEdgeScalarValues() const
+template <typename DoubleType>
+void TriangleNodeVolume<DoubleType>::calcTriangleEdgeScalarValues() const
 {
   const Region &r = GetRegion();
   const size_t dimension = r.GetDimension();
@@ -40,9 +42,9 @@ void TriangleNodeVolume::calcTriangleEdgeScalarValues() const
   ConstEdgeModelPtr elen = r.GetEdgeModel("EdgeLength");
   dsAssert(elen.get(), "UNEXPECTED");
 
-  const EdgeScalarList elens = elen->GetScalarValues();
+  const EdgeScalarList<DoubleType> elens = elen->GetScalarValues<DoubleType>();
 
-  TriangleEdgeScalarData evol = TriangleEdgeScalarData(*eec);
+  TriangleEdgeScalarData<DoubleType> evol = TriangleEdgeScalarData<DoubleType>(*eec);
 
   dsAssert(dimension == 2, "UNEXPECTED");
 
@@ -50,7 +52,7 @@ void TriangleNodeVolume::calcTriangleEdgeScalarValues() const
   evol *= 0.25;
 
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
-  std::vector<double> ev(3 * tl.size());
+  std::vector<DoubleType> ev(3 * tl.size());
 
   for (size_t tindex = 0; tindex < tl.size(); ++tindex)
   {
@@ -61,7 +63,7 @@ void TriangleNodeVolume::calcTriangleEdgeScalarValues() const
     /// teindex is 0,1,2
     for (size_t teindex = 0; teindex < edgeList.size(); ++teindex)
     {
-      double vol = elens[edgeList[teindex]->GetIndex()];
+      DoubleType vol = elens[edgeList[teindex]->GetIndex()];
       //// TODO: get rid of this messy indexing scheme
       vol *= evol[3*tindex + teindex];
 
@@ -74,8 +76,11 @@ void TriangleNodeVolume::calcTriangleEdgeScalarValues() const
   SetValues(ev);
 }
 
-void TriangleNodeVolume::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TriangleNodeVolume<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class TriangleNodeVolume<double>;
 

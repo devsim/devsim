@@ -26,7 +26,7 @@ limitations under the License.
 #include "SuperLUPreconditioner.hh"
 #include "Device.hh"
 #include "Region.hh"
-#include "Equation.hh"
+#include "EquationHolder.hh"
 #include "OutputStream.hh"
 #include "dsAssert.hh"
 
@@ -109,7 +109,7 @@ size_t Newton::NumberEquationsAndSetDimension()
   return eqnnum;
 }
 
-void Newton::AssembleContactsAndInterfaces(RealRowColValueVec &mat, RHSEntryVec &rhs, permvec_t &permvec, Device &dev, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Newton::AssembleContactsAndInterfaces(RealRowColValueVec<double> &mat, RHSEntryVec<double> &rhs, permvec_t &permvec, Device &dev, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   PermutationMap         p;
 
@@ -124,13 +124,13 @@ void Newton::AssembleContactsAndInterfaces(RealRowColValueVec &mat, RHSEntryVec 
   }
 }
 
-void Newton::AssembleBulk(RealRowColValueVec &mat, RHSEntryVec &rhs, Device &dev, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Newton::AssembleBulk(RealRowColValueVec<double> &mat, RHSEntryVec<double> &rhs, Device &dev, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   dev.RegionAssemble(mat, rhs, dsMathEnum::MATRIXANDRHS, t);
 }
 
 
-void Newton::LoadMatrixAndRHSOnCircuit(RealRowColValueVec &mat, RHSEntryVec &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Newton::LoadMatrixAndRHSOnCircuit(RealRowColValueVec<double> &mat, RHSEntryVec<double> &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   InstanceKeeper &ik = InstanceKeeper::instance();
   NodeKeeper     &nk = NodeKeeper::instance();
@@ -155,13 +155,13 @@ void Newton::LoadMatrixAndRHSOnCircuit(RealRowColValueVec &mat, RHSEntryVec &rhs
     }
     else if (w == dsMathEnum::MATRIXONLY)
     {
-      RHSEntryVec r;
+      RHSEntryVec<double> r;
       ik.AssembleDCMatrix(mat, *sol, r);
     }
     else if (w == dsMathEnum::RHS)
     {
       //// Make more efficient later
-      RealRowColValueVec m;
+      RealRowColValueVec<double> m;
       ik.AssembleDCMatrix(m, *sol, rhs);
     }
     else
@@ -179,12 +179,12 @@ void Newton::LoadMatrixAndRHSOnCircuit(RealRowColValueVec &mat, RHSEntryVec &rhs
     }
     else if (w == dsMathEnum::MATRIXONLY)
     {
-      RHSEntryVec r;
+      RHSEntryVec<double> r;
       ik.AssembleTRMatrix(&mat, *sol, r, 1.0);
     }
     else if (w == dsMathEnum::RHS)
     {
-      RealRowColValueVec *m = NULL;
+      RealRowColValueVec<double> *m = NULL;
       ik.AssembleTRMatrix(m, *sol, rhs, 1.0);
     }
     else
@@ -201,9 +201,9 @@ void Newton::LoadMatrixAndRHSOnCircuit(RealRowColValueVec &mat, RHSEntryVec &rhs
 //#include <iostream>
 
 template <typename T>
-void Newton::LoadIntoMatrix(const RealRowColValueVec &rcv, Matrix &mat, T scl, size_t offset)
+void Newton::LoadIntoMatrix(const RealRowColValueVec<double> &rcv, Matrix &mat, T scl, size_t offset)
 {
-  for (RealRowColValueVec::const_iterator it = rcv.begin(); it != rcv.end(); ++it)
+  for (RealRowColValueVec<double>::const_iterator it = rcv.begin(); it != rcv.end(); ++it)
   {
     const size_t row = it->row + offset;
     const size_t col = it->col + offset;
@@ -214,9 +214,9 @@ void Newton::LoadIntoMatrix(const RealRowColValueVec &rcv, Matrix &mat, T scl, s
 }
 
 template <typename T>
-void Newton::LoadIntoMatrixPermutated(const RealRowColValueVec &rcv, Matrix &mat, const permvec_t &permvec, T scl, size_t offset)
+void Newton::LoadIntoMatrixPermutated(const RealRowColValueVec<double> &rcv, Matrix &mat, const permvec_t &permvec, T scl, size_t offset)
 {
-  for (RealRowColValueVec::const_iterator it = rcv.begin(); it != rcv.end(); ++it)
+  for (RealRowColValueVec<double>::const_iterator it = rcv.begin(); it != rcv.end(); ++it)
   {
     size_t row = permvec[it->row];
     const size_t col = it->col + offset;
@@ -230,9 +230,9 @@ void Newton::LoadIntoMatrixPermutated(const RealRowColValueVec &rcv, Matrix &mat
 }
 
 template <typename T>
-void Newton::LoadIntoRHS(const RHSEntryVec &r, std::vector<T> &rhs, T scl, size_t offset)
+void Newton::LoadIntoRHS(const RHSEntryVec<double> &r, std::vector<T> &rhs, T scl, size_t offset)
 {
-  for (RHSEntryVec::const_iterator it = r.begin(); it != r.end(); ++it)
+  for (RHSEntryVec<double>::const_iterator it = r.begin(); it != r.end(); ++it)
   {
     const size_t row = it->first + offset;
     const T val = scl * rhssign * it->second;
@@ -242,9 +242,9 @@ void Newton::LoadIntoRHS(const RHSEntryVec &r, std::vector<T> &rhs, T scl, size_
 }
 
 template <typename T>
-void Newton::LoadIntoRHSPermutated(const RHSEntryVec &r, std::vector<T> &rhs, const permvec_t &permvec, T scl, size_t offset)
+void Newton::LoadIntoRHSPermutated(const RHSEntryVec<double> &r, std::vector<T> &rhs, const permvec_t &permvec, T scl, size_t offset)
 {
-  for (RHSEntryVec::const_iterator it = r.begin(); it != r.end(); ++it)
+  for (RHSEntryVec<double>::const_iterator it = r.begin(); it != r.end(); ++it)
   {
     size_t row = permvec[it->first];
     if (row != size_t(-1))
@@ -261,8 +261,8 @@ void Newton::LoadMatrixAndRHS(Matrix &matrix, std::vector<T> &rhs, permvec_t &pe
 {
   dsTimer timer("LoadMatrixAndRHS");
 
-  RHSEntryVec    v;
-  RealRowColValueVec m;
+  RHSEntryVec<double>    v;
+  RealRowColValueVec<double> m;
 
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t dlist = gdata.GetDeviceList();
@@ -722,7 +722,7 @@ void Newton::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
     const EquationPtrMap_t &equations = region.GetEquationPtrList();
     for (EquationPtrMap_t::const_iterator eit = equations.begin(); eit != equations.end(); ++eit)
     {
-      const Equation &equation = *(eit->second);
+      const EquationHolder &equation = (eit->second);
       os << "      Equation: \"" << equation.GetName() << "\""
           << std::scientific << std::setprecision(5) <<
                    "\tRelError: " << equation.GetRelError() <<
@@ -752,7 +752,7 @@ void Newton::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
       const EquationPtrMap_t &equations = region.GetEquationPtrList();
       for (EquationPtrMap_t::const_iterator eit = equations.begin(); eit != equations.end(); ++eit)
       {
-        const Equation &equation = *(eit->second);
+        const EquationHolder &equation = (eit->second);
         ObjectHolderMap_t emap;
         emap["name"] = ObjectHolder(equation.GetName());
         emap["relative_error"] = ObjectHolder(equation.GetRelError());
@@ -1119,7 +1119,7 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
 }
 
 //#include <iostream>
-void Newton::AssembleTclEquations(RealRowColValueVec &mat, RHSEntryVec &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<double> &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   GlobalData &gdata = GlobalData::GetInstance();
 
@@ -1220,7 +1220,7 @@ void Newton::AssembleTclEquations(RealRowColValueVec &mat, RHSEntryVec &rhs, dsM
 
             if (row.first && col.first && val.first)
             {
-              mat.push_back(RealRowColVal(row.second, col.second, val.second));
+              mat.push_back(RealRowColVal<double>(row.second, col.second, val.second));
             }
             else
             {

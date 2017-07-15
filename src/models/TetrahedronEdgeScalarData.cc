@@ -20,17 +20,13 @@ limitations under the License.
 #include "ScalarData.cc"
 
 //// Manual Template Instantiation
-template class ScalarData<TetrahedronEdgeModel>;
+template class ScalarData<TetrahedronEdgeModel, double>;
 
-template class
-ScalarData<TetrahedronEdgeModel>& ScalarData<TetrahedronEdgeModel>::op_equal<ScalarDataHelper::times_equal>(const double &, const ScalarDataHelper::times_equal &);
+template class ScalarData<TetrahedronEdgeModel, double>& TetrahedronEdgeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const double &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<TetrahedronEdgeModel>& ScalarData<TetrahedronEdgeModel>::op_equal<ScalarDataHelper::times_equal>(const ScalarData<TetrahedronEdgeModel> &, const ScalarDataHelper::times_equal &);
+template class ScalarData<TetrahedronEdgeModel, double>& TetrahedronEdgeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const TetrahedronEdgeScalarData<double> &, const ScalarDataHelper::times_equal<double> &);
 
-template class
-ScalarData<TetrahedronEdgeModel>& ScalarData<TetrahedronEdgeModel>::op_equal<ScalarDataHelper::plus_equal>(const double &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<TetrahedronEdgeModel, double>& TetrahedronEdgeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const double &, const ScalarDataHelper::plus_equal<double> &);
 
-template class
-ScalarData<TetrahedronEdgeModel>& ScalarData<TetrahedronEdgeModel>::op_equal<ScalarDataHelper::plus_equal>(const ScalarData<TetrahedronEdgeModel> &, const ScalarDataHelper::plus_equal &);
+template class ScalarData<TetrahedronEdgeModel, double>& TetrahedronEdgeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const TetrahedronEdgeScalarData<double> &, const ScalarDataHelper::plus_equal<double> &);
 

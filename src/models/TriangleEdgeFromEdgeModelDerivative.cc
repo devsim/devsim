@@ -24,9 +24,8 @@ limitations under the License.
 
 
 
-// TODO:"TEST THIS"
-
-TriangleEdgeFromEdgeModelDerivative::TriangleEdgeFromEdgeModelDerivative(
+template <typename DoubleType>
+TriangleEdgeFromEdgeModelDerivative<DoubleType>::TriangleEdgeFromEdgeModelDerivative(
         const std::string &edgemodel,
         const std::string &derivative,
         RegionPtr rp
@@ -50,17 +49,18 @@ TriangleEdgeFromEdgeModelDerivative::TriangleEdgeFromEdgeModelDerivative(
 
   RegisterCallback(edgeModelName0);
   RegisterCallback(edgeModelName1);
-  new TriangleEdgeSubModel(x_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
-  new TriangleEdgeSubModel(x_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
-  new TriangleEdgeSubModel(y_ModelName0, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
-  new TriangleEdgeSubModel(y_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
-  new TriangleEdgeSubModel(y_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(x_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(x_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName0, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
 }
 
 //// Need to figure out the deleter situation from sub models
 //// Perhaps a Delete SubModels method??????
 
-void TriangleEdgeFromEdgeModelDerivative::calcTriangleEdgeScalarValues() const
+template <typename DoubleType>
+void TriangleEdgeFromEdgeModelDerivative<DoubleType>::calcTriangleEdgeScalarValues() const
 {
   const Region &reg = GetRegion();
 
@@ -92,8 +92,8 @@ void TriangleEdgeFromEdgeModelDerivative::calcTriangleEdgeScalarValues() const
 
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
 
-  std::vector<std::vector<double> > evx(3);
-  std::vector<std::vector<double> > evy(3);
+  std::vector<std::vector<DoubleType> > evx(3);
+  std::vector<std::vector<DoubleType> > evy(3);
   for (size_t i = 0; i < 3; ++i)
   {
     evx[i].resize(3*tl.size());
@@ -106,13 +106,13 @@ void TriangleEdgeFromEdgeModelDerivative::calcTriangleEdgeScalarValues() const
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Triangle &triangle = *tl[i];
-    const std::vector<std::vector<Vector> > &v = efield.GetTriangleElementField(triangle, *emp[0], *emp[1]);
+    const std::vector<std::vector<Vector<DoubleType> > > &v = efield.GetTriangleElementField(triangle, *emp[0], *emp[1]);
     for (size_t nindex = 0; nindex < 3; ++nindex)
     {
       for (size_t eindex = 0; eindex < 3; ++eindex)
       {
         const size_t oindex = 3*i + eindex;
-        const Vector &vec = v[nindex][eindex];
+        const Vector<DoubleType> &vec = v[nindex][eindex];
         evx[nindex][oindex] = vec.Getx();
         evy[nindex][oindex] = vec.Gety();
       }
@@ -125,8 +125,12 @@ void TriangleEdgeFromEdgeModelDerivative::calcTriangleEdgeScalarValues() const
   }
 }
 
-void TriangleEdgeFromEdgeModelDerivative::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TriangleEdgeFromEdgeModelDerivative<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND element_from_edge_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -edge_model \"" << edgeModelName << "\" -derivative \"" << nodeModelName << "\"";
 }
+
+template class TriangleEdgeFromEdgeModelDerivative<double>;
+
 

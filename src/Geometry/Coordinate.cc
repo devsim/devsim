@@ -26,7 +26,7 @@ Coordinate::Coordinate(double x, double y, double z) : position(x, y, z), index(
 {
 }
 
-const Vector &Coordinate::Position() const
+const Vector<double> &Coordinate::Position() const
 {
    return position;
 }

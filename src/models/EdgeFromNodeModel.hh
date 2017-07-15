@@ -21,14 +21,10 @@ limitations under the License.
 
 #include <memory>
 
-class NodeModel;
-typedef std::weak_ptr<NodeModel>         WeakNodeModelPtr;
-typedef std::shared_ptr<NodeModel>       NodeModelPtr;
-typedef std::shared_ptr<const NodeModel> ConstNodeModelPtr;
-
 #include <string>
 // This class relies on a parent Node Model for it's data.  It provides conversion so that a node model may be projected onto both sides of an edge.
 // An edge sub model is used for node_1, if it is necessary
+template <typename DoubleType>
 class EdgeFromNodeModel : public EdgeModel
 {
     public:
@@ -39,7 +35,6 @@ class EdgeFromNodeModel : public EdgeModel
         void Serialize(std::ostream &) const;
 
     private:
-        double calcSolution(ConstEdgePtr) const;
         void calcEdgeScalarValues() const;
         void setInitialValues();
         // If we are an auxilary model, create our values from the parent

@@ -20,9 +20,8 @@ limitations under the License.
 
 #include "TetrahedronEdgeModel.hh"
 
-class Vector;
-
 // Coupling length
+template <typename DoubleType>
 class TetrahedronEdgeCouple : public TetrahedronEdgeModel {
     public:
         TetrahedronEdgeCouple(RegionPtr);

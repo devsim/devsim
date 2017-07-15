@@ -1,11 +1,11 @@
 SET (CXX_SRCS
+    ModelCreate.cc
     NodePosition.cc
     NodeVolume.cc
     EdgeCouple.cc
     EdgeLength.cc
     EdgeIndex.cc
     EdgeInverseLength.cc
-    ModelCreate.cc
     AtContactNode.cc
     SurfaceArea.cc
     UnitVec.cc

@@ -20,7 +20,8 @@ limitations under the License.
 #include "ContactEquation.hh"
 #include "Permutation.hh"
 // Default ideal equation
-class ExprContactEquation : public ContactEquation
+template <typename DoubleType>
+class ExprContactEquation : public ContactEquation<DoubleType>
 {
     public:
         /// eventually, we will need to handle time dependent case
@@ -48,7 +49,7 @@ class ExprContactEquation : public ContactEquation
         void calcCurrent();
         void calcCharge();
 
-        void DerivedAssemble(dsMath::RealRowColValueVec &, RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
 
         ExprContactEquation();

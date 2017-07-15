@@ -28,40 +28,44 @@ limitations under the License.
 
 
 
-TetrahedronEdgeSubModel::TetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
+template <typename DoubleType>
+TetrahedronEdgeSubModel<DoubleType>::TetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
     :
         TetrahedronEdgeModel(nm, rp, dt)
 {
 }
 
-TetrahedronEdgeSubModel::TetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, ConstTetrahedronEdgeModelPtr nmp, TetrahedronEdgeModel::DisplayType dt)
+template <typename DoubleType>
+TetrahedronEdgeSubModel<DoubleType>::TetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, ConstTetrahedronEdgeModelPtr nmp, TetrahedronEdgeModel::DisplayType dt)
     :
         TetrahedronEdgeModel(nm, rp, dt),
         parentModel(nmp)
 {
     parentModelName = parentModel.lock()->GetName();
 
-    //// TODO: consider making it so that we have different kinds of callbacks
     RegisterCallback(parentModelName);
 #if 0
     os << "creating TetrahedronEdgeSubModel " << nm << " with parent " << parentModel->GetName() << "\n";
 #endif
 }
 
-TetrahedronEdgeModelPtr TetrahedronEdgeSubModel::CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
+template <typename DoubleType>
+TetrahedronEdgeModelPtr TetrahedronEdgeSubModel<DoubleType>::CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
 {
   TetrahedronEdgeModel *p = new TetrahedronEdgeSubModel(nm, rp, dt);
   return p->GetSelfPtr();
 }
 
-TetrahedronEdgeModelPtr TetrahedronEdgeSubModel::CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr nmp)
+template <typename DoubleType>
+TetrahedronEdgeModelPtr TetrahedronEdgeSubModel<DoubleType>::CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr nmp)
 {
   TetrahedronEdgeModel *p = new TetrahedronEdgeSubModel(nm, rp, nmp, dt);
   return p->GetSelfPtr();
 }
 
 
-void TetrahedronEdgeSubModel::calcTetrahedronEdgeScalarValues() const
+template <typename DoubleType>
+void TetrahedronEdgeSubModel<DoubleType>::calcTetrahedronEdgeScalarValues() const
 {
     if (!parentModelName.empty())
     {
@@ -71,7 +75,7 @@ void TetrahedronEdgeSubModel::calcTetrahedronEdgeScalarValues() const
       ConstTetrahedronEdgeModelPtr emp = GetRegion().GetTetrahedronEdgeModel(parentModelName);
       if (!parentModel.expired())
       {
-        parentModel.lock()->GetScalarValues();
+        parentModel.lock()->template GetScalarValues<DoubleType>();
       }
       else if (emp != parentModel.lock())
       {
@@ -86,7 +90,8 @@ void TetrahedronEdgeSubModel::calcTetrahedronEdgeScalarValues() const
     }
 }
 
-void TetrahedronEdgeSubModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TetrahedronEdgeSubModel<DoubleType>::Serialize(std::ostream &of) const
 {
   if (!parentModelName.empty())
   {
@@ -94,16 +99,18 @@ void TetrahedronEdgeSubModel::Serialize(std::ostream &of) const
   }
   else if (this->IsUniform())
   {
-    of << "UNIFORM " << GetUniformValue();
+    of << "UNIFORM " << GetUniformValue<DoubleType>();
   }
   else
   {
     of << "DATA";
-    const TetrahedronEdgeScalarList &vals = this->GetScalarValues();
+    const TetrahedronEdgeScalarList<DoubleType> &vals = this->GetScalarValues<DoubleType>();
     for (size_t i = 0; i < vals.size(); ++i)
     {
       of << "\n" << vals[i];
     }
   }
 }
+
+template class TetrahedronEdgeSubModel<double>;
 

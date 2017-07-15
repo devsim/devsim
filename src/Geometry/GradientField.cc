@@ -48,8 +48,8 @@ void GradientField::CalcMatrices2d() const
   dsAssert(ux.get(), "UNEXPECTED");
   dsAssert(uy.get(), "UNEXPECTED");
 
-  const NodeScalarList &xvec = ux->GetScalarValues();
-  const NodeScalarList &yvec = uy->GetScalarValues();
+  const NodeScalarList<double> &xvec = ux->GetScalarValues<double>();
+  const NodeScalarList<double> &yvec = uy->GetScalarValues<double>();
 
 
   const ConstTriangleList &tlist = myregion_->GetTriangleList();
@@ -101,9 +101,9 @@ void GradientField::CalcMatrices3d() const
   dsAssert(uy.get(), "UNEXPECTED");
   dsAssert(uz.get(), "UNEXPECTED");
 
-  const NodeScalarList &xvec = ux->GetScalarValues();
-  const NodeScalarList &yvec = uy->GetScalarValues();
-  const NodeScalarList &zvec = uz->GetScalarValues();
+  const NodeScalarList<double> &xvec = ux->GetScalarValues<double>();
+  const NodeScalarList<double> &yvec = uy->GetScalarValues<double>();
+  const NodeScalarList<double> &zvec = uz->GetScalarValues<double>();
 
 
   const ConstTetrahedronList &tlist = myregion_->GetTetrahedronList();
@@ -142,14 +142,14 @@ void GradientField::CalcMatrices3d() const
   }
 }
 
-Vector GradientField::GetGradient(const Triangle &triangle, const NodeModel &nm) const
+Vector<double> GradientField::GetGradient(const Triangle &triangle, const NodeModel &nm) const
 {
   if (dense_mats_.empty())
   {
     CalcMatrices2d();
   }
 
-  const NodeScalarList &nvals = nm.GetScalarValues();
+  const NodeScalarList<double> &nvals = nm.GetScalarValues<double>();
 
   const size_t triangleIndex = triangle.GetIndex();
   dsMath::RealDenseMatrix &M = *dense_mats_[triangleIndex];
@@ -165,24 +165,23 @@ Vector GradientField::GetGradient(const Triangle &triangle, const NodeModel &nm)
 
   if (info)
   {
-    return Vector(B[0], B[1], B[2]);
+    return Vector<double>(B[0], B[1], B[2]);
   }
   else
   {
-    return Vector(0,0,0);
+    return Vector<double>(0,0,0);
     //// This is due to the inf result from a bad factorization
   }
 }
 
-// TODO:"REVIEW, TEST 3D CODE"
-Vector GradientField::GetGradient(const Tetrahedron &tetrahedron, const NodeModel &nm) const
+Vector<double> GradientField::GetGradient(const Tetrahedron &tetrahedron, const NodeModel &nm) const
 {
   if (dense_mats_.empty())
   {
     CalcMatrices3d();
   }
 
-  const NodeScalarList &nvals = nm.GetScalarValues();
+  const NodeScalarList<double> &nvals = nm.GetScalarValues<double>();
 
   const size_t tetrahedronIndex = tetrahedron.GetIndex();
   dsMath::RealDenseMatrix &M = *dense_mats_[tetrahedronIndex];
@@ -201,11 +200,11 @@ Vector GradientField::GetGradient(const Tetrahedron &tetrahedron, const NodeMode
 
   if (info)
   {
-    return Vector(B[0], B[1], B[2]);
+    return Vector<double>(B[0], B[1], B[2]);
   }
   else
   {
-    return Vector(0,0,0);
+    return Vector<double>(0,0,0);
     //// This is due to the inf result from a bad factorization
   }
 }

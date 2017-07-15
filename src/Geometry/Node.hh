@@ -50,7 +50,7 @@ class Node {
          index = i;
       }
 
-      const Vector &Position() const
+      const Vector<double> &Position() const
       {
          return coord->Position();
       }

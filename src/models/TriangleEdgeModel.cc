@@ -27,7 +27,6 @@ limitations under the License.
 #include "Triangle.hh"
 
 
-
 const char *TriangleEdgeModel::DisplayTypeString[] = {
   "nodisplay",
   "scalar",
@@ -41,18 +40,27 @@ TriangleEdgeModel::~TriangleEdgeModel()
 #endif
 }
 
-// TODO:"Make display type configurable"
+bool TriangleEdgeModel::IsZero() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsZero();
+}
+
+bool TriangleEdgeModel::IsOne() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsOne();
+}
+
 TriangleEdgeModel::TriangleEdgeModel(const std::string &nm, const RegionPtr rp, TriangleEdgeModel::DisplayType dt)
     : name(nm),
       myregion(rp),
       uptodate(false),
       inprocess(false),
-      isuniform(true),
-      uniform_value(0.0),
-      displayType(dt)
+      displayType(dt),
+      model_data(rp->GetNumberTriangles() * 3)
 { 
   myself = rp->AddTriangleEdgeModel(this);
-  length = GetRegion().GetNumberTriangles() * 3;
 }
 
 void TriangleEdgeModel::CalculateValues() const
@@ -76,45 +84,41 @@ void TriangleEdgeModel::CalculateValues() const
   }
 }
 
-const TriangleEdgeScalarList & TriangleEdgeModel::GetScalarValues() const
+template <typename DoubleType>
+const TriangleEdgeScalarList<DoubleType> & TriangleEdgeModel::GetScalarValues() const
 {
   CalculateValues();
 
-  if (isuniform)
-  {
-    values.clear();
-    values.resize(length, uniform_value);
-  }
+  model_data.expand_uniform();
 
-  return values;
+  return model_data.GetValues<DoubleType>();
 }
 
-void TriangleEdgeModel::SetValues(const TriangleEdgeScalarList &nv)
+template <typename DoubleType>
+void TriangleEdgeModel::SetValues(const TriangleEdgeScalarList<DoubleType> &nv)
 {
-  values = nv;
-
-  isuniform = false;
-  uniform_value = 0.0;
+  model_data.set_values(nv);
 
   MarkOld();
   uptodate = true;
 }
 
-void TriangleEdgeModel::SetValues(const TriangleEdgeScalarList &nv) const
+template <typename DoubleType>
+void TriangleEdgeModel::SetValues(const TriangleEdgeScalarList<DoubleType> &nv) const
 {
   const_cast<TriangleEdgeModel *>(this)->SetValues(nv);
 }
 
-void TriangleEdgeModel::SetValues(const double &v) const
+template <typename DoubleType>
+void TriangleEdgeModel::SetValues(const DoubleType &v) const
 {
   const_cast<TriangleEdgeModel *>(this)->SetValues(v);
 }
 
-void TriangleEdgeModel::SetValues(const double &v)
+template <typename DoubleType>
+void TriangleEdgeModel::SetValues(const DoubleType &v)
 {
-  values.clear();
-  isuniform = true;
-  uniform_value = v;
+  model_data.SetUniformValue(v);
 
   MarkOld();
   uptodate = true;
@@ -136,17 +140,16 @@ void TriangleEdgeModel::RegisterCallback(const std::string &nm)
   myregion->RegisterCallback(name, nm);
 }
 
-void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType interpolation_type, std::vector<double> &values) const
+template <typename DoubleType>
+void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType interpolation_type, std::vector<DoubleType> &values) const
 {
   //// TODO: optimize for uniform and zero
 
   const Region &region = this->GetRegion();
-  const TriangleEdgeScalarList &esl = this->GetScalarValues();
+  const TriangleEdgeScalarList<DoubleType> &esl = this->GetScalarValues<double>();
 
 
   const size_t number_nodes = region.GetNumberNodes();
-
-  dsAssert(esl.size() == length, "UNEXPECTED");
 
   values.clear();
   values.resize(number_nodes);
@@ -190,9 +193,9 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
   {
     ConstTriangleEdgeModelPtr couple_ptr = region.GetTriangleEdgeModel("ElementEdgeCouple");
     dsAssert(couple_ptr.get(), "UNEXPECTED");
-    const TriangleEdgeScalarList &element_edge_couples = couple_ptr->GetScalarValues();
+    const TriangleEdgeScalarList<DoubleType> &element_edge_couples = couple_ptr->GetScalarValues<double>();
 
-    std::vector<double> scales(number_nodes);
+    std::vector<DoubleType> scales(number_nodes);
 
     for (size_t i = 0; i < number_triangle; ++i)
     {
@@ -231,13 +234,12 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
   }
 }
 
-void TriangleEdgeModel::GetScalarValuesOnElements(std::vector<double> &ret) const
+template <typename DoubleType>
+void TriangleEdgeModel::GetScalarValuesOnElements(std::vector<DoubleType> &ret) const
 {
   const Region &region = this->GetRegion();
-  const TriangleEdgeScalarList &esl = this->GetScalarValues();
+  const TriangleEdgeScalarList<DoubleType> &esl = this->GetScalarValues<double>();
 
-
-  dsAssert(esl.size() == length, "UNEXPECTED");
 
   const size_t number_triangles = region.GetNumberTriangles();
 
@@ -264,13 +266,13 @@ bool TriangleEdgeModel::IsUniform() const
     CalculateValues();
   }
 
-  return isuniform;
+  return model_data.IsUniform();
 }
 
-double TriangleEdgeModel::GetUniformValue() const
+template <typename DoubleType>
+const DoubleType &TriangleEdgeModel::GetUniformValue() const
 {
-  dsAssert(isuniform, "UNEXPECTED");
-  return uniform_value;
+  return model_data.GetUniformValue<DoubleType>();
 }
 
 void TriangleEdgeModel::SerializeBuiltIn(std::ostream &of) const
@@ -295,14 +297,13 @@ const std::string &TriangleEdgeModel::GetRegionName() const
   return GetRegion().GetName();
 }
 
-EdgeScalarList TriangleEdgeModel::GetValuesOnEdges() const
+template <typename DoubleType>
+EdgeScalarList<DoubleType> TriangleEdgeModel::GetValuesOnEdges() const
 {
-  //// TODO: optimize for uniform and zero
-
-  const TriangleEdgeScalarData &tec = TriangleEdgeScalarData(*this);
+  const TriangleEdgeScalarData<DoubleType> &tec = TriangleEdgeScalarData<DoubleType>(*this);
   const ConstEdgeList &edge_list = GetRegion().GetEdgeList();
 
-  NodeScalarList ev(edge_list.size());
+  NodeScalarList<DoubleType> ev(edge_list.size());
 
   for (size_t i = 0; i < edge_list.size(); ++i)
   {
@@ -322,7 +323,15 @@ EdgeScalarList TriangleEdgeModel::GetValuesOnEdges() const
   }
   return ev;
 }
+ 
+template void TriangleEdgeModel::SetValues<double>(std::vector<double> const&);
+template void TriangleEdgeModel::SetValues<double>(double const&);
+template std::vector<double> const& TriangleEdgeModel::GetScalarValues<double>() const;
+template const double &TriangleEdgeModel::GetUniformValue<double>() const;
+template std::vector<double> TriangleEdgeModel::GetValuesOnEdges<double>() const;
+template void TriangleEdgeModel::GetScalarValuesOnNodes<double>(TriangleEdgeModel::InterpolationType, std::vector<double>&) const;
+template void TriangleEdgeModel::GetScalarValuesOnElements<double>(std::vector<double>&) const;
+template void TriangleEdgeModel::SetValues<double>(std::vector<double> const&) const;
+template void TriangleEdgeModel::SetValues<double>(double const&) const;
 
-
-
-
+ 

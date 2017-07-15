@@ -32,7 +32,6 @@ limitations under the License.
 #include "MeshUtil.hh"
 #include "dsAssert.hh"
 #include "base64.hh"
-//// TODO: consider data on interfaces and contacts later
 #include <sstream>
 #include <fstream>
 #include <iomanip>
@@ -86,7 +85,7 @@ void WritePoints(const Region &reg, std::ostream &myfile)
   points.reserve(3*cnl.size());
   for (ConstNodeList::const_iterator it = cnl.begin(); it != cnl.end(); ++it)
   {
-    const Vector &pos = (*it)->Position(); 
+    const Vector<double> &pos = (*it)->Position(); 
     points.push_back(pos.Getx());
     points.push_back(pos.Gety());
     points.push_back(pos.Getz());
@@ -97,7 +96,7 @@ void WritePoints(const Region &reg, std::ostream &myfile)
 #if 0
   for (ConstNodeList::const_iterator it = cnl.begin(); it != cnl.end(); ++it)
   {
-    const Vector &pos = (*it)->Position(); 
+    const Vector<double> &pos = (*it)->Position(); 
     myfile
       << " " << pos.Getx()
       << " " << pos.Gety()
@@ -136,7 +135,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
 
       if (em.GetDisplayType() == NodeModel::SCALAR)
       {
-        const NodeScalarList &nsl = em.GetScalarValues();
+        const NodeScalarList<double> &nsl = em.GetScalarValues<double>();
         WriteDataArray(nsl, nm, 1, myfile);
       }
       else if (em.GetDisplayType() == NodeModel::NODISPLAY)
@@ -160,7 +159,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
 
       if (em.GetDisplayType() == EdgeModel::SCALAR)
       {
-        const NodeScalarList &nsl = em.GetScalarValuesOnNodes();
+        const NodeScalarList<double> &nsl = em.GetScalarValuesOnNodes<double>();
         WriteDataArray(nsl, nm, 1, myfile);
       }
     }
@@ -180,7 +179,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
 
       if (em.GetDisplayType() == TriangleEdgeModel::SCALAR)
       {
-        em.GetScalarValuesOnNodes(TriangleEdgeModel::COUPLE, nsl);
+        em.GetScalarValuesOnNodes<double>(TriangleEdgeModel::COUPLE, nsl);
         WriteDataArray(nsl, nm, 1, myfile);
       }
       else if (em.GetDisplayType() == TriangleEdgeModel::NODISPLAY)
@@ -204,7 +203,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
       std::vector<double> nsl;
       if (em.GetDisplayType() == TetrahedronEdgeModel::SCALAR)
       {
-        em.GetScalarValuesOnNodes(TetrahedronEdgeModel::COUPLE, nsl);
+        em.GetScalarValuesOnNodes<double>(TetrahedronEdgeModel::COUPLE, nsl);
         WriteDataArray(nsl, nm, 1, myfile);
       }
       else if (em.GetDisplayType() == TetrahedronEdgeModel::NODISPLAY)
@@ -218,7 +217,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
   }
 #endif
 
-  //// Vector Edge Scalar Data
+  //// Vector<double> Edge Scalar Data
   if (!edge_models.empty())
   {
     // Strange paraview bug requires scalar before vector data
@@ -229,7 +228,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
 
       if (em.GetDisplayType() == EdgeModel::VECTOR)
       {
-        const NodeVectorList &nvl = em.GetVectorValuesOnNodes();
+        const NodeVectorList<double> &nvl = em.GetVectorValuesOnNodes<double>();
 
 
         std::vector<double> points;
@@ -238,7 +237,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
         const size_t len = nvl.size();
         for (size_t i = 0; i < len; ++i)
         {
-          const Vector &val = nvl[i];
+          const Vector<double> &val = nvl[i];
           points.push_back(val.Getx());
           points.push_back(val.Gety());
           points.push_back(val.Getz());
@@ -267,7 +266,7 @@ void WriteLineData(const Region &reg, std::ostream &myfile)
 {
   const Region::EdgeModelList_t &nml = reg.GetEdgeModelList();
 
-  const std::vector<Vector> unit = MeshUtil::GetUnitVector(reg);
+  const std::vector<Vector<double>> unit = MeshUtil::GetUnitVector(reg);
 
   if (!nml.empty())
   {
@@ -281,7 +280,7 @@ void WriteLineData(const Region &reg, std::ostream &myfile)
 
       if (em.GetDisplayType() == EdgeModel::SCALAR)
       {
-        const EdgeScalarList &nsl = em.GetScalarValues();
+        const EdgeScalarList<double> &nsl = em.GetScalarValues<double>();
 
         myfile << "<DataArray Name=\"" << nm << "\" type=\"Float64\" format=\"binary\">\n";
 
@@ -306,7 +305,7 @@ void WriteLineData(const Region &reg, std::ostream &myfile)
 
       if (em.GetDisplayType() == EdgeModel::VECTOR)
       {
-        const EdgeScalarList &nsl = em.GetScalarValues();
+        const EdgeScalarList<double> &nsl = em.GetScalarValues<double>();
 
         myfile << "<DataArray Name=\"" << nm << "\" type=\"Float64\" NumberOfComponents=\"3\" format=\"binary\">\n";
 
@@ -317,7 +316,7 @@ void WriteLineData(const Region &reg, std::ostream &myfile)
         const size_t len = unit.size();
         for (size_t i = 0; i < len; ++i)
         {
-          Vector val = unit[i];
+          Vector<double> val = unit[i];
           val *= nsl[i];
           points.push_back(val.Getx());
           points.push_back(val.Gety());
@@ -329,7 +328,7 @@ void WriteLineData(const Region &reg, std::ostream &myfile)
         const size_t len = unit.size();
         for (size_t i = 0; i < len; ++i)
         {
-          Vector val = unit[i];
+          Vector<double> val = unit[i];
           val *= nsl[i];
           myfile << " " << val.Getx()
                  << " " << val.Gety()
@@ -365,7 +364,7 @@ void WriteElementData(const Region &reg, std::ostream &myfile)
 
       if (em.GetDisplayType() == TriangleEdgeModel::SCALAR)
       {
-        em.GetScalarValuesOnElements(nsl);
+        em.GetScalarValuesOnElements<double>(nsl);
         WriteDataArray(nsl, nm, 1, myfile);
       }
       else if (em.GetDisplayType() == TriangleEdgeModel::NODISPLAY)
@@ -388,7 +387,7 @@ void WriteElementData(const Region &reg, std::ostream &myfile)
       std::vector<double> nsl;
       if (em.GetDisplayType() == TetrahedronEdgeModel::SCALAR)
       {
-        em.GetScalarValuesOnElements(nsl);
+        em.GetScalarValuesOnElements<double>(nsl);
         WriteDataArray(nsl, nm, 1, myfile);
       }
       else if (em.GetDisplayType() == TetrahedronEdgeModel::NODISPLAY)

@@ -19,23 +19,24 @@ limitations under the License.
 #include <iomanip>
 #include <vector>
 #include <cmath>
+template <typename DoubleType>
 class kahan {
     public:
-        explicit kahan(double v) : value_(v), correction_(0.0) {}
+        explicit kahan(DoubleType v) : value_(v), correction_(0.0) {}
         kahan(const kahan & v) : value_(v.value_), correction_(v.correction_) {}
 
 
-        kahan &operator+=(double v)
+        kahan &operator+=(DoubleType v)
         {
             if (fabs(value_) < fabs(correction_))
             {
-              const double t = value_;
+              const DoubleType t = value_;
               value_ = correction_;
               correction_ = t;
             }
 
-            const double x = value_ + v;
-            double c = x;
+            const DoubleType x = value_ + v;
+            DoubleType c = x;
             if (fabs(value_) < fabs(v))
             {
               c -= v;
@@ -50,7 +51,7 @@ class kahan {
             correction_ -= c;
             return *this;
         }
-        kahan &operator-=(double v)
+        kahan &operator-=(DoubleType v)
         {
             (*this) += (-v);
             return *this;
@@ -58,40 +59,43 @@ class kahan {
 
         ~kahan() {};
 
-        operator double()
+        operator DoubleType()
         {
             return value_ + correction_;
         }
 
-        double value_;
-        double correction_;
+        DoubleType value_;
+        DoubleType correction_;
 
     private:
         kahan();
         kahan &operator=(const kahan &);
 };
 
-std::ostream &operator<<(std::ostream &obj, const kahan &k)
+template <typename DoubleType>
+std::ostream &operator<<(std::ostream &obj, const kahan<DoubleType> &k)
 {
     obj <<  "(" << k.value_ << ", " << k.correction_ << ")";
     return obj;
 }
 
-double kahan3(double a, double b, double c)
+template <typename DoubleType>
+DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c)
 {
-  kahan k(a);
+  kahan<DoubleType> k(a);
   k += b;
   k += c;
-  return static_cast<double>(k);
+  return static_cast<DoubleType>(k);
 }
 
-double kahan4(double a, double b, double c, double d)
+template <typename DoubleType>
+DoubleType kahan4(DoubleType a, DoubleType b, DoubleType c, DoubleType d)
 {
-  kahan k(a);
+  kahan<DoubleType> k(a);
   k += b;
   k += c;
   k += d;
-  return static_cast<double>(k);
+  return static_cast<DoubleType>(k);
 }
 
 #if 0
@@ -112,7 +116,7 @@ int main()
         double v = x[i];
         a += v;
         b += v;
-        std::cout << v << " " << a << " " << static_cast<double>(a) << " " << b << std::endl;
+        std::cout << v << " " << a << " " << static_cast<DoubleType>(a) << " " << b << std::endl;
     }
 
 

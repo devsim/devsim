@@ -24,9 +24,18 @@ limitations under the License.
 
 namespace dsMath {
 template <typename T> class RowColVal;
-typedef std::vector<RowColVal<double> > RealRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 }
 
 class InstanceModel
@@ -35,14 +44,14 @@ class InstanceModel
         virtual ~InstanceModel() = 0;
         const std::string &getName() {return name_;}
 
-        virtual void assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec &mat, dsMath::RHSEntryVec &rhs)=0;
+        virtual void assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, dsMath::RHSEntryVec<double> &rhs)=0;
 
         // Transient stamp is only the AC part
         // scl is the scaling factor to multiply by the time-dependent elements
         // If the matrix is a NULL pointer, only the rhs is calculated
         // This is so that it can be used for the charge contributions of
         // previous time steps
-        virtual void assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec *mat, dsMath::RHSEntryVec &rhs) = 0;
+        virtual void assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs) = 0;
 
         virtual bool addParam(const std::string &, double) = 0;
         virtual void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &) {} 

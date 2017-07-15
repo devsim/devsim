@@ -138,16 +138,16 @@ createNodeSolutionCmd(CommandHandler &data)
       OutputStream::WriteOut(OutputStream::INFO, os.str().c_str());
   
       /// must be a copy since we are deleting the existing one
-      const NodeScalarList nsl = existingNodeModel->GetScalarValues();
+      const NodeScalarList<double> nsl = existingNodeModel->GetScalarValues<double>();
       existingNodeModel.reset();
-      NodeModelPtr nm = NodeSolution::CreateNodeSolution(name, reg);
+      NodeModelPtr nm = NodeSolution<double>::CreateNodeSolution(name, reg);
       nm->SetValues(nsl);
       data.SetEmptyResult();
 
     }
     else
     {
-      NodeSolution::CreateNodeSolution(name, reg);
+      NodeSolution<double>::CreateNodeSolution(name, reg);
       data.SetEmptyResult();
     }
 }
@@ -271,7 +271,7 @@ createNodeModelCmd(CommandHandler &data)
         else
         {
           existingNodeModel.reset();
-          result = dsHelper::CreateNodeExprModel(name, equation, reg, ndt);
+          result = dsHelper::CreateNodeExprModel<double>(name, equation, reg, ndt);
           data.SetEmptyResult();
         }
     }
@@ -299,7 +299,7 @@ createNodeModelCmd(CommandHandler &data)
         else
         {
           existingEdgeModel.reset();
-          result = dsHelper::CreateEdgeExprModel(name, equation, reg, edt);
+          result = dsHelper::CreateEdgeExprModel<double>(name, equation, reg, edt);
         }
     }
     else if (commandName == "element_model")
@@ -333,7 +333,7 @@ createNodeModelCmd(CommandHandler &data)
         else
         {
           existingTriangleEdgeModel.reset();
-          result = dsHelper::CreateTriangleEdgeExprModel(name, equation, reg, trdt);
+          result = dsHelper::CreateTriangleEdgeExprModel<double>(name, equation, reg, trdt);
         }
       }
       else if (dimension == 3)
@@ -359,7 +359,7 @@ createNodeModelCmd(CommandHandler &data)
         else
         {
           existingTetrahedronEdgeModel.reset();
-          result = dsHelper::CreateTetrahedronEdgeExprModel(name, equation, reg, tedt);
+          result = dsHelper::CreateTetrahedronEdgeExprModel<double>(name, equation, reg, tedt);
         }
       }
     }
@@ -478,7 +478,7 @@ createContactNodeModelCmd(CommandHandler &data)
         else
         {
           existingNodeModel.reset();
-          result = dsHelper::CreateNodeExprModel(name, equation, reg, ndt, cp);
+          result = dsHelper::CreateNodeExprModel<double>(name, equation, reg, ndt, cp);
         }
     }
     else if (commandName == "contact_edge_model")
@@ -492,7 +492,7 @@ createContactNodeModelCmd(CommandHandler &data)
         else
         {
           existingEdgeModel.reset();
-          result = dsHelper::CreateEdgeExprModel(name, equation, reg, edt, cp);
+          result = dsHelper::CreateEdgeExprModel<double>(name, equation, reg, edt, cp);
         }
     }
     else
@@ -579,20 +579,20 @@ createCylindricalCmd(CommandHandler &data)
 
   if (commandName == "cylindrical_edge_couple")
   {
-    new TriangleCylindricalEdgeCouple(reg);
-    new CylindricalEdgeCouple(reg);
+    new TriangleCylindricalEdgeCouple<double>(reg);
+    new CylindricalEdgeCouple<double>(reg);
     data.SetEmptyResult();
   }
   else if  (commandName == "cylindrical_node_volume")
   {
-    new TriangleCylindricalNodeVolume(reg);
-    new CylindricalNodeVolume(reg);
-    new CylindricalEdgeNodeVolume(reg);
+    new TriangleCylindricalNodeVolume<double>(reg);
+    new CylindricalNodeVolume<double>(reg);
+    new CylindricalEdgeNodeVolume<double>(reg);
     data.SetEmptyResult();
   }
   else if  (commandName == "cylindrical_surface_area")
   {
-    new CylindricalSurfaceArea(reg);
+    new CylindricalSurfaceArea<double>(reg);
     data.SetEmptyResult();
   }
   else
@@ -662,7 +662,7 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
     std::string em0 = name + "@n0";
     std::string em1 = name + "@n1";
     /// Need to test that these edge models don't already exist
-    new EdgeFromNodeModel(em0, em1, name, reg);
+    new EdgeFromNodeModel<double>(em0, em1, name, reg);
     data.SetEmptyResult();
   }
   else if (commandName == "element_from_node_model")
@@ -682,7 +682,7 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
       std::string em0 = name + "@en0";
       std::string em1 = name + "@en1";
       std::string em2 = name + "@en2";
-      new TriangleEdgeFromNodeModel(em0, em1, em2, name, reg);
+      new TriangleEdgeFromNodeModel<double>(em0, em1, em2, name, reg);
       data.SetEmptyResult();
     }
     else if (dimension == 3)
@@ -691,7 +691,7 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
       std::string em1 = name + "@en1";
       std::string em2 = name + "@en2";
       std::string em3 = name + "@en3";
-      new TetrahedronEdgeFromNodeModel(em0, em1, em2, em3, name, reg);
+      new TetrahedronEdgeFromNodeModel<double>(em0, em1, em2, em3, name, reg);
       data.SetEmptyResult();
     }
   }
@@ -700,12 +700,12 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
     const std::string &calctype = data.GetStringOption("calc_type");
     if (calctype == "avoidzero")
     {
-      new VectorGradient(reg, name, VectorGradient::AVOIDZERO);
+      new VectorGradient<double>(reg, name, VectorGradient<double>::AVOIDZERO);
       data.SetEmptyResult();
     }
     else if (calctype == "default")
     {
-      new VectorGradient(reg, name, VectorGradient::DEFAULT);
+      new VectorGradient<double>(reg, name, VectorGradient<double>::DEFAULT);
       data.SetEmptyResult();
     }
     else
@@ -795,8 +795,8 @@ createEdgeAverageModelCmd(CommandHandler &data)
     }
   }
 
-  AverageEdgeModel::AverageType_t atype = AverageEdgeModel::GetTypeName(averageType, errorString);
-  if (atype == AverageEdgeModel::UNKNOWN)
+  AverageEdgeModel<double>::AverageType_t atype = AverageEdgeModel<double>::GetTypeName(averageType, errorString);
+  if (atype == AverageEdgeModel<double>::UNKNOWN)
   {
     data.SetErrorResult(errorString);
     return;
@@ -804,12 +804,12 @@ createEdgeAverageModelCmd(CommandHandler &data)
 
   if (derivativeModel.empty())
   {
-    new AverageEdgeModel(edgeModel, nodeModel, atype, reg);
+    new AverageEdgeModel<double>(edgeModel, nodeModel, atype, reg);
     data.SetEmptyResult();
   }
   else
   {
-    new AverageEdgeModel(edgeModel, nodeModel, derivativeModel, atype, reg);
+    new AverageEdgeModel<double>(edgeModel, nodeModel, derivativeModel, atype, reg);
     data.SetEmptyResult();
   }
 
@@ -865,7 +865,7 @@ createInterfaceNodeModelCmd(CommandHandler &data)
         return;
     }
 
-    result = dsHelper::CreateInterfaceNodeExprModel(name, equation, interface);
+    result = dsHelper::CreateInterfaceNodeExprModel<double>(name, equation, interface);
 
     if (!result.first)
     {
@@ -1158,7 +1158,7 @@ printNodeValuesCmd(CommandHandler &data)
   else
   {
 
-    const NodeScalarList &nsl = nm_name->GetScalarValues();
+    const NodeScalarList<double> &nsl = nm_name->GetScalarValues<double>();
 
     if (commandName == "print_node_values")
     {
@@ -1242,7 +1242,7 @@ printEdgeValuesCmd(CommandHandler &data)
   }
   else
   {
-    const EdgeScalarList &nsl = nm_name->GetScalarValues();
+    const EdgeScalarList<double> &nsl = nm_name->GetScalarValues<double>();
     if (commandName == "print_edge_values")
     {
       std::ostringstream os;
@@ -1342,7 +1342,7 @@ printElementEdgeValuesCmd(CommandHandler &data)
 
     if (triangle_edge_model)
     {
-      const TriangleEdgeScalarList &nsl = triangle_edge_model->GetScalarValues();
+      const TriangleEdgeScalarList<double> &nsl = triangle_edge_model->GetScalarValues<double>();
       if (commandName == "print_element_values")
       {
         std::ostringstream os;
@@ -1368,7 +1368,7 @@ printElementEdgeValuesCmd(CommandHandler &data)
     }
     else if (tetrahedron_edge_model)
     {
-      const TetrahedronEdgeScalarList &nsl = tetrahedron_edge_model->GetScalarValues();
+      const TetrahedronEdgeScalarList<double> &nsl = tetrahedron_edge_model->GetScalarValues<double>();
       if (commandName == "print_element_values")
       {
         std::ostringstream os;
@@ -1459,7 +1459,7 @@ getInterfaceValuesCmd(CommandHandler &data)
   {
     if (commandName == "get_interface_model_values")
     {
-      const NodeScalarList &nsl = imp->GetScalarValues();
+      const NodeScalarList<double> &nsl = imp->GetScalarValues<double>();
       SetListAsResult(data, "Interface Node Model", name, nsl);
     }
     else if (commandName == "delete_interface_model")
@@ -1652,7 +1652,7 @@ createVectorElementModelCmd(CommandHandler &data)
       }
       else
       {
-        new VectorTriangleEdgeModel(name, reg);
+        new VectorTriangleEdgeModel<double>(name, reg);
         data.SetEmptyResult();
       }
     }
@@ -1669,7 +1669,7 @@ createVectorElementModelCmd(CommandHandler &data)
       }
       else
       {
-        new VectorTetrahedronEdgeModel(name, reg);
+        new VectorTetrahedronEdgeModel<double>(name, reg);
         data.SetEmptyResult();
       }
     }
@@ -1771,13 +1771,13 @@ createTriangleFromEdgeModelCmd(CommandHandler &data)
       if (derivative.empty())
       {
         /// Need to test that these edge models don't already exist
-        new TriangleEdgeFromEdgeModel(name, reg);
+        new TriangleEdgeFromEdgeModel<double>(name, reg);
         data.SetEmptyResult();
       }
       else
       {
         /// Need to test that these edge models don't already exist
-        new TriangleEdgeFromEdgeModelDerivative(name, derivative, reg);
+        new TriangleEdgeFromEdgeModelDerivative<double>(name, derivative, reg);
         data.SetEmptyResult();
       }
     }
@@ -1787,13 +1787,13 @@ createTriangleFromEdgeModelCmd(CommandHandler &data)
       if (derivative.empty())
       {
         /// Need to test that these edge models don't already exist
-        new TetrahedronEdgeFromEdgeModel(name, reg);
+        new TetrahedronEdgeFromEdgeModel<double>(name, reg);
         data.SetEmptyResult();
       }
       else
       {
         /// Need to test that these edge models don't already exist
-        new TetrahedronEdgeFromEdgeModelDerivative(name, derivative, reg);
+        new TetrahedronEdgeFromEdgeModelDerivative<double>(name, derivative, reg);
         data.SetEmptyResult();
       }
     }
@@ -1875,7 +1875,7 @@ debugTriangleCmd(CommandHandler &data)
         os << "Model: " << tmit->first << "\n";
         for (size_t ei = 0; ei < 3; ++ei)
         {
-          os << "    " << (tmit->second)->GetScalarValues()[3*ti + ei];
+          os << "    " << (tmit->second)->GetScalarValues<double>()[3*ti + ei];
         }
         os << "\n";
       }
@@ -1949,7 +1949,7 @@ createInterfaceNormalModelCmd(CommandHandler &data)
       std::string inormy(interfaceName + "_normal_y"); 
       std::string inormz(interfaceName + "_normal_z"); 
 
-      new InterfaceNormal(interfaceName, idist, inormx, inormy, inormz, region);
+      new InterfaceNormal<double>(interfaceName, idist, inormx, inormy, inormz, region);
       data.SetEmptyResult();
     }
 }
@@ -2049,7 +2049,7 @@ registerFunctionCmd(CommandHandler &data)
     data.SetErrorResult(errorString);
     return;
   }
-  MathEval::GetInstance().AddTclMath(name, static_cast<size_t>(nargs));
+  MathEval<double>::GetInstance().AddTclMath(name, static_cast<size_t>(nargs));
   data.SetEmptyResult();
 }
 

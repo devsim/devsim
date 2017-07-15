@@ -31,7 +31,8 @@ limitations under the License.
 #include <vector>
 #include <string>
 
-ExprEquation::ExprEquation(
+template <typename DoubleType>
+ExprEquation<DoubleType>::ExprEquation(
     const std::string &eqname,
     RegionPtr rp,
     const std::string &var,
@@ -41,15 +42,16 @@ ExprEquation::ExprEquation(
     const std::string &eemodel,
     const std::string &eevmodel,
     const std::string &tdnmodel,
-    Equation::UpdateType ut
-    ) : Equation(eqname, rp, var, ut), node_model_(nmodel), edge_model_(emodel), edge_volume_model_(evmodel), element_model_(eemodel), volume_model_(eevmodel), time_node_model_(tdnmodel)
+    typename Equation<DoubleType>::UpdateType ut
+    ) : Equation<DoubleType>(eqname, rp, var, ut), node_model_(nmodel), edge_model_(emodel), edge_volume_model_(evmodel), element_model_(eemodel), volume_model_(eevmodel), time_node_model_(tdnmodel)
 {
 }
 
-void ExprEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void ExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-    ModelExprDataCachePtr model_cache = ModelExprDataCachePtr(new ModelExprDataCache()); 
-    Region &r = const_cast<Region &>(GetRegion());
+    ModelExprDataCachePtr<DoubleType> model_cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    Region &r = const_cast<Region &>(Equation<DoubleType>::GetRegion());
     r.SetModelExprDataCache(model_cache);
 
     if (t == dsMathEnum::DC)
@@ -57,29 +59,29 @@ void ExprEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, dsMath::RHSEnt
         if (!edge_model_.empty())
         {
             model_cache->clear();
-            Equation::EdgeCoupleAssemble(edge_model_, m, v, w);
+            Equation<DoubleType>::EdgeCoupleAssemble(edge_model_, m, v, w);
             if (!edge_volume_model_.empty())
             {
-              Equation::EdgeNodeVolumeAssemble(edge_volume_model_, m, v, w);
+              Equation<DoubleType>::EdgeNodeVolumeAssemble(edge_volume_model_, m, v, w);
             }
         }
 
         if (!node_model_.empty())
         {
             model_cache->clear();
-            Equation::NodeVolumeAssemble(node_model_, m, v, w);
+            Equation<DoubleType>::NodeVolumeAssemble(node_model_, m, v, w);
         }
 
         if (!element_model_.empty())
         {
             model_cache->clear();
-            Equation::ElementEdgeCoupleAssemble(element_model_, m, v, w);
+            Equation<DoubleType>::ElementEdgeCoupleAssemble(element_model_, m, v, w);
         }
 
         if (!volume_model_.empty())
         {
             model_cache->clear();
-            Equation::ElementNodeVolumeAssemble(volume_model_, m, v, w);
+            Equation<DoubleType>::ElementNodeVolumeAssemble(volume_model_, m, v, w);
         }
 
     }
@@ -88,7 +90,7 @@ void ExprEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, dsMath::RHSEnt
         if (!time_node_model_.empty())
         {
             model_cache->clear();
-            Equation::NodeVolumeAssemble(time_node_model_, m, v, w);
+            Equation<DoubleType>::NodeVolumeAssemble(time_node_model_, m, v, w);
         }
     }
     else
@@ -97,24 +99,28 @@ void ExprEquation::DerivedAssemble(dsMath::RealRowColValueVec &m, dsMath::RHSEnt
     }
 }
 
-void ExprEquation::UpdateValues(NodeModel &nm, const std::vector<double> &rhs)
+template <typename DoubleType>
+void ExprEquation<DoubleType>::UpdateValues(NodeModel &nm, const std::vector<DoubleType> &rhs)
 {
-    DefaultUpdate(nm, rhs);
+    Equation<DoubleType>::DefaultUpdate(nm, rhs);
 }
 
-void ExprEquation::ACUpdateValues(NodeModel &nm, const std::vector<std::complex<double> > &rhs)
+template <typename DoubleType>
+void ExprEquation<DoubleType>::ACUpdateValues(NodeModel &nm, const std::vector<std::complex<DoubleType> > &rhs)
 {
-    DefaultACUpdate(nm, rhs);
+    Equation<DoubleType>::DefaultACUpdate(nm, rhs);
 }
 
-void ExprEquation::NoiseUpdateValues(const std::string &nm, const std::vector<size_t> &permvec, const std::vector<std::complex<double> > &rhs)
+template <typename DoubleType>
+void ExprEquation<DoubleType>::NoiseUpdateValues(const std::string &nm, const std::vector<size_t> &permvec, const std::vector<std::complex<DoubleType> > &rhs)
 {
-    DefaultNoiseUpdate(nm, permvec, rhs);
+    Equation<DoubleType>::DefaultNoiseUpdate(nm, permvec, rhs);
 }
 
-void ExprEquation::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void ExprEquation<DoubleType>::Serialize(std::ostream &of) const
 {
-  of << "COMMAND equation -device \"" << GetRegion().GetDeviceName() << "\" -region \"" << GetRegion().GetName() << "\" -name \"" << GetName() << "\" -variable_name \"" << GetVariable()
+  of << "COMMAND equation -device \"" << Equation<DoubleType>::GetRegion().GetDeviceName() << "\" -region \"" << Equation<DoubleType>::GetRegion().GetName() << "\" -name \"" << Equation<DoubleType>::GetName() << "\" -variable_name \"" << Equation<DoubleType>::GetVariable()
     << "\" -node_model \"" << node_model_
     << "\" -edge_model \"" << edge_model_
     << "\" -edge_volume_model \"" << edge_volume_model_
@@ -123,12 +129,13 @@ void ExprEquation::Serialize(std::ostream &of) const
     << "\" -time_node_model \"" << time_node_model_ << "\"";
 }
 
-void ExprEquation::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
+template <typename DoubleType>
+void ExprEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
 {
-  omap["device"] = ObjectHolder(GetRegion().GetDeviceName());
-  omap["region"] = ObjectHolder(GetRegion().GetName());
-  omap["name"]   = ObjectHolder(GetName());
-  omap["variable_name"] = ObjectHolder(GetVariable());
+  omap["device"] = ObjectHolder(Equation<DoubleType>::GetRegion().GetDeviceName());
+  omap["region"] = ObjectHolder(Equation<DoubleType>::GetRegion().GetName());
+  omap["name"]   = ObjectHolder(Equation<DoubleType>::GetName());
+  omap["variable_name"] = ObjectHolder(Equation<DoubleType>::GetVariable());
   omap["node_model"] = ObjectHolder(node_model_);
   omap["edge_model"] = ObjectHolder(edge_model_);
   omap["edge_volume_model"] = ObjectHolder(edge_volume_model_);
@@ -137,4 +144,5 @@ void ExprEquation::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &o
   omap["time_node_model"] = ObjectHolder(time_node_model_);
 }
 
+template class ExprEquation<double>;
 

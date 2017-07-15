@@ -22,15 +22,17 @@ limitations under the License.
 #include "dsAssert.hh"
 #include "Vector.hh"
 
-VectorTetrahedronEdgeModel::VectorTetrahedronEdgeModel(const std::string &edgemodel, RegionPtr rp)
+template <typename DoubleType>
+VectorTetrahedronEdgeModel<DoubleType>::VectorTetrahedronEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TetrahedronEdgeModel(edgemodel + "_x", rp, TetrahedronEdgeModel::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName+ "_y"), z_ModelName(elementEdgeModelName + "_z")
 {
   RegisterCallback(edgemodel);
-  new TetrahedronEdgeSubModel(y_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
-  new TetrahedronEdgeSubModel(z_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
 }
 
-void VectorTetrahedronEdgeModel::calcTetrahedronEdgeScalarValues() const
+template <typename DoubleType>
+void VectorTetrahedronEdgeModel<DoubleType>::calcTetrahedronEdgeScalarValues() const
 {
   const Region &reg = GetRegion();
 
@@ -45,18 +47,18 @@ void VectorTetrahedronEdgeModel::calcTetrahedronEdgeScalarValues() const
 
   const ConstTetrahedronList &tl = GetRegion().GetTetrahedronList();
 
-  std::vector<double> evx(6*tl.size());
-  std::vector<double> evy(6*tl.size());
-  std::vector<double> evz(6*tl.size());
+  std::vector<DoubleType> evx(6*tl.size());
+  std::vector<DoubleType> evy(6*tl.size());
+  std::vector<DoubleType> evz(6*tl.size());
 
   const TetrahedronElementField &efield = reg.GetTetrahedronElementField();
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Tetrahedron &tetrahedron = *tl[i];
-    const std::vector<Vector> &v = efield.GetTetrahedronElementField(tetrahedron, *emp);
+    const std::vector<Vector<DoubleType> > &v = efield.GetTetrahedronElementField(tetrahedron, *emp);
     for (size_t j = 0; j < 6; ++j)
     {
-      const Vector &vec = v[j];
+      const Vector<DoubleType> &vec = v[j];
       evx[6*i + j] = vec.Getx();
       evy[6*i + j] = vec.Gety();
       evz[6*i + j] = vec.Getz();
@@ -68,8 +70,11 @@ void VectorTetrahedronEdgeModel::calcTetrahedronEdgeScalarValues() const
   std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempz)->SetValues(evz);
 }
 
-void VectorTetrahedronEdgeModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void VectorTetrahedronEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND vector_element_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -element_model \"" << elementEdgeModelName << "\"";
 }
+
+template class VectorTetrahedronEdgeModel<double>;
 

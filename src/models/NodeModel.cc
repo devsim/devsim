@@ -32,6 +32,18 @@ const char *NodeModel::DisplayTypeString[] = {
   NULL
 };
 
+bool NodeModel::IsZero() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsZero();
+}
+
+bool NodeModel::IsOne() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsOne();
+}
+
 NodeModel::~NodeModel() {
 #if 0
     myregion->UnregisterCallback(name);
@@ -45,17 +57,10 @@ NodeModel::NodeModel(const std::string &nm, const RegionPtr rp, NodeModel::Displ
       mycontact(cp),
       uptodate(false),
       inprocess(false),
-      isuniform(true),
-      uniform_value(0.0),
-      displayType(dt)
+      displayType(dt),
+      model_data(rp->GetNumberNodes())
 { 
   myself = rp->AddNodeModel(this);
-  length = GetRegion().GetNumberNodes();
-
-  if (mycontact)
-  {
-    isuniform = false;
-  }
 }
 
 const std::string &NodeModel::GetName() const
@@ -81,9 +86,7 @@ void NodeModel::InitializeValues()
 void NodeModel::DefaultInitializeValues()
 {
     // default initialization is to 0.0
-  values.clear();
-  isuniform     = !mycontact;
-  uniform_value = 0.0;
+  model_data.clear();
 }
 
 void NodeModel::CalculateValues() const
@@ -109,92 +112,79 @@ void NodeModel::CalculateValues() const
 
 //
 // If not uptodate, then recalculate the model
-const NodeScalarList & NodeModel::GetScalarValues() const
+template <typename DoubleType>
+const NodeScalarList<DoubleType> & NodeModel::GetScalarValues() const
 {
   CalculateValues();
 
-  if (isuniform)
-  {
-    dsAssert(!mycontact, "UNEXPECTED");
-    values.clear();
-    values.resize(length, uniform_value);
-  }
+  model_data.expand_uniform();
 
-  return values;
+  return model_data.GetValues<DoubleType>();
 }
 
 // Note this is logically const and internal to the program
 // be careful this is duplicated as a non-const below
-void NodeModel::SetValues(const NodeScalarList &nv) const
+template <typename DoubleType>
+void NodeModel::SetValues(const NodeScalarList<DoubleType> &nv) const
 {
   const_cast<NodeModel *>(this)->SetValues(nv);
 }
 
 // be careful this is duplicated as a const above
-void NodeModel::SetValues(const NodeScalarList &nv)
+template <typename DoubleType>
+void NodeModel::SetValues(const NodeScalarList<DoubleType> &nv)
 {
   if (mycontact)
   {
-    values.clear();
-    values.resize(length);
-    for (std::vector<size_t>::iterator it = atcontact.begin(); it != atcontact.end(); ++it)
-    {
-      values[*it] = nv[*it];
-    }
+    GetContactIndexes(); // safety
+    model_data.set_indexes(atcontact, nv);
   }
   else
   {
-    values = nv;
+    model_data.set_values(nv);
   }
-
-  isuniform = false;
-  uniform_value = 0.0;
 
   MarkOld();
   uptodate = true;
 }
 
+#ifndef _WIN32
+#warning "test precision"
+#endif
 void NodeModel::SetValues(const NodeModel &nm)
 {
   if (&nm != this)
   {
     if (nm.IsUniform())
     {
-      const double v = nm.GetUniformValue();
+      const double v = nm.GetUniformValue<double>();
       NodeModel::SetValues(v);
     }
     else
     {
-      const NodeScalarList &v = nm.GetScalarValues();
+      const NodeScalarList<double> &v = nm.GetScalarValues<double>();
       NodeModel::SetValues(v);
     }
   }
 }
 
-void NodeModel::SetValues(const double &v) const
+template <typename DoubleType>
+void NodeModel::SetValues(const DoubleType &v) const
 {
   const_cast<NodeModel *>(this)->SetValues(v);
 }
 
-void NodeModel::SetValues(const double &v)
+template <typename DoubleType>
+void NodeModel::SetValues(const DoubleType &v)
 {
   if (mycontact)
   {
-    isuniform = false;
-    values.clear();
-    values.resize(length);
     GetContactIndexes(); // safety
-    for (std::vector<size_t>::iterator it = atcontact.begin(); it != atcontact.end(); ++it)
-    {
-      values[*it] = v;
-    }
+    model_data.set_indexes(atcontact, v);
   }
   else
   {
-    isuniform = true;
-    uniform_value = v;
-
-    values.clear();
+    model_data.SetUniformValue<DoubleType>(v);
   }
 
   MarkOld();
@@ -219,34 +209,26 @@ const std::vector<size_t> & NodeModel::GetContactIndexes() const
 /*
   if uniform desired then use SetNodeValues above
 */
-void NodeModel::SetNodeValue(size_t index, double value)
+template <typename DoubleType>
+void NodeModel::SetNodeValue(size_t index, DoubleType value)
 {
-  if (index >= length)
+  if (index >= model_data.GetLength())
   {
     return;
   }
 
   //// Set values
   //// unsets uniformity
-  GetScalarValues();
-
-  if (isuniform)
-  {
-    isuniform = false;
-    uniform_value = 0.0;
-  }
+  GetScalarValues<DoubleType>();
 
   if (mycontact)
   {
     GetContactIndexes(); // safety
-    if (std::find(atcontact.begin(), atcontact.end(), index) != atcontact.end())
-    {
-      values[index] = value;
-    }
+    model_data.set_indexes(atcontact, value);
   }
   else
   {
-    values[index] = value;
+    model_data.SetValue(index, value);
   }
 
   MarkOld();
@@ -278,13 +260,13 @@ bool NodeModel::IsUniform() const
     CalculateValues();
   }
 
-  return isuniform;
+  return model_data.IsUniform();
 }
 
-double NodeModel::GetUniformValue() const
+template <typename DoubleType>
+const DoubleType &NodeModel::GetUniformValue() const
 {
-  dsAssert(isuniform, "UNEXPECTED");
-  return uniform_value;
+  return model_data.GetUniformValue<DoubleType>();
 }
 
 void NodeModel::SerializeBuiltIn(std::ostream &of) const
@@ -303,6 +285,7 @@ void NodeModel::SetContact(const ContactPtr cp)
 {
   mycontact = cp;
   atcontact.clear();
+  uptodate = false;
 }
 
 const std::string &NodeModel::GetDeviceName() const
@@ -316,6 +299,7 @@ const std::string &NodeModel::GetRegionName() const
 }
 
 const std::string NodeModel::GetContactName() const
+
 {
   std::string ret;
   if (mycontact)
@@ -324,4 +308,13 @@ const std::string NodeModel::GetContactName() const
   }
   return ret;
 }
+
+template void NodeModel::SetNodeValue<double>(size_t, double);
+template void NodeModel::SetValues<double>(const NodeScalarList<double> &);
+template void NodeModel::SetValues<double>(const double &);
+template void NodeModel::SetValues<double>(const NodeScalarList<double> &) const;
+template void NodeModel::SetValues<double>(const double &) const;
+template const double &NodeModel::GetUniformValue<double>() const;
+template const std::vector<double> &NodeModel::GetScalarValues<double>() const;
+
 

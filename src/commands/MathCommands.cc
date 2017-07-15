@@ -22,11 +22,8 @@ limitations under the License.
 #include "Newton.hh"
 #include "DirectLinearSolver.hh"
 #include "IterativeLinearSolver.hh"
-#if 0
-#include "PetscSolver.hh"
-#endif
 
-#include "ContactEquation.hh"
+#include "ContactEquationHolder.hh"
 #include "Region.hh"
 #include "Contact.hh"
 
@@ -268,7 +265,7 @@ getContactCurrentCmd(CommandHandler &data)
     Device   *device = NULL;
 //    Region   *region = NULL;
     Contact  *contact = NULL;
-    ContactEquation *eqn = NULL;
+    ContactEquationHolder eqn;
 
     errorString = ValidateDeviceAndContact(deviceName, contactName, device, contact);
 
@@ -291,21 +288,18 @@ getContactCurrentCmd(CommandHandler &data)
     Region::ContactEquationPtrMap_t::const_iterator cit = cpair.first;
     Region::ContactEquationPtrMap_t::const_iterator cend = cpair.second;
 */
-    const Contact::ContactEquationPtrMap_t &cepm = contact->GetEquationPtrList();
+    const ContactEquationPtrMap_t &cepm = contact->GetEquationPtrList();
 
-#if 0
-    for (;cit != cend; ++cit)
-#endif
-    for (Contact::ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
+    for (ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
     {
-        if (cepmit->second->GetName() == equationName)
+        if (cepmit->second.GetName() == equationName)
         {
             eqn = cepmit->second;
         }
     }
 
     double val = 0.0;
-    if (!eqn)
+    if (eqn.GetName().empty())
     {
         std::ostringstream os;
         os << "Could not find contact equation \"" << equationName << "\" "
@@ -316,11 +310,11 @@ getContactCurrentCmd(CommandHandler &data)
     }
     else if (commandName == "get_contact_current")
     {
-        val = eqn->GetCurrent();
+        val = eqn.GetCurrent();
     }
     else if (commandName == "get_contact_charge")
     {
-        val = eqn->GetCharge();
+        val = eqn.GetCharge();
     }
     else
     {

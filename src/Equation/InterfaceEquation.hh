@@ -41,12 +41,21 @@ typedef const Node * ConstNodePtr;
 
 namespace dsMath {
 template <typename T> class RowColVal;
-typedef std::vector<RowColVal<double> > RealRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 }
 
-/// Similar to a contact, but it depends on multiple regions
+template <typename DoubleType>
 class InterfaceEquation {
     public:
         /// The first region is the master region.  It shouldn't be permuted out
@@ -55,7 +64,7 @@ class InterfaceEquation {
 
         virtual ~InterfaceEquation() = 0;
 
-        void Assemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         const std::string &GetName() const {
             return myname;
@@ -79,10 +88,10 @@ class InterfaceEquation {
         ConstNodeList_t GetActiveNodesFromList(const Region &, const ConstNodeList_t &) const;
 
 //// Permutation and additional equation
-        void NodeVolumeType1Assemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, const std::string &/*surface_area*/);
+        void NodeVolumeType1Assemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, const std::string &/*surface_area*/);
 
 //// No permutation of flux equations.  Flux added (and subtracted) from both of original equations
-        void NodeVolumeType2Assemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, const std::string &/*surface_area*/);
+        void NodeVolumeType2Assemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, const std::string &/*surface_area*/);
 
         const std::string &GetVariable() const
         {
@@ -91,7 +100,7 @@ class InterfaceEquation {
 
     private:
         /// Use same permutation map and error out if contact had already swapped it out
-        virtual void DerivedAssemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode) = 0;
+        virtual void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode) = 0;
 
         InterfaceEquation();
         InterfaceEquation(const InterfaceEquation &);

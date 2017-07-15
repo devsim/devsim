@@ -26,50 +26,48 @@ class mycondition;
 
 #include <vector>
 
-template <typename U>
+template <typename U, typename DoubleType>
 struct SerialVectorVectorOpEqual {
-  SerialVectorVectorOpEqual(std::vector<double> &v0, const std::vector<double> &v1, const U &op) :
+  SerialVectorVectorOpEqual(std::vector<DoubleType> &v0, const std::vector<DoubleType> &v1, const U &op) :
     vec0_(v0), vec1_(v1), op_(op) {}
 
   void operator()(const size_t b, const size_t e)
   {
-    double *v0 = &vec0_[b];
-    const double *v1 = &vec1_[b];
+    DoubleType *v0 = &vec0_[b];
+    const DoubleType *v1 = &vec1_[b];
     for (size_t i = b; i < e; ++i)
     {
       op_(*(v0++), *(v1++));
     }
   }
 
-  std::vector<double> &vec0_;
-  const std::vector<double> &vec1_;
+  std::vector<DoubleType> &vec0_;
+  const std::vector<DoubleType> &vec1_;
   const U &op_;
 };
 
-template <typename U>
+template <typename U, typename DoubleType>
 struct SerialVectorScalarOpEqual {
-  SerialVectorScalarOpEqual(std::vector<double> &v0, double s, const U &op) :
+  SerialVectorScalarOpEqual(std::vector<DoubleType> &v0, DoubleType s, const U &op) :
     vec0_(v0), scalar_(s), op_(op) {}
 
   void operator()(const size_t b, const size_t e)
   {
-    double *v0 = &vec0_[b];
+    DoubleType *v0 = &vec0_[b];
     for (size_t i = b; i < e; ++i)
     {
       op_(*(v0++), scalar_);
     }
   }
 
-  std::vector<double> &vec0_;
-  const double scalar_;
+  std::vector<DoubleType> &vec0_;
+  const DoubleType scalar_;
   const U &op_;
 };
 
 template <typename U>
 class OpEqualPacket {
   public:
-    //// TODO: refactor MathPacket so not all the arguments are in the constructor
-    //// of course this can no longer be const
     explicit OpEqualPacket(U &);
 
     //// We are done with this unit when this function returns.

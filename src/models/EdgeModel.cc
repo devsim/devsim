@@ -36,12 +36,23 @@ const char *EdgeModel::DisplayTypeString[] = {
   NULL
 };
 
-
 EdgeModel::~EdgeModel()
 {
 #if 0
     myregion->UnregisterCallback(name);
 #endif
+}
+
+bool EdgeModel::IsZero() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsZero();
+}
+
+bool EdgeModel::IsOne() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsOne();
 }
 
 EdgeModel::EdgeModel(const std::string &nm, const RegionPtr rp, EdgeModel::DisplayType dt, const ContactPtr cp)
@@ -50,17 +61,10 @@ EdgeModel::EdgeModel(const std::string &nm, const RegionPtr rp, EdgeModel::Displ
       mycontact(cp),
       uptodate(false),
       inprocess(false),
-      isuniform(true),
-      uniform_value(0.0),
-      displayType(dt)
+      displayType(dt),
+      model_data(rp->GetNumberEdges())
 { 
   myself = rp->AddEdgeModel(this);
-  length = GetRegion().GetNumberEdges();
-
-  if (mycontact)
-  {
-    isuniform = false;
-  }
 }
 
 void EdgeModel::CalculateValues() const
@@ -84,33 +88,30 @@ void EdgeModel::CalculateValues() const
   }
 }
 
-const EdgeScalarList & EdgeModel::GetScalarValues() const
+template <typename DoubleType>
+const EdgeScalarList<DoubleType> & EdgeModel::GetScalarValues() const
 {
   CalculateValues();
 
-  if (isuniform)
-  {
-    dsAssert(!mycontact, "UNEXPECTED");
-    values.clear();
-    values.resize(length, uniform_value);
-  }
+  model_data.expand_uniform();
 
-  return values;
+  return model_data.GetValues<DoubleType>();
 }
 
 ///// IF provided in general in the expression parser, WARN about missing derivatives
-NodeScalarList EdgeModel::GetScalarValuesOnNodes() const
+template <typename DoubleType>
+NodeScalarList<DoubleType> EdgeModel::GetScalarValuesOnNodes() const
 {
 //  dsAssert(this->GetDisplayType() == EdgeModel::SCALAR, "UNEXPECTED");
 
   const Region &region = this->GetRegion();
 
-  const EdgeScalarList &esl = this->GetScalarValues();
+  const EdgeScalarList<DoubleType> &esl = this->GetScalarValues<DoubleType>();
 
   const size_t number_nodes = region.GetNumberNodes();
   const size_t number_edges = region.GetNumberEdges();
 
-  NodeScalarList values(number_nodes);
+  NodeScalarList<DoubleType> values(number_nodes);
 
   /// Does a straight average on the whole
   std::vector<size_t> count(number_nodes);
@@ -119,7 +120,7 @@ NodeScalarList EdgeModel::GetScalarValuesOnNodes() const
   for (size_t i = 0; i < number_edges; ++i)
   {
     const Edge &edge = *cel[i];
-    const double val = esl[i];
+    const DoubleType val = esl[i];
     size_t ni0 = edge.GetHead()->GetIndex();
     size_t ni1 = edge.GetTail()->GetIndex();
     values[ni0] += val;
@@ -140,23 +141,24 @@ NodeScalarList EdgeModel::GetScalarValuesOnNodes() const
 }
 
 ///// IF provided in general in the expression parser, WARN about missing derivatives
-NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
+template <typename DoubleType>
+NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
 {
 //  dsAssert(this->GetDisplayType() == EdgeModel::VECTOR, "UNEXPECTED");
 
   const Region &region = this->GetRegion();
 
-  const EdgeScalarList &esl = this->GetScalarValues();
+  const EdgeScalarList<DoubleType> &esl = this->GetScalarValues<DoubleType>();
 
   const size_t number_nodes = region.GetNumberNodes();
   const size_t number_edges = region.GetNumberEdges();
 
   /// these are the unit vectors on each edge
-  EdgeVectorList edge_scaling(number_edges);
+  EdgeVectorList<DoubleType> edge_scaling(number_edges);
   /// these are the accumulated values on each edge
-  NodeVectorList node_values(number_nodes);
+  NodeVectorList<DoubleType> node_values(number_nodes);
   /// these are how we divide out the values based on how much they are pointing in our direction
-  NodeVectorList node_scaling(number_nodes);
+  NodeVectorList<DoubleType> node_scaling(number_nodes);
 
 
   const size_t dimension = region.GetDimension();
@@ -164,7 +166,7 @@ NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
   {
     ConstEdgeModelPtr emx = region.GetEdgeModel("unitx");
     dsAssert(emx.get(), "UNEXPECTED");
-    const EdgeScalarList &ex = emx->GetScalarValues();
+    const EdgeScalarList<DoubleType> &ex = emx->GetScalarValues<DoubleType>();
     for (size_t i = 0; i < number_edges; ++i)
     {
       edge_scaling[i].Setx(ex[i]);
@@ -175,7 +177,7 @@ NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
   {
     ConstEdgeModelPtr emy = region.GetEdgeModel("unity");
     dsAssert(emy.get(), "UNEXPECTED");
-    const EdgeScalarList &ey = emy->GetScalarValues();
+    const EdgeScalarList<DoubleType> &ey = emy->GetScalarValues<DoubleType>();
     for (size_t i = 0; i < number_edges; ++i)
     {
       edge_scaling[i].Sety(ey[i]);
@@ -186,7 +188,7 @@ NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
   {
     ConstEdgeModelPtr emz = region.GetEdgeModel("unitz");
     dsAssert(emz.get(), "UNEXPECTED");
-    const EdgeScalarList &ez = emz->GetScalarValues();
+    const EdgeScalarList<DoubleType> &ez = emz->GetScalarValues<DoubleType>();
     for (size_t i = 0; i < number_edges; ++i)
     {
       edge_scaling[i].Setz(ez[i]);
@@ -200,20 +202,20 @@ NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
   {
     const Edge &edge = *cel[i];
     //// this is the value to be projected
-    const double val = esl[i];
+    const DoubleType val = esl[i];
     size_t ni0 = edge.GetHead()->GetIndex();
     size_t ni1 = edge.GetTail()->GetIndex();
 
     //// this is the unit vector
-    const Vector &escal = edge_scaling[i];
+    const Vector<DoubleType> &escal = edge_scaling[i];
     //// project the edge quantity onto the unit vector
-    const Vector vval   = val * escal;
+    const Vector<DoubleType> vval   = val * escal;
 
     /// This is the scaling based on the direction we are pointing in
-    const Vector sval = Vector(fabs(escal.Getx()), fabs(escal.Gety()), fabs(escal.Getz()));
+    const Vector<DoubleType> sval = Vector<DoubleType>(fabs(escal.Getx()), fabs(escal.Gety()), fabs(escal.Getz()));
 
     //// Now we must actually weight each direction
-    const Vector nval = Vector(vval.Getx()*sval.Getx(), vval.Gety()*sval.Gety(), vval.Getz()*sval.Getz());
+    const Vector<DoubleType> nval = Vector<DoubleType>(vval.Getx()*sval.Getx(), vval.Gety()*sval.Gety(), vval.Getz()*sval.Getz());
 
     node_values[ni0]  += nval;
     node_scaling[ni0] += sval;
@@ -222,9 +224,9 @@ NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
   }
   for (size_t i = 0; i < number_nodes; ++i)
   {
-    const Vector &scal = node_scaling[i];
+    const Vector<DoubleType> &scal = node_scaling[i];
 
-    Vector vval = node_values[i];
+    Vector<DoubleType> vval = node_values[i];
 
     if (scal.Getx() > 0.0)
     {
@@ -261,55 +263,46 @@ NodeVectorList EdgeModel::GetVectorValuesOnNodes() const
   return node_values;
 }
 
-void EdgeModel::SetValues(const EdgeScalarList &nv) const
+template <typename DoubleType>
+void EdgeModel::SetValues(const EdgeScalarList<DoubleType> &nv) const
 {
   const_cast<EdgeModel *>(this)->SetValues(nv);
 }
 
-void EdgeModel::SetValues(const EdgeScalarList &nv)
+template <typename DoubleType>
+void EdgeModel::SetValues(const EdgeScalarList<DoubleType> &nv)
 {
   if (mycontact)
   {
-    values.clear();
-    values.resize(length);
-    for (std::vector<size_t>::iterator it = atcontact.begin(); it != atcontact.end(); ++it)
-    {
-      values[*it] = nv[*it];
-    }
+    GetContactIndexes();
+    model_data.set_indexes(atcontact, nv);
   }
   else
   {
-    values = nv;
+    model_data.set_values(nv);
   }
-
-  isuniform = false;
-  uniform_value = 0.0;
 
   MarkOld();
   uptodate = true;
 }
 
-void EdgeModel::SetValues(const double &v) const
+template <typename DoubleType>
+void EdgeModel::SetValues(const DoubleType &v) const
 {
   const_cast<EdgeModel *>(this)->SetValues(v);
 }
 
-void EdgeModel::SetValues(const double &v)
+template <typename DoubleType>
+void EdgeModel::SetValues(const DoubleType &v)
 {
   if (mycontact)
   {
-    values.clear();
-    values.resize(length);
-    for (std::vector<size_t>::iterator it = atcontact.begin(); it != atcontact.end(); ++it)
-    {
-      values[*it] = v;
-    }
+    GetContactIndexes();
+    model_data.set_indexes(atcontact, v);
   }
   else
   { 
-    isuniform = true;
-    uniform_value = v;
-    values.clear();
+    model_data.SetUniformValue<DoubleType>(v);
   }
 
   MarkOld();
@@ -362,13 +355,13 @@ bool EdgeModel::IsUniform() const
     CalculateValues();
   }
 
-  return isuniform;
+  return model_data.IsUniform();
 }
 
-double EdgeModel::GetUniformValue() const
+template <typename DoubleType>
+const DoubleType &EdgeModel::GetUniformValue() const
 {
-  dsAssert(isuniform, "UNEXPECTED");
-  return uniform_value;
+  return model_data.GetUniformValue<DoubleType>();
 }
 
 void EdgeModel::SerializeBuiltIn(std::ostream &of) const
@@ -387,6 +380,7 @@ void EdgeModel::SetContact(const ContactPtr cp)
 {
   mycontact = cp;
   atcontact.clear();
+  uptodate = false;
 }
 
 const std::string &EdgeModel::GetDeviceName() const
@@ -408,4 +402,13 @@ const std::string EdgeModel::GetContactName() const
   }
   return ret;
 }
+
+template void EdgeModel::SetValues<double>(std::vector<double> const&);
+template void EdgeModel::SetValues<double>(double const&);
+template std::vector<double> const& EdgeModel::GetScalarValues<double>() const;
+template const double &EdgeModel::GetUniformValue<double>() const;
+template std::vector<double> EdgeModel::GetScalarValuesOnNodes<double>() const;
+template std::vector<Vector<double>, std::allocator<Vector<double> > > EdgeModel::GetVectorValuesOnNodes<double>() const;
+template void EdgeModel::SetValues<double>(std::vector<double> const&) const;
+template void EdgeModel::SetValues<double>(double const&) const;
 

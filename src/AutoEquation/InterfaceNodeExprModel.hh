@@ -26,11 +26,11 @@ namespace Eqo {
 
 }
 // need to set general node properties, such as positive only
+template <typename DoubleType>
 class InterfaceNodeExprModel : public InterfaceNodeModel
 {
     public:
         InterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
-//      InterfaceNodeExprModel(const std::string &, const std::string &, RegionPtr);
 
         void Serialize(std::ostream &) const;
 

@@ -39,36 +39,35 @@ typedef std::shared_ptr<EquationObject> EqObjPtr;
 #include "InterfaceModelExprData.hh"
 
 namespace IMEE {
+template <typename DoubleType>
 class InterfaceModelExprEval {
     public:
-        typedef std::vector<InterfaceModelExprData> margv_t;
+        typedef std::vector<InterfaceModelExprData<DoubleType> > margv_t;
         typedef std::list<std::string> error_t;
         /// need to generalize to contact and interface equations as well
         typedef const Interface * data_ref_t;
         /// we are given a reference to our callbacks
         /// could just as soon be a class which is called back for these variables
         InterfaceModelExprEval(data_ref_t &, error_t &);
-//      InterfaceModelExprEval(data_ref_t &, error_t &, double); // for creation from double
         ~InterfaceModelExprEval();
 
-        InterfaceModelExprData eval_function(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> eval_function(Eqo::EqObjPtr);
 
     private:
-        InterfaceModelExprData EvaluateAddType(Eqo::EqObjPtr);
-        InterfaceModelExprData EvaluateProductType(Eqo::EqObjPtr);
-        InterfaceModelExprData EvaluateVariableType(Eqo::EqObjPtr);
-        InterfaceModelExprData EvaluateConstantType(Eqo::EqObjPtr);
-        InterfaceModelExprData EvaluateModelType(Eqo::EqObjPtr);
-        InterfaceModelExprData EvaluateIfType(Eqo::EqObjPtr);
-        InterfaceModelExprData EvaluateIfElseType(Eqo::EqObjPtr);
-        InterfaceModelExprData EvaluateFunctionType(Eqo::EqObjPtr);
-        InterfaceModelExprData EvaluateInvalidType(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateAddType(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateProductType(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateVariableType(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateConstantType(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateIfType(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateIfElseType(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateFunctionType(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateInvalidType(Eqo::EqObjPtr);
 
         void GetRegionAndName(const std::string &nm, std::string &name, const Region *&r);
-        InterfaceModelExprData EvaluateInterfaceModelType(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateInterfaceModelType(Eqo::EqObjPtr);
         ///  Handles math functions (log, pow, exp, . . .)
-        InterfaceModelExprData EvaluateExternalMath(const std::string &, const margv_t &);
-//      InterfaceModelExprData createInterfaceModelExprData(Eqo::EqObjPtr);
+        InterfaceModelExprData<DoubleType> EvaluateExternalMath(const std::string &, const margv_t &);
+//      InterfaceModelExprData<DoubleType> createInterfaceModelExprData(Eqo::EqObjPtr);
         data_ref_t &data_ref; // reference to data for variables
         error_t &errors;
 };

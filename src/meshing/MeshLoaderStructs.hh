@@ -433,9 +433,9 @@ class MeshCoordinate {
         double GetZ() const {
             return zpos;
         }
-        Vector GetVector() const
+        Vector<double> GetVector() const
         {
-            return Vector(xpos, ypos, zpos);
+            return Vector<double>(xpos, ypos, zpos);
         }
         
 

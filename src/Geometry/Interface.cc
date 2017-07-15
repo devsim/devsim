@@ -16,9 +16,8 @@ limitations under the License.
 ***/
 
 #include "Interface.hh"
-#include "InterfaceEquation.hh"
+#include "InterfaceEquationHolder.hh"
 #include "InterfaceNodeModel.hh"
-#include "IterHelper.hh"
 #include "GeometryStream.hh"
 #include "dsAssert.hh"
 #include "Region.hh"
@@ -37,6 +36,7 @@ Interface::Interface(const std::string &nm, Region *r0, Region *r1, const ConstN
 
 Interface::~Interface()
 {
+#if 0
     {
         InterfaceEquationPtrMap_t::iterator it = interfaceEquationList.begin();
         for (;it != interfaceEquationList.end(); ++it)
@@ -44,6 +44,7 @@ Interface::~Interface()
             delete it->second;
         }
     }
+#endif
 }
 
 const std::string &Interface::GetDeviceName() const
@@ -52,9 +53,9 @@ const std::string &Interface::GetDeviceName() const
 }
 
 /// Here we are taking ownership
-void Interface::AddInterfaceEquation(InterfaceEquationPtr iep)
+void Interface::AddInterfaceEquation(InterfaceEquationHolder &iep)
 {
-    const std::string &name = iep->GetName();
+    const std::string &name = iep.GetName();
     InterfaceEquationPtrMap_t::iterator it = interfaceEquationList.find(name);
     if (it == interfaceEquationList.end())
     {
@@ -66,30 +67,28 @@ void Interface::AddInterfaceEquation(InterfaceEquationPtr iep)
       os << "Warning: Replacing interface equation with equation of the same name.\n"
           "Interface: " << this->GetName() << ", Equation: " << name << "\n";
       GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
-      delete it->second;
       interfaceEquationList[name] = iep;
     }
 }
 
-void Interface::DeleteInterfaceEquation(InterfaceEquationPtr iep)
+void Interface::DeleteInterfaceEquation(InterfaceEquationHolder &iep)
 {
-    const std::string &name = iep->GetName();
+    const std::string &name = iep.GetName();
     InterfaceEquationPtrMap_t::iterator it = interfaceEquationList.find(name);
     if (it != interfaceEquationList.end())
     {
       dsAssert(iep == it->second, "UNEXPECTED");
       std::ostringstream os; 
-      delete it->second;
       interfaceEquationList.erase(it);
     }
 }
 
-const Interface::InterfaceEquationPtrMap_t &Interface::GetInterfaceEquationList() const
+const InterfaceEquationPtrMap_t &Interface::GetInterfaceEquationList() const
 {
     return interfaceEquationList;
 }
 
-Interface::InterfaceEquationPtrMap_t &Interface::GetInterfaceEquationList()
+InterfaceEquationPtrMap_t &Interface::GetInterfaceEquationList()
 {
     return interfaceEquationList;
 }
@@ -135,9 +134,12 @@ void Interface::DeleteInterfaceNodeModel(const std::string &nm)
   }
 }
 
-void Interface::Assemble(dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Interface::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-    IterHelper::ForEachMapValue(GetInterfaceEquationList(), IterHelper::assdcp<InterfaceEquation>(m, v, p, w, t));
+    for (auto it :  GetInterfaceEquationList())
+    {
+      it.second.Assemble(m, v, p, w, t);
+    }
 }
 
 void Interface::RegisterCallback(const std::string &mod, const std::string &dep)
@@ -429,12 +431,14 @@ std::string Interface::GetSurfaceAreaModel() const
   return model0;
 }
 
-InterfaceModelExprDataCachePtr Interface::GetInterfaceModelExprDataCache()
+template <typename DoubleType>
+InterfaceModelExprDataCachePtr<DoubleType> Interface::GetInterfaceModelExprDataCache()
 {
   return interfaceModelExprDataCache.lock();
 }
 
-void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr p)
+template <typename DoubleType>
+void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<DoubleType> p)
 {
   interfaceModelExprDataCache = p;
 }
@@ -455,4 +459,8 @@ void Interface::AddTriangles(const ConstTriangleList &tlist0, const ConstTriangl
   rp1->SignalCallbacks("@@@InterfaceChange");
 }
 
+
+template InterfaceModelExprDataCachePtr<double> Interface::GetInterfaceModelExprDataCache();
+
+template void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<double> p);
 

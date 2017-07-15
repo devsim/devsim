@@ -20,9 +20,11 @@ limitations under the License.
 
 #include "TriangleEdgeModel.hh"
 
+template <typename T>
 class Vector;
 
 // Coupling length
+template <typename DoubleType>
 class TriangleCylindricalEdgeCouple : public TriangleEdgeModel {
     public:
         TriangleCylindricalEdgeCouple(RegionPtr);
@@ -33,7 +35,7 @@ class TriangleCylindricalEdgeCouple : public TriangleEdgeModel {
         TriangleCylindricalEdgeCouple();
         TriangleCylindricalEdgeCouple(const TriangleCylindricalEdgeCouple &);
         TriangleCylindricalEdgeCouple &operator=(const TriangleCylindricalEdgeCouple &);
-        Vector calcTriangleCylindricalEdgeCouple(ConstTrianglePtr, const std::string &/*RAxisVariable*/, double /*RAxis0*/) const;
+        Vector<DoubleType> calcTriangleCylindricalEdgeCouple(ConstTrianglePtr, const std::string &/*RAxisVariable*/, DoubleType /*RAxis0*/) const;
         void calcTriangleEdgeScalarValues() const;
 };
 #endif

@@ -30,8 +30,9 @@ limitations under the License.
 
 #include "Interpreter.hh"
 
-//// TODO: This will be removed when parallelized
 #include "MathPacket.hh"
+
+#include "MathWrapper.hh"
 
 #if 0
 #ifdef _WIN32
@@ -40,36 +41,35 @@ limitations under the License.
 #endif
 
 namespace Eqomfp {
-  typedef double (*unaryfuncptr)(double);
-  typedef double (*binaryfuncptr)(double, double);
-  typedef double (*ternaryfuncptr)(double, double, double);
-  typedef double (*quaternaryfuncptr)(double, double, double, double);
-
+  template <typename T>
   struct TernaryTblEntry {
       const char *name;
-      ternaryfuncptr func;
+      ternaryfuncptr<T> func;
       const char *desc;
   };
 
+  template <typename T>
   struct QuaternaryTblEntry {
       const char *name;
-      quaternaryfuncptr func;
+      quaternaryfuncptr<T> func;
       const char *desc;
   };
 
+  template <typename T>
   struct BinaryTblEntry {
       const char *name;
-      binaryfuncptr func;
+      binaryfuncptr<T> func;
       const char *desc;
   };
 
+  template <typename T>
   struct UnaryTblEntry {
       const char *name;
-      unaryfuncptr func;
+      unaryfuncptr<T> func;
       const char *desc;
   };
 
-  UnaryTblEntry UnaryTable[] = {
+  UnaryTblEntry<double> UnaryTable[] = {
   {"abs",       fabs,         "abs(obj)   -- Absolute value"},
   {"exp",       exp,          "exp(obj)   -- Exponentiation with respect to e"},
   {"log",       log,          "log(obj)   -- Natural logarithm"},
@@ -101,7 +101,7 @@ namespace Eqomfp {
   {NULL, NULL, NULL}
   };
 
-  BinaryTblEntry BinaryTable[] = {
+  BinaryTblEntry<double> BinaryTable[] = {
   {"min",  min,  "min(obj1, obj2)       -- minimum of obj1 and obj2"},
   {"max",  max,  "max(obj1, obj2)       -- maximum of obj1 and obj2"},
 //  {"parallel", parallel,  "parallel(obj1, obj2)       -- 1 / (1/obj1 + 1/obj2)"},
@@ -117,30 +117,33 @@ namespace Eqomfp {
   {NULL, NULL, NULL}
   };
 
-  TernaryTblEntry TernaryTable[] = {
+  TernaryTblEntry<double> TernaryTable[] = {
   {"ifelse",  ifelsefunc,  "ifelse(obj1, obj2, obj3) -- if (obj1) then (obj2) else (obj3)"},
   {"kahan3",  kahan3,  "kahan(obj1, obj2, obj3) -- kahan summation"},
   {NULL, NULL, NULL}
   };
 
-  QuaternaryTblEntry QuaternaryTable[] = {
+  QuaternaryTblEntry<double> QuaternaryTable[] = {
   {"dot2d",  dot2dfunc,  "dot2d(ax, ay, bx, by) -- ax*bx + ay*by"},
   {"kahan4",  kahan4,  "kahan(obj1, obj2, obj3, obj4) -- kahan summation"},
   {NULL, NULL, NULL}
   };
 }
 
-MathEval *MathEval::instance_ = NULL;
+template <> MathEval<double> *MathEval<double>::instance_ = NULL;
 
-MathEval::MathEval()
+template <typename DoubleType>
+MathEval<DoubleType>::MathEval()
 {
 }
 
-MathEval::~MathEval()
+template <typename DoubleType>
+MathEval<DoubleType>::~MathEval()
 {
 }
 
-MathEval &MathEval::GetInstance()
+template <typename DoubleType>
+MathEval<DoubleType> &MathEval<DoubleType>::GetInstance()
 {
   if (!instance_)
   {
@@ -150,53 +153,56 @@ MathEval &MathEval::GetInstance()
   return *instance_;
 }
 
-void MathEval::DestroyInstance()
+template <typename DoubleType>
+void MathEval<DoubleType>::DestroyInstance()
 {
   delete instance_;
   instance_ = NULL;
 }
 
 
-void MathEval::InitializeBuiltInMathFunc()
+template <typename DoubleType>
+void MathEval<DoubleType>::InitializeBuiltInMathFunc()
 {
   for (size_t i = 0; Eqomfp::UnaryTable[i].name != NULL; ++i)
   {
     const std::string &name   = Eqomfp::UnaryTable[i].name;
-    Eqomfp::unaryfuncptr func = Eqomfp::UnaryTable[i].func;
-    FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr(new Eqomfp::MathWrapper1(name, func));
+    Eqomfp::unaryfuncptr<DoubleType> func = Eqomfp::UnaryTable[i].func;
+    FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper1<DoubleType>(name, func));
   }
   for (size_t i = 0; Eqomfp::BinaryTable[i].name != NULL; ++i)
   {
     const std::string &name   = Eqomfp::BinaryTable[i].name;
-    Eqomfp::binaryfuncptr func = Eqomfp::BinaryTable[i].func;
-    FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr(new Eqomfp::MathWrapper2(name, func));
+    Eqomfp::binaryfuncptr<DoubleType> func = Eqomfp::BinaryTable[i].func;
+    FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper2<DoubleType>(name, func));
   }
   for (size_t i = 0; Eqomfp::TernaryTable[i].name != NULL; ++i)
   {
     const std::string &name   = Eqomfp::TernaryTable[i].name;
-    Eqomfp::ternaryfuncptr func = Eqomfp::TernaryTable[i].func;
-    FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr(new Eqomfp::MathWrapper3(name, func));
+    Eqomfp::ternaryfuncptr<DoubleType> func = Eqomfp::TernaryTable[i].func;
+    FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper3<DoubleType>(name, func));
   }
   for (size_t i = 0; Eqomfp::QuaternaryTable[i].name != NULL; ++i)
   {
     const std::string &name   = Eqomfp::QuaternaryTable[i].name;
-    Eqomfp::quaternaryfuncptr func = Eqomfp::QuaternaryTable[i].func;
-    FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr(new Eqomfp::MathWrapper4(name, func));
+    Eqomfp::quaternaryfuncptr<DoubleType> func = Eqomfp::QuaternaryTable[i].func;
+    FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper4<DoubleType>(name, func));
   }
 
-  FuncPtrMap_["pow"] = Eqomfp::MathWrapperPtr(new Eqomfp::PowWrapper("pow"));
+  FuncPtrMap_["pow"] = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::PowWrapper<DoubleType>("pow"));
 }
 
-double MathEval::EvaluateMathFunc(const std::string &func, std::vector<double> &vals, std::string &error) const
+template <typename DoubleType>
+DoubleType MathEval<DoubleType>::EvaluateMathFunc(const std::string &func, std::vector<DoubleType> &vals, std::string &error) const
 {
   const size_t cnt = vals.size();
-  double x = 0.0;
+  DoubleType x = 0.0;
 
   if (tclMathFuncMap_.count(func))
   {
-    static std::vector<const std::vector<double> *> vvals;
+    static std::vector<const std::vector<DoubleType> *> vvals;
     vvals.resize(cnt);
-    static std::vector<double> result(1);
+    static std::vector<DoubleType> result(1);
     EvaluateTclMathFunc(func, vals, vvals, error, result);
     if (error.empty())
     {
@@ -205,15 +211,16 @@ double MathEval::EvaluateMathFunc(const std::string &func, std::vector<double> &
   }
   else if (FuncPtrMap_.count(func))
   {
-    std::map<std::string, Eqomfp::MathWrapperPtr>::const_iterator it = FuncPtrMap_.find(func);
-    const Eqomfp::MathWrapper &MyFunc = *(it->second);
+    typename std::map<std::string, Eqomfp::MathWrapperPtr<DoubleType>>::const_iterator it = FuncPtrMap_.find(func);
+    const Eqomfp::MathWrapper<DoubleType> &MyFunc = *(it->second);
     x = MyFunc.Evaluate(vals, error);
   }
 
   return x;
 }
 
-void MathEval::EvaluateTclMathFunc(const std::string &func, std::vector<double> &dvals, const std::vector<const std::vector<double> *> &vvals, std::string &error, std::vector<double> &result) const
+template <typename DoubleType>
+void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::string &error, std::vector<DoubleType> &result) const
 {
   tclMathFuncMap_t::const_iterator it = tclMathFuncMap_.find(func);
 
@@ -283,7 +290,7 @@ void MathEval::EvaluateTclMathFunc(const std::string &func, std::vector<double> 
         else
         {
           std::ostringstream os;
-          os << "Could not convert " << out.GetString() << " to a double\n";
+          os << "Could not convert " << out.GetString() << " to a DoubleType\n";
           error += os.str();
           break;
         }
@@ -303,7 +310,8 @@ void MathEval::EvaluateTclMathFunc(const std::string &func, std::vector<double> 
   }
 }
 
-void MathEval::EvaluateMathFunc(const std::string &func, std::vector<double> &dvals, const std::vector<const std::vector<double> *> &vvals, std::string &error, std::vector<double> &result, size_t vlen) const
+template <typename DoubleType>
+void MathEval<DoubleType>::EvaluateMathFunc(const std::string &func, std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::string &error, std::vector<DoubleType> &result, size_t vlen) const
 {
   result.resize(vlen);
 
@@ -313,8 +321,8 @@ void MathEval::EvaluateMathFunc(const std::string &func, std::vector<double> &dv
   }
   else if (FuncPtrMap_.count(func))
   {
-    std::map<std::string, Eqomfp::MathWrapperPtr>::const_iterator it = FuncPtrMap_.find(func);
-    const Eqomfp::MathWrapper &MyFunc = *(it->second);
+    typename std::map<std::string, Eqomfp::MathWrapperPtr<DoubleType>>::const_iterator it = FuncPtrMap_.find(func);
+    const Eqomfp::MathWrapper<DoubleType> &MyFunc = *(it->second);
     error += Eqomfp::MathPacketRun(MyFunc, dvals, vvals, result, vlen);
 //    MyFunc.Evaluate(dvals, vvals, error, result, 0, vlen);
     //// TODO: in the future not call this function but the schedular
@@ -337,16 +345,20 @@ void MathEval::EvaluateMathFunc(const std::string &func, std::vector<double> &dv
   }
 }
 
-void MathEval::AddTclMath(const std::string &funcname, size_t numargs)
+template <typename DoubleType>
+void MathEval<DoubleType>::AddTclMath(const std::string &funcname, size_t numargs)
 {
   ///Really need to make sure number of arguments make sense in tcl api
   tclMathFuncMap_[funcname] = numargs;
 }
 
-void MathEval::RemoveTclMath(const std::string &funcname)
+template <typename DoubleType>
+void MathEval<DoubleType>::RemoveTclMath(const std::string &funcname)
 {
   /// Does this throw?
   tclMathFuncMap_.erase(funcname);
 }
+
+template class MathEval<double>;
 
 

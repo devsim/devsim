@@ -18,6 +18,9 @@ limitations under the License.
 #include "Fermi.hh"
 #include <cmath>
 #include <cstdlib>
+#ifndef _WIN32
+#warning "Extended Precision Version"
+#endif
 namespace
 {
 // TODO: "These coefficients only worked out for amd64 in current configuration"
@@ -174,3 +177,4 @@ int main()
     }
 }
 #endif
+

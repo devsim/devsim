@@ -27,6 +27,7 @@ class Tetrahedron;
 typedef Tetrahedron *TetrahedronPtr;
 typedef const Tetrahedron *ConstTetrahedronPtr;
 
+template <typename DoubleType>
 class TetrahedronNodeVolume : public TetrahedronEdgeModel
 {
     public:

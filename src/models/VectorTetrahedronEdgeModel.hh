@@ -18,6 +18,7 @@ limitations under the License.
 #ifndef VECTOR_TETRAHEDRON_EDGE_FROM_EDGE_MODEL_HH
 #define VECTOR_TETRAHEDRON_EDGE_FROM_EDGE_MODEL_HH
 #include "TetrahedronEdgeModel.hh"
+template <typename DoubleType>
 class VectorTetrahedronEdgeModel : public TetrahedronEdgeModel {
     public:
         //// Out naming convention is that the name given is the edge model

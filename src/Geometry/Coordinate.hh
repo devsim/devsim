@@ -28,7 +28,7 @@ class Coordinate {
    public:
       Coordinate(double, double, double);
 
-      const Vector &Position() const;
+      const Vector<double> &Position() const;
 
       size_t GetIndex() const
       {
@@ -45,7 +45,7 @@ class Coordinate {
       Coordinate (const Coordinate &);
       Coordinate &operator=(const Coordinate &);
 
-      Vector position;
+      Vector<double> position;
       size_t index;
 };
 #endif

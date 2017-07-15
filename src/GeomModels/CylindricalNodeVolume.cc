@@ -22,7 +22,8 @@ limitations under the License.
 #include "Node.hh"
 #include "Edge.hh"
 
-CylindricalNodeVolume::CylindricalNodeVolume(RegionPtr rp)
+template <typename DoubleType>
+CylindricalNodeVolume<DoubleType>::CylindricalNodeVolume(RegionPtr rp)
     : NodeModel("CylindricalNodeVolume", rp, NodeModel::SCALAR)
 {
     const size_t dimension = rp->GetDimension();
@@ -35,14 +36,15 @@ CylindricalNodeVolume::CylindricalNodeVolume(RegionPtr rp)
     }
 }
 
-void CylindricalNodeVolume::calcNodeScalarValues() const
+template <typename DoubleType>
+void CylindricalNodeVolume<DoubleType>::calcNodeScalarValues() const
 {
   const Region &r = GetRegion();
   const size_t dimension = r.GetDimension();
 
   dsAssert(dimension == 2, "CylindricalNodeVolume 2d Only");
 
-  std::vector<double> nv(r.GetNumberNodes());
+  std::vector<DoubleType> nv(r.GetNumberNodes());
 
 
   if (dimension == 2)
@@ -55,8 +57,8 @@ void CylindricalNodeVolume::calcNodeScalarValues() const
     dsAssert(eec0.get(), "ElementNodeVolume@en0 missing");
     dsAssert(eec1.get(), "ElementNodeVolume@en1 missing");
 
-    const EdgeScalarList &nv0 = eec0->GetValuesOnEdges();
-    const EdgeScalarList &nv1 = eec1->GetValuesOnEdges();
+    const EdgeScalarList<DoubleType> &nv0 = eec0->GetValuesOnEdges<DoubleType>();
+    const EdgeScalarList<DoubleType> &nv1 = eec1->GetValuesOnEdges<DoubleType>();
 
     const ConstEdgeList &edge_list = region.GetEdgeList();
 
@@ -82,13 +84,17 @@ void CylindricalNodeVolume::calcNodeScalarValues() const
   SetValues(nv);
 }
 
-void CylindricalNodeVolume::setInitialValues()
+template <typename DoubleType>
+void CylindricalNodeVolume<DoubleType>::setInitialValues()
 {
     DefaultInitializeValues();
 }
 
-void CylindricalNodeVolume::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void CylindricalNodeVolume<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "DATAPARENT \"ElementCylindricalNodeVolume@en0\"";
 }
+
+template class CylindricalNodeVolume<double>;
 

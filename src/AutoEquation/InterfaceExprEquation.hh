@@ -34,7 +34,8 @@ namespace Eqo {
 /**
  * This type of equation permutes the second regions equation into the first.
  */
-class InterfaceExprEquation : public InterfaceEquation
+template <typename DoubleType>
+class InterfaceExprEquation : public InterfaceEquation<DoubleType>
 {
     public:
         enum EquationType {UNKNOWN, CONTINUOUS, FLUXTERM};
@@ -56,7 +57,7 @@ class InterfaceExprEquation : public InterfaceEquation
         InterfaceExprEquation(const InterfaceExprEquation &);
         InterfaceExprEquation &operator=(const InterfaceExprEquation &);
 
-        void DerivedAssemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         /// Need to decide if we are going to contain equations or models?
         /// Assume that 

@@ -19,6 +19,7 @@ limitations under the License.
 #define NODEVOLUME_HH
 #include "NodeModel.hh"
 
+template <typename DoubleType>
 class NodeVolume : public NodeModel
 {
     public:
@@ -27,7 +28,7 @@ class NodeVolume : public NodeModel
       void Serialize(std::ostream &) const;
 
     private:
-      double calcNodeVolume(ConstNodePtr) const;
+      DoubleType calcNodeVolume(ConstNodePtr) const;
       void calcNodeScalarValues() const;
       void setInitialValues();
 };

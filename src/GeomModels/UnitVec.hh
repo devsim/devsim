@@ -18,8 +18,10 @@ limitations under the License.
 #ifndef UNITVEC_HH
 #define UNITVEC_HH
 #include "EdgeModel.hh"
+template <typename T>
 class Vector;
 // Coupling length
+template <typename DoubleType>
 class UnitVec : public EdgeModel {
     public:
         UnitVec(RegionPtr);
@@ -31,7 +33,7 @@ class UnitVec : public EdgeModel {
         UnitVec();
         UnitVec(const UnitVec &);
         UnitVec &operator=(const UnitVec &);
-        Vector calcUnitVec(ConstEdgePtr) const;
+        Vector<DoubleType> calcUnitVec(ConstEdgePtr) const;
         void calcEdgeScalarValues() const;
 
         WeakEdgeModelPtr unity;

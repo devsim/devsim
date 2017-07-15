@@ -30,29 +30,29 @@ Triangle::Triangle(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2
 
 }
 
-Vector GetCenter(const Triangle &tr)
+Vector<double> GetCenter(const Triangle &tr)
 {
   const std::vector<ConstNodePtr> &nodes = tr.GetNodeList();
 
-  const Vector &v0 = nodes[0]->Position();
-  const Vector &v1 = nodes[1]->Position();
-  const Vector &v2 = nodes[2]->Position();
+  const Vector<double> &v0 = nodes[0]->Position();
+  const Vector<double> &v1 = nodes[1]->Position();
+  const Vector<double> &v2 = nodes[2]->Position();
 
   return GetTriangleCenter(v0, v1, v2);
 }
 
 //// Special case where we are not in a plane
-Vector GetTriangleCenter3d(const Vector &p1, const Vector &p2, const Vector &p3)
+Vector<double> GetTriangleCenter3d(const Vector<double> &p1, const Vector<double> &p2, const Vector<double> &p3)
 {
 
 // TODO:"This formula is from wikipedia and has not been verified"
 
-  Vector p12 = p1 - p2;
-  Vector p13 = p1 - p3;
-  Vector p23 = p2 - p3;
+  Vector<double> p12 = p1 - p2;
+  Vector<double> p13 = p1 - p3;
+  Vector<double> p23 = p2 - p3;
 
   //// Watch out for colinearity here
-  const Vector tden1 = cross_prod(p12, p23);
+  const Vector<double> tden1 = cross_prod(p12, p23);
   const double den = 2 * dot_prod(tden1, tden1);
 
   const double deninv = 1.0 / den;
@@ -64,12 +64,12 @@ Vector GetTriangleCenter3d(const Vector &p1, const Vector &p2, const Vector &p3)
   /// dot_prod(p31, p32) = dot_prod(p13, p23)
   const double gamma = dot_prod(p12, p12) * dot_prod(p13, p23) * deninv;
 
-  Vector pc = alpha * p1 + beta * p2 + gamma * p3;
+  Vector<double> pc = alpha * p1 + beta * p2 + gamma * p3;
 
   return pc; 
 }
 
-Vector GetTriangleCenterInPlane(double x0, double x1, double x2, double y0, double y1, double y2)
+Vector<double> GetTriangleCenterInPlane(double x0, double x1, double x2, double y0, double y1, double y2)
 {
   double xcenter = 0.0;
   double ycenter = 0.0;
@@ -102,31 +102,31 @@ Vector GetTriangleCenterInPlane(double x0, double x1, double x2, double y0, doub
     ycenter = m0 * (xcenter - mx0) + my0;
   }
 
-  return Vector(xcenter, ycenter);
+  return Vector<double>(xcenter, ycenter);
 }
 
 //// Handles case where all points in a plane
-Vector GetTriangleCenter(const Vector &v0, const Vector &v1, const Vector &v2)
+Vector<double> GetTriangleCenter(const Vector<double> &v0, const Vector<double> &v1, const Vector<double> &v2)
 {
-  const Vector &v10 = v1 - v0;
-  const Vector &v20 = v2 - v0;
+  const Vector<double> &v10 = v1 - v0;
+  const Vector<double> &v20 = v2 - v0;
 
-  Vector ret;
+  Vector<double> ret;
 
   if ((fabs(v10.Getz()) < Triangle::EPSILON) && (fabs(v20.Getz()) < Triangle::EPSILON))
   {
-    Vector temp = GetTriangleCenterInPlane(v0.Getx(), v1.Getx(), v2.Getx(), v0.Gety(), v1.Gety(), v2.Gety());
-    ret = Vector(temp.Getx(), temp.Gety(), v0.Getz());
+    Vector<double> temp = GetTriangleCenterInPlane(v0.Getx(), v1.Getx(), v2.Getx(), v0.Gety(), v1.Gety(), v2.Gety());
+    ret = Vector<double>(temp.Getx(), temp.Gety(), v0.Getz());
   }
   else if ((fabs(v10.Gety()) < Triangle::EPSILON) && (fabs(v20.Gety()) < Triangle::EPSILON))
   {
-    Vector temp = GetTriangleCenterInPlane(v0.Getx(), v1.Getx(), v2.Getx(), v0.Getz(), v1.Getz(), v2.Getz());
-    ret = Vector(temp.Getx(), v0.Gety(), temp.Gety());
+    Vector<double> temp = GetTriangleCenterInPlane(v0.Getx(), v1.Getx(), v2.Getx(), v0.Getz(), v1.Getz(), v2.Getz());
+    ret = Vector<double>(temp.Getx(), v0.Gety(), temp.Gety());
   }
   else if ((fabs(v10.Getx()) < Triangle::EPSILON) && (fabs(v20.Getx()) < Triangle::EPSILON))
   {
-    Vector temp = GetTriangleCenterInPlane(v0.Getz(), v1.Getz(), v2.Getz(), v0.Gety(), v1.Gety(), v2.Gety());
-    ret = Vector(v0.Getx(), temp.Gety(), temp.Getx());
+    Vector<double> temp = GetTriangleCenterInPlane(v0.Getz(), v1.Getz(), v2.Getz(), v0.Gety(), v1.Gety(), v2.Gety());
+    ret = Vector<double>(v0.Getx(), temp.Gety(), temp.Getx());
   }
   else
   {

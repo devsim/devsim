@@ -22,11 +22,8 @@ limitations under the License.
 #include "dsAssert.hh"
 #include "Vector.hh"
 
-
-
-// TODO:"TEST THIS"
-
-TetrahedronEdgeFromEdgeModelDerivative::TetrahedronEdgeFromEdgeModelDerivative(
+template <typename DoubleType>
+TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::TetrahedronEdgeFromEdgeModelDerivative(
         const std::string &edgemodel,
         const std::string &derivative,
         RegionPtr rp
@@ -57,23 +54,24 @@ TetrahedronEdgeFromEdgeModelDerivative::TetrahedronEdgeFromEdgeModelDerivative(
 
   RegisterCallback(edgeModelName0);
   RegisterCallback(edgeModelName1);
-  new TetrahedronEdgeSubModel(x_ModelName1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(x_ModelName2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(x_ModelName3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(y_ModelName0, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(y_ModelName1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(y_ModelName2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(y_ModelName3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(z_ModelName0, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(z_ModelName1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(z_ModelName2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
-  new TetrahedronEdgeSubModel(z_ModelName3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(x_ModelName1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(x_ModelName2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(x_ModelName3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName0, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName0, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::NODISPLAY);
 }
 
 //// Need to figure out the deleter situation from sub models
 //// Perhaps a Delete SubModels method??????
 
-void TetrahedronEdgeFromEdgeModelDerivative::calcTetrahedronEdgeScalarValues() const
+template <typename DoubleType>
+void TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::calcTetrahedronEdgeScalarValues() const
 {
   const Region &reg = GetRegion();
 
@@ -114,9 +112,9 @@ void TetrahedronEdgeFromEdgeModelDerivative::calcTetrahedronEdgeScalarValues() c
   const ConstTetrahedronList &tl = GetRegion().GetTetrahedronList();
 
 
-  std::vector<std::vector<double> > evx(4);
-  std::vector<std::vector<double> > evy(4);
-  std::vector<std::vector<double> > evz(4);
+  std::vector<std::vector<DoubleType> > evx(4);
+  std::vector<std::vector<DoubleType> > evy(4);
+  std::vector<std::vector<DoubleType> > evz(4);
   for (size_t i = 0; i < 4; ++i)
   {
     evx[i].resize(6*tl.size());
@@ -130,13 +128,13 @@ void TetrahedronEdgeFromEdgeModelDerivative::calcTetrahedronEdgeScalarValues() c
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Tetrahedron &tetrahedron = *tl[i];
-    const std::vector<std::vector<Vector > > &v = efield.GetTetrahedronElementField(tetrahedron, *emp[0], *emp[1]);
+    const std::vector<std::vector<Vector<DoubleType> > > &v = efield.GetTetrahedronElementField(tetrahedron, *emp[0], *emp[1]);
     for (size_t nindex = 0; nindex < 4; ++nindex)
     {
       for (size_t eindex = 0; eindex < 6; ++eindex)
       {
         const size_t oindex = 6*i + eindex;
-        const Vector &vec = v[nindex][eindex];
+        const Vector<DoubleType> &vec = v[nindex][eindex];
         evx[nindex][oindex] = vec.Getx();
         evy[nindex][oindex] = vec.Gety();
         evz[nindex][oindex] = vec.Getz();
@@ -151,8 +149,11 @@ void TetrahedronEdgeFromEdgeModelDerivative::calcTetrahedronEdgeScalarValues() c
   }
 }
 
-void TetrahedronEdgeFromEdgeModelDerivative::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND element_from_edge_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -edge_model \"" << edgeModelName << "\" -derivative \"" << nodeModelName << "\"";
 }
+
+template class TetrahedronEdgeFromEdgeModelDerivative<double>;
 

@@ -19,6 +19,7 @@ limitations under the License.
 #define CYLINDRICALEDGENODEVOLUME_HH
 #include "EdgeModel.hh"
 
+template <typename DoubleType>
 class CylindricalEdgeNodeVolume : public EdgeModel
 {
     public:

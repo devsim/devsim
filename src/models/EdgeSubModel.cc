@@ -28,13 +28,15 @@ limitations under the License.
 #include <sstream>
 
 
-EdgeSubModel::EdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt)
+template <typename DoubleType>
+EdgeSubModel<DoubleType>::EdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt)
     :
         EdgeModel(nm, rp, dt)
 {
 }
 
-EdgeSubModel::EdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt, ConstEdgeModelPtr nmp)
+template <typename DoubleType>
+EdgeSubModel<DoubleType>::EdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt, ConstEdgeModelPtr nmp)
     :
         EdgeModel(nm, rp, dt),
         parentModel(nmp)
@@ -48,19 +50,22 @@ EdgeSubModel::EdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::Displ
 #endif
 }
 
-EdgeModelPtr EdgeSubModel::CreateEdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt)
+template <typename DoubleType>
+EdgeModelPtr EdgeSubModel<DoubleType>::CreateEdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt)
 {
   EdgeModel *p = new EdgeSubModel(nm, rp, dt);
   return p->GetSelfPtr();
 }
 
-EdgeModelPtr EdgeSubModel::CreateEdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt, ConstEdgeModelPtr nmp)
+template <typename DoubleType>
+EdgeModelPtr EdgeSubModel<DoubleType>::CreateEdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt, ConstEdgeModelPtr nmp)
 {
   EdgeModel *p = new EdgeSubModel(nm, rp, dt, nmp);
   return p->GetSelfPtr();
 }
 
-void EdgeSubModel::calcEdgeScalarValues() const
+template <typename DoubleType>
+void EdgeSubModel<DoubleType>::calcEdgeScalarValues() const
 {
     if (!parentModelName.empty())
     {
@@ -70,7 +75,7 @@ void EdgeSubModel::calcEdgeScalarValues() const
       ConstEdgeModelPtr emp = GetRegion().GetEdgeModel(parentModelName);
       if (!parentModel.expired())
       {
-        parentModel.lock()->GetScalarValues();
+        parentModel.lock()->template GetScalarValues<DoubleType>();
       }
       else if (emp)
       {
@@ -85,7 +90,8 @@ void EdgeSubModel::calcEdgeScalarValues() const
     }
 }
 
-void EdgeSubModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void EdgeSubModel<DoubleType>::Serialize(std::ostream &of) const
 {
   if (!parentModelName.empty())
   {
@@ -93,16 +99,18 @@ void EdgeSubModel::Serialize(std::ostream &of) const
   }
   else if (this->IsUniform())
   {
-    of << "UNIFORM " << GetUniformValue();
+    of << "UNIFORM " << GetUniformValue<DoubleType>();
   }
   else
   {
     of << "DATA";
-    const EdgeScalarList &vals = this->GetScalarValues();
+    const EdgeScalarList<DoubleType> &vals = this->GetScalarValues<DoubleType>();
     for (size_t i = 0; i < vals.size(); ++i)
     {
       of << "\n" << vals[i];
     }
   }
 }
+
+template class EdgeSubModel<double>;
 

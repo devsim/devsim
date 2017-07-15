@@ -17,6 +17,9 @@ limitations under the License.
 
 #ifndef EDGEMODEL_HH
 #define EDGEMODEL_HH
+
+#include "ModelDataHolder.hh"
+
 #include "Vector.hh"
 
 #include <memory>
@@ -25,16 +28,23 @@ limitations under the License.
 #include <vector>
 #include <iosfwd>
 
-typedef std::vector<double> EdgeScalarList;
-typedef std::vector<Vector> EdgeVectorList;
-typedef std::vector<double> NodeScalarList;
-typedef std::vector<Vector> NodeVectorList;
+template<typename T>
+using EdgeScalarList = std::vector<T>;
+
+template<typename T>
+using EdgeVectorList = std::vector<Vector<T> >;
+
+template<typename T>
+using NodeScalarList = std::vector<T>;
+
+template<typename T>
+using NodeVectorList = std::vector<Vector<T> >;
 
 class EdgeModel;
-typedef std::weak_ptr<EdgeModel>         WeakEdgeModelPtr;
-typedef std::weak_ptr<const EdgeModel>   WeakConstEdgeModelPtr;
-typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
+using WeakEdgeModelPtr = std::weak_ptr<EdgeModel>;
+using WeakConstEdgeModelPtr = std::weak_ptr<const EdgeModel>;
+using EdgeModelPtr = std::shared_ptr<EdgeModel>;
+using ConstEdgeModelPtr = std::shared_ptr<const EdgeModel>;
 
 class Contact;
 typedef Contact *ContactPtr;
@@ -57,18 +67,16 @@ class EdgeModel {
             return name;
         }
 
-        // Gets the appropriate value
-        // May want to make non-virtual base member and call virtual method within
-        // Value is directed from first node in Edge to second node
-//      double GetEdgeScalarValue(const Edge *) const;
-
-        const EdgeScalarList &GetScalarValues() const;
+        template <typename DoubleType>
+        const EdgeScalarList<DoubleType> &GetScalarValues() const;
 
         ///// Does not provide Derivatives!!!!!!!!!!!!!
-        NodeScalarList GetScalarValuesOnNodes() const;
+        template <typename DoubleType>
+        NodeScalarList<DoubleType> GetScalarValuesOnNodes() const;
 
         ///// Does not provide Derivatives!!!!!!!!!!!!!
-        NodeVectorList GetVectorValuesOnNodes() const;
+        template <typename DoubleType>
+        NodeVectorList<DoubleType> GetVectorValuesOnNodes() const;
 
         const std::vector<size_t> &GetContactIndexes() const;
 
@@ -86,8 +94,11 @@ class EdgeModel {
             return inprocess;
         }
 
-        void SetValues(const EdgeScalarList &);
-        void SetValues(const double &);
+        template <typename DoubleType>
+        void SetValues(const EdgeScalarList<DoubleType> &);
+
+        template <typename DoubleType>
+        void SetValues(const DoubleType &);
 
         const Region &GetRegion() const
         {
@@ -135,22 +146,17 @@ class EdgeModel {
 
         bool IsUniform() const;
 
-        double GetUniformValue() const;
+        template <typename DoubleType>
+        const DoubleType &GetUniformValue() const;
 
         size_t GetLength() const
         {
-          return length;
+          return model_data.GetLength();
         }        
 
-        bool IsZero() const
-        {
-          return (IsUniform() && (uniform_value == 0.0));
-        }
+        bool IsZero() const;
 
-        bool IsOne() const
-        {
-          return (IsUniform() && (uniform_value == 1.0));
-        }
+        bool IsOne() const;
 
         void DevsimSerialize(std::ostream &) const;
 
@@ -165,8 +171,11 @@ class EdgeModel {
 
         void RegisterCallback(const std::string &);
 
-        void SetValues(const EdgeScalarList &) const;
-        void SetValues(const double &) const;
+        template <typename DoubleType>
+        void SetValues(const EdgeScalarList<DoubleType> &) const;
+
+        template <typename DoubleType>
+        void SetValues(const DoubleType &) const;
 
         void MarkOld() const;
 
@@ -189,15 +198,13 @@ class EdgeModel {
         RegionPtr   myregion;
         WeakEdgeModelPtr myself;
         ContactPtr  mycontact;
+        mutable ModelDataHolder model_data;
         mutable bool uptodate;
         mutable bool inprocess;
-        mutable bool isuniform;
-        mutable double         uniform_value;
-        mutable EdgeScalarList values;
         mutable std::vector<size_t> atcontact;
         DisplayType displayType;
-        size_t length;
         static const char *DisplayTypeString[];
 };
 
 #endif
+

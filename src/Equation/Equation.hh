@@ -23,16 +23,31 @@ limitations under the License.
 #include <complex>
 #include <map>
 #include <iosfwd>
-template <typename T> class ScalarData;
+template <typename T, typename U> class ScalarData;
+
 class NodeModel;
+template<typename T>
+using NodeScalarData = ScalarData<NodeModel, T>;
+
 class EdgeModel;
+
 class TriangleEdgeModel;
+
 class TetrahedronEdgeModel;
-typedef ScalarData<NodeModel> NodeScalarData;
-typedef ScalarData<EdgeModel> EdgeScalarData;
-typedef ScalarData<TriangleEdgeModel> TriangleEdgeScalarData;
-typedef ScalarData<TetrahedronEdgeModel> TetrahedronEdgeScalarData;
-typedef std::vector<double> NodeScalarList;
+
+
+template<typename T>
+using EdgeScalarData = ScalarData<EdgeModel, T>;
+
+template<typename T>
+using TriangleEdgeScalarData = ScalarData<TriangleEdgeModel, T>;
+
+template<typename T>
+using TetrahedronEdgeScalarData = ScalarData<TetrahedronEdgeModel, T>;
+
+template<typename T>
+using NodeScalarList = std::vector<T>;
+
 
 class Region;
 typedef Region *RegionPtr;
@@ -48,16 +63,25 @@ class ObjectHolder;
 //#include "MatrixEntries.hh"
 namespace dsMath {
 template <typename T> class RowColVal;
-typedef RowColVal<double> RealRowColVal;
-typedef std::vector<RealRowColVal > RealRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 }
 
 // base class
 // called for assembly
 // start with specific equation derived classes
 // Then work out automatically derived Equations and Models
+template <typename DoubleType>
 class Equation {
     public:
         enum UpdateType {DEFAULT, LOGDAMP, POSITIVE};
@@ -66,7 +90,7 @@ class Equation {
         Equation(const std::string &, RegionPtr, const std::string &/*variable*/, UpdateType utype = DEFAULT/*update type*/);
         virtual ~Equation() = 0;
 
-        void Assemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         const std::string &GetName() const {
             return myname;
@@ -76,25 +100,25 @@ class Equation {
             return variable;
         }
 
-        void Update(NodeModel &, const std::vector<double> &);
+        void Update(NodeModel &, const std::vector<DoubleType> &);
 
-        void ACUpdate(NodeModel &, const std::vector<std::complex<double> > &);
-        void NoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<double> > &);
+        void ACUpdate(NodeModel &, const std::vector<std::complex<DoubleType> > &);
+        void NoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &);
 
 /*
         enum SmallSignalUpdateType {SSAC, NOISE};
-        void SmallSignalUpdate(const std::string &, const std::string &, const std::vector<std::complex<double> > &, SmallSignalUpdateType);
+        void SmallSignalUpdate(const std::string &, const std::string &, const std::vector<std::complex<DoubleType> > &, SmallSignalUpdateType);
 */
 
 
         std::string GetNoiseRealName(const std::string &);
         std::string GetNoiseImagName(const std::string &);
-        void DefaultNoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<double> > &);
+        void DefaultNoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &);
 
-        double GetAbsError() const;
-        double GetRelError() const;
-        void setMinError(double);
-        double GetMinError() const;
+        DoubleType GetAbsError() const;
+        DoubleType GetRelError() const;
+        void setMinError(DoubleType);
+        DoubleType GetMinError() const;
 
         const Region &GetRegion() const
         {
@@ -111,51 +135,51 @@ class Equation {
         virtual void GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &) const = 0;
 
         // for non negative variable
-        void DefaultUpdate(NodeModel &, const std::vector<double> &);
-        void DefaultACUpdate(NodeModel &, const std::vector<std::complex<double> > &);
+        void DefaultUpdate(NodeModel &, const std::vector<DoubleType> &);
+        void DefaultACUpdate(NodeModel &, const std::vector<std::complex<DoubleType> > &);
 
-        void setAbsError(double);
-        void setRelError(double);
+        void setAbsError(DoubleType);
+        void setRelError(DoubleType);
 
         /// Stuff like potential is symmetric.  It's derivative with respect to a node on either side is of opposite sign.
         /// Stuff should already be integrated w.r.t. EdgeCouple
-        void EdgeAssembleRHS(dsMath::RHSEntryVec &, const EdgeScalarData &/*rhs*/, const double /*n0_sign*/, const double /*n1_sign*/);
+        void EdgeAssembleRHS(dsMath::RHSEntryVec<DoubleType> &, const EdgeScalarData<DoubleType> &/*rhs*/, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
 
-        void TriangleEdgeAssembleRHS(dsMath::RHSEntryVec &, const TriangleEdgeScalarData &/*rhs*/, const double /*n0_sign*/, const double /*n1_sign*/);
+        void TriangleEdgeAssembleRHS(dsMath::RHSEntryVec<DoubleType> &, const TriangleEdgeScalarData<DoubleType> &/*rhs*/, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
 
-        void TetrahedronEdgeAssembleRHS(dsMath::RHSEntryVec &, const TetrahedronEdgeScalarData &/*rhs*/, const double /*n0_sign*/, const double /*n1_sign*/);
+        void TetrahedronEdgeAssembleRHS(dsMath::RHSEntryVec<DoubleType> &, const TetrahedronEdgeScalarData<DoubleType> &/*rhs*/, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
 
-//        void SymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const EdgeScalarData &/*der*/, const std::string &/*var*/);
+//        void SymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec<DoubleType> &, const EdgeScalarData<DoubleType> &/*der*/, const std::string &/*var*/);
 
-        void UnSymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const EdgeScalarData &/*der0*/, const EdgeScalarData &/*der1*/, const std::string &/*var*/, const double /*n0_sign*/, const double /*n1_sign*/);
-        void UnSymmetricTriangleEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const TriangleEdgeScalarData &/*der0*/, const TriangleEdgeScalarData &/*der1*/, const TriangleEdgeScalarData &/*der2*/, const std::string &/*var*/, const double /*n0_sign*/, const double /*n1_sign*/);
-        void UnSymmetricTetrahedronEdgeAssembleJacobian(dsMath::RealRowColValueVec &, const TetrahedronEdgeScalarData &/*der0*/, const TetrahedronEdgeScalarData &/*der1*/, const TetrahedronEdgeScalarData &/*der2*/, const TetrahedronEdgeScalarData &/*der3*/, const std::string &/*var*/, const double /*n0_sign*/, const double /*n1_sign*/);
+        void UnSymmetricEdgeAssembleJacobian(dsMath::RealRowColValueVec<DoubleType> &, const EdgeScalarData<DoubleType> &/*der0*/, const EdgeScalarData<DoubleType> &/*der1*/, const std::string &/*var*/, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
+        void UnSymmetricTriangleEdgeAssembleJacobian(dsMath::RealRowColValueVec<DoubleType> &, const TriangleEdgeScalarData<DoubleType> &/*der0*/, const TriangleEdgeScalarData<DoubleType> &/*der1*/, const TriangleEdgeScalarData<DoubleType> &/*der2*/, const std::string &/*var*/, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
+        void UnSymmetricTetrahedronEdgeAssembleJacobian(dsMath::RealRowColValueVec<DoubleType> &, const TetrahedronEdgeScalarData<DoubleType> &/*der0*/, const TetrahedronEdgeScalarData<DoubleType> &/*der1*/, const TetrahedronEdgeScalarData<DoubleType> &/*der2*/, const TetrahedronEdgeScalarData<DoubleType> &/*der3*/, const std::string &/*var*/, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
         /// Stuff should already be integrated w.r.t. NodeVolume
-        void NodeAssembleRHS(dsMath::RHSEntryVec &, const NodeScalarData &/*rhs*/);
-        void NodeAssembleJacobian(dsMath::RealRowColValueVec &, const NodeScalarData &/*der*/, const std::string &/*var*/);
+        void NodeAssembleRHS(dsMath::RHSEntryVec<DoubleType> &, const NodeScalarData<DoubleType> &/*rhs*/);
+        void NodeAssembleJacobian(dsMath::RealRowColValueVec<DoubleType> &, const NodeScalarData<DoubleType> &/*der*/, const std::string &/*var*/);
 
-        void NodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
-        void NodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &/*node_volume*/);
-        void EdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
-        void EdgeNodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
-        void EdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &/*edge_couple*/, const double n0_sign, const double n1_sign);
-        void ElementEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
-        void ElementNodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad);
-        void TriangleEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &, const double, const double);
-        void TetrahedronEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &, const double, const double);
+        void NodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad);
+        void NodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &/*node_volume*/);
+        void EdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad);
+        void EdgeNodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad);
+        void EdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &/*edge_couple*/, const DoubleType n0_sign, const DoubleType n1_sign);
+        void ElementEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad);
+        void ElementNodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad);
+        void TriangleEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType, const DoubleType);
+        void TetrahedronEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType, const DoubleType);
 
         std::string GetDerivativeModelName(const std::string &, const std::string &);
     private:
-        virtual void DerivedAssemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode) = 0;
+        virtual void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode) = 0;
 
-        virtual void UpdateValues(NodeModel &, const std::vector<double> &) = 0;
-        virtual void ACUpdateValues(NodeModel &, const std::vector<std::complex<double> > &) = 0;
-        virtual void NoiseUpdateValues(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<double> > &) = 0;
+        virtual void UpdateValues(NodeModel &, const std::vector<DoubleType> &) = 0;
+        virtual void ACUpdateValues(NodeModel &, const std::vector<std::complex<DoubleType> > &) = 0;
+        virtual void NoiseUpdateValues(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &) = 0;
 
 
-        void PositiveSolutionUpdate(const NodeScalarList &, NodeScalarList &, NodeScalarList &);
-        void LogSolutionUpdate(const      NodeScalarList &, NodeScalarList &, NodeScalarList &);
-        void DefaultSolutionUpdate(const NodeScalarList &, NodeScalarList &, NodeScalarList &);
+        void PositiveSolutionUpdate(const NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &);
+        void LogSolutionUpdate(const      NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &);
+        void DefaultSolutionUpdate(const NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &);
 
         Equation();
         Equation(const Equation &);
@@ -164,10 +188,10 @@ class Equation {
         const std::string myname;
         RegionPtr myregion;
         const std::string variable;
-        double absError;
-        double relError;
-        double minError;
-        static const double defminError;
+        DoubleType absError;
+        DoubleType relError;
+        DoubleType minError;
+        static const DoubleType defminError;
         UpdateType updateType;
 };
 #endif

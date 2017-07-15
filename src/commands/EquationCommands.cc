@@ -19,7 +19,10 @@ limitations under the License.
 #include "dsCommand.hh"
 #include "CommandHandler.hh"
 
-#include "Equation.hh"
+#include "EquationHolder.hh"
+#include "ContactEquationHolder.hh"
+#include "InterfaceEquationHolder.hh"
+
 #include "ExprEquation.hh"
 #include "InterfaceExprEquation.hh"
 #include "ExprContactEquation.hh"
@@ -105,18 +108,18 @@ createEquationCmd(CommandHandler &data)
     errorString += ValidateOptionalEdgeModelName(dev, reg, edge_model);
     errorString += ValidateOptionalEdgeModelName(dev, reg, edge_volume_model);
 
-    Equation::UpdateType updateType = Equation::DEFAULT;
+    Equation<double>::UpdateType updateType = Equation<double>::DEFAULT;
     if (variable_update == "default")
     {
-        updateType = Equation::DEFAULT;
+        updateType = Equation<double>::DEFAULT;
     }
     else if (variable_update == "log_damp")
     {
-        updateType = Equation::LOGDAMP;
+        updateType = Equation<double>::LOGDAMP;
     }
     else if (variable_update == "positive")
     {
-        updateType = Equation::POSITIVE;
+        updateType = Equation<double>::POSITIVE;
     }
     else
     {
@@ -132,7 +135,7 @@ createEquationCmd(CommandHandler &data)
       return;
     }
 
-    new ExprEquation(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_model, time_node_model, updateType);
+    new ExprEquation<double>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_model, time_node_model, updateType);
     data.SetEmptyResult();
 }
 
@@ -222,7 +225,7 @@ deleteEquationCmd(CommandHandler &data)
 
     Device *dev = NULL;
     Region *reg = NULL;
-    Equation *eqn = NULL;
+    EquationHolder eqn;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -251,7 +254,7 @@ deleteEquationCmd(CommandHandler &data)
     else if (commandName == "get_equation_command")
     {
       ObjectHolderMap_t omap;
-      eqn->GetCommandOptions(omap);
+      eqn.GetCommandOptions(omap);
       data.SetMapResult(omap);
     }
 }
@@ -306,14 +309,14 @@ createInterfaceEquationCmd(CommandHandler &data)
     // implement in terms of ValidateNodeModeName
     errorString  = ValidateInterfaceNodeModelName(dev, interface, interface_model);
 
-    InterfaceExprEquation::EquationType et = InterfaceExprEquation::UNKNOWN;
+    InterfaceExprEquation<double>::EquationType et = InterfaceExprEquation<double>::UNKNOWN;
     if (type == "continuous")
     {
-        et = InterfaceExprEquation::CONTINUOUS;
+        et = InterfaceExprEquation<double>::CONTINUOUS;
     }
     else if (type == "fluxterm")
     {
-        et = InterfaceExprEquation::FLUXTERM;
+        et = InterfaceExprEquation<double>::FLUXTERM;
     }
     else
     {
@@ -329,7 +332,7 @@ createInterfaceEquationCmd(CommandHandler &data)
       return;
     }
 
-    new InterfaceExprEquation(name, interface, variable_name, interface_model, et);
+    new InterfaceExprEquation<double>(name, interface, variable_name, interface_model, et);
     data.SetEmptyResult();
 }
 
@@ -407,7 +410,7 @@ deleteInterfaceEquationCmd(CommandHandler &data)
 
     Device    *dev = NULL;
     Interface *interface = NULL;
-    InterfaceEquation *ieqn = NULL;
+    InterfaceEquationHolder ieqn;
 
     errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
 
@@ -436,7 +439,7 @@ deleteInterfaceEquationCmd(CommandHandler &data)
     else if (commandName == "get_interface_equation_command")
     {
       ObjectHolderMap_t omap;
-      ieqn->GetCommandOptions(omap);
+      ieqn.GetCommandOptions(omap);
       data.SetMapResult(omap);
     }
 }
@@ -519,7 +522,7 @@ createContactEquationCmd(CommandHandler &data)
       return;
     }
 
-    ContactEquation *ce = new ExprContactEquation(name, variable_name, contact, region,
+    ContactEquation<double> *ce = new ExprContactEquation<double>(name, variable_name, contact, region,
         node_model, edge_model, element_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
     if (!circuit_node.empty())
     {
@@ -606,7 +609,7 @@ deleteContactEquationCmd(CommandHandler &data)
     Device    *dev = NULL;
     Region    *region = NULL;
     Contact   *contact = NULL;
-    ContactEquation *ceqn = NULL;
+    ContactEquationHolder ceqn;
 
     errorString = ValidateDeviceAndContact(deviceName, contactName, dev, contact);
 
@@ -636,7 +639,7 @@ deleteContactEquationCmd(CommandHandler &data)
     else if (commandName == "get_contact_equation_command")
     {
       ObjectHolderMap_t omap;
-      ceqn->GetCommandOptions(omap);
+      ceqn.GetCommandOptions(omap);
       data.SetMapResult(omap);
     }
 }

@@ -23,17 +23,19 @@ limitations under the License.
 #include "Vector.hh"
 
 
-TriangleEdgeFromEdgeModel::TriangleEdgeFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
+template <typename DoubleType>
+TriangleEdgeFromEdgeModel<DoubleType>::TriangleEdgeFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::SCALAR), edgeModelName(edgemodel), y_ModelName(edgeModelName + "_y")
 {
   RegisterCallback(edgemodel);
-  new TriangleEdgeSubModel(y_ModelName, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
 }
 
 //// Need to figure out the deleter situation from sub models
 //// Perhaps a Delete SubModels method??????
 
-void TriangleEdgeFromEdgeModel::calcTriangleEdgeScalarValues() const
+template <typename DoubleType>
+void TriangleEdgeFromEdgeModel<DoubleType>::calcTriangleEdgeScalarValues() const
 {
   const Region &reg = GetRegion();
 
@@ -45,14 +47,14 @@ void TriangleEdgeFromEdgeModel::calcTriangleEdgeScalarValues() const
 
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
 
-  std::vector<double> evx(3*tl.size());
-  std::vector<double> evy(3*tl.size());
+  std::vector<DoubleType> evx(3*tl.size());
+  std::vector<DoubleType> evy(3*tl.size());
 
   const TriangleElementField &efield = reg.GetTriangleElementField();
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Triangle &triangle = *tl[i];
-    const std::vector<Vector> &v = efield.GetTriangleElementField(triangle, *emp);
+    const std::vector<Vector<DoubleType> > &v = efield.GetTriangleElementField(triangle, *emp);
     for (size_t j = 0; j < 3; ++j)
     {
       evx[3*i + j] = v[j].Getx();
@@ -64,8 +66,12 @@ void TriangleEdgeFromEdgeModel::calcTriangleEdgeScalarValues() const
   std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempy)->SetValues(evy);
 }
 
-void TriangleEdgeFromEdgeModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TriangleEdgeFromEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND element_from_edge_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -edge_model \"" << edgeModelName << "\"";
 }
+
+template class TriangleEdgeFromEdgeModel<double>;
+
 

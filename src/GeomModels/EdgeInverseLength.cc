@@ -22,21 +22,23 @@ limitations under the License.
 #include "Edge.hh"
 #include "dsAssert.hh"
 
-EdgeInverseLength::EdgeInverseLength(RegionPtr rp) :
+template <typename DoubleType>
+EdgeInverseLength<DoubleType>::EdgeInverseLength(RegionPtr rp) :
 EdgeModel("EdgeInverseLength", rp, EdgeModel::SCALAR)
 {
     RegisterCallback("EdgeLength");
 }
 
 
-void EdgeInverseLength::calcEdgeScalarValues() const
+template <typename DoubleType>
+void EdgeInverseLength<DoubleType>::calcEdgeScalarValues() const
 {
     ConstEdgeModelPtr elen = GetRegion().GetEdgeModel("EdgeLength");
     dsAssert(elen.get(), "UNEXPECTED");
 
-    const EdgeScalarList &evals = elen->GetScalarValues();
+    const EdgeScalarList<DoubleType> &evals = elen->GetScalarValues<DoubleType>();
 
-    std::vector<double> ev(evals.size());
+    std::vector<DoubleType> ev(evals.size());
 
 
     for (size_t i = 0; i < ev.size(); ++i)
@@ -46,8 +48,11 @@ void EdgeInverseLength::calcEdgeScalarValues() const
     SetValues(ev);
 }
 
-void EdgeInverseLength::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void EdgeInverseLength<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class EdgeInverseLength<double>;
 

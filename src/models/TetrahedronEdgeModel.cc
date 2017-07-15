@@ -42,18 +42,27 @@ TetrahedronEdgeModel::~TetrahedronEdgeModel()
 #endif
 }
 
-// TODO:"Make display type configurable"
+bool TetrahedronEdgeModel::IsZero() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsZero();
+}
+
+bool TetrahedronEdgeModel::IsOne() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsOne();
+}
+
 TetrahedronEdgeModel::TetrahedronEdgeModel(const std::string &nm, const RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
     : name(nm),
       myregion(rp),
       uptodate(false),
       inprocess(false),
-      isuniform(true),
-      uniform_value(0.0),
-      displayType(dt)
+      displayType(dt),
+      model_data(rp->GetNumberTetrahedrons() * 6)
 { 
   myself = rp->AddTetrahedronEdgeModel(this);
-  length = GetRegion().GetNumberTetrahedrons() * 6;
 }
 
 void TetrahedronEdgeModel::CalculateValues() const
@@ -77,45 +86,41 @@ void TetrahedronEdgeModel::CalculateValues() const
   }
 }
 
-const TetrahedronEdgeScalarList & TetrahedronEdgeModel::GetScalarValues() const
+template <typename DoubleType>
+const TetrahedronEdgeScalarList<DoubleType> & TetrahedronEdgeModel::GetScalarValues() const
 {
   CalculateValues();
 
-  if (isuniform)
-  {
-    values.clear();
-    values.resize(length, uniform_value);
-  }
+  model_data.expand_uniform();
 
-  return values;
+  return model_data.GetValues<DoubleType>();
 }
 
-void TetrahedronEdgeModel::SetValues(const TetrahedronEdgeScalarList &nv)
+template <typename DoubleType>
+void TetrahedronEdgeModel::SetValues(const TetrahedronEdgeScalarList<DoubleType> &nv)
 {
-  values = nv;
-
-  isuniform = false;
-  uniform_value = 0.0;
+  model_data.set_values(nv);
 
   MarkOld();
   uptodate = true;
 }
 
-void TetrahedronEdgeModel::SetValues(const TetrahedronEdgeScalarList &nv) const
+template <typename DoubleType>
+void TetrahedronEdgeModel::SetValues(const TetrahedronEdgeScalarList<DoubleType> &nv) const
 {
   const_cast<TetrahedronEdgeModel *>(this)->SetValues(nv);
 }
 
-void TetrahedronEdgeModel::SetValues(const double &v) const
+template <typename DoubleType>
+void TetrahedronEdgeModel::SetValues(const DoubleType &v) const
 {
   const_cast<TetrahedronEdgeModel *>(this)->SetValues(v);
 }
 
-void TetrahedronEdgeModel::SetValues(const double &v)
+template <typename DoubleType>
+void TetrahedronEdgeModel::SetValues(const DoubleType &v)
 {
-  values.clear();
-  isuniform = true;
-  uniform_value = v;
+  model_data.SetUniformValue(v);
 
   MarkOld();
   uptodate = true;
@@ -137,11 +142,12 @@ void TetrahedronEdgeModel::RegisterCallback(const std::string &nm)
     myregion->RegisterCallback(name, nm);
 }
 
-void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::InterpolationType interpolation_type, std::vector<double> &values) const
+template <typename DoubleType>
+void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::InterpolationType interpolation_type, std::vector<DoubleType> &values) const
 {
   const Region &region = this->GetRegion();
 
-  const TetrahedronEdgeScalarList &esl = this->GetScalarValues();
+  const TetrahedronEdgeScalarList<DoubleType> &esl = this->GetScalarValues<double>();
 
   const size_t number_nodes = region.GetNumberNodes();
   const size_t number_tetrahedron = region.GetNumberTetrahedrons();
@@ -165,7 +171,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
         const Edge &edge = *((*cel[j]).edge);
         size_t ni0 = edge.GetHead()->GetIndex();
         size_t ni1 = edge.GetTail()->GetIndex();
-        const double val = esl[6*i + j];
+        const DoubleType val = esl[6*i + j];
         values[ni0] += val;
         values[ni1] += val;
         ++count[ni0];
@@ -189,9 +195,9 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
   {
     ConstTetrahedronEdgeModelPtr couple_ptr = region.GetTetrahedronEdgeModel("ElementEdgeCouple");
     dsAssert(couple_ptr.get(), "UNEXPECTED");
-    const TetrahedronEdgeScalarList &element_edge_couples = couple_ptr->GetScalarValues();
+    const TetrahedronEdgeScalarList<DoubleType> &element_edge_couples = couple_ptr->GetScalarValues<double>();
 
-    std::vector<double> scales(number_nodes);
+    std::vector<DoubleType> scales(number_nodes);
 
     for (size_t i = 0; i < number_tetrahedron; ++i)
     {
@@ -203,8 +209,8 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
         const size_t ni1 = edge.GetTail()->GetIndex();
         const size_t index = 6*i + j;
         /// The scale must be larger than 0
-        const double scale = element_edge_couples[index];
-        const double val   = scale * esl[index];
+        const DoubleType scale = element_edge_couples[index];
+        const DoubleType val   = scale * esl[index];
         values[ni0] += val;
         values[ni1] += val;
         scales[ni0] += scale;
@@ -213,7 +219,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
     }
     for (size_t i = 0; i < number_nodes; ++i)
     {
-      const double s = scales[i];
+      const DoubleType s = scales[i];
       if (s > 0.0)
       {
         values[i] /= s;
@@ -230,11 +236,12 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
   }
 }
 
-void TetrahedronEdgeModel::GetScalarValuesOnElements(std::vector<double> &ret) const
+template <typename DoubleType>
+void TetrahedronEdgeModel::GetScalarValuesOnElements(std::vector<DoubleType> &ret) const
 {
   const Region &region = this->GetRegion();
 
-  const TetrahedronEdgeScalarList &esl = this->GetScalarValues();
+  const TetrahedronEdgeScalarList<DoubleType> &esl = this->GetScalarValues<double>();
 
 //  const size_t number_nodes = region.GetNumberNodes();
   const size_t number_tetrahedron = region.GetNumberTetrahedrons();
@@ -244,11 +251,11 @@ void TetrahedronEdgeModel::GetScalarValuesOnElements(std::vector<double> &ret) c
   ret.clear();
   ret.resize(number_tetrahedron);
 
-  const double scale = 1.0 / 6.0;
+  const DoubleType scale = 1.0 / 6.0;
   size_t mindex = 0;
   for (size_t i = 0; i < number_tetrahedron; ++i)
   {
-    double &value = ret[i];
+    DoubleType &value = ret[i];
     value += esl[mindex++];
     value += esl[mindex++];
     value += esl[mindex++];
@@ -267,13 +274,13 @@ bool TetrahedronEdgeModel::IsUniform() const
     CalculateValues();
   }
 
-  return isuniform;
+  return model_data.IsUniform();
 }
 
-double TetrahedronEdgeModel::GetUniformValue() const
+template <typename DoubleType>
+const DoubleType &TetrahedronEdgeModel::GetUniformValue() const
 {
-  dsAssert(isuniform, "UNEXPECTED");
-  return uniform_value;
+  return model_data.GetUniformValue<DoubleType>();
 }
 
 void TetrahedronEdgeModel::SerializeBuiltIn(std::ostream &of) const
@@ -298,19 +305,20 @@ const std::string &TetrahedronEdgeModel::GetRegionName() const
   return GetRegion().GetName();
 }
 
-EdgeScalarList TetrahedronEdgeModel::GetValuesOnEdges() const
+template <typename DoubleType>
+EdgeScalarList<DoubleType> TetrahedronEdgeModel::GetValuesOnEdges() const
 {
-  const TetrahedronEdgeScalarData &tec = TetrahedronEdgeScalarData(*this);
+  const TetrahedronEdgeScalarData<DoubleType> &tec = TetrahedronEdgeScalarData<DoubleType>(*this);
 
   const ConstEdgeList &edge_list = GetRegion().GetEdgeList();
-  std::vector<double> ev(edge_list.size());
+  std::vector<DoubleType> ev(edge_list.size());
 
   for (size_t i = 0; i < edge_list.size(); ++i)
   {
     const ConstTetrahedronList &tl = GetRegion().GetEdgeToTetrahedronList()[i];
     ConstTetrahedronList::const_iterator it = tl.begin();
     const ConstTetrahedronList::const_iterator itend = tl.end();
-    double vol = 0.0;
+    DoubleType vol = 0.0;
     for ( ; it != itend; ++it)
     {
       const size_t tindex = (**it).GetIndex();
@@ -324,4 +332,15 @@ EdgeScalarList TetrahedronEdgeModel::GetValuesOnEdges() const
 
   return ev;
 }
+
+template void TetrahedronEdgeModel::SetValues<double>(std::vector<double> const&);
+template void TetrahedronEdgeModel::SetValues<double>(double const&);
+template std::vector<double> const& TetrahedronEdgeModel::GetScalarValues<double>() const;
+template const double &TetrahedronEdgeModel::GetUniformValue<double>() const;
+template std::vector<double> TetrahedronEdgeModel::GetValuesOnEdges<double>() const;
+template void TetrahedronEdgeModel::GetScalarValuesOnNodes<double>(TetrahedronEdgeModel::InterpolationType, std::vector<double>&) const;
+template void TetrahedronEdgeModel::GetScalarValuesOnElements<double>(std::vector<double>&) const;
+template void TetrahedronEdgeModel::SetValues<double>(std::vector<double> const&) const;
+template void TetrahedronEdgeModel::SetValues<double>(double const&) const;
+
 

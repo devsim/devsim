@@ -18,52 +18,57 @@ limitations under the License.
 #ifndef SCALAR_DATA_HH
 #define SCALAR_DATA_HH
 #include <vector>
-typedef std::vector<double> ScalarList;
 #include <cstddef>
 
 namespace ScalarDataHelper {
 
 //// Someday /= as well for pow(x,-1)
+template <typename DoubleType>
 struct times_equal {
-  void operator()(double &x, const double &y) const
+  void operator()(DoubleType &x, const DoubleType &y) const
   {
     x *= y;
   }
 };
 
+template <typename DoubleType>
 struct plus_equal {
-  void operator()(double &x, const double &y) const
+  void operator()(DoubleType &x, const DoubleType &y) const
   {
     x += y;
   }
 };
 
+template <typename DoubleType>
 struct minus_equal {
-  void operator()(double &x, const double &y) const
+  void operator()(DoubleType &x, const DoubleType &y) const
   {
     x -= y;
   }
 };
-#if 0
 
+#if 0
+template <typename DoubleType>
 struct times_equal {
-  double &operator()(double &x, const double &y) const
+  DoubleType &operator()(DoubleType &x, const DoubleType &y) const
   {
     x *= y;
     return x;
   }
 };
 
+template <typename DoubleType>
 struct plus_equal {
-  double &operator()(double &x, const double &y) const
+  DoubleType &operator()(DoubleType &x, const DoubleType &y) const
   {
     x += y;
     return x;
   }
 };
 
+template <typename DoubleType>
 struct minus_equal {
-  double &operator()(double &x, const double &y) const
+  DoubleType &operator()(DoubleType &x, const DoubleType &y) const
   {
     x -= y;
     return x;
@@ -72,42 +77,42 @@ struct minus_equal {
 #endif
 }
 
-template <typename T>
+template <typename T, typename DoubleType>
 class ScalarData {
     public:
         typedef T reftype;
 
         // implicit is expensive when data is constant
-        ScalarData(double, size_t);
+        ScalarData(DoubleType, size_t);
         explicit ScalarData(const T &);
         ScalarData(const ScalarData &);
-        explicit ScalarData(const std::vector<double> &);
+        explicit ScalarData(const std::vector<DoubleType> &);
 
         ScalarData &operator=(const ScalarData &);
 
         ScalarData &operator*=(const ScalarData &);
         ScalarData &operator*=(const T &);
-        ScalarData &operator*=(double);
+        ScalarData &operator*=(DoubleType);
 
 /*
         ScalarData &operator-=(const ScalarData &);
         ScalarData &operator-=(const T &);
-        ScalarData &operator-=(double);
+        ScalarData &operator-=(DoubleType);
 */
 
         ScalarData &operator+=(const ScalarData &);
         ScalarData &operator+=(const T &);
-        ScalarData &operator+=(double);
+        ScalarData &operator+=(DoubleType);
 
-        double operator[](size_t) const;
-        double &operator[](size_t);
-        const ScalarList &GetScalarList() const;
+        DoubleType operator[](size_t) const;
+        DoubleType &operator[](size_t);
+        const std::vector<DoubleType> &GetScalarList() const;
 
         bool   IsUniform() const {
           return isuniform;
         }
 
-        double GetUniformValue() const {
+        DoubleType GetUniformValue() const {
           return uniform_value;
         }
 
@@ -116,9 +121,9 @@ class ScalarData {
         }
 
         //// Use the functors above as helpes (times_equal, etc)
-        template <typename U> ScalarData &op_equal(const ScalarData &, const U &);
-        template <typename U> ScalarData &op_equal(const T &, const U &);
-        template <typename U> ScalarData &op_equal(const double &, const U &);
+        template <typename V> ScalarData &op_equal(const ScalarData &, const V &);
+        template <typename V> ScalarData &op_equal(const T &, const V &);
+        template <typename V> ScalarData &op_equal(const DoubleType &, const V &);
 
         bool IsZero() const
         {
@@ -136,9 +141,9 @@ class ScalarData {
 
         ScalarData();
         mutable const reftype *refdata;
-        mutable ScalarList     values;
+        mutable std::vector<DoubleType> values;
         mutable bool           isuniform;
-        mutable double         uniform_value;
-        size_t             length;
+        mutable DoubleType     uniform_value;
+        size_t                 length;
 };
 #endif

@@ -24,20 +24,20 @@ limitations under the License.
 
 
 
-// TODO:"TEST THIS"
-
-TetrahedronEdgeFromEdgeModel::TetrahedronEdgeFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
+template <typename DoubleType>
+TetrahedronEdgeFromEdgeModel<DoubleType>::TetrahedronEdgeFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TetrahedronEdgeModel(edgemodel + "_x", rp, TetrahedronEdgeModel::SCALAR), edgeModelName(edgemodel), y_ModelName(edgeModelName+ "_y"), z_ModelName(edgeModelName + "_z")
 {
   RegisterCallback(edgemodel);
-  new TetrahedronEdgeSubModel(y_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
-  new TetrahedronEdgeSubModel(z_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
 }
 
 //// Need to figure out the deleter situation from sub models
 //// Perhaps a Delete SubModels method??????
 
-void TetrahedronEdgeFromEdgeModel::calcTetrahedronEdgeScalarValues() const
+template <typename DoubleType>
+void TetrahedronEdgeFromEdgeModel<DoubleType>::calcTetrahedronEdgeScalarValues() const
 {
   const Region &reg = GetRegion();
 
@@ -52,18 +52,18 @@ void TetrahedronEdgeFromEdgeModel::calcTetrahedronEdgeScalarValues() const
 
   const ConstTetrahedronList &tl = GetRegion().GetTetrahedronList();
 
-  std::vector<double> evx(6*tl.size());
-  std::vector<double> evy(6*tl.size());
-  std::vector<double> evz(6*tl.size());
+  std::vector<DoubleType> evx(6*tl.size());
+  std::vector<DoubleType> evy(6*tl.size());
+  std::vector<DoubleType> evz(6*tl.size());
 
   const TetrahedronElementField &efield = reg.GetTetrahedronElementField();
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Tetrahedron &tetrahedron = *tl[i];
-    const std::vector<Vector> &v = efield.GetTetrahedronElementField(tetrahedron, *emp);
+    const std::vector<Vector<DoubleType> > &v = efield.GetTetrahedronElementField(tetrahedron, *emp);
     for (size_t j = 0; j < 6; ++j)
     {
-      const Vector &vec = v[j];
+      const Vector<DoubleType> &vec = v[j];
       evx[6*i + j] = vec.Getx();
       evy[6*i + j] = vec.Gety();
       evz[6*i + j] = vec.Getz();
@@ -71,13 +71,15 @@ void TetrahedronEdgeFromEdgeModel::calcTetrahedronEdgeScalarValues() const
   }
 
   SetValues(evx);
-  //// TODO: take care of const problem once and for all
   std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempy)->SetValues(evy);
   std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(tempz)->SetValues(evz);
 }
 
-void TetrahedronEdgeFromEdgeModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TetrahedronEdgeFromEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND element_from_edge_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -edge_model \"" << edgeModelName << "\"";
 }
+
+template class TetrahedronEdgeFromEdgeModel<double>;
 

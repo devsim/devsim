@@ -11,7 +11,7 @@ IdealCapacitor::IdealCapacitor( NodeKeeper *nk, const char *name,
        C               = 1.000000e+00;
 }
 
-void IdealCapacitor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec &mat, std::vector<std::pair<int, double> > &rhs)
+void IdealCapacitor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, std::vector<std::pair<int, double> > &rhs)
 {
 
 
@@ -24,7 +24,7 @@ void IdealCapacitor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRow
 }
 
 
-void IdealCapacitor::assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec *mat, std::vector<std::pair<int, double> > &rhs)
+void IdealCapacitor::assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs)
 {
    const size_t node_num_vbot = node_ptr_vbot->getNumber();
    const size_t node_num_vtop = node_ptr_vtop->getNumber();
@@ -58,14 +58,14 @@ void IdealCapacitor::assembleTran(const double scl, const NodeKeeper::Solution &
    if (!is_gnd_node_vbot)
    {
       if (!is_gnd_node_vtop)
-         mat->push_back(dsMath::RealRowColVal(node_num_vbot,node_num_vtop, evbot_vtop));
-      mat->push_back(dsMath::RealRowColVal(node_num_vbot,node_num_vbot, evbot_vbot));
+         mat->push_back(dsMath::RealRowColVal<double>(node_num_vbot,node_num_vtop, evbot_vtop));
+      mat->push_back(dsMath::RealRowColVal<double>(node_num_vbot,node_num_vbot, evbot_vbot));
    }
    if (!is_gnd_node_vtop)
    {
-      mat->push_back(dsMath::RealRowColVal(node_num_vtop,node_num_vtop, evtop_vtop));
+      mat->push_back(dsMath::RealRowColVal<double>(node_num_vtop,node_num_vtop, evtop_vtop));
       if (!is_gnd_node_vbot)
-         mat->push_back(dsMath::RealRowColVal(node_num_vtop,node_num_vbot, evtop_vbot));
+         mat->push_back(dsMath::RealRowColVal<double>(node_num_vtop,node_num_vbot, evtop_vbot));
    }
 
 }

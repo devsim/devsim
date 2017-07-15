@@ -26,9 +26,7 @@ limitations under the License.
 #include "EdgeModel.hh"
 #include "TriangleEdgeModel.hh"
 #include "TetrahedronEdgeModel.hh"
-#include "Equation.hh"
-
-#include "IterHelper.hh"
+#include "EquationHolder.hh"
 #include "GeometryStream.hh"
 #include "GradientField.hh"
 #include "TriangleElementField.hh"
@@ -133,8 +131,8 @@ const TetrahedronElementField &Region::GetTetrahedronElementField() const
 
 Region::~Region()
 {
-    deleteMapPointers(equationPointerMap);
 #if 0
+    deleteMapPointers(equationPointerMap);
     //// We are now using smart pointers
     deleteMapPointers(nodeModels);
     deleteMapPointers(edgeModels);
@@ -1101,15 +1099,15 @@ void Region::SignalCallbacks(const std::string &str)
 }
 
 // number equations by order they are entered
-void Region::AddEquation(EquationPtr eq)
+void Region::AddEquation(EquationHolder &eq)
 {
-  // Replace this with a warning
-  const std::string nm  = eq->GetName();
-  const std::string var = eq->GetVariable();
+
+  const std::string nm  = eq.GetName();
+  const std::string var = eq.GetVariable();
 
   if (equationPointerMap.count(nm))
   {
-    EquationPtr oeq = equationPointerMap[nm];
+    EquationHolder &oeq = equationPointerMap[nm];
     if (oeq == eq)
     {
       std::ostringstream os; 
@@ -1120,11 +1118,11 @@ void Region::AddEquation(EquationPtr eq)
     }
     else
     {
-      if (oeq->GetVariable() != var)
+      if (oeq.GetVariable() != var)
       {
         std::ostringstream os; 
         os << "Warning: Adding a new equation by the same name with a different variable will remove mapping to other variable.\n"
-            "Region: " << this->GetName() << ", Equation: " << nm << ", Old variable: " << oeq->GetVariable() << ", New Variable: " << var << "\n";
+            "Region: " << this->GetName() << ", Equation: " << nm << ", Old variable: " << oeq.GetVariable() << ", New Variable: " << var << "\n";
         GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
 
         variableEquationMap.erase(var);
@@ -1137,7 +1135,7 @@ void Region::AddEquation(EquationPtr eq)
             "Region: " << this->GetName() << ", Equation: " << nm << ", Variable: " << var << "\n";
         GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
       }
-      delete oeq;
+
       equationPointerMap[nm] = eq;
         /// the equationIndexMap doesn't change
     }
@@ -1166,14 +1164,14 @@ void Region::AddEquation(EquationPtr eq)
 
 //// Deletes the equation and its associated variable
 //// Decrements the equation index for all other equations
-void Region::DeleteEquation(EquationPtr eq)
+void Region::DeleteEquation(EquationHolder &eq)
 {
   // Replace this with a warning
-  const std::string nm  = eq->GetName();
+  const std::string nm  = eq.GetName();
   dsAssert(equationPointerMap.count(nm) != 0, "UNEXPECTED");
   dsAssert(equationIndexMap.count(nm) != 0, "UNEXPECTED");
 
-  const std::string var = eq->GetVariable();
+  const std::string var = eq.GetVariable();
   dsAssert(variableEquationMap.count(var) != 0, "UNEXPECTED");
 
   /// At this point, the matrix will totally change.  We need to signify this somehow.
@@ -1295,17 +1293,16 @@ void Region::Update(const std::vector<double> &result)
         for ( ; eit != eend; ++eit)
         {
             const std::string eqname = eit->first;
-            Equation *eqptr = eit->second;
-            const std::string var = eqptr->GetVariable();
+            const EquationHolder &eqptr = eit->second;
+            const std::string var = eqptr.GetVariable();
 
             NodeModelPtr nm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(var));
             dsAssert(nm.get(), "UNEXPECTED");
 
-            //// TODO: An equation should know already the variable it is updating
-            eqptr->Update(*nm, result);
+            eqptr.Update(*nm, result);
 
-            double rerr = eqptr->GetRelError();
-            double aerr = eqptr->GetAbsError();
+            double rerr = eqptr.GetRelError();
+            double aerr = eqptr.GetAbsError();
 
             absError += aerr;
             relError += rerr;
@@ -1330,14 +1327,13 @@ void Region::ACUpdate(const std::vector<std::complex<double> > &result)
         for ( ; eit != eend; ++eit)
         {
             const std::string eqname = eit->first;
-            Equation *eqptr = eit->second;
-            const std::string var = eqptr->GetVariable();
+            const EquationHolder &eqptr = eit->second;
+            const std::string var = eqptr.GetVariable();
 
             NodeModelPtr nm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(var));
             dsAssert(nm.get(), "UNEXPECTED");
 
-            //// TODO: An equation should know already the variable it is updating
-            eqptr->ACUpdate(*nm, result);
+            eqptr.ACUpdate(*nm, result);
         }
 }
 
@@ -1354,17 +1350,21 @@ void Region::NoiseUpdate(const std::string &output, const std::vector<size_t> &p
         for ( ; eit != eend; ++eit)
         {
             const std::string eqname = eit->first;
-            Equation *eqptr = eit->second;
+            const EquationHolder &eqptr = eit->second;
 
-            eqptr->NoiseUpdate(output, permvec, result);
+            eqptr.NoiseUpdate(output, permvec, result);
         }
 }
 
-void Region::Assemble(dsMath::RealRowColValueVec &m, dsMath::RHSEntryVec &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Region::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
     if (numequations)
     {
-        IterHelper::ForEachMapValue(GetEquationPtrList(), IterHelper::assdc<Equation>(m, v, w, t));
+      const EquationPtrMap_t &ep = GetEquationPtrList();
+      for (auto it : ep)
+      {
+        (it).second.Assemble(m, v, w, t);
+      }
     }
 }
 
@@ -1379,7 +1379,7 @@ void Region::BackupSolutions(const std::string &suffix)
     NodeModelPtr bnm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(bname));
     if (!bnm)
     {
-      bnm = NodeSolution::CreateNodeSolution(bname, this);
+      bnm = NodeSolution<double>::CreateNodeSolution(bname, this);
     }
 
     bnm->SetValues(*nm);
@@ -1575,12 +1575,14 @@ std::string Region::GetEdgeNode1VolumeModel() const
   return dbent.second.GetString();
 }
 
-ModelExprDataCachePtr Region::GetModelExprDataCache()
+template <typename DoubleType>
+ModelExprDataCachePtr<DoubleType> Region::GetModelExprDataCache()
 {
   return modelExprDataCache.lock();
 }
 
-void Region::SetModelExprDataCache(ModelExprDataCachePtr p)
+template <typename DoubleType>
+void Region::SetModelExprDataCache(ModelExprDataCachePtr<DoubleType> p)
 {
   modelExprDataCache = p;
 }
@@ -1681,5 +1683,8 @@ ConstTetrahedronPtr Region::FindTetrahedron(ConstNodePtr n0, ConstNodePtr n1, Co
   return ret;
 }
 
+template ModelExprDataCachePtr<double> Region::GetModelExprDataCache();
+
+template void Region::SetModelExprDataCache(ModelExprDataCachePtr<double>);
 
 

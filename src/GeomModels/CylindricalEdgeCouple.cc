@@ -20,7 +20,8 @@ limitations under the License.
 #include "Region.hh"
 #include "dsAssert.hh"
 
-CylindricalEdgeCouple::CylindricalEdgeCouple(RegionPtr rp) :
+template <typename DoubleType>
+CylindricalEdgeCouple<DoubleType>::CylindricalEdgeCouple(RegionPtr rp) :
 EdgeModel("CylindricalEdgeCouple", rp, EdgeModel::SCALAR)
 {
   const size_t dimension = rp->GetDimension();
@@ -32,7 +33,8 @@ EdgeModel("CylindricalEdgeCouple", rp, EdgeModel::SCALAR)
 }
 
 
-void CylindricalEdgeCouple::calcEdgeScalarValues() const
+template <typename DoubleType>
+void CylindricalEdgeCouple<DoubleType>::calcEdgeScalarValues() const
 {
   const size_t dimension=GetRegion().GetDimension();
 
@@ -54,18 +56,22 @@ void CylindricalEdgeCouple::calcEdgeScalarValues() const
   }
 }
 
-void CylindricalEdgeCouple::calcCylindricalEdgeCouple2d() const
+template <typename DoubleType>
+void CylindricalEdgeCouple<DoubleType>::calcCylindricalEdgeCouple2d() const
 {
   ConstTriangleEdgeModelPtr eec = GetRegion().GetTriangleEdgeModel("ElementCylindricalEdgeCouple");
   dsAssert(eec.get(), "ElementCylindricalEdgeCouple missing");
 
-  std::vector<double> ev = eec->GetValuesOnEdges();
+  std::vector<DoubleType> ev = eec->GetValuesOnEdges<DoubleType>();
   SetValues(ev);
 }
 
 
-void CylindricalEdgeCouple::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void CylindricalEdgeCouple<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "DATAPARENT \"ElementCylindricalEdgeCouple\"";
 }
+
+template class CylindricalEdgeCouple<double>;
 

@@ -18,6 +18,7 @@ limitations under the License.
 #ifndef MESH_UTIL_HH
 #define MESH_UTIL_HH
 #include <vector>
+template <typename T>
 class Vector;
 class Region;
 namespace MeshUtil {
@@ -29,7 +30,7 @@ pts_t variable(double xl, double xh, double sl, double sh);
 ///// meshlines
 pts_t getPoints(double xl, double xh, double sl, double sh);
 
-std::vector<Vector> GetUnitVector(const Region &);
+std::vector<Vector<double>> GetUnitVector(const Region &);
 
 }
 

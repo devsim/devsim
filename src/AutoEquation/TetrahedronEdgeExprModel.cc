@@ -29,7 +29,8 @@ limitations under the License.
 
 
 // Must be valid equation object which is passed
-TetrahedronEdgeExprModel::TetrahedronEdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt) : TetrahedronEdgeModel(nm, rp, dt), equation(eq)
+template <typename DoubleType>
+TetrahedronEdgeExprModel<DoubleType>::TetrahedronEdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt) : TetrahedronEdgeModel(nm, rp, dt), equation(eq)
 {
 #if 0
   os << "creating TetrahedronEdgeExprModel " << nm << " with equation " << eq << "\n";
@@ -37,7 +38,8 @@ TetrahedronEdgeExprModel::TetrahedronEdgeExprModel(const std::string &nm, const 
   RegisterModels();
 }
 
-void TetrahedronEdgeExprModel::RegisterModels()
+template <typename DoubleType>
+void TetrahedronEdgeExprModel<DoubleType>::RegisterModels()
 {
     typedef std::set<std::string> refmodels_t;
     refmodels_t refs;
@@ -74,17 +76,18 @@ void TetrahedronEdgeExprModel::RegisterModels()
     }
 }
 
-void TetrahedronEdgeExprModel::calcTetrahedronEdgeScalarValues() const
+template <typename DoubleType>
+void TetrahedronEdgeExprModel<DoubleType>::calcTetrahedronEdgeScalarValues() const
 {
     // need to write the calculator
 //    dsAssert(false, "UNEXPECTED");
 #if 0
         os << "updating TetrahedronEdgeExprModel " << GetName() << " from expression " << EngineAPI::getStringValue(equation) << "\n";
 #endif
-    MEE::ModelExprEval::error_t errors;
+    typename MEE::ModelExprEval<DoubleType>::error_t errors;
     const Region *rp = &(this->GetRegion());
-    MEE::ModelExprEval mexp(rp, GetName(), errors);
-    MEE::ModelExprData out = mexp.eval_function(equation);
+    MEE::ModelExprEval<DoubleType> mexp(rp, GetName(), errors);
+    MEE::ModelExprData<DoubleType> out = mexp.eval_function(equation);
 
     if (!errors.empty())
     {
@@ -93,7 +96,7 @@ void TetrahedronEdgeExprModel::calcTetrahedronEdgeScalarValues() const
         " on Device: " << GetRegion().GetDeviceName() <<
         " on Region: " << GetRegion().GetName()
         << "\n";
-        for (MEE::ModelExprEval::error_t::iterator it = errors.begin(); it != errors.end(); ++it)
+        for (typename MEE::ModelExprEval<DoubleType>::error_t::iterator it = errors.begin(); it != errors.end(); ++it)
         {
             os << *it << "\n";
         }
@@ -102,45 +105,51 @@ void TetrahedronEdgeExprModel::calcTetrahedronEdgeScalarValues() const
 
     /// implicit conversion to tetrahedronedgemodel from edgemodel
     if (
-        (out.GetType() == MEE::ModelExprData::EDGEDATA)
+        (out.GetType() == MEE::EDGEDATA)
        )
     {
       out.convertToTetrahedronEdgeData();
     }
 
     if (
-        (out.GetType() == MEE::ModelExprData::TETRAHEDRONEDGEDATA)
+        (out.GetType() == MEE::TETRAHEDRONEDGEDATA)
        )
     {
-      const MEE::ModelExprData::ScalarValuesType &tval = out.GetScalarValues();
+      const MEE::ScalarValuesType<DoubleType> &tval = out.GetScalarValues();
       if (tval.IsUniform())
       {
         SetValues(tval.GetScalar());
       }
       else
       {
-        TetrahedronEdgeScalarList nsl(tval.GetVector());
+        TetrahedronEdgeScalarList<DoubleType> nsl(tval.GetVector());
         SetValues(nsl);
       }
     }
-    else if (out.GetType() == MEE::ModelExprData::DOUBLE)
+    else if (out.GetType() == MEE::DOUBLE)
     {
-        const double v = out.GetDoubleValue();
+        const DoubleType v = out.GetDoubleValue();
         SetValues(v);
     }
     else
     {
         std::ostringstream os; 
         os << "while evaluating model " << GetName() << ": expression "
-            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::ModelExprData::datatypename[out.GetType()]
+            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[out.GetType()]
             << "\n";
         GeometryStream::WriteOut(OutputStream::FATAL, *rp, os.str());
     }
         
 }
 
-void TetrahedronEdgeExprModel::Serialize(std::ostream &of) const
+#ifndef _WIN32
+#warning "serialize extended option here"
+#endif
+template <typename DoubleType>
+void TetrahedronEdgeExprModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND element_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -name \"" << GetName() << "\" -equation \"" << EngineAPI::getStringValue(equation) << ";\" -display_type \"" << GetDisplayTypeString() << "\"";
 }
+
+template class TetrahedronEdgeExprModel<double>;
 

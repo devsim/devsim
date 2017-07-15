@@ -28,14 +28,16 @@ limitations under the License.
 #include <sstream>
 
 
-TriangleEdgeSubModel::TriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt)
+template <typename DoubleType>
+TriangleEdgeSubModel<DoubleType>::TriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt)
     :
         TriangleEdgeModel(nm, rp, dt),
         parentModel()
 {
 }
 
-TriangleEdgeSubModel::TriangleEdgeSubModel(const std::string &nm, RegionPtr rp, ConstTriangleEdgeModelPtr nmp, TriangleEdgeModel::DisplayType dt)
+template <typename DoubleType>
+TriangleEdgeSubModel<DoubleType>::TriangleEdgeSubModel(const std::string &nm, RegionPtr rp, ConstTriangleEdgeModelPtr nmp, TriangleEdgeModel::DisplayType dt)
     :
         TriangleEdgeModel(nm, rp, dt),
         parentModel(nmp)
@@ -49,19 +51,22 @@ TriangleEdgeSubModel::TriangleEdgeSubModel(const std::string &nm, RegionPtr rp, 
 #endif
 }
 
-TriangleEdgeModelPtr TriangleEdgeSubModel::CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt)
+template <typename DoubleType>
+TriangleEdgeModelPtr TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt)
 {
   TriangleEdgeModel *p = new TriangleEdgeSubModel(nm, rp, dt);
   return p->GetSelfPtr();
 }
 
-TriangleEdgeModelPtr TriangleEdgeSubModel::CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt, ConstTriangleEdgeModelPtr nmp)
+template <typename DoubleType>
+TriangleEdgeModelPtr TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt, ConstTriangleEdgeModelPtr nmp)
 {
   TriangleEdgeModel *p = new TriangleEdgeSubModel(nm, rp, nmp, dt);
   return p->GetSelfPtr();
 }
 
-void TriangleEdgeSubModel::calcTriangleEdgeScalarValues() const
+template <typename DoubleType>
+void TriangleEdgeSubModel<DoubleType>::calcTriangleEdgeScalarValues() const
 {
     if (!parentModelName.empty())
     {
@@ -71,7 +76,7 @@ void TriangleEdgeSubModel::calcTriangleEdgeScalarValues() const
       ConstTriangleEdgeModelPtr emp = GetRegion().GetTriangleEdgeModel(parentModelName);
       if (!parentModel.expired())
       {
-        parentModel.lock()->GetScalarValues();
+        parentModel.lock()->template GetScalarValues<DoubleType>();
       }
       else if (emp != parentModel.lock())
       {
@@ -86,7 +91,8 @@ void TriangleEdgeSubModel::calcTriangleEdgeScalarValues() const
     }
 }
 
-void TriangleEdgeSubModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TriangleEdgeSubModel<DoubleType>::Serialize(std::ostream &of) const
 {
   if (!parentModelName.empty())
   {
@@ -94,16 +100,18 @@ void TriangleEdgeSubModel::Serialize(std::ostream &of) const
   }
   else if (this->IsUniform())
   {
-    of << "UNIFORM " << GetUniformValue();
+    of << "UNIFORM " << GetUniformValue<DoubleType>();
   }
   else
   {
     of << "DATA\n";
-    const TriangleEdgeScalarList &vals = this->GetScalarValues();
+    const TriangleEdgeScalarList<DoubleType> &vals = this->GetScalarValues<DoubleType>();
     for (size_t i = 0; i < vals.size(); ++i)
     {
       of << vals[i] << "\n";
     }
   }
 }
+
+template class TriangleEdgeSubModel<double>;
 

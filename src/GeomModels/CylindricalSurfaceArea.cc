@@ -29,7 +29,8 @@ limitations under the License.
 #include <sstream>
 
 
-CylindricalSurfaceArea::CylindricalSurfaceArea(RegionPtr rp) :
+template <typename DoubleType>
+CylindricalSurfaceArea<DoubleType>::CylindricalSurfaceArea(RegionPtr rp) :
 NodeModel("CylindricalSurfaceArea", rp, NodeModel::SCALAR)
 {
   //// This needs to be enforced in the Tcl API
@@ -46,7 +47,8 @@ NodeModel("CylindricalSurfaceArea", rp, NodeModel::SCALAR)
 }
 
 
-void CylindricalSurfaceArea::calcNodeScalarValues() const
+template <typename DoubleType>
+void CylindricalSurfaceArea<DoubleType>::calcNodeScalarValues() const
 {
   const size_t dimension=GetRegion().GetDimension();
 
@@ -70,14 +72,15 @@ void CylindricalSurfaceArea::calcNodeScalarValues() const
 
 namespace {
 //// refactor to just rely on edge length formula
-void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<double> &out, const std::string &RAxisVariable, double RAxis0)
+template <typename DoubleType>
+void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, const std::string &RAxisVariable, DoubleType RAxis0)
 {
 
   std::set<size_t> visited;
 
-  double r0 = 0.0;
-  double r1 = 0.0;
-  double rm = 0.0;
+  DoubleType r0 = 0.0;
+  DoubleType r1 = 0.0;
+  DoubleType rm = 0.0;
 
   for (ConstEdgeList::const_iterator it = edges.begin(); it != edges.end(); ++it)
   {
@@ -97,15 +100,15 @@ void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<double> &out, cons
     const Node &node0 = *(edge.GetHead());
     const Node &node1 = *(edge.GetTail());
 
-    const Vector &p0 = node0.Position();
-    const Vector &p1 = node1.Position();
+    const Vector<DoubleType> &p0 = node0.Position();
+    const Vector<DoubleType> &p1 = node1.Position();
 
     /// This is the midpoint between the edges
-    Vector vm = p1;
+    Vector<DoubleType> vm = p1;
     vm       -= p0;
     vm       *= 0.5;
 
-    const double vmag = vm.magnitude();
+    const DoubleType vmag = vm.magnitude();
 
     if (RAxisVariable == "x")
     {
@@ -130,14 +133,15 @@ void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<double> &out, cons
 }
 }
 
-void CylindricalSurfaceArea::calcCylindricalSurfaceArea2d() const
+template <typename DoubleType>
+void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
 {
   const Region &region = GetRegion();
   const Device &device = *(GetRegion().GetDevice());
 
-  std::vector<double> nv(region.GetNumberNodes());
+  std::vector<DoubleType> nv(region.GetNumberNodes());
 
-  double RAxis0 = 0.0;
+  DoubleType RAxis0 = 0.0;
   std::string RAxisVariable;
 
   {
@@ -223,14 +227,18 @@ void CylindricalSurfaceArea::calcCylindricalSurfaceArea2d() const
 }
 
 
-void CylindricalSurfaceArea::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void CylindricalSurfaceArea<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND cylindrical_surface_area -device \"" << GetRegion().GetDeviceName() << "\""
      << " -region \"" << GetRegionName() << "\"";
 }
 
-void CylindricalSurfaceArea::setInitialValues()
+template <typename DoubleType>
+void CylindricalSurfaceArea<DoubleType>::setInitialValues()
 {
     DefaultInitializeValues();
 }
+
+template class CylindricalSurfaceArea<double>;
 

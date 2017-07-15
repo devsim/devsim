@@ -38,26 +38,34 @@ typedef std::vector<const Node *> ConstNodeList_t;
 
 namespace dsMath {
 template <typename T> class RowColVal;
-typedef RowColVal<double> RealRowColVal;
-typedef std::vector<RowColVal<double> > RealRowColValueVec;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 }
 
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
-// Very similar to a regular equation, but with additional properties
+template <typename DoubleType>
 class ContactEquation {
     public:
         ContactEquation(const std::string &/*eqn*/, const std::string &/*var*/, ContactPtr, RegionPtr);
         virtual ~ContactEquation() = 0;
-        void Assemble(dsMath::RealRowColValueVec &, RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
         const std::string &GetName() const {
             return myname;
         }
-        double GetCurrent() {
+        DoubleType GetCurrent() {
 //          calcCurrent();
             return current;
         }
-        double GetCharge() {
+        DoubleType GetCharge() {
 //          calcCharge();
             return charge;
         }
@@ -99,34 +107,34 @@ class ContactEquation {
         virtual void Serialize(std::ostream &) const = 0;
         virtual void GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &) const = 0;
 
-        void SetCurrent(double x) {
+        void SetCurrent(DoubleType x) {
             current = x;
         }
-        void SetCharge(double x) {
+        void SetCharge(DoubleType x) {
             charge = x;
         }
 
-        double integrateNodeModelOverNodes(const std::string &/*nmodel*/, const std::string &/*node_volume*/);
-        double integrateEdgeModelOverNodes(const std::string &/*emodel*/, const std::string &/*edge_couple*/);
-        double integrateElementEdgeModelOverNodes(const std::string &/*temodel*/, const std::string &/*edge_couple*/, const double /*n0_sign*/, const double /*n1_sign*/);
-        double integrateTriangleEdgeModelOverNodes(const std::string &/*temodel*/, const std::string &/*edge_couple*/, const double /*n0_sign*/, const double /*n1_sign*/);
-        double integrateTetrahedronEdgeModelOverNodes(const std::string &/*temodel*/, const std::string &/*edge_couple*/, const double /*n0_sign*/, const double /*n1_sign*/);
+        DoubleType integrateNodeModelOverNodes(const std::string &/*nmodel*/, const std::string &/*node_volume*/);
+        DoubleType integrateEdgeModelOverNodes(const std::string &/*emodel*/, const std::string &/*edge_couple*/);
+        DoubleType integrateElementEdgeModelOverNodes(const std::string &/*temodel*/, const std::string &/*edge_couple*/, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
+        DoubleType integrateTriangleEdgeModelOverNodes(const std::string &/*temodel*/, const std::string &/*edge_couple*/, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
+        DoubleType integrateTetrahedronEdgeModelOverNodes(const std::string &/*temodel*/, const std::string &/*edge_couple*/, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
 
-        void AssembleNodeEquation(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, const std::string &);
-        void AssembleEdgeEquation(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &);
-        void AssembleElementEdgeEquation(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &, const double /*n0_sign*/, const double /*n1_sign*/);
-        void AssembleTriangleEdgeEquation(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &, const double /*n0_sign*/, const double /*n1_sign*/);
-        void AssembleTetrahedronEdgeEquation(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &, const double /*n0_sign*/, const double /*n1_sign*/);
+        void AssembleNodeEquation(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, const std::string &);
+        void AssembleEdgeEquation(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &);
+        void AssembleElementEdgeEquation(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
+        void AssembleTriangleEdgeEquation(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
+        void AssembleTetrahedronEdgeEquation(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
 
-        void AssembleNodeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &);
-        void AssembleEdgeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &);
-        void AssembleElementEdgeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &, const double /*n0_sign*/, const double /*n1_sign*/);
-        void AssembleTriangleEdgeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &, const double /*n0_sign*/, const double /*n1_sign*/);
-        void AssembleTetrahedronEdgeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec &, RHSEntryVec &, dsMathEnum::WhatToLoad, const std::string &, const double /*n0_sign*/, const double /*n1_sign*/);
+        void AssembleNodeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &);
+        void AssembleEdgeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &);
+        void AssembleElementEdgeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
+        void AssembleTriangleEdgeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
+        void AssembleTetrahedronEdgeEquationOnCircuit(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType /*n0_sign*/, const DoubleType /*n1_sign*/);
 
 
     private:
-        virtual void DerivedAssemble(dsMath::RealRowColValueVec &, RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode) = 0;
+        virtual void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode) = 0;
 
         virtual void calcCurrent() = 0;
         virtual void calcCharge() = 0;
@@ -140,8 +148,8 @@ class ContactEquation {
         std::string circuitnode;
         ContactPtr mycontact;
         RegionPtr  myregion;
-        double charge;
-        double current;
+        DoubleType charge;
+        DoubleType current;
 };
 #endif
 

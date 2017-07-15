@@ -16,6 +16,7 @@ limitations under the License.
 ***/
 
 #include "ContactEquation.hh"
+#include "ContactEquationHolder.hh"
 #include "Device.hh"
 #include "Region.hh"
 #include "Node.hh"
@@ -58,34 +59,40 @@ bool bothNodesOnContact(const ConstNodeList_t &cnodes, const Edge &edge)
 }
 }
 
-const std::string &ContactEquation::GetContactName() const
+template <typename DoubleType>
+const std::string &ContactEquation<DoubleType>::GetContactName() const
 {
   return GetContact().GetName();
 }
 
-const std::string &ContactEquation::GetDeviceName() const
+template <typename DoubleType>
+const std::string &ContactEquation<DoubleType>::GetDeviceName() const
 {
   return GetContact().GetDeviceName();
 }
 
-void ContactEquation::UpdateContact()
+template <typename DoubleType>
+void ContactEquation<DoubleType>::UpdateContact()
 {
   calcCurrent();
   calcCharge();
 }
 
-ContactEquation::ContactEquation(const std::string &nm, const std::string &var,
+template <typename DoubleType>
+ContactEquation<DoubleType>::ContactEquation(const std::string &nm, const std::string &var,
         ContactPtr cp, RegionPtr rp)
     : myname(nm), variable(var), mycontact(cp), myregion(rp), charge(0.0), current(0.0)
 {
-    cp->AddEquation(this);
+    ContactEquationHolder tmp(this);
+    cp->AddEquation(tmp);
 }
 
 /////
 ///// If a node is being used by another contact on the same region by an equation of the same name, we don't use it here
 /////
 ///// TODO: regress this case for two equations of the same name from two different contacts in the same region
-ConstNodeList_t ContactEquation::GetActiveNodes() const
+template <typename DoubleType>
+ConstNodeList_t ContactEquation<DoubleType>::GetActiveNodes() const
 {
   ConstNodeList_t ret;
 
@@ -131,7 +138,7 @@ ConstNodeList_t ContactEquation::GetActiveNodes() const
           else
           {
 
-            const Contact::ContactEquationPtrMap_t &cepm = contact.GetEquationPtrList();
+            const ContactEquationPtrMap_t &cepm = contact.GetEquationPtrList();
 
 #if 0
 //// We now only support one contact per region
@@ -140,9 +147,9 @@ ConstNodeList_t ContactEquation::GetActiveNodes() const
             Region::ContactEquationPtrMap_t::const_iterator cepmit = cpair.first;
             Region::ContactEquationPtrMap_t::const_iterator cepmend = cpair.second;
 #endif
-            for (Contact::ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
+            for (ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
             {
-              if ((cepmit->second)->GetName() == eqname)
+              if ((cepmit->second).GetName() == eqname)
               {
                 addToList = false;
                 break;
@@ -164,28 +171,33 @@ ConstNodeList_t ContactEquation::GetActiveNodes() const
   return ret;
 }
 
-void ContactEquation::Assemble(dsMath::RealRowColValueVec &m, RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::Assemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   DerivedAssemble(m, v, p, w, t);
 }
 
-ContactEquation::~ContactEquation()
+template <typename DoubleType>
+ContactEquation<DoubleType>::~ContactEquation()
 {
 }
 
-void ContactEquation::SetCircuitNode(const std::string &n)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::SetCircuitNode(const std::string &n)
 {
   circuitnode = n;
 }
 
-const std::string &ContactEquation::GetCircuitNode() const
+template <typename DoubleType>
+const std::string &ContactEquation<DoubleType>::GetCircuitNode() const
 {
   return circuitnode;
 }
 
-double ContactEquation::integrateNodeModelOverNodes(const std::string &nmodel, const std::string &node_volume)
+template <typename DoubleType>
+DoubleType ContactEquation<DoubleType>::integrateNodeModelOverNodes(const std::string &nmodel, const std::string &node_volume)
 {
-  double ch = 0.0;
+  DoubleType ch = 0.0;
 
   const ConstNodeList_t &cnodes = GetActiveNodes();
 
@@ -208,21 +220,22 @@ double ContactEquation::integrateNodeModelOverNodes(const std::string &nmodel, c
       dsErrors::MissingContactEquationModel(region, *this, node_volume, dsErrors::ModelInfo::NODE, OutputStream::FATAL);
     }
 
-    NodeScalarData nsd(*nv);
+    NodeScalarData<DoubleType> nsd(*nv);
     nsd *= *nm;
 
     for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
     {
-      const double nodeval = nsd[(*cit)->GetIndex()];
+      const DoubleType nodeval = nsd[(*cit)->GetIndex()];
       ch += nodeval;
     }
   }
   return ch;
 }
 
-double ContactEquation::integrateEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple)
+template <typename DoubleType>
+DoubleType ContactEquation<DoubleType>::integrateEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple)
 {
-  double ch = 0.0;
+  DoubleType ch = 0.0;
 
   const ConstNodeList_t &cnodes = GetActiveNodes();
 
@@ -245,7 +258,7 @@ double ContactEquation::integrateEdgeModelOverNodes(const std::string &emodel, c
       dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
     }
 
-    EdgeScalarData esd(*ec);
+    EdgeScalarData<DoubleType> esd(*ec);
     esd *= *em;
 
     const Region::NodeToConstEdgeList_t &ntelist = region.GetNodeToEdgeList();
@@ -263,7 +276,7 @@ double ContactEquation::integrateEdgeModelOverNodes(const std::string &emodel, c
           continue;
         }
 
-        double val = (*it)->GetNodeSign(*cit);
+        DoubleType val = (*it)->GetNodeSign(*cit);
         val *= esd[(*it)->GetIndex()];
         ch += val;
       }
@@ -273,9 +286,10 @@ double ContactEquation::integrateEdgeModelOverNodes(const std::string &emodel, c
 }
 
 //// TODO: worry about CylindricalNodeVolume being assymetric later on
-double ContactEquation::integrateTriangleEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple, const double n0_sign, const double n1_sign)
+template <typename DoubleType>
+DoubleType ContactEquation<DoubleType>::integrateTriangleEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
-  double ch = 0.0;
+  DoubleType ch = 0.0;
 
   const ConstNodeList_t &cnodes = GetActiveNodes();
 
@@ -297,7 +311,7 @@ double ContactEquation::integrateTriangleEdgeModelOverNodes(const std::string &e
       dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
     }
 
-    TriangleEdgeScalarData esd(*ec);
+    TriangleEdgeScalarData<DoubleType> esd(*ec);
     esd *= *em;
 
     const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
@@ -321,7 +335,7 @@ double ContactEquation::integrateTriangleEdgeModelOverNodes(const std::string &e
               continue;
             }
 
-            double val;
+            DoubleType val;
             if (*cit == edge.GetHead())
             {
               val = n0_sign;
@@ -341,9 +355,10 @@ double ContactEquation::integrateTriangleEdgeModelOverNodes(const std::string &e
   return ch;
 }
 
-double ContactEquation::integrateTetrahedronEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple, const double n0_sign, const double n1_sign)
+template <typename DoubleType>
+DoubleType ContactEquation<DoubleType>::integrateTetrahedronEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
-  double ch = 0.0;
+  DoubleType ch = 0.0;
 
   const ConstNodeList_t &cnodes = GetActiveNodes();
 
@@ -365,7 +380,7 @@ double ContactEquation::integrateTetrahedronEdgeModelOverNodes(const std::string
       dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
     }
 
-    TetrahedronEdgeScalarData esd(*ec);
+    TetrahedronEdgeScalarData<DoubleType> esd(*ec);
     esd *= *em;
 
     const Region::TetrahedronToConstEdgeDataList_t &ttelist = region.GetTetrahedronToEdgeDataList();
@@ -389,7 +404,7 @@ double ContactEquation::integrateTetrahedronEdgeModelOverNodes(const std::string
               continue;
             }
 
-            double val;
+            DoubleType val;
             if (*cit == edge.GetHead())
             {
               val = n0_sign;
@@ -409,11 +424,12 @@ double ContactEquation::integrateTetrahedronEdgeModelOverNodes(const std::string
   return ch;
 }
 
-double ContactEquation::integrateElementEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple, const double n0_sign, const double n1_sign)
+template <typename DoubleType>
+DoubleType ContactEquation<DoubleType>::integrateElementEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
   const size_t dimension = GetRegion().GetDimension();
 
-  double ret = 0.0;
+  DoubleType ret = 0.0;
 
   if (dimension == 2)
   {
@@ -427,7 +443,8 @@ double ContactEquation::integrateElementEdgeModelOverNodes(const std::string &em
   return ret;
 }
 
-void ContactEquation::AssembleNodeEquation(const std::string &nmodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, PermutationMap &p, dsMathEnum::WhatToLoad w, const std::string &node_volume)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, const std::string &node_volume)
 {
   dsAssert(!nmodel.empty(), "UNEXPECTED");
 
@@ -484,14 +501,14 @@ void ContactEquation::AssembleNodeEquation(const std::string &nmodel, dsMath::Re
       dsErrors::MissingContactEquationModel(region, *this, nmodel, dsErrors::ModelInfo::NODE, OutputStream::FATAL);
     }
 
-    NodeScalarData nsd(*nv);
+    NodeScalarData<DoubleType> nsd(*nv);
     nsd *= *nm;
 
     for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
     {
       const size_t row = region.GetEquationNumber(eqindex, *cit);
 
-      double rhsval = nsd.GetScalarList()[(*cit)->GetIndex()];
+      DoubleType rhsval = nsd.GetScalarList()[(*cit)->GetIndex()];
 
       v.push_back(std::make_pair(row,  rhsval));
     }
@@ -516,7 +533,7 @@ void ContactEquation::AssembleNodeEquation(const std::string &nmodel, dsMath::Re
       }
       else
       {
-        NodeScalarData ndd(*nv);
+        NodeScalarData<DoubleType> ndd(*nv);
         ndd *= *ndm;
 
         const size_t eqindex2 = region.GetEquationIndex(region.GetEquationNameFromVariable(var));
@@ -530,9 +547,9 @@ void ContactEquation::AssembleNodeEquation(const std::string &nmodel, dsMath::Re
         {
           const size_t row = region.GetEquationNumber(eqindex, *cit);
           const size_t col = region.GetEquationNumber(eqindex2, (*cit));
-          const double val = ndd.GetScalarList()[(*cit)->GetIndex()];
+          const DoubleType val = ndd.GetScalarList()[(*cit)->GetIndex()];
 
-          m.push_back(dsMath::RealRowColVal(row, col, val));
+          m.push_back(dsMath::RealRowColVal<DoubleType>(row, col, val));
         }
       }
     }
@@ -550,22 +567,23 @@ void ContactEquation::AssembleNodeEquation(const std::string &nmodel, dsMath::Re
       }
       else
       {
-        NodeScalarData ndd(*nv);
+        NodeScalarData<DoubleType> ndd(*nv);
         ndd *= *ndm;
 
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
         {
           const size_t row = region.GetEquationNumber(eqindex, *cit);
-          const double val = ndd.GetScalarList()[(*cit)->GetIndex()];
+          const DoubleType val = ndd.GetScalarList()[(*cit)->GetIndex()];
 
-          m.push_back(dsMath::RealRowColVal(row, ccol, val));
+          m.push_back(dsMath::RealRowColVal<DoubleType>(row, ccol, val));
         }
       }
     }
   }
 }
 
-void ContactEquation::AssembleNodeEquationOnCircuit(const std::string &nmodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &node_volume)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(const std::string &nmodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &node_volume)
 {
   typedef std::vector<std::string> VariableList_t;
   dsAssert(!nmodel.empty(), "UNEXPECTED");
@@ -611,12 +629,12 @@ void ContactEquation::AssembleNodeEquationOnCircuit(const std::string &nmodel, d
     }
 
 
-    NodeScalarData nsd(*nv);
+    NodeScalarData<DoubleType> nsd(*nv);
     nsd *= *nm;
 
     for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
     {
-      const double rhsval = nsd.GetScalarList()[(*cit)->GetIndex()];
+      const DoubleType rhsval = nsd.GetScalarList()[(*cit)->GetIndex()];
       v.push_back(std::make_pair(crow,  rhsval));
     }
   }
@@ -639,7 +657,7 @@ void ContactEquation::AssembleNodeEquationOnCircuit(const std::string &nmodel, d
       }
       else
       {
-        NodeScalarData ndd(*nv);
+        NodeScalarData<DoubleType> ndd(*nv);
         ndd *= *ndm;
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
         {
@@ -652,9 +670,9 @@ void ContactEquation::AssembleNodeEquationOnCircuit(const std::string &nmodel, d
 
           const size_t col = region.GetEquationNumber(eqindex2, (*cit));
 
-          const double val = ndd.GetScalarList()[(*cit)->GetIndex()];
+          const DoubleType val = ndd.GetScalarList()[(*cit)->GetIndex()];
 
-          m.push_back(dsMath::RealRowColVal(crow, col, val));
+          m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
         }
       }
     }
@@ -669,20 +687,21 @@ void ContactEquation::AssembleNodeEquationOnCircuit(const std::string &nmodel, d
       }
       else
       {
-        NodeScalarData ndd(*nv);
+        NodeScalarData<DoubleType> ndd(*nv);
         ndd *= *ndm;
 
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
         {
-          const double val = ndd.GetScalarList()[(*cit)->GetIndex()];
-          m.push_back(dsMath::RealRowColVal(crow, crow, val));
+          const DoubleType val = ndd.GetScalarList()[(*cit)->GetIndex()];
+          m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, val));
         }
       }
     }
   }
 }
 
-void ContactEquation::AssembleEdgeEquation(const std::string &emodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple)
 {
   typedef std::vector<std::string> VariableList_t;
 
@@ -731,7 +750,7 @@ void ContactEquation::AssembleEdgeEquation(const std::string &emodel, dsMath::Re
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
     }
 
-    EdgeScalarData esd(*ec);
+    EdgeScalarData<DoubleType> esd(*ec);
     esd *= *em;
 
     const Region::NodeToConstEdgeList_t &ntelist = region.GetNodeToEdgeList();
@@ -747,7 +766,7 @@ void ContactEquation::AssembleEdgeEquation(const std::string &emodel, dsMath::Re
         const size_t rowh = region.GetEquationNumber(eqindex, h);
         const size_t rowt = region.GetEquationNumber(eqindex, t);
 
-        double val = esd[(*it)->GetIndex()];
+        DoubleType val = esd[(*it)->GetIndex()];
         v.push_back(std::make_pair(rowh,  val));
         v.push_back(std::make_pair(rowt, -val));
       }
@@ -776,8 +795,8 @@ void ContactEquation::AssembleEdgeEquation(const std::string &emodel, dsMath::Re
       }
       else
       {
-        EdgeScalarData edd0(*ec);
-        EdgeScalarData edd1(*ec);
+        EdgeScalarData<DoubleType> edd0(*ec);
+        EdgeScalarData<DoubleType> edd1(*ec);
         edd0 *= *edm0;
         edd1 *= *edm1;
 
@@ -803,13 +822,13 @@ void ContactEquation::AssembleEdgeEquation(const std::string &emodel, dsMath::Re
             const size_t colh = region.GetEquationNumber(eqindex2, h);
             const size_t colt = region.GetEquationNumber(eqindex2, t);
 
-            const double valh = edd0[(*it)->GetIndex()];
-            const double valt = edd1[(*it)->GetIndex()];
-            //// Copy Pattern from Equation::UnSymmetricEdgeAssembleJacobian
-            m.push_back(dsMath::RealRowColVal(rowh, colh,  valh));
-            m.push_back(dsMath::RealRowColVal(rowt, colt, -valt));
-            m.push_back(dsMath::RealRowColVal(rowh, colt,  valt));
-            m.push_back(dsMath::RealRowColVal(rowt, colh, -valh));
+            const DoubleType valh = edd0[(*it)->GetIndex()];
+            const DoubleType valt = edd1[(*it)->GetIndex()];
+            //// Copy Pattern from Equation<DoubleType>::UnSymmetricEdgeAssembleJacobian
+            m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colh,  valh));
+            m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colt, -valt));
+            m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colt,  valt));
+            m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colh, -valh));
           }
         }
       }
@@ -830,7 +849,7 @@ void ContactEquation::AssembleEdgeEquation(const std::string &emodel, dsMath::Re
       }
       else
       {
-        EdgeScalarData edd(*ec);
+        EdgeScalarData<DoubleType> edd(*ec);
         edd *= *edm;
 
         const Region::NodeToConstEdgeList_t &ntelist = region.GetNodeToEdgeList();
@@ -845,10 +864,10 @@ void ContactEquation::AssembleEdgeEquation(const std::string &emodel, dsMath::Re
             const size_t rowh = region.GetEquationNumber(eqindex, h);
             const size_t rowt = region.GetEquationNumber(eqindex, t);
 
-            const double val = edd[(*it)->GetIndex()];
+            const DoubleType val = edd[(*it)->GetIndex()];
 
-            m.push_back(dsMath::RealRowColVal(rowh, ccol,  val));
-            m.push_back(dsMath::RealRowColVal(rowt, ccol, -val));
+            m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, ccol,  val));
+            m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, ccol, -val));
           }
         }
       }
@@ -856,7 +875,8 @@ void ContactEquation::AssembleEdgeEquation(const std::string &emodel, dsMath::Re
   }
 }
 
-void ContactEquation::AssembleTriangleEdgeEquation(const std::string &emodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const double n0_sign, const double n1_sign)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
   typedef std::vector<std::string> VariableList_t;
 
@@ -905,7 +925,7 @@ void ContactEquation::AssembleTriangleEdgeEquation(const std::string &emodel, ds
     }
 
 
-    TriangleEdgeScalarData esd(*ec);
+    TriangleEdgeScalarData<DoubleType> esd(*ec);
     esd *= *em;
 
     const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
@@ -929,7 +949,7 @@ void ContactEquation::AssembleTriangleEdgeEquation(const std::string &emodel, ds
             const size_t rowh = region.GetEquationNumber(eqindex, h);
             const size_t rowt = region.GetEquationNumber(eqindex, t);
 
-            double val = esd[3 * tindex + eindex];
+            DoubleType val = esd[3 * tindex + eindex];
 
             v.push_back(std::make_pair(rowh, n0_sign * val));
             v.push_back(std::make_pair(rowt, n1_sign * val));
@@ -966,9 +986,9 @@ void ContactEquation::AssembleTriangleEdgeEquation(const std::string &emodel, ds
       }
       else
       {
-        TriangleEdgeScalarData edd0(*ec);
-        TriangleEdgeScalarData edd1(*ec);
-        TriangleEdgeScalarData edd2(*ec);
+        TriangleEdgeScalarData<DoubleType> edd0(*ec);
+        TriangleEdgeScalarData<DoubleType> edd1(*ec);
+        TriangleEdgeScalarData<DoubleType> edd2(*ec);
         edd0 *= *edm0;
         edd1 *= *edm1;
         edd2 *= *edm2;
@@ -1009,17 +1029,17 @@ void ContactEquation::AssembleTriangleEdgeEquation(const std::string &emodel, ds
 
                 const size_t vindex = 3 * tindex + eindex;
 
-                const double valh = edd0[vindex];
-                const double valt = edd1[vindex];
-                const double valo = edd2[vindex];
+                const DoubleType valh = edd0[vindex];
+                const DoubleType valt = edd1[vindex];
+                const DoubleType valo = edd2[vindex];
 
-                m.push_back(dsMath::RealRowColVal(rowh, colh, n0_sign * valh));
-                m.push_back(dsMath::RealRowColVal(rowt, colt, n1_sign * valt));
-                m.push_back(dsMath::RealRowColVal(rowh, colt, n0_sign * valt));
-                m.push_back(dsMath::RealRowColVal(rowt, colh, n1_sign * valh));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colh, n0_sign * valh));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colt, n1_sign * valt));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colt, n0_sign * valt));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colh, n1_sign * valh));
 
-                m.push_back(dsMath::RealRowColVal(rowh, colo, n0_sign * valo));
-                m.push_back(dsMath::RealRowColVal(rowt, colo, n1_sign * valo));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colo, n0_sign * valo));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colo, n1_sign * valo));
               }
             }
           }
@@ -1042,7 +1062,7 @@ void ContactEquation::AssembleTriangleEdgeEquation(const std::string &emodel, ds
       }
       else
       {
-        TriangleEdgeScalarData edd(*ec);
+        TriangleEdgeScalarData<DoubleType> edd(*ec);
         edd *= *edm;
 
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
@@ -1064,10 +1084,10 @@ void ContactEquation::AssembleTriangleEdgeEquation(const std::string &emodel, ds
                 const size_t rowh = region.GetEquationNumber(eqindex, h);
                 const size_t rowt = region.GetEquationNumber(eqindex, t);
 
-                const double val = edd[3*tindex + eindex];
+                const DoubleType val = edd[3*tindex + eindex];
 
-                m.push_back(dsMath::RealRowColVal(rowh, ccol, n0_sign * val));
-                m.push_back(dsMath::RealRowColVal(rowt, ccol, n1_sign * val));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, ccol, n0_sign * val));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, ccol, n1_sign * val));
               }
             }
           }
@@ -1078,7 +1098,8 @@ void ContactEquation::AssembleTriangleEdgeEquation(const std::string &emodel, ds
 }
 
 // TODO:"REVIEW CODE"
-void ContactEquation::AssembleTetrahedronEdgeEquation(const std::string &emodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const double n0_sign, const double n1_sign)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
   typedef std::vector<std::string> VariableList_t;
 
@@ -1126,7 +1147,7 @@ void ContactEquation::AssembleTetrahedronEdgeEquation(const std::string &emodel,
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
     }
 
-    TetrahedronEdgeScalarData esd(*ec);
+    TetrahedronEdgeScalarData<DoubleType> esd(*ec);
     esd *= *em;
 
     const Region::TetrahedronToConstEdgeDataList_t &ttelist = region.GetTetrahedronToEdgeDataList();
@@ -1150,7 +1171,7 @@ void ContactEquation::AssembleTetrahedronEdgeEquation(const std::string &emodel,
             const size_t rowh = region.GetEquationNumber(eqindex, h);
             const size_t rowt = region.GetEquationNumber(eqindex, t);
 
-            double val = esd[6 * tindex + eindex];
+            DoubleType val = esd[6 * tindex + eindex];
 
             v.push_back(std::make_pair(rowh, n0_sign * val));
             v.push_back(std::make_pair(rowt, n1_sign * val));
@@ -1189,10 +1210,10 @@ void ContactEquation::AssembleTetrahedronEdgeEquation(const std::string &emodel,
       }
       else
       {
-        TetrahedronEdgeScalarData edd0(*ec);
-        TetrahedronEdgeScalarData edd1(*ec);
-        TetrahedronEdgeScalarData edd2(*ec);
-        TetrahedronEdgeScalarData edd3(*ec);
+        TetrahedronEdgeScalarData<DoubleType> edd0(*ec);
+        TetrahedronEdgeScalarData<DoubleType> edd1(*ec);
+        TetrahedronEdgeScalarData<DoubleType> edd2(*ec);
+        TetrahedronEdgeScalarData<DoubleType> edd3(*ec);
         edd0 *= *edm0;
         edd1 *= *edm1;
         edd2 *= *edm2;
@@ -1238,20 +1259,20 @@ void ContactEquation::AssembleTetrahedronEdgeEquation(const std::string &emodel,
 
                 const size_t vindex = 6 * tindex + eindex;
 
-                const double valh = edd0[vindex];
-                const double valt = edd1[vindex];
-                const double valo2 = edd2[vindex];
-                const double valo3 = edd3[vindex];
+                const DoubleType valh = edd0[vindex];
+                const DoubleType valt = edd1[vindex];
+                const DoubleType valo2 = edd2[vindex];
+                const DoubleType valo3 = edd3[vindex];
 
-                m.push_back(dsMath::RealRowColVal(rowh, colh, n0_sign * valh));
-                m.push_back(dsMath::RealRowColVal(rowt, colt, n1_sign * valt));
-                m.push_back(dsMath::RealRowColVal(rowh, colt, n0_sign * valt));
-                m.push_back(dsMath::RealRowColVal(rowt, colh, n1_sign * valh));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colh, n0_sign * valh));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colt, n1_sign * valt));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colt, n0_sign * valt));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colh, n1_sign * valh));
 
-                m.push_back(dsMath::RealRowColVal(rowh, colo2, n0_sign * valo2));
-                m.push_back(dsMath::RealRowColVal(rowt, colo2, n1_sign * valo2));
-                m.push_back(dsMath::RealRowColVal(rowh, colo3, n0_sign * valo3));
-                m.push_back(dsMath::RealRowColVal(rowt, colo3, n1_sign * valo3));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colo2, n0_sign * valo2));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colo2, n1_sign * valo2));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colo3, n0_sign * valo3));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colo3, n1_sign * valo3));
               }
             }
           }
@@ -1274,7 +1295,7 @@ void ContactEquation::AssembleTetrahedronEdgeEquation(const std::string &emodel,
       }
       else
       {
-        TetrahedronEdgeScalarData edd(*ec);
+        TetrahedronEdgeScalarData<DoubleType> edd(*ec);
         edd *= *edm;
 
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
@@ -1296,10 +1317,10 @@ void ContactEquation::AssembleTetrahedronEdgeEquation(const std::string &emodel,
                 const size_t rowh = region.GetEquationNumber(eqindex, h);
                 const size_t rowt = region.GetEquationNumber(eqindex, t);
 
-                const double val = edd[6*tindex + eindex];
+                const DoubleType val = edd[6*tindex + eindex];
 
-                m.push_back(dsMath::RealRowColVal(rowh, ccol, n0_sign * val));
-                m.push_back(dsMath::RealRowColVal(rowt, ccol, n1_sign * val));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, ccol, n0_sign * val));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, ccol, n1_sign * val));
               }
             }
           }
@@ -1309,7 +1330,8 @@ void ContactEquation::AssembleTetrahedronEdgeEquation(const std::string &emodel,
   }
 }
 
-void ContactEquation::AssembleElementEdgeEquation(const std::string &emodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const double n0_sign, const double n1_sign)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleElementEdgeEquation(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
   const size_t dimension = GetRegion().GetDimension();
   if (dimension == 2)
@@ -1322,7 +1344,8 @@ void ContactEquation::AssembleElementEdgeEquation(const std::string &emodel, dsM
   }
 }
 
-void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple)
 {
   dsAssert(!emodel.empty(), "UNEXPECTED");
   dsAssert(!circuitnode.empty(), "UNEXPECTED");
@@ -1365,14 +1388,14 @@ void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, d
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
     }
 
-    EdgeScalarData esd(*ec);
+    EdgeScalarData<DoubleType> esd(*ec);
     esd *= *em;
 
     const Region::NodeToConstEdgeList_t &ntelist = region.GetNodeToEdgeList();
 
     for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
     {
-      double rhsval = 0.0;
+      DoubleType rhsval = 0.0;
 
       const ConstEdgeList &el = ntelist[(*cit)->GetIndex()];
       for (ConstEdgeList::const_iterator it = el.begin() ; it != el.end(); ++it)
@@ -1382,7 +1405,7 @@ void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, d
           continue;
         }
 
-        double val = (*it)->GetNodeSign((*cit));
+        DoubleType val = (*it)->GetNodeSign((*cit));
         val *= esd[(*it)->GetIndex()];
         rhsval += val;
       }
@@ -1415,8 +1438,8 @@ void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, d
       else
       {
 //          os << "Contact assemble: using model " << dermodel0 << "\n";
-        EdgeScalarData edd0(*ec);
-        EdgeScalarData edd1(*ec);
+        EdgeScalarData<DoubleType> edd0(*ec);
+        EdgeScalarData<DoubleType> edd1(*ec);
         edd0 *= *edm0;
         edd1 *= *edm1;
 
@@ -1435,7 +1458,7 @@ void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, d
 
           const size_t col = region.GetEquationNumber(eqindex2, (*cit));
 
-          double val = 0.0;
+          DoubleType val = 0.0;
           for (ConstEdgeList::const_iterator it = el.begin() ; it != el.end(); ++it)
           {
             if (bothNodesOnContact(cnodes, **it))
@@ -1443,10 +1466,10 @@ void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, d
               continue;
             }
 
-            double val2 = 0.0;
+            DoubleType val2 = 0.0;
             size_t col2 = 0;
 
-//          const double ns = (*it)->GetNodeSign((*cit));
+//          const DoubleType ns = (*it)->GetNodeSign((*cit));
             const  size_t eind = (*it)->GetIndex();
 
             //// If our contact node is on node 0 or node 1 of the edge
@@ -1475,11 +1498,11 @@ void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, d
               dsAssert(0, "UNEXPECTED");
             }
 
-            m.push_back(dsMath::RealRowColVal(crow, col2, val2));
+            m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
 //              os << "e2 " << crow << " " << col2 << " " << val2 << "\n";
           }
 
-          m.push_back(dsMath::RealRowColVal(crow, col, val));
+          m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
 //          os << "e1 " << crow << " " << col << " " << val << "\n";
         }
       }
@@ -1495,7 +1518,7 @@ void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, d
         else
         {
 //              os << "Contact assemble: using model " << dermodel << "\n";
-          EdgeScalarData edd(*ec);
+          EdgeScalarData<DoubleType> edd(*ec);
           edd *= *edm;
 
           const Region::NodeToConstEdgeList_t &ntelist = region.GetNodeToEdgeList();
@@ -1512,16 +1535,16 @@ void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, d
               }
 
               const  size_t eind = (*it)->GetIndex();
-              const double val = edd[eind];
+              const DoubleType val = edd[eind];
 
               if ((*it)->GetHead() == (*cit))
               {
-                m.push_back(dsMath::RealRowColVal(crow, crow, val));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, val));
 //                  os << "jjj " <<  crow << " " << crow << val << "\n";
               }
               else if ((*it)->GetTail() == (*cit))
               {
-                m.push_back(dsMath::RealRowColVal(crow, crow,-val));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow,-val));
 //                  os << "jjj " <<  crow << " " << crow << -val << "\n";
               }
               else
@@ -1536,7 +1559,8 @@ void ContactEquation::AssembleEdgeEquationOnCircuit(const std::string &emodel, d
   }
 }
 
-void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const double n0_sign, const double n1_sign)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
   dsAssert(!emodel.empty(), "UNEXPECTED");
   dsAssert(!circuitnode.empty(), "UNEXPECTED");
@@ -1581,7 +1605,7 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
     }
 
 
-    TriangleEdgeScalarData esd(*ec);
+    TriangleEdgeScalarData<DoubleType> esd(*ec);
     esd *= *em;
 
     const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
@@ -1596,7 +1620,7 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
         const size_t tindex = triangle.GetIndex();
         const ConstEdgeList &edgeList = ttelist[tindex];
 
-        double rhsval = 0.0;
+        DoubleType rhsval = 0.0;
 
         for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
         {
@@ -1609,7 +1633,7 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
             }
 
             
-            double val;
+            DoubleType val;
             if (*cit == edge.GetHead())
             {
               val = n0_sign;
@@ -1660,9 +1684,9 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
           else
           {
 //              os << "Contact assemble: using model " << dermodel0 << "\n";
-            TriangleEdgeScalarData edd0(*ec);
-            TriangleEdgeScalarData edd1(*ec);
-            TriangleEdgeScalarData edd2(*ec);
+            TriangleEdgeScalarData<DoubleType> edd0(*ec);
+            TriangleEdgeScalarData<DoubleType> edd1(*ec);
+            TriangleEdgeScalarData<DoubleType> edd2(*ec);
             edd0 *= *edm0;
             edd1 *= *edm1;
             edd2 *= *edm2;
@@ -1676,7 +1700,7 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
 
             const size_t col = region.GetEquationNumber(eqindex2, (*cit));
 
-            double val = 0.0;
+            DoubleType val = 0.0;
 
             const ConstTriangleList &ntl = nttlist[(*cit)->GetIndex()];
             for (ConstTriangleList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
@@ -1700,10 +1724,10 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
                   const Node *h = edge.GetHead();
                   const Node *t = edge.GetTail();
 
-                  double val1 = 0.0;
+                  DoubleType val1 = 0.0;
                   size_t col1 = 0;
 
-                  double val2 = 0.0;
+                  DoubleType val2 = 0.0;
                   size_t col2 = 0;
 
                   //// we are guaranteed that the node is across from the edge
@@ -1737,10 +1761,10 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
                   {
                     dsAssert(0, "UNEXPECTED");
                   }
-                  m.push_back(dsMath::RealRowColVal(crow, col1, val1));
-                  m.push_back(dsMath::RealRowColVal(crow, col2, val2));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col1, val1));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
                 }
-                m.push_back(dsMath::RealRowColVal(crow, col, val));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
     //          os << "e1 " << crow << " " << col << " " << val << "\n";
               }
             }
@@ -1758,7 +1782,7 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
           else
           {
 //                  os << "Contact assemble: using model " << dermodel << "\n";
-            TriangleEdgeScalarData edd(*ec);
+            TriangleEdgeScalarData<DoubleType> edd(*ec);
             edd *= *edm;
 
             const ConstTriangleList &ntl = nttlist[(*cit)->GetIndex()];
@@ -1782,16 +1806,16 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
                   const Node *h = edge.GetHead();
                   const Node *t = edge.GetTail();
 
-                  const double val = edd[vindex];
+                  const DoubleType val = edd[vindex];
 
                   if (h == (*cit))
                   {
-                    m.push_back(dsMath::RealRowColVal(crow, crow, n0_sign * val));
+                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
   //                  os << "jjj " <<  crow << " " << crow << val << "\n";
                   }
                   else if (t == (*cit))
                   {
-                    m.push_back(dsMath::RealRowColVal(crow, crow, n1_sign * val));
+                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
   //                  os << "jjj " <<  crow << " " << crow << -val << "\n";
                   }
                   else
@@ -1809,7 +1833,8 @@ void ContactEquation::AssembleTriangleEdgeEquationOnCircuit(const std::string &e
 }
 
 // TODO:"REVIEW CODE"
-void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const double n0_sign, const double n1_sign)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
   dsAssert(!emodel.empty(), "UNEXPECTED");
 
@@ -1854,7 +1879,7 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
     }
 
-    TetrahedronEdgeScalarData esd(*ec);
+    TetrahedronEdgeScalarData<DoubleType> esd(*ec);
     esd *= *em;
 
     const Region::TetrahedronToConstEdgeDataList_t &ttelist = region.GetTetrahedronToEdgeDataList();
@@ -1869,7 +1894,7 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
         const size_t tindex = tetrahedron.GetIndex();
         const ConstEdgeDataList &edgeDataList = ttelist[tindex];
 
-        double rhsval = 0.0;
+        DoubleType rhsval = 0.0;
 
         for (size_t eindex = 0; eindex < edgeDataList.size(); ++eindex)
         {
@@ -1881,7 +1906,7 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
               continue;
             }
 
-            double val;
+            DoubleType val;
             if (*cit == edge.GetHead())
             {
               val = n0_sign;
@@ -1934,10 +1959,10 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
           else
           {
 //              os << "Contact assemble: using model " << dermodel0 << "\n";
-            TetrahedronEdgeScalarData edd0(*ec);
-            TetrahedronEdgeScalarData edd1(*ec);
-            TetrahedronEdgeScalarData edd2(*ec);
-            TetrahedronEdgeScalarData edd3(*ec);
+            TetrahedronEdgeScalarData<DoubleType> edd0(*ec);
+            TetrahedronEdgeScalarData<DoubleType> edd1(*ec);
+            TetrahedronEdgeScalarData<DoubleType> edd2(*ec);
+            TetrahedronEdgeScalarData<DoubleType> edd3(*ec);
             edd0 *= *edm0;
             edd1 *= *edm1;
             edd2 *= *edm2;
@@ -1952,7 +1977,7 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
 
             const size_t col = region.GetEquationNumber(eqindex2, (*cit));
 
-            double val = 0.0;
+            DoubleType val = 0.0;
 
             const ConstTetrahedronList &ntl = nttlist[(*cit)->GetIndex()];
             for (ConstTetrahedronList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
@@ -1978,13 +2003,13 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
                   const Node *h = edge.GetHead();
                   const Node *t = edge.GetTail();
 
-                  double val1 = 0.0;
+                  DoubleType val1 = 0.0;
                   size_t col1 = 0;
 
-                  double val2 = 0.0;
+                  DoubleType val2 = 0.0;
                   size_t col2 = 0;
 
-                  double val3 = 0.0;
+                  DoubleType val3 = 0.0;
                   size_t col3 = 0;
 
                   const Node * const ot2  = edgeData.nodeopp[0];
@@ -2027,11 +2052,11 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
                   {
                     dsAssert(0, "UNEXPECTED");
                   }
-                  m.push_back(dsMath::RealRowColVal(crow, col1, val1));
-                  m.push_back(dsMath::RealRowColVal(crow, col2, val2));
-                  m.push_back(dsMath::RealRowColVal(crow, col3, val3));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col1, val1));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col3, val3));
                 }
-                m.push_back(dsMath::RealRowColVal(crow, col, val));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
     //          os << "e1 " << crow << " " << col << " " << val << "\n";
               }
             }
@@ -2049,7 +2074,7 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
           else
           {
 //                  os << "Contact assemble: using model " << dermodel << "\n";
-            TetrahedronEdgeScalarData edd(*ec);
+            TetrahedronEdgeScalarData<DoubleType> edd(*ec);
             edd *= *edm;
 
             const ConstTetrahedronList &ntl = nttlist[(*cit)->GetIndex()];
@@ -2073,15 +2098,15 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
                   const Node *h = edge.GetHead();
                   const Node *t = edge.GetTail();
 
-                  const double val = edd[vindex];
+                  const DoubleType val = edd[vindex];
 
                   if (h == (*cit))
                   {
-                    m.push_back(dsMath::RealRowColVal(crow, crow, n0_sign * val));
+                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
                   }
                   else if (t == (*cit))
                   {
-                    m.push_back(dsMath::RealRowColVal(crow, crow, n1_sign * val));
+                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
                   }
                   else
                   {
@@ -2097,7 +2122,8 @@ void ContactEquation::AssembleTetrahedronEdgeEquationOnCircuit(const std::string
   }
 }
 
-void ContactEquation::AssembleElementEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec &m, RHSEntryVec &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const double n0_sign, const double n1_sign)
+template <typename DoubleType>
+void ContactEquation<DoubleType>::AssembleElementEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
   const size_t dimension = GetRegion().GetDimension();
   if (dimension == 2)
@@ -2110,15 +2136,19 @@ void ContactEquation::AssembleElementEdgeEquationOnCircuit(const std::string &em
   }
 }
 
-void ContactEquation::DevsimSerialize(std::ostream &of) const
+template <typename DoubleType>
+void ContactEquation<DoubleType>::DevsimSerialize(std::ostream &of) const
 {
   of << "begin_equation \"" << this->GetName() << "\"\n";
   this->Serialize(of);
   of << "\nend_equation\n\n";
 }
 
-void ContactEquation::GetCommandOptions(std::map<std::string, ObjectHolder> &omap) const
+template <typename DoubleType>
+void ContactEquation<DoubleType>::GetCommandOptions(std::map<std::string, ObjectHolder> &omap) const
 {
   this->GetCommandOptions_Impl(omap);
 }
+
+template class ContactEquation<double>;
 

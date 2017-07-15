@@ -156,21 +156,21 @@ void OpEqualRange<U>::run()
   mutex_.unlock();
 }
 
-template class OpEqualPacket<SerialVectorVectorOpEqual<ScalarDataHelper::times_equal> >;
-template class OpEqualPacket<SerialVectorVectorOpEqual<ScalarDataHelper::plus_equal> >;
+template class OpEqualPacket<SerialVectorVectorOpEqual<ScalarDataHelper::times_equal<double>, double> >;
+template class OpEqualPacket<SerialVectorVectorOpEqual<ScalarDataHelper::plus_equal<double>, double> >;
 
 template
-void OpEqualRun<SerialVectorVectorOpEqual<ScalarDataHelper::plus_equal> >(SerialVectorVectorOpEqual<ScalarDataHelper::plus_equal>&, size_t);
+void OpEqualRun<SerialVectorVectorOpEqual<ScalarDataHelper::plus_equal<double>, double> >(SerialVectorVectorOpEqual<ScalarDataHelper::plus_equal<double>, double>&, size_t);
 
 template
-void OpEqualRun<SerialVectorVectorOpEqual<ScalarDataHelper::times_equal> >(SerialVectorVectorOpEqual<ScalarDataHelper::times_equal>&, size_t);
+void OpEqualRun<SerialVectorVectorOpEqual<ScalarDataHelper::times_equal<double>, double> >(SerialVectorVectorOpEqual<ScalarDataHelper::times_equal<double>, double>&, size_t);
 
-template class OpEqualPacket<SerialVectorScalarOpEqual<ScalarDataHelper::times_equal> >;
-template class OpEqualPacket<SerialVectorScalarOpEqual<ScalarDataHelper::plus_equal> >;
-
-template
-void OpEqualRun<SerialVectorScalarOpEqual<ScalarDataHelper::plus_equal> >(SerialVectorScalarOpEqual<ScalarDataHelper::plus_equal>&, size_t);
+template class OpEqualPacket<SerialVectorScalarOpEqual<ScalarDataHelper::times_equal<double>, double> >;
+template class OpEqualPacket<SerialVectorScalarOpEqual<ScalarDataHelper::plus_equal<double>, double> >;
 
 template
-void OpEqualRun<SerialVectorScalarOpEqual<ScalarDataHelper::times_equal> >(SerialVectorScalarOpEqual<ScalarDataHelper::times_equal>&, size_t);
+void OpEqualRun<SerialVectorScalarOpEqual<ScalarDataHelper::plus_equal<double>, double> >(SerialVectorScalarOpEqual<ScalarDataHelper::plus_equal<double>, double>&, size_t);
+
+template
+void OpEqualRun<SerialVectorScalarOpEqual<ScalarDataHelper::times_equal<double>, double> >(SerialVectorScalarOpEqual<ScalarDataHelper::times_equal<double>, double>&, size_t);
 

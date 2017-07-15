@@ -22,7 +22,8 @@ limitations under the License.
 #include "Edge.hh"
 #include "EdgeSubModel.hh"
 
-CylindricalEdgeNodeVolume::CylindricalEdgeNodeVolume(RegionPtr rp)
+template <typename DoubleType>
+CylindricalEdgeNodeVolume<DoubleType>::CylindricalEdgeNodeVolume(RegionPtr rp)
     : EdgeModel("CylindricalEdgeNodeVolume@n0", rp, EdgeModel::SCALAR)
 {
     const size_t dimension = rp->GetDimension();
@@ -34,17 +35,18 @@ CylindricalEdgeNodeVolume::CylindricalEdgeNodeVolume(RegionPtr rp)
       RegisterCallback("ElementCylindricalNodeVolume@en1");
     }
 
-    node1Volume_ = EdgeSubModel::CreateEdgeSubModel("CylindricalEdgeNodeVolume@n1", rp, EdgeModel::SCALAR, this->GetSelfPtr());
+    node1Volume_ = EdgeSubModel<DoubleType>::CreateEdgeSubModel("CylindricalEdgeNodeVolume@n1", rp, EdgeModel::SCALAR, this->GetSelfPtr());
 }
 
-void CylindricalEdgeNodeVolume::calcEdgeScalarValues() const
+template <typename DoubleType>
+void CylindricalEdgeNodeVolume<DoubleType>::calcEdgeScalarValues() const
 {
   const Region &r = GetRegion();
   const size_t dimension = r.GetDimension();
 
   dsAssert(dimension == 2, "CylindricalEdgeNodeVolume 2d Only");
 
-  std::vector<double> nv(r.GetNumberNodes());
+  std::vector<DoubleType> nv(r.GetNumberNodes());
 
 
   if (dimension == 2)
@@ -57,8 +59,8 @@ void CylindricalEdgeNodeVolume::calcEdgeScalarValues() const
     dsAssert(eec0.get(), "ElementCylindricalNodeVolume@en0 missing");
     dsAssert(eec1.get(), "ElementCylindricalNodeVolume@en1 missing");
 
-    const EdgeScalarList &nv0 = eec0->GetValuesOnEdges();
-    const EdgeScalarList &nv1 = eec1->GetValuesOnEdges();
+    const EdgeScalarList<DoubleType> &nv0 = eec0->GetValuesOnEdges<DoubleType>();
+    const EdgeScalarList<DoubleType> &nv1 = eec1->GetValuesOnEdges<DoubleType>();
 
     SetValues(nv0);
     node1Volume_.lock()->SetValues(nv1);
@@ -72,8 +74,11 @@ void CylindricalEdgeNodeVolume::calcEdgeScalarValues() const
   SetValues(nv);
 }
 
-void CylindricalEdgeNodeVolume::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void CylindricalEdgeNodeVolume<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "DATAPARENT \"ElementCylindricalNodeVolume@en0\"";
 }
+
+template class CylindricalEdgeNodeVolume<double>;
 

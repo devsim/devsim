@@ -38,7 +38,7 @@ void WriteCoordinates(std::ostream &myfile, const Device::CoordinateList_t &clis
     for (Device::CoordinateList_t::const_iterator cit = clist.begin(); cit != clist.end(); ++cit)
     {
         myfile << "c ";
-        const Vector &pos = (*cit)->Position();
+        const Vector<double> &pos = (*cit)->Position();
         myfile << pos.Getx() << " " << pos.Gety() << " " << pos.Getz() << "\n";
     }
 }
@@ -64,7 +64,7 @@ void WriteNodesAndSolutions(std::ostream &myfile, const Region &reg, const std::
             myfile << " ";
             if (*nmit)
             {
-                myfile << (*nmit)->GetScalarValues()[i];
+                myfile << (*nmit)->GetScalarValues<double>()[i];
             }
             else
             {
@@ -87,7 +87,7 @@ void WriteEdgesAndSolutions(std::ostream &myfile, const Region &reg, const std::
     const ConstEdgeList &cel = reg.GetEdgeList();
     const size_t nvals = cel.size();
 
-    const std::vector <Vector> &unitvec = MeshUtil::GetUnitVector(reg);
+    const std::vector <Vector<double>> &unitvec = MeshUtil::GetUnitVector(reg);
 
     for (size_t i = 0; i < nvals; ++i)
     {
@@ -99,8 +99,8 @@ void WriteEdgesAndSolutions(std::ostream &myfile, const Region &reg, const std::
             myfile << " ";
             if (*emit)
             {
-                Vector p = unitvec[i];
-                p *=  (*emit)->GetScalarValues()[i];
+                Vector<double> p = unitvec[i];
+                p *=  (*emit)->GetScalarValues<double>()[i];
                 myfile << p.Getx() << " " << p.Gety() << " " << p.Getz();
             }
             else

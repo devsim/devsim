@@ -20,6 +20,7 @@ limitations under the License.
 #include "NodeModel.hh"
 #include <string>
 // need to set general node propeties, such as positive only
+template <typename DoubleType>
 class NodeSolution : public NodeModel
 {
     public:
@@ -33,7 +34,6 @@ class NodeSolution : public NodeModel
         void Serialize(std::ostream &) const;
 
     private:
-        double calcSolution(ConstNodePtr) const;
         void calcNodeScalarValues() const;
         void setInitialValues();
         // If we are an auxilary model, create our values from the parent
@@ -43,3 +43,4 @@ class NodeSolution : public NodeModel
 };
 
 #endif
+

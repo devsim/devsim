@@ -24,22 +24,20 @@ limitations under the License.
 #include "NodeModel.hh"
 #include "dsAssert.hh"
 
-// TODO:"TEST THIS"
-
-
-
-TriangleEdgeFromNodeModel::TriangleEdgeFromNodeModel(const std::string &edgemodel0, const std::string &edgemodel1, const std::string &edgemodel2, const std::string &nodemodel, RegionPtr rp)
+template <typename DoubleType>
+TriangleEdgeFromNodeModel<DoubleType>::TriangleEdgeFromNodeModel(const std::string &edgemodel0, const std::string &edgemodel1, const std::string &edgemodel2, const std::string &nodemodel, RegionPtr rp)
     : TriangleEdgeModel(edgemodel0, rp, TriangleEdgeModel::SCALAR), nodeModelName(nodemodel), edgeModel1Name(edgemodel1), edgeModel2Name(edgemodel2)
 {
   RegisterCallback(nodemodel);
-  new TriangleEdgeSubModel(edgeModel1Name, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
-  new TriangleEdgeSubModel(edgeModel2Name, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
+  new TriangleEdgeSubModel<DoubleType>(edgeModel1Name, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
+  new TriangleEdgeSubModel<DoubleType>(edgeModel2Name, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
 }
 
 //// Need to figure out the deleter situation from sub models
 //// Perhaps a Delete SubModels method??????
 
-void TriangleEdgeFromNodeModel::calcTriangleEdgeScalarValues() const
+template <typename DoubleType>
+void TriangleEdgeFromNodeModel<DoubleType>::calcTriangleEdgeScalarValues() const
 {
   const Region &reg = GetRegion();
 
@@ -64,11 +62,11 @@ void TriangleEdgeFromNodeModel::calcTriangleEdgeScalarValues() const
 
   dsAssert(triangleList.size() == ttelist.size(), "UNEXPECTED");
 
-  std::vector<double> ev0(3*triangleList.size());
-  std::vector<double> ev1(3*triangleList.size());
-  std::vector<double> ev2(3*triangleList.size());
+  std::vector<DoubleType> ev0(3*triangleList.size());
+  std::vector<DoubleType> ev1(3*triangleList.size());
+  std::vector<DoubleType> ev2(3*triangleList.size());
 
-  const NodeScalarList &nsl = nmp->GetScalarValues();
+  const NodeScalarList<DoubleType> &nsl = nmp->GetScalarValues<DoubleType>();
 
   for (size_t i = 0; i < triangleList.size(); ++i)
   {
@@ -100,8 +98,11 @@ void TriangleEdgeFromNodeModel::calcTriangleEdgeScalarValues() const
   std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(temp2)->SetValues(ev2);
 }
 
-void TriangleEdgeFromNodeModel::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void TriangleEdgeFromNodeModel<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND element_from_node_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -node_model \"" << nodeModelName << "\"";
 }
+
+template class TriangleEdgeFromNodeModel<double>;
 

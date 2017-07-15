@@ -32,17 +32,27 @@ InterfaceNodeModel::~InterfaceNodeModel() {
 #endif
 }
 
+bool InterfaceNodeModel::IsZero() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsZero();
+}
+
+bool InterfaceNodeModel::IsOne() const
+{
+  CalculateValues();
+  return model_data.IsUniform() && model_data.IsOne();
+}
+
 // derived classes must register dependencies
 InterfaceNodeModel::InterfaceNodeModel(const std::string &nm, const InterfacePtr ip)
     : name(nm),
       myinterface(ip),
       uptodate(false),
       inprocess(false),
-      isuniform(false),
-      uniform_value(0.0)
+      model_data(ip->GetNodes0().size())
 { 
   ip->AddInterfaceNodeModel(this);
-  length = GetInterface().GetNodes0().size();
 }
 
 void InterfaceNodeModel::CalculateValues() const
@@ -71,57 +81,53 @@ void InterfaceNodeModel::CalculateValues() const
   }
 }
 
-const NodeScalarList &InterfaceNodeModel::GetScalarValues() const
+template <typename DoubleType>
+const NodeScalarList<DoubleType> &InterfaceNodeModel::GetScalarValues() const
 {
   CalculateValues();
 
-  if (isuniform)
-  {
-    values.clear();
-    values.resize(length, uniform_value);
-  }
+  model_data.expand_uniform();
 
-  return values;
+  return model_data.GetValues<DoubleType>();
 }
 
-void InterfaceNodeModel::SetValues(const double &v) const
+template <typename DoubleType>
+void InterfaceNodeModel::SetValues(const DoubleType &v) const
 {
-  values.clear();
-  isuniform = true;
-  uniform_value = v;
+  model_data.SetUniformValue<DoubleType>(v);
 
   MarkOld();
   uptodate = true;
 }
 
-void InterfaceNodeModel::SetValues(const NodeScalarList &nv) const
+template <typename DoubleType>
+void InterfaceNodeModel::SetValues(const NodeScalarList<DoubleType> &nv) const
 {
   const_cast<InterfaceNodeModel *>(this)->SetValues(nv);
 }
 
-void InterfaceNodeModel::SetValues(const NodeScalarList &nv)
+template <typename DoubleType>
+void InterfaceNodeModel::SetValues(const NodeScalarList<DoubleType> &nv)
 {
-  values = nv;
-
-  isuniform = false;
-  uniform_value = 0.0;
+  model_data.set_values(nv);
 
   MarkOld();
   uptodate = true;
 }
 
+template <typename DoubleType>
 void InterfaceNodeModel::SetValues(const InterfaceNodeModel &nm)
 {
   if (&nm != this)
   {
     if (nm.IsUniform())
     {
-      const double v = nm.GetUniformValue();
+      const DoubleType v = nm.GetUniformValue<double>();
       InterfaceNodeModel::SetValues(v);
     }
     else
     {
-      const NodeScalarList &v = nm.GetScalarValues();
+      const NodeScalarList<DoubleType> &v = nm.GetScalarValues<double>();
       InterfaceNodeModel::SetValues(v);
     }
   }
@@ -152,13 +158,13 @@ bool InterfaceNodeModel::IsUniform() const
     CalculateValues();
   }
 
-  return isuniform;
+  return model_data.IsUniform();
 }
 
-double InterfaceNodeModel::GetUniformValue() const
+template <typename DoubleType>
+const DoubleType &InterfaceNodeModel::GetUniformValue() const
 {
-  dsAssert(isuniform, "UNEXPECTED");
-  return uniform_value;
+  return model_data.GetUniformValue<DoubleType>();
 }
 
 void InterfaceNodeModel::DevsimSerialize(std::ostream &of) const
@@ -177,4 +183,9 @@ const std::string &InterfaceNodeModel::GetInterfaceName() const
 {
   return myinterface->GetName();
 }
+
+template std::vector<double> const& InterfaceNodeModel::GetScalarValues<double>() const;
+template const double &InterfaceNodeModel::GetUniformValue<double>() const;
+template void InterfaceNodeModel::SetValues<double>(std::vector<double> const&) const;
+template void InterfaceNodeModel::SetValues<double>(double const&) const;
 

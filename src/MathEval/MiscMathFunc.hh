@@ -17,14 +17,22 @@ limitations under the License.
 
 #ifndef MISC_MATH_FUNC_HH
 #define MISC_MATH_FUNC_HH
-double derfdx(double);
+template <typename DoubleType>
+DoubleType derfdx(DoubleType);
 
-double derfcdx(double);
+template <typename DoubleType>
+DoubleType derfcdx(DoubleType);
 
-double vec_sum(double);
-double vec_max(double);
-double vec_min(double);
+template <typename DoubleType>
+DoubleType vec_sum(DoubleType);
 
-double dot2dfunc(double, double, double, double);
+template <typename DoubleType>
+DoubleType vec_max(DoubleType);
+
+template <typename DoubleType>
+DoubleType vec_min(DoubleType);
+
+template <typename DoubleType>
+DoubleType dot2dfunc(DoubleType, DoubleType, DoubleType, DoubleType);
 
 #endif

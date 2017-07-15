@@ -29,6 +29,7 @@ limitations under the License.
 class Region;
 class Triangle;
 class Tetrahedron;
+
 class NodeModel;
 
 namespace dsMath {
@@ -43,9 +44,9 @@ class GradientField {
 
     ~GradientField();
 
-    Vector   GetGradient(const Triangle &, const NodeModel &) const;
+    Vector<double>   GetGradient(const Triangle &, const NodeModel &) const;
 
-    Vector   GetGradient(const Tetrahedron &, const NodeModel &) const;
+    Vector<double>   GetGradient(const Tetrahedron &, const NodeModel &) const;
 
   private:
     const Region &GetRegion() const

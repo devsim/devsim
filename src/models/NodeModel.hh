@@ -18,19 +18,23 @@ limitations under the License.
 #ifndef NODEMODEL_HH
 #define NODEMODEL_HH
 
+#include "ModelDataHolder.hh"
+
 #include <memory>
 
 #include <string>
 #include <vector>
 #include <iosfwd>
 
-typedef std::vector<double> NodeScalarList;
+template<typename T>
+using NodeScalarList = std::vector<T>;
 
 class NodeModel;
-typedef std::weak_ptr<NodeModel>         WeakNodeModelPtr;
-typedef std::weak_ptr<const NodeModel>   WeakConstNodeModelPtr;
-typedef std::shared_ptr<NodeModel>       NodeModelPtr;
-typedef std::shared_ptr<const NodeModel> ConstNodeModelPtr;
+
+using WeakNodeModelPtr = std::weak_ptr<NodeModel>;
+using WeakConstNodeModelPtr = std::weak_ptr<const NodeModel>;
+using NodeModelPtr = std::shared_ptr<NodeModel>;
+using ConstNodeModelPtr = std::shared_ptr<const NodeModel>;
 
 class Node;
 typedef Node *NodePtr;
@@ -56,7 +60,8 @@ class NodeModel {
         std::string GetImagName() const;
 
         // should collapse this with setNodeScalarValue
-        const NodeScalarList &GetScalarValues() const;
+        template <typename DoubleType>
+        const NodeScalarList<DoubleType> &GetScalarValues() const;
 
         const std::vector<size_t> &GetContactIndexes() const;
 
@@ -76,10 +81,16 @@ class NodeModel {
 
         void InitializeValues();
 
-        void SetNodeValue(size_t, double);
-        void SetValues(const NodeScalarList &);
+        template <typename DoubleType>
+        void SetNodeValue(size_t, DoubleType);
+
+        template <typename DoubleType>
+        void SetValues(const NodeScalarList<DoubleType> &);
+
         void SetValues(const NodeModel &);
-        void SetValues(const double &);
+
+        template <typename DoubleType>
+        void SetValues(const DoubleType &);
 
         const Region &GetRegion() const
         {
@@ -127,22 +138,17 @@ class NodeModel {
 
         bool IsUniform() const;
 
-        double GetUniformValue() const;
+        template <typename DoubleType>
+        const DoubleType &GetUniformValue() const;
 
         size_t GetLength() const
         {
-          return length;
+          return model_data.GetLength();
         }
 
-        bool IsZero() const
-        {
-          return (IsUniform() && (uniform_value == 0.0));
-        }
+        bool IsZero() const;
 
-        bool IsOne() const
-        {
-          return (IsUniform() && (uniform_value == 1.0));
-        }
+        bool IsOne() const;
 
         void DevsimSerialize(std::ostream &) const;
 
@@ -159,8 +165,11 @@ class NodeModel {
         void RegisterCallback(const std::string &);
 
         // logically const as is used by the lazy evaluated model values
-        void SetValues(const NodeScalarList &) const;
-        void SetValues(const double &) const;
+        template <typename DoubleType>
+        void SetValues(const NodeScalarList<DoubleType> &) const;
+
+        template <typename DoubleType>
+        void SetValues(const DoubleType &) const;
 
         void MarkOld() const;
 
@@ -170,7 +179,7 @@ class NodeModel {
     private:
         void CalculateValues() const;
 
-        //virtual double calcNodeScalarValue(NodePtr) = 0; 
+        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0; 
         virtual void calcNodeScalarValues() const = 0; 
         virtual void setInitialValues() = 0;
 
@@ -182,14 +191,13 @@ class NodeModel {
         WeakNodeModelPtr myself;
         RegionPtr   myregion;
         ContactPtr  mycontact;
+        mutable ModelDataHolder model_data;
         mutable bool uptodate;
         mutable bool inprocess;
-        mutable bool isuniform;
-        mutable double         uniform_value;
-        mutable NodeScalarList values;
+
         mutable std::vector<size_t> atcontact;
         DisplayType displayType;
-        size_t length;
         static const char *DisplayTypeString[];
 };
 #endif
+

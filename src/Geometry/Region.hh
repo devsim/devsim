@@ -27,42 +27,53 @@ limitations under the License.
 #include <map>
 #include <set>
 #include <complex>
+
+template <typename T>
 class Vector;
+
 class GradientField;
 class TriangleElementField;
 class TetrahedronElementField;
 
 template <typename T> class ObjectCache;
 namespace MEE {
+template <typename DoubleType>
 class ModelExprData;
 }
-typedef ObjectCache<MEE::ModelExprData> ModelExprDataCache;
-typedef std::weak_ptr<ModelExprDataCache >   WeakModelExprDataCachePtr;
-typedef std::shared_ptr<ModelExprDataCache > ModelExprDataCachePtr;
+
+template <typename DoubleType>
+using ModelExprDataCache = ObjectCache<MEE::ModelExprData<DoubleType> >;
+
+template <typename DoubleType>
+using WeakModelExprDataCachePtr = std::weak_ptr<ModelExprDataCache<DoubleType> >;
+
+template <typename DoubleType>
+using ModelExprDataCachePtr = std::shared_ptr<ModelExprDataCache<DoubleType> >;
 
 class Device;
 typedef Device *DevicePtr;
 typedef const Device *ConstDevicePtr;
 
 class NodeModel;
-typedef std::weak_ptr<NodeModel>         WeakNodeModelPtr;
-typedef std::shared_ptr<NodeModel>       NodeModelPtr;
-typedef std::shared_ptr<const NodeModel> ConstNodeModelPtr;
+using WeakNodeModelPtr = std::weak_ptr<NodeModel>;
+using NodeModelPtr = std::shared_ptr<NodeModel>;
+using ConstNodeModelPtr = std::shared_ptr<const NodeModel>;
 
 class EdgeModel;
-typedef std::weak_ptr<EdgeModel>         WeakEdgeModelPtr;
-typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
+using WeakEdgeModelPtr = std::weak_ptr<EdgeModel>;
+using EdgeModelPtr = std::shared_ptr<EdgeModel>;
+using ConstEdgeModelPtr = std::shared_ptr<const EdgeModel>;
 
 class TriangleEdgeModel;
-typedef std::weak_ptr<TriangleEdgeModel>         WeakTriangleEdgeModelPtr;
-typedef std::shared_ptr<TriangleEdgeModel>       TriangleEdgeModelPtr;
-typedef std::shared_ptr<const TriangleEdgeModel> ConstTriangleEdgeModelPtr;
+using WeakTriangleEdgeModelPtr = std::weak_ptr<TriangleEdgeModel>;
+using TriangleEdgeModelPtr = std::shared_ptr<TriangleEdgeModel>;
+using ConstTriangleEdgeModelPtr = std::shared_ptr<const TriangleEdgeModel>;
 
 class TetrahedronEdgeModel;
-typedef std::weak_ptr<TetrahedronEdgeModel>         WeakTetrahedronEdgeModelPtr;
-typedef std::shared_ptr<TetrahedronEdgeModel>       TetrahedronEdgeModelPtr;
-typedef std::shared_ptr<const TetrahedronEdgeModel> ConstTetrahedronEdgeModelPtr;
+using WeakTetrahedronEdgeModelPtr = std::weak_ptr<TetrahedronEdgeModel>;
+using TetrahedronEdgeModelPtr = std::shared_ptr<TetrahedronEdgeModel>;
+using ConstTetrahedronEdgeModelPtr = std::shared_ptr<const TetrahedronEdgeModel>;
+
 
 class Edge;
 typedef Edge *EdgePtr;
@@ -92,33 +103,34 @@ typedef Tetrahedron *TetrahedronPtr;
 typedef const Tetrahedron *ConstTetrahedronPtr;
 typedef std::vector<ConstTetrahedronPtr> ConstTetrahedronList;
 
-class Equation;
-typedef Equation *EquationPtr;
-typedef const Equation *ConstEquationPtr;
+class PermutationEntry;
+typedef std::map<size_t, PermutationEntry> PermutationMap;
+namespace dsMath {
+template <typename T> class RowColVal;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
+}
 
 typedef std::map<std::string, size_t> EquationIndMap_t;
-typedef std::map<std::string, EquationPtr> EquationPtrMap_t;
+
+class EquationHolder;
+
+typedef std::map<std::string, EquationHolder> EquationPtrMap_t;
 // Variable to equation
 typedef std::map<std::string, std::string> VariableEqnMap_t;
 
 typedef std::vector<std::string> VariableList_t;
 
-class PermutationEntry;
-typedef std::map<size_t, PermutationEntry> PermutationMap;
-namespace dsMath {
-template <typename T> class RowColVal;
-typedef std::vector<RowColVal<double> > RealRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
-}
-#if 0
-namespace dsMath {
-template <typename T> class RowColVal;
-typedef std::vector<RowColVal<double> > RealRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
-}
-#endif
 
 /**
    A Region knows which mesh it belongs to.  A mesh may contain a shared_ptr to
@@ -272,7 +284,7 @@ class Region
       TetrahedronEdgeModelPtr  AddTetrahedronEdgeModel(TetrahedronEdgeModel *);
       // given a models name, spit out a pointer to it
 
-      ConstNodeModelPtr            GetNodeModel(const std::string &) const;
+      ConstNodeModelPtr    GetNodeModel(const std::string &) const;
       ConstEdgeModelPtr            GetEdgeModel(const std::string &) const;
       ConstTriangleEdgeModelPtr    GetTriangleEdgeModel(const std::string &) const;
       ConstTetrahedronEdgeModelPtr GetTetrahedronEdgeModel(const std::string &) const;
@@ -301,8 +313,8 @@ class Region
         return tetrahedronEdgeModels;
       }
 
-      void AddEquation(EquationPtr);
-      void DeleteEquation(EquationPtr);
+      void AddEquation(EquationHolder &);
+      void DeleteEquation(EquationHolder &);
       size_t GetEquationIndex(const std::string &) const;
       // Is access control worth it?
       // Fix this
@@ -337,7 +349,7 @@ class Region
     void ACUpdate(const std::vector<std::complex<double> > &/*result*/);
     void NoiseUpdate(const std::string &/*output*/, const std::vector<size_t> &/*permvec*/, const std::vector<std::complex<double> > &/*result*/);
 
-    void Assemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    void Assemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
     void BackupSolutions(const std::string &);
     void RestoreSolutions(const std::string &);
@@ -352,11 +364,11 @@ class Region
 
     size_t GetEdgeIndexOnTetrahedron(const Tetrahedron &, ConstEdgePtr) const;
 
-    const std::vector<Vector> & GetTriangleCenters() const
+    const std::vector<Vector<double> > & GetTriangleCenters() const
     {
       return triangleCenters;
     }
-    const std::vector<Vector> & GetTetrahedronCenters() const
+    const std::vector<Vector<double> > & GetTetrahedronCenters() const
     {
       return tetrahedronCenters;
     }
@@ -372,8 +384,11 @@ class Region
 
     //// const in the sense we are not changing the region
     //// however the cache is changeable
-    ModelExprDataCachePtr GetModelExprDataCache();
-    void SetModelExprDataCache(ModelExprDataCachePtr);
+    template <typename DoubleType>
+    ModelExprDataCachePtr<DoubleType> GetModelExprDataCache();
+
+    template <typename DoubleType>
+    void SetModelExprDataCache(ModelExprDataCachePtr<DoubleType>);
 
    private:
       Region();
@@ -443,9 +458,10 @@ class Region
       mutable TriangleElementField    *triangleElementField_;
       mutable TetrahedronElementField *tetrahedronElementField_;
 
-      std::vector<Vector>       triangleCenters;
-      std::vector<Vector>       tetrahedronCenters;
-      WeakModelExprDataCachePtr modelExprDataCache;
+      std::vector<Vector<double> >       triangleCenters;
+      std::vector<Vector<double> >       tetrahedronCenters;
+
+      WeakModelExprDataCachePtr<double> modelExprDataCache;
 };
 
 

@@ -37,28 +37,34 @@ class Region;
 typedef Region *RegionPtr;
 typedef const Region *ConstRegionPtr;
 
-class ContactEquation;
-typedef ContactEquation *ContactEquationPtr;
-typedef const ContactEquation *ConstContactEquationPtr;
-typedef std::map<std::string, ContactEquationPtr> ContactEquationPtrMap_t;
+class ContactEquationHolder;
+typedef std::map<std::string, ContactEquationHolder> ContactEquationPtrMap_t;
 
 typedef std::map<std::string, std::string> VariableEqnMap_t;
 
 
 class PermutationEntry;
 typedef std::map<size_t, PermutationEntry> PermutationMap;
+
 namespace dsMath {
 template <typename T> class RowColVal;
-typedef std::vector<RowColVal<double> > RealRowColValueVec;
-typedef std::pair<int, double> RHSEntry;
-typedef std::vector<RHSEntry> RHSEntryVec;
+
+template <typename DoubleType>
+using RealRowColVal = RowColVal<DoubleType>;
+
+template <typename DoubleType>
+using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
+
+template <typename DoubleType>
+using RHSEntry = std::pair<int, DoubleType>;
+
+template <typename DoubleType>
+using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 }
 
 // Create const list
 class Contact {
     public:
-      typedef std::map<std::string, ContactEquationPtr> ContactEquationPtrMap_t;
-
       ~Contact();
       Contact(const std::string &, RegionPtr, const ConstNodeList_t &/*n*/, const std::string &/*material*/);
 
@@ -72,12 +78,12 @@ class Contact {
 
       const std::string &GetDeviceName() const;
 
-      void AddEquation(ContactEquationPtr);
-      void DeleteEquation(ContactEquationPtr);
+      void AddEquation(ContactEquationHolder &);
+      void DeleteEquation(ContactEquationHolder &);
       ContactEquationPtrMap_t &GetEquationPtrList();
       const ContactEquationPtrMap_t &GetEquationPtrList() const;
 
-      void Assemble(dsMath::RealRowColValueVec &, dsMath::RHSEntryVec &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+      void Assemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
       void AddEdges(const ConstEdgeList_t &);
       void AddTriangles(const ConstTriangleList_t &);

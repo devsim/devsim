@@ -22,13 +22,15 @@ limitations under the License.
 #include "Node.hh"
 #include "GeometryStream.hh"
 
-AtContactNode::AtContactNode(RegionPtr rp)
+template <typename DoubleType>
+AtContactNode<DoubleType>::AtContactNode(RegionPtr rp)
     : NodeModel("AtContactNode", rp, NodeModel::SCALAR)
 {
     RegisterCallback("@@@ContactChange");
 }
 
-void AtContactNode::calcNodeScalarValues() const
+template <typename DoubleType>
+void AtContactNode<DoubleType>::calcNodeScalarValues() const
 {
     const Region &region = GetRegion();
 
@@ -38,7 +40,7 @@ void AtContactNode::calcNodeScalarValues() const
     const Device::ContactList_t &cl = region.GetDevice()->GetContactList();
 
     const ConstNodeList &nl = region.GetNodeList();
-    std::vector<double> nv(nl.size());
+    std::vector<DoubleType> nv(nl.size());
 
     Device::ContactList_t::const_iterator it = cl.begin();
     for ( ; it != cl.end(); ++it)
@@ -65,13 +67,18 @@ void AtContactNode::calcNodeScalarValues() const
     SetValues(nv);
 }
 
-void AtContactNode::setInitialValues()
+template <typename DoubleType>
+void AtContactNode<DoubleType>::setInitialValues()
 {
     DefaultInitializeValues();
 }
 
-void AtContactNode::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void AtContactNode<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class AtContactNode<double>;
+
 

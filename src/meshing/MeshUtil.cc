@@ -106,12 +106,12 @@ pts_t getPoints(double xl, double xh, double sl, double sh)
     return pts;
 }
 
-std::vector<Vector> GetUnitVector(const Region &reg)
+std::vector<Vector<double>> GetUnitVector(const Region &reg)
 {
     const ConstEdgeList &cel = reg.GetEdgeList();
     const size_t nvals = cel.size();
 
-    std::vector <Vector> unitvec(nvals, Vector(0, 0, 0));
+    std::vector <Vector<double>> unitvec(nvals, Vector<double>(0, 0, 0));
     {
       ConstEdgeModelPtr uxp = reg.GetEdgeModel("unitx");
       ConstEdgeModelPtr uyp = reg.GetEdgeModel("unity");
@@ -123,17 +123,17 @@ std::vector<Vector> GetUnitVector(const Region &reg)
         double z = 0.0;
         if (uxp)
         {
-          x = uxp->GetScalarValues()[i];
+          x = uxp->GetScalarValues<double>()[i];
         }
         if (uyp)
         {
-          y = uyp->GetScalarValues()[i];
+          y = uyp->GetScalarValues<double>()[i];
         }
         if (uzp)
         {
-          z = uzp->GetScalarValues()[i];
+          z = uzp->GetScalarValues<double>()[i];
         }
-        unitvec[i] = Vector(x, y, z);
+        unitvec[i] = Vector<double>(x, y, z);
       }
       
     }

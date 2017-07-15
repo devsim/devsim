@@ -18,7 +18,8 @@ limitations under the License.
 #ifndef ADDITIONAL_MATH_HH
 #define ADDITIONAL_MATH_HH
 
-inline double min(double x, double y)
+template <typename U>
+inline U min(U x, U y)
 {
   if (x <= y)
   {
@@ -30,7 +31,8 @@ inline double min(double x, double y)
   }
 }
 
-inline double max(double x, double y)
+template <typename U>
+inline U max(U x, U y)
 {
   if (x >= y)
   {
@@ -42,28 +44,17 @@ inline double max(double x, double y)
   }
 }
 
-inline double step(double x)
+template <typename U>
+inline U step(U x)
 {
     return (x >= 0.0) ? 1.0 : 0.0;
 }
 
-inline double sgn(double x)
+template <typename U>
+inline U sgn(U x)
 {
     return (x >= 0.0) ? 1.0 : -1.0;
 }
 
-#if 0
-inline double parallel(double x, double y)
-{
-  return ((x * y)/(x + y));
-}
-
-inline double dparallel_dx(double x, double y)
-{
-  double ret = y/(x + y);
-  ret *= ret;
-  return ret;
-}
 #endif
 
-#endif

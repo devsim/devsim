@@ -22,16 +22,18 @@ limitations under the License.
 #include "Edge.hh"
 #include "Node.hh"
 
-EdgeIndex::EdgeIndex(RegionPtr rp) :
+template <typename DoubleType>
+EdgeIndex<DoubleType>::EdgeIndex(RegionPtr rp) :
 EdgeModel("edge_index", rp, EdgeModel::SCALAR)
 {
 }
 
 
-void EdgeIndex::calcEdgeScalarValues() const
+template <typename DoubleType>
+void EdgeIndex<DoubleType>::calcEdgeScalarValues() const
 {
     const ConstEdgeList &el = GetRegion().GetEdgeList();
-    std::vector<double> ev(el.size());
+    std::vector<DoubleType> ev(el.size());
     for (size_t i = 0; i < ev.size(); ++i)
     {
         ev[i] = calcEdgeIndex(el[i]);
@@ -39,14 +41,18 @@ void EdgeIndex::calcEdgeScalarValues() const
     SetValues(ev);
 }
 
-double EdgeIndex::calcEdgeIndex(ConstEdgePtr ep) const
+template <typename DoubleType>
+DoubleType EdgeIndex<DoubleType>::calcEdgeIndex(ConstEdgePtr ep) const
 {
-    const double val = ep->GetIndex();
+    const DoubleType val = ep->GetIndex();
     return val;
 }
 
-void EdgeIndex::Serialize(std::ostream &of) const
+template <typename DoubleType>
+void EdgeIndex<DoubleType>::Serialize(std::ostream &of) const
 {
   SerializeBuiltIn(of);
 }
+
+template class EdgeIndex<double>;
 

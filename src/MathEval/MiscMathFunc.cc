@@ -18,33 +18,52 @@ limitations under the License.
 #include "MiscMathFunc.hh"
 #include <cmath>
 
-double derfdx(double x)
+template <typename DoubleType>
+DoubleType derfdx(DoubleType x)
 {
+#ifndef _WIN32
+#warning "Use proper literal"
+#endif
     return M_2_SQRTPI*exp(-x*x);
 }
 
-double derfcdx(double x)
+template <typename DoubleType>
+DoubleType derfcdx(DoubleType x)
 {
+#ifndef _WIN32
+#warning "Use proper literal"
+#endif
     return -M_2_SQRTPI*exp(-x*x);
 }
 
-double vec_sum(double x)
+template <typename DoubleType>
+DoubleType vec_sum(DoubleType x)
 {
   return x;
 }
 
-double vec_max(double x)
+template <typename DoubleType>
+DoubleType vec_max(DoubleType x)
 {
   return x;
 }
 
-double vec_min(double x)
+template <typename DoubleType>
+DoubleType vec_min(DoubleType x)
 {
   return x;
 }
 
-double dot2dfunc(double ax, double ay, double bx, double by)
+template <typename DoubleType>
+DoubleType dot2dfunc(DoubleType ax, DoubleType ay, DoubleType bx, DoubleType by)
 {
   return (ax*bx + ay*by);
 }
+
+template double derfdx(double x);
+template double derfcdx(double x);
+template double vec_sum(double x);
+template double vec_max(double x);
+template double vec_min(double x);
+template double dot2dfunc(double ax, double ay, double bx, double by);
 

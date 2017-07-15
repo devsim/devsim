@@ -18,14 +18,21 @@ limitations under the License.
 #ifndef TRIANGLE_EDGE_MODEL_HH
 #define TRIANGLE_EDGE_MODEL_HH
 
+#include "ModelDataHolder.hh"
+
 #include <memory>
 #include <string>
 #include <vector>
 #include <iosfwd>
 
-typedef std::vector<double> TriangleEdgeScalarList;
-typedef std::vector<double> NodeScalarList;
-typedef std::vector<double> EdgeScalarList;
+template<typename T>
+using TriangleEdgeScalarList = std::vector<T>;
+
+template<typename T>
+using NodeScalarList = std::vector<T>;
+
+template<typename T>
+using EdgeScalarList = std::vector<T>;
 
 class Region;
 typedef Region *RegionPtr;
@@ -34,15 +41,11 @@ class Edge;
 typedef Edge *EdgePtr;
 typedef const Edge *ConstEdgePtr;
 
-class EdgeModel;
-typedef std::shared_ptr<EdgeModel>       EdgeModelPtr;
-typedef std::shared_ptr<const EdgeModel> ConstEdgeModelPtr;
-
 class TriangleEdgeModel;
-typedef std::weak_ptr<TriangleEdgeModel>         WeakTriangleEdgeModelPtr;
-typedef std::weak_ptr<const TriangleEdgeModel>   WeakConstTriangleEdgeModelPtr;
-typedef std::shared_ptr<TriangleEdgeModel>       TriangleEdgeModelPtr;
-typedef std::shared_ptr<const TriangleEdgeModel> ConstTriangleEdgeModelPtr;
+using WeakTriangleEdgeModelPtr = std::weak_ptr<TriangleEdgeModel>;
+using WeakConstTriangleEdgeModelPtr = std::weak_ptr<const TriangleEdgeModel>;
+using TriangleEdgeModelPtr = std::shared_ptr<TriangleEdgeModel>;
+using ConstTriangleEdgeModelPtr = std::shared_ptr<const TriangleEdgeModel>;
 
 class Triangle;
 typedef Triangle *TrianglePtr;
@@ -58,19 +61,19 @@ class TriangleEdgeModel {
             return name;
         }
 
-        // Gets the appropriate value
-        // May want to make non-virtual base member and call virtual method within
-        // Value is directed from first node in Edge to second node
-//      double GetTriangleScalarValue(const Triangle *) const;
-        const TriangleEdgeScalarList &GetScalarValues() const;
+        template <typename DoubleType>
+        const TriangleEdgeScalarList<DoubleType> &GetScalarValues() const;
 
         enum InterpolationType {AVERAGE, COUPLE, SUM};
-        void GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType, std::vector<double> &) const;
 
-        void GetScalarValuesOnElements(std::vector<double> &) const;
+        template <typename DoubleType>
+        void GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType, std::vector<DoubleType> &) const;
 
-        //// Sum up values on sides of the edge
-        EdgeScalarList GetValuesOnEdges() const;
+        template <typename DoubleType>
+        void GetScalarValuesOnElements(std::vector<DoubleType> &) const;
+
+        template <typename DoubleType>
+        EdgeScalarList<DoubleType> GetValuesOnEdges() const;
 
         void MarkOld();
 
@@ -86,8 +89,11 @@ class TriangleEdgeModel {
             return inprocess;
         }
 
-        void SetValues(const TriangleEdgeScalarList &);
-        void SetValues(const double &);
+        template <typename DoubleType>
+        void SetValues(const TriangleEdgeScalarList<DoubleType> &);
+
+        template <typename DoubleType>
+        void SetValues(const DoubleType &);
 
         const Region &GetRegion() const
         {
@@ -121,22 +127,17 @@ class TriangleEdgeModel {
 
         bool IsUniform() const;
 
-        double GetUniformValue() const;
+        template <typename DoubleType>
+        const DoubleType &GetUniformValue() const;
 
         size_t GetLength() const
         {
-          return length;
+          return model_data.GetLength();
         }
 
-        bool IsZero() const
-        {
-          return (IsUniform() && (uniform_value == 0.0));
-        }
+        bool IsZero() const;
 
-        bool IsOne() const
-        {
-          return (IsUniform() && (uniform_value == 1.0));
-        }
+        bool IsOne() const;
 
         void DevsimSerialize(std::ostream &) const;
 
@@ -150,8 +151,11 @@ class TriangleEdgeModel {
 
         void RegisterCallback(const std::string &);
 
-        void SetValues(const TriangleEdgeScalarList &) const;
-        void SetValues(const double &) const;
+        template <typename DoubleType>
+        void SetValues(const TriangleEdgeScalarList<DoubleType> &) const;
+
+        template <typename DoubleType>
+        void SetValues(const DoubleType &) const;
 
         void MarkOld() const;
 
@@ -160,7 +164,7 @@ class TriangleEdgeModel {
 
         // Actually performs the computation
         // The nonvirtual method does any required setup.
-        //virtual double calcEdgeScalarValue(EdgePtr) const = 0; 
+        //virtual DoubleType calcEdgeScalarValue(EdgePtr) const = 0; 
         virtual void calcTriangleEdgeScalarValues() const = 0;
 
 
@@ -175,14 +179,12 @@ class TriangleEdgeModel {
         WeakTriangleEdgeModelPtr myself;
         // need to know my region to get database data and appropriate node and edge lists
         RegionPtr   myregion;
+        mutable ModelDataHolder model_data;
         mutable bool uptodate;
         mutable bool inprocess;
-        mutable bool isuniform;
-        mutable double         uniform_value;
-        mutable TriangleEdgeScalarList values;
         DisplayType displayType;
-        size_t length;
         static const char *DisplayTypeString[];
 };
 
 #endif
+
