@@ -1,5 +1,5 @@
 
-CMAKE=/cygdrive/C/Program\ Files/CMake/bin/cmake.exe
+CMAKE=cmake
 DEVSIM_CONFIG=appveyor
 #mkdir -p win32
 #(cd win32; "$CMAKE" -G "Visual Studio 14" -DDEVSIM_CONFIG=${DEVSIM_CONFIG} ..)
