@@ -36,3 +36,13 @@ Documentation available in doc/devsim.pdf.  Windows specific information is avai
 The official website is here:
 https://www.devsim.org
 
+### Support:
+
+For support and general discussion, please join our forum:
+https://groups.google.com/forum/#!forum/devsim
+
+### Contributing:
+
+Please see:
+[Contribution guidelines for this project](CONTRIBUTING.md)
+
