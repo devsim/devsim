@@ -31,26 +31,27 @@ Tetrahedron::Tetrahedron(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNode
     nodes[3]=n3;
 }
 
-Vector<double> GetCenter(const std::vector<ConstNodePtr> &nodes)
+template <typename DoubleType>
+Vector<DoubleType> GetCenter(const std::vector<ConstNodePtr> &nodes)
 {
-  const Vector<double> &v0 = nodes[0]->Position();
+  const Vector<DoubleType> &v0 = ConvertPosition<DoubleType>(nodes[0]->Position());
 
-  static std::vector<Vector<double> > vecs(3);
-  static std::vector<double> B(3);
+  static std::vector<Vector<DoubleType> > vecs(3);
+  static std::vector<DoubleType> B(3);
 
   for (size_t i = 0; i < 3; ++i)
   {
-    Vector<double> &v = vecs[i];
-    v = nodes[i + 1]->Position();
+    Vector<DoubleType> &v = vecs[i];
+    v = ConvertPosition<DoubleType>(nodes[i + 1]->Position());
     v -= v0;
     B[i] = 0.5*dot_prod(v, v);
   }
 
 
-  dsMath::RealDenseMatrix M(3);
+  dsMath::RealDenseMatrix<DoubleType> M(3);
   for (size_t i = 0; i < 3; ++i)
   {
-    const Vector<double> &v = vecs[i];
+    const Vector<DoubleType> &v = vecs[i];
     M(i, 0) = v.Getx();
     M(i, 1) = v.Gety();
     M(i, 2) = v.Getz();
@@ -59,24 +60,35 @@ Vector<double> GetCenter(const std::vector<ConstNodePtr> &nodes)
   const bool ok = M.LUFactor();
   if (!ok)
   {
-    OutputStream::WriteOut(OutputStream::FATAL, "BAD TETRAHEDRON");
+    OutputStream::WriteOut(OutputStream::OutputType::FATAL, "BAD TETRAHEDRON");
   }
 
   const bool info = M.Solve(B);
   if (!info)
   {
-    OutputStream::WriteOut(OutputStream::FATAL, "BAD TETRAHEDRON");
+    OutputStream::WriteOut(OutputStream::OutputType::FATAL, "BAD TETRAHEDRON");
   }
 
-  Vector<double> ret(B[0], B[1], B[2]);
+  Vector<DoubleType> ret(B[0], B[1], B[2]);
   ret += v0;
   return ret;
 }
 
-Vector<double> GetCenter(const Tetrahedron &tet)
+template <typename DoubleType>
+Vector<DoubleType> GetCenter(const Tetrahedron &tet)
 {
   const std::vector<ConstNodePtr> &nodes = tet.GetNodeList();
 
-  return GetCenter(nodes);
+  return GetCenter<DoubleType>(nodes);
 }
+
+
+template Vector<double> GetCenter(const std::vector<ConstNodePtr> &nodes);
+template Vector<double> GetCenter(const Tetrahedron &tet);
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template Vector<float128> GetCenter(const std::vector<ConstNodePtr> &nodes);
+template Vector<float128> GetCenter(const Tetrahedron &tet);
+#endif
 

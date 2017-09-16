@@ -18,17 +18,19 @@ limitations under the License.
 #ifndef TIMEDATA_HH
 #define TIMEDATA_HH
 #include <vector>
+#include <cstddef>
 
+enum class TimePoint_t {TM0 = 0, TM1, TM2};
+
+template <typename DoubleType>
 class TimeData
 {
     public:
         static TimeData &GetInstance();
         static void DestroyInstance();
 
-        enum TimePoint_t {TM0 = 0, TM1, TM2};
-
-        void SetI(TimePoint_t, const std::vector<double> &);
-        void SetQ(TimePoint_t, const std::vector<double> &);
+        void SetI(TimePoint_t, const std::vector<DoubleType> &);
+        void SetQ(TimePoint_t, const std::vector<DoubleType> &);
 
         //// from -> to
         void CopyI(TimePoint_t, TimePoint_t);
@@ -37,17 +39,17 @@ class TimeData
         void ClearI(TimePoint_t);
         void ClearQ(TimePoint_t);
 
-        void AssembleI(TimePoint_t, double, std::vector<double> &);
-        void AssembleQ(TimePoint_t, double, std::vector<double> &);
+        void AssembleI(TimePoint_t, DoubleType, std::vector<DoubleType> &);
+        void AssembleQ(TimePoint_t, DoubleType, std::vector<DoubleType> &);
 
         bool ExistsI(TimePoint_t tp)
         {
-          return !IData[tp].empty();
+          return !IData[static_cast<size_t>(tp)].empty();
         }
 
         bool ExistsQ(TimePoint_t tp)
         {
-          return !QData[tp].empty();
+          return !QData[static_cast<size_t>(tp)].empty();
         }
 
     private:
@@ -58,8 +60,8 @@ class TimeData
         ~TimeData();
         static TimeData *instance;
 
-        std::vector<std::vector<double > > IData;
-        std::vector<std::vector<double > > QData;
+        std::vector<std::vector<DoubleType > > IData;
+        std::vector<std::vector<DoubleType > > QData;
 };
 
 #endif

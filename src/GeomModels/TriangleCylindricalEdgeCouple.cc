@@ -25,10 +25,12 @@ limitations under the License.
 #include "GlobalData.hh"
 #include "GeometryStream.hh"
 #include "ObjectHolder.hh"
+#include <cmath>
+using std::abs;
 
 template <typename DoubleType>
 TriangleCylindricalEdgeCouple<DoubleType>::TriangleCylindricalEdgeCouple(RegionPtr rp) :
-TriangleEdgeModel("ElementCylindricalEdgeCouple", rp, TriangleEdgeModel::SCALAR)
+TriangleEdgeModel("ElementCylindricalEdgeCouple", rp, TriangleEdgeModel::DisplayType::SCALAR)
 {
   RegisterCallback("raxis_zero");
   RegisterCallback("raxis_variable");
@@ -79,7 +81,7 @@ void TriangleCylindricalEdgeCouple<DoubleType>::calcTriangleEdgeScalarValues() c
 
     if (!os.str().empty())
     {
-      GeometryStream::WriteOut(OutputStream::FATAL, GetRegion(), os.str());
+      GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str());
     }
   }
 
@@ -104,7 +106,7 @@ Vector<DoubleType> TriangleCylindricalEdgeCouple<DoubleType>::calcTriangleCylind
   const Region &region = GetRegion();
 
   const Triangle &triangle = *tp;
-  const std::vector<Vector<DoubleType>> &centers = region.GetTriangleCenters();
+  const std::vector<Vector<DoubleType>> &centers = region.GetTriangleCenters<DoubleType>();
 
   const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
   size_t tindex = triangle.GetIndex();
@@ -155,7 +157,7 @@ Vector<DoubleType> TriangleCylindricalEdgeCouple<DoubleType>::calcTriangleCylind
     //// r*cos_theta = s  where s is the coordinate along the line
     const DoubleType val = M_PI * (r1 + r0) * vm.magnitude();
 
-    ec[i] = fabs(val);
+    ec[i] = abs(val);
   }
 
   return Vector<DoubleType>(ec[0], ec[1], ec[2]);

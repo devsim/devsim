@@ -45,7 +45,7 @@ void GeniusErrorHandler(int level,  char *msg)
   if (fatal_cgns_error)
   {
     os << msg << "\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str().c_str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
     errors += os.str();
   }
   else if (print_cgns_messages)
@@ -422,13 +422,13 @@ int processRegionElements(dsMesh::GeniusRegionPtr grp, std::string &errorString)
   {
     if ((edata[eindex] == TRI_3) && ((eindex + 4) <= edatalen))
     {
-      region.AddShape(dsMesh::Shapes::TRIANGLE, &edata[eindex + 1]);
+      region.AddShape(dsMesh::Shapes::ElementType_t::TRIANGLE, &edata[eindex + 1]);
       eindex += 4;
       elem_count += 1;
     }
     else if ((edata[eindex] == TETRA_4) && ((eindex + 5) <= edatalen))
     {
-      region.AddShape(dsMesh::Shapes::TETRAHEDRON, &edata[eindex + 1]);
+      region.AddShape(dsMesh::Shapes::ElementType_t::TETRAHEDRON, &edata[eindex + 1]);
       eindex += 5;
       elem_count += 1;
     }

@@ -23,7 +23,7 @@ limitations under the License.
 
 class dsTimer {
   public:
-    dsTimer(const std::string &/*token*/, OutputStream::OutputType outtype = OutputStream::VERBOSE2);
+    dsTimer(const std::string &/*token*/, OutputStream::OutputType outtype = OutputStream::OutputType::VERBOSE2);
     ~dsTimer();
   private:
     dsTimer(const dsTimer &);

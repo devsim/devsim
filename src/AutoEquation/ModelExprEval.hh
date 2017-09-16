@@ -30,10 +30,12 @@ typedef Region *RegionPtr;
 #include "ModelExprData.hh"
 
 namespace MEE {
+
+enum class ExpectedType {UNKNOWN = 0, NODE, EDGE, TRIANGLEEDGE, TETRAHEDRONEDGE};
+
 template <typename DoubleType>
 class ModelExprEval {
     public:
-        enum ExpectedType {UNKNOWN = 0, NODE, EDGE, TRIANGLEEDGE, TETRAHEDRONEDGE};
         typedef std::vector<ModelExprData<DoubleType> > margv_t;
         typedef std::list<std::string> error_t;
         /// need to generalize to contact and interface equations as well

@@ -17,7 +17,7 @@ limitations under the License.
 
 
 namespace dsGetArgs {
-const char * Types::optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT", "LIST"};
+const char * optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT", "LIST"};
 
 GetArgs::GetArgs(optionList opts, switchList sl) : options(opts), switches(sl)
 {
@@ -137,10 +137,10 @@ void notSpecified(const std::string &command, const std::string &arg, std::strin
   error = os.str();
 }
 
-void notConvertibleToType(const std::string &command, const std::string &arg, Types::optionType ot, const ObjectHolder &val, std::string &error)
+void notConvertibleToType(const std::string &command, const std::string &arg, optionType ot, const ObjectHolder &val, std::string &error)
 {
   std::ostringstream os;
-  os << "Cannot convert \"" << val.GetString() << "\" to a " << Types::optionTypeStrings[ot] <<  " for argument " << arg;
+  os << "Cannot convert \"" << val.GetString() << "\" to a " << optionTypeStrings[static_cast<size_t>(ot)] <<  " for argument " << arg;
 
   error = os.str();
 }

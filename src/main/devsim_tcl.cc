@@ -53,7 +53,7 @@ int main(int argc, char * argv[])
     NodeKeeper::delete_instance();
     InstanceKeeper::delete_instance();
     MathEval<double>::DestroyInstance();
-    TimeData::DestroyInstance();
+    TimeData<double>::DestroyInstance();
 }
 
 

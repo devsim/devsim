@@ -60,7 +60,7 @@ class NodeKeeper {
         static void delete_instance();
 
         CircuitNodePtr AddNode(const std::string &/*name*/,
-                CNT::CircuitNodeType x=CNT::DEFAULT, CUT::UpdateType y=CUT::DEFAULT);
+                CircuitNodeType x=CircuitNodeType::DEFAULT, CircuitUpdateType y=CircuitUpdateType::DEFAULT);
 
         CircuitNodePtr AddNodeAlias(const std::string &/*alias*/, const std::string &/*name*/);
 
@@ -80,12 +80,15 @@ class NodeKeeper {
         void InitializeSolution(const std::string &); 
         void DestroySolution(const std::string &); 
 //      bool HasSolution(const std::string &);
-        Solution *GetSolution(const std::string &);
+
+        std::vector<double> *GetSolution(const std::string &);
 
         // Update the solution with the given name with the given vector
-        void UpdateSolution(const std::string &, const Solution &); 
-        void ACUpdateSolution(const std::string &, const std::string &, const ACSolution &); 
+        void UpdateSolution(const std::string &, const std::vector<double> &); 
+
+        void ACUpdateSolution(const std::string &, const std::string &, const std::vector<std::complex<double>> &); 
         // Copy Solution from one vector to another
+
         void CopySolution(const std::string &, const std::string &); 
 
         size_t getNumberNodes() {return numberOfNodes_;}
@@ -132,3 +135,4 @@ class NodeKeeper {
         NormMap_t       relError;
 };
 #endif
+

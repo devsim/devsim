@@ -20,6 +20,10 @@ limitations under the License.
 
 #include "MathEnum.hh"
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+
 class ObjectHolder;
 
 template <typename DoubleType>
@@ -52,25 +56,42 @@ using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 
 class EquationHolder {
   public:
-    EquationHolder() : double_(nullptr) {}
-    EquationHolder(Equation<double> *);
+    EquationHolder() {}
+
+    template <typename DoubleType>
+    EquationHolder(Equation<DoubleType> *);
 
     std::string GetName() const;
     std::string GetVariable() const;
     bool operator==(const EquationHolder &) const;
     void DevsimSerialize(std::ostream &) const;
 
-    double GetRelError() const;
-    double GetAbsError() const;
-    void Update(NodeModel &, const std::vector<double> &) const;
-    void ACUpdate(NodeModel &, const std::vector<std::complex<double>> &) const;
-    void NoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<double> > &) const;
-    void Assemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    template <typename DoubleType>
+    DoubleType GetRelError() const;
+
+    template <typename DoubleType>
+    DoubleType GetAbsError() const;
+
+    template <typename DoubleType>
+    void Update(NodeModel &, const std::vector<DoubleType> &) const;
+
+    template <typename DoubleType>
+    void ACUpdate(NodeModel &, const std::vector<std::complex<DoubleType>> &) const;
+
+    template <typename DoubleType>
+    void NoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &) const;
+
+    template <typename DoubleType>
+    void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+
     void GetCommandOptions(std::map<std::string, ObjectHolder> &) const;
 
     ~EquationHolder();
   private:
     std::shared_ptr<Equation<double>> double_;
+#ifdef DEVSIM_EXTENDED_PRECISION
+    std::shared_ptr<Equation<float128>> float128_;
+#endif
 };
 #endif
 

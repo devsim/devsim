@@ -20,8 +20,8 @@ limitations under the License.
 #include <string>
 class OutputStream {
     public:
-        enum OutputType {INFO, VERBOSE1, VERBOSE2, ERROR, FATAL};
-        enum Verbosity_t {V0 = 0, V1, V2, UNKNOWN};
+        enum class OutputType {INFO, VERBOSE1, VERBOSE2, ERROR, FATAL};
+        enum class Verbosity_t {V0 = 0, V1, V2, UNKNOWN};
         static void WriteOut(OutputType, const std::string &);
         static void SetInterpreter(void *);
         static void WriteOut(OutputType, Verbosity_t verbosity, const std::string &);

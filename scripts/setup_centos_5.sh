@@ -1,7 +1,7 @@
 DEVSIM_CONFIG="centos_5"
 CC=/usr/bin/gcc44
 CXX=/usr/bin/g++44
-CMAKE_CXX_FLAGS="-std=c++0x"
+CMAKE_CXX_FLAGS=""
 for TYPE in debug release; do
 ARCH=`uname -m`
 #  for ARCH in i386 x86_64; do

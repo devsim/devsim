@@ -51,18 +51,18 @@ createEquationCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-        {"name",            "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"variable_name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"node_model",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {"edge_model",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {"edge_volume_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {"element_model",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {"volume_model",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {"time_node_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {"variable_update", "default", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+        {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"variable_name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"node_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"edge_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"edge_volume_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"element_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"volume_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"time_node_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"variable_update", "default", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -108,18 +108,18 @@ createEquationCmd(CommandHandler &data)
     errorString += ValidateOptionalEdgeModelName(dev, reg, edge_model);
     errorString += ValidateOptionalEdgeModelName(dev, reg, edge_volume_model);
 
-    Equation<double>::UpdateType updateType = Equation<double>::DEFAULT;
+    EquationEnum::UpdateType updateType = EquationEnum::DEFAULT;
     if (variable_update == "default")
     {
-        updateType = Equation<double>::DEFAULT;
+        updateType = EquationEnum::DEFAULT;
     }
     else if (variable_update == "log_damp")
     {
-        updateType = Equation<double>::LOGDAMP;
+        updateType = EquationEnum::LOGDAMP;
     }
     else if (variable_update == "positive")
     {
-        updateType = Equation<double>::POSITIVE;
+        updateType = EquationEnum::POSITIVE;
     }
     else
     {
@@ -149,9 +149,9 @@ getEquationListCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -202,10 +202,10 @@ deleteEquationCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-        {"name",            "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+        {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -269,13 +269,13 @@ createInterfaceEquationCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"interface",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidInterface},
-        {"name",            "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"variable_name",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"type",            "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"interface_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"interface",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidInterface},
+        {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"variable_name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"type",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"interface_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -309,14 +309,14 @@ createInterfaceEquationCmd(CommandHandler &data)
     // implement in terms of ValidateNodeModeName
     errorString  = ValidateInterfaceNodeModelName(dev, interface, interface_model);
 
-    InterfaceExprEquation<double>::EquationType et = InterfaceExprEquation<double>::UNKNOWN;
+    InterfaceExprEquationEnum::EquationType et = InterfaceExprEquationEnum::UNKNOWN;
     if (type == "continuous")
     {
-        et = InterfaceExprEquation<double>::CONTINUOUS;
+        et = InterfaceExprEquationEnum::CONTINUOUS;
     }
     else if (type == "fluxterm")
     {
-        et = InterfaceExprEquation<double>::FLUXTERM;
+        et = InterfaceExprEquationEnum::FLUXTERM;
     }
     else
     {
@@ -346,9 +346,9 @@ getInterfaceEquationListCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"interface",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidInterface},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"interface",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidInterface},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -388,10 +388,10 @@ deleteInterfaceEquationCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"interface",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidInterface},
-        {"name",            "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"interface",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidInterface},
+        {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -455,21 +455,21 @@ createContactEquationCmd(CommandHandler &data)
 
     static dsGetArgs::Option option[] =
     {
-        {"device",        "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"contact",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidContact},
-        {"name",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"variable_name", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"node_model",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"edge_model",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"element_model",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"node_current_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"edge_current_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"element_current_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"node_charge_model",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"edge_charge_model",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"element_charge_model",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"circuit_node",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",        "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"contact",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidContact},
+        {"name",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"variable_name", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"node_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"edge_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"element_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"node_current_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"edge_current_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"element_current_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"node_charge_model",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"edge_charge_model",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"element_charge_model",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"circuit_node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
 // TODO:"Test element_model"
@@ -542,9 +542,9 @@ getContactEquationListCmd(CommandHandler &data)
 
     static dsGetArgs::Option option[] =
     {
-        {"device",        "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"contact",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidContact},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",        "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"contact",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidContact},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -586,10 +586,10 @@ deleteContactEquationCmd(CommandHandler &data)
 
     static dsGetArgs::Option option[] =
     {
-        {"device",        "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"contact",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidContact},
-        {"name",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",        "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"contact",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidContact},
+        {"name",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -656,9 +656,9 @@ createCustomEquationCmd(CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {"name",        "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"procedure",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"name",        "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"procedure",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -692,11 +692,11 @@ getEquationNumbersCmd(CommandHandler &data)
 
   static dsGetArgs::Option option[] =
   {
-    {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-    {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-    {"variable", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-    {"equation", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+    {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+    {"variable", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+    {"equation", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;

@@ -31,16 +31,15 @@ limitations under the License.
 #include <complex>
 
 
-template <typename DoubleType>
-const char *VectorGradient<DoubleType>::CalcTypeString[] = {
+const char *VectorGradientEnum::CalcTypeString[] = {
   "default",
   "avoidzero",
   NULL
 };
 
 template <typename DoubleType>
-VectorGradient<DoubleType>::VectorGradient(RegionPtr rp, const std::string &name, CalcType ct)
-    : NodeModel(name + "_gradx", rp, NodeModel::SCALAR), parentname_(name),  calctype_(ct)
+VectorGradient<DoubleType>::VectorGradient(RegionPtr rp, const std::string &name, VectorGradientEnum::CalcType ct)
+    : NodeModel(name + "_gradx", rp, NodeModel::DisplayType::SCALAR), parentname_(name),  calctype_(ct)
 {
     /// This is the scalar we are taking the gradient of
     RegisterCallback(name);
@@ -79,7 +78,7 @@ void VectorGradient<DoubleType>::calc1d() const
   const ConstEdgeList &el = r.GetEdgeList();
 
   EdgeScalarData<DoubleType> vgrad(*edgeSign);
-  vgrad *= *edgeInv;
+  vgrad.times_equal_model(*edgeInv);
 
   const NodeScalarList<DoubleType> &nsl = scalarField->GetScalarValues<DoubleType>();
 
@@ -93,7 +92,7 @@ void VectorGradient<DoubleType>::calc1d() const
 
     vgrad[i] *= (s1 - s0);
 
-    if ((calctype_ == AVOIDZERO) && ((s0 == 0.0) || (s1 == 0.0)))
+    if ((calctype_ == VectorGradientEnum::AVOIDZERO) && ((s0 == 0.0) || (s1 == 0.0)))
     {
       zlist[i] = 0;
     }
@@ -139,7 +138,7 @@ void VectorGradient<DoubleType>::calc2d() const
   NodeScalarList<DoubleType> vx(nsl.size());
   NodeScalarList<DoubleType> vy(nsl.size());
 
-  const GradientField &gfield = r.GetGradientField();
+  const GradientField<DoubleType> &gfield = r.GetGradientField<DoubleType>();
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
   std::vector<size_t> zlist(tl.size(), 1);
 
@@ -152,7 +151,7 @@ void VectorGradient<DoubleType>::calc2d() const
   }
 
   const Region::NodeToConstTriangleList_t &nttlist = r.GetNodeToTriangleList();
-  if (calctype_ == AVOIDZERO)
+  if (calctype_ == VectorGradientEnum::AVOIDZERO)
   {
     for (size_t i = 0; i < nsl.size(); ++i)
     {
@@ -169,7 +168,7 @@ void VectorGradient<DoubleType>::calc2d() const
 
   for (size_t i = 0; i < nsl.size(); ++i)
   {
-    std::complex<DoubleType> val = 0.0;
+    std::complex<DoubleType> val;
     size_t count = 0;
 
     const ConstTriangleList &tlist = nttlist[i];
@@ -195,7 +194,6 @@ void VectorGradient<DoubleType>::calc2d() const
   yfield_.lock()->SetValues(vy);
 }
 
-// TODO:"REVIEW, TEST CODE"
 template <typename DoubleType>
 void VectorGradient<DoubleType>::calc3d() const
 {
@@ -211,7 +209,7 @@ void VectorGradient<DoubleType>::calc3d() const
   NodeScalarList<DoubleType> vy(nsl.size());
   NodeScalarList<DoubleType> vz(nsl.size());
 
-  const GradientField &gfield = r.GetGradientField();
+  const GradientField<DoubleType> &gfield = r.GetGradientField<DoubleType>();
   const ConstTetrahedronList &tl = GetRegion().GetTetrahedronList();
   std::vector<size_t> zlist(tl.size(), 1);
 
@@ -224,7 +222,7 @@ void VectorGradient<DoubleType>::calc3d() const
   }
 
   const Region::NodeToConstTetrahedronList_t &nttlist = r.GetNodeToTetrahedronList();
-  if (calctype_ == AVOIDZERO)
+  if (calctype_ == VectorGradientEnum::AVOIDZERO)
   {
     for (size_t i = 0; i < nsl.size(); ++i)
     {
@@ -304,8 +302,13 @@ template <typename DoubleType>
 void VectorGradient<DoubleType>::Serialize(std::ostream &of) const
 {
   
-  of << "COMMAND vector_gradient -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -calc_type \"" << CalcTypeString[calctype_] << "\" -node_model \"" << parentname_ << "\"";
+  of << "COMMAND vector_gradient -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -calc_type \"" << VectorGradientEnum::CalcTypeString[calctype_] << "\" -node_model \"" << parentname_ << "\"";
 }
 
 template class VectorGradient<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class VectorGradient<float128>;
+#endif
+
 

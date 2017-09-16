@@ -22,7 +22,7 @@ limitations under the License.
 
 template <typename DoubleType>
 CylindricalEdgeCouple<DoubleType>::CylindricalEdgeCouple(RegionPtr rp) :
-EdgeModel("CylindricalEdgeCouple", rp, EdgeModel::SCALAR)
+EdgeModel("CylindricalEdgeCouple", rp, EdgeModel::DisplayType::SCALAR)
 {
   const size_t dimension = rp->GetDimension();
   dsAssert(dimension == 2, "CylindricalEdgeCouple 2d Only");

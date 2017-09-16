@@ -26,7 +26,7 @@ limitations under the License.
 #include "Vector.hh"
 #include "GeometryStream.hh"
 #include <cmath>
-
+using std::abs;
 #include <algorithm>
 
 const char *EdgeModel::DisplayTypeString[] = {
@@ -84,7 +84,7 @@ void EdgeModel::CalculateValues() const
     os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  while evaluating the edge model " << name
     << " on Device: " << GetRegion().GetDevice()->GetName() << " on Region: " << GetRegion().GetName() << "\n";
     FPECheck::ClearFPE();
-    GeometryStream::WriteOut(OutputStream::FATAL, GetRegion(), os.str().c_str());
+    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str().c_str());
   }
 }
 
@@ -102,7 +102,7 @@ const EdgeScalarList<DoubleType> & EdgeModel::GetScalarValues() const
 template <typename DoubleType>
 NodeScalarList<DoubleType> EdgeModel::GetScalarValuesOnNodes() const
 {
-//  dsAssert(this->GetDisplayType() == EdgeModel::SCALAR, "UNEXPECTED");
+//  dsAssert(this->GetDisplayType() == EdgeModel::DisplayType::SCALAR, "UNEXPECTED");
 
   const Region &region = this->GetRegion();
 
@@ -212,7 +212,7 @@ NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
     const Vector<DoubleType> vval   = val * escal;
 
     /// This is the scaling based on the direction we are pointing in
-    const Vector<DoubleType> sval = Vector<DoubleType>(fabs(escal.Getx()), fabs(escal.Gety()), fabs(escal.Getz()));
+    const Vector<DoubleType> sval = Vector<DoubleType>(abs(escal.Getx()), abs(escal.Gety()), abs(escal.Getz()));
 
     //// Now we must actually weight each direction
     const Vector<DoubleType> nval = Vector<DoubleType>(vval.Getx()*sval.Getx(), vval.Gety()*sval.Gety(), vval.Getz()*sval.Getz());
@@ -403,12 +403,13 @@ const std::string EdgeModel::GetContactName() const
   return ret;
 }
 
-template void EdgeModel::SetValues<double>(std::vector<double> const&);
-template void EdgeModel::SetValues<double>(double const&);
-template std::vector<double> const& EdgeModel::GetScalarValues<double>() const;
-template const double &EdgeModel::GetUniformValue<double>() const;
-template std::vector<double> EdgeModel::GetScalarValuesOnNodes<double>() const;
-template std::vector<Vector<double>, std::allocator<Vector<double> > > EdgeModel::GetVectorValuesOnNodes<double>() const;
-template void EdgeModel::SetValues<double>(std::vector<double> const&) const;
-template void EdgeModel::SetValues<double>(double const&) const;
+#define DBLTYPE double
+#include "EdgeModelInstantiate.cc"
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#undef  DBLTYPE
+#define DBLTYPE float128
+#include "Float128.hh"
+#include "EdgeModelInstantiate.cc"
+#endif
 

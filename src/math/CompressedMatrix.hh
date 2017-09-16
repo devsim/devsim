@@ -27,29 +27,30 @@ limitations under the License.
 #include<unordered_map>
 
 namespace dsMath {
-class Matrix;
-class CompressedMatrix : public Matrix {
-    public:
 
-        enum MatrixType {REAL, COMPLEX};
-        ///// CCM is compressed column, CRM is compressed row
-        enum CompressionType {CCM, CRM};
-        enum SymbolicStatus_t {NEW_SYMBOLIC, SAME_SYMBOLIC};
+enum class MatrixType {REAL, COMPLEX};
+///// CCM is compressed column, CRM is compressed row
+enum class CompressionType {CCM, CRM};
+enum class SymbolicStatus_t {NEW_SYMBOLIC, SAME_SYMBOLIC};
+
+template <typename DoubleType>
+class CompressedMatrix : public Matrix<DoubleType> {
+    public:
 
         typedef std::unordered_map<int, int >         RowInd;
         typedef std::pair<int, int >        RowColEntry;
         typedef std::vector<RowColEntry>    RowColEntryVec;
         typedef std::vector<RowInd >        SymbolicMat;
-        typedef std::map<int, double>       ColValueEntry;
+        typedef std::map<int, DoubleType>       ColValueEntry;
         typedef std::vector<ColValueEntry > RowColValueEntries;
 
         void AddSymbolic(int, int);  // add row,column to element list
 
-        void AddEntry(int, int, double);  // add row,column, value
+        void AddEntry(int, int, DoubleType);  // add row,column, value
 
-        void AddEntry(int, int, ComplexDouble_t);
+        void AddEntry(int, int, ComplexDouble_t<DoubleType>);
 
-        void AddImagEntry(int, int, double);  // add row,column, value
+        void AddImagEntry(int, int, DoubleType);  // add row,column, value
 
 
         void ClearMatrix(); // zero the elements so that we can start the next iteration
@@ -66,20 +67,20 @@ class CompressedMatrix : public Matrix {
                                   }
 
         /// This is compressed column format
-        const IntVec_t           &GetCols() const;
-        const IntVec_t           &GetRows() const;
-        const DoubleVec_t        &GetReal() const;
-        const DoubleVec_t        &GetImag() const;
-        const ComplexDoubleVec_t GetComplex() const;
+        const IntVec_t                            &GetCols() const;
+        const IntVec_t                            &GetRows() const;
+        const DoubleVec_t<DoubleType>             &GetReal() const;
+        const DoubleVec_t<DoubleType>             &GetImag() const;
+        const ComplexDoubleVec_t<DoubleType>      GetComplex() const;
 
-        explicit CompressedMatrix(size_t, MatrixType = REAL, CompressionType = CCM);
+        explicit CompressedMatrix(size_t, MatrixType = MatrixType::REAL, CompressionType = CompressionType::CCM);
 
         void Finalize();
 
-        void Multiply(const DoubleVec_t &/*x*/, DoubleVec_t &/*y*/) const;
-        void TransposeMultiply(const DoubleVec_t &/*x*/, DoubleVec_t &/*y*/) const;
-        void Multiply(const ComplexDoubleVec_t &/*x*/, ComplexDoubleVec_t &/*y*/) const;
-        void TransposeMultiply(const ComplexDoubleVec_t &/*x*/, ComplexDoubleVec_t &/*y*/) const;
+        void Multiply(const DoubleVec_t<DoubleType> &/*x*/, DoubleVec_t<DoubleType> &/*y*/) const;
+        void TransposeMultiply(const DoubleVec_t<DoubleType> &/*x*/, DoubleVec_t<DoubleType> &/*y*/) const;
+        void Multiply(const ComplexDoubleVec_t<DoubleType> &/*x*/, ComplexDoubleVec_t<DoubleType> &/*y*/) const;
+        void TransposeMultiply(const ComplexDoubleVec_t<DoubleType> &/*x*/, ComplexDoubleVec_t<DoubleType> &/*y*/) const;
 
     protected:
         void CreateMatrix(); // Create compressed columns
@@ -92,8 +93,8 @@ class CompressedMatrix : public Matrix {
     private:
         CompressedMatrix();
         // Make sure that we copy all aspects(including pointers) later on
-        CompressedMatrix(const Matrix &);
-        CompressedMatrix &operator= (const Matrix &);
+        CompressedMatrix(const CompressedMatrix<DoubleType> &);
+        CompressedMatrix &operator= (const CompressedMatrix<DoubleType> &);
 
         MatrixType      matType_;
         CompressionType compressionType_;
@@ -105,8 +106,8 @@ class CompressedMatrix : public Matrix {
         IntVec_t    Ap_;
         IntVec_t    Ai_;
         //// Should these just be one complex vector
-        DoubleVec_t Ax_;
-        DoubleVec_t Az_;
+        DoubleVec_t<DoubleType> Ax_;
+        DoubleVec_t<DoubleType> Az_;
         bool compressed;
         SymbolicStatus_t symbolicstatus_;
 };

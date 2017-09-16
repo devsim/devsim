@@ -17,6 +17,7 @@ limitations under the License.
 
 #include "Fermi.hh"
 #include <cmath>
+using std::abs;
 #include <cstdlib>
 #ifndef _WIN32
 #warning "Extended Precision Version"
@@ -134,7 +135,7 @@ double Fermi(double Eta)
         }
         r += upd;
         //// eta would be -infinity for r to go to 0
-        rerr = fabs(upd)/(fabs(r)+1.0e-10);
+        rerr = abs(upd)/(abs(r)+1.0e-10);
 //      std::cerr << "try " << i << " " << r <<  " " << f << " " << fp << " " << upd << " " << rerr << std::endl;
 //      TODO: consider second order newton
         ++i;

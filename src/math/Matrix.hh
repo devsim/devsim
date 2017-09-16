@@ -26,16 +26,16 @@ limitations under the License.
 
 
 namespace dsMath {
-class Matrix;
+template <typename DoubleType>
 class Matrix {
     public:
 //      virtual void AddSymbolic(int, int) = 0;  // add row,column to element list
 
-        virtual void AddEntry(int, int, double) = 0;  // add row,column, value
+        virtual void AddEntry(int, int, DoubleType) = 0;  // add row,column, value
 
-        virtual void AddEntry(int, int, ComplexDouble_t) = 0;
+        virtual void AddEntry(int, int, std::complex<DoubleType>) = 0;
 
-        virtual void AddImagEntry(int, int, double) = 0;  // add row,column, value
+        virtual void AddImagEntry(int, int, DoubleType) = 0;  // add row,column, value
 
         virtual ~Matrix() = 0;
 
@@ -48,13 +48,13 @@ class Matrix {
 
         virtual void Finalize() = 0;
 
-        virtual void Multiply(const DoubleVec_t &/*x*/, DoubleVec_t &/*y*/) const = 0;
-        virtual void TransposeMultiply(const DoubleVec_t &/*x*/, DoubleVec_t &/*y*/) const = 0;
-        virtual void Multiply(const ComplexDoubleVec_t &/*x*/, ComplexDoubleVec_t &/*y*/) const = 0;
-        virtual void TransposeMultiply(const ComplexDoubleVec_t &/*x*/, ComplexDoubleVec_t &/*y*/) const = 0;
+        virtual void Multiply(const DoubleVec_t<DoubleType> &/*x*/, DoubleVec_t<DoubleType> &/*y*/) const = 0;
+        virtual void TransposeMultiply(const DoubleVec_t<DoubleType> &/*x*/, DoubleVec_t<DoubleType> &/*y*/) const = 0;
+        virtual void Multiply(const ComplexDoubleVec_t<DoubleType> &/*x*/, ComplexDoubleVec_t<DoubleType> &/*y*/) const = 0;
+        virtual void TransposeMultiply(const ComplexDoubleVec_t<DoubleType> &/*x*/, ComplexDoubleVec_t<DoubleType> &/*y*/) const = 0;
 
-        DoubleVec_t operator*(const DoubleVec_t &x) const;
-        ComplexDoubleVec_t operator*(const ComplexDoubleVec_t &x) const;
+        DoubleVec_t<DoubleType> operator*(const DoubleVec_t<DoubleType> &x) const;
+        ComplexDoubleVec_t<DoubleType> operator*(const ComplexDoubleVec_t<DoubleType> &x) const;
 
     protected:
 
@@ -67,3 +67,4 @@ class Matrix {
 };
 }
 #endif
+

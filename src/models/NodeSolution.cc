@@ -30,7 +30,7 @@ limitations under the License.
 template <typename DoubleType>
 NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp)
     :
-        NodeModel(nm, rp, NodeModel::SCALAR),
+        NodeModel(nm, rp, NodeModel::DisplayType::SCALAR),
         parentModel()
 {
 #if 0
@@ -42,7 +42,7 @@ template <typename DoubleType>
 NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp)
     :
         // dirty hack
-        NodeModel(nm, rp, NodeModel::SCALAR),
+        NodeModel(nm, rp, NodeModel::DisplayType::SCALAR),
         parentModel(nmp)
 {
   parentModelName = parentModel.lock()->GetName();
@@ -82,12 +82,12 @@ void NodeSolution<DoubleType>::calcNodeScalarValues() const
         else if (nmp)
         {
           parentModel.reset();
-          dsErrors::ChangedModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::NODE, OutputStream::INFO);
+          dsErrors::ChangedModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::NODE, OutputStream::OutputType::INFO);
           parentModelName.clear();
         }
         else
         {
-          dsErrors::MissingModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::NODE, OutputStream::FATAL);
+          dsErrors::MissingModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
         }
     }
 }
@@ -121,4 +121,8 @@ void NodeSolution<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class NodeSolution<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class NodeSolution<float128>;
+#endif
 

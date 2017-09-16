@@ -39,7 +39,7 @@ typedef GmshLoader *GmshLoaderPtr;
 struct GmshElement {
   GmshElement(size_t ei, size_t pn, Shapes::ElementType_t et, const std::vector<int> &ni) : element_index(ei), physical_number(pn), element_type(et), node_indexes(ni) {
     /* this is an optimization as we now currently allow only one element type per dimension */
-    dimension= element_type;
+    dimension=static_cast<size_t>(element_type);
   };
 
   size_t           element_index;

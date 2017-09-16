@@ -24,7 +24,7 @@ limitations under the License.
 
 template <typename DoubleType>
 AtContactNode<DoubleType>::AtContactNode(RegionPtr rp)
-    : NodeModel("AtContactNode", rp, NodeModel::SCALAR)
+    : NodeModel("AtContactNode", rp, NodeModel::DisplayType::SCALAR)
 {
     RegisterCallback("@@@ContactChange");
 }
@@ -57,7 +57,7 @@ void AtContactNode<DoubleType>::calcNodeScalarValues() const
 #if 0
             std::ostringstream os; 
             os << region.GetName() << " Node  pointer " << *jt << "\n";
-            GeometryStream::WriteOut(OutputStream::INFO, os.str());
+            GeometryStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 #endif
 
             const size_t index = (*jt)->GetIndex();

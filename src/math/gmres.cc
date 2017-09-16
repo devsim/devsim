@@ -206,7 +206,7 @@ T dot(const IMLVector<T> &x, const IMLVector<T> &y)
 template <typename U>
 class IMLPreconditioner {
   public:
-    IMLPreconditioner(const dsMath::Preconditioner& p) : pre_(p) {};
+    IMLPreconditioner(const dsMath::Preconditioner<double>& p) : pre_(p) {};
 
     IMLVector<U> solve(const IMLVector<U> &bv) const
     {
@@ -218,7 +218,7 @@ class IMLPreconditioner {
     }
     
   private:
-    const dsMath::Preconditioner &pre_;
+    const dsMath::Preconditioner<double> &pre_;
 };
 
 #if 0
@@ -245,7 +245,7 @@ T norm(const IMLVector<T> &vec)
 template <typename T>
 class IMLMatrix {
   public:
-    IMLMatrix (const dsMath::Matrix &m) : mat_(m) {}
+    IMLMatrix (const dsMath::Matrix<double> &m) : mat_(m) {}
 
     IMLVector<T> operator*(const IMLVector<T> &x) const
     {
@@ -255,7 +255,7 @@ class IMLMatrix {
     }
 
   private:
-    const dsMath::Matrix &mat_;
+    const dsMath::Matrix<double> &mat_;
 };
 
 
@@ -343,12 +343,12 @@ template int GMRES
     double &);
 }
 
-#include <iostream>
+//#include <iostream>
 namespace dsMath {
-int GMRES(const Matrix &A, DoubleVec_t &x, const DoubleVec_t &b, const Preconditioner &M, int &m, int &max_iter, double &tol)
+int GMRES(const Matrix<double> &A, DoubleVec_t<double> &x, const DoubleVec_t<double> &b, const Preconditioner<double> &M, int &m, int &max_iter, double &tol)
 {
   iml::IMLVector<double> ix(x);
-  RealDenseMatrix H(m+1);
+  RealDenseMatrix<double> H(m+1);
   int ret = GMRES(iml::IMLMatrix<double>(A), ix, iml::IMLVector<double>(b), iml::IMLPreconditioner<double>(M), H, m, max_iter, tol);
 //  std::cerr << m << " " << max_iter << " " << tol << "\n";
 //  ix *= (-1.0);

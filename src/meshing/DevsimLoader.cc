@@ -219,7 +219,7 @@ void createRegion(const MeshRegion &mr, Device *dp, std::vector<const Node *> &n
   {
     std::ostringstream os; 
     os << "Adding " << nlist.size() << " nodes" << "\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
 
   /////
@@ -232,7 +232,7 @@ void createRegion(const MeshRegion &mr, Device *dp, std::vector<const Node *> &n
   {
     std::ostringstream os; 
     os << "Adding " << elist.size() << " edges with " << edgeduplicate << " duplicates removed\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
 
   ////
@@ -245,7 +245,7 @@ void createRegion(const MeshRegion &mr, Device *dp, std::vector<const Node *> &n
   {
     std::ostringstream os; 
     os << "Adding " << triangle_list.size() << " triangles " << " with " << triangleduplicate << " duplicate removed\n";
-    OutputStream::WriteOut(OutputStream::ERROR, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
   }
 
   ////
@@ -258,7 +258,7 @@ void createRegion(const MeshRegion &mr, Device *dp, std::vector<const Node *> &n
     {
       std::ostringstream os; 
       os << "Adding " << tetrahedron_list.size() << " tetrahedra " << " with " << tetrahedronduplicate << " duplicate removed\n";
-      OutputStream::WriteOut(OutputStream::ERROR, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
     }
   }
 
@@ -511,7 +511,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         ret = false;
         std::ostringstream os; 
         os << "Region " << rname << " does not exist for contact " << cname << "\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         break;
       }
       dsAssert(node_map.count(rname) != 0, "UNEXPECTED");
@@ -531,7 +531,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
           ret = false;
           std::ostringstream os; 
           os << "Node index " << index << " for contact " << cname << " violates bounds for region " << rname << "\n";
-          OutputStream::WriteOut(OutputStream::ERROR, os.str());
+          OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         }
       }
 
@@ -551,7 +551,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         cp->AddEdges(cel);
         std::ostringstream os; 
         os << "Contact " << cname << " in region " << rname << " with " << cnl.size() << " nodes" << "\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       }
       cnl.clear();
     }
@@ -584,7 +584,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         ret = false;
         std::ostringstream os; 
         os << "Region " << rname0 << " does not exist for interface " << iname << "\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         break;
       }
       dsAssert(node_map.count(rname0) != 0, "UNEXPECTED");
@@ -594,7 +594,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         ret = false;
         std::ostringstream os; 
         os << "Region " << rname1 << " does not exist for interface " << iname << "\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         break;
       }
       dsAssert(node_map.count(rname1) != 0, "UNEXPECTED");
@@ -615,7 +615,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Interface " << iname << " " << rname0 << " " << rname1 << " has " << mnp.size() << " node pairs" << "\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 
         for (MeshInterface::NodePairList_t::const_iterator iit = mnp.begin(); iit != mnp.end(); ++iit)
         {
@@ -626,14 +626,14 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
             ret = false;
             std::ostringstream os; 
             os << "Node index " << index0 << " for interface " << iname << " violates bounds for region " << rname0 << "\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
           }
           else if (index1 >= nl1.size())
           {
             ret = false;
             std::ostringstream os; 
             os << "Node index " << index1 << " for interface " << iname << " violates bounds for region " << rname1 << "\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
           }
           else
           {
@@ -656,7 +656,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Adding interface " << iname << " with " << cn0.size() << ", " << cn1.size() << " nodes" << "\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
         Interface *ip = new Interface(iname, rp0, rp1, cn0, cn1);
         dp->AddInterface(ip);
         ip->AddTriangles(ct0, ct1);
@@ -691,7 +691,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       ret = false;
       std::ostringstream os; 
       os << "Region " << rname << " does not exis\n";
-      OutputStream::WriteOut(OutputStream::ERROR, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       break;
     }
 
@@ -706,41 +706,41 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
 
       const bool alreadyExists =
         (
-          ((model_type == Solution::NODE) && rp->GetNodeModel(sname)) ||
-          ((model_type == Solution::EDGE) && rp->GetEdgeModel(sname)) ||
-          ((model_type == Solution::TRIANGLEEDGE) && rp->GetTriangleEdgeModel(sname)) ||
-          ((model_type == Solution::TETRAHEDRONEDGE) && rp->GetTetrahedronEdgeModel(sname))
+          ((model_type == Solution::ModelType::NODE) && rp->GetNodeModel(sname)) ||
+          ((model_type == Solution::ModelType::EDGE) && rp->GetEdgeModel(sname)) ||
+          ((model_type == Solution::ModelType::TRIANGLEEDGE) && rp->GetTriangleEdgeModel(sname)) ||
+          ((model_type == Solution::ModelType::TETRAHEDRONEDGE) && rp->GetTetrahedronEdgeModel(sname))
         );
 
       if (alreadyExists)
       {
-        if ((data_type !=  Solution::BUILTIN) && (data_type != Solution::DATAPARENT))
+        if ((data_type !=  Solution::DataType::BUILTIN) && (data_type != Solution::DataType::DATAPARENT))
         {
           std::ostringstream os; 
-          os << "Not replacing built in " << Solution::ModelTypeString[model_type] <<  " model " << sname << "\n";      
-          OutputStream::WriteOut(OutputStream::INFO, os.str());
+          os << "Not replacing built in " << Solution::ModelTypeString[static_cast<size_t>(model_type)] <<  " model " << sname << "\n";      
+          OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
         }
       }
-      else if (data_type == Solution::BUILTIN)
+      else if (data_type == Solution::DataType::BUILTIN)
       {
         std::ostringstream os; 
         os << "Built in model missing " << sname << "\n";       
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       }
       else
       {
         //// Here we instantiate the data
         //// In order to ensure that models aren't confused for parameters, COMMAND type will be created as an empty solution
         //// on the next pass, we will create the command types
-        if (model_type == Solution::NODE)
+        if (model_type == Solution::ModelType::NODE)
         {
           //// This creates a uniform model with value 0.0
           NodeModelPtr nodesol = NodeSolution<double>::CreateNodeSolution(sname, rp);
-          if (data_type == Solution::UNIFORM)
+          if (data_type == Solution::DataType::UNIFORM)
           {
             nodesol->SetValues<double>(sol.GetUniformValue());
           }
-          else if (data_type == Solution::DATA)
+          else if (data_type == Solution::DataType::DATA)
           {
             Solution::values_t vals  = sol.GetValues();
             if (vals.size() != rp->GetNumberNodes())
@@ -748,7 +748,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
               ret = false;
               std::ostringstream os; 
               os << "Node solution " << sname << " has a different number of values (" << vals.size() << ") then specified for the region " << rname << " (" << rp->GetNumberNodes() << ")\n";
-              OutputStream::WriteOut(OutputStream::FATAL, os.str());
+              OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
             }
             else
             {
@@ -761,16 +761,16 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
             }
           }
         }
-        else if (model_type == Solution::EDGE)
+        else if (model_type == Solution::ModelType::EDGE)
         {
           //// This creates a uniform model with value 0.0
           //// Do we need to get the display type somehow in our data format??
-          EdgeModel *edgesol = new EdgeSubModel<double>(sname, rp, EdgeModel::SCALAR);
-          if (data_type == Solution::UNIFORM)
+          EdgeModel *edgesol = new EdgeSubModel<double>(sname, rp, EdgeModel::DisplayType::SCALAR);
+          if (data_type == Solution::DataType::UNIFORM)
           {
             edgesol->SetValues<double>(sol.GetUniformValue());
           }
-          else if (data_type == Solution::DATA)
+          else if (data_type == Solution::DataType::DATA)
           {
             Solution::values_t vals  = sol.GetValues();
             if (vals.size() != rp->GetNumberEdges())
@@ -778,7 +778,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
               ret = false;
               std::ostringstream os; 
               os << "Edge data " << sname << " has a different number of values (" << vals.size() << ") then specified for the region " << rname << " (" << rp->GetNumberEdges() << ")\n";
-              OutputStream::WriteOut(OutputStream::FATAL, os.str());
+              OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
             }
             else
             {
@@ -791,38 +791,38 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
             }
           }
         }
-        else if (model_type == Solution::TRIANGLEEDGE)
+        else if (model_type == Solution::ModelType::TRIANGLEEDGE)
         {
           //// This creates a uniform model with value 0.0
           //// Do we need to get the display type somehow in our data format??
-          TriangleEdgeModel *triangleedgesol = new TriangleEdgeSubModel<double>(sname, rp, TriangleEdgeModel::SCALAR);
-          if (data_type == Solution::UNIFORM)
+          TriangleEdgeModel *triangleedgesol = new TriangleEdgeSubModel<double>(sname, rp, TriangleEdgeModel::DisplayType::SCALAR);
+          if (data_type == Solution::DataType::UNIFORM)
           {
             triangleedgesol->SetValues<double>(sol.GetUniformValue());
           }
-          else if (data_type == Solution::DATA)
+          else if (data_type == Solution::DataType::DATA)
           {
             ret = false;
             std::ostringstream os; 
             os << "Triangle edge data is not supported " << sname << "\n";
-            OutputStream::WriteOut(OutputStream::FATAL, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
           }
         }
-        else if (model_type == Solution::TETRAHEDRONEDGE)
+        else if (model_type == Solution::ModelType::TETRAHEDRONEDGE)
         {
           //// This creates a uniform model with value 0.0
           //// Do we need to get the display type somehow in our data format??
-          TetrahedronEdgeModel *tetrahedronedgesol = new TetrahedronEdgeSubModel<double>(sname, rp, TetrahedronEdgeModel::SCALAR);
-          if (data_type == Solution::UNIFORM)
+          TetrahedronEdgeModel *tetrahedronedgesol = new TetrahedronEdgeSubModel<double>(sname, rp, TetrahedronEdgeModel::DisplayType::SCALAR);
+          if (data_type == Solution::DataType::UNIFORM)
           {
             tetrahedronedgesol->SetValues<double>(sol.GetUniformValue());
           }
-          else if (data_type == Solution::DATA)
+          else if (data_type == Solution::DataType::DATA)
           {
             ret = false;
             std::ostringstream os; 
             os << "Tetrahedron edge data is not supported " << sname << "\n";
-            OutputStream::WriteOut(OutputStream::FATAL, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
           }
         }
         ///// TODO: Note that fully supporting data on triangle edge and tetrahedron edge would require knowing the edge to element mapping
@@ -837,7 +837,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
 //      Solution::ModelType  model_type = sol.GetModelType();
       Solution::DataType   data_type  = sol.GetDataType();
 
-      if (data_type == Solution::COMMAND)
+      if (data_type == Solution::DataType::COMMAND)
       {
         std::ostringstream os;
         //// TODO: do command here!
@@ -848,11 +848,11 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
           if (!ret)
           {
             errorString += "While executing: " + sol.GetCommandName() + "\n" + resultString + "\n";
-            OutputStream::WriteOut(OutputStream::FATAL, errorString);
+            OutputStream::WriteOut(OutputStream::OutputType::FATAL, errorString);
           }
 //          os << "with result " << resultString << "\n";
         }
-//        OutputStream::WriteOut(OutputStream::FATAL, os.str());
+//        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
       }
     }
 
@@ -866,7 +866,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         if (!ret)
         {
           errorString += "While executing: " + equation.GetCommandName() + "\n" + resultString + "\n";
-          OutputStream::WriteOut(OutputStream::FATAL, errorString);
+          OutputStream::WriteOut(OutputStream::OutputType::FATAL, errorString);
         }
       }
     }
@@ -894,7 +894,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         //// TODO: do command here!
         os << "Unable to create interface model: " << sname << "\n";
         errorString += os.str();
-        OutputStream::WriteOut(OutputStream::FATAL, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
       }
     }
   }
@@ -914,13 +914,13 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
       Solution::DataType   data_type  = sol.GetDataType();
 
       //// TODO: need to assert it was successful
-      if (data_type == Solution::COMMAND)
+      if (data_type == Solution::DataType::COMMAND)
       {
 /*
         std::ostringstream os;
         //// TODO: do command here!
         os << "Need to execute: " << sol.GetCommandName() << "\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 */
 
         {
@@ -929,7 +929,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
           if (!ret)
           {
             errorString += "While executing: " + sol.GetCommandName() + "\n" + resultString + "\n";
-            OutputStream::WriteOut(OutputStream::FATAL, errorString);
+            OutputStream::WriteOut(OutputStream::OutputType::FATAL, errorString);
           }
         }
       }
@@ -945,7 +945,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         if (!ret)
         {
           errorString += "While executing: " + equation.GetCommandName() + "\n" + resultString + "\n";
-          OutputStream::WriteOut(OutputStream::FATAL, errorString);
+          OutputStream::WriteOut(OutputStream::OutputType::FATAL, errorString);
         }
       }
     }
@@ -964,7 +964,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         if (!ret)
         {
           errorString += "While executing: " + equation.GetCommandName() + "\n" + resultString + "\n";
-          OutputStream::WriteOut(OutputStream::FATAL, errorString);
+          OutputStream::WriteOut(OutputStream::OutputType::FATAL, errorString);
         }
       }
     }
@@ -1005,7 +1005,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
       ret = false;
       std::ostringstream os; 
       os << "There are no coordinates in the mesh " << this->GetName() << "\n";
-      OutputStream::WriteOut(OutputStream::ERROR, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
     }
 
     if (!nregions)
@@ -1013,7 +1013,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
       ret = false;
       std::ostringstream os; 
       os << "There are no regions on the mesh " << this->GetName() << "\n";
-      OutputStream::WriteOut(OutputStream::ERROR, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
     }
 
     if (ncontacts < 2)
@@ -1021,7 +1021,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
       //ret = false;
       std::ostringstream os; 
       os << "There should be at least 2 contacts on the device and there are only " << ncontacts << "\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
 
 
@@ -1071,7 +1071,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
         ret = false;
         std::ostringstream os; 
         os << rname << " has dimension " << ldim << " while another region has dimension " << dimension << "\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       }
 
       if (!region.HasNodes())
@@ -1079,7 +1079,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
         ret = false;
         std::ostringstream os; 
         os << rname << " has no nodes\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       }
       else
       {
@@ -1090,7 +1090,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
           ret = false;
           std::ostringstream os; 
           os << rname << " has more nodes than there are coordinates\n"; 
-          OutputStream::WriteOut(OutputStream::ERROR, os.str());
+          OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         }
         else
         {
@@ -1101,7 +1101,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
               ret = false;
               std::ostringstream os; 
               os << "Node index " << nit->Index() << " in region " << rname << "exceeds the max coordinate index, " << (ncoords - 1) << "\n";
-              OutputStream::WriteOut(OutputStream::ERROR, os.str());
+              OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
             }
           }
         }
@@ -1112,7 +1112,7 @@ bool DevsimLoader::Finalize_(std::string &errorString)
         ret = false;
         std::ostringstream os; 
         os << rname << " has no edges\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       }
       else
       {
@@ -1124,14 +1124,14 @@ bool DevsimLoader::Finalize_(std::string &errorString)
             ret = false;
             std::ostringstream os; 
             os << "Node index " << nit->Index0() << " in region " << rname << " for edges exceeds the max node index, " << (nnodes - 1) << "\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
           }
           if (nit->Index1() >= nnodes)
           {
             ret = false;
             std::ostringstream os; 
             os << "Node index " << nit->Index1() << " in region " << rname << " for edges exceeds the max node index, " << (nnodes - 1) << "\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
           }
         }
       }
@@ -1147,21 +1147,21 @@ bool DevsimLoader::Finalize_(std::string &errorString)
             ret = false;
             std::ostringstream os; 
             os << "Node index " << nit->Index0() << " in region " << rname << " for triangles exceeds the max node index, " << (nnodes - 1) << "\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
           }
           if (nit->Index1() >= nnodes)
           {
             ret = false;
             std::ostringstream os; 
             os << "Node index " << nit->Index1() << " in region " << rname << " for triangles exceeds the max node index, " << (nnodes - 1) << "\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
           }
           if (nit->Index2() >= nnodes)
           {
             ret = false;
             std::ostringstream os; 
             os << "Node index " << nit->Index2() << " in region " << rname << " for triangles exceeds the max node index, " << (nnodes - 1) << "\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
           }
         }
       }

@@ -23,17 +23,22 @@ limitations under the License.
 
 #include "slu_zdefs.h"
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+
 namespace dsMath {
-bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix *cm)
+template <typename DoubleType>
+bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix<DoubleType> *cm, const ComplexDoubleVec_t<double> &Vals)
 {
-  CompressedMatrix::SymbolicStatus_t sstatus= cm->GetSymbolicStatus();
+  SymbolicStatus_t sstatus= cm->GetSymbolicStatus();
 
   const int n = numeqns_;
 
   int *perm_c = perm_c_; /* column permutation vector */
   int *etree  = etree_;  /* column elimination tree */
 
-  if (perm_c_ && (sstatus == CompressedMatrix::SAME_SYMBOLIC))
+  if (perm_c_ && (sstatus == SymbolicStatus_t::SAME_SYMBOLIC))
   {
     //// This is so it doesn't get deleted by DeleteStorage
     perm_c_ = NULL;
@@ -49,7 +54,6 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix *cm)
 
   const IntVec_t    &Cols = cm->GetCols();
   const IntVec_t    &Rows = cm->GetRows();
-  const ComplexDoubleVec_t &Vals = cm->GetComplex();
 
   const int nnz = Rows.size();
 
@@ -64,11 +68,11 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix *cm)
   SuperLUStat_t stat;
 
   /* Set the default input options. */
-  if (lutype_ == Preconditioner::FULL)
+  if (lutype_ == PEnum::LUType_t::FULL)
   {
     set_default_options(&options);
   }
-  else if (lutype_ == Preconditioner::INCOMPLETE)
+  else if (lutype_ == PEnum::LUType_t::INCOMPLETE)
   {
     ilu_set_default_options(&options);
   }
@@ -107,7 +111,7 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix *cm)
    *   permc_spec = 3: approximate minimum degree for unsymmetric matrices
    */           
   
-  if (sstatus == CompressedMatrix::NEW_SYMBOLIC)
+  if (sstatus == SymbolicStatus_t::NEW_SYMBOLIC)
   {
     permc_spec = options.ColPerm;
     get_perm_c(permc_spec, &A, perm_c);
@@ -126,7 +130,7 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix *cm)
     {
       std::ostringstream os;
       os << "Matrix Permutation failed!! << perm[" << check << "] = " << perm_c[check] << "\n";
-      OutputStream::WriteOut(OutputStream::FATAL, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
   }
 #endif
@@ -134,12 +138,12 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix *cm)
   panel_size = sp_ienv(1);
   relax = sp_ienv(2);
 
-  if (lutype_ == Preconditioner::FULL)
+  if (lutype_ == PEnum::LUType_t::FULL)
   {
     zgstrf(&options, &AC, relax, panel_size, 
            etree, NULL, 0, perm_c, perm_r, L, U, &stat, &info_);
   }
-  else if (lutype_ ==  Preconditioner::INCOMPLETE)
+  else if (lutype_ ==  PEnum::LUType_t::INCOMPLETE)
   {
     zgsitrf(&options, &AC, relax, panel_size,
            etree, NULL, 0, perm_c, perm_r, L, U, &stat, &info_);
@@ -185,7 +189,8 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix *cm)
   return (info_ == 0);
 }
 
-void SuperLUData::LUSolve(ComplexDoubleVec_t &x, const ComplexDoubleVec_t &b)
+template <>
+void SuperLUData::LUSolve(ComplexDoubleVec_t<double> &x, const ComplexDoubleVec_t<double> &b)
 {
   if (info_ == 0)
   {
@@ -242,5 +247,29 @@ void SuperLUData::LUSolve(ComplexDoubleVec_t &x, const ComplexDoubleVec_t &b)
   StatFree(&stat);
 }
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+template <>
+void SuperLUData::LUSolve(ComplexDoubleVec_t<float128> &x, const ComplexDoubleVec_t<float128> &b)
+{
+  ComplexDoubleVec_t<double> b64(b.size());
+  ComplexDoubleVec_t<double> x64;
+  for (size_t i = 0; i < b.size(); ++i)
+  {
+    b64[i] = ComplexDouble_t<double>(static_cast<double>(b[i].real()), static_cast<double>(b[i].imag()));
+  }
+  this->LUSolve(x64, b64);
+
+  x.resize(x64.size());
+  for (size_t i = 0; i < x64.size(); ++i)
+  {
+    x[i] = ComplexDouble_t<float128>(static_cast<float128>(x64[i].real()), static_cast<float128>(x64[i].imag()));
+  }
 }
+#endif
+}
+
+template bool dsMath::SuperLUData::LUFactorComplexMatrix(CompressedMatrix<double> *, const ComplexDoubleVec_t<double> &);
+#ifdef DEVSIM_EXTENDED_PRECISION
+template bool dsMath::SuperLUData::LUFactorComplexMatrix(CompressedMatrix<float128> *, const ComplexDoubleVec_t<double> &);
+#endif
 

@@ -21,7 +21,6 @@ limitations under the License.
 #include <string>
 #include <utility>
 
-/// No forward declaration of enum
 #include "NodeModel.hh"
 #include "EdgeModel.hh"
 #include "TriangleEdgeModel.hh"

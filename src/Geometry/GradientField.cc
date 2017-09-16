@@ -24,19 +24,22 @@ limitations under the License.
 #include "Tetrahedron.hh"
 #include "Node.hh"
 
-GradientField::~GradientField()
+template <typename DoubleType>
+GradientField<DoubleType>::~GradientField()
 {
-  for (std::vector<dsMath::RealDenseMatrix *>::iterator it = dense_mats_.begin(); it != dense_mats_.end(); ++it)
+  for (typename std::vector<dsMath::RealDenseMatrix<DoubleType> *>::iterator it = dense_mats_.begin(); it != dense_mats_.end(); ++it)
   {
     delete *it;
   }
 }
 
-GradientField::GradientField(const Region *r) : myregion_(r)
+template <typename DoubleType>
+GradientField<DoubleType>::GradientField(const Region *r) : myregion_(r)
 {
 }
 
-void GradientField::CalcMatrices2d() const
+template <typename DoubleType>
+void GradientField<DoubleType>::CalcMatrices2d() const
 {
   dsAssert(GetRegion().GetDimension() == 2, "UNEXPECTED");
   //// TODO:Check for FPE's
@@ -48,8 +51,8 @@ void GradientField::CalcMatrices2d() const
   dsAssert(ux.get(), "UNEXPECTED");
   dsAssert(uy.get(), "UNEXPECTED");
 
-  const NodeScalarList<double> &xvec = ux->GetScalarValues<double>();
-  const NodeScalarList<double> &yvec = uy->GetScalarValues<double>();
+  const NodeScalarList<DoubleType> &xvec = ux->GetScalarValues<DoubleType>();
+  const NodeScalarList<DoubleType> &yvec = uy->GetScalarValues<DoubleType>();
 
 
   const ConstTriangleList &tlist = myregion_->GetTriangleList();
@@ -61,19 +64,19 @@ void GradientField::CalcMatrices2d() const
     const Triangle &triangle = **ti;
     const size_t triangleIndex = triangle.GetIndex();
 
-    dsMath::RealDenseMatrix *dmp = new dsMath::RealDenseMatrix(3);
-    dsMath::RealDenseMatrix &M = *dmp;
+    auto *dmp = new dsMath::RealDenseMatrix<DoubleType>(3);
+    dsMath::RealDenseMatrix<DoubleType> &M = *dmp;
 
     const std::vector<ConstNodePtr> &nl = triangle.GetNodeList();
 
     const size_t ni0 = nl[0]->GetIndex();
-    const double x0 = xvec[ni0];
-    const double y0 = yvec[ni0];
+    const DoubleType x0 = xvec[ni0];
+    const DoubleType y0 = yvec[ni0];
     for (size_t r = 1; r < 3; ++r)
     {
       const size_t nir = nl[r]->GetIndex();
-      const double xr = xvec[nir] - x0;
-      const double yr = yvec[nir] - y0;
+      const DoubleType xr = xvec[nir] - x0;
+      const DoubleType yr = yvec[nir] - y0;
 
       M(r, 0) = xr;
       M(r, 1) = yr;
@@ -87,7 +90,8 @@ void GradientField::CalcMatrices2d() const
   }
 }
 
-void GradientField::CalcMatrices3d() const
+template <typename DoubleType>
+void GradientField<DoubleType>::CalcMatrices3d() const
 {
   dsAssert(GetRegion().GetDimension() == 3, "UNEXPECTED");
   //// TODO:Check for FPE's
@@ -101,9 +105,9 @@ void GradientField::CalcMatrices3d() const
   dsAssert(uy.get(), "UNEXPECTED");
   dsAssert(uz.get(), "UNEXPECTED");
 
-  const NodeScalarList<double> &xvec = ux->GetScalarValues<double>();
-  const NodeScalarList<double> &yvec = uy->GetScalarValues<double>();
-  const NodeScalarList<double> &zvec = uz->GetScalarValues<double>();
+  const NodeScalarList<DoubleType> &xvec = ux->GetScalarValues<DoubleType>();
+  const NodeScalarList<DoubleType> &yvec = uy->GetScalarValues<DoubleType>();
+  const NodeScalarList<DoubleType> &zvec = uz->GetScalarValues<DoubleType>();
 
 
   const ConstTetrahedronList &tlist = myregion_->GetTetrahedronList();
@@ -115,21 +119,21 @@ void GradientField::CalcMatrices3d() const
     const Tetrahedron &tetrahedron = **ti;
     const size_t tetrahedronIndex = tetrahedron.GetIndex();
 
-    dsMath::RealDenseMatrix *dmp = new dsMath::RealDenseMatrix(3);
-    dsMath::RealDenseMatrix &M = *dmp;
+    dsMath::RealDenseMatrix<DoubleType> *dmp = new dsMath::RealDenseMatrix<DoubleType>(3);
+    dsMath::RealDenseMatrix<DoubleType> &M = *dmp;
 
     const std::vector<ConstNodePtr> &nl = tetrahedron.GetNodeList();
 
     const size_t ni0 = nl[0]->GetIndex();
-    const double x0 = xvec[ni0];
-    const double y0 = yvec[ni0];
-    const double z0 = zvec[ni0];
+    const DoubleType x0 = xvec[ni0];
+    const DoubleType y0 = yvec[ni0];
+    const DoubleType z0 = zvec[ni0];
     for (size_t r = 1; r < 4; ++r)
     {
       const size_t nir = nl[r]->GetIndex();
-      const double xr = xvec[nir] - x0;
-      const double yr = yvec[nir] - y0;
-      const double zr = zvec[nir] - z0;
+      const DoubleType xr = xvec[nir] - x0;
+      const DoubleType yr = yvec[nir] - y0;
+      const DoubleType zr = zvec[nir] - z0;
 
       M(r-1, 0) = xr;
       M(r-1, 1) = yr;
@@ -142,21 +146,22 @@ void GradientField::CalcMatrices3d() const
   }
 }
 
-Vector<double> GradientField::GetGradient(const Triangle &triangle, const NodeModel &nm) const
+template <typename DoubleType>
+Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Triangle &triangle, const NodeModel &nm) const
 {
   if (dense_mats_.empty())
   {
     CalcMatrices2d();
   }
 
-  const NodeScalarList<double> &nvals = nm.GetScalarValues<double>();
+  const NodeScalarList<DoubleType> &nvals = nm.GetScalarValues<DoubleType>();
 
   const size_t triangleIndex = triangle.GetIndex();
-  dsMath::RealDenseMatrix &M = *dense_mats_[triangleIndex];
+  dsMath::RealDenseMatrix<DoubleType> &M = *dense_mats_[triangleIndex];
 
   const std::vector<ConstNodePtr> &nl = triangle.GetNodeList();
 
-  static std::vector<double> B(3);
+  static std::vector<DoubleType> B(3);
   for (size_t i = 0; i < 3; ++i)
   {
     B[i] = nvals[nl[i]->GetIndex()];
@@ -165,47 +170,54 @@ Vector<double> GradientField::GetGradient(const Triangle &triangle, const NodeMo
 
   if (info)
   {
-    return Vector<double>(B[0], B[1], B[2]);
+    return Vector<DoubleType>(B[0], B[1], B[2]);
   }
   else
   {
-    return Vector<double>(0,0,0);
+    return Vector<DoubleType>(0,0,0);
     //// This is due to the inf result from a bad factorization
   }
 }
 
-Vector<double> GradientField::GetGradient(const Tetrahedron &tetrahedron, const NodeModel &nm) const
+template <typename DoubleType>
+Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Tetrahedron &tetrahedron, const NodeModel &nm) const
 {
   if (dense_mats_.empty())
   {
     CalcMatrices3d();
   }
 
-  const NodeScalarList<double> &nvals = nm.GetScalarValues<double>();
+  const NodeScalarList<DoubleType> &nvals = nm.GetScalarValues<DoubleType>();
 
   const size_t tetrahedronIndex = tetrahedron.GetIndex();
-  dsMath::RealDenseMatrix &M = *dense_mats_[tetrahedronIndex];
+  dsMath::RealDenseMatrix<DoubleType> &M = *dense_mats_[tetrahedronIndex];
 
   const std::vector<ConstNodePtr> &nl = tetrahedron.GetNodeList();
 
-  static std::vector<double> B(3);
-  const double nv0 = nvals[nl[0]->GetIndex()];
+  static std::vector<DoubleType> B(3);
+  const DoubleType nv0 = nvals[nl[0]->GetIndex()];
 
   for (size_t i = 1; i < 4; ++i)
   {
-    const double nvr = nvals[nl[i]->GetIndex()] - nv0;
+    const DoubleType nvr = nvals[nl[i]->GetIndex()] - nv0;
     B[i-1] = nvr;
   }
   bool info = M.Solve(B);
 
   if (info)
   {
-    return Vector<double>(B[0], B[1], B[2]);
+    return Vector<DoubleType>(B[0], B[1], B[2]);
   }
   else
   {
-    return Vector<double>(0,0,0);
+    return Vector<DoubleType>(0,0,0);
     //// This is due to the inf result from a bad factorization
   }
 }
+
+template class GradientField<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class GradientField<float128>;
+#endif
 

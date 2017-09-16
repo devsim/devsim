@@ -19,17 +19,23 @@ limitations under the License.
 #include "Preconditioner.hh"
 
 #include "OutputStream.hh"
-#include "DenseMatrix.hh"
 #include "gmres.hh"
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
 
 #include <sstream>
 
+
 //#include <iostream>
 namespace dsMath {
-IterativeLinearSolver::IterativeLinearSolver() : restart_(50), linear_iterations_(100), relative_tolerance_(1e-20)
+template <typename DoubleType>
+IterativeLinearSolver<DoubleType>::IterativeLinearSolver() : restart_(50), linear_iterations_(100), relative_tolerance_(1e-20)
 {}
 
-bool IterativeLinearSolver::SolveImpl(Matrix &mat, Preconditioner &pre, DoubleVec_t &sol, DoubleVec_t &rhs)
+template <>
+bool IterativeLinearSolver<double>::SolveImpl(Matrix<double> &mat, Preconditioner<double> &pre, std::vector<double> &sol, std::vector<double> &rhs)
 {
 
   bool ret = false;
@@ -53,40 +59,60 @@ bool IterativeLinearSolver::SolveImpl(Matrix &mat, Preconditioner &pre, DoubleVe
       << "/" << relative_tolerance_
       << " linear convergence " << ret
       << "\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
   else
   {
     std::ostringstream os;
     os << "Matrix factorization failed\n";
-    OutputStream::WriteOut(OutputStream::ERROR, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
   }
 //std::cerr << "End LUFactor Matrix\n";
 
   return ret;
 }
 
-bool IterativeLinearSolver::ACSolveImpl(Matrix &mat, Preconditioner &pre, ComplexDoubleVec_t &sol, ComplexDoubleVec_t &rhs)
+#ifdef DEVSIM_EXTENDED_PRECISION
+template <>
+bool IterativeLinearSolver<float128>::SolveImpl(Matrix<float128> &mat, Preconditioner<float128> &pre, std::vector<float128> &sol, std::vector<float128> &rhs)
+{
+  bool ret = false;
+  std::ostringstream os;
+  os << "GMRES not implemented for extended precision\n";
+  OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
+  return ret;
+}
+#endif
+
+template <typename DoubleType>
+bool IterativeLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, std::vector<std::complex<DoubleType>> &sol, std::vector<std::complex<DoubleType>> &rhs)
 {
   bool ret = false;
   {
     std::ostringstream os;
     os << "AC iterative solve not implemented\n";
-    OutputStream::WriteOut(OutputStream::ERROR, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
   }
   return ret;
 }
 
-bool IterativeLinearSolver::NoiseSolveImpl(Matrix &mat, Preconditioner &pre, ComplexDoubleVec_t &sol, ComplexDoubleVec_t &rhs)
+template <typename DoubleType>
+bool IterativeLinearSolver<DoubleType>::NoiseSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, std::vector<std::complex<DoubleType>> &sol, std::vector<std::complex<DoubleType>> &rhs)
 {
   bool ret = false;
   {
     std::ostringstream os;
     os << "Noise iterative solve not implemented\n";
     /// requires working transpose
-    OutputStream::WriteOut(OutputStream::ERROR, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
   }
   return ret;
 }
 }
+
+template class dsMath::IterativeLinearSolver<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class dsMath::IterativeLinearSolver<float128>;
+#endif
 

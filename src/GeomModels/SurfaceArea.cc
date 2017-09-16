@@ -33,7 +33,7 @@ limitations under the License.
 
 template <typename DoubleType>
 SurfaceArea<DoubleType>::SurfaceArea(RegionPtr rp)
-    : NodeModel("SurfaceArea", rp, NodeModel::SCALAR)
+    : NodeModel("SurfaceArea", rp, NodeModel::DisplayType::SCALAR)
 {
   const size_t dimension = GetRegion().GetDimension();
   if (dimension == 1)
@@ -372,7 +372,7 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
   std::vector<DoubleType> nvy(nl.size());
   std::vector<DoubleType> nvz(nl.size());
 
-  const std::vector<Vector<DoubleType>> &triangleCenters = region.GetTriangleCenters();
+  const std::vector<Vector<DoubleType>> &triangleCenters = region.GetTriangleCenters<DoubleType>();
 
   std::vector<DoubleType> nv(nl.size());
 

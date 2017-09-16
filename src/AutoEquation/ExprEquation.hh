@@ -47,7 +47,7 @@ class ExprEquation : public Equation<DoubleType>
                      const std::string &, /*ElementVolumeModel Name for integrating source*/
                      const std::string &, /*Time-dependent NodeModel Name for integrating source/sink*/
                         //// Some day we may have edge time dependent model
-                     typename Equation<DoubleType>::UpdateType/* = Equation::DEFAULT*/
+                     typename EquationEnum::UpdateType/* = Equation::DEFAULT*/
                         );
 
 

@@ -99,7 +99,7 @@ CmdDispatch(ClientData clientData, Tcl_Interp *interp,
     std::ostringstream os;
     os << "There was an uncaught floating point exception of type \"" << FPECheck::getFPEString() << "\"\n";
     FPECheck::ClearFPE();
-    OutputStream::WriteOut(OutputStream::ERROR, os.str().c_str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str().c_str());
     myerror = TCL_ERROR;
   }
 

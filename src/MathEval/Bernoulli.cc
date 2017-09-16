@@ -17,6 +17,7 @@ limitations under the License.
 
 #include "Bernoulli.hh"
 #include <cmath>
+using std::abs;
 //#include <climits>
 #include <cstdlib>
 //#include <values.h>
@@ -86,7 +87,7 @@ inline double Bernoulli_Regular(const double x)
 
 double Bernoulli(const double x)
 {
-    const double fx = fabs(x);
+    const double fx = abs(x);
     double ret;
     if (fx < 1.0e-4)
     {
@@ -195,7 +196,7 @@ inline double derBernoulli3(double x)
 
 double derBernoulli(const double x)
 {
-    const double fx = fabs(x);
+    const double fx = abs(x);
     double ret;
     if (fx < 1.0e-4)
     {
@@ -245,7 +246,7 @@ double Bernoulli(double x)
 
 double derBernoulli(double x)
 {
-    const double fx = fabs(x);
+    const double fx = abs(x);
     double ret;
     if ( fx < 1.0e-4 )
     {

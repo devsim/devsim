@@ -27,7 +27,7 @@ void dsAssert_(bool x, const std::string &msg)
         std::ostringstream os;
         os << "There was a fatal exception in the program.  Shutting down.  Please inspect program output.\n";
         os << msg << "\n";
-        OutputStream::WriteOut(OutputStream::FATAL, os.str().c_str());
+        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
     }
 }
 

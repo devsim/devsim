@@ -53,7 +53,7 @@ typedef const Triangle *ConstTrianglePtr;
 
 class TriangleEdgeModel {
     public:
-        enum DisplayType {NODISPLAY, SCALAR, UNKNOWN};
+        enum class DisplayType {NODISPLAY, SCALAR, UNKNOWN};
         TriangleEdgeModel(const std::string &, const RegionPtr, TriangleEdgeModel::DisplayType);
         virtual ~TriangleEdgeModel();
 
@@ -64,7 +64,7 @@ class TriangleEdgeModel {
         template <typename DoubleType>
         const TriangleEdgeScalarList<DoubleType> &GetScalarValues() const;
 
-        enum InterpolationType {AVERAGE, COUPLE, SUM};
+        enum class InterpolationType {AVERAGE, COUPLE, SUM};
 
         template <typename DoubleType>
         void GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType, std::vector<DoubleType> &) const;
@@ -107,7 +107,7 @@ class TriangleEdgeModel {
 
         const char * GetDisplayTypeString() const
         {
-          return DisplayTypeString[displayType];
+          return DisplayTypeString[static_cast<size_t>(displayType)];
         }
 
         void SetDisplayType(TriangleEdgeModel::DisplayType dt)

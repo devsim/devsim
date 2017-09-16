@@ -203,7 +203,7 @@ GlobalData::DoubleDBEntry_t GlobalData::GetDoubleDBEntryOnRegion(const Region *r
          "\" Region \"" << region
          << "\" database entry \"" << name
          << "\" resolves to a string \"" << dbent.second.GetString() <<  "\" when a number was expected\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
   }
   return ret;
@@ -269,7 +269,7 @@ void GlobalData::SignalCallbacksOnGlobal(const std::string &name)
             {
                 std::ostringstream os; 
                 os << "Device \"" << device << " shadows global parameter update " << name << "\n";
-                OutputStream::WriteOut(OutputStream::INFO, os.str());
+                OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
             }
             else
             {
@@ -305,7 +305,7 @@ void GlobalData::SignalCallbacksOnDevice(const std::string &device, const std::s
                         os << "Device \"" << device << 
                                      "\" Region \"" << region
                                      << "\" shadows global parameter update " << name << "\n";
-                        OutputStream::WriteOut(OutputStream::INFO, os.str());
+                        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
                     }
                     else
                     {
@@ -391,7 +391,7 @@ void GlobalData::SignalCallbacksOnMaterialChange(const std::string &material_nam
            "\" Material \"" << material_name
            << "\" material db entry \"" << parameter_name
            << "\" is masked by parameter setting.\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       }
     }
   }

@@ -21,16 +21,19 @@ limitations under the License.
 #include "FPECheck.hh"
 #include "OutputStream.hh"
 namespace dsMath {
-Preconditioner::~Preconditioner()
+template <typename DoubleType>
+Preconditioner<DoubleType>::~Preconditioner()
 {
 }
 
-Preconditioner::Preconditioner(size_t numeqns, Preconditioner::TransposeType_t transpose) : size_(numeqns), factored(false), transpose_solve_(transpose), matrix_(NULL)
+template <typename DoubleType>
+Preconditioner<DoubleType>::Preconditioner(size_t numeqns, PEnum::TransposeType_t transpose) : size_(numeqns), factored(false), transpose_solve_(transpose), matrix_(NULL)
 {
 }
 
 #if 0
-void Preconditioner::SetMatrix(Matrix *m)
+template <typename DoubleType>
+void Preconditioner<DoubleType>::SetMatrix(Matrix *m)
 {
   matrix_ = m;
   DerivedSetMatrix();
@@ -38,24 +41,27 @@ void Preconditioner::SetMatrix(Matrix *m)
 }
 #endif
 
-void Preconditioner::SetTransposeSolve(bool x)
+template <typename DoubleType>
+void Preconditioner<DoubleType>::SetTransposeSolve(bool x)
 {
   if (x)
   {
-    transpose_solve_ = Preconditioner::TRANS;
+    transpose_solve_ = PEnum::TransposeType_t::TRANS;
   }
   else
   {
-    transpose_solve_ = Preconditioner::NOTRANS;
+    transpose_solve_ = PEnum::TransposeType_t::NOTRANS;
   }
 }
 
-bool Preconditioner::GetTransposeSolve()
+template <typename DoubleType>
+bool Preconditioner<DoubleType>::GetTransposeSolve()
 {
-  return (transpose_solve_ == Preconditioner::TRANS);
+  return (transpose_solve_ == PEnum::TransposeType_t::TRANS);
 }
 
-bool Preconditioner::LUFactor(Matrix *mat)
+template <typename DoubleType>
+bool Preconditioner<DoubleType>::LUFactor(Matrix<DoubleType> *mat)
 {
 
   factored = false;
@@ -69,7 +75,7 @@ bool Preconditioner::LUFactor(Matrix *mat)
   {
     std::ostringstream os;
     os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  during LU Factorization\n";
-    OutputStream::WriteOut(OutputStream::FATAL, os.str().c_str());
+    OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
     FPECheck::ClearFPE();
   }
 
@@ -78,7 +84,8 @@ bool Preconditioner::LUFactor(Matrix *mat)
 }
 
 
-bool Preconditioner::LUSolve(DoubleVec_t &x, const DoubleVec_t &b) const
+template <typename DoubleType>
+bool Preconditioner<DoubleType>::LUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const
 {
 #ifndef NDEBUG
   dsAssert(factored, "UNEXPECTED");
@@ -96,7 +103,7 @@ bool Preconditioner::LUSolve(DoubleVec_t &x, const DoubleVec_t &b) const
   {
     std::ostringstream os;
     os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  during LU Back Substitution\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     FPECheck::ClearFPE();
   }
   else
@@ -107,7 +114,8 @@ bool Preconditioner::LUSolve(DoubleVec_t &x, const DoubleVec_t &b) const
   return ret;
 }
 
-bool Preconditioner::LUSolve(ComplexDoubleVec_t &x, const ComplexDoubleVec_t &b) const
+template <typename DoubleType>
+bool Preconditioner<DoubleType>::LUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const
 {
 #ifndef NDEBUG
   dsAssert(factored, "UNEXPECTED");
@@ -123,7 +131,7 @@ bool Preconditioner::LUSolve(ComplexDoubleVec_t &x, const ComplexDoubleVec_t &b)
   {
     std::ostringstream os;
     os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  during LU Back Substitution\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     FPECheck::ClearFPE();
   }
   else
@@ -133,6 +141,11 @@ bool Preconditioner::LUSolve(ComplexDoubleVec_t &x, const ComplexDoubleVec_t &b)
 
   return ret;
 }
-
-
 }
+
+template class dsMath::Preconditioner<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class dsMath::Preconditioner<float128>;
+#endif
+

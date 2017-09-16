@@ -145,7 +145,7 @@ CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs)
     os << "There was an uncaught floating point exception of type \"" << FPECheck::getFPEString() << "\"\n";
     FPECheck::ClearFPE();
     ret = NULL;
-    OutputStream::WriteOut(OutputStream::ERROR, os.str().c_str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str().c_str());
   }
 
 
@@ -227,7 +227,7 @@ static PyObject * CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs, 
     os << "There was an uncaught floating point exception of type"" << FPECheck::getFPEString() << ""n";
     FPECheck::ClearFPE();
     ret = NULL;
-    OutputStream::WriteOut(OutputStream::ERROR, os.str().c_str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str().c_str());
   }
 
   return ret;

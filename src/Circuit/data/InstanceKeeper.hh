@@ -70,9 +70,9 @@ class InstanceKeeper {
         // apply the current time step to the signal
         void updateSignals(double);
 
-        void AssembleDCMatrix(dsMath::RealRowColValueVec<double> &, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec<double> &rhs);
+        void AssembleDCMatrix(dsMath::RealRowColValueVec<double> &, const std::vector<double> &sol, dsMath::RHSEntryVec<double> &rhs);
         //// This is also used for the ssac
-        void AssembleTRMatrix(dsMath::RealRowColValueVec<double> *, const NodeKeeper::Solution &sol, dsMath::RHSEntryVec<double> &rhs, double scl);
+        void AssembleTRMatrix(dsMath::RealRowColValueVec<double> *, const std::vector<double> &sol, dsMath::RHSEntryVec<double> &rhs, double scl);
         void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &rhs);
 
 
@@ -90,3 +90,4 @@ class InstanceKeeper {
         SignalList              sigList_;
 };
 #endif
+

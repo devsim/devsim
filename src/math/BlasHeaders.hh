@@ -20,90 +20,109 @@ limitations under the License.
 
 typedef std::complex<double> doublecomplex;
 
-#ifdef __linux__
 extern "C"
 {
 
-#define dgetrf dgetrf_
-#define dgetrs dgetrs_
-#define drotg  drotg_
-#define zgetrf zgetrf_
-#define zgetrs zgetrs_
-#define zrotg  zrotg_
-
-void dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
-void dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info);
-void zgetrf( int *m, int *n, doublecomplex *a, int *lda, int *ipiv, int *info );
-void zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info);
-
-void drotg(double *, double *, double *, double *);
-/// rely on memory layout being the same between FORTRAN complex and std::complex<double>
-void zrotg(std::complex<double> *, std::complex<double> *, std::complex<double> *, std::complex<double> *);
-}
-#endif
-
-#ifdef __APPLE__
-extern "C"
-{
-
-#define dgetrf dgetrf_
-#define dgetrs dgetrs_
-#define drotg  drotg_
-#define zgetrf zgetrf_
-#define zgetrs zgetrs_
-#define zrotg  zrotg_
-
-void dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
-void dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info);
-void zgetrf( int *m, int *n, doublecomplex *a, int *lda, int *ipiv, int *info );
-void zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info);
-
-void drotg(double *, double *, double *, double *);
-/// rely on memory layout being the same between FORTRAN complex and std::complex<double>
-void zrotg(std::complex<double> *, std::complex<double> *, std::complex<double> *, std::complex<double> *);
-}
-#endif
-
-/// More specific for ACML on linux
-#ifdef _WIN32
-extern "C"
-{
-//// Using the ACML convention
-#if 0
+#if defined(__linux__) || defined(__APPLE__) || defined(_WIN32)
+#define external_dgetrf dgetrf_
+#define external_dgetrs dgetrs_
+#define external_drotg  drotg_
+#define external_zgetrf zgetrf_
+#define external_zgetrs zgetrs_
+#define external_zrotg  zrotg_
+#elif 0
 #define dgetrf DGETRF
 #define dgetrs DGETRS
 #define drotg  DROTG
 #define zgetrf ZGETRF
 #define zgetrs ZGETRS
 #define zrotg  ZROTG
-#else
-#define dgetrf dgetrf_
-#define dgetrs dgetrs_
-#define drotg  drotg_
-#define zgetrf zgetrf_
-#define zgetrs zgetrs_
-#define zrotg  zrotg_
 #endif
 
-void dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
-void dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info, int trans_len);
-void zgetrf( int *m, int *n, doublecomplex *a, int *lda, int *ipiv, int *info );
-void zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info, int trans_len);
+void external_dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
+void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info);
+void external_zgetrf( int *m, int *n, doublecomplex *a, int *lda, int *ipiv, int *info );
+void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info);
+void external_drotg(double *, double *, double *, double *);
+void external_zrotg(std::complex<double> *, std::complex<double> *, std::complex<double> *, std::complex<double> *);
+}
 
-void drotg(double *, double *, double *, double *);
+inline void getrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info )
+{
+  external_dgetrf( m, n, a, lda, ipiv, info );
+}
 
-/// rely on memory layout being the same between FORTRAN complex and std::complex<double>
-void zrotg(std::complex<double> *, std::complex<double> *, std::complex<double> *, std::complex<double> *);
+inline void getrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info)
+{
+  external_dgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info);
+}
+
+#if 0
+inline void getrf( int *m, int *n, doublecomplex *a, int *lda, int *ipiv, int *info )
+{
+  external_zgetrf( m, n, a, lda, ipiv, info );
+}
+
+inline void getrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info)
+{
+  external_zgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info);
+}
+#endif
+
+inline void drotg(double *a, double *b, double *c, double *d)
+{
+  external_drotg(a, b, c, d);
+}
+
+inline void zrotg(std::complex<double> *a, std::complex<double> *b, std::complex<double> *c, std::complex<double> *d)
+{
+  external_zrotg(a, b, c, d);
+}
+
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+
+extern "C" {
+void quad_dgetrf_( int *m, int *n, float128 *a, int *lda, int *ipiv, int *info );
+void quad_dgetrs_( char *trans, int *n, int *nrhs, float128 *a, int *lda, int *ipiv, float128 *b, int *ldb, int *info);
+}
+
+typedef std::complex<float128> float128complex;
+inline void getrf( int *m, int *n, float128 *a, int *lda, int *ipiv, int *info )
+{
+  quad_dgetrf_(m, n, a, lda, ipiv, info);
+}
+
+inline void getrs( char *trans, int *n, int *nrhs, float128 *a, int *lda, int *ipiv, float128 *b, int *ldb, int *info)
+{
+  quad_dgetrs_(trans, n, nrhs, a, lda, ipiv, b, ldb, info);
+}
+
+#if 0
+inline void getrf( int *m, int *n, float128complex *a, int *lda, int *ipiv, int *info )
+{
+#ifndef _WIN32
+#warning "IMPLEMENT!!!!"
+#endif
+*info = 1;
+}
+
+inline void getrs( char *trans, int *n, int *nrhs, float128complex *a, int *lda, int *ipiv, float128complex *b, int *ldb, int *info)
+{
+#ifndef _WIN32
+#warning "IMPLEMENT!!!!"
+#endif
+*info = 1;
 }
 #endif
 
 #if 0
-extern "C" {
-void cblas_drotg(double *, double *, double *, double *);
+void drotg(float128 *a, double *b, double *c, double *d);
 
-/// rely on memory layout being the same between FORTRAN complex and std::complex<double>
-
-void cblas_zrotg(std::complex<double> *, std::complex<double> *, std::complex<double> *, std::complex<double> *);
-}
+void zrotg(std::complex<float128> *a, std::complex<double> *b, std::complex<double> *c, std::complex<double> *d);
 #endif
 #endif
+
+#endif
+

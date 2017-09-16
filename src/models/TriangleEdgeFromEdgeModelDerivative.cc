@@ -30,7 +30,7 @@ TriangleEdgeFromEdgeModelDerivative<DoubleType>::TriangleEdgeFromEdgeModelDeriva
         const std::string &derivative,
         RegionPtr rp
     )
-    : TriangleEdgeModel(edgemodel + "_x:" + derivative + "@en0", rp, TriangleEdgeModel::NODISPLAY),
+    : TriangleEdgeModel(edgemodel + "_x:" + derivative + "@en0", rp, TriangleEdgeModel::DisplayType::NODISPLAY),
       edgeModelName(edgemodel),
       nodeModelName(derivative)
 {
@@ -49,11 +49,11 @@ TriangleEdgeFromEdgeModelDerivative<DoubleType>::TriangleEdgeFromEdgeModelDeriva
 
   RegisterCallback(edgeModelName0);
   RegisterCallback(edgeModelName1);
-  new TriangleEdgeSubModel<DoubleType>(x_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
-  new TriangleEdgeSubModel<DoubleType>(x_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName0, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(x_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(x_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName0, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
 }
 
 //// Need to figure out the deleter situation from sub models
@@ -100,7 +100,7 @@ void TriangleEdgeFromEdgeModelDerivative<DoubleType>::calcTriangleEdgeScalarValu
     evy[i].resize(3*tl.size());
   }
 
-  const TriangleElementField &efield = reg.GetTriangleElementField();
+  const TriangleElementField<DoubleType> &efield = reg.GetTriangleElementField<DoubleType>();
 
   //// For each triangle
   for (size_t i = 0; i < tl.size(); ++i)

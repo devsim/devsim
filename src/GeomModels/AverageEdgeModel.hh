@@ -27,25 +27,28 @@ using ConstNodeModelPtr = std::shared_ptr<const NodeModel>;
 
 #include <string>
 
+namespace AverageEdgeModelEnum
+{
+  enum AverageType_t {ARITHMETIC, GEOMETRIC, GRADIENT, NEGATIVE_GRADIENT, UNKNOWN};
+  // This model depends on this Node model to calculate values
+  // must match AverageTypeNames below
+  struct TypeNameMap_t {
+    const char *  str;
+    AverageType_t type;
+  };
+  extern TypeNameMap_t AverageTypeNames[];
+
+  AverageEdgeModelEnum::AverageType_t GetTypeName(const std::string &, std::string &);
+}
 
 template <typename DoubleType>
 class AverageEdgeModel : public EdgeModel
 {
     public:
-        // This model depends on this Node model to calculate values
-        // must match AverageTypeNames below
-        enum AverageType_t {ARITHMETIC, GEOMETRIC, GRADIENT, NEGATIVE_GRADIENT, UNKNOWN};
 
-        struct TypeNameMap_t {
-          const char *  str;
-          AverageType_t type;
-        };
-
-        AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, AverageType_t /*averagetype*/, RegionPtr);
-        AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, const std::string &/*var*/, AverageType_t /*averagetype*/, RegionPtr);
+        AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
+        AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, const std::string &/*var*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
         ~AverageEdgeModel();
-
-        static AverageType_t GetTypeName(const std::string &, std::string &);
 
         void Serialize(std::ostream &) const;
 
@@ -68,8 +71,7 @@ class AverageEdgeModel : public EdgeModel
         std::string   derivativeModelName;
         //// derivative with respect to first edge
         mutable WeakEdgeModelPtr node1EdgeModel;
-        const AverageType_t averageType;
-        static TypeNameMap_t AverageTypeNames[];
+        const AverageEdgeModelEnum::AverageType_t averageType;
 };
 
 #endif

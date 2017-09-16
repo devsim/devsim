@@ -45,8 +45,7 @@ void IdealCurrent::getDCStamp(Matrix::RowColEntryVec &vec)
 }
 #endif
 
-// I should separate out rhs assembly from dc assembly
-void IdealCurrent::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &vec, dsMath::RHSEntryVec<double> &rhs)
+void IdealCurrent::assembleDC_impl(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &vec, dsMath::RHSEntryVec<double> &rhs)
 {
     i_ = sig_->getVoltage();
     const int rp = np_->getNumber();

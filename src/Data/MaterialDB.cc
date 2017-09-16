@@ -63,15 +63,15 @@ bool MaterialDB::OpenDB(const std::string &nm, OpenType_t ot, std::string &error
   if (!nm.empty())
   {
     int s = SQLITE_OK;
-    if (ot == READONLY)
+    if (ot == OpenType_t::READONLY)
     {
       s = sqlite3_open_v2(nm.c_str(), &db, SQLITE_OPEN_READONLY, NULL);
     }
-    else if (ot == READWRITE)
+    else if (ot == OpenType_t::READWRITE)
     {
       s = sqlite3_open_v2(nm.c_str(), &db, SQLITE_OPEN_READWRITE, NULL);
     }
-    else if (ot == CREATE)
+    else if (ot == OpenType_t::CREATE)
     {
       s = sqlite3_open_v2(nm.c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
     }
@@ -167,7 +167,7 @@ MaterialDB::DBEntry_t MaterialDB::GetDBEntry(const std::string &material_name, c
       const std::string u = reinterpret_cast<const char *>(sqlite3_column_text(pstmt, 1));
       const std::string d = reinterpret_cast<const char *>(sqlite3_column_text(pstmt, 2));
 
-      materialData[material_name][parameter_name] = MaterialDBEntry(u, d, ObjectHolder(v), MaterialDBEntry::FROMDB);
+      materialData[material_name][parameter_name] = MaterialDBEntry(u, d, ObjectHolder(v), MaterialDBEntry::EntryType_t::FROMDB);
       ret = std::make_pair(true, materialData[material_name][parameter_name]);
     }
 
@@ -180,7 +180,7 @@ MaterialDB::DBEntry_t MaterialDB::GetDBEntry(const std::string &material_name, c
       os << "Material \"" << material_name
          << "\" database entry \"" << parameter_name
          << "\" has more than one row, using the first.\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
 #endif
 
@@ -214,7 +214,7 @@ MaterialDB::DoubleDBEntry_t MaterialDB::GetDoubleDBEntry(const std::string &mate
       os << "Material \"" << material_name
          << "\" database entry \"" << parameter_name
          << "\" resolves to a string \"" << dbent.second.GetValue().GetString() <<  "\" when a number was expected\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
   }
   return ret;
@@ -274,8 +274,8 @@ bool MaterialDB::SaveDB(std::string &errorString)
       const std::string &parameter_name = (jt->first);
       const MaterialDBEntry &mdb = jt->second;
 
-      if ((mdb.GetEntryType() == MaterialDBEntry::FROMDB)
-          || (mdb.GetEntryType() == MaterialDBEntry::UNDEFINED)
+      if ((mdb.GetEntryType() == MaterialDBEntry::EntryType_t::FROMDB)
+          || (mdb.GetEntryType() == MaterialDBEntry::EntryType_t::UNDEFINED)
           )
       {
         continue;
@@ -299,7 +299,7 @@ bool MaterialDB::SaveDB(std::string &errorString)
       if (changes > 0)
       {
         MaterialDBEntry m = mdb;
-        m.SetType(MaterialDBEntry::FROMDB);
+        m.SetType(MaterialDBEntry::EntryType_t::FROMDB);
         materialData[material_name][parameter_name] = m;
       }
       else if (changes == 0)
@@ -322,7 +322,7 @@ bool MaterialDB::SaveDB(std::string &errorString)
         if (err == SQLITE_DONE)
         {
           MaterialDBEntry m = mdb;
-          m.SetType(MaterialDBEntry::FROMDB);
+          m.SetType(MaterialDBEntry::EntryType_t::FROMDB);
           materialData[material_name][parameter_name] = m;
         }
         else
@@ -356,7 +356,7 @@ bool MaterialDB::CreateDB(const std::string &filename, std::string &errorString)
   bool ret = false;
   errorString.clear();
 
-  ret = OpenDB(filename, CREATE, errorString);
+  ret = OpenDB(filename, OpenType_t::CREATE, errorString);
   if (!ret)
   {
     return ret;

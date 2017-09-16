@@ -24,18 +24,14 @@ class CircuitNode;
 
 typedef std::shared_ptr<CircuitNode> CircuitNodePtr;
 
-namespace CUT {
-    enum UpdateType {DEFAULT, LOGDAMP, POSITIVE};
-};
+enum class CircuitUpdateType {DEFAULT, LOGDAMP, POSITIVE};
 
-namespace CNT {
-    enum CircuitNodeType {
-        DEFAULT,          // Your typical node
-        MNA,              // MNA for Voltage sources
-        INTERNAL,         // INTERNAL for internal nodes
-        GROUND            // Ground CircuitNodes are not solved
-    }; 
-};
+enum class CircuitNodeType {
+    DEFAULT,          // Your typical node
+    MNA,              // MNA for Voltage sources
+    INTERNAL,         // INTERNAL for internal nodes
+    GROUND            // Ground CircuitNodes are not solved
+}; 
 
 class CircuitNode {
     public:
@@ -46,16 +42,16 @@ class CircuitNode {
         inline size_t getNumber()
             {return nodeNumber_;}
 
-        inline CUT::UpdateType getUpdateType()
+        inline CircuitUpdateType getUpdateType()
             {return updateType;}
         
-        inline CNT::CircuitNodeType getCircuitNodeType()
+        inline CircuitNodeType getCircuitNodeType()
             {return nodeType_;}
 
         inline const char * getCircuitNodeTypeStr()
-            {return CircuitNodeTypeStr[nodeType_];}
+            {return CircuitNodeTypeStr[static_cast<size_t>(nodeType_)];}
 
-        inline bool isGROUND() {return (nodeType_==CNT::GROUND);}
+        inline bool isGROUND() {return (nodeType_==CircuitNodeType::GROUND);}
 
         size_t GetNumber()
             {return nodeNumber_;}
@@ -64,10 +60,10 @@ class CircuitNode {
         friend class NodeKeeper;
         /* Modified Nodal Analysis */
         CircuitNode();
-        explicit CircuitNode(CNT::CircuitNodeType, CUT::UpdateType);
+        explicit CircuitNode(CircuitNodeType, CircuitUpdateType);
         CircuitNode operator=(const CircuitNode &);
 
-        inline bool  isMNA() {return (nodeType_== CNT::MNA);}
+        inline bool  isMNA() {return (nodeType_== CircuitNodeType::MNA);}
 //      void setMNA(bool setm=true) {
 //          nodeType_=(setm) ? MNA : DEFAULT;}
 
@@ -75,8 +71,8 @@ class CircuitNode {
             {nodeNumber_=n;}
 
         size_t           nodeNumber_;
-        CNT::CircuitNodeType nodeType_;
-        CUT::UpdateType      updateType;
+        CircuitNodeType nodeType_;
+        CircuitUpdateType      updateType;
 };
 
 

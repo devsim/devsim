@@ -54,7 +54,7 @@ class MaterialDB
       static MaterialDB &GetInstance();
       static void DestroyInstance();
 
-      enum OpenType_t {READONLY, READWRITE, CREATE};
+      enum class OpenType_t {READONLY, READWRITE, CREATE};
       bool OpenDB(const std::string &/*filename*/, OpenType_t /*flags*/, std::string &/*errorString*/);
 
       void AddDBEntry(const std::string &/*material_name*/, const std::string &/*parameter_name*/, const MaterialDBEntry &/*dbentry*/);

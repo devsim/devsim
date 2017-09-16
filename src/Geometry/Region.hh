@@ -19,6 +19,10 @@ limitations under the License.
 #define REGION_HH
 #include "MathEnum.hh"
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+
 #include <memory>
 
 #include <cstddef>
@@ -31,8 +35,11 @@ limitations under the License.
 template <typename T>
 class Vector;
 
+template <typename T>
 class GradientField;
+template <typename T>
 class TriangleElementField;
+template <typename T>
 class TetrahedronElementField;
 
 template <typename T> class ObjectCache;
@@ -335,43 +342,49 @@ class Region
 
       VariableList_t GetVariableList() const;
 
-    double GetAbsError() const
+    template <typename DoubleType>
+    DoubleType GetAbsError() const
     {
-        return absError;
+        return static_cast<DoubleType>(absError);
     }
 
-    double GetRelError() const
+    template <typename DoubleType>
+    DoubleType GetRelError() const
     {
-        return relError;
+        return static_cast<DoubleType>(relError);
     }
 
-    void Update(const std::vector<double> &/*result*/);
-    void ACUpdate(const std::vector<std::complex<double> > &/*result*/);
-    void NoiseUpdate(const std::string &/*output*/, const std::vector<size_t> &/*permvec*/, const std::vector<std::complex<double> > &/*result*/);
+    template <typename DoubleType>
+    void Update(const std::vector<DoubleType> &/*result*/);
+    template <typename DoubleType>
+    void ACUpdate(const std::vector<std::complex<DoubleType> > &/*result*/);
+    template <typename DoubleType>
+    void NoiseUpdate(const std::string &/*output*/, const std::vector<size_t> &/*permvec*/, const std::vector<std::complex<DoubleType> > &/*result*/);
 
-    void Assemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    template <typename DoubleType>
+    void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
     void BackupSolutions(const std::string &);
     void RestoreSolutions(const std::string &);
 
-    const GradientField &GetGradientField() const;
+    template <typename DoubleType>
+    const GradientField<DoubleType> &GetGradientField() const;
 
-    const TriangleElementField &GetTriangleElementField() const;
+    template <typename DoubleType>
+    const TriangleElementField<DoubleType> &GetTriangleElementField() const;
 
-    const TetrahedronElementField &GetTetrahedronElementField() const;
+    template <typename DoubleType>
+    const TetrahedronElementField<DoubleType> &GetTetrahedronElementField() const;
+
+    template <typename DoubleType>
+    const std::vector<Vector<DoubleType> > &GetTriangleCenters() const;
+
+    template <typename DoubleType>
+    const std::vector<Vector<DoubleType> > &GetTetrahedronCenters() const;
 
     size_t GetEdgeIndexOnTriangle(const Triangle &, ConstEdgePtr) const;
 
     size_t GetEdgeIndexOnTetrahedron(const Tetrahedron &, ConstEdgePtr) const;
-
-    const std::vector<Vector<double> > & GetTriangleCenters() const
-    {
-      return triangleCenters;
-    }
-    const std::vector<Vector<double> > & GetTetrahedronCenters() const
-    {
-      return tetrahedronCenters;
-    }
 
     std::string GetNodeVolumeModel() const;
     std::string GetEdgeCoupleModel() const;
@@ -389,6 +402,7 @@ class Region
 
     template <typename DoubleType>
     void SetModelExprDataCache(ModelExprDataCachePtr<DoubleType>);
+
 
    private:
       Region();
@@ -413,6 +427,26 @@ class Region
       void CreateTriangleToTetrahedronList();
       void SetTriangleCenters();
       void SetTetrahedronCenters();
+
+      template <typename DoubleType>
+      struct GeometryField
+      {
+        GeometryField() : gradientField(nullptr), triangleElementField(nullptr), tetrahedronElementField(nullptr)
+        {
+        }
+
+        //  put implementation in the c
+        ~GeometryField();
+
+        mutable GradientField<DoubleType>           *gradientField;
+        mutable TriangleElementField<DoubleType>    *triangleElementField;
+        mutable TetrahedronElementField<DoubleType> *tetrahedronElementField;
+        std::vector<Vector<DoubleType> >             triangleCenters;
+        std::vector<Vector<DoubleType> >             tetrahedronCenters;
+      };
+
+      template <typename DoubleType>
+      GeometryField<DoubleType> &GetGeometryField() const;
 
       std::string materialName;
       std::string regionName;
@@ -452,17 +486,24 @@ class Region
       bool   finalized;
       ConstDevicePtr device;
       const   std::string deviceName;
+#ifdef DEVSIM_EXTENDED_PRECISION
+      float128  relError;
+      float128  absError;
+#else
       double  relError;
       double  absError;
-      mutable GradientField           *gradientField_;
-      mutable TriangleElementField    *triangleElementField_;
-      mutable TetrahedronElementField *tetrahedronElementField_;
+#endif
 
-      std::vector<Vector<double> >       triangleCenters;
-      std::vector<Vector<double> >       tetrahedronCenters;
+      mutable GeometryField<double> GeometryField_double;
+#ifdef DEVSIM_EXTENDED_PRECISION
+      mutable GeometryField<float128> GeometryField_float128;
+#endif
 
-      WeakModelExprDataCachePtr<double> modelExprDataCache;
+      WeakModelExprDataCachePtr<double> modelExprDataCache_double;
+#ifdef DEVSIM_EXTENDED_PRECISION
+      WeakModelExprDataCachePtr<float128> modelExprDataCache_float128;
+#endif
 };
 
-
 #endif
+

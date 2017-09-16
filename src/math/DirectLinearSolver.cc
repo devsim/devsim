@@ -24,7 +24,8 @@ limitations under the License.
 
 //#include <iostream>
 namespace dsMath {
-DirectLinearSolver::DirectLinearSolver()
+template <typename DoubleType>
+DirectLinearSolver<DoubleType>::DirectLinearSolver()
 {}
 
 namespace {
@@ -39,11 +40,12 @@ void WriteOutProblem(bool factored, bool solved)
   {
     os << "Matrix solve failed\n";
   }
-  OutputStream::WriteOut(OutputStream::INFO, os.str());
+  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 }
 }
 
-bool DirectLinearSolver::SolveImpl(Matrix &mat, Preconditioner &pre, DoubleVec_t &sol, DoubleVec_t &rhs)
+template <typename DoubleType>
+bool DirectLinearSolver<DoubleType>::SolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, std::vector<DoubleType> &sol, std::vector<DoubleType> &rhs)
 {
 
   std::string what;
@@ -72,7 +74,8 @@ bool DirectLinearSolver::SolveImpl(Matrix &mat, Preconditioner &pre, DoubleVec_t
   return ret;
 }
 
-bool DirectLinearSolver::ACSolveImpl(Matrix &mat, Preconditioner &pre, ComplexDoubleVec_t &sol, ComplexDoubleVec_t &rhs)
+template <typename DoubleType>
+bool DirectLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, std::vector<std::complex<DoubleType>> &sol, std::vector<std::complex<DoubleType>> &rhs)
 {
   bool ret = false;
   bool solved = false;
@@ -94,7 +97,8 @@ bool DirectLinearSolver::ACSolveImpl(Matrix &mat, Preconditioner &pre, ComplexDo
   return ret;
 }
 
-bool DirectLinearSolver::NoiseSolveImpl(Matrix &mat, Preconditioner &pre, ComplexDoubleVec_t &sol, ComplexDoubleVec_t &rhs)
+template <typename DoubleType>
+bool DirectLinearSolver<DoubleType>::NoiseSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, std::vector<std::complex<DoubleType>> &sol, std::vector<std::complex<DoubleType>> &rhs)
 {
   bool ret = false;
   bool solved = false;
@@ -116,4 +120,6 @@ bool DirectLinearSolver::NoiseSolveImpl(Matrix &mat, Preconditioner &pre, Comple
   return ret;
 }
 }
+
+template class dsMath::DirectLinearSolver<double>;
 

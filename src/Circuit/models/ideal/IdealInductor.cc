@@ -12,7 +12,7 @@ IdealInductor::IdealInductor( NodeKeeper *nk, const char *name,
        L               = 1.000000e+00;
 }
 
-void IdealInductor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, std::vector<std::pair<int, double> > &rhs)
+void IdealInductor::assembleDC_impl(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, std::vector<std::pair<int, double> > &rhs)
 {
    const size_t node_num_I = node_ptr_I->getNumber();
    const size_t node_num_vbot = node_ptr_vbot->getNumber();
@@ -67,7 +67,7 @@ void IdealInductor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowC
 }
 
 
-void IdealInductor::assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs)
+void IdealInductor::assembleTran_impl(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs)
 {
    const size_t node_num_I = node_ptr_I->getNumber();
 

@@ -83,7 +83,8 @@ class Contact {
       ContactEquationPtrMap_t &GetEquationPtrList();
       const ContactEquationPtrMap_t &GetEquationPtrList() const;
 
-      void Assemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+      template <typename DoubleType>
+      void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
       void AddEdges(const ConstEdgeList_t &);
       void AddTriangles(const ConstTriangleList_t &);

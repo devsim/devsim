@@ -24,7 +24,7 @@ limitations under the License.
 
 template <typename DoubleType>
 TriangleNodeVolume<DoubleType>::TriangleNodeVolume(RegionPtr rp)
-    : TriangleEdgeModel("ElementNodeVolume", rp, TriangleEdgeModel::SCALAR)
+    : TriangleEdgeModel("ElementNodeVolume", rp, TriangleEdgeModel::DisplayType::SCALAR)
 {
     RegisterCallback("EdgeLength");
     RegisterCallback("ElementEdgeCouple");
@@ -49,7 +49,7 @@ void TriangleNodeVolume<DoubleType>::calcTriangleEdgeScalarValues() const
   dsAssert(dimension == 2, "UNEXPECTED");
 
   //// 0.5 * edgecouple * (0.5 * edgelength)
-  evol *= 0.25;
+  evol.times_equal_scalar(0.25);
 
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
   std::vector<DoubleType> ev(3 * tl.size());

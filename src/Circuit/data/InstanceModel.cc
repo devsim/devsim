@@ -36,7 +36,7 @@ CircuitNodePtr InstanceModel::AddCircuitNode(const char *name)
 CircuitNodePtr InstanceModel::AddInternalNode(const char *name)
 {
     std::string tmp = name_ + "." + name;
-    return nodekeep_->AddNode(tmp, CNT::INTERNAL);
+    return nodekeep_->AddNode(tmp, CircuitNodeType::INTERNAL);
 }
 
 /**
@@ -46,6 +46,21 @@ CircuitNodePtr InstanceModel::AddInternalNode(const char *name)
 CircuitNodePtr InstanceModel::AddMNANode(const char *name)
 {
     std::string tmp = name_ + "." + name;
-    return nodekeep_->AddNode(tmp, CNT::MNA);
+    return nodekeep_->AddNode(tmp, CircuitNodeType::MNA);
+}
+
+void InstanceModel::assembleDC(const std::vector<double> &sol, dsMath::RealRowColValueVec<double> &mat, dsMath::RHSEntryVec<double> &rhs)
+{
+  this->assembleDC_impl(sol, mat, rhs);
+}
+
+void InstanceModel::assembleTran(const double scl, const std::vector<double> &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs)
+{
+  this->assembleTran_impl(scl, sol, mat, rhs);
+}
+
+void InstanceModel::assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &rhs)
+{
+  this->assembleACRHS_impl(rhs);
 }
 

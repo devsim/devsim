@@ -26,7 +26,7 @@ limitations under the License.
 
 template <typename DoubleType>
 NodeVolume<DoubleType>::NodeVolume(RegionPtr rp)
-    : NodeModel("NodeVolume", rp, NodeModel::SCALAR)
+    : NodeModel("NodeVolume", rp, NodeModel::DisplayType::SCALAR)
 {
     const size_t dimension = rp->GetDimension();
 
@@ -57,10 +57,10 @@ void NodeVolume<DoubleType>::calcNodeScalarValues() const
     dsAssert(elen.get(), "UNEXPECTED");
 
     EdgeScalarData<DoubleType> evol = EdgeScalarData<DoubleType>(*ec);
-    evol *= *elen;
+    evol.times_equal_model(*elen);
 
     //// valid only for dimension == 1
-    evol *= 0.5;
+    evol.times_equal_scalar(0.5);
 
     for (size_t i = 0; i < nv.size(); ++i)
     {
@@ -83,13 +83,13 @@ void NodeVolume<DoubleType>::calcNodeScalarValues() const
     ConstTriangleEdgeModelPtr eec = GetRegion().GetTriangleEdgeModel("ElementNodeVolume");
     dsAssert(eec.get(), "ElementNodeVolume missing");
 
-    eec->GetScalarValuesOnNodes(TriangleEdgeModel::SUM, nv);
+    eec->GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType::SUM, nv);
   }
   else if (dimension == 3)
   {
     ConstTetrahedronEdgeModelPtr eec = GetRegion().GetTetrahedronEdgeModel("ElementNodeVolume");
     dsAssert(eec.get(), "UNEXPECTED");
-    eec->GetScalarValuesOnNodes(TetrahedronEdgeModel::SUM, nv);
+    eec->GetScalarValuesOnNodes(TetrahedronEdgeModel::InterpolationType::SUM, nv);
   }
   else
   {

@@ -72,8 +72,10 @@ class InterfaceNodeModel {
         template <typename DoubleType>
         void SetValues(const NodeScalarList<DoubleType> &);
 
+#if 0
         template <typename DoubleType>
         void SetValues(const InterfaceNodeModel &);
+#endif
 
         const Interface &GetInterface() const
         {

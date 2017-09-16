@@ -243,7 +243,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
 
       if (!os.str().empty())
       {
-        GeometryStream::WriteOut(OutputStream::FATAL, GetInterface(), std::string("On interface ") + GetInterface().GetName() + "\n" + os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetInterface(), std::string("On interface ") + GetInterface().GetName() + "\n" + os.str());
       }
 
     }
@@ -263,7 +263,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
 
       if (!os.str().empty())
       {
-        GeometryStream::WriteOut(OutputStream::FATAL, GetInterface(), std::string("On interface ") + GetInterface().GetName() + "\n" + os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetInterface(), std::string("On interface ") + GetInterface().GetName() + "\n" + os.str());
       }
 
     }
@@ -300,15 +300,15 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
 
         /// We will need to check later that we don't DoubleType permute from another equation
         /// That is why we need to encode the contact or interface ptr into the permutation entry (error checking).
-        if (w == dsMathEnum::PERMUTATIONSONLY)
+        if (w == dsMathEnum::WhatToLoad::PERMUTATIONSONLY)
         {
             p[row1] = PermutationEntry(row0);
         }
-        else if ((w == dsMathEnum::RHS) || (w == dsMathEnum::MATRIXANDRHS))
+        else if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
         {
             v.push_back(std::make_pair(row1,  rhs[i]));
         }
-        else if (w == dsMathEnum::MATRIXONLY)
+        else if (w == dsMathEnum::WhatToLoad::MATRIXONLY)
         {
         }
         else
@@ -316,10 +316,10 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
         }
     }
 
-    if (w == dsMathEnum::PERMUTATIONSONLY)
+    if (w == dsMathEnum::WhatToLoad::PERMUTATIONSONLY)
     {
     }
-    else if ((w == dsMathEnum::MATRIXONLY) || (w == dsMathEnum::MATRIXANDRHS))
+    else if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
     {
         // variable list
         std::vector<vlistdata> vlistd;
@@ -335,7 +335,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
             ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(dermodel);
             if (!idm)
             {
-                dsErrors::MissingInterfaceEquationModel(r0, *this, dermodel, OutputStream::VERBOSE1);
+                dsErrors::MissingInterfaceEquationModel(r0, *this, dermodel, OutputStream::OutputType::VERBOSE1);
             }
             else
             {
@@ -353,7 +353,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
             ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(dermodel);
             if (!idm)
             {
-                dsErrors::MissingInterfaceEquationModel(r1, *this, dermodel, OutputStream::VERBOSE1);
+                dsErrors::MissingInterfaceEquationModel(r1, *this, dermodel, OutputStream::OutputType::VERBOSE1);
             }
             else
             {
@@ -390,7 +390,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
             }
         }
     }
-    else if (w == dsMathEnum::RHS)
+    else if (w == dsMathEnum::WhatToLoad::RHS)
     {
     }
     else
@@ -403,7 +403,7 @@ template <typename DoubleType>
 void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &interfacenodemodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, const std::string &surface_area)
 {
     //// special short cut
-    if (w == dsMathEnum::PERMUTATIONSONLY)
+    if (w == dsMathEnum::WhatToLoad::PERMUTATIONSONLY)
     {
         return;
     }
@@ -447,7 +447,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
     const NodeScalarList<DoubleType> rhs = inm->GetScalarValues<DoubleType>();
     dsAssert(rhs.size() == nodes1.size(), "UNEXPECTED");
 
-    if ((w == dsMathEnum::RHS) || (w == dsMathEnum::MATRIXANDRHS))
+    if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
     {
         const NodeScalarList<DoubleType> &sa0vals = sa0->GetScalarValues<DoubleType>();
         const NodeScalarList<DoubleType> &sa1vals = sa1->GetScalarValues<DoubleType>();
@@ -481,7 +481,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
         }
     }
 
-    if ((w == dsMathEnum::MATRIXONLY) || (w == dsMathEnum::MATRIXANDRHS))
+    if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
     {
         // variable list
         std::vector<vlistdata> vlistd;
@@ -497,7 +497,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
             ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(dermodel);
             if (!idm)
             {
-                dsErrors::MissingInterfaceEquationModel(r0, *this, dermodel, OutputStream::VERBOSE1);
+                dsErrors::MissingInterfaceEquationModel(r0, *this, dermodel, OutputStream::OutputType::VERBOSE1);
             }
             else
             {
@@ -515,7 +515,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
             ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(dermodel);
             if (!idm)
             {
-                dsErrors::MissingInterfaceEquationModel(r1, *this, dermodel, OutputStream::VERBOSE1);
+                dsErrors::MissingInterfaceEquationModel(r1, *this, dermodel, OutputStream::OutputType::VERBOSE1);
             }
             else
             {
@@ -569,7 +569,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
             }
         }
     }
-    else if (w == dsMathEnum::RHS)
+    else if (w == dsMathEnum::WhatToLoad::RHS)
     {
     }
     else
@@ -593,4 +593,9 @@ void InterfaceEquation<DoubleType>::GetCommandOptions(std::map<std::string, Obje
 }
 
 template class InterfaceEquation<double>;
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class InterfaceEquation<float128>;
+#endif
 

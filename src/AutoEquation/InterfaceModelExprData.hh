@@ -30,7 +30,7 @@ using InterfaceNodeScalarData = ScalarData<InterfaceNodeModel, T>;
 
 namespace IMEE {
 
-enum datatype {NODEDATA=0, DOUBLE, INVALID};
+enum class datatype {NODEDATA=0, DOUBLE, INVALID};
 extern const char *const datatypename[];
 
 template <typename DoubleType>
@@ -70,10 +70,10 @@ class InterfaceModelExprData {
     public:
 
         InterfaceModelExprData(const InterfaceModelExprData &);
-        InterfaceModelExprData(DoubleType x) : val(x), type(DOUBLE) {};
+        InterfaceModelExprData(DoubleType x) : val(x), type(datatype::DOUBLE) {};
         InterfaceModelExprData(const InterfaceNodeScalarData<DoubleType> &);
 
-        InterfaceModelExprData() : val(0.0), type(INVALID) {};
+        InterfaceModelExprData() : val(0.0), type(datatype::INVALID) {};
 
         InterfaceModelExprData &operator=(const InterfaceModelExprData &);
 

@@ -25,23 +25,26 @@ limitations under the License.
 #include <algorithm>
 
 namespace dsMath {
-CompressedMatrix::CompressedMatrix(size_t sz, MatrixType mt, CompressionType ct) : Matrix(sz), matType_(mt), compressionType_(ct), compressed(false)
+template <typename DoubleType>
+CompressedMatrix<DoubleType>::CompressedMatrix(size_t sz, MatrixType mt, CompressionType ct) : Matrix<DoubleType>(sz), matType_(mt), compressionType_(ct), compressed(false)
 {
-  Symbolic_.resize(size());
-  OutOfBandEntries_Real.resize(size());
-  if (GetMatrixType() == COMPLEX)
+  Symbolic_.resize(this->size());
+  OutOfBandEntries_Real.resize(this->size());
+  if (GetMatrixType() == MatrixType::COMPLEX)
   {
-    OutOfBandEntries_Imag.resize(size());
+    OutOfBandEntries_Imag.resize(this->size());
   }
 }
 
-CompressedMatrix::~CompressedMatrix()
+template <typename DoubleType>
+CompressedMatrix<DoubleType>::~CompressedMatrix()
 {
 }
 
-void CompressedMatrix::AddSymbolic(int r, int c)
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::AddSymbolic(int r, int c)
 {
-  if (compressionType_ == CRM)
+  if (compressionType_ == CompressionType::CRM)
   {
     int tmp = r;
     r = c;
@@ -57,16 +60,17 @@ void CompressedMatrix::AddSymbolic(int r, int c)
 }
 
 /// Create Matrix from symbolic info
-void CompressedMatrix::CreateMatrix()
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::CreateMatrix()
 {
   const size_t cols = Symbolic_.size();
 #ifndef NDEBUG
-  dsAssert(cols == size(), "UNEXPECTED");
+  dsAssert(cols == this->size(), "UNEXPECTED");
 #endif
 
-  Ap_.resize(size()+1);
+  Ap_.resize(this->size()+1);
   Ai_.clear();
-  Ai_.reserve(size());
+  Ai_.reserve(this->size());
 
   int r=0;
   for (size_t c=0; c < cols;  ++c)
@@ -96,14 +100,14 @@ void CompressedMatrix::CreateMatrix()
 //        (*iter).second = r; // gives us the position in Ai,Ax
     }
   }
-  Ap_[size()] = r;
+  Ap_[this->size()] = r;
   
   // Ye old swap trick
   IntVec_t(Ai_).swap(Ai_);
   // reserve room
   Ax_.clear();
   Ax_.resize(Ai_.size());
-  if (GetMatrixType() == COMPLEX) {
+  if (GetMatrixType() == MatrixType::COMPLEX) {
     Az_.clear();
     Az_.resize(Ai_.size());
   }
@@ -111,25 +115,28 @@ void CompressedMatrix::CreateMatrix()
   compressed = true;
 }
 
-void CompressedMatrix::SetCompressed(bool x)
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::SetCompressed(bool x)
 {
     compressed = true;
 }
 
-bool CompressedMatrix::GetCompressed()
+template <typename DoubleType>
+bool CompressedMatrix<DoubleType>::GetCompressed()
 {
     return compressed;
 }
 
-const dsMath::IntVec_t &CompressedMatrix::GetCols() const
+template <typename DoubleType>
+const dsMath::IntVec_t &CompressedMatrix<DoubleType>::GetCols() const
 {
   dsAssert(compressed, "UNEXPECTED");
 
-  if (compressionType_ == CCM)
+  if (compressionType_ == CompressionType::CCM)
   {
     return Ap_;
   }
-  else if (compressionType_ == CRM)
+  else if (compressionType_ == CompressionType::CRM)
   {
     return Ai_;
   }
@@ -141,15 +148,16 @@ const dsMath::IntVec_t &CompressedMatrix::GetCols() const
   return Ap_;
 }
 
-const dsMath::IntVec_t &CompressedMatrix::GetRows() const
+template <typename DoubleType>
+const dsMath::IntVec_t &CompressedMatrix<DoubleType>::GetRows() const
 {
   dsAssert(compressed, "UNEXPECTED");
 
-  if (compressionType_ == CCM)
+  if (compressionType_ == CompressionType::CCM)
   {
     return Ai_;
   }
-  else if (compressionType_ == CRM)
+  else if (compressionType_ == CompressionType::CRM)
   {
     return Ap_;
   }
@@ -160,50 +168,54 @@ const dsMath::IntVec_t &CompressedMatrix::GetRows() const
   return Ai_;
 }
 
-const dsMath::DoubleVec_t &CompressedMatrix::GetReal() const
+template <typename DoubleType>
+const dsMath::DoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetReal() const
 {
   dsAssert(compressed, "UNEXPECTED");
 
   return Ax_;
 }
 
-const dsMath::DoubleVec_t &CompressedMatrix::GetImag() const
+template <typename DoubleType>
+const dsMath::DoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetImag() const
 {
   dsAssert(compressed, "UNEXPECTED");
 
   return Az_;
 }
 
-const dsMath::ComplexDoubleVec_t CompressedMatrix::GetComplex() const
+template <typename DoubleType>
+const dsMath::ComplexDoubleVec_t<DoubleType> CompressedMatrix<DoubleType>::GetComplex() const
 {
   dsAssert(compressed, "UNEXPECTED");
   dsAssert(Ax_.size() == Az_.size(), "UNEXPECTED");
 
   size_t len = Ax_.size();
 
-  ComplexDoubleVec_t ret(len);
+  ComplexDoubleVec_t<DoubleType> ret(len);
 
   /// Not the most efficient
   for (size_t i = 0; i < len; ++i)
   {
-    ret[i] = ComplexDouble_t(Ax_[i], Az_[i]);
+    ret[i] = ComplexDouble_t<DoubleType>(Ax_[i], Az_[i]);
   }
 
   return ret;
 }
 
-void CompressedMatrix::AddEntry(int r, int c, double v)
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::AddEntry(int r, int c, DoubleType v)
 {
 #ifndef NDEBUG
-  dsAssert(static_cast<size_t>(r) < size(), "UNEXPECTED");
-  dsAssert(static_cast<size_t>(c) < size(), "UNEXPECTED");
+  dsAssert(static_cast<size_t>(r) < this->size(), "UNEXPECTED");
+  dsAssert(static_cast<size_t>(c) < this->size(), "UNEXPECTED");
 #endif
 
   if (v == 0.0)
   {
     return;
   }
-  else if (compressionType_ == CRM)
+  else if (compressionType_ == CompressionType::CRM)
   {
     int tmp = r;
     r = c;
@@ -236,19 +248,20 @@ void CompressedMatrix::AddEntry(int r, int c, double v)
 }
 
 /// Model this after AddEntry
-void CompressedMatrix::AddImagEntry(int r, int c, double v)
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::AddImagEntry(int r, int c, DoubleType v)
 {
 #ifndef NDEBUG
-  dsAssert(GetMatrixType() == COMPLEX, "UNEXPECTED");
-  dsAssert(static_cast<size_t>(r) < size(), "UNEXPECTED");
-  dsAssert(static_cast<size_t>(c) < size(), "UNEXPECTED");
+  dsAssert(GetMatrixType() == MatrixType::COMPLEX, "UNEXPECTED");
+  dsAssert(static_cast<size_t>(r) < this->size(), "UNEXPECTED");
+  dsAssert(static_cast<size_t>(c) < this->size(), "UNEXPECTED");
 #endif
 
   if (v == 0.0)
   {
     return;
   }
-  else if (compressionType_ == CRM)
+  else if (compressionType_ == CompressionType::CRM)
   {
     int tmp = r;
     r = c;
@@ -278,9 +291,10 @@ void CompressedMatrix::AddImagEntry(int r, int c, double v)
   }
 }
 
-void CompressedMatrix::AddEntry(int r, int c, ComplexDouble_t v)
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::AddEntry(int r, int c, ComplexDouble_t<DoubleType> v)
 {
-  if (compressionType_ == CRM)
+  if (compressionType_ == CompressionType::CRM)
   {
     int tmp = r;
     r = c;
@@ -301,7 +315,8 @@ void CompressedMatrix::AddEntry(int r, int c, ComplexDouble_t v)
   }
 }
 
-void CompressedMatrix::DecompressMatrix()
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::DecompressMatrix()
 {
   if (!compressed)
   {
@@ -309,12 +324,12 @@ void CompressedMatrix::DecompressMatrix()
   }
   std::ostringstream os; 
   os << "Matrix Decompress!!! Symbolic pattern changed\n";
-  OutputStream::WriteOut(OutputStream::VERBOSE1, os.str());
+  OutputStream::WriteOut(OutputStream::OutputType::VERBOSE1, os.str());
   compressed = false;
   size_t sz = Ap_.size() - 1;
 
 #ifndef NDEBUG
-  dsAssert(sz == size(), "UNEXPECTED");
+  dsAssert(sz == this->size(), "UNEXPECTED");
 #endif
 
   /// size is 1 past in compressed column
@@ -326,7 +341,7 @@ void CompressedMatrix::DecompressMatrix()
     {
       AddEntry(Ai_[j], i, Ax_[j]);
     }
-    if (GetMatrixType() == COMPLEX)
+    if (GetMatrixType() == MatrixType::COMPLEX)
     {
       for (size_t j = beg; j < end; ++ j)
       {
@@ -344,53 +359,55 @@ void CompressedMatrix::DecompressMatrix()
 }
 
 
-void CompressedMatrix::Finalize()
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::Finalize()
 {
   if (!compressed)
   {
-    symbolicstatus_ = NEW_SYMBOLIC;
+    symbolicstatus_ = SymbolicStatus_t::NEW_SYMBOLIC;
 
     CreateMatrix();
     for (size_t i = 0; i < OutOfBandEntries_Real.size(); ++i)
     {
-      ColValueEntry::iterator it = OutOfBandEntries_Real[i].begin();
-      const ColValueEntry::iterator itend = OutOfBandEntries_Real[i].end();
+      typename ColValueEntry::iterator it = OutOfBandEntries_Real[i].begin();
+      const typename ColValueEntry::iterator itend = OutOfBandEntries_Real[i].end();
       for ( ; it != itend; ++it)
       {
         AddEntry(i, it->first, it->second);
       }
     }
     OutOfBandEntries_Real.clear();
-    OutOfBandEntries_Real.resize(size());
+    OutOfBandEntries_Real.resize(this->size());
 
-    if (GetMatrixType() == COMPLEX)
+    if (GetMatrixType() == MatrixType::COMPLEX)
     {
       for (size_t i = 0; i < OutOfBandEntries_Imag.size(); ++i)
       {
-        ColValueEntry::iterator it = OutOfBandEntries_Imag[i].begin();
-        const ColValueEntry::iterator itend = OutOfBandEntries_Imag[i].end();
+        typename ColValueEntry::iterator it = OutOfBandEntries_Imag[i].begin();
+        const typename ColValueEntry::iterator itend = OutOfBandEntries_Imag[i].end();
         for ( ; it != itend; ++it)
         {
           AddImagEntry(i, it->first, it->second);
         }
       }
       OutOfBandEntries_Imag.clear();
-      OutOfBandEntries_Imag.resize(size());
+      OutOfBandEntries_Imag.resize(this->size());
     }
   }
   else
   {
-    symbolicstatus_ = SAME_SYMBOLIC;
+    symbolicstatus_ = SymbolicStatus_t::SAME_SYMBOLIC;
   }
 }
 
-void CompressedMatrix::ClearMatrix()
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::ClearMatrix()
 {
 //  compressed = false;
   size_t sz = Ax_.size();
   Ax_.clear();
   Ax_.resize(sz);
-  if (GetMatrixType() == COMPLEX)
+  if (GetMatrixType() == MatrixType::COMPLEX)
   {
     Az_.clear();
     Az_.resize(sz);
@@ -398,7 +415,7 @@ void CompressedMatrix::ClearMatrix()
 
   OutOfBandEntries_Real.clear();
   OutOfBandEntries_Real.resize(sz);
-  if (GetMatrixType() == COMPLEX)
+  if (GetMatrixType() == MatrixType::COMPLEX)
   {
     OutOfBandEntries_Imag.clear();
     OutOfBandEntries_Imag.resize(sz);
@@ -460,72 +477,83 @@ void RowScaleMultiply(const IntVec_t &rows, const IntVec_t &cols, const std::vec
 }
 }
 
-void CompressedMatrix::Multiply(const DoubleVec_t &x, DoubleVec_t &y) const
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::Multiply(const DoubleVec_t<DoubleType> &x, DoubleVec_t<DoubleType> &y) const
 {
   dsAssert(compressed, "UNEXPECTED");
 
   const IntVec_t    &Cols = this->GetCols();
   const IntVec_t    &Rows = this->GetRows();
-  const DoubleVec_t &Vals = this->GetReal();
-  if (compressionType_ == CCM)
+  const DoubleVec_t<DoubleType> &Vals = this->GetReal();
+  if (compressionType_ == CompressionType::CCM)
   {
     ColScaleMultiply(Cols, Rows, Vals, x, y);
   }
-  else if (compressionType_ == CRM)
+  else if (compressionType_ == CompressionType::CRM)
   {
     RowScaleMultiply(Rows, Cols, Vals, x, y);
   }
 }
 
-void CompressedMatrix::TransposeMultiply(const DoubleVec_t &x, DoubleVec_t &y) const
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::TransposeMultiply(const DoubleVec_t<DoubleType> &x, DoubleVec_t<DoubleType> &y) const
 {
   dsAssert(compressed, "UNEXPECTED");
 
   const IntVec_t    &Cols = this->GetCols();
   const IntVec_t    &Rows = this->GetRows();
-  const DoubleVec_t &Vals = this->GetReal();
-  if (compressionType_ == CCM)
+  const DoubleVec_t<DoubleType> &Vals = this->GetReal();
+  if (compressionType_ == CompressionType::CCM)
   {
     RowScaleMultiply(Rows, Cols, Vals, x, y);
   }
-  else if (compressionType_ == CRM)
+  else if (compressionType_ == CompressionType::CRM)
   {
     ColScaleMultiply(Cols, Rows, Vals, x, y);
   }
 }
 
-void CompressedMatrix::Multiply(const ComplexDoubleVec_t &x, ComplexDoubleVec_t &y) const
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::Multiply(const ComplexDoubleVec_t<DoubleType> &x, ComplexDoubleVec_t<DoubleType> &y) const
 {
   dsAssert(compressed, "UNEXPECTED");
 
   const IntVec_t    &Cols =  this->GetCols();
   const IntVec_t    &Rows =  this->GetRows();
-  const ComplexDoubleVec_t &Vals = this->GetComplex();
-  if (compressionType_ == CCM)
+  const ComplexDoubleVec_t<DoubleType> &Vals = this->GetComplex();
+  if (compressionType_ == CompressionType::CCM)
   {
     ColScaleMultiply(Cols, Rows, Vals, x, y);
   }
-  else if (compressionType_ == CRM)
+  else if (compressionType_ == CompressionType::CRM)
   {
     RowScaleMultiply(Rows, Cols, Vals, x, y);
   }
 }
 
-void CompressedMatrix::TransposeMultiply(const ComplexDoubleVec_t &x, ComplexDoubleVec_t &y) const
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::TransposeMultiply(const ComplexDoubleVec_t<DoubleType> &x, ComplexDoubleVec_t<DoubleType> &y) const
 {
   dsAssert(compressed, "UNEXPECTED");
 
   const IntVec_t    &Cols =  this->GetCols();
   const IntVec_t    &Rows =  this->GetRows();
-  const ComplexDoubleVec_t &Vals = this->GetComplex();
-  if (compressionType_ == CCM)
+  const ComplexDoubleVec_t<DoubleType> &Vals = this->GetComplex();
+  if (compressionType_ == CompressionType::CCM)
   {
     RowScaleMultiply(Rows, Cols, Vals, x, y);
   }
-  else if (compressionType_ == CRM)
+  else if (compressionType_ == CompressionType::CRM)
   {
     ColScaleMultiply(Cols, Rows, Vals, x, y);
   }
 }
 }
+
+template class dsMath::CompressedMatrix<double>;
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class dsMath::CompressedMatrix<float128>;
+#endif
 

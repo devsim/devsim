@@ -18,8 +18,10 @@ limitations under the License.
 #include "Triangle.hh"
 #include "Node.hh"
 #include "dsAssert.hh"
-//#include "DenseMatrix.hh"
+
 #include <cmath>
+using std::abs;
+
 const double Triangle::EPSILON=1.0e-20;
 Triangle::Triangle(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2) : nodes(3)
 {
@@ -30,103 +32,107 @@ Triangle::Triangle(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2
 
 }
 
-Vector<double> GetCenter(const Triangle &tr)
+template <typename DoubleType>
+Vector<DoubleType> GetCenter(const Triangle &tr)
 {
   const std::vector<ConstNodePtr> &nodes = tr.GetNodeList();
 
-  const Vector<double> &v0 = nodes[0]->Position();
-  const Vector<double> &v1 = nodes[1]->Position();
-  const Vector<double> &v2 = nodes[2]->Position();
+  const Vector<DoubleType> &v0 = ConvertPosition<DoubleType>(nodes[0]->Position());
+  const Vector<DoubleType> &v1 = ConvertPosition<DoubleType>(nodes[1]->Position());
+  const Vector<DoubleType> &v2 = ConvertPosition<DoubleType>(nodes[2]->Position());
 
   return GetTriangleCenter(v0, v1, v2);
 }
 
 //// Special case where we are not in a plane
-Vector<double> GetTriangleCenter3d(const Vector<double> &p1, const Vector<double> &p2, const Vector<double> &p3)
+template <typename DoubleType>
+Vector<DoubleType> GetTriangleCenter3d(const Vector<DoubleType> &p1, const Vector<DoubleType> &p2, const Vector<DoubleType> &p3)
 {
 
 // TODO:"This formula is from wikipedia and has not been verified"
 
-  Vector<double> p12 = p1 - p2;
-  Vector<double> p13 = p1 - p3;
-  Vector<double> p23 = p2 - p3;
+  Vector<DoubleType> p12 = p1 - p2;
+  Vector<DoubleType> p13 = p1 - p3;
+  Vector<DoubleType> p23 = p2 - p3;
 
   //// Watch out for colinearity here
-  const Vector<double> tden1 = cross_prod(p12, p23);
-  const double den = 2 * dot_prod(tden1, tden1);
+  const Vector<DoubleType> tden1 = cross_prod(p12, p23);
+  const DoubleType den = 2 * dot_prod(tden1, tden1);
 
-  const double deninv = 1.0 / den;
+  const DoubleType deninv = 1.0 / den;
 
-  const double alpha = dot_prod(p23, p23) * dot_prod(p12, p13) * deninv;
+  const DoubleType alpha = dot_prod(p23, p23) * dot_prod(p12, p13) * deninv;
 
-  const double beta  = dot_prod(p13, p13) * dot_prod(-p12, p23) * deninv;
+  const DoubleType beta  = dot_prod(p13, p13) * dot_prod(-p12, p23) * deninv;
 
   /// dot_prod(p31, p32) = dot_prod(p13, p23)
-  const double gamma = dot_prod(p12, p12) * dot_prod(p13, p23) * deninv;
+  const DoubleType gamma = dot_prod(p12, p12) * dot_prod(p13, p23) * deninv;
 
-  Vector<double> pc = alpha * p1 + beta * p2 + gamma * p3;
+  Vector<DoubleType> pc = alpha * p1 + beta * p2 + gamma * p3;
 
   return pc; 
 }
 
-Vector<double> GetTriangleCenterInPlane(double x0, double x1, double x2, double y0, double y1, double y2)
+template <typename DoubleType>
+Vector<DoubleType> GetTriangleCenterInPlane(DoubleType x0, DoubleType x1, DoubleType x2, DoubleType y0, DoubleType y1, DoubleType y2)
 {
-  double xcenter = 0.0;
-  double ycenter = 0.0;
+  DoubleType xcenter = 0.0;
+  DoubleType ycenter = 0.0;
 
-  if (fabs(y1-y0) < Triangle::EPSILON)
+  if (abs(y1-y0) < Triangle::EPSILON)
   {
-    const double m1 = - (x2-x1) / (y2-y1);
-    const double mx1 = (x1 + x2) / 2.0;
-    const double my1 = (y1 + y2) / 2.0;
+    const DoubleType m1 = - (x2-x1) / (y2-y1);
+    const DoubleType mx1 = (x1 + x2) / 2.0;
+    const DoubleType my1 = (y1 + y2) / 2.0;
     xcenter = (x1 + x0) / 2.0;
     ycenter = m1 * (xcenter - mx1) + my1;
   }
-  else if (fabs(y2-y1) < Triangle::EPSILON)
+  else if (abs(y2-y1) < Triangle::EPSILON)
   {
-    const double m0 = - (x1-x0) / (y1-y0);
-    const double mx0 = (x0 + x1) / 2.0;
-    const double my0 = (y0 + y1) / 2.0;
+    const DoubleType m0 = - (x1-x0) / (y1-y0);
+    const DoubleType mx0 = (x0 + x1) / 2.0;
+    const DoubleType my0 = (y0 + y1) / 2.0;
     xcenter = (x2 + x1) / 2.0;
     ycenter = m0 * (xcenter - mx0) + my0;
   }
   else
   {
-    const double  m0 = - (x1-x0) / (y1-y0);
-    const double  m1 = - (x2-x1) / (y2-y1);
-    const double  mx0 = (x0 + x1) / 2.0;
-    const double  mx1 = (x1 + x2) / 2.0;
-    const double  my0 = (y0 + y1) / 2.0;
-    const double  my1 = (y1 + y2) / 2.0;
+    const DoubleType  m0 = - (x1-x0) / (y1-y0);
+    const DoubleType  m1 = - (x2-x1) / (y2-y1);
+    const DoubleType  mx0 = (x0 + x1) / 2.0;
+    const DoubleType  mx1 = (x1 + x2) / 2.0;
+    const DoubleType  my0 = (y0 + y1) / 2.0;
+    const DoubleType  my1 = (y1 + y2) / 2.0;
     xcenter = (m0 * mx0 - m1 * mx1 + my1 - my0) / (m0 - m1);
     ycenter = m0 * (xcenter - mx0) + my0;
   }
 
-  return Vector<double>(xcenter, ycenter);
+  return Vector<DoubleType>(xcenter, ycenter);
 }
 
 //// Handles case where all points in a plane
-Vector<double> GetTriangleCenter(const Vector<double> &v0, const Vector<double> &v1, const Vector<double> &v2)
+template <typename DoubleType>
+Vector<DoubleType> GetTriangleCenter(const Vector<DoubleType> &v0, const Vector<DoubleType> &v1, const Vector<DoubleType> &v2)
 {
-  const Vector<double> &v10 = v1 - v0;
-  const Vector<double> &v20 = v2 - v0;
+  const Vector<DoubleType> &v10 = v1 - v0;
+  const Vector<DoubleType> &v20 = v2 - v0;
 
-  Vector<double> ret;
+  Vector<DoubleType> ret;
 
-  if ((fabs(v10.Getz()) < Triangle::EPSILON) && (fabs(v20.Getz()) < Triangle::EPSILON))
+  if ((abs(v10.Getz()) < Triangle::EPSILON) && (abs(v20.Getz()) < Triangle::EPSILON))
   {
-    Vector<double> temp = GetTriangleCenterInPlane(v0.Getx(), v1.Getx(), v2.Getx(), v0.Gety(), v1.Gety(), v2.Gety());
-    ret = Vector<double>(temp.Getx(), temp.Gety(), v0.Getz());
+    Vector<DoubleType> temp = GetTriangleCenterInPlane(v0.Getx(), v1.Getx(), v2.Getx(), v0.Gety(), v1.Gety(), v2.Gety());
+    ret = Vector<DoubleType>(temp.Getx(), temp.Gety(), v0.Getz());
   }
-  else if ((fabs(v10.Gety()) < Triangle::EPSILON) && (fabs(v20.Gety()) < Triangle::EPSILON))
+  else if ((abs(v10.Gety()) < Triangle::EPSILON) && (abs(v20.Gety()) < Triangle::EPSILON))
   {
-    Vector<double> temp = GetTriangleCenterInPlane(v0.Getx(), v1.Getx(), v2.Getx(), v0.Getz(), v1.Getz(), v2.Getz());
-    ret = Vector<double>(temp.Getx(), v0.Gety(), temp.Gety());
+    Vector<DoubleType> temp = GetTriangleCenterInPlane(v0.Getx(), v1.Getx(), v2.Getx(), v0.Getz(), v1.Getz(), v2.Getz());
+    ret = Vector<DoubleType>(temp.Getx(), v0.Gety(), temp.Gety());
   }
-  else if ((fabs(v10.Getx()) < Triangle::EPSILON) && (fabs(v20.Getx()) < Triangle::EPSILON))
+  else if ((abs(v10.Getx()) < Triangle::EPSILON) && (abs(v20.Getx()) < Triangle::EPSILON))
   {
-    Vector<double> temp = GetTriangleCenterInPlane(v0.Getz(), v1.Getz(), v2.Getz(), v0.Gety(), v1.Gety(), v2.Gety());
-    ret = Vector<double>(v0.Getx(), temp.Gety(), temp.Getx());
+    Vector<DoubleType> temp = GetTriangleCenterInPlane(v0.Getz(), v1.Getz(), v2.Getz(), v0.Gety(), v1.Gety(), v2.Gety());
+    ret = Vector<DoubleType>(v0.Getx(), temp.Gety(), temp.Getx());
   }
   else
   {
@@ -135,4 +141,9 @@ Vector<double> GetTriangleCenter(const Vector<double> &v0, const Vector<double> 
   return ret;
 }
 
+template Vector<double> GetCenter(const Triangle &);
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template Vector<float128> GetCenter(const Triangle &);
+#endif
 

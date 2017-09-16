@@ -26,11 +26,11 @@ limitations under the License.
 
 template <typename DoubleType>
 TetrahedronEdgeFromEdgeModel<DoubleType>::TetrahedronEdgeFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
-    : TetrahedronEdgeModel(edgemodel + "_x", rp, TetrahedronEdgeModel::SCALAR), edgeModelName(edgemodel), y_ModelName(edgeModelName+ "_y"), z_ModelName(edgeModelName + "_z")
+    : TetrahedronEdgeModel(edgemodel + "_x", rp, TetrahedronEdgeModel::DisplayType::SCALAR), edgeModelName(edgemodel), y_ModelName(edgeModelName+ "_y"), z_ModelName(edgeModelName + "_z")
 {
   RegisterCallback(edgemodel);
-  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
-  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
 }
 
 //// Need to figure out the deleter situation from sub models
@@ -56,7 +56,7 @@ void TetrahedronEdgeFromEdgeModel<DoubleType>::calcTetrahedronEdgeScalarValues()
   std::vector<DoubleType> evy(6*tl.size());
   std::vector<DoubleType> evz(6*tl.size());
 
-  const TetrahedronElementField &efield = reg.GetTetrahedronElementField();
+  const TetrahedronElementField<DoubleType> &efield = reg.GetTetrahedronElementField<DoubleType>();
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Tetrahedron &tetrahedron = *tl[i];

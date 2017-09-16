@@ -11,7 +11,7 @@ IdealCapacitor::IdealCapacitor( NodeKeeper *nk, const char *name,
        C               = 1.000000e+00;
 }
 
-void IdealCapacitor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, std::vector<std::pair<int, double> > &rhs)
+void IdealCapacitor::assembleDC_impl(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, std::vector<std::pair<int, double> > &rhs)
 {
 
 
@@ -24,7 +24,7 @@ void IdealCapacitor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRow
 }
 
 
-void IdealCapacitor::assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs)
+void IdealCapacitor::assembleTran_impl(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs)
 {
    const size_t node_num_vbot = node_ptr_vbot->getNumber();
    const size_t node_num_vtop = node_ptr_vtop->getNumber();

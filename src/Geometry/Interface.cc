@@ -66,7 +66,7 @@ void Interface::AddInterfaceEquation(InterfaceEquationHolder &iep)
       std::ostringstream os; 
       os << "Warning: Replacing interface equation with equation of the same name.\n"
           "Interface: " << this->GetName() << ", Equation: " << name << "\n";
-      GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+      GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
       interfaceEquationList[name] = iep;
     }
 }
@@ -107,7 +107,7 @@ void Interface::AddInterfaceNodeModel(InterfaceNodeModel *nmp)
         std::ostringstream os; 
         os << "Replacing Interface Node Model " << nm << " in interface " << name
                   << " of material " << "\n";
-        GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
     }
 
     interfaceNodeModels[nm] = InterfaceNodeModelPtr(nmp);
@@ -134,7 +134,8 @@ void Interface::DeleteInterfaceNodeModel(const std::string &nm)
   }
 }
 
-void Interface::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Interface::Assemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
     for (auto it :  GetInterfaceEquationList())
     {
@@ -431,17 +432,31 @@ std::string Interface::GetSurfaceAreaModel() const
   return model0;
 }
 
-template <typename DoubleType>
-InterfaceModelExprDataCachePtr<DoubleType> Interface::GetInterfaceModelExprDataCache()
+template <>
+InterfaceModelExprDataCachePtr<double> Interface::GetInterfaceModelExprDataCache()
 {
-  return interfaceModelExprDataCache.lock();
+  return interfaceModelExprDataCache_double.lock();
 }
 
-template <typename DoubleType>
-void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<DoubleType> p)
+template <>
+void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<double> p)
 {
-  interfaceModelExprDataCache = p;
+  interfaceModelExprDataCache_double = p;
 }
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+template <>
+InterfaceModelExprDataCachePtr<float128> Interface::GetInterfaceModelExprDataCache()
+{
+  return interfaceModelExprDataCache_float128.lock();
+}
+
+template <>
+void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<float128> p)
+{
+  interfaceModelExprDataCache_float128 = p;
+}
+#endif
 
 void Interface::AddEdges(const ConstEdgeList &elist0, const ConstEdgeList &elist1)
 {
@@ -461,6 +476,15 @@ void Interface::AddTriangles(const ConstTriangleList &tlist0, const ConstTriangl
 
 
 template InterfaceModelExprDataCachePtr<double> Interface::GetInterfaceModelExprDataCache();
-
 template void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<double> p);
+template void Interface::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t);
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template InterfaceModelExprDataCachePtr<float128> Interface::GetInterfaceModelExprDataCache();
+template void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<float128> p);
+template void Interface::Assemble(dsMath::RealRowColValueVec<float128> &m, dsMath::RHSEntryVec<float128> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t);
+#endif
+
+
 

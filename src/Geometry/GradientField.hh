@@ -34,9 +34,11 @@ class NodeModel;
 
 namespace dsMath {
 template <typename T> class DenseMatrix;
-typedef DenseMatrix<double> RealDenseMatrix;
+template <typename T>
+using RealDenseMatrix = DenseMatrix<T>;
 }
 
+template <typename DoubleType>
 class GradientField {
 
   public:
@@ -44,9 +46,9 @@ class GradientField {
 
     ~GradientField();
 
-    Vector<double>   GetGradient(const Triangle &, const NodeModel &) const;
+    Vector<DoubleType>   GetGradient(const Triangle &, const NodeModel &) const;
 
-    Vector<double>   GetGradient(const Tetrahedron &, const NodeModel &) const;
+    Vector<DoubleType>   GetGradient(const Tetrahedron &, const NodeModel &) const;
 
   private:
     const Region &GetRegion() const
@@ -62,7 +64,8 @@ class GradientField {
     void CalcMatrices3d() const;
     const Region *myregion_;
 
-    typedef std::vector<dsMath::RealDenseMatrix *> dense_matrix_vec_t;
+    typedef std::vector<dsMath::RealDenseMatrix<DoubleType> *> dense_matrix_vec_t;
     mutable dense_matrix_vec_t dense_mats_;
 };
 #endif
+

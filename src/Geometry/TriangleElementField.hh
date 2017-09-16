@@ -32,16 +32,19 @@ class TriangleEdgeModel;
 
 namespace dsMath {
 template <typename T> class DenseMatrix;
-typedef DenseMatrix<double> RealDenseMatrix;
+template <typename T>
+using RealDenseMatrix = DenseMatrix<T>;
 }
 
+template <typename DoubleType>
 struct TriangleElementFieldMatrixHolder {
   TriangleElementFieldMatrixHolder();
   ~TriangleElementFieldMatrixHolder();
 
-  dsMath::RealDenseMatrix *mats[3];
+  dsMath::RealDenseMatrix<DoubleType> *mats[3];
 };
 
+template <typename DoubleType>
 class TriangleElementField {
 
   public:
@@ -49,10 +52,10 @@ class TriangleElementField {
 
     ~TriangleElementField();
 
-    std::vector<Vector<double> > GetTriangleElementField(const Triangle &, const TriangleEdgeModel &) const;
-    std::vector<Vector<double> > GetTriangleElementField(const Triangle &, const EdgeModel &) const;
-    std::vector<Vector<double> > GetTriangleElementField(const Triangle &, const std::vector<double> &) const;
-    std::vector<std::vector<Vector<double> > > GetTriangleElementField(const Triangle &, const EdgeModel &, const EdgeModel &) const;
+    std::vector<Vector<DoubleType> > GetTriangleElementField(const Triangle &, const TriangleEdgeModel &) const;
+    std::vector<Vector<DoubleType> > GetTriangleElementField(const Triangle &, const EdgeModel &) const;
+    std::vector<Vector<DoubleType> > GetTriangleElementField(const Triangle &, const std::vector<DoubleType> &) const;
+    std::vector<std::vector<Vector<DoubleType> > > GetTriangleElementField(const Triangle &, const EdgeModel &, const EdgeModel &) const;
 
   private:
     TriangleElementField();
@@ -62,7 +65,7 @@ class TriangleElementField {
     void CalcMatrices() const;
     const Region *myregion_;
 
-    typedef std::vector<TriangleElementFieldMatrixHolder> dense_matrix_vec_t;
+    typedef std::vector<TriangleElementFieldMatrixHolder<DoubleType>> dense_matrix_vec_t;
     ///// Need to handle 01, 02, 12 combinations
     ///// Indexing should be (i + j - 1) assuming symmetry
     mutable dense_matrix_vec_t dense_mats_;

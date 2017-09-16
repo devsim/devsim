@@ -28,7 +28,7 @@ NodePosition<DoubleType>::~NodePosition()
 
 template <typename DoubleType>
 NodePosition<DoubleType>::NodePosition(RegionPtr rp)
-    : NodeModel("x", rp, NodeModel::SCALAR)
+    : NodeModel("x", rp, NodeModel::DisplayType::SCALAR)
 {
   yposition = NodeSolution<DoubleType>::CreateNodeSolution("y", rp, this->GetSelfPtr());
   zposition = NodeSolution<DoubleType>::CreateNodeSolution("z", rp, this->GetSelfPtr());

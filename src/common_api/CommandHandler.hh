@@ -44,9 +44,9 @@ namespace dsGetArgs
 /// switchList   : a list of list of switches
 //typedef const char * switchDefault;
 
-namespace Types {
-enum optionType {BOOLEAN = 0, STRING, INTEGER, FLOAT, LIST};
-enum requiredType {OPTIONAL, REQUIRED};
+enum class optionType {BOOLEAN = 0, STRING, INTEGER, FLOAT, LIST};
+enum class requiredType {OPTIONAL, REQUIRED};
+namespace optionTypeString {
 extern const char * optionTypeStrings[];
 }
 
@@ -57,8 +57,8 @@ struct Option {
     const char *name;
     //// always use "" instead of NULL
     const char   *defaultValue;
-    Types::optionType    type;
-    Types::requiredType  rtype;
+    optionType    type;
+    requiredType  rtype;
     checkFunction func;
 };
 

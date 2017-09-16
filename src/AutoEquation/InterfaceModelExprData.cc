@@ -42,7 +42,7 @@ ScalarValuesType<DoubleType> InterfaceModelExprData<DoubleType>::GetScalarValues
 {
   ScalarValuesType<DoubleType> ret;
 
-  if (type == NODEDATA)
+  if (type == datatype::NODEDATA)
   {
     if (nsd->IsUniform())
     {
@@ -67,7 +67,7 @@ InterfaceModelExprData<DoubleType>::InterfaceModelExprData(const InterfaceModelE
 }
 
 template <typename DoubleType>
-InterfaceModelExprData<DoubleType>::InterfaceModelExprData(const InterfaceNodeScalarData<DoubleType> &x) : val(0.0), type(NODEDATA) {
+InterfaceModelExprData<DoubleType>::InterfaceModelExprData(const InterfaceNodeScalarData<DoubleType> &x) : val(0.0), type(datatype::NODEDATA) {
     InterfaceNodeScalarData<DoubleType> *foo = new InterfaceNodeScalarData<DoubleType>(x);
     nsd = std::shared_ptr<InterfaceNodeScalarData<DoubleType>>(foo);
 };
@@ -101,37 +101,37 @@ InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::op_equal
   makeUnique();
 
   /// We were converted automatically above
-  if (type == NODEDATA)
+  if (type == datatype::NODEDATA)
   {
-    if (other.type == NODEDATA)
+    if (other.type == datatype::NODEDATA)
     {
-      nsd->op_equal(*other.nsd, func);
+      nsd->op_equal_data(*other.nsd, func);
     }
-    else if (other.type == DOUBLE)
+    else if (other.type == datatype::DOUBLE)
     {
-      nsd->op_equal(other.val, func);
+      nsd->op_equal_scalar(other.val, func);
     }
     else
     {
-      type = INVALID;
+      type = datatype::INVALID;
     }
   }
-  else if (type == DOUBLE)
+  else if (type == datatype::DOUBLE)
   {
-    if (other.type == NODEDATA)
+    if (other.type == datatype::NODEDATA)
     {
       InterfaceNodeScalarData<DoubleType> *x = new InterfaceNodeScalarData<DoubleType>(val, other.nsd->GetLength()); 
       nsd = nsd_ptr(x);
-      nsd->op_equal(*other.nsd, func);
-      type = NODEDATA;
+      nsd->op_equal_data(*other.nsd, func);
+      type = datatype::NODEDATA;
     }
-    else if (other.type == DOUBLE)
+    else if (other.type == datatype::DOUBLE)
     {
       func(val, other.val);
     }
     else
     {
-      type = INVALID;
+      type = datatype::INVALID;
     }
   }
 
@@ -145,7 +145,7 @@ InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::op_equal
 template <typename DoubleType>
 InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::operator*=(const InterfaceModelExprData<DoubleType> &other)
 {
-  this->op_equal(other, ScalarDataHelper::times_equal<double>());
+  this->op_equal(other, ScalarDataHelper::times_equal<DoubleType>());
   return *this;
 }
 
@@ -154,12 +154,15 @@ InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::operator
 template <typename DoubleType>
 InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::operator+=(const InterfaceModelExprData<DoubleType> &other)
 {
-  this->op_equal(other, ScalarDataHelper::plus_equal<double>());
+  this->op_equal(other, ScalarDataHelper::plus_equal<DoubleType>());
   return *this;
 }
 
 //// Manual Template Instantiation
 template class InterfaceModelExprData<double>;
-
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class InterfaceModelExprData<float128>;
+#endif
 }
 

@@ -202,7 +202,7 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
 
   const int element_number = ilist[1];
 
-  dsMesh::Shapes::ElementType_t element_enum = dsMesh::Shapes::UNKNOWN;
+  dsMesh::Shapes::ElementType_t element_enum = dsMesh::Shapes::ElementType_t::UNKNOWN;
 
 /*
   const char *TypeNames[] =
@@ -218,22 +218,22 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
   switch (element_number)
   {
     case 15:
-      element_enum = dsMesh::Shapes::POINT;
+      element_enum = dsMesh::Shapes::ElementType_t::POINT;
       break;
     case 1:
-      element_enum = dsMesh::Shapes::LINE;
+      element_enum = dsMesh::Shapes::ElementType_t::LINE;
       break;
     case 2:
-      element_enum = dsMesh::Shapes::TRIANGLE;
+      element_enum = dsMesh::Shapes::ElementType_t::TRIANGLE;
       break;
     case 4:
-      element_enum = dsMesh::Shapes::TETRAHEDRON;
+      element_enum = dsMesh::Shapes::ElementType_t::TETRAHEDRON;
       break;
     default:
       break;
   };
 
-  if (element_enum == dsMesh::Shapes::UNKNOWN)
+  if (element_enum == dsMesh::Shapes::ElementType_t::UNKNOWN)
   {
     std::ostringstream os;
     os << "ERROR: Unable to process element of type " << element_number << "\n";
@@ -311,10 +311,10 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
 
   const size_t indexes_size = indexes.size();
   if (
-      ((element_enum == dsMesh::Shapes::POINT) && (indexes_size == 1)) ||
-      ((element_enum == dsMesh::Shapes::LINE) && (indexes_size == 2)) ||
-      ((element_enum == dsMesh::Shapes::TRIANGLE) && (indexes_size == 3)) ||
-      ((element_enum == dsMesh::Shapes::TETRAHEDRON) && (indexes_size == 4))
+      ((element_enum == dsMesh::Shapes::ElementType_t::POINT) && (indexes_size == 1)) ||
+      ((element_enum == dsMesh::Shapes::ElementType_t::LINE) && (indexes_size == 2)) ||
+      ((element_enum == dsMesh::Shapes::ElementType_t::TRIANGLE) && (indexes_size == 3)) ||
+      ((element_enum == dsMesh::Shapes::ElementType_t::TETRAHEDRON) && (indexes_size == 4))
      )
   {
     gmsh.AddElement(dsMesh::GmshElement(element_index, physical_number, element_enum, indexes));

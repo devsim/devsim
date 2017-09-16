@@ -49,7 +49,7 @@ typedef Region *RegionPtr;
 
 class NodeModel {
     public:
-        enum DisplayType {NODISPLAY, SCALAR, UNKNOWN};
+        enum class DisplayType {NODISPLAY, SCALAR, UNKNOWN};
         NodeModel(const std::string &, const RegionPtr, NodeModel::DisplayType, const ContactPtr x = NULL);
         virtual ~NodeModel()=0;
 
@@ -87,7 +87,9 @@ class NodeModel {
         template <typename DoubleType>
         void SetValues(const NodeScalarList<DoubleType> &);
 
+#if 0
         void SetValues(const NodeModel &);
+#endif
 
         template <typename DoubleType>
         void SetValues(const DoubleType &);
@@ -118,7 +120,7 @@ class NodeModel {
 
         const char *GetDisplayTypeString() const
         {
-          return DisplayTypeString[displayType];
+          return DisplayTypeString[static_cast<size_t>(displayType)];
         }
 
         void SetDisplayType(NodeModel::DisplayType dt)

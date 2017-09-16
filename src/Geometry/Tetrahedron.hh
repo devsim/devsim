@@ -69,7 +69,11 @@ struct TetrahedronCompIndex : public std::binary_function<ConstTetrahedronPtr, C
    bool operator()(ConstTetrahedronPtr x, ConstTetrahedronPtr y) { return x->GetIndex() < y->GetIndex(); }
 };
 
-Vector<double> GetCenter(const Tetrahedron &);
-Vector<double> GetCenter(const std::vector<ConstNodePtr> &nodes);
+template <typename DoubleType>
+Vector<DoubleType> GetCenter(const Tetrahedron &);
+
+template <typename DoubleType>
+Vector<DoubleType> GetCenter(const std::vector<ConstNodePtr> &nodes);
 
 #endif
+

@@ -32,9 +32,11 @@ class TetrahedronEdgeModel;
 
 namespace dsMath {
 template <typename T> class DenseMatrix;
-typedef DenseMatrix<double> RealDenseMatrix;
+template <typename T>
+using RealDenseMatrix = DenseMatrix<T>;
 }
 
+template <typename DoubleType>
 struct TetrahedronElementFieldMatrixHolder {
   TetrahedronElementFieldMatrixHolder();
   ~TetrahedronElementFieldMatrixHolder();
@@ -43,9 +45,10 @@ struct TetrahedronElementFieldMatrixHolder {
   //// The edge index is the order in the edge data list
   size_t edgeIndexes[4][3];
   //// One dense matrix for each Tetrahedron node
-  dsMath::RealDenseMatrix *mats[4];
+  dsMath::RealDenseMatrix<DoubleType> *mats[4];
 };
 
+template <typename DoubleType>
 class TetrahedronElementField {
 
   public:
@@ -54,11 +57,11 @@ class TetrahedronElementField {
     ~TetrahedronElementField();
 
     //// Gets the weighted average for a given edge index (0, 1, 2)
-    std::vector<Vector<double> > GetTetrahedronElementField(const Tetrahedron &, const TetrahedronEdgeModel &) const;
-    std::vector<Vector<double> > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &) const;
-    std::vector<Vector<double> > GetTetrahedronElementField(const Tetrahedron &, const std::vector<double> &) const;
+    std::vector<Vector<DoubleType> > GetTetrahedronElementField(const Tetrahedron &, const TetrahedronEdgeModel &) const;
+    std::vector<Vector<DoubleType> > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &) const;
+    std::vector<Vector<DoubleType> > GetTetrahedronElementField(const Tetrahedron &, const std::vector<DoubleType> &) const;
     //// Gets the weighted average for a given edge index (0, 1, 2) w.r.t. given node index (0, 1, 2)
-    std::vector<std::vector<Vector<double> > > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &, const EdgeModel &) const;
+    std::vector<std::vector<Vector<DoubleType> > > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &, const EdgeModel &) const;
 
   private:
     TetrahedronElementField();
@@ -68,8 +71,8 @@ class TetrahedronElementField {
     void CalcMatrices() const;
     const Region *myregion_;
 
-    typedef std::vector<TetrahedronElementFieldMatrixHolder> dense_matrix_vec_t;
+    typedef std::vector<TetrahedronElementFieldMatrixHolder<DoubleType>> dense_matrix_vec_t;
     mutable dense_matrix_vec_t dense_mats_;
-
 };
 #endif
+

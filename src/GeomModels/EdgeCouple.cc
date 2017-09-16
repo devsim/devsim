@@ -24,7 +24,7 @@ limitations under the License.
 
 template <typename DoubleType>
 EdgeCouple<DoubleType>::EdgeCouple(RegionPtr rp) :
-EdgeModel("EdgeCouple", rp, EdgeModel::SCALAR)
+EdgeModel("EdgeCouple", rp, EdgeModel::DisplayType::SCALAR)
 {
   const size_t dimension = rp->GetDimension();
   if ((dimension == 2) || (dimension == 3))

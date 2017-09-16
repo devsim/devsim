@@ -80,7 +80,7 @@ void TetrahedronEdgeSubModel<DoubleType>::calcTetrahedronEdgeScalarValues() cons
       else if (emp != parentModel.lock())
       {
         parentModel.reset();
-        dsErrors::ChangedModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::ELEMENTEDGE, GetName(), dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::INFO);
+        dsErrors::ChangedModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::ELEMENTEDGE, GetName(), dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::INFO);
         parentModelName.clear();
       }
       else

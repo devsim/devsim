@@ -100,19 +100,19 @@ void TetrahedronEdgeExprModel<DoubleType>::calcTetrahedronEdgeScalarValues() con
         {
             os << *it << "\n";
         }
-        GeometryStream::WriteOut(OutputStream::ERROR, *rp, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *rp, os.str());
     }
 
     /// implicit conversion to tetrahedronedgemodel from edgemodel
     if (
-        (out.GetType() == MEE::EDGEDATA)
+        (out.GetType() == MEE::datatype::EDGEDATA)
        )
     {
       out.convertToTetrahedronEdgeData();
     }
 
     if (
-        (out.GetType() == MEE::TETRAHEDRONEDGEDATA)
+        (out.GetType() == MEE::datatype::TETRAHEDRONEDGEDATA)
        )
     {
       const MEE::ScalarValuesType<DoubleType> &tval = out.GetScalarValues();
@@ -126,7 +126,7 @@ void TetrahedronEdgeExprModel<DoubleType>::calcTetrahedronEdgeScalarValues() con
         SetValues(nsl);
       }
     }
-    else if (out.GetType() == MEE::DOUBLE)
+    else if (out.GetType() == MEE::datatype::DOUBLE)
     {
         const DoubleType v = out.GetDoubleValue();
         SetValues(v);
@@ -135,9 +135,9 @@ void TetrahedronEdgeExprModel<DoubleType>::calcTetrahedronEdgeScalarValues() con
     {
         std::ostringstream os; 
         os << "while evaluating model " << GetName() << ": expression "
-            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[out.GetType()]
+            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *rp, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *rp, os.str());
     }
         
 }
@@ -152,4 +152,8 @@ void TetrahedronEdgeExprModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class TetrahedronEdgeExprModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TetrahedronEdgeExprModel<float128>;
+#endif
 

@@ -18,26 +18,37 @@ limitations under the License.
 #include "TimeData.hh"
 #include "dsAssert.hh"
 
-TimeData *TimeData::instance = 0;
+template <>
+TimeData<double> *TimeData<double>::instance = 0;
 
-TimeData::TimeData() : IData(3), QData(3)
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template <>
+TimeData<float128> *TimeData<float128>::instance = 0;
+#endif
+
+template <typename DoubleType>
+TimeData<DoubleType>::TimeData() : IData(3), QData(3)
 {
 }
 
-TimeData &TimeData::GetInstance()
+template <typename DoubleType>
+TimeData<DoubleType> &TimeData<DoubleType>::GetInstance()
 {
     if (!instance)
     {
-        instance = new TimeData;
+        instance = new TimeData<DoubleType>;
     }
     return *instance;
 }
 
-TimeData::~TimeData()
+template <typename DoubleType>
+TimeData<DoubleType>::~TimeData()
 {
 }
 
-void TimeData::DestroyInstance()
+template <typename DoubleType>
+void TimeData<DoubleType>::DestroyInstance()
 {
     if (instance)
     {
@@ -46,43 +57,49 @@ void TimeData::DestroyInstance()
     instance = 0;
 }
 
-//// TODO: transfer ownership
-void TimeData::SetI(TimePoint_t tp, const std::vector<double> &v)
+template <typename DoubleType>
+void TimeData<DoubleType>::SetI(TimePoint_t tp, const std::vector<DoubleType> &v)
 {
-  IData[tp] = v;
+  IData[static_cast<size_t>(tp)] = v;
 }
 
-void TimeData::SetQ(TimePoint_t tp, const std::vector<double> &v)
+template <typename DoubleType>
+void TimeData<DoubleType>::SetQ(TimePoint_t tp, const std::vector<DoubleType> &v)
 {
-  QData[tp] = v;
+  QData[static_cast<size_t>(tp)] = v;
 }
 
-void TimeData::CopyI(TimePoint_t fr, TimePoint_t to)
+template <typename DoubleType>
+void TimeData<DoubleType>::CopyI(TimePoint_t fr, TimePoint_t to)
 {
-  IData[to] = IData[fr];
+  IData[static_cast<size_t>(to)] = IData[static_cast<size_t>(fr)];
 }
 
-void TimeData::CopyQ(TimePoint_t fr, TimePoint_t to)
+template <typename DoubleType>
+void TimeData<DoubleType>::CopyQ(TimePoint_t fr, TimePoint_t to)
 {
-  QData[to] = QData[fr];
+  QData[static_cast<size_t>(to)] = QData[static_cast<size_t>(fr)];
 }
 
-void TimeData::ClearI(TimePoint_t tp)
+template <typename DoubleType>
+void TimeData<DoubleType>::ClearI(TimePoint_t tp)
 {
-  IData[tp].clear();
+  IData[static_cast<size_t>(tp)].clear();
 }
 
-void TimeData::ClearQ(TimePoint_t tp)
+template <typename DoubleType>
+void TimeData<DoubleType>::ClearQ(TimePoint_t tp)
 {
-  QData[tp].clear();
+  QData[static_cast<size_t>(tp)].clear();
 }
 
-void TimeData::AssembleI(TimePoint_t tp, double scale, std::vector<double> &v)
+template <typename DoubleType>
+void TimeData<DoubleType>::AssembleI(TimePoint_t tp, DoubleType scale, std::vector<DoubleType> &v)
 {
-  dsAssert(!IData[tp].empty(),            "UNEXPECTED missing time data");
-  dsAssert( IData[tp].size() == v.size(), "UNEXPECTED time data mismatch");
+  dsAssert(!IData[static_cast<size_t>(tp)].empty(),            "UNEXPECTED missing time data");
+  dsAssert( IData[static_cast<size_t>(tp)].size() == v.size(), "UNEXPECTED time data mismatch");
 
-  const std::vector<double> &data = IData[tp];
+  const std::vector<DoubleType> &data = IData[static_cast<size_t>(tp)];
 
   for (size_t i = 0; i < v.size(); ++i)
   {
@@ -90,16 +107,24 @@ void TimeData::AssembleI(TimePoint_t tp, double scale, std::vector<double> &v)
   }
 }
 
-void TimeData::AssembleQ(TimePoint_t tp, double scale, std::vector<double> &v)
+template <typename DoubleType>
+void TimeData<DoubleType>::AssembleQ(TimePoint_t tp, DoubleType scale, std::vector<DoubleType> &v)
 {
-  dsAssert(!QData[tp].empty(),            "UNEXPECTED missing time data");
-  dsAssert( QData[tp].size() == v.size(), "UNEXPECTED time data mismatch");
+  dsAssert(!QData[static_cast<size_t>(tp)].empty(),            "UNEXPECTED missing time data");
+  dsAssert( QData[static_cast<size_t>(tp)].size() == v.size(), "UNEXPECTED time data mismatch");
 
-  const std::vector<double> &data = QData[tp];
+  const std::vector<DoubleType> &data = QData[static_cast<size_t>(tp)];
 
   for (size_t i = 0; i < v.size(); ++i)
   {
     v[i] += scale * data[i];
   }
 }
+
+template class TimeData<double>;
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+template class TimeData<float128>;
+#endif
+
 
