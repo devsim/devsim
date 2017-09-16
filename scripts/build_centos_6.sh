@@ -13,8 +13,11 @@ yum install -y devtoolset-6-gcc devtoolset-6-gcc-c++ devtoolset-6-libquadmath-de
 
 #download install Miniconda
 cd /root
-curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
-bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p ${HOME}/anaconda
+if [ ! -f Miniconda2-latest-Linux-x86_64.sh ]
+then
+curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh;
+bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p ${HOME}/anaconda;
+fi
 ${HOME}/anaconda/bin/conda install -y numpy mkl
 
 #download boost library
