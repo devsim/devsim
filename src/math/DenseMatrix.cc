@@ -56,11 +56,7 @@ bool DenseMatrix<DoubleType>::Solve(std::vector<DoubleType> &B)
 
   if (info_ == 0)
   {
-#ifdef _WIN32
-    getrs(&trans, &dim_, &nrhs, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<DoubleType *>(&B[0]), &dim_, &info_, 1);
-#else
     getrs(&trans, &dim_, &nrhs, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<DoubleType *>(&B[0]), &dim_, &info_);
-#endif
   }
   return (info_ == 0);
 }

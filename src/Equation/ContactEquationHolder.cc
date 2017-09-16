@@ -62,8 +62,12 @@ bool ContactEquationHolder::operator==(const ContactEquationHolder &eq) const
     return double_ == eq.double_;
   }
 #ifdef DEVSIM_EXTENDED_PRECISION
-  return float128_ == eq.float128_;
+  else if (float128_)
+  {
+    return float128_ == eq.float128_;
+  }
 #endif
+  return false;
 }
 
 template <typename DoubleType>
