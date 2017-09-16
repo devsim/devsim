@@ -40,9 +40,14 @@ extern "C"
 #endif
 
 void external_dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
-void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info);
 void external_zgetrf( int *m, int *n, doublecomplex *a, int *lda, int *ipiv, int *info );
+#ifdef _WIN32
+void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info, int trans_len);
+void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info, int trans_len);
+#else
+void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info);
 void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info);
+#endif
 void external_drotg(double *, double *, double *, double *);
 void external_zrotg(std::complex<double> *, std::complex<double> *, std::complex<double> *, std::complex<double> *);
 }
@@ -54,7 +59,11 @@ inline void getrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info )
 
 inline void getrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info)
 {
+#ifdef _WIN32
+  external_dgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info, 1);
+#else
   external_dgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info);
+#endif
 }
 
 #if 0
