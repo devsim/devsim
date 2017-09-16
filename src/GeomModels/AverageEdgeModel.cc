@@ -31,11 +31,11 @@ limitations under the License.
 #include <sstream>
 
 AverageEdgeModelEnum::TypeNameMap_t AverageEdgeModelEnum::AverageTypeNames[] = {
-        {"arithmetic", ARITHMETIC},
-        {"geometric", GEOMETRIC},
-        {"gradient", GRADIENT},
-        {"negative_gradient", NEGATIVE_GRADIENT},
-        {NULL, UNKNOWN}};
+        {"arithmetic", AverageEdgeModelEnum::ARITHMETIC},
+        {"geometric", AverageEdgeModelEnum::GEOMETRIC},
+        {"gradient", AverageEdgeModelEnum::GRADIENT},
+        {"negative_gradient", AverageEdgeModelEnum::NEGATIVE_GRADIENT},
+        {NULL, AverageEdgeModelEnum::UNKNOWN}};
 
 template <typename DoubleType>
 AverageEdgeModel<DoubleType>::~AverageEdgeModel()
