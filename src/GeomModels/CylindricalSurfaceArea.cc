@@ -27,11 +27,13 @@ limitations under the License.
 #include "Edge.hh"
 #include "ObjectHolder.hh"
 #include <sstream>
+#include <cmath>
+using std::abs;
 
 
 template <typename DoubleType>
 CylindricalSurfaceArea<DoubleType>::CylindricalSurfaceArea(RegionPtr rp) :
-NodeModel("CylindricalSurfaceArea", rp, NodeModel::SCALAR)
+NodeModel("CylindricalSurfaceArea", rp, NodeModel::DisplayType::SCALAR)
 {
   //// This needs to be enforced in the Tcl API
   //// need to validate this is an actual interface or contact name in the Tcl API
@@ -125,9 +127,9 @@ void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, 
     rm = 0.5 * (r0 + r1);
 
     const size_t ni0 = node0.GetIndex();
-    out[ni0] += M_PI * fabs(rm + r0) * vmag;
+    out[ni0] += M_PI * abs(rm + r0) * vmag;
     const size_t ni1 = node1.GetIndex();
-    out[ni1] += M_PI * fabs(r1 + rm) * vmag;
+    out[ni1] += M_PI * abs(r1 + rm) * vmag;
 
   }
 }
@@ -176,7 +178,7 @@ void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
 
     if (!os.str().empty())
     {
-      GeometryStream::WriteOut(OutputStream::FATAL, GetRegion(), os.str());
+      GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str());
     }
   }
 

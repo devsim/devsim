@@ -40,12 +40,12 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
     return;
   }
 
-  if (verbosity == UNKNOWN)
+  if (verbosity == Verbosity_t::UNKNOWN)
   {
-    verbosity = V2;
+    verbosity = Verbosity_t::V2;
   }
 
-  if (ot == INFO)
+  if (ot == OutputType::INFO)
   {
     PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
     if (!tc)
@@ -56,9 +56,9 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
     PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
     PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
   }
-  else if (ot == VERBOSE1)
+  else if (ot == OutputType::VERBOSE1)
   {
-    if ((verbosity == V1) || (verbosity == V2))
+    if ((verbosity == Verbosity_t::V1) || (verbosity == Verbosity_t::V2))
     {
       PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
       if (!tc)
@@ -70,9 +70,9 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
       PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
     }
   }
-  else if (ot == VERBOSE2)
+  else if (ot == OutputType::VERBOSE2)
   {
-    if (verbosity == V2)
+    if (verbosity == Verbosity_t::V2)
     {
       PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
       if (!tc)
@@ -84,7 +84,7 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
       PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
     }
   }
-  else if (ot == ERROR)
+  else if (ot == OutputType::ERROR)
   {
     PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
     if (!tc)
@@ -95,7 +95,7 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
     PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
     PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
   }
-  else if (ot == FATAL)
+  else if (ot == OutputType::FATAL)
   {
     PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
     if (!tc)
@@ -112,20 +112,20 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
 
 OutputStream::Verbosity_t OutputStream::GetVerbosity(const std::string &vstring)
 {
-  OutputStream::Verbosity_t ret = V0;
+  OutputStream::Verbosity_t ret = Verbosity_t::V0;
   if (!vstring.empty())
   {
     if (vstring == "info")
     {
-      ret = V0;
+      ret = Verbosity_t::V0;
     }
     else if (vstring == "verbose")
     {
-      ret = V2; 
+      ret = Verbosity_t::V2; 
     }
     else
     {
-      ret = UNKNOWN;
+      ret = Verbosity_t::UNKNOWN;
     }
   }
   return ret;

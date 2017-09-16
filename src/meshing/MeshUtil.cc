@@ -22,6 +22,7 @@ limitations under the License.
 #include "EdgeModel.hh"
 
 #include <cmath>
+using std::abs;
 
 namespace MeshUtil {
 const double tolerance=1.0e-10;
@@ -89,7 +90,7 @@ pts_t getPoints(double xl, double xh, double sl, double sh)
 
     pts_t pts;
     /// If the negative spacing is about equal to the positive spacing, then we use equidistance method
-    if ((fabs(sh-sl)/sh) < tolerance)
+    if ((abs(sh-sl)/sh) < tolerance)
     {
         pts = equidistance(xl, xh, sl);
     }

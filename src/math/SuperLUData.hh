@@ -25,27 +25,35 @@ typedef int int_t;
 #include "supermatrix.h"
 
 namespace dsMath {
+template <typename DoubleType>
 class CompressedMatrix;
+
 class SuperLUData {
   public:
-    SuperLUData(size_t /*numeqns*/, bool /*transpose*/, Preconditioner::LUType_t /*lutype*/);
+    SuperLUData(size_t /*numeqns*/, bool /*transpose*/, PEnum::LUType_t /*lutype*/);
     ~SuperLUData();
-    bool LUFactorMatrix(CompressedMatrix *);
 
-    void LUSolve(DoubleVec_t &/*x*/, const DoubleVec_t &/*b*/);
+    template <typename DoubleType>
+    bool LUFactorMatrix(CompressedMatrix<DoubleType> *);
 
-    void LUSolve(ComplexDoubleVec_t &/*x*/, const ComplexDoubleVec_t &/*b*/);
+    template <typename DoubleType>
+    void LUSolve(DoubleVec_t<DoubleType> &/*x*/, const DoubleVec_t<DoubleType> &/*b*/);
+
+    template <typename DoubleType>
+    void LUSolve(ComplexDoubleVec_t<DoubleType> &/*x*/, const ComplexDoubleVec_t<DoubleType> &/*b*/);
 
     void DeleteStorage();
 
   protected:
-    bool LUFactorRealMatrix(CompressedMatrix *);
-    bool LUFactorComplexMatrix(CompressedMatrix *);
+    template <typename DoubleType>
+    bool LUFactorRealMatrix(CompressedMatrix<DoubleType> *, const DoubleVec_t<double> &);
+    template <typename DoubleType>
+    bool LUFactorComplexMatrix(CompressedMatrix<DoubleType> *, const ComplexDoubleVec_t<double> &);
 
   private:    
     int          numeqns_;
     bool         transpose_;
-    Preconditioner::LUType_t     lutype_;
+    PEnum::LUType_t     lutype_;
     int         *perm_r_;
     int         *perm_c_;
     int         *etree_;
@@ -59,3 +67,4 @@ int check_perm(const int n, const int *perm);
 #endif
 }
 #endif
+

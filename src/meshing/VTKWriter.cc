@@ -133,12 +133,12 @@ void WritePointData(const Region &reg, std::ostream &myfile)
       const std::string &nm = it->first;
       const NodeModel   &em = *(it->second);
 
-      if (em.GetDisplayType() == NodeModel::SCALAR)
+      if (em.GetDisplayType() == NodeModel::DisplayType::SCALAR)
       {
         const NodeScalarList<double> &nsl = em.GetScalarValues<double>();
         WriteDataArray(nsl, nm, 1, myfile);
       }
-      else if (em.GetDisplayType() == NodeModel::NODISPLAY)
+      else if (em.GetDisplayType() == NodeModel::DisplayType::NODISPLAY)
       {
       }
       else
@@ -157,7 +157,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
       const std::string &nm = it->first;
       const EdgeModel &em = *(it->second);
 
-      if (em.GetDisplayType() == EdgeModel::SCALAR)
+      if (em.GetDisplayType() == EdgeModel::DisplayType::SCALAR)
       {
         const NodeScalarList<double> &nsl = em.GetScalarValuesOnNodes<double>();
         WriteDataArray(nsl, nm, 1, myfile);
@@ -177,12 +177,12 @@ void WritePointData(const Region &reg, std::ostream &myfile)
       const std::string &nm = it->first;
       const TriangleEdgeModel &em = *(it->second);
 
-      if (em.GetDisplayType() == TriangleEdgeModel::SCALAR)
+      if (em.GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR)
       {
         em.GetScalarValuesOnNodes<double>(TriangleEdgeModel::COUPLE, nsl);
         WriteDataArray(nsl, nm, 1, myfile);
       }
-      else if (em.GetDisplayType() == TriangleEdgeModel::NODISPLAY)
+      else if (em.GetDisplayType() == TriangleEdgeModel::DisplayType::NODISPLAY)
       {
       }
       else
@@ -201,12 +201,12 @@ void WritePointData(const Region &reg, std::ostream &myfile)
       const TetrahedronEdgeModel &em = *(it->second);
 
       std::vector<double> nsl;
-      if (em.GetDisplayType() == TetrahedronEdgeModel::SCALAR)
+      if (em.GetDisplayType() == TetrahedronEdgeModel::DisplayType::SCALAR)
       {
         em.GetScalarValuesOnNodes<double>(TetrahedronEdgeModel::COUPLE, nsl);
         WriteDataArray(nsl, nm, 1, myfile);
       }
-      else if (em.GetDisplayType() == TetrahedronEdgeModel::NODISPLAY)
+      else if (em.GetDisplayType() == TetrahedronEdgeModel::DisplayType::NODISPLAY)
       {
       }
       else
@@ -226,7 +226,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
       const std::string &nm = it->first;
       const EdgeModel &em = *(it->second);
 
-      if (em.GetDisplayType() == EdgeModel::VECTOR)
+      if (em.GetDisplayType() == EdgeModel::DisplayType::VECTOR)
       {
         const NodeVectorList<double> &nvl = em.GetVectorValuesOnNodes<double>();
 
@@ -245,10 +245,10 @@ void WritePointData(const Region &reg, std::ostream &myfile)
 
         WriteDataArray(points, nm, 3, myfile);
       }
-      else if (em.GetDisplayType() == EdgeModel::SCALAR)
+      else if (em.GetDisplayType() == EdgeModel::DisplayType::SCALAR)
       {
       }
-      else if (em.GetDisplayType() == EdgeModel::NODISPLAY)
+      else if (em.GetDisplayType() == EdgeModel::DisplayType::NODISPLAY)
       {
       }
       else
@@ -278,7 +278,7 @@ void WriteLineData(const Region &reg, std::ostream &myfile)
       const std::string &nm = it->first;
       const EdgeModel &em = *(it->second);
 
-      if (em.GetDisplayType() == EdgeModel::SCALAR)
+      if (em.GetDisplayType() == EdgeModel::DisplayType::SCALAR)
       {
         const EdgeScalarList<double> &nsl = em.GetScalarValues<double>();
 
@@ -303,7 +303,7 @@ void WriteLineData(const Region &reg, std::ostream &myfile)
       const std::string &nm = it->first;
       const EdgeModel &em = *(it->second);
 
-      if (em.GetDisplayType() == EdgeModel::VECTOR)
+      if (em.GetDisplayType() == EdgeModel::DisplayType::VECTOR)
       {
         const EdgeScalarList<double> &nsl = em.GetScalarValues<double>();
 
@@ -362,12 +362,12 @@ void WriteElementData(const Region &reg, std::ostream &myfile)
       const std::string &nm = it->first;
       const TriangleEdgeModel &em = *(it->second);
 
-      if (em.GetDisplayType() == TriangleEdgeModel::SCALAR)
+      if (em.GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR)
       {
         em.GetScalarValuesOnElements<double>(nsl);
         WriteDataArray(nsl, nm, 1, myfile);
       }
-      else if (em.GetDisplayType() == TriangleEdgeModel::NODISPLAY)
+      else if (em.GetDisplayType() == TriangleEdgeModel::DisplayType::NODISPLAY)
       {
       }
       else
@@ -385,12 +385,12 @@ void WriteElementData(const Region &reg, std::ostream &myfile)
       const TetrahedronEdgeModel &em = *(it->second);
 
       std::vector<double> nsl;
-      if (em.GetDisplayType() == TetrahedronEdgeModel::SCALAR)
+      if (em.GetDisplayType() == TetrahedronEdgeModel::DisplayType::SCALAR)
       {
         em.GetScalarValuesOnElements<double>(nsl);
         WriteDataArray(nsl, nm, 1, myfile);
       }
-      else if (em.GetDisplayType() == TetrahedronEdgeModel::NODISPLAY)
+      else if (em.GetDisplayType() == TetrahedronEdgeModel::DisplayType::NODISPLAY)
       {
       }
       else

@@ -68,7 +68,7 @@ Eqo::EqObjPtr CreateDefaultDerivatives()
         {
             os << *it << "\n";
         }
-        OutputStream::WriteOut(OutputStream::FATAL, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
     return testeq;
 }

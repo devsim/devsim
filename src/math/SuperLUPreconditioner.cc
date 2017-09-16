@@ -24,31 +24,34 @@ limitations under the License.
 
 
 namespace dsMath {
-SuperLUPreconditioner::SuperLUPreconditioner(size_t sz, Preconditioner::TransposeType_t transpose, LUType_t lutype) : Preconditioner(sz, transpose), superLUData_(NULL), lutype_(lutype)
+template <typename DoubleType>
+SuperLUPreconditioner<DoubleType>::SuperLUPreconditioner(size_t sz, PEnum::TransposeType_t transpose, PEnum::LUType_t lutype) : Preconditioner<DoubleType>(sz, transpose), superLUData_(NULL), lutype_(lutype)
 {
 }
 
-SuperLUPreconditioner::~SuperLUPreconditioner()
+template <typename DoubleType>
+SuperLUPreconditioner<DoubleType>::~SuperLUPreconditioner()
 {
   delete superLUData_;
 }
 
-bool SuperLUPreconditioner::DerivedLUFactor(Matrix *m)
+template <typename DoubleType>
+bool SuperLUPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
 {
-  CompressedMatrix *cm = dynamic_cast<CompressedMatrix *>(m);
+  CompressedMatrix<DoubleType> *cm = dynamic_cast<CompressedMatrix<DoubleType> *>(m);
   dsAssert(cm, "UNEXPECTED");
-  dsAssert(cm->GetCompressionType() == CompressedMatrix::CCM, "UNEXPECTED");
+  dsAssert(cm->GetCompressionType() == CompressionType::CCM, "UNEXPECTED");
 
 //  delete superLUData_;
   if (!superLUData_)
   {
-    if (lutype_ == FULL)
+    if (lutype_ == PEnum::LUType_t::FULL)
     {
-      superLUData_ = new SuperLUData(size(), GetTransposeSolve(), FULL);
+      superLUData_ = new SuperLUData(Preconditioner<DoubleType>::size(), Preconditioner<DoubleType>::GetTransposeSolve(), PEnum::LUType_t::FULL);
     }
-    else if (lutype_ == INCOMPLETE)
+    else if (lutype_ == PEnum::LUType_t::INCOMPLETE)
     {
-      superLUData_ = new SuperLUData(size(), GetTransposeSolve(), INCOMPLETE);
+      superLUData_ = new SuperLUData(Preconditioner<DoubleType>::size(), Preconditioner<DoubleType>::GetTransposeSolve(), PEnum::LUType_t::INCOMPLETE);
     }
     else
     {
@@ -60,14 +63,23 @@ bool SuperLUPreconditioner::DerivedLUFactor(Matrix *m)
   return ret;
 }
 
-void SuperLUPreconditioner::DerivedLUSolve(DoubleVec_t &x, const DoubleVec_t &b) const
+template <typename DoubleType>
+void SuperLUPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const
 {
   superLUData_->LUSolve(x, b);
 }
 
-void SuperLUPreconditioner::DerivedLUSolve(ComplexDoubleVec_t &x, const ComplexDoubleVec_t &b) const
+template <typename DoubleType>
+void SuperLUPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const
 {
   superLUData_->LUSolve(x, b);
 }
 }
+
+
+template class dsMath::SuperLUPreconditioner<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class dsMath::SuperLUPreconditioner<float128>;
+#endif
 

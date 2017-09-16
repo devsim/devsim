@@ -25,7 +25,7 @@ limitations under the License.
 
 template <typename DoubleType>
 TetrahedronNodeVolume<DoubleType>::TetrahedronNodeVolume(RegionPtr rp)
-    : TetrahedronEdgeModel("ElementNodeVolume", rp, TetrahedronEdgeModel::SCALAR)
+    : TetrahedronEdgeModel("ElementNodeVolume", rp, TetrahedronEdgeModel::DisplayType::SCALAR)
 {
     ///// 1/3 * base area time perpendicular distance to 3rd node
     ///// 1./3. * (0.5 * EdgeLength) * ElementEdgeCouple
@@ -49,7 +49,7 @@ void TetrahedronNodeVolume<DoubleType>::calcTetrahedronEdgeScalarValues() const
 
 
   //// 1./3. * edgecouple * (0.5 * edgelength)
-  evol *= (1.0/6.0);
+  evol.times_equal_scalar(static_cast<DoubleType>(1.0)/static_cast<DoubleType>(6.0));
 
   const EdgeScalarList<DoubleType> &edge_lengths = elen->GetScalarValues<DoubleType>();
 

@@ -59,7 +59,7 @@ typedef const Edge *ConstEdgePtr;
 
 class EdgeModel {
     public:
-        enum DisplayType {NODISPLAY, SCALAR, VECTOR, UNKNOWN};
+        enum class DisplayType {NODISPLAY, SCALAR, VECTOR, UNKNOWN};
         EdgeModel(const std::string &, const RegionPtr, EdgeModel::DisplayType, const ContactPtr x = NULL);
         virtual ~EdgeModel();
 
@@ -126,7 +126,7 @@ class EdgeModel {
 
         const char *GetDisplayTypeString() const
         {
-          return DisplayTypeString[displayType];
+          return DisplayTypeString[static_cast<size_t>(displayType)];
         }
 
         void SetDisplayType(EdgeModel::DisplayType dt)

@@ -26,7 +26,8 @@ limitations under the License.
 #include "EdgeData.hh"
 #include "Triangle.hh"
 
-TetrahedronElementFieldMatrixHolder::TetrahedronElementFieldMatrixHolder()
+template <typename DoubleType>
+TetrahedronElementFieldMatrixHolder<DoubleType>::TetrahedronElementFieldMatrixHolder()
 {
   for (size_t i = 0; i < 4; ++i)
   {
@@ -38,7 +39,8 @@ TetrahedronElementFieldMatrixHolder::TetrahedronElementFieldMatrixHolder()
   }
 }
 
-TetrahedronElementFieldMatrixHolder::~TetrahedronElementFieldMatrixHolder()
+template <typename DoubleType>
+TetrahedronElementFieldMatrixHolder<DoubleType>::~TetrahedronElementFieldMatrixHolder()
 {
   for (size_t i = 0; i < 4; ++i)
   {
@@ -46,17 +48,20 @@ TetrahedronElementFieldMatrixHolder::~TetrahedronElementFieldMatrixHolder()
   }
 }
 
-TetrahedronElementField::~TetrahedronElementField()
+template <typename DoubleType>
+TetrahedronElementField<DoubleType>::~TetrahedronElementField()
 {
 }
 
-TetrahedronElementField::TetrahedronElementField(const Region *r) : myregion_(r)
+template <typename DoubleType>
+TetrahedronElementField<DoubleType>::TetrahedronElementField(const Region *r) : myregion_(r)
 {
 }
 
 //// The matrices we develop are for each of the 4 nodes on the Tetrahedron
 //// Each node has 3 edges connected to it
-void TetrahedronElementField::CalcMatrices() const
+template <typename DoubleType>
+void TetrahedronElementField<DoubleType>::CalcMatrices() const
 {
   dsAssert(myregion_->GetDimension() == 3, "UNEXPECTED");
   //// TODO:Check for FPE's
@@ -69,9 +74,9 @@ void TetrahedronElementField::CalcMatrices() const
   dsAssert(uy.get(), "UNEXPECTED");
   dsAssert(uz.get(), "UNEXPECTED");
 
-  const EdgeScalarList<double> &xvec = ux->GetScalarValues<double>();
-  const EdgeScalarList<double> &yvec = uy->GetScalarValues<double>();
-  const EdgeScalarList<double> &zvec = uz->GetScalarValues<double>();
+  const EdgeScalarList<DoubleType> &xvec = ux->GetScalarValues<DoubleType>();
+  const EdgeScalarList<DoubleType> &yvec = uy->GetScalarValues<DoubleType>();
+  const EdgeScalarList<DoubleType> &zvec = uz->GetScalarValues<DoubleType>();
 
 //  const ConstTetrahedronList &tlist = myregion_->GetTetrahedronList();
 
@@ -90,9 +95,9 @@ void TetrahedronElementField::CalcMatrices() const
 
     const ConstNodeList  nodeList = tetrahedron.GetNodeList();
 
-    double sx[3];
-    double sy[3];
-    double sz[3];
+    DoubleType sx[3];
+    DoubleType sy[3];
+    DoubleType sz[3];
     size_t edgeIndexes[3];
 
     //// for each node
@@ -118,8 +123,8 @@ void TetrahedronElementField::CalcMatrices() const
       //// We expect to find 3 edges connected to this node
       dsAssert(k == 3, "UNEXPECTED");
 
-      dsMath::RealDenseMatrix *dmp = new dsMath::RealDenseMatrix(3);
-      dsMath::RealDenseMatrix &M = *dmp;
+      dsMath::RealDenseMatrix<DoubleType> *dmp = new dsMath::RealDenseMatrix<DoubleType>(3);
+      dsMath::RealDenseMatrix<DoubleType> &M = *dmp;
 
       for (size_t l = 0; l < 3; ++l)
       {
@@ -139,15 +144,16 @@ void TetrahedronElementField::CalcMatrices() const
   }
 }
 
-std::vector<Vector<double> > TetrahedronElementField::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const EdgeModel &em) const
+template <typename DoubleType>
+std::vector<Vector<DoubleType> > TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const EdgeModel &em) const
 {
   const size_t tetrahedronIndex = tetrahedron.GetIndex();
   const Region::TetrahedronToConstEdgeDataList_t &ttelist = myregion_->GetTetrahedronToEdgeDataList();
   const ConstEdgeDataList &edgeDataList = ttelist[tetrahedronIndex];
 
-  const EdgeScalarList<double> &evals = em.GetScalarValues<double>();
+  const EdgeScalarList<DoubleType> &evals = em.GetScalarValues<DoubleType>();
 
-  std::vector<double> edgedata(6);
+  std::vector<DoubleType> edgedata(6);
   for (size_t i = 0; i < 6; ++i)
   {
     const size_t edgeIndex = (edgeDataList[i]->edge)->GetIndex();
@@ -158,13 +164,14 @@ std::vector<Vector<double> > TetrahedronElementField::GetTetrahedronElementField
 
 }
 
-std::vector<Vector<double> > TetrahedronElementField::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const TetrahedronEdgeModel &em) const
+template <typename DoubleType>
+std::vector<Vector<DoubleType> > TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const TetrahedronEdgeModel &em) const
 {
   const size_t tetrahedronIndex = tetrahedron.GetIndex();
 
-  const TetrahedronEdgeScalarList<double> &evals = em.GetScalarValues<double>();
+  const TetrahedronEdgeScalarList<DoubleType> &evals = em.GetScalarValues<DoubleType>();
 
-  std::vector<double> edgedata(6);
+  std::vector<DoubleType> edgedata(6);
   for (size_t i = 0; i < 6; ++i)
   {
     const size_t edgeIndex = 6*tetrahedronIndex + i;
@@ -175,9 +182,10 @@ std::vector<Vector<double> > TetrahedronElementField::GetTetrahedronElementField
 
 }
 
-std::vector<Vector<double> > TetrahedronElementField::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const std::vector<double> &edgedata) const
+template <typename DoubleType>
+std::vector<Vector<DoubleType> > TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const std::vector<DoubleType> &edgedata) const
 {
-  std::vector<Vector<double> > ret(6);
+  std::vector<Vector<DoubleType> > ret(6);
 
   if (dense_mats_.empty())
   {
@@ -187,13 +195,13 @@ std::vector<Vector<double> > TetrahedronElementField::GetTetrahedronElementField
   const size_t tetrahedronIndex = tetrahedron.GetIndex();
 
   //// this is the rhs vec
-  std::vector<double> B(3);
+  std::vector<DoubleType> B(3);
   //// these are the values emanating from each node
-  std::vector<Vector<double> > nodeVectors(4);
+  std::vector<Vector<DoubleType> > nodeVectors(4);
   // for each node
   for (size_t i = 0; i < 4; ++i)
   {
-    dsMath::RealDenseMatrix &M = *dense_mats_[tetrahedronIndex].mats[i];
+    dsMath::RealDenseMatrix<DoubleType> &M = *dense_mats_[tetrahedronIndex].mats[i];
     for (size_t j = 0; j < 3; ++j)
     {
       const size_t eindex = dense_mats_[tetrahedronIndex].edgeIndexes[i][j];
@@ -205,13 +213,13 @@ std::vector<Vector<double> > TetrahedronElementField::GetTetrahedronElementField
     dsAssert(info, "UNEXPECTED");
 
     //// This is the element field on one of the four nodes
-    nodeVectors[i] = Vector<double>(B[0], B[1], B[2]);
+    nodeVectors[i] = Vector<DoubleType>(B[0], B[1], B[2]);
   }
 
   /// for each of the nodes
   for (size_t i = 0; i < 4; ++i)
   {
-    const Vector<double> &val = 0.5 * nodeVectors[i];
+    const Vector<DoubleType> &val = static_cast<DoubleType>(0.5) * nodeVectors[i];
 
     //// calculate the average on the edge
     for (size_t j = 0; j < 3; ++j)
@@ -231,10 +239,11 @@ std::vector<Vector<double> > TetrahedronElementField::GetTetrahedronElementField
 //// return matrix is based as 2nd index as edge (0-5), 1st index as derivative w.r.t. node (0-3)
 //// where 2 the first triangle node off edge and 3 is the 2nd triangle node off edge
 //return as [nodeindex][edgeindex]
-std::vector<std::vector<Vector<double> > > TetrahedronElementField::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const EdgeModel &em0, const EdgeModel &em1) const
+template <typename DoubleType>
+std::vector<std::vector<Vector<DoubleType> > > TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const EdgeModel &em0, const EdgeModel &em1) const
 {
   // sized for the 4 derivative nodes
-  std::vector<std::vector<Vector<double> > > ret(4);
+  std::vector<std::vector<Vector<DoubleType> > > ret(4);
   for (size_t i = 0; i < 4; ++i)
   {
     // has 6 edges
@@ -246,8 +255,8 @@ std::vector<std::vector<Vector<double> > > TetrahedronElementField::GetTetrahedr
     CalcMatrices();
   }
 
-  const EdgeScalarList<double> &evals0 = em0.GetScalarValues<double>();
-  const EdgeScalarList<double> &evals1 = em1.GetScalarValues<double>();
+  const EdgeScalarList<DoubleType> &evals0 = em0.GetScalarValues<DoubleType>();
+  const EdgeScalarList<DoubleType> &evals1 = em1.GetScalarValues<DoubleType>();
 
   const size_t tetrahedronIndex = tetrahedron.GetIndex();
 
@@ -258,16 +267,16 @@ std::vector<std::vector<Vector<double> > > TetrahedronElementField::GetTetrahedr
   const ConstEdgeDataList &edgeDataList = ttelist[tetrahedronIndex];
 
   //// this is the rhs vec
-  std::vector<double> B(3);
+  std::vector<DoubleType> B(3);
   //// these are the values emanating from each node
 
-  Vector<double> nodeVectors[4][4];
+  Vector<DoubleType> nodeVectors[4][4];
   /// foreach node index
   for (size_t i = 0; i < 4; ++i)
   {
 //    const ConstNodePtr node_i_ptr = nodeList[i];
 
-    dsMath::RealDenseMatrix &M = *dense_mats_[tetrahedronIndex].mats[i];
+    dsMath::RealDenseMatrix<DoubleType> &M = *dense_mats_[tetrahedronIndex].mats[i];
     // for each derivative index
     for (size_t j = 0; j < 4; ++j)
     {
@@ -283,7 +292,7 @@ std::vector<std::vector<Vector<double> > > TetrahedronElementField::GetTetrahedr
         ConstNodePtr nh = edge_ptr->GetHead();
         ConstNodePtr nt = edge_ptr->GetTail();
 
-        double rhs = 0.0;
+        DoubleType rhs = 0.0;
         if (nh == node_j_ptr)
         {
           rhs = evals0[edgeIndex];
@@ -299,7 +308,7 @@ std::vector<std::vector<Vector<double> > > TetrahedronElementField::GetTetrahedr
       dsAssert(info, "UNEXPECTED");
 
       //// This is the element field on one of the four nodes
-      nodeVectors[i][j] = Vector<double>(B[0], B[1], B[2]);
+      nodeVectors[i][j] = Vector<DoubleType>(B[0], B[1], B[2]);
     }
   }
 
@@ -312,7 +321,7 @@ std::vector<std::vector<Vector<double> > > TetrahedronElementField::GetTetrahedr
       // the node ordering on the tetrahedron, not the element edge
       const ConstNodePtr dnode = nodeList[j];
 
-      const Vector<double> &val = 0.5 * nodeVectors[i][j];
+      const Vector<DoubleType> &val = static_cast<DoubleType>(0.5) * nodeVectors[i][j];
 
       //// calculate the average on the edge
       for (size_t k = 0; k < 3; ++k)
@@ -350,4 +359,10 @@ std::vector<std::vector<Vector<double> > > TetrahedronElementField::GetTetrahedr
 
   return ret;
 }
+
+template class TetrahedronElementField<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TetrahedronElementField<float128>;
+#endif
 

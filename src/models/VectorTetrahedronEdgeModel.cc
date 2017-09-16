@@ -24,11 +24,11 @@ limitations under the License.
 
 template <typename DoubleType>
 VectorTetrahedronEdgeModel<DoubleType>::VectorTetrahedronEdgeModel(const std::string &edgemodel, RegionPtr rp)
-    : TetrahedronEdgeModel(edgemodel + "_x", rp, TetrahedronEdgeModel::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName+ "_y"), z_ModelName(elementEdgeModelName + "_z")
+    : TetrahedronEdgeModel(edgemodel + "_x", rp, TetrahedronEdgeModel::DisplayType::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName+ "_y"), z_ModelName(elementEdgeModelName + "_z")
 {
   RegisterCallback(edgemodel);
-  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
-  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
 }
 
 template <typename DoubleType>
@@ -51,7 +51,7 @@ void VectorTetrahedronEdgeModel<DoubleType>::calcTetrahedronEdgeScalarValues() c
   std::vector<DoubleType> evy(6*tl.size());
   std::vector<DoubleType> evz(6*tl.size());
 
-  const TetrahedronElementField &efield = reg.GetTetrahedronElementField();
+  const TetrahedronElementField<DoubleType> &efield = reg.GetTetrahedronElementField<DoubleType>();
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Tetrahedron &tetrahedron = *tl[i];

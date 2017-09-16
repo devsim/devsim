@@ -25,28 +25,39 @@ limitations under the License.
 
 //#include <iostream>
 namespace dsMath {
-LinearSolver::LinearSolver()
+template <typename DoubleType>
+LinearSolver<DoubleType>::LinearSolver()
 {}
 
-LinearSolver::~LinearSolver()
+template <typename DoubleType>
+LinearSolver<DoubleType>::~LinearSolver()
 {}
 
-bool LinearSolver::Solve(Matrix &m, Preconditioner &p, DoubleVec_t &x, DoubleVec_t &b)
+template <typename DoubleType>
+bool LinearSolver<DoubleType>::Solve(Matrix<DoubleType> &m, Preconditioner<DoubleType> &p, std::vector<DoubleType> &x, std::vector<DoubleType> &b)
 {
   dsTimer timer("LinearSolve");
   return this->SolveImpl(m, p, x, b);
 }
 
-bool LinearSolver::ACSolve(Matrix &m, Preconditioner &p, ComplexDoubleVec_t &x, ComplexDoubleVec_t &b)
+template <typename DoubleType>
+bool LinearSolver<DoubleType>::ACSolve(Matrix<DoubleType> &m, Preconditioner<DoubleType> &p, std::vector<std::complex<DoubleType>> &x, std::vector<std::complex<DoubleType>> &b)
 {
   dsTimer timer("ACLinearSolve");
   return this->ACSolveImpl(m, p, x, b);
 }
 
-bool LinearSolver::NoiseSolve(Matrix &m, Preconditioner &p, ComplexDoubleVec_t &x, ComplexDoubleVec_t &b)
+template <typename DoubleType>
+bool LinearSolver<DoubleType>::NoiseSolve(Matrix<DoubleType> &m, Preconditioner<DoubleType> &p, std::vector<std::complex<DoubleType>> &x, std::vector<std::complex<DoubleType>> &b)
 {
   dsTimer timer("ACLinearSolve");
   return this->NoiseSolveImpl(m, p, x, b);
 }
 }
+
+template class dsMath::LinearSolver<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class dsMath::LinearSolver<float128>;
+#endif
 

@@ -32,11 +32,14 @@ limitations under the License.
 #include <algorithm>
 #include <vector>
 
+#include <cmath>
+using std::abs;
+
 template <typename DoubleType>
 TriangleCylindricalNodeVolume<DoubleType>::TriangleCylindricalNodeVolume(RegionPtr rp)
-    : TriangleEdgeModel("ElementCylindricalNodeVolume@en0", rp, TriangleEdgeModel::SCALAR)
+    : TriangleEdgeModel("ElementCylindricalNodeVolume@en0", rp, TriangleEdgeModel::DisplayType::SCALAR)
 {
-  node1Volume_ = TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel("ElementCylindricalNodeVolume@en1", rp, TriangleEdgeModel::SCALAR, this->GetSelfPtr());
+  node1Volume_ = TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel("ElementCylindricalNodeVolume@en1", rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
   RegisterCallback("raxis_zero");
   RegisterCallback("raxis_variable");
 }
@@ -84,7 +87,7 @@ void TriangleCylindricalNodeVolume<DoubleType>::calcTriangleEdgeScalarValues() c
 
     if (!os.str().empty())
     {
-      GeometryStream::WriteOut(OutputStream::FATAL, GetRegion(), os.str());
+      GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str());
     }
   }
 
@@ -117,13 +120,13 @@ template <typename DoubleType>
 DoubleType calcCylindricalTriangleVolumeFlat(DoubleType r0, DoubleType z0, DoubleType r1, DoubleType z1, DoubleType r2)
 {
   DoubleType ret = 0.0;
-  const DoubleType z = fabs(z1 - z0);
+  const DoubleType z = abs(z1 - z0);
   const DoubleType r20_2 = pow((r2 - r0), 2.0);
   const DoubleType r10_2 = pow((r1 - r0), 2.0);
 
-  ret = fabs(r20_2 - r10_2) * z / 3.0;
+  ret = abs(r20_2 - r10_2) * z / 3.0;
 
-  const DoubleType r21 = fabs(r2 - r1);
+  const DoubleType r21 = abs(r2 - r1);
   ret += r21 * r0 * z;
   ret *= M_PI; 
 
@@ -174,7 +177,7 @@ std::vector<DoubleType> TriangleCylindricalNodeVolume<DoubleType>::calcTriangleC
   const Region &region = GetRegion();
 
   const Triangle &triangle = *tp;
-  const std::vector<Vector<DoubleType>> &centers = region.GetTriangleCenters();
+  const std::vector<Vector<DoubleType>> &centers = region.GetTriangleCenters<DoubleType>();
 
   const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
   size_t tindex = triangle.GetIndex();

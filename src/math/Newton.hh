@@ -31,74 +31,88 @@ typedef std::map<std::string, ObjectHolder> ObjectHolderMap_t;
 class Device;
 /// This is the outer nonlinear solver
 namespace dsMath {
+template <typename DoubleType>
 class Matrix;
+
+template <typename DoubleType>
 class LinearSolver;
+
 namespace TimeMethods {
-    enum TimeMethod_t {DCONLY, INTEGRATEDC, INTEGRATETR, INTEGRATEBDF1, INTEGRATEBDF2};
+    enum class TimeMethod_t {DCONLY, INTEGRATEDC, INTEGRATETR, INTEGRATEBDF1, INTEGRATEBDF2};
+
+    template <typename DoubleType>
     struct TimeParams {
-      TimeParams(TimeMethod_t tm, double ts, double g) : method(tm), tstep(ts), gamma(g), tdelta(0.0), a0(0.0), a1(0.0), a2(0.0), b0(1.0), b1(0.0), b2(0.0) {
+      TimeParams(TimeMethod_t tm, DoubleType ts, DoubleType g) : method(tm), tstep(ts), gamma(g), tdelta(0.0), a0(0.0), a1(0.0), a2(0.0), b0(1.0), b1(0.0), b2(0.0) {
       }
 
     // strictly dc
     bool IsDCOnly() const {
-      return (method == DCONLY);
+      return (method == TimeMethod_t::DCONLY);
     }
     // could be dc transient too.
     bool IsDCMethod() const {
-      return (method == DCONLY) || (method == INTEGRATEDC);
+      return (method == TimeMethod_t::DCONLY) || (method == TimeMethod_t::INTEGRATEDC);
     }
 
     // can be dc transient too
     bool IsTransient() const {
-      return (method != DCONLY);
+      return (method != TimeMethod_t::DCONLY);
     }
 
     bool IsIntegration() const {
-      return (method == INTEGRATEBDF1) || (method == INTEGRATETR) || (method == INTEGRATEBDF2);
+      return (method == TimeMethod_t::INTEGRATEBDF1) || (method == TimeMethod_t::INTEGRATETR) || (method == TimeMethod_t::INTEGRATEBDF2);
     }
       TimeMethod_t method;
-      double tstep;
-      double gamma;
-      double tdelta;
-      double a0;
-      double a1;
-      double a2;
-      double b0;
-      double b1;
-      double b2;
+      DoubleType tstep;
+      DoubleType gamma;
+      DoubleType tdelta;
+      DoubleType a0;
+      DoubleType a1;
+      DoubleType a2;
+      DoubleType b0;
+      DoubleType b1;
+      DoubleType b2;
     };
 
-struct DCOnly : public TimeParams
+template <typename DoubleType>
+struct DCOnly : public TimeParams<DoubleType>
 {
-  DCOnly() : TimeParams(DCONLY, 0.0, 0.0)
+  DCOnly() : TimeParams<DoubleType>(TimeMethod_t::DCONLY, 0.0, 0.0)
   {
-    b0 = 1.0;
+    TimeParams<DoubleType>::b0 = 1.0;
   }
 };
 
-struct TransientDC : public TimeParams
+template <typename DoubleType>
+struct TransientDC : public TimeParams<DoubleType>
 {
-  TransientDC() : TimeParams(INTEGRATEDC, 0.0, 0.0)
+  TransientDC() : TimeParams<DoubleType>(TimeMethod_t::INTEGRATEDC, 0.0, 0.0)
   {
-    b0 = 1.0;
+    TimeParams<DoubleType>::b0 = 1.0;
   }
 };
 
-struct BDF1 : public TimeParams
+template <typename DoubleType>
+struct BDF1 : public TimeParams<DoubleType>
 {
-  BDF1(double tstep, double gamma) : TimeParams(INTEGRATEBDF1, tstep, gamma)
+  BDF1(DoubleType tstep, DoubleType gamma) : TimeParams<DoubleType>(TimeMethod_t::INTEGRATEBDF1, tstep, gamma)
   {
     tdelta = gamma * tstep;
-    const double tf = 1.0 / tdelta;
+    const DoubleType tf = 1.0 / tdelta;
     a0 = tf;
     a1 = -tf;
     b0 = 1.0;
   }
+  using TimeParams<DoubleType>::tdelta;
+  using TimeParams<DoubleType>::a0;
+  using TimeParams<DoubleType>::a1;
+  using TimeParams<DoubleType>::b0;
 };
 
-struct BDF2 : public TimeParams
+template <typename DoubleType>
+struct BDF2 : public TimeParams<DoubleType>
 {
-  BDF2(double tstep, double gamma) : TimeParams(INTEGRATEBDF2, tstep, gamma)
+  BDF2(DoubleType tstep, DoubleType gamma) : TimeParams<DoubleType>(TimeMethod_t::INTEGRATEBDF2, tstep, gamma)
   {
     //// td for first order projection
     tdelta = (1.0 - gamma) * tstep;
@@ -107,24 +121,35 @@ struct BDF2 : public TimeParams
     a2 = (1.0 - gamma) / (gamma * tstep);
     b0 = 1.0;
   }
+  using TimeParams<DoubleType>::tdelta;
+  using TimeParams<DoubleType>::a0;
+  using TimeParams<DoubleType>::a1;
+  using TimeParams<DoubleType>::a2;
+  using TimeParams<DoubleType>::b0;
 };
 
-struct TR : public TimeParams
+template <typename DoubleType>
+struct TR : public TimeParams<DoubleType>
 {
-  TR(double tstep, double gamma) : TimeParams(INTEGRATETR, tstep, gamma)
+  TR(DoubleType tstep, DoubleType gamma) : TimeParams<DoubleType>(TimeMethod_t::INTEGRATETR, tstep, gamma)
   {
     tdelta = gamma * tstep;
-    const double tf = 2.0 / tdelta;
+    const DoubleType tf = 2.0 / tdelta;
     a0 = tf;
     a1 = -tf;
     b0 = 1.0;
     b1 = -1.0;
   }
+  using TimeParams<DoubleType>::tdelta;
+  using TimeParams<DoubleType>::a0;
+  using TimeParams<DoubleType>::a1;
+  using TimeParams<DoubleType>::b0;
+  using TimeParams<DoubleType>::b1;
 };
 
 }
 
-
+template <typename DoubleType>
 class Newton {
     public:
         typedef std::vector<size_t> permvec_t;
@@ -136,21 +161,21 @@ class Newton {
 
         //// INTEGRATE_DC means that we are just gonna Assemble I, Q when done
 
-        bool Solve(LinearSolver &, const TimeMethods::TimeParams &, ObjectHolderMap_t *ohm);
+        bool Solve(LinearSolver<DoubleType> &, const TimeMethods::TimeParams<DoubleType> &, ObjectHolderMap_t *ohm);
 
-        bool ACSolve(LinearSolver &, double);
+        bool ACSolve(LinearSolver<DoubleType> &, DoubleType);
 
-        bool NoiseSolve(const std::string &, LinearSolver &, double);
-        //Newton(LinearSolver &iterator);
-        void SetAbsError(double x)
+        bool NoiseSolve(const std::string &, LinearSolver<DoubleType> &, DoubleType);
+        //Newton(LinearSolver<DoubleType> &iterator);
+        void SetAbsError(DoubleType x)
         {
             absLimit = x;
         }
-        void SetRelError(double x)
+        void SetRelError(DoubleType x)
         {
             relLimit = x;
         }
-        void SetQRelError(double x)
+        void SetQRelError(DoubleType x)
         {
             qrelLimit = x;
         }
@@ -160,18 +185,17 @@ class Newton {
         }
     protected:
         template <typename T>
-        void LoadIntoMatrix(const RealRowColValueVec<double> &rcv, Matrix &matrix, T scl = 1.0, size_t offset = 0);
+        void LoadIntoMatrix(const RealRowColValueVec<DoubleType> &rcv, Matrix<DoubleType> &matrix, T scl = 1.0, size_t offset = 0);
         template <typename T>
-        void LoadIntoMatrixPermutated(const RealRowColValueVec<double> &rcv, Matrix &matrix, const permvec_t &, T scl = 1.0, size_t offset = 0);
+        void LoadIntoMatrixPermutated(const RealRowColValueVec<DoubleType> &rcv, Matrix<DoubleType> &matrix, const permvec_t &, T scl = 1.0, size_t offset = 0);
         template <typename T>
-        void LoadIntoRHS(const RHSEntryVec<double> &, std::vector<T> &, T scl = 1.0, size_t offset = 0);
+        void LoadIntoRHS(const RHSEntryVec<DoubleType> &, std::vector<T> &, T scl = 1.0, size_t offset = 0);
         template <typename T>
-        void LoadIntoRHSPermutated(const RHSEntryVec<double> &, std::vector<T> &, const permvec_t &, T scl = 1.0, size_t offset = 0);
+        void LoadIntoRHSPermutated(const RHSEntryVec<DoubleType> &, std::vector<T> &, const permvec_t &, T scl = 1.0, size_t offset = 0);
     private:
-
-        void InitializeTransientAssemble(const TimeMethods::TimeParams &, size_t, std::vector<double> &);
-        bool CheckTransientProjection(const TimeMethods::TimeParams &, const std::vector<double> &);
-        void UpdateTransientCurrent(const TimeMethods::TimeParams &, size_t, const std::vector<double> &, std::vector<double> &);
+        void InitializeTransientAssemble(const TimeMethods::TimeParams<DoubleType> &, size_t, std::vector<DoubleType> &);
+        bool CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &, const std::vector<DoubleType> &);
+        void UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &, size_t, const std::vector<DoubleType> &, std::vector<DoubleType> &);
 
         void PrintDeviceErrors(const Device &device, ObjectHolderMap_t *);
         void PrintCircuitErrors(ObjectHolderMap_t *);
@@ -184,36 +208,36 @@ class Newton {
         void RestoreSolutions();
 
         template <typename T>
-        void LoadMatrixAndRHS(Matrix &, std::vector<T> &, permvec_t &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode, T);
+        void LoadMatrixAndRHS(Matrix<DoubleType> &, std::vector<T> &, permvec_t &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode, T);
 
         //// TODO: may be more efficient to reuse matrix and scale imaginary elements
-        void LoadMatrixAndRHSAC(Matrix &, ComplexDoubleVec_t &, permvec_t &, double);
-        void LoadCircuitRHSAC(ComplexDoubleVec_t &);
+        void LoadMatrixAndRHSAC(Matrix<DoubleType> &, std::vector<std::complex<DoubleType>> &, permvec_t &, DoubleType);
+        void LoadCircuitRHSAC(std::vector<std::complex<DoubleType>> &);
 
-        void LoadMatrixAndRHSOnCircuit(RealRowColValueVec<double> &, RHSEntryVec<double> &rhs, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void LoadMatrixAndRHSOnCircuit(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &rhs, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        void AssembleContactsAndInterfaces(RealRowColValueVec<double> &, RHSEntryVec<double> &, permvec_t &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void AssembleContactsAndInterfaces(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, permvec_t &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
         //// This one can't permutate anything
-        void AssembleBulk(RealRowColValueVec<double> &, RHSEntryVec<double> &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void AssembleBulk(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        void AssembleTclEquations(RealRowColValueVec<double> &, RHSEntryVec<double> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void AssembleTclEquations(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         static const size_t DefaultMaxIter;
-        static const double DefaultAbsError;
-        static const double DefaultRelError;
-        static const double DefaultQRelError;
+        static const DoubleType DefaultAbsError;
+        static const DoubleType DefaultRelError;
+        static const DoubleType DefaultQRelError;
 
         Newton(const Newton &);
 
         size_t maxiter; /// The maximum number of iterations
-        double absLimit;  /// The calculated abs error (maybe come on per device or per region basis)
-        double relLimit;  /// The calculated rel error
-        double qrelLimit;
+        DoubleType absLimit;  /// The calculated abs error (maybe come on per device or per region basis)
+        DoubleType relLimit;  /// The calculated rel error
+        DoubleType qrelLimit;
 
 
         size_t dimension;
 
-        static const double rhssign;
+        static const DoubleType rhssign;
 };
 }
 #endif

@@ -87,7 +87,7 @@ void IdealVoltage::getDCStamp(Matrix::RowColEntryVec &vec)
 #endif
 
 // I should separate out rhs assembly from dc assembly
-void IdealVoltage::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &vec, dsMath::RHSEntryVec<double> &rhs)
+void IdealVoltage::assembleDC_impl(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &vec, dsMath::RHSEntryVec<double> &rhs)
 {
     v_ = sig_->getVoltage();
     const double G = 1.0;
@@ -129,7 +129,7 @@ void IdealVoltage::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowCo
 #include <iostream>
 //using namespace std;
 // assume for now you can only have one value
-void IdealVoltage::assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &x) {
+void IdealVoltage::assembleACRHS_impl(std::vector<std::pair<size_t, std::complex<double> > > &x) {
     const int rI = nI_->getNumber();
     x.push_back(std::make_pair(rI, std::complex<double>(acrv_,aciv_)));
 /*

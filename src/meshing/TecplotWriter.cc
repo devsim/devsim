@@ -175,7 +175,7 @@ void WriteEdgeBlockScalar(std::ostream &myfile, const Region &reg, const std::st
   /// in case the model doesn't exist in our region
   if (emp)
   {
-//    dsAssert(emp->GetDisplayType() == EdgeModel::SCALAR, "UNEXPECTED");
+//    dsAssert(emp->GetDisplayType() == EdgeModel::DisplayType::SCALAR, "UNEXPECTED");
     if (emp->IsUniform())
     {
       WriteUniform(os, number_nodes, emp->GetUniformValue<double>());
@@ -207,7 +207,7 @@ void WriteTriangleEdgeBlockScalar(std::ostream &myfile, const Region &reg, const
   /// in case the model doesn't exist in our region
   if (emp)
   {
-//    dsAssert(emp->GetDisplayType() == TriangleEdgeModel::SCALAR, "UNEXPECTED");
+//    dsAssert(emp->GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR, "UNEXPECTED");
 
     if (emp->IsUniform())
     {
@@ -239,7 +239,7 @@ void WriteTetrahedronEdgeBlockScalar(std::ostream &myfile, const Region &reg, co
   /// in case the model doesn't exist in our region
   if (emp)
   {
-//    dsAssert(emp->GetDisplayType() == TriangleEdgeModel::SCALAR, "UNEXPECTED");
+//    dsAssert(emp->GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR, "UNEXPECTED");
 
     if (emp->IsUniform())
     {
@@ -281,7 +281,7 @@ void WriteEdgeBlockVector(std::ostream &myfile, const Region &reg, const std::st
   /// TODO: make sure it is the same type in each region
   if (emp)
   {
-    dsAssert(emp->GetDisplayType() == EdgeModel::VECTOR, "UNEXPECTED");
+    dsAssert(emp->GetDisplayType() == EdgeModel::DisplayType::VECTOR, "UNEXPECTED");
 
     const NodeVectorList<double> &values = emp->GetVectorValuesOnNodes<double>();
     dsAssert(values.size() > 0, "UNEXPECTED");
@@ -460,7 +460,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
 
           std::string conflicting_type;
 
-          if (display_type == NodeModel::NODISPLAY)
+          if (display_type == NodeModel::DisplayType::NODISPLAY)
           {
             if (s_display)
             {
@@ -471,7 +471,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
               nodeModelsNoDisplay.insert(name);
             }
           }
-          else if (display_type == NodeModel::SCALAR)
+          else if (display_type == NodeModel::DisplayType::SCALAR)
           {
             if (n_display)
             {
@@ -491,7 +491,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
           {
             std::stringstream os;
             os << "Writing model " << name << " as " << conflicting_type << " since it was the first type encountered\n";
-            OutputStream::WriteOut(OutputStream::INFO, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
           }
         }
 
@@ -509,7 +509,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
 
           std::string conflicting_type;
 
-          if (display_type == EdgeModel::NODISPLAY)
+          if (display_type == EdgeModel::DisplayType::NODISPLAY)
           {
             if (v_display)
             {
@@ -524,7 +524,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
               edgeModelsNoDisplay.insert(name);
             }
           }
-          else if (display_type == EdgeModel::SCALAR)
+          else if (display_type == EdgeModel::DisplayType::SCALAR)
           {
             if (v_display)
             {
@@ -539,7 +539,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
               edgeModelsScalar.insert(name);
             }
           }
-          else if (display_type == EdgeModel::VECTOR)
+          else if (display_type == EdgeModel::DisplayType::VECTOR)
           {
             if (s_display)
             {
@@ -563,7 +563,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
           {
             std::stringstream os;
             os << "Writing model " << name << " as " << conflicting_type << " since it was the first type encountered\n";
-            OutputStream::WriteOut(OutputStream::INFO, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
           }
         }
 
@@ -581,24 +581,24 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
 
         for (Region::TriangleEdgeModelList_t::const_iterator trit = triangle_edge_model_list.begin(); trit != triangle_edge_model_list.end(); ++trit)
         {
-          if (trit->second->GetDisplayType() == TriangleEdgeModel::SCALAR)
+          if (trit->second->GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR)
           {
             elementEdgeModelsScalar.insert(trit->first);
           }
           else
           {
-            dsAssert(trit->second->GetDisplayType() == TriangleEdgeModel::NODISPLAY, "UNEXPECTED");
+            dsAssert(trit->second->GetDisplayType() == TriangleEdgeModel::DisplayType::NODISPLAY, "UNEXPECTED");
           }
         }
         for (Region::TetrahedronEdgeModelList_t::const_iterator teit = tetrahedron_edge_model_list.begin(); teit != tetrahedron_edge_model_list.end(); ++teit)
         {
-          if (teit->second->GetDisplayType() == TetrahedronEdgeModel::SCALAR)
+          if (teit->second->GetDisplayType() == TetrahedronEdgeModel::DisplayType::SCALAR)
           {
             elementEdgeModelsScalar.insert(teit->first);
           }
           else
           {
-            dsAssert(teit->second->GetDisplayType() == TetrahedronEdgeModel::NODISPLAY, "UNEXPECTED");
+            dsAssert(teit->second->GetDisplayType() == TetrahedronEdgeModel::DisplayType::NODISPLAY, "UNEXPECTED");
           }
         }
       }

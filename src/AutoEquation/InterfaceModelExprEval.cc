@@ -247,7 +247,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateI
         }
     }
 
-    if (out.GetType() == INVALID)
+    if (out.GetType() == datatype::INVALID)
     {
         std::ostringstream os;
         os << "Could not find or evaluate a model by the name of " << m << ", using 0.0";
@@ -274,7 +274,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateP
   {
       InterfaceModelExprData<DoubleType> x = eval_function(values[i]);
       if (
-          (x.GetType() == DOUBLE) &&
+          (x.GetType() == datatype::DOUBLE) &&
           (x.GetDoubleValue() == 0.0)
          )
       {
@@ -317,7 +317,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateI
   dsAssert(values.size() == 2, "UNEXPECTED");
 
   InterfaceModelExprData<DoubleType> test = eval_function(values[0]);
-  if ((test.GetType() == DOUBLE))
+  if ((test.GetType() == datatype::DOUBLE))
   {
       if (test.GetDoubleValue() == 0.0)
       {
@@ -349,7 +349,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateI
   dsAssert(values.size() == 3, "UNEXPECTED");
 
   InterfaceModelExprData<DoubleType> test = eval_function(values[0]);
-  if ((test.GetType() == DOUBLE))
+  if ((test.GetType() == datatype::DOUBLE))
   {
       if (test.GetDoubleValue() == 0.0)
       {
@@ -402,7 +402,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateI
 {
   InterfaceModelExprData<DoubleType> out;
 
-  //out.type = INVALID;
+  //out.type = datatype::INVALID;
   std::ostringstream os;
   os << "Could not evaluate expression type for "
       << EngineAPI::getStringValue(arg);
@@ -485,7 +485,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::eval_func
     FPECheck::ClearFPE();
   }
 
-  if (cache_result && (out.GetType() != INVALID))
+  if (cache_result && (out.GetType() != datatype::INVALID))
   {
     cache->SetEntry(EngineAPI::getStringValue(arg), out);
   }
@@ -513,15 +513,15 @@ namespace {
             for (size_t i = 0; i < argv.size(); ++i)
             {
                 datatype type = argv[i].GetType();
-                if (type == INVALID)
+                if (type == datatype::INVALID)
                 {
                     hasInvalid = true;
                 }
-                else if (type == NODEDATA)
+                else if (type == datatype::NODEDATA)
                 {
                     hasNodeData = true;
                 }
-                else if (type == DOUBLE)
+                else if (type == datatype::DOUBLE)
                 {
                     hasDouble = true;
                 }
@@ -569,7 +569,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
   }
 
   // simplest case to handle
-  if (mytest.allArgsSame && (mytest.commonType == DOUBLE))
+  if (mytest.allArgsSame && (mytest.commonType == datatype::DOUBLE))
   {
     std::string resultstr;
     std::vector<DoubleType> dargs;
@@ -602,12 +602,12 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
     for (size_t i=0; i < argv.size(); ++i)
     {
       // todo employ caching scheme later on
-      if (argv[i].GetType() == DOUBLE)
+      if (argv[i].GetType() == datatype::DOUBLE)
       {
         dargs[i] = argv[i].GetDoubleValue();
         vargs[i] = NULL;
       }
-      else if (argv[i].GetType() != INVALID)
+      else if (argv[i].GetType() != datatype::INVALID)
       {
         ScalarValuesType<DoubleType> tval = argv[i].GetScalarValues();
         if (tval.IsUniform())
@@ -672,7 +672,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
       {
         if (name == "vec_sum")
         {
-          DoubleType sum = std::accumulate(output.begin(), output.end(), 0.0);
+          DoubleType sum = std::accumulate(output.begin(), output.end(), static_cast<DoubleType>(0.0));
           out = InterfaceModelExprData<DoubleType>(sum);
         }
         else if (name == "vec_max")
@@ -710,6 +710,8 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
 }
 
 template class InterfaceModelExprEval<double>;
-
+#ifdef DEVSIM_EXTENDED_PRECISION
+template class InterfaceModelExprEval<float128>;
+#endif
 };
 

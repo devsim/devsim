@@ -23,7 +23,7 @@ limitations under the License.
 
 Signal::Signal(SignalType x) : _type(x) {}
 
-DCOnly::DCOnly(double x) : Signal(DCONLY) {
+DCOnly::DCOnly(double x) : Signal(SignalType::DCONLY) {
    _volt=x;
 }
 
@@ -43,7 +43,7 @@ Pulse::Pulse(double v1,
       double tr,
       double tf,
       double pw,
-      double per) : Signal(PULSE), // add sanity checks later
+      double per) : Signal(SignalType::PULSE), // add sanity checks later
          _v1(v1),
          _v2(v2),
          _td(td),

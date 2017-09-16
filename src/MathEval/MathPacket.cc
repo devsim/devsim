@@ -21,6 +21,10 @@ limitations under the License.
 #include "myThreadPool.hh"
 #include "myqueue.hh"
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+
 namespace Eqomfp {
 
 template <typename DoubleType>
@@ -176,5 +180,9 @@ void MathPacketRange<DoubleType>::run()
 
 template class MathPacket<double>;
 template std::string MathPacketRun(const MathWrapper<double> &, const std::vector<double> &, const std::vector<const std::vector<double> *> &, std::vector<double> &, size_t);
+#ifdef DEVSIM_EXTENDED_PRECISION
+template class MathPacket<float128>;
+template std::string MathPacketRun(const MathWrapper<float128> &, const std::vector<float128> &, const std::vector<const std::vector<float128> *> &, std::vector<float128> &, size_t);
+#endif
 }
 

@@ -45,7 +45,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
       if (optionMap.count(optname))
       {
         Option     *opt  = optionMap[optname];
-        Types::optionType  type = (*opt).type;  
+        optionType  type = (*opt).type;  
 
         if (selections.count(optname))
         {
@@ -61,47 +61,47 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
             selections[optname] = ObjectHolder(objv[i]);
 
             const ObjectHolder &toh = selections[optname];
-            if (type == Types::FLOAT)
+            if (type == optionType::FLOAT)
             {
               ObjectHolder::DoubleEntry_t ret = toh.GetDouble();
               if (!ret.first)
               {
-                notConvertibleToType(commandName, optname, Types::FLOAT, toh, error);
+                notConvertibleToType(commandName, optname, optionType::FLOAT, toh, error);
                 status = TCL_ERROR;
                 break;
               }
             }
-            else if (type == Types::BOOLEAN)
+            else if (type == optionType::BOOLEAN)
             {
               ObjectHolder::BooleanEntry_t ret = toh.GetBoolean();
               if (!ret.first)
               {
-                notConvertibleToType(commandName, optname, Types::BOOLEAN, toh, error);
+                notConvertibleToType(commandName, optname, optionType::BOOLEAN, toh, error);
                 status = TCL_ERROR;
                 break;
               }
             }
-            else if (type == Types::INTEGER)
+            else if (type == optionType::INTEGER)
             {
               ObjectHolder::IntegerEntry_t ret = toh.GetInteger();
               if (!ret.first)
               {
-                notConvertibleToType(commandName, optname, Types::INTEGER, toh, error);
+                notConvertibleToType(commandName, optname, optionType::INTEGER, toh, error);
                 status = TCL_ERROR;
                 break;
               }
             }
-            else if (type == Types::LIST)
+            else if (type == optionType::LIST)
             {
               bool ret = toh.IsList();
               if (!ret)
               {
-                notConvertibleToType(commandName, optname, Types::LIST, toh, error);
+                notConvertibleToType(commandName, optname, optionType::LIST, toh, error);
                 status = TCL_ERROR;
                 break;
               }
             }
-            else if (type == Types::STRING)
+            else if (type == optionType::STRING)
             {
             }
             else
@@ -136,11 +136,11 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
     while ((*it).name != NULL)
     {
       std::string name = (*it).name;
-      if ((*it).rtype == Types::REQUIRED)
+      if ((*it).rtype == requiredType::REQUIRED)
       {
         if (!selections.count(name))
         {
-            os << "missing required " << Types::optionTypeStrings[(*it).type] <<  " parameter - " << name << "\n";
+            os << "missing required " << optionTypeStrings[static_cast<size_t>((*it).type)] <<  " parameter - " << name << "\n";
             status = TCL_ERROR;
         }
       }

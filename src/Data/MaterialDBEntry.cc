@@ -28,7 +28,7 @@ MaterialDBEntry::MaterialDBEntry(const std::string &p, const std::string &u, con
 }
 #endif
 
-MaterialDBEntry::MaterialDBEntry() : entry_type_(UNDEFINED)
+MaterialDBEntry::MaterialDBEntry() : entry_type_(EntryType_t::UNDEFINED)
 {
 }
 

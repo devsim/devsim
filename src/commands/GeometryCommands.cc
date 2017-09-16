@@ -43,7 +43,7 @@ void getDeviceListCmd(CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -77,18 +77,18 @@ getRegionListCmd(CommandHandler &data)
     if (commandName == "get_region_list")
     {
       static dsGetArgs::Option getregionlistoption[] = {
-          {"device", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-          {"contact", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-          {"interface", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-          {NULL, NULL,   dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+          {"device", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+          {"contact", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+          {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+          {NULL, NULL,   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
       };
       option = getregionlistoption;
     }
     else if (commandName == "get_interface_list" || commandName == "get_contact_list")
     {
       static dsGetArgs::Option getregionlistoption[] = {
-          {"device", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-          {NULL, NULL,   dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+          {"device", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+          {NULL, NULL,   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
       };
       option = getregionlistoption;
     }

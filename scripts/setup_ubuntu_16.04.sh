@@ -1,7 +1,7 @@
 DEVSIM_CONFIG="ubuntu_16.04"
 CC=/usr/bin/gcc
 CXX=/usr/bin/g++
-CMAKE_CXX_FLAGS="-std=c++0x"
+CMAKE_CXX_FLAGS=""
 for TYPE in debug release; do
 ARCH=`uname -m`
 #  for ARCH in i386 x86_64; do

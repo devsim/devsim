@@ -24,7 +24,7 @@ limitations under the License.
 
 template <typename DoubleType>
 CylindricalEdgeNodeVolume<DoubleType>::CylindricalEdgeNodeVolume(RegionPtr rp)
-    : EdgeModel("CylindricalEdgeNodeVolume@n0", rp, EdgeModel::SCALAR)
+    : EdgeModel("CylindricalEdgeNodeVolume@n0", rp, EdgeModel::DisplayType::SCALAR)
 {
     const size_t dimension = rp->GetDimension();
     dsAssert(dimension == 2, "CylindricalEdgeNodeVolume 2d Only");
@@ -35,7 +35,7 @@ CylindricalEdgeNodeVolume<DoubleType>::CylindricalEdgeNodeVolume(RegionPtr rp)
       RegisterCallback("ElementCylindricalNodeVolume@en1");
     }
 
-    node1Volume_ = EdgeSubModel<DoubleType>::CreateEdgeSubModel("CylindricalEdgeNodeVolume@n1", rp, EdgeModel::SCALAR, this->GetSelfPtr());
+    node1Volume_ = EdgeSubModel<DoubleType>::CreateEdgeSubModel("CylindricalEdgeNodeVolume@n1", rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
 template <typename DoubleType>

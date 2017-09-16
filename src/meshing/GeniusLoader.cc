@@ -190,7 +190,7 @@ std::vector<int> *GeniusLoader::GetGeniusRegionBoundaryPoints(const std::string 
     {
       std::ostringstream os; 
       os << "Cannot find genius region " << genius_region_name << ".\n";
-      OutputStream::WriteOut(OutputStream::ERROR, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       ret = NULL;
       break;
     }
@@ -201,7 +201,7 @@ std::vector<int> *GeniusLoader::GetGeniusRegionBoundaryPoints(const std::string 
     {
       std::ostringstream os; 
       os << "Cannot find genius boundary " << genius_boundary_name << " on genius region.\n";
-      OutputStream::WriteOut(OutputStream::ERROR, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       break;
     }
 
@@ -211,7 +211,7 @@ std::vector<int> *GeniusLoader::GetGeniusRegionBoundaryPoints(const std::string 
     {
       std::ostringstream os; 
       os << "Cannot find points genius boundary " << genius_boundary_name << " on genius region " << genius_region_name << ".\n";
-      OutputStream::WriteOut(OutputStream::ERROR, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       break;
     }
     else
@@ -253,7 +253,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
   {
     std::ostringstream os; 
     os << "Device " << deviceName << " has " << meshCoordinateList.size() << " coordinates.\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
 
   std::map<std::string, std::vector<NodePtr> > RegionNameToNodeMap;
@@ -296,7 +296,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Cannot find genius region " << genius_region_name << " for region " << regionName << "\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -314,7 +314,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Region " << regionName << " has " << mesh_nodes.size() << " nodes.\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       }
 
       std::vector<NodePtr> &nodeList = RegionNameToNodeMap[regionName];
@@ -329,7 +329,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Region " << regionName << " has " << nodeList.size() << " nodes.\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       }
 
       if (dimension == 3)
@@ -400,7 +400,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Contact " << contactName << " references non-existent region name " << regionName << ".\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -422,7 +422,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Contact " << contactName << " references non-existent region name " << regionName << ".\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -432,7 +432,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Contact " << contactName << " on region " << regionName << " being instantiated multiple times.\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -461,7 +461,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       dp->AddContact(new Contact(contactName, regionptr, cnodes, materialName));
       std::ostringstream os; 
       os << "Contact " << contactName << " in region " << regionName << " with " << cnodes.size() << " nodes" << "\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
   }
 
@@ -484,7 +484,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Interface " << interfaceName << " references non-existent region name " << regionName0 << ".\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -493,7 +493,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Interface " << interfaceName << " references non-existent region name " << regionName1 << ".\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -512,7 +512,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Interface " << interfaceName << " references non-existent region name " << regionName0 << ".\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -520,7 +520,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Interface " << interfaceName << " references non-existent region name " << regionName1 << ".\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -530,7 +530,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Interface " << interfaceName << " on regions " << regionName0 << " and " << regionName1 << " being instantiated multiple times.\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -553,7 +553,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       {
         std::ostringstream os; 
         os << "Interface " << interfaceName << " on regions " << regionName0 << " and " << regionName1 << " has points mismatch.\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
         continue;
       }
@@ -581,7 +581,7 @@ bool GeniusLoader::Instantiate_(const std::string &deviceName, std::string &erro
       dp->AddInterface(new Interface(interfaceName, regionptr0, regionptr1, inodes0, inodes1));
       std::ostringstream os; 
       os << "Adding interface " << interfaceName << " with " << inodes0.size() << ", " << inodes1.size() << " nodes" << "\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
   }
 
@@ -615,7 +615,7 @@ bool GeniusLoader::Finalize_(std::string &errorString)
         ret = false;
         std::ostringstream os; 
         os << "Genius region name " << genius_region_name << " does not exist.\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       }
     }
   }
@@ -632,7 +632,7 @@ bool GeniusLoader::Finalize_(std::string &errorString)
         ret = false;
         std::ostringstream os; 
         os << "Region name " << region_name << " does not exist for contact " << contact_name << ".\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       }
       else
       {
@@ -646,7 +646,7 @@ bool GeniusLoader::Finalize_(std::string &errorString)
             ret = false;
             std::ostringstream os; 
             os << "Region name " << region_name << " does not have contact " << contact_name << ".\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         }
       }
     }
@@ -666,14 +666,14 @@ bool GeniusLoader::Finalize_(std::string &errorString)
         ret = false;
         std::ostringstream os; 
         os << "Region name " << region0_name << " does not exist for interface " << interface_name << ".\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       }
       if (rit1 == regionMap.end())
       {
         ret = false;
         std::ostringstream os; 
         os << "Region name " << region1_name << " does not exist for interface " << interface_name << ".\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
       }
 
       if (ret)
@@ -690,7 +690,7 @@ bool GeniusLoader::Finalize_(std::string &errorString)
             ret = false;
             std::ostringstream os; 
             os << "Region name " << region0_name << " does not have interface " << interface_name << ".\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         }
 
         bool boco1_found = genius_region0.HasBoundary(boco_name);
@@ -699,7 +699,7 @@ bool GeniusLoader::Finalize_(std::string &errorString)
             ret = false;
             std::ostringstream os; 
             os << "Region name " << region1_name << " does not have interface " << interface_name << ".\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         }
 
         if (ret)
@@ -709,7 +709,7 @@ bool GeniusLoader::Finalize_(std::string &errorString)
             ret = false;
             std::ostringstream os; 
             os << "Regions " << region0_name << " and " << region1_name << " have point mismatch for interface " << interface_name << ".\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
           }
         }
       }
@@ -725,7 +725,7 @@ bool GeniusLoader::Finalize_(std::string &errorString)
       ret = false;
       std::ostringstream os; 
       os << "Region name " << it->first << " has multiple element types.\n";
-      OutputStream::WriteOut(OutputStream::ERROR, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
     }
     else if (shapes.GetDimension() > dimension)
     {
@@ -739,7 +739,7 @@ bool GeniusLoader::Finalize_(std::string &errorString)
     os << "Region name " << it->first << " has " << shapes.Triangles.size() << " Triangles.\n";
     os << "Region name " << it->first << " has " << shapes.Lines.size() << " Lines.\n";
     os << "Region name " << it->first << " has " << shapes.Points.size() << " Points.\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
   }
 

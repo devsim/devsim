@@ -26,12 +26,12 @@ limitations under the License.
 
 template <typename DoubleType>
 TetrahedronEdgeFromNodeModel<DoubleType>::TetrahedronEdgeFromNodeModel(const std::string &en0, const std::string &en1, const std::string &en2, const std::string &en3, const std::string &nodemodel, RegionPtr rp)
-    : TetrahedronEdgeModel(en0, rp, TetrahedronEdgeModel::SCALAR), nodeModelName(nodemodel), edgeModel1Name(en1), edgeModel2Name(en2), edgeModel3Name(en3)
+    : TetrahedronEdgeModel(en0, rp, TetrahedronEdgeModel::DisplayType::SCALAR), nodeModelName(nodemodel), edgeModel1Name(en1), edgeModel2Name(en2), edgeModel3Name(en3)
 {
   RegisterCallback(nodemodel);
-  new TetrahedronEdgeSubModel<DoubleType>(en1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
-  new TetrahedronEdgeSubModel<DoubleType>(en2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
-  new TetrahedronEdgeSubModel<DoubleType>(en3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(en1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(en2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(en3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
 }
 
 

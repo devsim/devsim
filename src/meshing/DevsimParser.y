@@ -612,9 +612,9 @@ nodesol : BEG_NODESOL WORD  {
             else
             {
                 dsDevsimParse::Sol = new dsMesh::Solution($2);
-                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::NODE);
+                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::NODE);
                 dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshRegion->GetNodes().size());
-                dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DATA);
+                dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::DATA);
             }
         } |
         nodesol number  {
@@ -725,7 +725,7 @@ nodemodel : BEG_NODEMODEL WORD  {
             else
             {
                 dsDevsimParse::Sol = new dsMesh::Solution($2);
-                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::NODE);
+                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::NODE);
                 dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshRegion->GetNodes().size());
             }
         } |
@@ -758,7 +758,7 @@ edgemodel : BEG_EDGEMODEL WORD  {
             else
             {
                 dsDevsimParse::Sol = new dsMesh::Solution($2);
-                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::EDGE);
+                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::EDGE);
                 dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshRegion->GetEdges().size());
             }
         } |
@@ -791,7 +791,7 @@ triangleedgemodel : BEG_TRIANGLEEDGEMODEL WORD  {
             else
             {
                 dsDevsimParse::Sol = new dsMesh::Solution($2);
-                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::TRIANGLEEDGE);
+                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::TRIANGLEEDGE);
                 dsDevsimParse::Sol->SetReserve(3*dsDevsimParse::MeshRegion->GetTriangles().size());
             }
         } |
@@ -824,7 +824,7 @@ tetrahedronedgemodel : BEG_TETRAHEDRONEDGEMODEL WORD  {
             else
             {
                 dsDevsimParse::Sol = new dsMesh::Solution($2);
-                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::TETRAHEDRONEDGE);
+                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::TETRAHEDRONEDGE);
                 dsDevsimParse::Sol->SetReserve(6*dsDevsimParse::MeshRegion->GetTetrahedra().size());
             }
         } |
@@ -857,7 +857,7 @@ interfacenodemodel : BEG_INTERFACENODEMODEL WORD  {
             else
             {
                 dsDevsimParse::Sol = new dsMesh::Solution($2);
-                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::INTERFACENODE);
+                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::INTERFACENODE);
 //                dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshInterface->GetNodesPairs().size());
             }
         } |
@@ -871,7 +871,7 @@ interfacenodemodel : BEG_INTERFACENODEMODEL WORD  {
 
 datasection : DATASECTION {
           //// Make sure reserve is set before DATA
-          dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DATA);
+          dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::DATA);
         } |
         datasection number {
           dsDevsimParse::Sol->AddValue($2);
@@ -879,16 +879,16 @@ datasection : DATASECTION {
         ;
 
 builtin : BUILTINSECTION {
-          dsDevsimParse::Sol->SetDataType(dsMesh::Solution::BUILTIN);
+          dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::BUILTIN);
         }
 
 dataparent : DATAPARENTSECTION WORD {
-          dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DATAPARENT);
+          dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::DATAPARENT);
           dsDevsimParse::Sol->SetParent($2);
         }
 
 uniform : UNIFORMSECTION number {
-          dsDevsimParse::Sol->SetDataType(dsMesh::Solution::UNIFORM);
+          dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::UNIFORM);
           dsDevsimParse::Sol->SetUniformValue($2);
         }
 
@@ -898,7 +898,7 @@ command : command_recursive |
 
 command_recursive: 
           COMMANDSECTION WORD {
-            dsDevsimParse::Sol->SetDataType(dsMesh::Solution::COMMAND);
+            dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::COMMAND);
             dsDevsimParse::Sol->SetCommandName($2);
           } |
           command_recursive COMMAND_OPTION FLOAT {
@@ -948,9 +948,9 @@ edgesol : BEG_EDGESOL WORD  {
             else
             {
                 dsDevsimParse::Sol = new dsMesh::Solution($2);
-                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::EDGE);
+                dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::EDGE);
                 dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshRegion->GetEdges().size());
-                dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DATA);
+                dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::DATA);
             }
         } |
         edgesol number  {

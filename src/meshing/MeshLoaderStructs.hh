@@ -61,13 +61,13 @@ typedef std::vector<MeshTetrahedron> MeshTetrahedronList_t;
 
 class Solution {
     public:
-        enum ModelType {MUNDEFINED = 0, NODE, EDGE, TRIANGLEEDGE, TETRAHEDRONEDGE, INTERFACENODE};
-        enum DataType  {DUNDEFINED = 0, BUILTIN, DATAPARENT, UNIFORM, DATA, COMMAND};
+        enum class ModelType {MUNDEFINED = 0, NODE, EDGE, TRIANGLEEDGE, TETRAHEDRONEDGE, INTERFACENODE};
+        enum class DataType  {DUNDEFINED = 0, BUILTIN, DATAPARENT, UNIFORM, DATA, COMMAND};
 
         static const char *ModelTypeString[];
         static const char *DataTypeString[];
         //// Should get size reservation from number of nodes in region
-        Solution(const std::string &n) : name(n), model_type(MUNDEFINED), data_type(DUNDEFINED), uniform_value(0.0), reserve_size(0) {
+        Solution(const std::string &n) : name(n), model_type(ModelType::MUNDEFINED), data_type(DataType::DUNDEFINED), uniform_value(0.0), reserve_size(0) {
         }
 
         bool HasValues() {
@@ -122,7 +122,7 @@ class Solution {
 
         void SetDataType(DataType dt) {
           data_type = dt;
-          if (data_type == DATA)
+          if (data_type == DataType::DATA)
           {
             values.reserve(reserve_size);
           }

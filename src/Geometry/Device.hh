@@ -24,6 +24,10 @@ limitations under the License.
 #include <map>
 #include <complex>
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+
 class PermutationEntry;
 typedef std::map<size_t, PermutationEntry> PermutationMap;
 
@@ -79,9 +83,12 @@ class Device
       /// If we ever add a delete method.  Interfaces would need to be removed automatically when their underlying regions are removed.
       void AddRegion(const RegionPtr &);
 
-      void Update(const std::vector<double> &/*result*/);
-      void ACUpdate(const std::vector<std::complex<double> > &/*result*/);
-      void NoiseUpdate(const std::string &/*output*/, const std::vector<size_t> &/*permvec*/, const std::vector<std::complex<double> > &/*result*/);
+      template <typename DoubleType>
+      void Update(const std::vector<DoubleType> &/*result*/);
+      template <typename DoubleType>
+      void ACUpdate(const std::vector<std::complex<DoubleType> > &/*result*/);
+      template <typename DoubleType>
+      void NoiseUpdate(const std::string &/*output*/, const std::vector<size_t> &/*permvec*/, const std::vector<std::complex<DoubleType> > &/*result*/);
 
       void UpdateContacts();
       // Need to be careful with accessors and stuff
@@ -102,20 +109,25 @@ class Device
       size_t GetBaseEquationNumber();
       size_t CalcMaxEquationNumber();
 
-    void ContactAssemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    template <typename DoubleType>
+    void ContactAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-    void InterfaceAssemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    template <typename DoubleType>
+    void InterfaceAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-    void RegionAssemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    template <typename DoubleType>
+    void RegionAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-    double GetAbsError() const
+    template <typename DoubleType>
+    DoubleType GetAbsError() const
     {
-        return absError;
+        return static_cast<DoubleType>(absError);
     }
 
-    double GetRelError() const
+    template <typename DoubleType>
+    DoubleType GetRelError() const
     {
-        return relError;
+        return static_cast<DoubleType>(relError);
     }
 
     const CoordinateList_t &GetCoordinateList() const
@@ -189,8 +201,13 @@ class Device
 
       size_t baseeqnnum; // base equation number for this region
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+      float128 relError;
+      float128 absError;
+#else
       double relError;
       double absError;
+#endif
 };
 
 #endif

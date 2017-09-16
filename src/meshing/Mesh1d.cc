@@ -104,7 +104,7 @@ void Mesh1d::SetLocationsAndTags()
 
             std::ostringstream os; 
             os << tag << "\n";
-            OutputStream::WriteOut(OutputStream::INFO, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 
             dsAssert(!tagsToIndices.count(tag), "UNEXPECTED");
             dsAssert(!indicesToTags.count(pos), "UNEXPECTED");
@@ -368,7 +368,7 @@ bool Mesh1d::Finalize_(std::string &errorString)
         }
 //      os << "\n";
 
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
 
     if (ret)

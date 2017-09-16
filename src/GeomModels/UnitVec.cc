@@ -30,16 +30,16 @@ UnitVec<DoubleType>::~UnitVec()
 
 template <typename DoubleType>
 UnitVec<DoubleType>::UnitVec(RegionPtr rp) :
-EdgeModel("unitx", rp, EdgeModel::SCALAR)
+EdgeModel("unitx", rp, EdgeModel::DisplayType::SCALAR)
 {
     if (rp->GetDimension() > 1)
     {
-        unity = EdgeSubModel<DoubleType>::CreateEdgeSubModel("unity", rp, EdgeModel::SCALAR, this->GetSelfPtr());
+        unity = EdgeSubModel<DoubleType>::CreateEdgeSubModel("unity", rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
     }
 
     if (rp->GetDimension() > 2)
     {
-        unitz = EdgeSubModel<DoubleType>::CreateEdgeSubModel("unitz", rp, EdgeModel::SCALAR, this->GetSelfPtr());
+        unitz = EdgeSubModel<DoubleType>::CreateEdgeSubModel("unitz", rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
     }
 }
 

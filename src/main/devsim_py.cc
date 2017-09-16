@@ -55,8 +55,11 @@ int main(int argc, char * argv[])
     dsMesh::MeshKeeper::DestroyInstance();
     NodeKeeper::delete_instance();
     InstanceKeeper::delete_instance();
+#ifndef _WIN32
+#warning "handle multiprecision"
+#endif
     MathEval<double>::DestroyInstance();
-    TimeData::DestroyInstance();
+    TimeData<double>::DestroyInstance();
 #endif
     return ret;
 }

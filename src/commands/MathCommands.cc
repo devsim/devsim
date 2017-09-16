@@ -48,21 +48,21 @@ solveCmd(CommandHandler &data)
   /// (This would be on the contact and not the contact equation??)
   static dsGetArgs::Option option[] =
   {
-    {"type",               "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {"absolute_error",     "0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
-    {"relative_error",     "0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
-    {"maximum_iterations", "20", dsGetArgs::Types::INTEGER, dsGetArgs::Types::OPTIONAL},
-    {"frequency",    "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
-    {"output_node",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-    {"solver_type",  "direct", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-    {"tdelta",       "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
-    {"charge_error", "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
-    {"gamma",        "1.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
+    {"type",               "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {"absolute_error",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"relative_error",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"maximum_iterations", "20", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::OPTIONAL},
+    {"frequency",    "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"output_node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+    {"solver_type",  "direct", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+    {"tdelta",       "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"charge_error", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"gamma",        "1.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
     // empty string converts to bool for python
-    {"info", "", dsGetArgs::Types::BOOLEAN, dsGetArgs::Types::OPTIONAL},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    {"info", "", dsGetArgs::optionType::BOOLEAN, dsGetArgs::requiredType::OPTIONAL},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
-//      {"callback",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
+//      {"callback",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
 
   dsGetArgs::switchList switches = NULL;
 
@@ -151,21 +151,21 @@ solveCmd(CommandHandler &data)
   const double frequency = data.GetDoubleOption("frequency");
   const std::string &outputNode = data.GetStringOption("output_node");
 
-  dsMath::Newton solver;
+  dsMath::Newton<double> solver;
   solver.SetAbsError(absolute_error);
   solver.SetRelError(relative_error);
   solver.SetQRelError(charge_error);
   solver.SetMaxIter(maximum_iterations);
 
-  std::unique_ptr<dsMath::LinearSolver> linearSolver;
+  std::unique_ptr<dsMath::LinearSolver<double>> linearSolver;
 
   if (solver_type == "direct")
   {
-    linearSolver = std::unique_ptr<dsMath::LinearSolver>(new dsMath::DirectLinearSolver);
+    linearSolver = std::unique_ptr<dsMath::LinearSolver<double>>(new dsMath::DirectLinearSolver<double>);
   }
   else if (solver_type == "iterative")
   {
-    linearSolver = std::unique_ptr<dsMath::LinearSolver>(new dsMath::IterativeLinearSolver);
+    linearSolver = std::unique_ptr<dsMath::LinearSolver<double>>(new dsMath::IterativeLinearSolver<double>);
   }
   else
   {
@@ -184,7 +184,7 @@ solveCmd(CommandHandler &data)
 
   if (type == "dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCOnly(), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCOnly<double>(), p_ohm);
   }
   else if (type == "ac")
   {
@@ -196,19 +196,19 @@ solveCmd(CommandHandler &data)
   }
   else if (type == "transient_dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TransientDC(), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TransientDC<double>(), p_ohm);
   }
   else if (type == "transient_bdf1")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF1(tdelta, gamma), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF1<double>(tdelta, gamma), p_ohm);
   }
   else if (type == "transient_tr")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TR(tdelta, gamma), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TR<double>(tdelta, gamma), p_ohm);
   }
   else if (type == "transient_bdf2")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF2(tdelta, gamma), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF2<double>(tdelta, gamma), p_ohm);
   }
 
   if (!res)
@@ -241,10 +241,10 @@ getContactCurrentCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     static dsGetArgs::Option option[] = {
-        {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"equation", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"contact",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"equation", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"contact",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -310,11 +310,11 @@ getContactCurrentCmd(CommandHandler &data)
     }
     else if (commandName == "get_contact_current")
     {
-        val = eqn.GetCurrent();
+        val = eqn.GetCurrent<double>();
     }
     else if (commandName == "get_contact_charge")
     {
-        val = eqn.GetCharge();
+        val = eqn.GetCharge<double>();
     }
     else
     {

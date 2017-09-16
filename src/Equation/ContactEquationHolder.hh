@@ -20,6 +20,10 @@ limitations under the License.
 
 #include "MathEnum.hh"
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+
 class ObjectHolder;
 
 #include <string>
@@ -53,22 +57,32 @@ using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 
 class ContactEquationHolder {
   public:
-    ContactEquationHolder() : double_(nullptr) {}
-    ContactEquationHolder(ContactEquation<double> *);
+    ContactEquationHolder() {}
+
+    template <typename DoubleType>
+    ContactEquationHolder(ContactEquation<DoubleType> *);
+
     ~ContactEquationHolder();
 
-    double GetCurrent() const;
-    double GetCharge() const;
+    template <typename DoubleType>
+    DoubleType GetCurrent() const;
 
-    const std::string &GetName() const;
-    const std::string &GetVariable() const;
+    template <typename DoubleType>
+    DoubleType GetCharge() const;
+
+    std::string GetName() const;
+    std::string GetVariable() const;
     bool operator==(const ContactEquationHolder &) const;
     void UpdateContact() const;
-    void Assemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+    template <typename DoubleType>
+    void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
     void DevsimSerialize(std::ostream &) const;
     void GetCommandOptions(std::map<std::string, ObjectHolder> &) const;
   private:
     std::shared_ptr<ContactEquation<double>> double_;
+#ifdef DEVSIM_EXTENDED_PRECISION
+    std::shared_ptr<ContactEquation<float128>> float128_;
+#endif
 };
 #endif
 

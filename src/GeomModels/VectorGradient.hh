@@ -29,12 +29,17 @@ typedef Triangle *TrianglePtr;
 typedef const Triangle *ConstTrianglePtr;
 #endif
 
+namespace VectorGradientEnum
+{
+  enum CalcType {DEFAULT=0, AVOIDZERO};
+  extern const char *CalcTypeString[];
+}
+
 template <typename DoubleType>
 class VectorGradient : public NodeModel
 {
     public:
-      enum CalcType {DEFAULT=0, AVOIDZERO};
-      VectorGradient(RegionPtr, const std::string &, CalcType);
+      VectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
 
       void Serialize(std::ostream &) const;
 
@@ -47,11 +52,10 @@ class VectorGradient : public NodeModel
       void   setInitialValues();
 
       std::string   parentname_;
-      CalcType      calctype_;
+      VectorGradientEnum::CalcType      calctype_;
       WeakNodeModelPtr yfield_;
       WeakNodeModelPtr zfield_;
 
-      const static char *CalcTypeString[];
 };
 
 #endif

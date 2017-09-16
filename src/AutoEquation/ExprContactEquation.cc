@@ -66,7 +66,7 @@ void ExprContactEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec
     const std::string &EdgeCoupleModel = ContactEquation<DoubleType>::GetRegion().GetEdgeCoupleModel();
     const std::string &ElementEdgeCoupleModel = ContactEquation<DoubleType>::GetRegion().GetElementEdgeCoupleModel();
 
-    if (w == dsMathEnum::PERMUTATIONSONLY)
+    if (w == dsMathEnum::WhatToLoad::PERMUTATIONSONLY)
     {
         if (!nodemodel_int.empty())
         {
@@ -74,7 +74,7 @@ void ExprContactEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec
             ContactEquation<DoubleType>::AssembleNodeEquation(nodemodel_int, m, v, p, w, NodeVolumeModel);
         }
     }
-    else if (t == dsMathEnum::DC)
+    else if (t == dsMathEnum::TimeMode::DC)
     {
         if (!nodemodel_int.empty())
         {
@@ -114,7 +114,7 @@ void ExprContactEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec
             }
         }
     }
-    else if (t == dsMathEnum::TIME)
+    else if (t == dsMathEnum::TimeMode::TIME)
     {
     // In a circuit equation, we need to account for displacement flux
     /**
@@ -215,3 +215,8 @@ void ExprContactEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::strin
 }
 
 template class ExprContactEquation<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class ExprContactEquation<float128>;
+#endif
+

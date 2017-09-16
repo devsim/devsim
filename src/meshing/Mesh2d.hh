@@ -29,7 +29,7 @@ limitations under the License.
 #include <map>
 
 namespace dsMesh {
-enum LineDirection {XDIR = 0, YDIR};
+enum class LineDirection {XDIR = 0, YDIR};
 class Mesh2d;
 typedef Mesh2d *Mesh2dPtr;
 

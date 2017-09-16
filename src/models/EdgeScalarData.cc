@@ -22,18 +22,6 @@ limitations under the License.
 #include "EdgeModel.hh"
 #include "ScalarData.cc"
 
-//// Manual Template Instantiation
-template class ScalarData<EdgeModel, double>;
-
-template class ScalarData<EdgeModel, double>& EdgeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const double &, const ScalarDataHelper::times_equal<double> &);
-
-template class ScalarData<EdgeModel, double>& EdgeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const EdgeScalarData<double> &, const ScalarDataHelper::times_equal<double> &);
-
-template class ScalarData<EdgeModel, double>& EdgeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const double &, const ScalarDataHelper::plus_equal<double> &);
-
-template class ScalarData<EdgeModel, double>& EdgeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const EdgeScalarData<double> &, const ScalarDataHelper::plus_equal<double> &);
-
-
 ///
 /// Creates Edge model for node value on both sides of edge
 /// Can be made more optimal by using vector on region which provides mapping from node index to edge index
@@ -54,4 +42,19 @@ void createEdgeModelsFromNodeModel(const NodeScalarList<DoubleType> &nm, const R
 }
 
 template void createEdgeModelsFromNodeModel(const NodeScalarList<double> &nm, const Region &reg, EdgeScalarList<double> &edge0, EdgeScalarList<double> &edge1);
+#ifdef DEVSIM_EXTENDED_PRECISION
+template void createEdgeModelsFromNodeModel(const NodeScalarList<float128> &nm, const Region &reg, EdgeScalarList<float128> &edge0, EdgeScalarList<float128> &edge1);
+#endif
+
+#define SCCLASSNAME EdgeScalarData
+#define SCMODELTYPE EdgeModel
+#define SCDBLTYPE   double
+#include "ScalarDataInstantiate.cc"
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#undef  SCDBLTYPE
+#define SCDBLTYPE float128
+#include "Float128.hh"
+#include "ScalarDataInstantiate.cc"
+#endif
 

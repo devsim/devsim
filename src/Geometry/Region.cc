@@ -102,32 +102,72 @@ const Node *findNodeOppositeOfTriangleEdge(const Edge &edge, const Triangle &tri
 }// anonymous namespace
 
 
-const GradientField &Region::GetGradientField() const
+template <typename DoubleType>
+const GradientField<DoubleType> &Region::GetGradientField() const
 {
-  if (!gradientField_)
+  GradientField<DoubleType> *gradientField = GetGeometryField<DoubleType>().gradientField;
+  if (!gradientField)
   {
-    gradientField_ = new GradientField(this);
+    gradientField = new GradientField<DoubleType>(this);
   }
-  return *gradientField_;
+  return *gradientField;
 }
 
-const TriangleElementField &Region::GetTriangleElementField() const
+template <typename DoubleType>
+const TriangleElementField<DoubleType> &Region::GetTriangleElementField() const
 {
-  if (!triangleElementField_)
+  TriangleElementField<DoubleType> *triangleElementField = GetGeometryField<DoubleType>().triangleElementField;
+  if (!triangleElementField)
   {
-    triangleElementField_ = new TriangleElementField(this);
+    triangleElementField = new TriangleElementField<DoubleType>(this);
   }
-  return *triangleElementField_;
+  return *triangleElementField;
 }
 
-const TetrahedronElementField &Region::GetTetrahedronElementField() const
+template <typename DoubleType>
+const TetrahedronElementField<DoubleType> &Region::GetTetrahedronElementField() const
 {
-  if (!tetrahedronElementField_)
+  TetrahedronElementField<DoubleType> *tetrahedronElementField = GetGeometryField<DoubleType>().tetrahedronElementField;
+  if (!tetrahedronElementField)
   {
-    tetrahedronElementField_ = new TetrahedronElementField(this);
+    tetrahedronElementField = new TetrahedronElementField<DoubleType>(this);
   }
-  return *tetrahedronElementField_;
+  return *tetrahedronElementField;
 }
+
+template <typename DoubleType>
+const std::vector<Vector<DoubleType> > &Region::GetTriangleCenters() const
+{
+  return GetGeometryField<DoubleType>().triangleCenters;
+}
+
+template <typename DoubleType>
+const std::vector<Vector<DoubleType> > &Region::GetTetrahedronCenters() const
+{
+  return GetGeometryField<DoubleType>().tetrahedronCenters;
+}
+
+template <typename DoubleType>
+Region::GeometryField<DoubleType>::~GeometryField()
+{
+  delete gradientField;
+  delete triangleElementField;
+  delete tetrahedronElementField;
+}
+
+template <>
+Region::GeometryField<double> &Region::GetGeometryField() const
+{
+  return GeometryField_double;
+}
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+template <>
+Region::GeometryField<float128> &Region::GetGeometryField() const
+{
+  return GeometryField_float128;
+}
+#endif
 
 Region::~Region()
 {
@@ -143,9 +183,6 @@ Region::~Region()
     deleteVectorPointers(edgeList);
     deleteVectorPointers(triangleList);
     deleteVectorPointers(tetrahedronList);
-    delete gradientField_;
-    delete triangleElementField_;
-    delete tetrahedronElementField_;
 
     for (size_t i = 0; i < tetrahedronToEdgeDataList.size(); ++i)
     {
@@ -154,7 +191,7 @@ Region::~Region()
 }
 
 Region::Region(std::string regName, std::string mat, size_t d, ConstDevicePtr dp)
-    : finalized(false), device(dp), relError(0.0), absError(0.0), gradientField_(NULL), triangleElementField_(NULL), tetrahedronElementField_(NULL)
+    : finalized(false), device(dp), relError(0.0), absError(0.0)
 {
     dsAssert(!mat.empty(), "UNEXPECTED");
     materialName = mat;
@@ -294,7 +331,7 @@ void Region::SetNodeIndexes()
   {
     os << "Node " << nodeList[i]->GetIndex() << "\n";
   }
-  GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+  GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
 #endif
 }
 
@@ -662,20 +699,48 @@ void Region::CreateTetrahedronToTriangleList()
 
 void Region::SetTriangleCenters()
 {
-  triangleCenters.resize(triangleList.size());
+#ifdef DEVSIM_EXTENDED_PRECISION
+  auto &triangleCenters_float128 = GetGeometryField<float128>().triangleCenters;
+  auto &triangleCenters_double = GetGeometryField<double>().triangleCenters;
+  triangleCenters_float128.resize(triangleList.size());
+  triangleCenters_double.resize(triangleList.size());
   for (size_t i = 0; i < triangleList.size(); ++i)
   {
-    triangleCenters[i] = GetCenter(*triangleList[i]);
+    Vector<float128> &center = triangleCenters_float128[i];
+    center = GetCenter<float128>(*triangleList[i]);
+    triangleCenters_double[i] = Vector<double>(static_cast<double>(center.Getx()), static_cast<double>(center.Gety()), static_cast<double>(center.Getz()));
   }
+#else
+  auto &triangleCenters_double = GetGeometryField<double>().triangleCenters;
+  triangleCenters_double.resize(triangleList.size());
+  for (size_t i = 0; i < triangleList.size(); ++i)
+  {
+    triangleCenters_double[i] = GetCenter<double>(*triangleList[i]);
+  }
+#endif
 }
 
 void Region::SetTetrahedronCenters()
 {
-  tetrahedronCenters.resize(tetrahedronList.size());
+#ifdef DEVSIM_EXTENDED_PRECISION
+  auto &tetrahedronCenters_float128 = GetGeometryField<float128>().tetrahedronCenters;
+  auto &tetrahedronCenters_double = GetGeometryField<double>().tetrahedronCenters;
+  tetrahedronCenters_float128.resize(tetrahedronList.size());
+  tetrahedronCenters_double.resize(tetrahedronList.size());
   for (size_t i = 0; i < tetrahedronList.size(); ++i)
   {
-    tetrahedronCenters[i] = GetCenter(*tetrahedronList[i]);
+    Vector<float128> &center = tetrahedronCenters_float128[i];
+    center = GetCenter<float128>(*tetrahedronList[i]);
+    tetrahedronCenters_double[i] = Vector<double>(static_cast<double>(center.Getx()), static_cast<double>(center.Gety()), static_cast<double>(center.Getz()));
   }
+#else
+  auto &tetrahedronCenters_double = GetGeometryField<double>().tetrahedronCenters;
+  tetrahedronCenters_double.resize(tetrahedronList.size());
+  for (size_t i = 0; i < tetrahedronList.size(); ++i)
+  {
+    tetrahedronCenters_double[i] = GetCenter<double>(*tetrahedronList[i]);
+  }
+#endif
 }
 
 //Performs the sort when we are done adding nodes and edges
@@ -846,7 +911,7 @@ NodeModelPtr Region::AddNodeModel(NodeModel *nmp)
         std::ostringstream os; 
         os << "Replacing Node Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
-        GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
         ret = NodeModelPtr(nmp);
         nodeModels[nm] = ret;
     }
@@ -855,21 +920,21 @@ NodeModelPtr Region::AddNodeModel(NodeModel *nmp)
         std::ostringstream os;
         os << "Cannot replace Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Node Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else if (triangleEdgeModels.count(nm))
     {
         std::ostringstream os;
         os << "Cannot replace Triangle Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Node Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else if (tetrahedronEdgeModels.count(nm))
     {
         std::ostringstream os;
         os << "Cannot replace Tetrahedron Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Node Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else
     {
@@ -890,7 +955,7 @@ EdgeModelPtr Region::AddEdgeModel(EdgeModel *emp)
         std::ostringstream os; 
         os << "Replacing Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
-        GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
         ret = EdgeModelPtr(emp);
         edgeModels[nm] = ret;
     }
@@ -899,21 +964,21 @@ EdgeModelPtr Region::AddEdgeModel(EdgeModel *emp)
         std::ostringstream os;
         os << "Cannot replace Node Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Edge Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else if (triangleEdgeModels.count(nm))
     {
         std::ostringstream os;
         os << "Cannot replace Triangle Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Edge Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else if (tetrahedronEdgeModels.count(nm))
     {
         std::ostringstream os;
         os << "Cannot replace Tetrahedron Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Edge Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else
     {
@@ -933,7 +998,7 @@ TriangleEdgeModelPtr Region::AddTriangleEdgeModel(TriangleEdgeModel *emp)
         std::ostringstream os; 
         os << "Replacing Triangle Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
-        GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
         ret = TriangleEdgeModelPtr(emp);
         triangleEdgeModels[nm] = ret;
     }
@@ -942,21 +1007,21 @@ TriangleEdgeModelPtr Region::AddTriangleEdgeModel(TriangleEdgeModel *emp)
         std::ostringstream os;
         os << "Cannot replace Node Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Triangle Edge Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else if (edgeModels.count(nm))
     {
         std::ostringstream os;
         os << "Cannot replace Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Triangle Edge Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else if (tetrahedronEdgeModels.count(nm))
     {
         std::ostringstream os;
         os << "Cannot replace Tetrahedron Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Triangle Edge Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else
     {
@@ -976,7 +1041,7 @@ TetrahedronEdgeModelPtr Region::AddTetrahedronEdgeModel(TetrahedronEdgeModel *em
         std::ostringstream os; 
         os << "Replacing Tetrahedron Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
-        GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
         ret = TetrahedronEdgeModelPtr(emp);
         tetrahedronEdgeModels[nm] = ret;
     }
@@ -985,21 +1050,21 @@ TetrahedronEdgeModelPtr Region::AddTetrahedronEdgeModel(TetrahedronEdgeModel *em
         std::ostringstream os;
         os << "Cannot replace Node Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Tetrahedron Edge Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else if (edgeModels.count(nm))
     {
         std::ostringstream os;
         os << "Cannot replace Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Tetrahedron Edge Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else if (triangleEdgeModels.count(nm))
     {
         std::ostringstream os;
         os << "Cannot replace Triangle Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << " with Tetrahedron Edge Model of the same name\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else
     {
@@ -1114,7 +1179,7 @@ void Region::AddEquation(EquationHolder &eq)
       os << "Warning: Will not replace equation with itself.\n"
           "Region: " << this->GetName() << ", Equation: " << nm <<
           ", New Variable: " << var << "\n";
-      GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+      GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
     }
     else
     {
@@ -1123,7 +1188,7 @@ void Region::AddEquation(EquationHolder &eq)
         std::ostringstream os; 
         os << "Warning: Adding a new equation by the same name with a different variable will remove mapping to other variable.\n"
             "Region: " << this->GetName() << ", Equation: " << nm << ", Old variable: " << oeq.GetVariable() << ", New Variable: " << var << "\n";
-        GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
 
         variableEquationMap.erase(var);
         variableEquationMap[var] = nm;
@@ -1133,7 +1198,7 @@ void Region::AddEquation(EquationHolder &eq)
         std::ostringstream os; 
         os << "Warning: Replacing equation with equation of the same name.\n"
             "Region: " << this->GetName() << ", Equation: " << nm << ", Variable: " << var << "\n";
-        GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
       }
 
       equationPointerMap[nm] = eq;
@@ -1148,7 +1213,7 @@ void Region::AddEquation(EquationHolder &eq)
       std::ostringstream os; 
       os << "ERROR: Can't create equation if its variable is already being used\n"
           << "New Equation: " << nm << ", Old Equation: " << oenm << ", Variable: "  << var << "\n";
-      GeometryStream::WriteOut(OutputStream::FATAL, *this, os.str());
+      GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
     }
     else
     {
@@ -1277,7 +1342,8 @@ std::vector<std::string> Region::GetVariableList() const
     return vlist;
 }
 
-void Region::Update(const std::vector<double> &result)
+template <typename DoubleType>
+void Region::Update(const std::vector<DoubleType> &result)
 {
         absError = 0.0;
         relError = 0.0;
@@ -1301,8 +1367,8 @@ void Region::Update(const std::vector<double> &result)
 
             eqptr.Update(*nm, result);
 
-            double rerr = eqptr.GetRelError();
-            double aerr = eqptr.GetAbsError();
+            DoubleType rerr = eqptr.GetRelError<DoubleType>();
+            DoubleType aerr = eqptr.GetAbsError<DoubleType>();
 
             absError += aerr;
             relError += rerr;
@@ -1314,7 +1380,8 @@ void Region::Update(const std::vector<double> &result)
         }
 }
 
-void Region::ACUpdate(const std::vector<std::complex<double> > &result)
+template <typename DoubleType>
+void Region::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
 {
         if (!numequations)
         {
@@ -1337,7 +1404,8 @@ void Region::ACUpdate(const std::vector<std::complex<double> > &result)
         }
 }
 
-void Region::NoiseUpdate(const std::string &output, const std::vector<size_t> &permvec, const std::vector<std::complex<double> > &result)
+template <typename DoubleType>
+void Region::NoiseUpdate(const std::string &output, const std::vector<size_t> &permvec, const std::vector<std::complex<DoubleType> > &result)
 {
         if (!numequations)
         {
@@ -1356,7 +1424,8 @@ void Region::NoiseUpdate(const std::string &output, const std::vector<size_t> &p
         }
 }
 
-void Region::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Region::Assemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
     if (numequations)
     {
@@ -1379,10 +1448,32 @@ void Region::BackupSolutions(const std::string &suffix)
     NodeModelPtr bnm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(bname));
     if (!bnm)
     {
-      bnm = NodeSolution<double>::CreateNodeSolution(bname, this);
+      if (std::dynamic_pointer_cast<const NodeSolution<double>>(nm))
+      {
+        bnm = NodeSolution<double>::CreateNodeSolution(bname, this);
+      }
+#ifdef DEVSIM_EXTENDED_PRECISION
+      else if (std::dynamic_pointer_cast<const NodeSolution<float128>>(nm))
+      {
+        bnm = NodeSolution<float128>::CreateNodeSolution(bname, this);
+      }
+#endif
+      else
+      {
+        dsAssert(false, std::string("Node Model: \"") + *it + "\" is not a Node Solution" );
+      }
     }
 
-    bnm->SetValues(*nm);
+    if (std::dynamic_pointer_cast<NodeSolution<double>>(bnm))
+    {
+      bnm->SetValues(nm->GetScalarValues<double>());
+    }
+#ifdef DEVSIM_EXTENDED_PRECISION
+    else if (std::dynamic_pointer_cast<NodeSolution<float128>>(bnm))
+    {
+      bnm->SetValues(nm->GetScalarValues<float128>());
+    }
+#endif
   }
 }
 
@@ -1397,7 +1488,20 @@ void Region::RestoreSolutions(const std::string &suffix)
     NodeModelPtr bnm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(bname));
     dsAssert(bnm.get(), "UNEXPECTED");
 
-    nm->SetValues(*bnm);
+    if (std::dynamic_pointer_cast<NodeSolution<double>>(nm))
+    {
+      nm->SetValues(bnm->GetScalarValues<double>());
+    }
+#ifdef DEVSIM_EXTENDED_PRECISION
+    else if (std::dynamic_pointer_cast<NodeSolution<float128>>(nm))
+    {
+      nm->SetValues(bnm->GetScalarValues<float128>());
+    }
+#endif
+    else
+    {
+      dsAssert(0, "UNEXPECTED");
+    }
   }
 }
 
@@ -1575,17 +1679,31 @@ std::string Region::GetEdgeNode1VolumeModel() const
   return dbent.second.GetString();
 }
 
-template <typename DoubleType>
-ModelExprDataCachePtr<DoubleType> Region::GetModelExprDataCache()
+template <>
+ModelExprDataCachePtr<double> Region::GetModelExprDataCache()
 {
-  return modelExprDataCache.lock();
+  return modelExprDataCache_double.lock();
 }
 
-template <typename DoubleType>
-void Region::SetModelExprDataCache(ModelExprDataCachePtr<DoubleType> p)
+template <>
+void Region::SetModelExprDataCache(ModelExprDataCachePtr<double> p)
 {
-  modelExprDataCache = p;
+  modelExprDataCache_double = p;
 }
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+template <>
+ModelExprDataCachePtr<float128> Region::GetModelExprDataCache()
+{
+  return modelExprDataCache_float128.lock();
+}
+
+template <>
+void Region::SetModelExprDataCache(ModelExprDataCachePtr<float128> p)
+{
+  modelExprDataCache_float128 = p;
+}
+#endif
 
 
 ConstEdgePtr Region::FindEdge(ConstNodePtr nh, ConstNodePtr nt) const
@@ -1683,8 +1801,11 @@ ConstTetrahedronPtr Region::FindTetrahedron(ConstNodePtr n0, ConstNodePtr n1, Co
   return ret;
 }
 
-template ModelExprDataCachePtr<double> Region::GetModelExprDataCache();
-
-template void Region::SetModelExprDataCache(ModelExprDataCachePtr<double>);
-
+#define DBLTYPE double
+#include "RegionInstantiate.cc"
+#undef DBLTYPE
+#ifdef DEVSIM_EXTENDED_PRECISION
+#define DBLTYPE float128
+#include "RegionInstantiate.cc"
+#endif
 

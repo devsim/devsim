@@ -24,9 +24,6 @@ limitations under the License.
 #include "GlobalData.hh"
 #include "AdditionalMath.hh"
 #include "kahan.hh"
-#include <cmath>
-#include <sstream>
-#include <map>
 
 #include "Interpreter.hh"
 
@@ -34,10 +31,21 @@ limitations under the License.
 
 #include "MathWrapper.hh"
 
+#include <cmath>
+using std::abs;
+#include <sstream>
+#include <map>
+
 #if 0
 #ifdef _WIN32
 #include "boost/math/special_functions/erf.hpp"
 #endif
+#endif
+
+template <> MathEval<double> *MathEval<double>::instance_ = NULL;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template <> MathEval<float128> *MathEval<float128>::instance_ = NULL;
 #endif
 
 namespace Eqomfp {
@@ -69,23 +77,17 @@ namespace Eqomfp {
       const char *desc;
   };
 
-  UnaryTblEntry<double> UnaryTable[] = {
-  {"abs",       fabs,         "abs(obj)   -- Absolute value"},
+  UnaryTblEntry<double> UnaryTable_double[] = {
+  {"abs",       abs,         "abs(obj)   -- Absolute value"},
   {"exp",       exp,          "exp(obj)   -- Exponentiation with respect to e"},
   {"log",       log,          "log(obj)   -- Natural logarithm"},
   {"B",         Bernoulli,    "B(obj)     -- Bernoulli Function"},
   {"dBdx",      derBernoulli, "dBdx(obj)  -- derivative Bernoulli wrt arg"},
   {"step",      step,         "step(obj)  -- step function"},
   {"sgn",       sgn,          "sgn(obj)   -- sign function"},
-  {"acosh",     atanh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
+  {"acosh",     acosh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
   {"asinh",     asinh,        "asinh(obj)   -- inverse hyperbolic sine function"},
   {"atanh",     atanh,        "atanh(obj)   -- inverse hyperbolic tangent function"},
-#if 0
-#ifdef _WIN32
-  {"erf",       boost::math::erf,          "erf(obj)   -- error function"},
-  {"erfc",      boost::math::erfc,          "erf(obj)   -- complementary error function"},
-#endif
-#endif
   {"erf",       erf,          "erf(obj)   -- error function"},
   {"erfc",      erfc,         "erfc(obj)  -- complementary error function"},
   {"derfdx",    derfdx,       "derfdx(obj)   -- derivative error function"},
@@ -101,12 +103,9 @@ namespace Eqomfp {
   {NULL, NULL, NULL}
   };
 
-  BinaryTblEntry<double> BinaryTable[] = {
+  BinaryTblEntry<double> BinaryTable_double[] = {
   {"min",  min,  "min(obj1, obj2)       -- minimum of obj1 and obj2"},
   {"max",  max,  "max(obj1, obj2)       -- maximum of obj1 and obj2"},
-//  {"parallel", parallel,  "parallel(obj1, obj2)       -- 1 / (1/obj1 + 1/obj2)"},
-//  {"dparallel_dx", dparallel_dx,  "dparallel_dx(obj1, obj2)       -- derivative wrt. first argument to parallel"},
-//  {"pow",  pow,  "pow(obj1, obj2)       -- Raise obj1 to the power of obj2"},
   {"&&",  logical_and,  "obj1 && obj2       -- logical and"},
   {"||",  logical_or,  "obj1 || obj2       -- logical or"},
   {"==",  logical_eq,  "obj1 == obj2       -- logical equal"},
@@ -117,20 +116,208 @@ namespace Eqomfp {
   {NULL, NULL, NULL}
   };
 
-  TernaryTblEntry<double> TernaryTable[] = {
+  TernaryTblEntry<double> TernaryTable_double[] = {
   {"ifelse",  ifelsefunc,  "ifelse(obj1, obj2, obj3) -- if (obj1) then (obj2) else (obj3)"},
   {"kahan3",  kahan3,  "kahan(obj1, obj2, obj3) -- kahan summation"},
   {NULL, NULL, NULL}
   };
 
-  QuaternaryTblEntry<double> QuaternaryTable[] = {
+  QuaternaryTblEntry<double> QuaternaryTable_double[] = {
   {"dot2d",  dot2dfunc,  "dot2d(ax, ay, bx, by) -- ax*bx + ay*by"},
   {"kahan4",  kahan4,  "kahan(obj1, obj2, obj3, obj4) -- kahan summation"},
   {NULL, NULL, NULL}
   };
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+float128 abs(float128 x)
+{
+  return boost::multiprecision::abs(x);
+}
+float128 exp(float128 x)
+{
+  return boost::multiprecision::exp(x);
+}
+float128 log(float128 x)
+{
+  return boost::multiprecision::log(x);
 }
 
-template <> MathEval<double> *MathEval<double>::instance_ = NULL;
+float128 Bernoulli(float128 x)
+{
+  return Bernoulli(static_cast<double>(x));
+}
+
+float128 derBernoulli(float128 x)
+{
+  return derBernoulli(static_cast<double>(x));
+}
+
+float128 Fermi(float128 x)
+{
+  return Fermi(static_cast<double>(x));
+}
+
+float128 dFermidx(float128 x)
+{
+  return dFermidx(static_cast<double>(x));
+}
+
+float128 InvFermi(float128 x)
+{
+  return InvFermi(static_cast<double>(x));
+}
+
+float128 dInvFermidx(float128 x)
+{
+  return dInvFermidx(static_cast<double>(x));
+}
+
+float128 acosh(float128 x)
+{
+  return cosh(static_cast<double>(x));
+}
+
+float128 asinh(float128 x)
+{
+  return asinh(static_cast<double>(x));
+}
+
+float128 atanh(float128 x)
+{
+  return atanh(static_cast<double>(x));
+}
+
+
+float128 erf(float128 x)
+{
+  return erf(static_cast<double>(x));
+}
+
+float128 erfc(float128 x)
+{
+  return erfc(static_cast<double>(x));
+}
+
+
+float128 derfdx(float128 x)
+{
+  return derfdx(static_cast<double>(x));
+}
+
+
+float128 derfcdx(float128 x)
+{
+  return derfcdx(static_cast<double>(x));
+}
+
+
+
+  UnaryTblEntry<float128> UnaryTable_float128[] = {
+  {"abs",       abs,         "abs(obj)   -- Absolute value"},
+  {"exp",       exp,          "exp(obj)   -- Exponentiation with respect to e"},
+  {"log",       log,          "log(obj)   -- Natural logarithm"},
+  {"B",         Bernoulli,    "B(obj)     -- Bernoulli Function"},
+  {"dBdx",      derBernoulli, "dBdx(obj)  -- derivative Bernoulli wrt arg"},
+  {"step",      step,         "step(obj)  -- step function"},
+  {"sgn",       sgn,          "sgn(obj)   -- sign function"},
+  {"acosh",     acosh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
+  {"asinh",     asinh,        "asinh(obj)   -- inverse hyperbolic sine function"},
+  {"atanh",     atanh,        "atanh(obj)   -- inverse hyperbolic tangent function"},
+  {"erf",       erf,          "erf(obj)   -- error function"},
+  {"erfc",      erfc,         "erfc(obj)  -- complementary error function"},
+  {"derfdx",    derfdx,       "derfdx(obj)   -- derivative error function"},
+  {"derfcdx",   derfcdx,      "derfcdx(obj)  -- derivative of complementary error function"},
+  {"Fermi",     Fermi,        "Fermi(obj)  -- Fermi Integral"},
+  {"dFermidx",  dFermidx,     "dFermidx(obj)  -- derivative of Fermi Integral"},
+  {"InvFermi",     InvFermi,        "InvFermi(obj)  -- inverse of the Fermi Integral"},
+  {"dInvFermidx",  dInvFermidx,     "dInvFermidx(obj)  -- derivative of InvFermi Integral"},
+  {"!",  logical_not,     "!obj  -- Logical Not"},
+  {"vec_sum",   vec_sum, "Vector Summation"},
+  {"vec_max",   vec_max, "Vector Maximum"},
+  {"vec_min",   vec_min, "Vector Minimum"},
+  {NULL, NULL, NULL}
+  };
+
+  BinaryTblEntry<float128> BinaryTable_float128[] = {
+  {"min",  min,  "min(obj1, obj2)       -- minimum of obj1 and obj2"},
+  {"max",  max,  "max(obj1, obj2)       -- maximum of obj1 and obj2"},
+  {"&&",  logical_and,  "obj1 && obj2       -- logical and"},
+  {"||",  logical_or,  "obj1 || obj2       -- logical or"},
+  {"==",  logical_eq,  "obj1 == obj2       -- logical equal"},
+  {"<",  logical_lt,  "obj1 < obj2       -- logical less"},
+  {"<=",  logical_lte,  "obj1 <= obj2       -- logical less than equal"},
+  {">",  logical_gt,  "obj1 > obj2       -- logical greater"},
+  {">=",  logical_gte,  "obj1 >= obj2       -- logical greater than equal"},
+    {NULL, NULL, NULL}
+  };
+  TernaryTblEntry<float128> TernaryTable_float128[] = {
+  {"ifelse",  ifelsefunc,  "ifelse(obj1, obj2, obj3) -- if (obj1) then (obj2) else (obj3)"},
+  {"kahan3",  kahan3,  "kahan(obj1, obj2, obj3) -- kahan summation"},
+    {NULL, NULL, NULL}
+  };
+  QuaternaryTblEntry<float128> QuaternaryTable_float128[] = {
+  {"dot2d",  dot2dfunc,  "dot2d(ax, ay, bx, by) -- ax*bx + ay*by"},
+  {"kahan4",  kahan4,  "kahan(obj1, obj2, obj3, obj4) -- kahan summation"},
+    {NULL, NULL, NULL}
+  };
+#endif
+
+struct Tables{
+  template <typename DoubleType>
+  static Eqomfp::UnaryTblEntry<DoubleType> &GetUnaryTable(size_t);
+  template <typename DoubleType>
+  static Eqomfp::BinaryTblEntry<DoubleType> &GetBinaryTable(size_t);
+  template <typename DoubleType>
+  static Eqomfp::TernaryTblEntry<DoubleType> &GetTernaryTable(size_t);
+  template <typename DoubleType>
+  static Eqomfp::QuaternaryTblEntry<DoubleType> &GetQuaternaryTable(size_t);
+};
+
+template <>
+Eqomfp::UnaryTblEntry<double> &Tables::GetUnaryTable(size_t i)
+{
+  return UnaryTable_double[i];
+}
+template <>
+Eqomfp::BinaryTblEntry<double> &Tables::GetBinaryTable(size_t i)
+{
+  return BinaryTable_double[i];
+}
+template <>
+Eqomfp::TernaryTblEntry<double> &Tables::GetTernaryTable(size_t i)
+{
+  return TernaryTable_double[i];
+}
+template <>
+Eqomfp::QuaternaryTblEntry<double> &Tables::GetQuaternaryTable(size_t i)
+{
+  return QuaternaryTable_double[i];
+}
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+template <>
+Eqomfp::UnaryTblEntry<float128> &Tables::GetUnaryTable(size_t i)
+{
+  return UnaryTable_float128[i];
+}
+template <>
+Eqomfp::BinaryTblEntry<float128> &Tables::GetBinaryTable(size_t i)
+{
+  return BinaryTable_float128[i];
+}
+template <>
+Eqomfp::TernaryTblEntry<float128> &Tables::GetTernaryTable(size_t i)
+{
+  return TernaryTable_float128[i];
+}
+template <>
+Eqomfp::QuaternaryTblEntry<float128> &Tables::GetQuaternaryTable(size_t i)
+{
+  return QuaternaryTable_float128[i];
+}
+#endif
+
+}
 
 template <typename DoubleType>
 MathEval<DoubleType>::MathEval()
@@ -160,32 +347,31 @@ void MathEval<DoubleType>::DestroyInstance()
   instance_ = NULL;
 }
 
-
 template <typename DoubleType>
 void MathEval<DoubleType>::InitializeBuiltInMathFunc()
 {
-  for (size_t i = 0; Eqomfp::UnaryTable[i].name != NULL; ++i)
+  for (size_t i = 0; Eqomfp::Tables::GetUnaryTable<DoubleType>(i).name != NULL; ++i)
   {
-    const std::string &name   = Eqomfp::UnaryTable[i].name;
-    Eqomfp::unaryfuncptr<DoubleType> func = Eqomfp::UnaryTable[i].func;
+    const std::string &name   = Eqomfp::Tables::GetUnaryTable<DoubleType>(i).name;
+    Eqomfp::unaryfuncptr<DoubleType> func = Eqomfp::Tables::GetUnaryTable<DoubleType>(i).func;
     FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper1<DoubleType>(name, func));
   }
-  for (size_t i = 0; Eqomfp::BinaryTable[i].name != NULL; ++i)
+  for (size_t i = 0; Eqomfp::Tables::GetBinaryTable<DoubleType>(i).name != NULL; ++i)
   {
-    const std::string &name   = Eqomfp::BinaryTable[i].name;
-    Eqomfp::binaryfuncptr<DoubleType> func = Eqomfp::BinaryTable[i].func;
+    const std::string &name   = Eqomfp::Tables::GetBinaryTable<DoubleType>(i).name;
+    Eqomfp::binaryfuncptr<DoubleType> func = Eqomfp::Tables::GetBinaryTable<DoubleType>(i).func;
     FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper2<DoubleType>(name, func));
   }
-  for (size_t i = 0; Eqomfp::TernaryTable[i].name != NULL; ++i)
+  for (size_t i = 0; Eqomfp::Tables::GetTernaryTable<DoubleType>(i).name != NULL; ++i)
   {
-    const std::string &name   = Eqomfp::TernaryTable[i].name;
-    Eqomfp::ternaryfuncptr<DoubleType> func = Eqomfp::TernaryTable[i].func;
+    const std::string &name   = Eqomfp::Tables::GetTernaryTable<DoubleType>(i).name;
+    Eqomfp::ternaryfuncptr<DoubleType> func = Eqomfp::Tables::GetTernaryTable<DoubleType>(i).func;
     FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper3<DoubleType>(name, func));
   }
-  for (size_t i = 0; Eqomfp::QuaternaryTable[i].name != NULL; ++i)
+  for (size_t i = 0; Eqomfp::Tables::GetQuaternaryTable<DoubleType>(i).name != NULL; ++i)
   {
-    const std::string &name   = Eqomfp::QuaternaryTable[i].name;
-    Eqomfp::quaternaryfuncptr<DoubleType> func = Eqomfp::QuaternaryTable[i].func;
+    const std::string &name   = Eqomfp::Tables::GetQuaternaryTable<DoubleType>(i).name;
+    Eqomfp::quaternaryfuncptr<DoubleType> func = Eqomfp::Tables::GetQuaternaryTable<DoubleType>(i).func;
     FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper4<DoubleType>(name, func));
   }
 
@@ -244,7 +430,10 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
     {
       if (vvals[i] == NULL)
       {
-        tclObjVector[i + 1] = ObjectHolder(dvals[i]);
+#ifndef _WIN32
+#warning "Fix precision"
+#endif
+        tclObjVector[i + 1] = ObjectHolder(static_cast<double>(dvals[i]));
       }
       else
       {
@@ -272,7 +461,10 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
 
         if (isvec)
         {          
-          tclObjVector[i+1] = ObjectHolder(vvals[i]->operator[](j));
+#ifndef _WIN32
+#warning "Fix precision"
+#endif
+          tclObjVector[i+1] = ObjectHolder(static_cast<double>(vvals[i]->operator[](j)));
         }
       }
 
@@ -360,5 +552,9 @@ void MathEval<DoubleType>::RemoveTclMath(const std::string &funcname)
 }
 
 template class MathEval<double>;
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+template class MathEval<float128>;
+#endif
 
 

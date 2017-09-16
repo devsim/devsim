@@ -19,14 +19,15 @@ limitations under the License.
 #include "NodeModel.hh"
 #include "ScalarData.cc"
 
-//// Manual Template Instantiation
-template class ScalarData<NodeModel, double>;
+#define SCCLASSNAME NodeScalarData
+#define SCMODELTYPE NodeModel
+#define SCDBLTYPE   double
+#include "ScalarDataInstantiate.cc"
 
-template class ScalarData<NodeModel, double>& NodeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const double &, const ScalarDataHelper::times_equal<double> &);
-
-template class ScalarData<NodeModel, double>& NodeScalarData<double>::op_equal<ScalarDataHelper::times_equal<double>>(const NodeScalarData<double> &, const ScalarDataHelper::times_equal<double> &);
-
-template class ScalarData<NodeModel, double>& NodeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const double &, const ScalarDataHelper::plus_equal<double> &);
-
-template class ScalarData<NodeModel, double>& NodeScalarData<double>::op_equal<ScalarDataHelper::plus_equal<double>>(const NodeScalarData<double> &, const ScalarDataHelper::plus_equal<double> &);
+#ifdef DEVSIM_EXTENDED_PRECISION
+#undef  SCDBLTYPE
+#define SCDBLTYPE float128
+#include "Float128.hh"
+#include "ScalarDataInstantiate.cc"
+#endif
 

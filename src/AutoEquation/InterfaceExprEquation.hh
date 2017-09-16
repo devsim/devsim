@@ -34,19 +34,22 @@ namespace Eqo {
 /**
  * This type of equation permutes the second regions equation into the first.
  */
+namespace InterfaceExprEquationEnum
+{
+  enum EquationType {UNKNOWN, CONTINUOUS, FLUXTERM};
+  extern const char *EquationTypeString[];
+}
 template <typename DoubleType>
 class InterfaceExprEquation : public InterfaceEquation<DoubleType>
 {
     public:
-        enum EquationType {UNKNOWN, CONTINUOUS, FLUXTERM};
 
-        static const char *EquationTypeString[];
 
         InterfaceExprEquation(const std::string &, /*Equation Name we are giving ourself*/
                      InterfacePtr,           /*Region we are being solved in*/
                      const std::string &, /*variable Name being solved*/
                      const std::string &, /*InterfaceNodeModel Name for region*/
-                     EquationType
+                     InterfaceExprEquationEnum::EquationType
                         );
 
     private:
@@ -62,7 +65,8 @@ class InterfaceExprEquation : public InterfaceEquation<DoubleType>
         /// Need to decide if we are going to contain equations or models?
         /// Assume that 
         std::string   interface_node_model_;
-        EquationType  equation_type_;
+        InterfaceExprEquationEnum::EquationType  equation_type_;
         //std::string tdnodemodel; // maybe someday in the future
 };
 #endif
+

@@ -67,3 +67,11 @@ template double vec_max(double x);
 template double vec_min(double x);
 template double dot2dfunc(double ax, double ay, double bx, double by);
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template float128 vec_sum(float128 x);
+template float128 vec_max(float128 x);
+template float128 vec_min(float128 x);
+template float128 dot2dfunc(float128 ax, float128 ay, float128 bx, float128 by);
+#endif
+

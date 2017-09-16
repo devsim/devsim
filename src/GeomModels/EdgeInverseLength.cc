@@ -24,7 +24,7 @@ limitations under the License.
 
 template <typename DoubleType>
 EdgeInverseLength<DoubleType>::EdgeInverseLength(RegionPtr rp) :
-EdgeModel("EdgeInverseLength", rp, EdgeModel::SCALAR)
+EdgeModel("EdgeInverseLength", rp, EdgeModel::DisplayType::SCALAR)
 {
     RegisterCallback("EdgeLength");
 }

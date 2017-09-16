@@ -18,8 +18,8 @@ limitations under the License.
 #ifndef MATH_ENUM
 #define MATH_ENUM
 namespace dsMathEnum {
-enum WhatToLoad {MATRIXONLY, RHS, MATRIXANDRHS, PERMUTATIONSONLY};
-enum TimeMode   {DC, TIME};
+enum class WhatToLoad {MATRIXONLY, RHS, MATRIXANDRHS, PERMUTATIONSONLY};
+enum class TimeMode   {DC, TIME};
 
 extern const char *WhatToLoadString[];
 extern const char *TimeModeString[];

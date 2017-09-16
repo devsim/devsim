@@ -24,7 +24,7 @@ limitations under the License.
 
 template <typename DoubleType>
 CylindricalNodeVolume<DoubleType>::CylindricalNodeVolume(RegionPtr rp)
-    : NodeModel("CylindricalNodeVolume", rp, NodeModel::SCALAR)
+    : NodeModel("CylindricalNodeVolume", rp, NodeModel::DisplayType::SCALAR)
 {
     const size_t dimension = rp->GetDimension();
     dsAssert(dimension == 2, "CylindricalNodeVolume 2d Only");

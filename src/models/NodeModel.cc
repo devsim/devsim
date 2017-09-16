@@ -106,7 +106,7 @@ void NodeModel::CalculateValues() const
     os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  while evaluating the node model " << name
     << " on Device: " << GetRegion().GetDevice()->GetName() << " on Region: " << GetRegion().GetName() << "\n";
     FPECheck::ClearFPE();
-    GeometryStream::WriteOut(OutputStream::FATAL, GetRegion(), os.str().c_str());
+    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str().c_str());
   }
 }
 
@@ -148,9 +148,7 @@ void NodeModel::SetValues(const NodeScalarList<DoubleType> &nv)
   uptodate = true;
 }
 
-#ifndef _WIN32
-#warning "test precision"
-#endif
+#if 0
 void NodeModel::SetValues(const NodeModel &nm)
 {
   if (&nm != this)
@@ -167,6 +165,7 @@ void NodeModel::SetValues(const NodeModel &nm)
     }
   }
 }
+#endif
 
 template <typename DoubleType>
 void NodeModel::SetValues(const DoubleType &v) const
@@ -309,12 +308,13 @@ const std::string NodeModel::GetContactName() const
   return ret;
 }
 
-template void NodeModel::SetNodeValue<double>(size_t, double);
-template void NodeModel::SetValues<double>(const NodeScalarList<double> &);
-template void NodeModel::SetValues<double>(const double &);
-template void NodeModel::SetValues<double>(const NodeScalarList<double> &) const;
-template void NodeModel::SetValues<double>(const double &) const;
-template const double &NodeModel::GetUniformValue<double>() const;
-template const std::vector<double> &NodeModel::GetScalarValues<double>() const;
+#define DBLTYPE double
+#include "NodeModelInstantiate.cc"
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#undef  DBLTYPE
+#define DBLTYPE float128
+#include "Float128.hh"
+#include "NodeModelInstantiate.cc"
+#endif
 

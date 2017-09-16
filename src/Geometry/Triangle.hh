@@ -71,8 +71,16 @@ struct TriangleCompIndex : public std::binary_function<ConstTrianglePtr, ConstTr
    bool operator()(ConstTrianglePtr x, ConstTrianglePtr y) { return x->GetIndex() < y->GetIndex(); }
 };
 
-Vector<double> GetCenter(const Triangle &);
-Vector<double> GetTriangleCenter(const Vector<double> &, const Vector<double> &, const Vector<double> &);
-Vector<double> GetTriangleCenter2d(const Vector<double> &, const Vector<double> &, const Vector<double> &);
-Vector<double> GetTriangleCenter3d(const Vector<double> &, const Vector<double> &, const Vector<double> &);
+template <typename DoubleType>
+Vector<DoubleType> GetCenter(const Triangle &);
+
+template <typename DoubleType>
+Vector<DoubleType> GetTriangleCenter(const Vector<DoubleType> &, const Vector<DoubleType> &, const Vector<DoubleType> &);
+
+template <typename DoubleType>
+Vector<DoubleType> GetTriangleCenter2d(const Vector<DoubleType> &, const Vector<DoubleType> &, const Vector<DoubleType> &);
+
+template <typename DoubleType>
+Vector<DoubleType> GetTriangleCenter3d(const Vector<DoubleType> &, const Vector<DoubleType> &, const Vector<DoubleType> &);
 #endif
+

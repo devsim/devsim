@@ -18,6 +18,12 @@ limitations under the License.
 #include "MathWrapper.hh"
 
 #include "dsAssert.hh"
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+using boost::multiprecision::pow;
+#endif
+
 #include <sstream>
 #include <cmath>
 #include <limits>
@@ -200,8 +206,8 @@ namespace
 template <typename DoubleType>
 inline bool IsInt(DoubleType x)
 {
-  DoubleType y;
-  return ((modf(x, &y) == 0) &&
+  double y;
+  return ((modf(static_cast<double>(x), &y) == 0) &&
           (x >= std::numeric_limits<int>::min()) &&
           (x <= std::numeric_limits<int>::max())
          );
@@ -222,7 +228,7 @@ void PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dval
 
     for (size_t i = vbeg; i < vend; ++i)
     {
-      *(vr++) = std::pow(*(v0++), *(v1++));
+      *(vr++) = pow(*(v0++), *(v1++));
     }
 
   }
@@ -236,14 +242,14 @@ void PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dval
     {
       for (size_t i = vbeg; i < vend; ++i)
       {
-        *(vr++) = std::pow(*(v0++), static_cast<int>(dval1));
+        *(vr++) = pow(*(v0++), static_cast<int>(dval1));
       }
     }
     else
     {
       for (size_t i = vbeg; i < vend; ++i)
       {
-        *(vr++) = std::pow(*(v0++), dval1);
+        *(vr++) = pow(*(v0++), dval1);
       }
     }
   }
@@ -255,7 +261,7 @@ void PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dval
 
     for (size_t i = vbeg; i < vend; ++i)
     {
-      *(vr++) = std::pow(dval0, *(v1++));
+      *(vr++) = pow(dval0, *(v1++));
     }
   }
 }
@@ -266,11 +272,11 @@ DoubleType PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType>
   const DoubleType e = vals[1];
   if (IsInt(e))
   {
-    return std::pow(vals[0], static_cast<int>(e));
+    return pow(vals[0], static_cast<int>(e));
   }
   else
   {
-    return std::pow(vals[0], e);
+    return pow(vals[0], e);
   }
 }
 
@@ -280,6 +286,15 @@ template class MathWrapper2<double>;
 template class MathWrapper3<double>;
 template class MathWrapper4<double>;
 template class PowWrapper<double>;
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+template class MathWrapper<float128>;
+template class MathWrapper1<float128>;
+template class MathWrapper2<float128>;
+template class MathWrapper3<float128>;
+template class MathWrapper4<float128>;
+template class PowWrapper<float128>;
+#endif
 
 }///end Eqomfp
 

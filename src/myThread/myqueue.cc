@@ -60,7 +60,7 @@ void myqueue::StartThreads()
   std::ostringstream os;
   os << "Using " << num_threads_ << " threads.\n";
   os << "Using " << minimum_task_size_ << " minimum task size.\n";
-  OutputStream::WriteOut(OutputStream::INFO, os.str());
+  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 }
 
 void myqueue::ChangeNumberThreads(size_t newnum)
@@ -84,7 +84,7 @@ void myqueue::ChangeNumberThreads(size_t newnum)
     num_threads_ = newnum;
     std::ostringstream os;
     os << "Using " << num_threads_ << " threads.\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
 }
 

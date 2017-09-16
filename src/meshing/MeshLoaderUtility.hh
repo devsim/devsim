@@ -27,7 +27,7 @@ class Tetrahedron;
 namespace dsMesh {
 
 struct Shapes {
-  enum ElementType_t {UNKNOWN = -1, POINT=0, LINE, TRIANGLE, TETRAHEDRON};
+  enum class ElementType_t {UNKNOWN = -1, POINT=0, LINE, TRIANGLE, TETRAHEDRON};
 
   typedef std::vector<int> NodeIndexes_t;
 

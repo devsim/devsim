@@ -17,11 +17,11 @@ limitations under the License.
 
 #include "CircuitNode.hh"
 
-CircuitNode::CircuitNode() : nodeNumber_(0), nodeType_(CNT::DEFAULT), updateType(CUT::DEFAULT)
+CircuitNode::CircuitNode() : nodeNumber_(0), nodeType_(CircuitNodeType::DEFAULT), updateType(CircuitUpdateType::DEFAULT)
 {
 }
 
-CircuitNode::CircuitNode(CNT::CircuitNodeType nt, CUT::UpdateType ut) : nodeNumber_(0), nodeType_(nt), updateType(ut)
+CircuitNode::CircuitNode(CircuitNodeType nt, CircuitUpdateType ut) : nodeNumber_(0), nodeType_(nt), updateType(ut)
 {
 }
 

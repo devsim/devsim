@@ -81,19 +81,19 @@ void Shapes::DecomposeAndUniquify()
 
 void Shapes::AddShape(ElementType_t element_type, const int * node_indexes)
 {
-  if (element_type == POINT)
+  if (element_type == ElementType_t::POINT)
   {
     Points.push_back(MeshNode(node_indexes[0]));
   }
-  else if (element_type == LINE)
+  else if (element_type == ElementType_t::LINE)
   {
     Lines.push_back(MeshEdge(node_indexes[0], node_indexes[1]));
   }
-  else if (element_type == TRIANGLE)
+  else if (element_type == ElementType_t::TRIANGLE)
   {
     Triangles.push_back(MeshTriangle(node_indexes[0], node_indexes[1], node_indexes[2]));
   }
-  else if (element_type == TETRAHEDRON)
+  else if (element_type == ElementType_t::TETRAHEDRON)
   {
     Tetrahedra.push_back(MeshTetrahedron(node_indexes[0], node_indexes[1], node_indexes[2], node_indexes[3]));
   }

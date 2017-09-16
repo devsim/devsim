@@ -5,6 +5,7 @@ SET (CXX_SRCS
     MiscMathFunc.cc
     MathWrapper.cc
     MathPacket.cc
+    kahan.cc
 )
 
 INCLUDE_DIRECTORIES (

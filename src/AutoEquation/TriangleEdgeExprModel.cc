@@ -100,19 +100,19 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
         {
             os << *it << "\n";
         }
-        GeometryStream::WriteOut(OutputStream::ERROR, *rp, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *rp, os.str());
     }
 
     /// implicit conversion to triangleedgemodel from edgemodel
     if (
-        (out.GetType() == MEE::EDGEDATA)
+        (out.GetType() == MEE::datatype::EDGEDATA)
        )
     {
       out.convertToTriangleEdgeData();
     }
 
     if (
-        (out.GetType() == MEE::TRIANGLEEDGEDATA)
+        (out.GetType() == MEE::datatype::TRIANGLEEDGEDATA)
        )
     {
       const MEE::ScalarValuesType<DoubleType> &tval = out.GetScalarValues();
@@ -126,7 +126,7 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
         SetValues(nsl);
       }
     }
-    else if (out.GetType() == MEE::DOUBLE)
+    else if (out.GetType() == MEE::datatype::DOUBLE)
     {
         const DoubleType v = out.GetDoubleValue();
         SetValues(v);
@@ -135,9 +135,9 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
     {
         std::ostringstream os; 
         os << "while evaluating model " << GetName() << ": expression "
-            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[out.GetType()]
+            << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *rp, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *rp, os.str());
     }
         
 }
@@ -152,4 +152,8 @@ void TriangleEdgeExprModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class TriangleEdgeExprModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TriangleEdgeExprModel<float128>;
+#endif
 

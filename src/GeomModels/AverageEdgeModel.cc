@@ -30,8 +30,7 @@ limitations under the License.
 #include <cmath>
 #include <sstream>
 
-template <typename DoubleType>
-typename AverageEdgeModel<DoubleType>::TypeNameMap_t AverageEdgeModel<DoubleType>::AverageTypeNames[] = {
+AverageEdgeModelEnum::TypeNameMap_t AverageEdgeModelEnum::AverageTypeNames[] = {
         {"arithmetic", ARITHMETIC},
         {"geometric", GEOMETRIC},
         {"gradient", GRADIENT},
@@ -45,7 +44,7 @@ AverageEdgeModel<DoubleType>::~AverageEdgeModel()
 #if 0
   if (!edgeModel1Name.empty())
   {
-    dsErrors::ModelModelDeletion(GetRegion(), edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::INFO);
+    dsErrors::ModelModelDeletion(GetRegion(), edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::INFO);
     ///// This is EVIL
     //const_cast<Region &>(GetRegion()).DeleteEdgeModel(edgeModel1Name);
   }
@@ -53,9 +52,9 @@ AverageEdgeModel<DoubleType>::~AverageEdgeModel()
 }
 
 template <typename DoubleType>
-AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const std::string &nmodel, AverageType_t atype, RegionPtr rp)
+AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const std::string &nmodel, AverageEdgeModelEnum::AverageType_t atype, RegionPtr rp)
     :
-        EdgeModel(emodel, rp, EdgeModel::SCALAR),
+        EdgeModel(emodel, rp, EdgeModel::DisplayType::SCALAR),
         originalEdgeModelName(emodel),
         nodeModelName(nmodel),
         averageType(atype)
@@ -63,28 +62,28 @@ AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const 
     dsAssert(rp->GetNodeModel(nmodel).get(), "UNEXPECTED");
     RegisterCallback(nodeModelName);
 
-    if ((averageType == GRADIENT) || (averageType == NEGATIVE_GRADIENT))
+    if ((averageType == AverageEdgeModelEnum::GRADIENT) || (averageType == AverageEdgeModelEnum::NEGATIVE_GRADIENT))
     {
       RegisterCallback("EdgeInverseLength");
     }
 }
 
 template <typename DoubleType>
-AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const std::string &nmodel, const std::string &deriv, AverageType_t atype, RegionPtr rp)
+AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const std::string &nmodel, const std::string &deriv, AverageEdgeModelEnum::AverageType_t atype, RegionPtr rp)
     :
-        EdgeModel(emodel + ":" + deriv + "@n0", rp, EdgeModel::SCALAR),
+        EdgeModel(emodel + ":" + deriv + "@n0", rp, EdgeModel::DisplayType::SCALAR),
         originalEdgeModelName(emodel),
         nodeModelName(nmodel),
         edgeModel1Name(emodel + ":" + deriv + "@n1"),
         variableName(deriv),
         averageType(atype)
 {
-    node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::SCALAR, this->GetSelfPtr());
+    node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
     dsAssert(!node1EdgeModel.expired(), "UNEXPECTED");
 
     if (!rp->GetNodeModel(nodeModelName))
     {
-      dsErrors::MissingModelModelDependency(GetRegion(), nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+      dsErrors::MissingModelModelDependency(GetRegion(), nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
     }
 
     RegisterCallback(nodeModelName);
@@ -96,13 +95,13 @@ AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const 
         derivativeModelName = nodeModelName + ":" + variableName;
         if (!rp->GetNodeModel(derivativeModelName))
         {
-          dsErrors::MissingModelModelDependency(GetRegion(), derivativeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+          dsErrors::MissingModelModelDependency(GetRegion(), derivativeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
         }
         RegisterCallback(derivativeModelName);
       }
     }
 
-    if ((averageType == GRADIENT) || (averageType == NEGATIVE_GRADIENT))
+    if ((averageType == AverageEdgeModelEnum::GRADIENT) || (averageType == AverageEdgeModelEnum::NEGATIVE_GRADIENT))
     {
       RegisterCallback("EdgeInverseLength");
     }
@@ -157,29 +156,29 @@ void AverageEdgeModel<DoubleType>::calcEdgeScalarValues() const
       nmDerivative = rp->GetNodeModel(derivativeModelName);
       if (!nmDerivative)
       {
-        dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::ERROR);
+        dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
       }
     }
 
     if (!nm)
     {
-      dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::ERROR);
+      dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
     }
 
     if (variableName.empty())
     {
       EdgeScalarList<DoubleType> esl;
       switch (averageType) {
-          case ARITHMETIC:
+          case AverageEdgeModelEnum::ARITHMETIC:
             doMath(nm, esl, Arithmetic());
             break;
-          case GEOMETRIC:
+          case AverageEdgeModelEnum::GEOMETRIC:
             doMath(nm, esl, Geometric());
             break;
-          case GRADIENT:
+          case AverageEdgeModelEnum::GRADIENT:
             doGradient(nm, esl, 1.0);
             break;
-          case NEGATIVE_GRADIENT:
+          case AverageEdgeModelEnum::NEGATIVE_GRADIENT:
             doGradient(nm, esl, -1.0);
             break;
           default:
@@ -192,13 +191,13 @@ void AverageEdgeModel<DoubleType>::calcEdgeScalarValues() const
       const ConstEdgeModelPtr em1 = rp->GetEdgeModel(edgeModel1Name);
       if (!em1)
       {
-        dsErrors::ReviveContainer(*rp, edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::INFO);
-        node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::SCALAR, this->GetConstSelfPtr());
+        dsErrors::ReviveContainer(*rp, edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::INFO);
+        node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::DisplayType::SCALAR, this->GetConstSelfPtr());
       }
       else if (node1EdgeModel.expired())
       {
-        dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(),      dsErrors::ModelInfo::EDGE, OutputStream::ERROR);
-        dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+        dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(),      dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
+        dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
       }
 
       
@@ -206,16 +205,16 @@ void AverageEdgeModel<DoubleType>::calcEdgeScalarValues() const
       EdgeScalarList<DoubleType> esl1;
 
       switch (averageType) {
-          case ARITHMETIC:
+          case AverageEdgeModelEnum::ARITHMETIC:
             doMath(nm, nmDerivative, esl0, esl1, Arithmetic());
             break;
-          case GEOMETRIC:
+          case AverageEdgeModelEnum::GEOMETRIC:
             doMath(nm, nmDerivative, esl0, esl1, Geometric());
             break;
-          case GRADIENT:
+          case AverageEdgeModelEnum::GRADIENT:
             doGradient(nm, nmDerivative, esl0, esl1, 1.0);
             break;
-          case NEGATIVE_GRADIENT:
+          case AverageEdgeModelEnum::NEGATIVE_GRADIENT:
             doGradient(nm, nmDerivative, esl0, esl1, -1.0);
             break;
           default:
@@ -290,7 +289,7 @@ void AverageEdgeModel<DoubleType>::doGradient(ConstNodeModelPtr nmp, EdgeScalarL
 
   const ConstEdgeModelPtr em = GetRegion().GetEdgeModel("EdgeInverseLength");
   if (!em) {
-    dsErrors::MissingModelModelDependency(region, "EdgeInverseLength", dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+    dsErrors::MissingModelModelDependency(region, "EdgeInverseLength", dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
   }
   const EdgeScalarList<DoubleType> &invLen = em->GetScalarValues<DoubleType>();
 
@@ -317,7 +316,7 @@ void AverageEdgeModel<DoubleType>::doGradient(ConstNodeModelPtr /*nmp*/, ConstNo
   const ConstEdgeModelPtr em = GetRegion().GetEdgeModel("EdgeInverseLength");
   if (!em)
   {
-    dsErrors::MissingModelModelDependency(region, "EdgeInverseLength", dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+    dsErrors::MissingModelModelDependency(region, "EdgeInverseLength", dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
   }
   const EdgeScalarList<DoubleType> &invLen = em->GetScalarValues<DoubleType>();
 
@@ -345,11 +344,10 @@ void AverageEdgeModel<DoubleType>::doGradient(ConstNodeModelPtr /*nmp*/, ConstNo
   }
 }
 
-template <typename DoubleType>
-typename AverageEdgeModel<DoubleType>::AverageType_t AverageEdgeModel<DoubleType>::GetTypeName(const std::string &name, std::string &errorString)
+AverageEdgeModelEnum::AverageType_t AverageEdgeModelEnum::GetTypeName(const std::string &name, std::string &errorString)
 {
-  AverageType_t ret = UNKNOWN;
-  AverageEdgeModel<DoubleType>::TypeNameMap_t *typeit = AverageTypeNames;
+  AverageEdgeModelEnum::AverageType_t ret = AverageEdgeModelEnum::UNKNOWN;
+  AverageEdgeModelEnum::TypeNameMap_t *typeit = AverageEdgeModelEnum::AverageTypeNames;
   while (typeit->str != NULL)
   {
     if (typeit->str == name)
@@ -360,9 +358,9 @@ typename AverageEdgeModel<DoubleType>::AverageType_t AverageEdgeModel<DoubleType
     ++typeit;
   }
 
-  if (ret == UNKNOWN)
+  if (ret == AverageEdgeModelEnum::UNKNOWN)
   {
-    AverageEdgeModel<DoubleType>::TypeNameMap_t *typeit = AverageTypeNames;
+    AverageEdgeModelEnum::TypeNameMap_t *typeit = AverageEdgeModelEnum::AverageTypeNames;
     std::ostringstream os;
     os << "\"" << name << "\" is not a valid average type, available options are";
     while (typeit->str != NULL)
@@ -383,7 +381,7 @@ template <typename DoubleType>
 void AverageEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 {
   // originalEdgeModelName is for the derivative case
-  of << "COMMAND edge_average_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -node_model \"" << nodeModelName << "\"" << " -edge_model \"" << originalEdgeModelName << "\" -average_type \"" << AverageTypeNames[averageType].str << "\"";
+  of << "COMMAND edge_average_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -node_model \"" << nodeModelName << "\"" << " -edge_model \"" << originalEdgeModelName << "\" -average_type \"" << AverageEdgeModelEnum::AverageTypeNames[averageType].str << "\"";
 
   if (!variableName.empty())
   {

@@ -141,7 +141,7 @@ void Device::AddContact(const ContactPtr &cp)
       }
       os << "\n";
     }
-    GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+    GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
   }
 }
 
@@ -198,7 +198,7 @@ void Device::AddInterface(const InterfacePtr &ip)
       }
       os << "\n";
     }
-    GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+    GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
   }
 }
 
@@ -285,13 +285,14 @@ size_t Device::CalcMaxEquationNumber()
             os << " has no equations.\n";
         }
     }
-    GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+    GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
 
     size_t maxeqnnum = (hasEquations) ? x-1 : size_t(-1);
     return maxeqnnum;
 }
 
-void Device::ContactAssemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Device::ContactAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   for (auto it : GetContactList())
   {
@@ -299,7 +300,8 @@ void Device::ContactAssemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSE
   }
 }
 
-void Device::InterfaceAssemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Device::InterfaceAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
 
   for (auto it : GetInterfaceList())
@@ -308,7 +310,8 @@ void Device::InterfaceAssemble(dsMath::RealRowColValueVec<double> &m, dsMath::RH
   }
 }
 
-void Device::RegionAssemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Device::RegionAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   for (auto it : GetRegionList())
   {
@@ -316,7 +319,8 @@ void Device::RegionAssemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEn
   }
 }
 
-void Device::Update(const std::vector<double> &result)
+template <typename DoubleType>
+void Device::Update(const std::vector<DoubleType> &result)
 {
     relError = 0.0;
     absError = 0.0;
@@ -327,8 +331,8 @@ void Device::Update(const std::vector<double> &result)
         Region *rp = it->second;
 
         rp->Update(result);
-        double rerr = rp->GetRelError();
-        double aerr = rp->GetAbsError();
+        DoubleType rerr = rp->GetRelError<DoubleType>();
+        DoubleType aerr = rp->GetAbsError<DoubleType>();
 
         if (aerr > absError)
         {
@@ -338,7 +342,8 @@ void Device::Update(const std::vector<double> &result)
     }
 }
 
-void Device::ACUpdate(const std::vector<std::complex<double> > &result)
+template <typename DoubleType>
+void Device::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
 {
     RegionList_t::iterator it = regionList.begin(); 
     const RegionList_t::iterator end = regionList.end(); 
@@ -350,7 +355,8 @@ void Device::ACUpdate(const std::vector<std::complex<double> > &result)
     }
 }
 
-void Device::NoiseUpdate(const std::string &output, const std::vector<size_t> &permvec, const std::vector<std::complex<double> > &result)
+template <typename DoubleType>
+void Device::NoiseUpdate(const std::string &output, const std::vector<size_t> &permvec, const std::vector<std::complex<DoubleType> > &result)
 {
     RegionList_t::iterator it = regionList.begin(); 
     const RegionList_t::iterator end = regionList.end(); 
@@ -441,4 +447,11 @@ void Device::SignalCallbacksOnInterface(const std::string &nm, const Region *rp)
   }
 }
 
+#define DBLTYPE double
+#include "DeviceInstantiate.cc"
+#undef DBLTYPE
+#ifdef DEVSIM_EXTENDED_PRECISION
+#define DBLTYPE float128
+#include "DeviceInstantiate.cc"
+#endif
 

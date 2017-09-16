@@ -18,6 +18,9 @@ limitations under the License.
 #ifndef INTERFACE_HH
 #define INTERFACE_HH
 #include "MathEnum.hh"
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
 #include <memory>
 #include <string>
 #include <vector>
@@ -141,7 +144,8 @@ class Interface {
 
         const NameToInterfaceNodeModelMap_t &GetInterfaceNodeModelList() const;
 
-        void Assemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        template <typename DoubleType>
+        void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         void AddEdges(const ConstEdgeList_t &, const ConstEdgeList_t &);
         void AddTriangles(const ConstTriangleList_t &, const ConstTriangleList_t &);
@@ -183,7 +187,10 @@ class Interface {
 
         DependencyMap_t DependencyMap;
 
-        WeakInterfaceModelExprDataCachePtr<double> interfaceModelExprDataCache;
-
+        WeakInterfaceModelExprDataCachePtr<double>   interfaceModelExprDataCache_double;
+#ifdef DEVSIM_EXTENDED_PRECISION
+        WeakInterfaceModelExprDataCachePtr<float128> interfaceModelExprDataCache_float128;
+#endif
 };
 #endif
+

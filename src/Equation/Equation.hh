@@ -77,6 +77,11 @@ template <typename DoubleType>
 using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 }
 
+namespace EquationEnum
+{
+  enum UpdateType {DEFAULT, LOGDAMP, POSITIVE};
+  extern const char *UpdateTypeString;
+}
 // base class
 // called for assembly
 // start with specific equation derived classes
@@ -84,10 +89,8 @@ using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 template <typename DoubleType>
 class Equation {
     public:
-        enum UpdateType {DEFAULT, LOGDAMP, POSITIVE};
-        static const char *UpdateTypeString;
 
-        Equation(const std::string &, RegionPtr, const std::string &/*variable*/, UpdateType utype = DEFAULT/*update type*/);
+        Equation(const std::string &, RegionPtr, const std::string &/*variable*/, EquationEnum::UpdateType utype = EquationEnum::DEFAULT/*update type*/);
         virtual ~Equation() = 0;
 
         void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
@@ -104,12 +107,6 @@ class Equation {
 
         void ACUpdate(NodeModel &, const std::vector<std::complex<DoubleType> > &);
         void NoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &);
-
-/*
-        enum SmallSignalUpdateType {SSAC, NOISE};
-        void SmallSignalUpdate(const std::string &, const std::string &, const std::vector<std::complex<DoubleType> > &, SmallSignalUpdateType);
-*/
-
 
         std::string GetNoiseRealName(const std::string &);
         std::string GetNoiseImagName(const std::string &);
@@ -192,7 +189,7 @@ class Equation {
         DoubleType relError;
         DoubleType minError;
         static const DoubleType defminError;
-        UpdateType updateType;
+        EquationEnum::UpdateType updateType;
 };
 #endif
 

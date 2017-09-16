@@ -33,8 +33,7 @@ limitations under the License.
 #include <vector>
 #include <string>
 
-template <typename DoubleType>
-const char *InterfaceExprEquation<DoubleType>::EquationTypeString[] =
+const char *InterfaceExprEquationEnum::EquationTypeString[] =
 {
   "unknown",
   "continuous",
@@ -47,7 +46,7 @@ InterfaceExprEquation<DoubleType>::InterfaceExprEquation(
     InterfacePtr ip,
     const std::string &var,
     const std::string &inmodel,
-    EquationType et
+    InterfaceExprEquationEnum::EquationType et
     ) : InterfaceEquation<DoubleType>(eqname, var, ip), interface_node_model_(inmodel), equation_type_(et)
 {
     equation_type_ = et;
@@ -73,17 +72,17 @@ void InterfaceExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueV
     interface.SetInterfaceModelExprDataCache(interface_model_cache);
 
     const std::string &SurfaceAreaModel = InterfaceEquation<DoubleType>::GetInterface().GetSurfaceAreaModel();
-    if (t == dsMathEnum::DC)
+    if (t == dsMathEnum::TimeMode::DC)
     {
         if (!interface_node_model_.empty())
         {
             //// Type 1 is where we permutate the two equations on both sides together
             //// A new equation is specified for the left over equation
-            if (equation_type_ == CONTINUOUS)
+            if (equation_type_ == InterfaceExprEquationEnum::CONTINUOUS)
             {
                 InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(interface_node_model_, m, v, p, w, SurfaceAreaModel);
             }
-            else if (equation_type_ == FLUXTERM)
+            else if (equation_type_ == InterfaceExprEquationEnum::FLUXTERM)
             {
                 InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(interface_node_model_, m, v, p, w, SurfaceAreaModel);
             }
@@ -93,7 +92,7 @@ void InterfaceExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueV
             }
         }
     }
-    else if (t == dsMathEnum::TIME)
+    else if (t == dsMathEnum::TimeMode::TIME)
     {
     }
     else
@@ -107,7 +106,7 @@ void InterfaceExprEquation<DoubleType>::Serialize(std::ostream &of) const
 {
   of << "COMMAND interface_equation -device \"" << InterfaceEquation<DoubleType>::GetInterface().GetDeviceName() << "\" -interface \"" << InterfaceEquation<DoubleType>::GetInterface().GetName() << "\" -name \"" << InterfaceEquation<DoubleType>::GetName() << "\" -variable_name \"" << InterfaceEquation<DoubleType>::GetVariable()
     << "\" -interface_model \"" << interface_node_model_
-    << "\" -type \"" << EquationTypeString[equation_type_]
+    << "\" -type \"" << InterfaceExprEquationEnum::EquationTypeString[equation_type_]
     << "\"";
 }
     
@@ -119,8 +118,12 @@ void InterfaceExprEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::str
   omap["name"] = ObjectHolder(InterfaceEquation<DoubleType>::GetName());
   omap["variable_name"] = ObjectHolder(InterfaceEquation<DoubleType>::GetVariable());
   omap["interface_model"] = ObjectHolder(interface_node_model_);
-  omap["type"] = ObjectHolder(EquationTypeString[equation_type_]);
+  omap["type"] = ObjectHolder(InterfaceExprEquationEnum::EquationTypeString[equation_type_]);
 }
 
 template class InterfaceExprEquation<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class InterfaceExprEquation<float128>;
+#endif
 

@@ -25,7 +25,7 @@ limitations under the License.
 
 template <typename DoubleType>
 TriangleEdgeCouple<DoubleType>::TriangleEdgeCouple(RegionPtr rp) :
-TriangleEdgeModel("ElementEdgeCouple", rp, TriangleEdgeModel::SCALAR)
+TriangleEdgeModel("ElementEdgeCouple", rp, TriangleEdgeModel::DisplayType::SCALAR)
 {
 }
 
@@ -56,7 +56,7 @@ template <typename DoubleType>
 Vector<DoubleType> TriangleEdgeCouple<DoubleType>::calcTriangleEdgeCouple(ConstTrianglePtr tp) const
 {
     const Triangle &triangle = *tp;
-    const std::vector<Vector<DoubleType>> &centers = GetRegion().GetTriangleCenters();
+    const std::vector<Vector<DoubleType>> &centers = GetRegion().template GetTriangleCenters<DoubleType>();
 
     const Region::TriangleToConstEdgeList_t &ttelist = GetRegion().GetTriangleToEdgeList();
     size_t tindex = triangle.GetIndex();

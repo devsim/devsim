@@ -153,7 +153,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
         std::string warn = os.str();
         if (!warn.empty())
         {
-            OutputStream::WriteOut(OutputStream::INFO, warn);
+            OutputStream::WriteOut(OutputStream::OutputType::INFO, warn);
         }
     }
 
@@ -196,7 +196,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
 #if 0
                 std::ostringstream os;
                 os << "Coord " << xlocs[i] << " " << ylocs[j] << "\n";
-                OutputStream::WriteOut(OutputStream::INFO, os.str().c_str());
+                OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
 #endif
             }
         }
@@ -256,7 +256,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
 
                 std::ostringstream os;
                 os << "Creating Region " << nm << "\n";
-                OutputStream::WriteOut(OutputStream::INFO, os.str().c_str());
+                OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
             }
 
             MeshRegion &mregion = meshLoader->GetMeshRegion(nm);
@@ -304,7 +304,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
             << coordinates[i1].GetVector() << " "
             << coordinates[i2].GetVector() << " "
             << v0 << "\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str().c_str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
 #endif
         }
     }
@@ -345,7 +345,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
                         found = true;
             std::ostringstream os;
             os << "Contact: " << nm << " region " << r << " ni: " << ni << " ci: " << i << " " << coordinates[i].GetVector() << "\n";
-            OutputStream::WriteOut(OutputStream::INFO, os.str().c_str());
+            OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
                         break;
                     }
                 }
@@ -414,11 +414,11 @@ bool Mesh2d::Finalize_(std::string &errorString)
 
 void Mesh2d::AddLine(LineDirection d, MeshLine2dPtr mline)
 {
-    if (d == dsMesh::XDIR)
+    if (d == dsMesh::LineDirection::XDIR)
     {
         xlines.push_back(mline);
     }
-    else if (d == dsMesh::YDIR)
+    else if (d == dsMesh::LineDirection::YDIR)
     {
         ylines.push_back(mline);
     }
@@ -437,7 +437,7 @@ void Mesh2d::AddRegion(MeshRegion2dPtr mreg)
             std::ostringstream os;
             os << "Not changing material from " << morig.GetMaterial() <<
                 " to " << mreg->GetMaterial() << " for region " << nm << "\n";
-            OutputStream::WriteOut(OutputStream::INFO, os.str().c_str());
+            OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
         }
         morig.AddBoundingBox(*mreg);
     }
@@ -463,7 +463,7 @@ void Mesh2d::AddInterface(MeshInterface2dPtr mint)
         {
             std::ostringstream os;
             os << "Not changing interface regions  for interface " << nm << "\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str().c_str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str().c_str());
         }
         morig.AddBoundingBox(*mint);
     }
@@ -488,7 +488,7 @@ void Mesh2d::AddContact(MeshContact2dPtr mcon)
         {
             std::ostringstream os;
             os << "Not changing contact region  for contact " << nm << "\n";
-            OutputStream::WriteOut(OutputStream::ERROR, os.str().c_str());
+            OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str().c_str());
         }
         morig.AddBoundingBox(*mcon);
     }

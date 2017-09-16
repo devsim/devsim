@@ -44,19 +44,24 @@ class InstanceModel
         virtual ~InstanceModel() = 0;
         const std::string &getName() {return name_;}
 
-        virtual void assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, dsMath::RHSEntryVec<double> &rhs)=0;
+        void assembleDC(const std::vector<double> &sol, dsMath::RealRowColValueVec<double> &mat, dsMath::RHSEntryVec<double> &rhs);
 
         // Transient stamp is only the AC part
         // scl is the scaling factor to multiply by the time-dependent elements
         // If the matrix is a NULL pointer, only the rhs is calculated
         // This is so that it can be used for the charge contributions of
         // previous time steps
-        virtual void assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs) = 0;
+        void assembleTran(const double scl, const std::vector<double> &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs);
 
         virtual bool addParam(const std::string &, double) = 0;
-        virtual void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &) {} 
+
+        void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &); 
 
     protected:
+        virtual void assembleDC_impl(const std::vector<double> &sol, dsMath::RealRowColValueVec<double> &mat, dsMath::RHSEntryVec<double> &rhs)=0;
+        virtual void assembleTran_impl(const double scl, const std::vector<double> &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs) = 0;
+        virtual void assembleACRHS_impl(std::vector<std::pair<size_t, std::complex<double> > > &) {} 
+
         // Only derived classes can instantiate the base class
         InstanceModel(NodeKeeper *, const char *name);
         CircuitNodePtr AddCircuitNode(const char *);
@@ -80,3 +85,4 @@ class InstanceModel
 };
 
 #endif /* INSTANCE_MODEL_HH */
+

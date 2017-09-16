@@ -58,7 +58,7 @@ NodeKeeper::~NodeKeeper() {
  * Add a node with the suggested name
  * and a default type
  */
-CircuitNodePtr NodeKeeper::AddNode(const std::string & name, CNT::CircuitNodeType nt, CUT::UpdateType ut)
+CircuitNodePtr NodeKeeper::AddNode(const std::string & name, CircuitNodeType nt, CircuitUpdateType ut)
 {
 //    os << "NodeKeeper::AddNode\n";
 
@@ -66,7 +66,7 @@ CircuitNodePtr NodeKeeper::AddNode(const std::string & name, CNT::CircuitNodeTyp
     {
         std::ostringstream os;
         os << "CircuitNode " << name << " cannot be added once an analysis has been performed.\n";
-        OutputStream::WriteOut(OutputStream::FATAL, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
 
 
@@ -75,7 +75,7 @@ CircuitNodePtr NodeKeeper::AddNode(const std::string & name, CNT::CircuitNodeTyp
 /*
         std::ostringstream os;
         os << name << " is a preexisting node\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 */
     }
     else
@@ -83,7 +83,7 @@ CircuitNodePtr NodeKeeper::AddNode(const std::string & name, CNT::CircuitNodeTyp
 /*
         std::ostringstream os;
         os << name << " is being added\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 */
         CircuitNodePtr node=CircuitNodePtr(new CircuitNode(nt, ut));
         NodeTable_[name]=node;
@@ -99,14 +99,14 @@ CircuitNodePtr NodeKeeper::AddNodeAlias(const std::string &alias, const std::str
     {
         std::ostringstream os;
         os << "CircuitNode " << name << " must exist to create alias " << alias << ".\n";
-        OutputStream::WriteOut(OutputStream::FATAL, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
 
     if (nalias != NodeTable_.end())
     {
         std::ostringstream os;
         os << "CircuitNode " << alias << " cannot be an alias since it is already a real node.\n";
-        OutputStream::WriteOut(OutputStream::FATAL, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
 
     NodeAliasTable_[alias] = name;
@@ -120,27 +120,27 @@ void NodeKeeper::DeleteNode(const std::string & name)
     {
         std::ostringstream os;
         os << "NodeKeeper::DeleteNode\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
     if (SolutionLocked_)
     {
        std::ostringstream os;
         os << "CircuitNode " << name << " cannot be deleted once an analysis has been performed.\n";
-        OutputStream::WriteOut(OutputStream::FATAL, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
 
     if (NodeTable_.count(name))
     {
         std::ostringstream os;
         os << name << " is being deleted\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
         NodeTable_.erase(name);
     }
     else
     {
         std::ostringstream os;
         os << name << " does not exist\n";
-        OutputStream::WriteOut(OutputStream::ERROR, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
     }
     dsAssert(NodeTable_.count(name), "CIRCUIT_UNEXPECTED");
 }
@@ -177,7 +177,7 @@ void NodeKeeper::SetNodeNumbers(size_t start) {
         }
         std::ostringstream os;
         os << iter->first << "\t" << iter->second->GetNumber() << "\t" << iter->second->getCircuitNodeTypeStr() << "\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
 
     // Need to find out which node is ground later on
@@ -270,7 +270,7 @@ void NodeKeeper::CreateSolution(const std::string &key)
     Sol_[key] = new Solution(numberOfNodes_,0.0);
     std::ostringstream os;
     os << "creating solution " << key << " with " << numberOfNodes_ << " nodes" << "\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 
 }
 
@@ -321,28 +321,28 @@ void NodeKeeper::UpdateSolution(const std::string &key, const Solution &rhs)
 
         const size_t       cind     = cn.GetNumber();
         const size_t       eqrow    = cind + minEquationNumber;
-        const CUT::UpdateType ut    = cn.getUpdateType();
+        const CircuitUpdateType ut    = cn.getUpdateType();
 
         /// Assume the equations are numbered in order
         const double oval = sol->operator[](cind);
 
         double upd = rhs[eqrow];
 
-        if (ut == CUT::LOGDAMP)
+        if (ut == CircuitUpdateType::LOGDAMP)
         {
             /// hard code for VT at room temp
-            if ( fabs(upd) > 0.0259 )
+            if ( std::abs(upd) > 0.0259 )
             {
                 const double sign = (upd > 0.0) ? 1.0 : -1.0;
-                upd = sign*0.0259*log(1+fabs(upd)/0.0259);
+                upd = sign*0.0259*log(1+std::abs(upd)/0.0259);
             }
         }
-        else if (ut == CUT::POSITIVE)
+        else if (ut == CircuitUpdateType::POSITIVE)
         {
 #if 0
             std::ostringstream os;
             os << upd << "\t" << oval << std::endl;
-            OutputStream::WriteOut(OutputStream::INFO, os.str());
+            OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 #endif
             while ((upd + oval) <=  0.0)
             {
@@ -351,7 +351,7 @@ void NodeKeeper::UpdateSolution(const std::string &key, const Solution &rhs)
         }
         else
         {
-            dsAssert(ut == CUT::DEFAULT, "CIRCUIT_UNEXPECTED");
+            dsAssert(ut == CircuitUpdateType::DEFAULT, "CIRCUIT_UNEXPECTED");
         }
 
         const double nval = upd + oval;
@@ -360,14 +360,14 @@ void NodeKeeper::UpdateSolution(const std::string &key, const Solution &rhs)
         std::ostringstream os;
         os << "Setting " << nodename << " = " << nval << std::endl;
         os << " old " << oval << " upd " << upd << " new " << nval << std::endl;
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 #endif
         sol->operator[](cind) = nval;
 
-        const double n1 = fabs(upd);
+        const double n1 = std::abs(upd);
         aerr += n1;
 
-        const double n2 = fabs(nval);
+        const double n2 = std::abs(nval);
         const double nrerror =  n1 / (n2 + minError); 
         if (nrerror > rerr)
             rerr = nrerror;
@@ -415,13 +415,13 @@ void NodeKeeper::ACUpdateSolution(const std::string &rkey, const std::string &ik
         const std::string &nodename = it->first;
         std::ostringstream os;
         os << "Setting " << nodename << " = " << upd << std::endl;
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 #endif
 
         rsol->operator[](cind) = upd.real();
         isol->operator[](cind) = upd.imag();
 
-        const double n1 = abs(upd);
+        const double n1 = std::abs(upd);
         aerr += n1;
     }
     absError[rkey] = aerr;
@@ -450,7 +450,7 @@ void NodeKeeper::PrintSolution(const std::string &sn)
     {
         std::ostringstream os;
         os << "Circuit Solution:\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
 
     NodeTable_t::iterator iter;
@@ -465,7 +465,7 @@ void NodeKeeper::PrintSolution(const std::string &sn)
 
         std::ostringstream os;
         os << iter->first << "\t" << sol->operator[](iter->second->GetNumber()) << "\n";
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
 }
 
@@ -497,7 +497,7 @@ void NodeKeeper::ACPrintSolution(const std::string &rk, const std::string &ik)
 
         os << iter->first << "\t" << ccol << "\n";
     }
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 }
 
 

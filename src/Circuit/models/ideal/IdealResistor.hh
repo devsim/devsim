@@ -14,8 +14,8 @@ class IdealResistor : public InstanceModel {
           const char *n1,
           const char *n2);
 
-       void assembleDC(const NodeKeeper::Solution &, dsMath::RealRowColValueVec<double> &, std::vector<std::pair<int, double> > &);
-       void assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs);
+       void assembleDC_impl(const NodeKeeper::Solution &, dsMath::RealRowColValueVec<double> &, std::vector<std::pair<int, double> > &);
+       void assembleTran_impl(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs);
        bool addParam(const std::string &, double);
     private:
        IdealResistor();

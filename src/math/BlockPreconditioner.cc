@@ -30,6 +30,9 @@ limitations under the License.
 #include <sstream>
 #include <map>
 
+#include <cmath>
+using std::abs;
+
 namespace dsMath {
 template <typename T>
 /// Sort first by increasing row
@@ -44,24 +47,27 @@ struct SpecialSort : public std::binary_function<RowColVal<T>, RowColVal<T>, boo
       }
       else if (x.row == y.row)
       {
-        ret = (std::abs(x.val) > std::abs(y.val));
+        ret = (abs(x.val) > abs(y.val));
       }
       return ret;
     }
 };
 
-BlockPreconditioner::~BlockPreconditioner()
+template <typename DoubleType>
+BlockPreconditioner<DoubleType>::~BlockPreconditioner()
 {
   delete block_matrix_;
   delete block_preconditioner_;
 }
 
-BlockPreconditioner::BlockPreconditioner(size_t numeqns, Preconditioner::TransposeType_t transpose) : Preconditioner(numeqns, transpose), block_matrix_(NULL), block_preconditioner_(NULL), drop_tolerance_(0.5)
+template <typename DoubleType>
+BlockPreconditioner<DoubleType>::BlockPreconditioner(size_t numeqns, PEnum::TransposeType_t transpose) : Preconditioner<DoubleType>(numeqns, transpose), block_matrix_(NULL), block_preconditioner_(NULL), drop_tolerance_(0.5)
 {
-  block_preconditioner_ = new SuperLUPreconditioner(numeqns, transpose, SuperLUPreconditioner::FULL);
+  block_preconditioner_ = new SuperLUPreconditioner<DoubleType>(numeqns, transpose, PEnum::LUType_t::FULL);
 }
 
-void BlockPreconditioner::CreateBlockInfo()
+template <typename DoubleType>
+void BlockPreconditioner<DoubleType>::CreateBlockInfo()
 {
   blockInfoList_.clear();
 
@@ -102,7 +108,7 @@ void BlockPreconditioner::CreateBlockInfo()
   std::sort(blockInfoList_.begin(), blockInfoList_.end());
 
   equationNumberToBlockMap_.clear();
-  equationNumberToBlockMap_.resize(size(), size_t(-1));
+  equationNumberToBlockMap_.resize(Preconditioner<DoubleType>::size(), size_t(-1));
   for (size_t i = 0; i < blockInfoList_.size(); ++i)
   {
     const BlockInfo &binfo = blockInfoList_[i];
@@ -113,8 +119,8 @@ void BlockPreconditioner::CreateBlockInfo()
   }
 }
 
-template <typename T>
-void BlockPreconditioner::ProcessBlockInfo(const IntVec_t &Cols, const IntVec_t &Rows, const std::vector<T> &Vals)
+template <typename DoubleType> template <typename T>
+void BlockPreconditioner<DoubleType>::ProcessBlockInfo(const IntVec_t &Cols, const IntVec_t &Rows, const std::vector<T> &Vals)
 {
   const size_t cmax = Cols.size() - 1;
 
@@ -185,7 +191,7 @@ void BlockPreconditioner::ProcessBlockInfo(const IntVec_t &Cols, const IntVec_t 
       std::sort(vec.begin(), vec.end(), SpecialSort<T>());
 
       int    last_row = -1;
-      double drop_tolerance = 0.0;
+      DoubleType drop_tolerance = 0.0;
       bool   done_with_row = false;
       for (size_t i = 0; i < vec.size(); ++i)
       {
@@ -194,7 +200,7 @@ void BlockPreconditioner::ProcessBlockInfo(const IntVec_t &Cols, const IntVec_t 
         const int &row = rcv.row;
         const int &col = rcv.col;
         T          val = rcv.val;
-        const double val_mag = std::abs(val);
+        const DoubleType val_mag = abs(val);
 
         if (row != last_row)
         {
@@ -236,7 +242,7 @@ void BlockPreconditioner::ProcessBlockInfo(const IntVec_t &Cols, const IntVec_t 
     }
   }
   {
-    double drop_percent = 100.0 * static_cast<double>(dropped) / (dropped+kept+outofrange);
+    DoubleType drop_percent = 100.0 * static_cast<DoubleType>(dropped) / (dropped+kept+outofrange);
     std::ostringstream os;
     os 
         << "drop tolerance_ " << drop_tolerance_
@@ -245,41 +251,43 @@ void BlockPreconditioner::ProcessBlockInfo(const IntVec_t &Cols, const IntVec_t 
         << " outofrange " << outofrange
         << " drop % " << drop_percent <<
         "\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
 }
 
-void BlockPreconditioner::CreateBlockMatrix(CompressedMatrix *cm)
+template <typename DoubleType>
+void BlockPreconditioner<DoubleType>::CreateBlockMatrix(CompressedMatrix<DoubleType> *cm)
 {
 //  block_matrix_->ClearMatrix();
 
-  dsAssert(cm->GetCompressionType() == CompressedMatrix::CCM, "UNEXPECTED");
+  dsAssert(cm->GetCompressionType() == CompressionType::CCM, "UNEXPECTED");
 
-  if (cm->GetMatrixType() == CompressedMatrix::REAL)
+  if (cm->GetMatrixType() == MatrixType::REAL)
   {
     const IntVec_t    &Cols = cm->GetCols();
     const IntVec_t    &Rows = cm->GetRows();
-    const DoubleVec_t &Vals = cm->GetReal();
+    const DoubleVec_t<DoubleType> &Vals = cm->GetReal();
     ProcessBlockInfo(Cols, Rows, Vals);
   }
-  else if (cm->GetMatrixType() == CompressedMatrix::COMPLEX)
+  else if (cm->GetMatrixType() == MatrixType::COMPLEX)
   {
     const IntVec_t    &Cols = cm->GetCols();
     const IntVec_t    &Rows = cm->GetRows();
-    const ComplexDoubleVec_t &Vals = cm->GetComplex();
+    const ComplexDoubleVec_t<DoubleType> &Vals = cm->GetComplex();
     ProcessBlockInfo(Cols, Rows, Vals);
   }
 }
 
-bool BlockPreconditioner::DerivedLUFactor(Matrix *m)
+template <typename DoubleType>
+bool BlockPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
 {
-  CompressedMatrix *cm = dynamic_cast<CompressedMatrix *>(m);
+  CompressedMatrix<DoubleType> *cm = dynamic_cast<CompressedMatrix<DoubleType> *>(m);
   dsAssert(cm != NULL, "UNEXPECTED");
-  dsAssert(cm->GetCompressionType() == CompressedMatrix::CCM, "UNEXPECTED");
+  dsAssert(cm->GetCompressionType() == CompressionType::CCM, "UNEXPECTED");
 
   if (!block_matrix_)
   {
-    block_matrix_ = new CompressedMatrix(cm->size(), cm->GetMatrixType(), cm->GetCompressionType());
+    block_matrix_ = new CompressedMatrix<DoubleType>(cm->size(), cm->GetMatrixType(), cm->GetCompressionType());
     CreateBlockInfo();
   }
   else
@@ -297,15 +305,22 @@ bool BlockPreconditioner::DerivedLUFactor(Matrix *m)
   return block_preconditioner_->LUFactor(block_matrix_);
 }
 
-void BlockPreconditioner::DerivedLUSolve(DoubleVec_t &x, const DoubleVec_t &b) const
+template <typename DoubleType>
+void BlockPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const
 {
   block_preconditioner_->LUSolve(x, b);
 }
 
-void BlockPreconditioner::DerivedLUSolve(ComplexDoubleVec_t &x, const ComplexDoubleVec_t &b) const
+template <typename DoubleType>
+void BlockPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const
 {
   block_preconditioner_->LUSolve(x, b);
 }
 }
 
+template class dsMath::BlockPreconditioner<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class dsMath::BlockPreconditioner<float128>;
+#endif
 

@@ -25,10 +25,10 @@ limitations under the License.
 
 template <typename DoubleType>
 TriangleEdgeFromEdgeModel<DoubleType>::TriangleEdgeFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
-    : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::SCALAR), edgeModelName(edgemodel), y_ModelName(edgeModelName + "_y")
+    : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::DisplayType::SCALAR), edgeModelName(edgemodel), y_ModelName(edgeModelName + "_y")
 {
   RegisterCallback(edgemodel);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::SCALAR);
 }
 
 //// Need to figure out the deleter situation from sub models
@@ -50,7 +50,7 @@ void TriangleEdgeFromEdgeModel<DoubleType>::calcTriangleEdgeScalarValues() const
   std::vector<DoubleType> evx(3*tl.size());
   std::vector<DoubleType> evy(3*tl.size());
 
-  const TriangleElementField &efield = reg.GetTriangleElementField();
+  const TriangleElementField<DoubleType> &efield = reg.GetTriangleElementField<DoubleType>();
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Triangle &triangle = *tl[i];

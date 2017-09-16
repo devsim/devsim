@@ -156,21 +156,13 @@ void OpEqualRange<U>::run()
   mutex_.unlock();
 }
 
-template class OpEqualPacket<SerialVectorVectorOpEqual<ScalarDataHelper::times_equal<double>, double> >;
-template class OpEqualPacket<SerialVectorVectorOpEqual<ScalarDataHelper::plus_equal<double>, double> >;
+#define DBLTYPE double
+#include "ParallelOpEqualInstantiate.cc"
 
-template
-void OpEqualRun<SerialVectorVectorOpEqual<ScalarDataHelper::plus_equal<double>, double> >(SerialVectorVectorOpEqual<ScalarDataHelper::plus_equal<double>, double>&, size_t);
-
-template
-void OpEqualRun<SerialVectorVectorOpEqual<ScalarDataHelper::times_equal<double>, double> >(SerialVectorVectorOpEqual<ScalarDataHelper::times_equal<double>, double>&, size_t);
-
-template class OpEqualPacket<SerialVectorScalarOpEqual<ScalarDataHelper::times_equal<double>, double> >;
-template class OpEqualPacket<SerialVectorScalarOpEqual<ScalarDataHelper::plus_equal<double>, double> >;
-
-template
-void OpEqualRun<SerialVectorScalarOpEqual<ScalarDataHelper::plus_equal<double>, double> >(SerialVectorScalarOpEqual<ScalarDataHelper::plus_equal<double>, double>&, size_t);
-
-template
-void OpEqualRun<SerialVectorScalarOpEqual<ScalarDataHelper::times_equal<double>, double> >(SerialVectorScalarOpEqual<ScalarDataHelper::times_equal<double>, double>&, size_t);
+#ifdef DEVSIM_EXTENDED_PRECISION
+#undef  DBLTYPE
+#define DBLTYPE float128
+#include "Float128.hh"
+#include "ParallelOpEqualInstantiate.cc"
+#endif
 

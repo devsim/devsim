@@ -121,7 +121,7 @@ void Contact::AddEquation(ContactEquationHolder &eq)
       os << "Warning: Will not replace Contact Equation with itself.\n"
           "Region: " << this->GetName() << ", Equation: " << nm <<
           ", New Variable: " << var << "\n";
-      GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+      GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
     }
     else
     {
@@ -130,7 +130,7 @@ void Contact::AddEquation(ContactEquationHolder &eq)
         std::ostringstream os; 
         os << "Warning: Adding a new Contact Equation by the same name with a different variable will remove mapping to other variable.\n"
             "Region: " << this->GetName() << ", Equation: " << nm << ", Old variable: " << oeq.GetVariable() << ", New Variable: " << var << "\n";
-        GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
 
         variableEquationMap.erase(var);
         variableEquationMap[var] = nm;
@@ -140,7 +140,7 @@ void Contact::AddEquation(ContactEquationHolder &eq)
         std::ostringstream os; 
         os << "Warning: Replacing Contact Equation with Contact Equation of the same name.\n"
             "Contact: " << this->GetName() << ", Equation: " << nm << ", Variable: " << var << "\n";
-        GeometryStream::WriteOut(OutputStream::INFO, *this, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
       }
       contactEquationPtrMap[nm] = eq;
         /// the contactEquationIndexMap doesn't change
@@ -154,7 +154,7 @@ void Contact::AddEquation(ContactEquationHolder &eq)
       std::ostringstream os; 
       os << "ERROR: Can't create Contact Equation if its variable is already being used\n"
           << "New Equation: " << nm << ", Old Equation: " << oenm << ", Variable: "  << var << "\n";
-      GeometryStream::WriteOut(OutputStream::ERROR, *this, os.str());
+      GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *this, os.str());
       dsAssert(false, "UNEXPECTED");
     }
     else
@@ -189,7 +189,8 @@ const ContactEquationPtrMap_t &Contact::GetEquationPtrList() const
   return contactEquationPtrMap;
 }
 
-void Contact::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Contact::Assemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   for (auto it : GetEquationPtrList())
   {
@@ -333,3 +334,8 @@ void Contact::AddTriangles(const ConstTriangleList &tlist)
 
 
 
+template void Contact::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t);
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template void Contact::Assemble(dsMath::RealRowColValueVec<float128> &m, dsMath::RHSEntryVec<float128> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t);
+#endif

@@ -14,6 +14,7 @@ ARCH=`uname -m`
       -DCMAKE_C_COMPILER=${CC} \
       -DDEVSIM_CONFIG=${DEVSIM_CONFIG} \
       -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
+      -DDEVSIM_EXTENDED_PRECISION=ON \
       ..)
 #  done
 done

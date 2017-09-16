@@ -53,12 +53,13 @@ class IdealVoltage : public InstanceModel {
 
 //      IdealVoltage(const char *nplus, const char *nmin, const char *value);
 //      void getDCStamp(Matrix::RowColEntryVec &);
-        void assembleDC(const NodeKeeper::Solution &, dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &);
-        void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &);
 //      void getTranStamp(Matrix::RowColEntryVec &) {};
-        void assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs) {};
         bool addParam(const std::string &, double);
     private:
+        void assembleACRHS_impl(std::vector<std::pair<size_t, std::complex<double> > > &);
+        void assembleDC_impl(const NodeKeeper::Solution &, dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &);
+        void assembleTran_impl(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs) {};
+
         IdealVoltage();
         IdealVoltage(const IdealVoltage &);
         IdealVoltage operator=(const IdealVoltage &);

@@ -90,9 +90,9 @@ class ScalarData {
 
         ScalarData &operator=(const ScalarData &);
 
-        ScalarData &operator*=(const ScalarData &);
-        ScalarData &operator*=(const T &);
-        ScalarData &operator*=(DoubleType);
+        ScalarData &times_equal_data (const ScalarData &);
+        ScalarData &times_equal_model(const T &);
+        ScalarData &times_equal_scalar(DoubleType);
 
 /*
         ScalarData &operator-=(const ScalarData &);
@@ -100,9 +100,9 @@ class ScalarData {
         ScalarData &operator-=(DoubleType);
 */
 
-        ScalarData &operator+=(const ScalarData &);
-        ScalarData &operator+=(const T &);
-        ScalarData &operator+=(DoubleType);
+        ScalarData &plus_equal_data(const ScalarData &);
+        ScalarData &plus_equal_model(const T &);
+        ScalarData &plus_equal_scalar(DoubleType);
 
         DoubleType operator[](size_t) const;
         DoubleType &operator[](size_t);
@@ -121,9 +121,9 @@ class ScalarData {
         }
 
         //// Use the functors above as helpes (times_equal, etc)
-        template <typename V> ScalarData &op_equal(const ScalarData &, const V &);
-        template <typename V> ScalarData &op_equal(const T &, const V &);
-        template <typename V> ScalarData &op_equal(const DoubleType &, const V &);
+        template <typename V> ScalarData &op_equal_data(const ScalarData &, const V &);
+        template <typename V> ScalarData &op_equal_model(const T &, const V &);
+        template <typename V> ScalarData &op_equal_scalar(const DoubleType &, const V &);
 
         bool IsZero() const
         {

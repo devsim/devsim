@@ -38,22 +38,52 @@ limitations under the License.
 #include "Interpreter.hh"
 #include "dsTimer.hh"
 
-//// Take out when remove EquationMathErrorInfo
-//#include "EquationErrors.hh"
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
 
 #include <sstream>
 #include <iomanip>
-//#include <iostream>
+#include <cmath>
+using std::abs;
 
 namespace dsMath {
 
-const double Newton::rhssign = -1.0;
-const size_t Newton::DefaultMaxIter = 20;
-const double Newton::DefaultAbsError  = 0.0;
-const double Newton::DefaultRelError  = 0.0;
-const double Newton::DefaultQRelError = 0.0;
+template <>
+const double Newton<double>::rhssign = -1.0;
 
-size_t Newton::NumberEquationsAndSetDimension()
+template <>
+const size_t Newton<double>::DefaultMaxIter = 20;
+
+template <>
+const double Newton<double>::DefaultAbsError  = 0.0;
+
+template <>
+const double Newton<double>::DefaultRelError  = 0.0;
+
+template <>
+const double Newton<double>::DefaultQRelError = 0.0;
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+template <>
+const float128 Newton<float128>::rhssign = -1.0;
+
+template <>
+const size_t Newton<float128>::DefaultMaxIter = 20;
+
+template <>
+const float128 Newton<float128>::DefaultAbsError  = 0.0;
+
+template <>
+const float128 Newton<float128>::DefaultRelError  = 0.0;
+
+template <>
+const float128 Newton<float128>::DefaultQRelError = 0.0;
+#endif
+
+
+template <typename DoubleType>
+size_t Newton<DoubleType>::NumberEquationsAndSetDimension()
 {
   GlobalData &gdata = GlobalData::GetInstance();
   size_t eqnnum = 0;
@@ -82,7 +112,7 @@ size_t Newton::NumberEquationsAndSetDimension()
       {
           os << "Device \"" << name << "\" has no equations.\n";
       }
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 
       if (dev.GetDimension() > dimension)
       {
@@ -100,7 +130,7 @@ size_t Newton::NumberEquationsAndSetDimension()
 #if 1
       std::ostringstream os; 
       os << "Circuit " << " has equations " << eqnnum << ":" << maxnum << "\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 #endif
       eqnnum = maxnum + 1;
     }
@@ -109,7 +139,8 @@ size_t Newton::NumberEquationsAndSetDimension()
   return eqnnum;
 }
 
-void Newton::AssembleContactsAndInterfaces(RealRowColValueVec<double> &mat, RHSEntryVec<double> &rhs, permvec_t &permvec, Device &dev, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Newton<DoubleType>::AssembleContactsAndInterfaces(RealRowColValueVec<DoubleType> &mat, RHSEntryVec<DoubleType> &rhs, permvec_t &permvec, Device &dev, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   PermutationMap         p;
 
@@ -124,68 +155,62 @@ void Newton::AssembleContactsAndInterfaces(RealRowColValueVec<double> &mat, RHSE
   }
 }
 
-void Newton::AssembleBulk(RealRowColValueVec<double> &mat, RHSEntryVec<double> &rhs, Device &dev, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Newton<DoubleType>::AssembleBulk(RealRowColValueVec<DoubleType> &mat, RHSEntryVec<DoubleType> &rhs, Device &dev, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-  dev.RegionAssemble(mat, rhs, dsMathEnum::MATRIXANDRHS, t);
+  dev.RegionAssemble(mat, rhs, dsMathEnum::WhatToLoad::MATRIXANDRHS, t);
 }
 
-
-void Newton::LoadMatrixAndRHSOnCircuit(RealRowColValueVec<double> &mat, RHSEntryVec<double> &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Newton<DoubleType>::LoadMatrixAndRHSOnCircuit(RealRowColValueVec<DoubleType> &mat, RHSEntryVec<DoubleType> &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   InstanceKeeper &ik = InstanceKeeper::instance();
   NodeKeeper     &nk = NodeKeeper::instance();
 
-  /// Nasty hack
-  /// TODO: circuit elements should ask nodekeeper instead of node for equation number
-  //        circuit elements store node names instead of circuit node pointers
-#if 0
-  size_t offset = nk.GetMinEquationNumber();
-#endif
+  RHSEntryVec<double> drhs;
+  RealRowColValueVec<double> dmat;
 
-////// TODO: is the rhs valid at this point for ssac?
-/////  Make sure it is not used
-
-  if (t == dsMathEnum::DC)
+  if (t == dsMathEnum::TimeMode::DC)
   {
-    NodeKeeper::Solution *sol = nk.GetSolution("dcop");
+    std::vector<double> *sol = nk.GetSolution("dcop");
     dsAssert(sol != 0, "UNEXPECTED");
-    if (w == dsMathEnum::MATRIXANDRHS)
+    if (w == dsMathEnum::WhatToLoad::MATRIXANDRHS)
     {
-      ik.AssembleDCMatrix(mat, *sol, rhs);
+      ik.AssembleDCMatrix(dmat, *sol, drhs);
     }
-    else if (w == dsMathEnum::MATRIXONLY)
+    else if (w == dsMathEnum::WhatToLoad::MATRIXONLY)
     {
       RHSEntryVec<double> r;
-      ik.AssembleDCMatrix(mat, *sol, r);
+      ik.AssembleDCMatrix(dmat, *sol, r);
     }
-    else if (w == dsMathEnum::RHS)
+    else if (w == dsMathEnum::WhatToLoad::RHS)
     {
       //// Make more efficient later
       RealRowColValueVec<double> m;
-      ik.AssembleDCMatrix(m, *sol, rhs);
+      ik.AssembleDCMatrix(m, *sol, drhs);
     }
     else
     {
       dsAssert(0, "UNEXPECTED");
     }
   }
-  else if (t == dsMathEnum::TIME)
+  else if (t == dsMathEnum::TimeMode::TIME)
   {
-    NodeKeeper::Solution *sol = nk.GetSolution("dcop");
+    std::vector<double> *sol = nk.GetSolution("dcop");
     dsAssert(sol != 0, "UNEXPECTED");
-    if (w == dsMathEnum::MATRIXANDRHS)
+    if (w == dsMathEnum::WhatToLoad::MATRIXANDRHS)
     {
-      ik.AssembleTRMatrix(&mat, *sol, rhs, 1.0);
+      ik.AssembleTRMatrix(&dmat, *sol, drhs, 1.0);
     }
-    else if (w == dsMathEnum::MATRIXONLY)
+    else if (w == dsMathEnum::WhatToLoad::MATRIXONLY)
     {
       RHSEntryVec<double> r;
-      ik.AssembleTRMatrix(&mat, *sol, r, 1.0);
+      ik.AssembleTRMatrix(&dmat, *sol, r, 1.0);
     }
-    else if (w == dsMathEnum::RHS)
+    else if (w == dsMathEnum::WhatToLoad::RHS)
     {
       RealRowColValueVec<double> *m = NULL;
-      ik.AssembleTRMatrix(m, *sol, rhs, 1.0);
+      ik.AssembleTRMatrix(m, *sol, drhs, 1.0);
     }
     else
     {
@@ -196,14 +221,25 @@ void Newton::LoadMatrixAndRHSOnCircuit(RealRowColValueVec<double> &mat, RHSEntry
   {
     dsAssert(0, "UNEXPECTED");
   }
+
+  for (size_t i = 0; i < dmat.size(); ++i)
+  {
+    auto &entry = dmat[i];
+    mat.push_back(RowColVal<DoubleType>(entry.row, entry.col, static_cast<DoubleType>(entry.val)));
+  }
+
+  for (size_t i = 0; i < drhs.size(); ++i)
+  {
+    auto &entry = drhs[i];
+    rhs.push_back(std::make_pair(entry.first, static_cast<DoubleType>(entry.second)));
+  }
 }
 
-//#include <iostream>
-
+template <typename DoubleType>
 template <typename T>
-void Newton::LoadIntoMatrix(const RealRowColValueVec<double> &rcv, Matrix &mat, T scl, size_t offset)
+void Newton<DoubleType>::LoadIntoMatrix(const RealRowColValueVec<DoubleType> &rcv, Matrix<DoubleType> &mat, T scl, size_t offset)
 {
-  for (RealRowColValueVec<double>::const_iterator it = rcv.begin(); it != rcv.end(); ++it)
+  for (typename RealRowColValueVec<DoubleType>::const_iterator it = rcv.begin(); it != rcv.end(); ++it)
   {
     const size_t row = it->row + offset;
     const size_t col = it->col + offset;
@@ -213,10 +249,11 @@ void Newton::LoadIntoMatrix(const RealRowColValueVec<double> &rcv, Matrix &mat, 
   }
 }
 
+template <typename DoubleType>
 template <typename T>
-void Newton::LoadIntoMatrixPermutated(const RealRowColValueVec<double> &rcv, Matrix &mat, const permvec_t &permvec, T scl, size_t offset)
+void Newton<DoubleType>::LoadIntoMatrixPermutated(const RealRowColValueVec<DoubleType> &rcv, Matrix<DoubleType> &mat, const permvec_t &permvec, T scl, size_t offset)
 {
-  for (RealRowColValueVec<double>::const_iterator it = rcv.begin(); it != rcv.end(); ++it)
+  for (typename RealRowColValueVec<DoubleType>::const_iterator it = rcv.begin(); it != rcv.end(); ++it)
   {
     size_t row = permvec[it->row];
     const size_t col = it->col + offset;
@@ -229,10 +266,11 @@ void Newton::LoadIntoMatrixPermutated(const RealRowColValueVec<double> &rcv, Mat
   }
 }
 
+template <typename DoubleType>
 template <typename T>
-void Newton::LoadIntoRHS(const RHSEntryVec<double> &r, std::vector<T> &rhs, T scl, size_t offset)
+void Newton<DoubleType>::LoadIntoRHS(const RHSEntryVec<DoubleType> &r, std::vector<T> &rhs, T scl, size_t offset)
 {
-  for (RHSEntryVec<double>::const_iterator it = r.begin(); it != r.end(); ++it)
+  for (typename RHSEntryVec<DoubleType>::const_iterator it = r.begin(); it != r.end(); ++it)
   {
     const size_t row = it->first + offset;
     const T val = scl * rhssign * it->second;
@@ -241,10 +279,11 @@ void Newton::LoadIntoRHS(const RHSEntryVec<double> &r, std::vector<T> &rhs, T sc
   }
 }
 
+template <typename DoubleType>
 template <typename T>
-void Newton::LoadIntoRHSPermutated(const RHSEntryVec<double> &r, std::vector<T> &rhs, const permvec_t &permvec, T scl, size_t offset)
+void Newton<DoubleType>::LoadIntoRHSPermutated(const RHSEntryVec<DoubleType> &r, std::vector<T> &rhs, const permvec_t &permvec, T scl, size_t offset)
 {
-  for (RHSEntryVec<double>::const_iterator it = r.begin(); it != r.end(); ++it)
+  for (typename RHSEntryVec<DoubleType>::const_iterator it = r.begin(); it != r.end(); ++it)
   {
     size_t row = permvec[it->first];
     if (row != size_t(-1))
@@ -256,13 +295,14 @@ void Newton::LoadIntoRHSPermutated(const RHSEntryVec<double> &r, std::vector<T> 
   }
 }
 
+template <typename DoubleType>
 template <typename T>
-void Newton::LoadMatrixAndRHS(Matrix &matrix, std::vector<T> &rhs, permvec_t &permvec, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t, T scl)
+void Newton<DoubleType>::LoadMatrixAndRHS(Matrix<DoubleType> &matrix, std::vector<T> &rhs, permvec_t &permvec, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t, T scl)
 {
   dsTimer timer("LoadMatrixAndRHS");
 
-  RHSEntryVec<double>    v;
-  RealRowColValueVec<double> m;
+  RHSEntryVec<DoubleType>    v;
+  RealRowColValueVec<DoubleType> m;
 
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t dlist = gdata.GetDeviceList();
@@ -277,7 +317,7 @@ void Newton::LoadMatrixAndRHS(Matrix &matrix, std::vector<T> &rhs, permvec_t &pe
 
     AssembleContactsAndInterfaces(m, v, permvec, dev, w, t);
 
-    if (w != dsMathEnum::PERMUTATIONSONLY)
+    if (w != dsMathEnum::WhatToLoad::PERMUTATIONSONLY)
     {
       LoadIntoMatrix(m, matrix, scl);
       LoadIntoRHS(v, rhs, scl);
@@ -290,7 +330,7 @@ void Newton::LoadMatrixAndRHS(Matrix &matrix, std::vector<T> &rhs, permvec_t &pe
     }
   }
 
-  if (w != dsMathEnum::PERMUTATIONSONLY)
+  if (w != dsMathEnum::WhatToLoad::PERMUTATIONSONLY)
   {
     NodeKeeper &nk = NodeKeeper::instance();
     if (nk.HaveNodes())
@@ -312,10 +352,12 @@ void Newton::LoadMatrixAndRHS(Matrix &matrix, std::vector<T> &rhs, permvec_t &pe
 }
 
 //// This function must be skipped for noise
-void Newton::LoadCircuitRHSAC(ComplexDoubleVec_t &rhs)
+template <typename DoubleType>
+void Newton<DoubleType>::LoadCircuitRHSAC(std::vector<std::complex<DoubleType>> &rhs)
 {
 
   typedef std::vector<std::pair<size_t, std::complex<double> > > ComplexRHSEntryVec_t;
+
   ComplexRHSEntryVec_t cv;
 
   std::ostringstream os; 
@@ -332,26 +374,31 @@ void Newton::LoadCircuitRHSAC(ComplexDoubleVec_t &rhs)
 
     size_t offset = nk.GetMinEquationNumber();
 
-    for (ComplexRHSEntryVec_t::iterator it = cv.begin(); it != cv.end(); ++it)
+    for (typename ComplexRHSEntryVec_t::iterator it = cv.begin(); it != cv.end(); ++it)
     {
-      rhs[it->first + offset] = it->second;
+      rhs[it->first + offset] = std::complex<DoubleType>(static_cast<DoubleType>(it->second.real()), static_cast<DoubleType>(it->second.imag()));
     }
   }
-  OutputStream::WriteOut(OutputStream::INFO, os.str());
+  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 }
 
-void Newton::LoadMatrixAndRHSAC(Matrix &matrix, ComplexDoubleVec_t &rhs, permvec_t &permvec, double frequency)
+template <typename DoubleType>
+void Newton<DoubleType>::LoadMatrixAndRHSAC(Matrix<DoubleType> &matrix, std::vector<std::complex<DoubleType>> &rhs, permvec_t &permvec, DoubleType frequency)
 {
-  const ComplexDouble_t jOmega  = 2.0 * M_PI * ComplexDouble_t(0,1.0) * frequency;
+#ifndef _WIN32
+#warning "Use correct M_PI for precision"
+#endif
+  const std::complex<DoubleType> jOmega  = static_cast<DoubleType>(2.0 * M_PI) * std::complex<DoubleType>(0,1.0) * frequency;
 
-  DoubleVec_t        r(rhs.size());
-  ComplexDoubleVec_t c(rhs.size());
-  LoadMatrixAndRHS(matrix, r, permvec, dsMathEnum::PERMUTATIONSONLY, dsMathEnum::DC,   1.0);
-  LoadMatrixAndRHS(matrix, r, permvec, dsMathEnum::MATRIXONLY, dsMathEnum::DC,   1.0);
-  LoadMatrixAndRHS(matrix, c, permvec, dsMathEnum::MATRIXONLY, dsMathEnum::TIME, jOmega);
+  std::vector<DoubleType>                   r(rhs.size());
+  std::vector<std::complex<DoubleType>> c(rhs.size());
+  LoadMatrixAndRHS(matrix, r, permvec, dsMathEnum::WhatToLoad::PERMUTATIONSONLY, dsMathEnum::TimeMode::DC,   static_cast<DoubleType>(1.0));
+  LoadMatrixAndRHS(matrix, r, permvec, dsMathEnum::WhatToLoad::MATRIXONLY, dsMathEnum::TimeMode::DC,   static_cast<DoubleType>(1.0));
+  LoadMatrixAndRHS(matrix, c, permvec, dsMathEnum::WhatToLoad::MATRIXONLY, dsMathEnum::TimeMode::TIME, jOmega);
 }
 
-void Newton::RestoreSolutions()
+template <typename DoubleType>
+void Newton<DoubleType>::RestoreSolutions()
 {
   GlobalData &gdata = GlobalData::GetInstance();
 
@@ -379,8 +426,8 @@ void Newton::RestoreSolutions()
   }
 }
 
-//// TODO: refactor so we are not so explicit
-void Newton::BackupSolutions()
+template <typename DoubleType>
+void Newton<DoubleType>::BackupSolutions()
 {
   GlobalData &gdata = GlobalData::GetInstance();
 
@@ -409,9 +456,93 @@ void Newton::BackupSolutions()
   }
 }
 
-//// TODO: call backups to handle time steps
-//// TODO: return information to tclapi
-bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &timeinfo, ObjectHolderMap_t *ohm)
+namespace {
+Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, size_t numeqns)
+{
+  Preconditioner<double> *preconditioner;
+  if (dynamic_cast<IterativeLinearSolver<double> *>(&itermethod))
+  {
+    preconditioner = new BlockPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS);
+  }
+  else
+  {
+    preconditioner = new SuperLUPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+  }
+  return preconditioner;
+}
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermethod, size_t numeqns)
+{
+  Preconditioner<float128> *preconditioner;
+  if (dynamic_cast<IterativeLinearSolver<float128> *>(&itermethod))
+  {
+    preconditioner = new BlockPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS);
+  }
+  else
+  {
+    preconditioner = new SuperLUPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+  }
+  return preconditioner;
+}
+#endif
+
+template <typename DoubleType>
+Preconditioner<DoubleType> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns)
+{
+  return new SuperLUPreconditioner<DoubleType>(numeqns, trans_type, PEnum::LUType_t::FULL);
+}
+
+#if 0
+#ifdef DEVSIM_EXTENDED_PRECISION
+Preconditioner<float128> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns)
+{
+  return new SuperLUPreconditioner<float128>(numeqns, trans_type, PEnum::LUType_t::FULL);
+}
+#endif
+#endif
+}
+
+namespace {
+void CallUpdateSolution(NodeKeeper &nk, const std::string &name, std::vector<double> &result)
+{
+  nk.UpdateSolution(name, result);
+}
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+void CallUpdateSolution(NodeKeeper &nk, const std::string &name, std::vector<float128> &result)
+{
+  std::vector<double> tmp(result.size());
+  for (size_t i = 0; i < result.size(); ++i)
+  {
+    tmp[i] = static_cast<double>(result[i]);
+  }
+  nk.UpdateSolution(name, tmp);
+}
+#endif
+
+void CallACUpdateSolution(NodeKeeper &nk, const std::string &rname, const std::string &iname, std::vector<std::complex<double>> &result)
+{
+  nk.ACUpdateSolution(rname, iname, result);
+}
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+void CallACUpdateSolution(NodeKeeper &nk, const std::string &rname, const std::string &iname, std::vector<std::complex<float128>> &result)
+{
+  std::vector<std::complex<double>> tmp(result.size());
+  for (size_t i = 0; i < result.size(); ++i)
+  {
+    tmp[i] = std::complex<double>(static_cast<double>(result[i].real()), static_cast<double>(result[i].imag()));
+  }
+  nk.ACUpdateSolution(rname, iname, tmp);
+}
+#endif
+
+}
+
+
+template <typename DoubleType>
+bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeMethods::TimeParams<DoubleType> &timeinfo, ObjectHolderMap_t *ohm)
 {
   NodeKeeper &nk = NodeKeeper::instance();
   GlobalData &gdata = GlobalData::GetInstance();
@@ -426,21 +557,13 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
 
   PrintNumberEquations(numeqns, ohm);
 
-  std::unique_ptr<Matrix> matrix;
-  std::unique_ptr<Preconditioner> preconditioner;
+  std::unique_ptr<Matrix<DoubleType>> matrix;
+  std::unique_ptr<Preconditioner<DoubleType>> preconditioner;
 
-  if (dynamic_cast<IterativeLinearSolver *>(&itermethod))
-  {
-    matrix = std::unique_ptr<Matrix>(new CompressedMatrix(numeqns));
-    preconditioner = std::unique_ptr<Preconditioner>(new BlockPreconditioner(numeqns, Preconditioner::NOTRANS));
-  }
-  else
-  {
-    matrix = std::unique_ptr<Matrix>(new CompressedMatrix(numeqns));
-    preconditioner = std::unique_ptr<Preconditioner>(new SuperLUPreconditioner(numeqns, Preconditioner::NOTRANS, Preconditioner::FULL));
-  }
+  matrix = std::unique_ptr<Matrix<DoubleType>>(new CompressedMatrix<DoubleType>(numeqns));
+  preconditioner = std::unique_ptr<Preconditioner<DoubleType>>(CreatePreconditioner(itermethod, numeqns));
 
-  DoubleVec_t rhs(numeqns);
+  std::vector<DoubleType> rhs(numeqns);
 
   bool converged = false;
 
@@ -455,20 +578,20 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
     permvec[i] = i;
   }
 
-  DoubleVec_t result(numeqns);
+  std::vector<DoubleType> result(numeqns);
 
-  DoubleVec_t rhs_constant(numeqns);
+  std::vector<DoubleType> rhs_constant(numeqns);
   if (!timeinfo.IsDCMethod())
   {
     InitializeTransientAssemble(timeinfo, numeqns, rhs_constant);
   }
   
 
-  LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::PERMUTATIONSONLY, dsMathEnum::DC, 1.0);
+  LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::PERMUTATIONSONLY, dsMathEnum::TimeMode::DC, static_cast<DoubleType>(1.0));
 
   size_t divergence_count = 0;
-  double last_rel_err = 0.0;
-  double last_abs_err = 0.0;
+  DoubleType last_rel_err = 0.0;
+  DoubleType last_abs_err = 0.0;
 
   ObjectHolderList_t iteration_list;
 
@@ -487,16 +610,16 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
     /// This is the resistive portion (always assembled
     if (timeinfo.IsDCOnly())
     {
-      LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::MATRIXANDRHS, dsMathEnum::DC, 1.0);
+      LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, dsMathEnum::TimeMode::DC, static_cast<DoubleType>(1.0));
     }
     else
     {
-      LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::MATRIXANDRHS, dsMathEnum::DC, 1.0);
+      LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, dsMathEnum::TimeMode::DC, static_cast<DoubleType>(1.0));
 
       /// This assembles the time derivative current 
       if (timeinfo.a0 != 0.0)
       {
-        LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::MATRIXANDRHS, dsMathEnum::TIME, timeinfo.a0);
+        LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, dsMathEnum::TimeMode::TIME, timeinfo.a0);
       }
     }
 
@@ -528,7 +651,7 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
 
     if (nk.HaveNodes())
     {
-      nk.UpdateSolution("dcop", result);
+      CallUpdateSolution(nk, "dcop", result);
       nk.TriggerCallbacksOnNodes();
     }
 
@@ -542,8 +665,8 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
       {
         const std::string &name = dit->first;
         const Device &device = *(dit->second);
-        const double devrerr = device.GetRelError();
-        const double devaerr = device.GetAbsError();
+        const DoubleType devrerr = device.GetRelError<DoubleType>();
+        const DoubleType devaerr = device.GetAbsError<DoubleType>();
 
         if (ohm)
         {
@@ -580,8 +703,8 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
 
       if (nk.HaveNodes())
       {
-        const double cirrerr = nk.GetRelError("dcop");
-        const double ciraerr = nk.GetAbsError("dcop");
+        const DoubleType cirrerr = nk.GetRelError("dcop");
+        const DoubleType ciraerr = nk.GetAbsError("dcop");
         PrintCircuitErrors(p_iteration_map);
         converged = converged && (cirrerr < relLimit) && (ciraerr < absLimit);
       }
@@ -594,12 +717,12 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
     }
   }
 
-  std::vector<double> newQ;
+  std::vector<DoubleType> newQ;
   if (timeinfo.IsTransient())
   {
     //// New charge based on new assemble
     newQ.resize(numeqns);
-    LoadMatrixAndRHS(*matrix, newQ, permvec, dsMathEnum::RHS, dsMathEnum::TIME, 1.0);
+    LoadMatrixAndRHS(*matrix, newQ, permvec, dsMathEnum::WhatToLoad::RHS, dsMathEnum::TimeMode::TIME, static_cast<DoubleType>(1.0));
 
     //// Check to see if your projection was correct
     if (timeinfo.IsIntegration())
@@ -644,29 +767,32 @@ bool Newton::Solve(LinearSolver &itermethod, const TimeMethods::TimeParams &time
   return converged;
 }
 
-void Newton::PrintNumberEquations(size_t numeqns, ObjectHolderMap_t *ohm)
+template <typename DoubleType>
+void Newton<DoubleType>::PrintNumberEquations(size_t numeqns, ObjectHolderMap_t *ohm)
 {
   std::ostringstream os; 
   os << "number of equations " << numeqns << "\n";
-  OutputStream::WriteOut(OutputStream::INFO, os.str());
+  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   if (ohm)
   {
     (*ohm)["number_of_equations"] = ObjectHolder(static_cast<int>(numeqns));
   }
 }
 
-void Newton::PrintIteration(size_t iter, ObjectHolderMap_t *ohm)
+template <typename DoubleType>
+void Newton<DoubleType>::PrintIteration(size_t iter, ObjectHolderMap_t *ohm)
 {
   std::ostringstream os; 
   os << "Iteration: " << iter << "\n";
-  OutputStream::WriteOut(OutputStream::INFO, os.str());
+  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   if (ohm)
   {
     (*ohm)["iteration"] = ObjectHolder(static_cast<int>(iter));
   }
 }
 
-void Newton::PrintCircuitErrors(ObjectHolderMap_t *ohm)
+template <typename DoubleType>
+void Newton<DoubleType>::PrintCircuitErrors(ObjectHolderMap_t *ohm)
 {
   NodeKeeper &nk = NodeKeeper::instance();
   const double cirrerr = nk.GetRelError("dcop");
@@ -676,7 +802,7 @@ void Newton::PrintCircuitErrors(ObjectHolderMap_t *ohm)
       << std::scientific << std::setprecision(5) <<
                "\tRelError: " << cirrerr <<
                "\tAbsError: " << ciraerr << "\n";
-  OutputStream::WriteOut(OutputStream::INFO, os.str());
+  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   if (ohm)
   {
     ObjectHolderMap_t cir;
@@ -686,11 +812,12 @@ void Newton::PrintCircuitErrors(ObjectHolderMap_t *ohm)
   }
 }
 
-void Newton::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
+template <typename DoubleType>
+void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
 {
   const std::string &name = device.GetName();
-  const double devrerr = device.GetRelError();
-  const double devaerr = device.GetAbsError();
+  const DoubleType devrerr = device.GetRelError<DoubleType>();
+  const DoubleType devaerr = device.GetAbsError<DoubleType>();
 
   std::unique_ptr<ObjectHolderMap_t> dmap;
   std::unique_ptr<ObjectHolderList_t> rlist;
@@ -716,8 +843,8 @@ void Newton::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
 
     os << "    Region: \"" << region.GetName() << "\""
         << std::scientific << std::setprecision(5) <<
-                 "\tRelError: " << region.GetRelError() <<
-                 "\tAbsError: " << region.GetAbsError() << "\n";
+                 "\tRelError: " << region.GetRelError<DoubleType>() <<
+                 "\tAbsError: " << region.GetAbsError<DoubleType>() << "\n";
 
     const EquationPtrMap_t &equations = region.GetEquationPtrList();
     for (EquationPtrMap_t::const_iterator eit = equations.begin(); eit != equations.end(); ++eit)
@@ -725,19 +852,19 @@ void Newton::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
       const EquationHolder &equation = (eit->second);
       os << "      Equation: \"" << equation.GetName() << "\""
           << std::scientific << std::setprecision(5) <<
-                   "\tRelError: " << equation.GetRelError() <<
-                   "\tAbsError: " << equation.GetAbsError() << "\n";
+                   "\tRelError: " << equation.GetRelError<DoubleType>() <<
+                   "\tAbsError: " << equation.GetAbsError<DoubleType>() << "\n";
 
     }
   }
-  OutputStream::WriteOut(OutputStream::INFO, os.str());
+  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 
   if (ohm)
   {
     ObjectHolderMap_t &dmap = *ohm;
     dmap["name"] = ObjectHolder(name);
-    dmap["relative_error"] = ObjectHolder(devrerr);
-    dmap["absolute_error"] = ObjectHolder(devaerr);
+    dmap["relative_error"] = ObjectHolder(static_cast<double>(devrerr));
+    dmap["absolute_error"] = ObjectHolder(static_cast<double>(devaerr));
 
     ObjectHolderList_t rlist;
     for (Device::RegionList_t::const_iterator rit = regions.begin(); rit != regions.end(); ++rit)
@@ -745,8 +872,8 @@ void Newton::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
       const Region &region = *(rit->second);
       ObjectHolderMap_t rmap;
       rmap["name"] = ObjectHolder(region.GetName());
-      rmap["relative_error"] = ObjectHolder(region.GetRelError());
-      rmap["absolute_error"] = ObjectHolder(region.GetAbsError());
+      rmap["relative_error"] = ObjectHolder(region.GetRelError<double>());
+      rmap["absolute_error"] = ObjectHolder(region.GetAbsError<double>());
 
       ObjectHolderList_t elist;
       const EquationPtrMap_t &equations = region.GetEquationPtrList();
@@ -755,8 +882,8 @@ void Newton::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
         const EquationHolder &equation = (eit->second);
         ObjectHolderMap_t emap;
         emap["name"] = ObjectHolder(equation.GetName());
-        emap["relative_error"] = ObjectHolder(equation.GetRelError());
-        emap["absolute_error"] = ObjectHolder(equation.GetAbsError());
+        emap["relative_error"] = ObjectHolder(equation.GetRelError<double>());
+        emap["absolute_error"] = ObjectHolder(equation.GetAbsError<double>());
         elist.push_back(ObjectHolder(emap));
       }
       rmap["equations"] = ObjectHolder(elist);
@@ -766,48 +893,50 @@ void Newton::PrintDeviceErrors(const Device &device, ObjectHolderMap_t *ohm)
   }
 }
 
-void Newton::InitializeTransientAssemble(const TimeMethods::TimeParams &timeinfo, size_t numeqns, std::vector<double> &rhs_constant)
+template <typename DoubleType>
+void Newton<DoubleType>::InitializeTransientAssemble(const TimeMethods::TimeParams<DoubleType> &timeinfo, size_t numeqns, std::vector<DoubleType> &rhs_constant)
 {
-  TimeData &tinst = TimeData::GetInstance();
+  TimeData<DoubleType> &tinst = TimeData<DoubleType>::GetInstance();
   if (timeinfo.a1 != 0.0)
   {
-    tinst.AssembleQ(TimeData::TM0, timeinfo.a1, rhs_constant);
+    tinst.AssembleQ(TimePoint_t::TM0, timeinfo.a1, rhs_constant);
   }
   if (timeinfo.a2 != 0.0)
   {
-    tinst.AssembleQ(TimeData::TM1, timeinfo.a2, rhs_constant);
+    tinst.AssembleQ(TimePoint_t::TM1, timeinfo.a2, rhs_constant);
   }
 
   if (timeinfo.b1 != 0.0)
   {
-    tinst.AssembleI(TimeData::TM0, timeinfo.b1, rhs_constant);
+    tinst.AssembleI(TimePoint_t::TM0, timeinfo.b1, rhs_constant);
   }
   if (timeinfo.b2 != 0.0)
   {
-    tinst.AssembleI(TimeData::TM1, timeinfo.b2, rhs_constant);
+    tinst.AssembleI(TimePoint_t::TM1, timeinfo.b2, rhs_constant);
   }
 }
 
-bool Newton::CheckTransientProjection(const TimeMethods::TimeParams &timeinfo, const std::vector<double> &newQ)
+template <typename DoubleType>
+bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &timeinfo, const std::vector<DoubleType> &newQ)
 {
   const size_t numeqns = newQ.size();
   bool converged = true;
   /// need to make sure projection makes sense
-  std::vector<double> projectQ(numeqns);
+  std::vector<DoubleType> projectQ(numeqns);
   
-  TimeData &tinst = TimeData::GetInstance();
+  TimeData<DoubleType> &tinst = TimeData<DoubleType>::GetInstance();
 
-  tinst.AssembleI(TimeData::TM0, timeinfo.tdelta, projectQ);
-  tinst.AssembleQ(TimeData::TM0, 1.0,    projectQ);
+  tinst.AssembleI(TimePoint_t::TM0, timeinfo.tdelta, projectQ);
+  tinst.AssembleQ(TimePoint_t::TM0, 1.0,    projectQ);
 
-  double qrel = 0.0;
+  DoubleType qrel = 0.0;
   for (size_t i = 0; i < numeqns; ++i)
   {
-    const double qproj = projectQ[i];
-    const double qnew  = newQ[i];
+    const DoubleType qproj = projectQ[i];
+    const DoubleType qnew  = newQ[i];
     if (qnew != 0.0)
     {
-      const double qr = fabs(qnew - qproj)/(1.0e-20 + fabs(qnew) + fabs(qproj));
+      const DoubleType qr = abs(qnew - qproj)/(1.0e-20 + abs(qnew) + abs(qproj));
       if (qr > qrel)
       {
         qrel = qr;
@@ -816,7 +945,7 @@ bool Newton::CheckTransientProjection(const TimeMethods::TimeParams &timeinfo, c
   }
   std::ostringstream os;
   os << "Charge Relative Error " << std::scientific << std::setprecision(5) << qrel << "\n";
-  OutputStream::WriteOut(OutputStream::INFO, os.str());
+  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   if (qrel > qrelLimit)
   {
     converged = false;
@@ -824,46 +953,47 @@ bool Newton::CheckTransientProjection(const TimeMethods::TimeParams &timeinfo, c
   return converged;
 }
 
-void Newton::UpdateTransientCurrent(const TimeMethods::TimeParams &timeinfo, size_t numeqns, const std::vector<double> &newQ, std::vector<double> &newI)
+template <typename DoubleType>
+void Newton<DoubleType>::UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &timeinfo, size_t numeqns, const std::vector<DoubleType> &newQ, std::vector<DoubleType> &newI)
 {
   newI.clear();
   newI.resize(numeqns);
-  TimeData &tinst = TimeData::GetInstance();
+  TimeData<DoubleType> &tinst = TimeData<DoubleType>::GetInstance();
   if (timeinfo.IsDCMethod())
   {
     //// There is no displacement current for a dc solution
-    tinst.SetI(TimeData::TM0, newI);
-    tinst.SetQ(TimeData::TM0, newQ);
+    tinst.SetI(TimePoint_t::TM0, newI);
+    tinst.SetQ(TimePoint_t::TM0, newQ);
 
-    tinst.ClearI(TimeData::TM1);
-    tinst.ClearI(TimeData::TM2);
-    tinst.ClearQ(TimeData::TM1);
-    tinst.ClearQ(TimeData::TM2);
+    tinst.ClearI(TimePoint_t::TM1);
+    tinst.ClearI(TimePoint_t::TM2);
+    tinst.ClearQ(TimePoint_t::TM1);
+    tinst.ClearQ(TimePoint_t::TM2);
   }
   else
   {
     ////// Charge
 
-    if (tinst.ExistsQ(TimeData::TM1))
+    if (tinst.ExistsQ(TimePoint_t::TM1))
     {
-      tinst.CopyQ(TimeData::TM1, TimeData::TM2);
+      tinst.CopyQ(TimePoint_t::TM1, TimePoint_t::TM2);
     }
-    if (tinst.ExistsQ(TimeData::TM0))
+    if (tinst.ExistsQ(TimePoint_t::TM0))
     {
-      tinst.CopyQ(TimeData::TM0, TimeData::TM1);
+      tinst.CopyQ(TimePoint_t::TM0, TimePoint_t::TM1);
     }
 
-    tinst.SetQ(TimeData::TM0, newQ);
+    tinst.SetQ(TimePoint_t::TM0, newQ);
 
 
     ////// Current
-    if (tinst.ExistsI(TimeData::TM1))
+    if (tinst.ExistsI(TimePoint_t::TM1))
     {
-      tinst.CopyI(TimeData::TM1, TimeData::TM2);
+      tinst.CopyI(TimePoint_t::TM1, TimePoint_t::TM2);
     }
-    if (tinst.ExistsI(TimeData::TM0))
+    if (tinst.ExistsI(TimePoint_t::TM0))
     {
-      tinst.CopyI(TimeData::TM0, TimeData::TM1);
+      tinst.CopyI(TimePoint_t::TM0, TimePoint_t::TM1);
     }
 
     ////// Update Current
@@ -872,31 +1002,32 @@ void Newton::UpdateTransientCurrent(const TimeMethods::TimeParams &timeinfo, siz
 
     if (timeinfo.a0 != 0.0)
     {
-      tinst.AssembleQ(TimeData::TM0, timeinfo.a0, newI);
+      tinst.AssembleQ(TimePoint_t::TM0, timeinfo.a0, newI);
     }
     if (timeinfo.a1 != 0.0)
     {
-      tinst.AssembleQ(TimeData::TM1, timeinfo.a1, newI);
+      tinst.AssembleQ(TimePoint_t::TM1, timeinfo.a1, newI);
     }
     if (timeinfo.a2 != 0.0)
     {
-      tinst.AssembleQ(TimeData::TM2, timeinfo.a2, newI);
+      tinst.AssembleQ(TimePoint_t::TM2, timeinfo.a2, newI);
     }
 
     if (timeinfo.b1 != 0.0)
     {
-      tinst.AssembleI(TimeData::TM1, timeinfo.b1, newI);
+      tinst.AssembleI(TimePoint_t::TM1, timeinfo.b1, newI);
     }
     if (timeinfo.b2 != 0.0)
     {
-      tinst.AssembleI(TimeData::TM2, timeinfo.b2, newI);
+      tinst.AssembleI(TimePoint_t::TM2, timeinfo.b2, newI);
     }
 
-    tinst.SetI(TimeData::TM0, newI);
+    tinst.SetI(TimePoint_t::TM0, newI);
   }
 }
 
-bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
+template <typename DoubleType>
+bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleType frequency)
 {
   NodeKeeper &nk = NodeKeeper::instance();
   GlobalData &gdata = GlobalData::GetInstance();
@@ -912,10 +1043,10 @@ bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
   }
 
 
-  std::unique_ptr<Matrix> matrix(new CompressedMatrix(numeqns, CompressedMatrix::COMPLEX, CompressedMatrix::CCM));
-  std::unique_ptr<Preconditioner> preconditioner(new SuperLUPreconditioner(numeqns, Preconditioner::NOTRANS, Preconditioner::FULL));
+  std::unique_ptr<Matrix<DoubleType>> matrix(new CompressedMatrix<DoubleType>(numeqns, MatrixType::COMPLEX, CompressionType::CCM));
+  std::unique_ptr<Preconditioner<DoubleType>> preconditioner(CreateACPreconditioner<DoubleType>(PEnum::TransposeType_t::NOTRANS, numeqns));
 
-  ComplexDoubleVec_t rhs(numeqns);
+  std::vector<std::complex<DoubleType>> rhs(numeqns);
 
   /// This is to initialize other copies
   permvec_t permvec_temp(numeqns);
@@ -925,7 +1056,7 @@ bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
     permvec_temp[i] = i;
   }
 
-  ComplexDoubleVec_t result(numeqns);
+  std::vector<std::complex<DoubleType>> result(numeqns);
 
   bool converged = false;
 
@@ -957,7 +1088,7 @@ bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
 
     if (nk.HaveNodes())
     {
-      nk.ACUpdateSolution("ssac_real", "ssac_imag", result);
+      CallACUpdateSolution(nk, "ssac_real", "ssac_imag", result);
     }
 
 
@@ -973,8 +1104,8 @@ bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
         {
             std::string name = (dit->first);
             Device *dev =      (dit->second);
-            const double devrerr = dev->GetRelError();
-            const double devaerr = dev->GetAbsError();
+            const DoubleType devrerr = dev->GetRelError();
+            const DoubleType devaerr = dev->GetAbsError();
             os << "\tDevice: \"" << name << "\""
                 << std::scientific << std::setprecision(5) <<
                          "\tRelError: " << devrerr <<
@@ -984,15 +1115,15 @@ bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
 
         if (nk.HaveNodes())
         {
-            const double cirrerr = nk.GetRelError("ssac_real");
-            const double ciraerr = nk.GetAbsError("ssac_real");
+            const DoubleType cirrerr = nk.GetRelError("ssac_real");
+            const DoubleType ciraerr = nk.GetAbsError("ssac_real");
             os << "  Circuit: "
                 << std::scientific << std::setprecision(5) <<
                          "\tRelError: " << cirrerr <<
                          "\tAbsError: " << ciraerr << "\n";
         }
 #endif
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
 
 
@@ -1006,7 +1137,8 @@ bool Newton::ACSolve(LinearSolver &itermethod, double frequency)
   return converged;
 }
 
-bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod, double frequency)
+template <typename DoubleType>
+bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver<DoubleType> &itermethod, DoubleType frequency)
 {
 
   NodeKeeper &nk = NodeKeeper::instance();
@@ -1018,7 +1150,7 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
   {
     std::ostringstream os;
     os << "A circuit is required for a noise solve.\n";
-    OutputStream::WriteOut(OutputStream::ERROR, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
     return false;
     //// Should probably abort here
   }
@@ -1031,7 +1163,7 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
   {
     std::ostringstream os;
     os << "Circuit output " << output_name << " does not exist.\n";
-    OutputStream::WriteOut(OutputStream::ERROR, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
     return false;
     //// Should probably abort here
   }
@@ -1039,7 +1171,7 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
   {
     std::ostringstream os;
     os << "Circuit output " << output_name << " has equation " << outputeqnnum << ".\n";
-    OutputStream::WriteOut(OutputStream::INFO, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
 
   GlobalData &gdata = GlobalData::GetInstance();
@@ -1053,10 +1185,10 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
   nk.InitializeSolution("dcop");
 
 
-  std::unique_ptr<Matrix> matrix(new CompressedMatrix(numeqns, CompressedMatrix::COMPLEX, CompressedMatrix::CCM));
-  std::unique_ptr<Preconditioner> preconditioner(new SuperLUPreconditioner(numeqns, Preconditioner::TRANS, SuperLUPreconditioner::FULL));
+  std::unique_ptr<Matrix<DoubleType>> matrix(new CompressedMatrix<DoubleType>(numeqns, MatrixType::COMPLEX, CompressionType::CCM));
+  std::unique_ptr<Preconditioner<DoubleType>> preconditioner(CreateACPreconditioner<DoubleType>(PEnum::TransposeType_t::TRANS, numeqns));
 
-  ComplexDoubleVec_t rhs(numeqns);
+  std::vector<std::complex<DoubleType>> rhs(numeqns);
 
   /// This is to initialize other copies
   permvec_t permvec_temp(numeqns);
@@ -1066,7 +1198,7 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
       permvec_temp[i] = i;
   }
 
-  ComplexDoubleVec_t result(numeqns);
+  std::vector<std::complex<DoubleType>> result(numeqns);
 
   bool converged = false;
 
@@ -1101,7 +1233,7 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
       dev->NoiseUpdate(output_name, permvec, result);
     }
 
-    nk.ACUpdateSolution(circuit_real_name, circuit_imag_name, result);
+    CallACUpdateSolution(nk, circuit_real_name, circuit_imag_name, result);
 
 
     {
@@ -1110,7 +1242,7 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
       os << "number of equations " << numeqns << "\n";
       //// TODO: more meaningful reporting
 
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
   } while (0);
 
@@ -1118,8 +1250,8 @@ bool Newton::NoiseSolve(const std::string &output_name, LinearSolver &itermethod
   return converged;
 }
 
-//#include <iostream>
-void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<double> &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <typename DoubleType>
+void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &mat, RHSEntryVec<DoubleType> &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   GlobalData &gdata = GlobalData::GetInstance();
 
@@ -1127,8 +1259,8 @@ void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<d
 
   std::vector<std::string> arguments;
   arguments.reserve(2);
-  arguments.push_back(dsMathEnum::WhatToLoadString[w]);
-  arguments.push_back(dsMathEnum::TimeModeString[t]);
+  arguments.push_back(dsMathEnum::WhatToLoadString[static_cast<size_t>(w)]);
+  arguments.push_back(dsMathEnum::TimeModeString[static_cast<size_t>(t)]);
 
   Interpreter MyInterp;
   std::string     result;
@@ -1145,7 +1277,7 @@ void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<d
     {
       std::ostringstream os; 
       os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" with result \"" << MyInterp.GetErrorString() << "\"\n";
-      OutputStream::WriteOut(OutputStream::FATAL, os.str().c_str());
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
     }
     else
     {
@@ -1158,14 +1290,14 @@ void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<d
       {
         std::ostringstream os; 
         os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" cannot extract list of length 2 containing matrix and rhs entries\n";
-        OutputStream::WriteOut(OutputStream::FATAL, os.str().c_str());
+        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
       }
 
       ObjectHolder rhs_objects = objects[1];
       ObjectHolder matrix_objects = objects[0];
 
       //// Read in the entries here
-      if (w != dsMathEnum::MATRIXONLY)
+      if (w != dsMathEnum::WhatToLoad::MATRIXONLY)
       {
         ok = rhs_objects.GetListOfObjects(objects);
         size_t len = objects.size();
@@ -1174,7 +1306,7 @@ void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<d
         {
           std::ostringstream os; 
           os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" rhs entry list of length \"" << len << "\" is not divisible by 2\n";
-          OutputStream::WriteOut(OutputStream::FATAL, os.str().c_str());
+          OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
         }
         else
         {
@@ -1191,14 +1323,14 @@ void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<d
             {
               std::ostringstream os; 
               os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" rhs val entry " << objects[i].GetString() << " " << objects[i+1].GetString() << "\n";
-              OutputStream::WriteOut(OutputStream::FATAL, os.str().c_str());
+              OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
             }
 
           }
         }
       }
 
-      if (w != dsMathEnum::RHS)
+      if (w != dsMathEnum::WhatToLoad::RHS)
       {
         ok = matrix_objects.GetListOfObjects(objects);
         size_t len = objects.size();
@@ -1207,7 +1339,7 @@ void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<d
         {
           std::ostringstream os; 
           os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" matrix entry list of length \"" << len << "\" is not divisible by 3\n";
-          OutputStream::WriteOut(OutputStream::FATAL, os.str().c_str());
+          OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
         }
         else
         {
@@ -1220,14 +1352,14 @@ void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<d
 
             if (row.first && col.first && val.first)
             {
-              mat.push_back(RealRowColVal<double>(row.second, col.second, val.second));
+              mat.push_back(RealRowColVal<DoubleType>(row.second, col.second, val.second));
             }
             else
             {
               std::ostringstream os; 
               os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" matrix entry " <<
                 objects[i].GetString() << " " << objects[i+1].GetString() << " " << objects[i+2].GetString() << "\n";
-              OutputStream::WriteOut(OutputStream::FATAL, os.str().c_str());
+              OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
             }
           }
         }
@@ -1236,5 +1368,9 @@ void Newton::AssembleTclEquations(RealRowColValueVec<double> &mat, RHSEntryVec<d
   }
 }
 
+template class Newton<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+template class Newton<float128>;
+#endif
 }/// end namespace dsMath
 

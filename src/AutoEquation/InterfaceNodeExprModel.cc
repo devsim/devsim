@@ -102,11 +102,11 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
         {
             os << *it << "\n";
         }
-        GeometryStream::WriteOut(OutputStream::ERROR, *ip, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *ip, os.str());
     }
 
     if (
-        (out.GetType() == IMEE::NODEDATA)
+        (out.GetType() == IMEE::datatype::NODEDATA)
        )
     {
         const IMEE::ScalarValuesType<DoubleType> &tval = out.GetScalarValues();
@@ -120,7 +120,7 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
           SetValues(nsl);
         }
     }
-    else if (out.GetType() == IMEE::DOUBLE)
+    else if (out.GetType() == IMEE::datatype::DOUBLE)
     {
         const DoubleType v = out.GetDoubleValue();
         const Interface::ConstNodeList_t &nl = GetInterface().GetNodes0();
@@ -131,9 +131,9 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
     {
         std::ostringstream os; 
         os << "while evaluating model " << GetName() << ": expression "
-            << EngineAPI::getStringValue(equation) << " evaluates to a " << IMEE::datatypename[out.GetType()]
+            << EngineAPI::getStringValue(equation) << " evaluates to a " << IMEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";
-        GeometryStream::WriteOut(OutputStream::FATAL, *ip, os.str());
+        GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *ip, os.str());
     }
         
 }
@@ -148,4 +148,9 @@ void InterfaceNodeExprModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class InterfaceNodeExprModel<double>;
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class InterfaceNodeExprModel<float128>;
+#endif
 

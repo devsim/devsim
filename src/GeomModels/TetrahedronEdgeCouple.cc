@@ -27,7 +27,7 @@ limitations under the License.
 
 template <typename DoubleType>
 TetrahedronEdgeCouple<DoubleType>::TetrahedronEdgeCouple(RegionPtr rp) :
-TetrahedronEdgeModel("ElementEdgeCouple", rp, TetrahedronEdgeModel::SCALAR)
+TetrahedronEdgeModel("ElementEdgeCouple", rp, TetrahedronEdgeModel::DisplayType::SCALAR)
 {
 }
 
@@ -45,8 +45,8 @@ void TetrahedronEdgeCouple<DoubleType>::calcTetrahedronEdgeScalarValues() const
 template <typename DoubleType>
 void TetrahedronEdgeCouple<DoubleType>::calcTetrahedronEdgeCouple() const
 {
-  const std::vector<Vector<DoubleType>> tetrahedronCenters = GetRegion().GetTetrahedronCenters();
-  const std::vector<Vector<DoubleType>> triangleCenters    = GetRegion().GetTriangleCenters();
+  const std::vector<Vector<DoubleType>> tetrahedronCenters = GetRegion().template GetTetrahedronCenters<DoubleType>();
+  const std::vector<Vector<DoubleType>> triangleCenters    = GetRegion().template GetTriangleCenters<DoubleType>();
   const Region::TetrahedronToConstEdgeDataList_t &ttelist = GetRegion().GetTetrahedronToEdgeDataList();
 
   const ConstTetrahedronList &tetrahedronList = GetRegion().GetTetrahedronList();

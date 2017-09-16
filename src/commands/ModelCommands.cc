@@ -88,10 +88,10 @@ createNodeSolutionCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-        {"name",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+        {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -135,7 +135,7 @@ createNodeSolutionCmd(CommandHandler &data)
     {
       std::ostringstream os;
       os << "Using existing values of Node Model " << name << " to initialize node solution values.\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str().c_str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
   
       /// must be a copy since we are deleting the existing one
       const NodeScalarList<double> nsl = existingNodeModel->GetScalarValues<double>();
@@ -166,12 +166,12 @@ createNodeModelCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-        {"name",   "",   dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"equation",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, NULL},
-        {"display_type",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+        {"name",   "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"equation",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
+        {"display_type",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -199,10 +199,10 @@ createNodeModelCmd(CommandHandler &data)
 
     const size_t dimension = dev->GetDimension();
 
-    NodeModel::DisplayType            ndt  = NodeModel::SCALAR;
-    EdgeModel::DisplayType            edt  = EdgeModel::SCALAR;
-    TriangleEdgeModel::DisplayType    trdt = TriangleEdgeModel::SCALAR;
-    TetrahedronEdgeModel::DisplayType tedt = TetrahedronEdgeModel::SCALAR;
+    NodeModel::DisplayType            ndt  = NodeModel::DisplayType::SCALAR;
+    EdgeModel::DisplayType            edt  = EdgeModel::DisplayType::SCALAR;
+    TriangleEdgeModel::DisplayType    trdt = TriangleEdgeModel::DisplayType::SCALAR;
+    TetrahedronEdgeModel::DisplayType tedt = TetrahedronEdgeModel::DisplayType::SCALAR;
 
     if (!dtype.empty())
     {
@@ -226,10 +226,10 @@ createNodeModelCmd(CommandHandler &data)
         }
       }
 
-      if ((ndt == NodeModel::UNKNOWN) ||
-          (edt == EdgeModel::UNKNOWN) ||
-          (trdt == TriangleEdgeModel::UNKNOWN) ||
-          (tedt == TetrahedronEdgeModel::UNKNOWN))
+      if ((ndt == NodeModel::DisplayType::UNKNOWN) ||
+          (edt == EdgeModel::DisplayType::UNKNOWN) ||
+          (trdt == TriangleEdgeModel::DisplayType::UNKNOWN) ||
+          (tedt == TetrahedronEdgeModel::DisplayType::UNKNOWN))
       {
         errorString += "display_type \"" + dtype + "\" is not a valid option\n";
       }
@@ -401,12 +401,12 @@ createContactNodeModelCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"contact",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidContact},
-        {"name",   "",   dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"equation",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, NULL},
-        {"display_type",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"contact",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidContact},
+        {"name",   "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"equation",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
+        {"display_type",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -432,8 +432,8 @@ createContactNodeModelCmd(CommandHandler &data)
     Contact *cp = NULL;
     errorString = ValidateDeviceAndContact(deviceName, contactName, dev, cp);
 
-    NodeModel::DisplayType ndt = NodeModel::SCALAR;
-    EdgeModel::DisplayType edt = EdgeModel::VECTOR;
+    NodeModel::DisplayType ndt = NodeModel::DisplayType::SCALAR;
+    EdgeModel::DisplayType edt = EdgeModel::DisplayType::VECTOR;
 
     if (commandName == "contact_node_model")
     {
@@ -441,7 +441,7 @@ createContactNodeModelCmd(CommandHandler &data)
       {
         ndt = dsHelper::getNodeModelDisplayType(dtype);
       }
-      if (ndt == NodeModel::UNKNOWN)
+      if (ndt == NodeModel::DisplayType::UNKNOWN)
       {
         errorString += "display_type \"" + dtype + "\" is not a valid option for contact_node_model\n";
       }
@@ -452,7 +452,7 @@ createContactNodeModelCmd(CommandHandler &data)
       {
         edt = dsHelper::getEdgeModelDisplayType(dtype);
       }
-      if (edt == EdgeModel::UNKNOWN)
+      if (edt == EdgeModel::DisplayType::UNKNOWN)
       {
         errorString += "display_type \"" + dtype + "\" is not a valid option for contact_edge_model\n";
       }
@@ -533,9 +533,9 @@ createCylindricalCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-    {"device",         "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-    {"region",         "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    {"device",         "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+    {"region",         "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;
@@ -613,11 +613,11 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-    {"device",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-    {"region",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-    {"node_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {"calc_type", "default", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+    {"region",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+    {"node_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {"calc_type", "default", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, stringCannotBeEmpty},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;
@@ -700,12 +700,12 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
     const std::string &calctype = data.GetStringOption("calc_type");
     if (calctype == "avoidzero")
     {
-      new VectorGradient<double>(reg, name, VectorGradient<double>::AVOIDZERO);
+      new VectorGradient<double>(reg, name, VectorGradientEnum::AVOIDZERO);
       data.SetEmptyResult();
     }
     else if (calctype == "default")
     {
-      new VectorGradient<double>(reg, name, VectorGradient<double>::DEFAULT);
+      new VectorGradient<double>(reg, name, VectorGradientEnum::DEFAULT);
       data.SetEmptyResult();
     }
     else
@@ -733,13 +733,13 @@ createEdgeAverageModelCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-    {"device",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-    {"region",       "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-    {"node_model",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {"edge_model",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {"average_type", "arithmetic", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, stringCannotBeEmpty},
-    {"derivative", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    {"device",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+    {"region",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+    {"node_model",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {"edge_model",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {"average_type", "arithmetic", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, stringCannotBeEmpty},
+    {"derivative", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;
@@ -795,8 +795,8 @@ createEdgeAverageModelCmd(CommandHandler &data)
     }
   }
 
-  AverageEdgeModel<double>::AverageType_t atype = AverageEdgeModel<double>::GetTypeName(averageType, errorString);
-  if (atype == AverageEdgeModel<double>::UNKNOWN)
+  AverageEdgeModelEnum::AverageType_t atype = AverageEdgeModelEnum::GetTypeName(averageType, errorString);
+  if (atype == AverageEdgeModelEnum::UNKNOWN)
   {
     data.SetErrorResult(errorString);
     return;
@@ -829,11 +829,11 @@ createInterfaceNodeModelCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"interface", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"name",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"equation","", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"name",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"equation","", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -896,12 +896,12 @@ setNodeValuesCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"name",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"init_from", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {"values",    "", dsGetArgs::Types::LIST,   dsGetArgs::Types::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"init_from", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"values",    "", dsGetArgs::optionType::LIST,   dsGetArgs::requiredType::OPTIONAL, NULL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -951,7 +951,7 @@ setNodeValuesCmd(CommandHandler &data)
         return;
     }
 
-    ConstNodeModelPtr nm_name        = reg->GetNodeModel(name);
+    NodeModelPtr nm_name        = std::const_pointer_cast<NodeModel, const NodeModel>(reg->GetNodeModel(name));
     if (!nm_name.get())
     {
         std::ostringstream os;
@@ -962,22 +962,29 @@ setNodeValuesCmd(CommandHandler &data)
     {
       ConstNodeModelPtr nm_initializer = reg->GetNodeModel(initializer);
 
-      if (initializer.empty())
-      {
-          std::ostringstream os;
-          os << "-init_from " << name << " is empty\n";
-          errorString += os.str();
-      }
-      else if (!nm_initializer.get())
+      if (!nm_initializer.get())
       {
           std::ostringstream os;
           os << "-init_from " << nm_initializer << " does not exist\n";
           errorString += os.str();
       }
+      else if (std::dynamic_pointer_cast<NodeSolution<double>>(nm_name))
+      {
+          nm_name->SetValues(nm_initializer->GetScalarValues<double>());
+          data.SetEmptyResult();
+      }
+#ifdef DEVSIM_EXTENDED_PRECISION
+      else if (std::dynamic_pointer_cast<NodeSolution<float128>>(nm_name))
+      {
+          nm_name->SetValues(nm_initializer->GetScalarValues<float128>());
+          data.SetEmptyResult();
+      }
+#endif
       else
       {
-          std::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(*nm_initializer);
-          data.SetEmptyResult();
+          std::ostringstream os;
+          os << "-name " << nm_name << " is not a node solution\n";
+          errorString += os.str();
       }
     }
     else
@@ -1010,12 +1017,12 @@ setNodeValueCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"name",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"index", "-1", dsGetArgs::Types::INTEGER, dsGetArgs::Types::OPTIONAL, NULL},
-        {"value", "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::REQUIRED,  NULL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"index", "-1", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"value", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED,  NULL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -1109,10 +1116,10 @@ printNodeValuesCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-      {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-      {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-      {"name",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-      {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+      {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+      {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+      {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+      {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;
@@ -1169,7 +1176,7 @@ printNodeValuesCmd(CommandHandler &data)
 //// Should makes this a simple test list return
           os << std::scientific << std::setprecision(5) << nsl[i] << "\n";
       }
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       data.SetEmptyResult();
     }
     else if (commandName == "get_node_model_values")
@@ -1194,10 +1201,10 @@ printEdgeValuesCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-    {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-    {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {"name",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+    {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;
@@ -1253,7 +1260,7 @@ printEdgeValuesCmd(CommandHandler &data)
 //// The tclprecision can be set
           os << std::scientific << std::setprecision(5) << nsl[i] << "\n";
       }
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       data.SetEmptyResult();
     }
     else if (commandName == "get_edge_model_values")
@@ -1280,10 +1287,10 @@ printElementEdgeValuesCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-    {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-    {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {"name",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+    {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;
@@ -1353,7 +1360,7 @@ printElementEdgeValuesCmd(CommandHandler &data)
   //// The tclprecision can be set
             os << std::scientific << std::setprecision(5) << nsl[i] << "\n";
         }
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
         data.SetEmptyResult();
       }
       else if (commandName == "get_element_model_values")
@@ -1379,7 +1386,7 @@ printElementEdgeValuesCmd(CommandHandler &data)
   //// The tclprecision can be set
             os << std::scientific << std::setprecision(5) << nsl[i] << "\n";
         }
-        OutputStream::WriteOut(OutputStream::INFO, os.str());
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
         data.SetEmptyResult();
       }
       else if (commandName == "get_element_model_values")
@@ -1407,10 +1414,10 @@ getInterfaceValuesCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-    {"device",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-    {"interface", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {"name",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+    {"device",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+    {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {"name",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
   };
 
   dsGetArgs::switchList switches = NULL;
@@ -1482,9 +1489,9 @@ getNodeModelListCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-      {"device",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-      {"region",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-      {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+      {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+      {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+      {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;
@@ -1550,9 +1557,9 @@ getInterfaceModelListCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"interface", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -1598,10 +1605,10 @@ createVectorElementModelCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-        {"element_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+        {"element_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -1687,11 +1694,11 @@ createTriangleFromEdgeModelCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-        {"edge_model", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"derivative", "", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+        {"edge_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"derivative", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -1811,9 +1818,9 @@ debugTriangleCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",     "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -1879,7 +1886,7 @@ debugTriangleCmd(CommandHandler &data)
         }
         os << "\n";
       }
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       data.SetEmptyResult();
     }
 }
@@ -1897,10 +1904,10 @@ createInterfaceNormalModelCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
     {
-        {"device",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidDevice},
-        {"region",    "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, mustBeValidRegion},
-        {"interface", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"device",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {"region",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+        {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -1967,8 +1974,8 @@ symdiffCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-    {"expr",   "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    {"expr",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;
@@ -2020,9 +2027,9 @@ registerFunctionCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-    {"name",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED},
-    {"nargs", "", dsGetArgs::Types::INTEGER, dsGetArgs::Types::REQUIRED},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+    {"name",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED},
+    {"nargs", "", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::REQUIRED},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = NULL;

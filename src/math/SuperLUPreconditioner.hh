@@ -25,15 +25,16 @@ namespace dsMath {
 class SuperLUData;
 
 //// Eventually we may put Compressed column between matrix and SuperLUPreconditioner
-class SuperLUPreconditioner : public Preconditioner
+template <typename DoubleType>
+class SuperLUPreconditioner : public Preconditioner<DoubleType>
 {
     public:
-        SuperLUPreconditioner(size_t, Preconditioner::TransposeType_t, LUType_t);
+        SuperLUPreconditioner(size_t, PEnum::TransposeType_t, PEnum::LUType_t);
 
     protected:
-        bool DerivedLUFactor(Matrix *);     // Factor the matrix
-        void DerivedLUSolve(DoubleVec_t &x, const DoubleVec_t &b) const;
-        void DerivedLUSolve(ComplexDoubleVec_t &x, const ComplexDoubleVec_t &b) const;
+        bool DerivedLUFactor(Matrix<DoubleType> *);     // Factor the matrix
+        void DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const;
+        void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const;
 
         ~SuperLUPreconditioner();
 
@@ -44,8 +45,9 @@ class SuperLUPreconditioner : public Preconditioner
         SuperLUPreconditioner &operator= (const SuperLUPreconditioner &);
 
         SuperLUData *superLUData_;
-        LUType_t     lutype_;
+        PEnum::LUType_t     lutype_;
 };
 
 }
 #endif
+

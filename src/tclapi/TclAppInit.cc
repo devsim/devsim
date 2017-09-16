@@ -30,7 +30,7 @@ namespace mthread {
 int Tcl_AppInit(Tcl_Interp *interp) {
       SetMainInterpreter(interp);
       OutputStream::SetInterpreter(interp);
-      OutputStream::WriteOut(OutputStream::INFO,
+      OutputStream::WriteOut(OutputStream::OutputType::INFO,
 "\n"
 "----------------------------------------\n"
 "\n"

@@ -80,12 +80,12 @@ void EdgeSubModel<DoubleType>::calcEdgeScalarValues() const
       else if (emp)
       {
         parentModel.reset();
-        dsErrors::ChangedModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::INFO);
+        dsErrors::ChangedModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::INFO);
         parentModelName.clear();
       }
       else
       {
-        dsErrors::MissingModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+        dsErrors::MissingModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
       }
     }
 }

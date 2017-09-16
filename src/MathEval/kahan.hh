@@ -18,7 +18,6 @@ limitations under the License.
 #include <iostream>
 #include <iomanip>
 #include <vector>
-#include <cmath>
 template <typename DoubleType>
 class kahan {
     public:
@@ -26,36 +25,8 @@ class kahan {
         kahan(const kahan & v) : value_(v.value_), correction_(v.correction_) {}
 
 
-        kahan &operator+=(DoubleType v)
-        {
-            if (fabs(value_) < fabs(correction_))
-            {
-              const DoubleType t = value_;
-              value_ = correction_;
-              correction_ = t;
-            }
-
-            const DoubleType x = value_ + v;
-            DoubleType c = x;
-            if (fabs(value_) < fabs(v))
-            {
-              c -= v;
-              c -= value_;
-            }
-            else
-            {
-              c -= value_;
-              c -= v;
-            }
-            value_      = x;
-            correction_ -= c;
-            return *this;
-        }
-        kahan &operator-=(DoubleType v)
-        {
-            (*this) += (-v);
-            return *this;
-        }
+        kahan &operator+=(DoubleType v);
+        kahan &operator-=(DoubleType v);
 
         ~kahan() {};
 
@@ -72,17 +43,27 @@ class kahan {
         kahan &operator=(const kahan &);
 };
 
+#if 0
 template <typename DoubleType>
 std::ostream &operator<<(std::ostream &obj, const kahan<DoubleType> &k)
 {
     obj <<  "(" << k.value_ << ", " << k.correction_ << ")";
     return obj;
 }
+#endif
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
 
 template <typename DoubleType>
 DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c)
 {
+#ifdef DEVSIM_EXTENDED_PRECISION
+  float128 k(a);
+#else
   kahan<DoubleType> k(a);
+#endif
   k += b;
   k += c;
   return static_cast<DoubleType>(k);
@@ -91,7 +72,11 @@ DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c)
 template <typename DoubleType>
 DoubleType kahan4(DoubleType a, DoubleType b, DoubleType c, DoubleType d)
 {
+#ifdef DEVSIM_EXTENDED_PRECISION
+  float128 k(a);
+#else
   kahan<DoubleType> k(a);
+#endif
   k += b;
   k += c;
   k += d;

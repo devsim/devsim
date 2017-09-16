@@ -34,7 +34,7 @@ EdgeFromNodeModel<DoubleType>::~EdgeFromNodeModel()
 {
   // We can't do this, it causes seg fault if the region is already gone
 #if 0
-  dsErrors::ModelModelDeletion(GetRegion(), edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::INFO);
+  dsErrors::ModelModelDeletion(GetRegion(), edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::INFO);
   ///// This is EVIL
 //// TODO: revisit the deletion issue.
   const_cast<Region &>(GetRegion()).DeleteEdgeModel(edgeModel1Name);
@@ -44,13 +44,13 @@ EdgeFromNodeModel<DoubleType>::~EdgeFromNodeModel()
 template <typename DoubleType>
 EdgeFromNodeModel<DoubleType>::EdgeFromNodeModel(const std::string &edgemodel0, const std::string &edgemodel1, const std::string &nodemodel, const RegionPtr rp)
     :
-        EdgeModel(edgemodel0, rp, EdgeModel::SCALAR), // The name of this node model
+        EdgeModel(edgemodel0, rp, EdgeModel::DisplayType::SCALAR), // The name of this node model
         nodeModelName(nodemodel),
         edgeModel1Name(edgemodel1)
 {
     // The other model is going to be set from our model
 //// TODO: issues, use soft references by name here, just like we do other node models
-    node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgemodel1, rp, EdgeModel::SCALAR, this->GetSelfPtr());
+    node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgemodel1, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
     dsAssert(!node1EdgeModel.expired(), "UNEXPECTED");
 
 //// This is caught by the api
@@ -72,20 +72,20 @@ void EdgeFromNodeModel<DoubleType>::calcEdgeScalarValues() const
 
     if (!nm)
     {
-      dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(),      dsErrors::ModelInfo::EDGE, OutputStream::ERROR);
-      dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+      dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(),      dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
+      dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
     }
 
     const ConstEdgeModelPtr em1 = rp->GetEdgeModel(edgeModel1Name);
     if (!em1)
     {
-      dsErrors::ReviveContainer(*rp, edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::INFO);
-      node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::SCALAR, this->GetConstSelfPtr());
+      dsErrors::ReviveContainer(*rp, edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::INFO);
+      node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::DisplayType::SCALAR, this->GetConstSelfPtr());
     }
     else if (node1EdgeModel.expired())
     {
-      dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(),      dsErrors::ModelInfo::EDGE, OutputStream::ERROR);
-      dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+      dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(),      dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
+      dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
     }
 
 

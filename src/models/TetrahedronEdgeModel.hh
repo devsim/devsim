@@ -55,7 +55,7 @@ typedef const Tetrahedron *ConstTetrahedronPtr;
 
 class TetrahedronEdgeModel {
     public:
-        enum DisplayType {NODISPLAY, SCALAR, UNKNOWN};
+        enum class DisplayType {NODISPLAY, SCALAR, UNKNOWN};
 
         TetrahedronEdgeModel(const std::string &, const RegionPtr, TetrahedronEdgeModel::DisplayType);
         virtual ~TetrahedronEdgeModel();
@@ -67,7 +67,7 @@ class TetrahedronEdgeModel {
         template <typename DoubleType>
         const TetrahedronEdgeScalarList<DoubleType> &GetScalarValues() const;
 
-        enum InterpolationType {AVERAGE, COUPLE, SUM};
+        enum class InterpolationType {AVERAGE, COUPLE, SUM};
 
         template <typename DoubleType>
         void GetScalarValuesOnNodes(TetrahedronEdgeModel::InterpolationType, std::vector<DoubleType> &) const;
@@ -110,7 +110,7 @@ class TetrahedronEdgeModel {
 
         const char * GetDisplayTypeString() const
         {
-          return DisplayTypeString[displayType];
+          return DisplayTypeString[static_cast<size_t>(displayType)];
         }
 
         void SetDisplayType(TetrahedronEdgeModel::DisplayType dt)

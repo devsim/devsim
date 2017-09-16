@@ -29,7 +29,7 @@ void GeometryStream::WriteOut(OutputStream::OutputType ot, const Device &device,
   GlobalData::DBEntry_t dbent = ginst.GetDBEntryOnDevice(device.GetName(), "debug_level");
   if (!dbent.first)
   {
-    OutputStream::WriteOut(ot, OutputStream::V0, msg);
+    OutputStream::WriteOut(ot, OutputStream::Verbosity_t::V0, msg);
   }
   else
   {
@@ -43,7 +43,7 @@ void GeometryStream::WriteOut(OutputStream::OutputType ot, const Contact &contac
   GlobalData::DBEntry_t dbent = ginst.GetDBEntryOnRegion(contact.GetRegion(), "debug_level");
   if (!dbent.first)
   {
-    OutputStream::WriteOut(ot, OutputStream::V0, msg);
+    OutputStream::WriteOut(ot, OutputStream::Verbosity_t::V0, msg);
   }
   else
   {
@@ -61,7 +61,7 @@ void GeometryStream::WriteOut(OutputStream::OutputType ot, const Interface &inte
   if (!(dbent0.first || dbent1.first))
   {
     //// no entries
-    OutputStream::WriteOut(ot, OutputStream::V0, msg);
+    OutputStream::WriteOut(ot, OutputStream::Verbosity_t::V0, msg);
   }
   else if (dbent0.first && dbent1.first)
   {
@@ -92,7 +92,7 @@ void GeometryStream::WriteOut(OutputStream::OutputType ot, const Region &region,
   GlobalData::DBEntry_t dbent = ginst.GetDBEntryOnRegion(&region, "debug_level");
   if (!dbent.first)
   {
-    OutputStream::WriteOut(ot, OutputStream::V0, msg);
+    OutputStream::WriteOut(ot, OutputStream::Verbosity_t::V0, msg);
   }
   else
   {

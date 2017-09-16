@@ -26,11 +26,11 @@ limitations under the License.
 
 template <typename DoubleType>
 TriangleEdgeFromNodeModel<DoubleType>::TriangleEdgeFromNodeModel(const std::string &edgemodel0, const std::string &edgemodel1, const std::string &edgemodel2, const std::string &nodemodel, RegionPtr rp)
-    : TriangleEdgeModel(edgemodel0, rp, TriangleEdgeModel::SCALAR), nodeModelName(nodemodel), edgeModel1Name(edgemodel1), edgeModel2Name(edgemodel2)
+    : TriangleEdgeModel(edgemodel0, rp, TriangleEdgeModel::DisplayType::SCALAR), nodeModelName(nodemodel), edgeModel1Name(edgemodel1), edgeModel2Name(edgemodel2)
 {
   RegisterCallback(nodemodel);
-  new TriangleEdgeSubModel<DoubleType>(edgeModel1Name, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
-  new TriangleEdgeSubModel<DoubleType>(edgeModel2Name, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
+  new TriangleEdgeSubModel<DoubleType>(edgeModel1Name, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::SCALAR);
+  new TriangleEdgeSubModel<DoubleType>(edgeModel2Name, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::SCALAR);
 }
 
 //// Need to figure out the deleter situation from sub models

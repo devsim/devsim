@@ -22,7 +22,9 @@ limitations under the License.
 #include <vector>
 
 namespace dsMath {
+template <typename DoubleType>
 class Matrix;
+template <typename DoubleType>
 class CompressedMatrix;
 
 struct BlockInfo
@@ -65,20 +67,21 @@ struct BlockInfo
   size_t max_range_;
 };
 
-class BlockPreconditioner : public Preconditioner {
+template <typename DoubleType>
+class BlockPreconditioner : public Preconditioner<DoubleType> {
   public:
     virtual ~BlockPreconditioner();
 
-    BlockPreconditioner(size_t /*numeqns*/, Preconditioner::TransposeType_t /*tranpose*/);
+    BlockPreconditioner(size_t /*numeqns*/, PEnum::TransposeType_t /*tranpose*/);
 
   protected:
-    void DerivedLUSolve(DoubleVec_t &x, const DoubleVec_t &b) const;
-    void DerivedLUSolve(ComplexDoubleVec_t &x, const ComplexDoubleVec_t &b) const;
-    bool DerivedLUFactor(Matrix *);     // Factor the matrix
+    void DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const;
+    void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const;
+    bool DerivedLUFactor(Matrix<DoubleType> *);     // Factor the matrix
 
   private:
     void CreateBlockInfo();
-    void CreateBlockMatrix(CompressedMatrix *);
+    void CreateBlockMatrix(CompressedMatrix<DoubleType> *);
 
     template <typename T>
     void ProcessBlockInfo(const IntVec_t &, const IntVec_t &, const std::vector<T> &);
@@ -90,10 +93,11 @@ class BlockPreconditioner : public Preconditioner {
     BlockInfoList_t            blockInfoList_;
     EquationNumberToBlockMap_t equationNumberToBlockMap_;
 
-    CompressedMatrix *block_matrix_;
-    Preconditioner   *block_preconditioner_;
-    double            drop_tolerance_;
+    CompressedMatrix<DoubleType> *block_matrix_;
+    Preconditioner<DoubleType>   *block_preconditioner_;
+    DoubleType            drop_tolerance_;
 };
 
 }
 #endif
+

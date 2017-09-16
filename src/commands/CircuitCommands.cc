@@ -43,23 +43,23 @@ void AddGroundNode()
     NodeKeeper &nk = NodeKeeper::instance();
     if (!nk.IsCircuitNode("0"))
     {
-        nk.AddNode("0", CNT::GROUND, CUT::DEFAULT);
+        nk.AddNode("0", CircuitNodeType::GROUND, CircuitUpdateType::DEFAULT);
     }
 
     if (!nk.IsCircuitNode("GND"))
     {
-        nk.AddNode("GND", CNT::GROUND, CUT::DEFAULT);
+        nk.AddNode("GND", CircuitNodeType::GROUND, CircuitUpdateType::DEFAULT);
     }
 }
 
-void CreateNode(const std::string &name, CUT::UpdateType ut)
+void CreateNode(const std::string &name, CircuitUpdateType ut)
 {
     AddGroundNode();
 
     NodeKeeper &nk = NodeKeeper::instance();
     if (!nk.IsCircuitNode(name))
     {
-        nk.AddNode(name, CNT::DEFAULT, ut);
+        nk.AddNode(name, CircuitNodeType::DEFAULT, ut);
     }
 
 }
@@ -73,10 +73,10 @@ void addCircuitNodeCmd(CommandHandler &data)
 
     static dsGetArgs::Option option[] =
     {
-        {"name",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"variable_update",      "default", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL},
-        {"value",                "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"name",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"variable_update",      "default", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"value",                "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -93,18 +93,18 @@ void addCircuitNodeCmd(CommandHandler &data)
     const std::string &variable_update = data.GetStringOption("variable_update");
     double value = data.GetDoubleOption("value");
 
-    CUT::UpdateType updateType = CUT::DEFAULT;
+    CircuitUpdateType updateType = CircuitUpdateType::DEFAULT;
     if (variable_update == "default")
     {
-        updateType = CUT::DEFAULT;
+        updateType = CircuitUpdateType::DEFAULT;
     }
     else if (variable_update == "log_damp")
     {
-        updateType = CUT::LOGDAMP;
+        updateType = CircuitUpdateType::LOGDAMP;
     }
     else if (variable_update == "positive")
     {
-        updateType = CUT::POSITIVE;
+        updateType = CircuitUpdateType::POSITIVE;
     }
     else
     {
@@ -114,7 +114,7 @@ void addCircuitNodeCmd(CommandHandler &data)
         errorString += os.str();
     }
 
-    if (updateType == CUT::POSITIVE)
+    if (updateType == CircuitUpdateType::POSITIVE)
     {
         if (value <= 0.0)
         {
@@ -143,7 +143,7 @@ void addCircuitNodeCmd(CommandHandler &data)
     }
     else
     {
-        CreateNode(name, CUT::DEFAULT);
+        CreateNode(name, CircuitUpdateType::DEFAULT);
         data.SetEmptyResult();
     }
 
@@ -167,13 +167,13 @@ circuitElementCmd(CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {"name",          "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"n1",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, NULL},
-        {"n2",      "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, NULL},
-        {"value",   "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
-        {"acreal",   "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
-        {"acimag",   "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL}
+        {"name",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"n1",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
+        {"n2",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
+        {"value",   "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+        {"acreal",   "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+        {"acimag",   "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -216,8 +216,8 @@ circuitElementCmd(CommandHandler &data)
     }
 
     //// Should not fail
-    CreateNode(n1, CUT::DEFAULT);
-    CreateNode(n2, CUT::DEFAULT);
+    CreateNode(n1, CircuitUpdateType::DEFAULT);
+    CreateNode(n2, CircuitUpdateType::DEFAULT);
 
     NodeKeeper &nk = NodeKeeper::instance();
     InstanceKeeper &ik = InstanceKeeper::instance();
@@ -287,10 +287,10 @@ circuitAlterCmd(CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {"name",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"param", "value", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL},
-        {"value", "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::REQUIRED, NULL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"name",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"param", "value", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"value", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED, NULL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -392,9 +392,9 @@ circuitNodeAliasCmd(CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {"node",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"alias", "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"alias", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -453,7 +453,7 @@ void circuitGetCircuitNodeListCmd(CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -497,7 +497,7 @@ void circuitGetCircuitSolutionListCmd (CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -530,10 +530,10 @@ void circuitGetCircuitNodeValueCmd (CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {"node",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-        {"solution",  "dcop", dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, stringCannotBeEmpty},
-        {"value",  "0.0", dsGetArgs::Types::FLOAT, dsGetArgs::Types::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+        {"node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"solution",  "dcop", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, stringCannotBeEmpty},
+        {"value",  "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
     dsGetArgs::switchList switches = NULL;
@@ -598,8 +598,8 @@ circuitGetCircuitEquationNumberCmd (CommandHandler &data)
 
   static dsGetArgs::Option option[] =
   {
-    {"node",  "", dsGetArgs::Types::STRING, dsGetArgs::Types::REQUIRED, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::Types::STRING, dsGetArgs::Types::OPTIONAL, NULL}
+    {"node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
   };
 
   dsGetArgs::switchList switches = NULL;

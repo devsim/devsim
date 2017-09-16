@@ -20,6 +20,10 @@ limitations under the License.
 
 #include "MathEnum.hh"
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+
 #include <string>
 #include <iosfwd>
 #include <vector>
@@ -53,15 +57,24 @@ template <typename DoubleType>
 class InterfaceEquation;
 class InterfaceEquationHolder {
   public:
-    InterfaceEquationHolder() : double_(nullptr) {}
-    InterfaceEquationHolder(InterfaceEquation<double> *);
-    const std::string &GetName() const;
+    InterfaceEquationHolder() {}
+
+    template <typename DoubleType>
+    InterfaceEquationHolder(InterfaceEquation<DoubleType> *);
+
+    std::string GetName() const;
     bool operator==(const InterfaceEquationHolder &) const;
-    void Assemble(dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+
+    template <typename DoubleType>
+    void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+
     void DevsimSerialize(std::ostream &) const;
     void GetCommandOptions(std::map<std::string, ObjectHolder> &) const;
   private:
     std::shared_ptr<InterfaceEquation<double>> double_;
+#ifdef DEVSIM_EXTENDED_PRECISION
+    std::shared_ptr<InterfaceEquation<float128>> float128_;
+#endif
 };
 #endif
 

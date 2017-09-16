@@ -42,7 +42,7 @@ ExprEquation<DoubleType>::ExprEquation(
     const std::string &eemodel,
     const std::string &eevmodel,
     const std::string &tdnmodel,
-    typename Equation<DoubleType>::UpdateType ut
+    EquationEnum::UpdateType ut
     ) : Equation<DoubleType>(eqname, rp, var, ut), node_model_(nmodel), edge_model_(emodel), edge_volume_model_(evmodel), element_model_(eemodel), volume_model_(eevmodel), time_node_model_(tdnmodel)
 {
 }
@@ -54,7 +54,7 @@ void ExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<Double
     Region &r = const_cast<Region &>(Equation<DoubleType>::GetRegion());
     r.SetModelExprDataCache(model_cache);
 
-    if (t == dsMathEnum::DC)
+    if (t == dsMathEnum::TimeMode::DC)
     {
         if (!edge_model_.empty())
         {
@@ -85,7 +85,7 @@ void ExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<Double
         }
 
     }
-    else if (t == dsMathEnum::TIME)
+    else if (t == dsMathEnum::TimeMode::TIME)
     {
         if (!time_node_model_.empty())
         {
@@ -145,4 +145,8 @@ void ExprEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::string, Obje
 }
 
 template class ExprEquation<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class ExprEquation<float128>;
+#endif
 

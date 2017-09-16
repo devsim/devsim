@@ -82,7 +82,7 @@ void TetrahedronEdgeModel::CalculateValues() const
     os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  while evaluating the edge model " << name
     << " on Device: " << GetRegion().GetDevice()->GetName() << " on Region: " << GetRegion().GetName() << "\n";
     FPECheck::ClearFPE();
-    GeometryStream::WriteOut(OutputStream::FATAL, GetRegion(), os.str().c_str());
+    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str().c_str());
   }
 }
 
@@ -147,7 +147,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
 {
   const Region &region = this->GetRegion();
 
-  const TetrahedronEdgeScalarList<DoubleType> &esl = this->GetScalarValues<double>();
+  const TetrahedronEdgeScalarList<DoubleType> &esl = this->GetScalarValues<DoubleType>();
 
   const size_t number_nodes = region.GetNumberNodes();
   const size_t number_tetrahedron = region.GetNumberTetrahedrons();
@@ -159,7 +159,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
 
   const Region::TetrahedronToConstEdgeDataList_t &ttcedl = region.GetTetrahedronToEdgeDataList();
 
-  if ((interpolation_type == TetrahedronEdgeModel::AVERAGE) || (interpolation_type == TetrahedronEdgeModel::SUM))
+  if ((interpolation_type == TetrahedronEdgeModel::InterpolationType::AVERAGE) || (interpolation_type == TetrahedronEdgeModel::InterpolationType::SUM))
   {
     /// Does a straight average on the whole
     std::vector<size_t> count(number_nodes);
@@ -179,7 +179,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
       }
     }
 
-    if (interpolation_type == TetrahedronEdgeModel::AVERAGE)
+    if (interpolation_type == TetrahedronEdgeModel::InterpolationType::AVERAGE)
     {
       for (size_t i = 0; i < number_nodes; ++i)
       {
@@ -191,11 +191,11 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
       }
     }
   }
-  else if (interpolation_type == TetrahedronEdgeModel::COUPLE)
+  else if (interpolation_type == TetrahedronEdgeModel::InterpolationType::COUPLE)
   {
     ConstTetrahedronEdgeModelPtr couple_ptr = region.GetTetrahedronEdgeModel("ElementEdgeCouple");
     dsAssert(couple_ptr.get(), "UNEXPECTED");
-    const TetrahedronEdgeScalarList<DoubleType> &element_edge_couples = couple_ptr->GetScalarValues<double>();
+    const TetrahedronEdgeScalarList<DoubleType> &element_edge_couples = couple_ptr->GetScalarValues<DoubleType>();
 
     std::vector<DoubleType> scales(number_nodes);
 
@@ -241,7 +241,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnElements(std::vector<DoubleType> &re
 {
   const Region &region = this->GetRegion();
 
-  const TetrahedronEdgeScalarList<DoubleType> &esl = this->GetScalarValues<double>();
+  const TetrahedronEdgeScalarList<DoubleType> &esl = this->GetScalarValues<DoubleType>();
 
 //  const size_t number_nodes = region.GetNumberNodes();
   const size_t number_tetrahedron = region.GetNumberTetrahedrons();
@@ -251,7 +251,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnElements(std::vector<DoubleType> &re
   ret.clear();
   ret.resize(number_tetrahedron);
 
-  const DoubleType scale = 1.0 / 6.0;
+  const DoubleType scale = static_cast<DoubleType>(1.0) / static_cast<DoubleType>(6.0);
   size_t mindex = 0;
   for (size_t i = 0; i < number_tetrahedron; ++i)
   {
@@ -333,14 +333,13 @@ EdgeScalarList<DoubleType> TetrahedronEdgeModel::GetValuesOnEdges() const
   return ev;
 }
 
-template void TetrahedronEdgeModel::SetValues<double>(std::vector<double> const&);
-template void TetrahedronEdgeModel::SetValues<double>(double const&);
-template std::vector<double> const& TetrahedronEdgeModel::GetScalarValues<double>() const;
-template const double &TetrahedronEdgeModel::GetUniformValue<double>() const;
-template std::vector<double> TetrahedronEdgeModel::GetValuesOnEdges<double>() const;
-template void TetrahedronEdgeModel::GetScalarValuesOnNodes<double>(TetrahedronEdgeModel::InterpolationType, std::vector<double>&) const;
-template void TetrahedronEdgeModel::GetScalarValuesOnElements<double>(std::vector<double>&) const;
-template void TetrahedronEdgeModel::SetValues<double>(std::vector<double> const&) const;
-template void TetrahedronEdgeModel::SetValues<double>(double const&) const;
+#define DBLTYPE double
+#include "TetrahedronEdgeModelInstantiate.cc"
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#undef  DBLTYPE
+#define DBLTYPE float128
+#include "Float128.hh"
+#include "TetrahedronEdgeModelInstantiate.cc"
+#endif
 

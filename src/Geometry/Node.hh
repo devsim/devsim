@@ -75,4 +75,20 @@ struct NodeCompIndex : public std::binary_function<ConstNodePtr, ConstNodePtr, b
    bool operator()(ConstNodePtr x, ConstNodePtr y) { return x->GetIndex() < y->GetIndex(); }
 };
 
+template <typename DoubleType>
+inline Vector<DoubleType> ConvertPosition(const Vector<double> &v)
+{
+  return Vector<DoubleType>(
+    static_cast<DoubleType>(v.Getx()),
+    static_cast<DoubleType>(v.Gety()),
+    static_cast<DoubleType>(v.Getz()));
+}
+
+template <>
+inline Vector<double> ConvertPosition(const Vector<double> &v)
+{
+  return v;
+}
+
 #endif
+

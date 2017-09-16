@@ -11,7 +11,7 @@ IdealResistor::IdealResistor( NodeKeeper *nk, const char *name,
        R               = 1.000000e+00;
 }
 
-void IdealResistor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, std::vector<std::pair<int, double> > &rhs)
+void IdealResistor::assembleDC_impl(const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> &mat, std::vector<std::pair<int, double> > &rhs)
 {
    const size_t node_num_vbot = node_ptr_vbot->getNumber();
    const size_t node_num_vtop = node_ptr_vtop->getNumber();
@@ -56,7 +56,7 @@ void IdealResistor::assembleDC(const NodeKeeper::Solution &sol, dsMath::RealRowC
 }
 
 
-void IdealResistor::assembleTran(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs)
+void IdealResistor::assembleTran_impl(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs)
 {
 
 

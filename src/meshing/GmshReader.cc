@@ -70,19 +70,19 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
     dsMesh::Shapes::ElementType_t element_type = static_cast<dsMesh::Shapes::ElementType_t>(elements[eeindex]);
     switch (element_type)
     {
-      case dsMesh::Shapes::POINT:
+      case dsMesh::Shapes::ElementType_t::POINT:
         nodes_to_get = 1;
         pdim = 0;
         break;
-      case dsMesh::Shapes::LINE:
+      case dsMesh::Shapes::ElementType_t::LINE:
         nodes_to_get = 2;
         pdim = 1;
         break;
-      case dsMesh::Shapes::TRIANGLE:
+      case dsMesh::Shapes::ElementType_t::TRIANGLE:
         nodes_to_get = 3;
         pdim = 2;
         break;
-      case dsMesh::Shapes::TETRAHEDRON:
+      case dsMesh::Shapes::ElementType_t::TETRAHEDRON:
         nodes_to_get = 4;
         pdim = 3;
         break;
@@ -95,7 +95,7 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
     if (nodes_to_get == 0)
     {
       std::ostringstream os;
-      os << "ERROR: element " << element_type << " unrecognized type position " << eeindex << "\n";
+      os << "ERROR: element " << static_cast<size_t>(element_type) << " unrecognized type position " << eeindex << "\n";
       errorString = os.str();
       return false;
     }

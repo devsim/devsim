@@ -36,7 +36,7 @@ namespace mthread {
 bool Python_AppInit() {
     Py_Initialize();
 //    PyEval_InitThreads();
-      OutputStream::WriteOut(OutputStream::INFO,
+      OutputStream::WriteOut(OutputStream::OutputType::INFO,
 "\n"
 "----------------------------------------\n"
 "\n"

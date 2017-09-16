@@ -21,12 +21,16 @@ limitations under the License.
 #include <complex>
 namespace dsMath {
 template <typename T> class DenseMatrix;
-typedef DenseMatrix<double> RealDenseMatrix;
-typedef DenseMatrix<std::complex<double> > ComplexDenseMatrix;
+
+template <typename T>
+using RealDenseMatrix = DenseMatrix<T>;
+
+template <typename T>
+using ComplexDenseMatrix = DenseMatrix<std::complex<T> >;
 
 template <typename T> class DenseMatrix {
   public:
-    enum Type_t {REAL, COMPLEX};
+
     //// Assume square for now
     explicit DenseMatrix(size_t);
 
@@ -48,8 +52,8 @@ template <typename T> class DenseMatrix {
     int                 dim_;
     bool                factored_;
     int                 info_;
-    Type_t              type_;
     
 };
 }
 #endif
+

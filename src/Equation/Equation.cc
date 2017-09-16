@@ -42,6 +42,7 @@ limitations under the License.
 #include "EquationErrors.hh"
 
 #include <cmath>
+using std::abs;
 
 template <typename DoubleType>
 const DoubleType Equation<DoubleType>::defminError = 1.0e-10;
@@ -83,7 +84,7 @@ DoubleType Equation<DoubleType>::GetRelError() const
 }
 
 template <typename DoubleType>
-Equation<DoubleType>::Equation(const std::string &nm, RegionPtr rp, const std::string &var, UpdateType ut)
+Equation<DoubleType>::Equation(const std::string &nm, RegionPtr rp, const std::string &var, EquationEnum::UpdateType ut)
     : myname(nm), myregion(rp), variable(var), absError(0.0), relError(0.0), minError(defminError), updateType(ut)
 {
     EquationHolder ptr(this);
@@ -129,10 +130,10 @@ void Equation<DoubleType>::LogSolutionUpdate(const NodeScalarList<DoubleType> &o
   for (size_t i = 0; i < ovals.size(); ++i)
   {
       DoubleType upd = upds[i];
-      if ( fabs(upd) > 0.0259 )
+      if ( abs(upd) > 0.0259 )
       {
           const DoubleType sign = (upd > 0.0) ? 1.0 : -1.0;
-          upd = sign*0.0259*log(1+fabs(upd)/0.0259);
+          upd = sign*0.0259*log(1+abs(upd)/0.0259);
       }
 
       const DoubleType oval = ovals[i];
@@ -185,7 +186,7 @@ void Equation<DoubleType>::PositiveSolutionUpdate(const NodeScalarList<DoubleTyp
       {
         upd = 0;
         const Region &reg = *myregion;
-        dsErrors::SolutionVariableNonPositive(reg, myname, GetVariable(), oval, OutputStream::FATAL);
+        dsErrors::SolutionVariableNonPositive(reg, myname, GetVariable(), oval, OutputStream::OutputType::FATAL);
       }
 
       upds[i] = upd;
@@ -217,7 +218,7 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
 //    dsAssert(ind != size_t(-1), "UNEXPECTED");
     if (ind == size_t(-1))
     {
-      dsErrors::MissingEquationIndex(reg, myname, "", OutputStream::FATAL) ;
+      dsErrors::MissingEquationIndex(reg, myname, "", OutputStream::OutputType::FATAL) ;
     }
 
     const ConstNodeList &nl = myregion->GetNodeList();
@@ -238,15 +239,15 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
     NodeScalarList<DoubleType> nvals(ovals.size());
 
     /// Could probably pass this as a functor class in the future
-    if (updateType == LOGDAMP)
+    if (updateType == EquationEnum::LOGDAMP)
     {
       LogSolutionUpdate(ovals, upds, nvals);
     }
-    else if (updateType == POSITIVE)
+    else if (updateType == EquationEnum::POSITIVE)
     {
       PositiveSolutionUpdate(ovals, upds, nvals);
     }
-    else if (updateType == DEFAULT)
+    else if (updateType == EquationEnum::DEFAULT)
     {
       DefaultSolutionUpdate(ovals, upds, nvals);
     }
@@ -262,7 +263,7 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
 
     for (size_t i = 0; i < upds.size(); ++i)
     {
-        const DoubleType n1 = fabs(upds[i]);
+        const DoubleType n1 = abs(upds[i]);
 
         if (n1 > aerr)
         {
@@ -270,7 +271,7 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
         }
 //      aerr += n1;
 
-        const DoubleType n2 = fabs(nvals[i]);
+        const DoubleType n2 = abs(nvals[i]);
 
         const DoubleType nrerror =  n1 / (n2 + minError); 
 
@@ -283,7 +284,7 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
 
     setAbsError(aerr);
     setRelError(rerr);
-//    dsErrors::EquationMathErrorInfo(*this, rerr, aerr, OutputStream::INFO);
+//    dsErrors::EquationMathErrorInfo(*this, rerr, aerr, OutputStream::OutputType::INFO);
 }
 
 //// TODO: Make sure noise and ac kept in sync
@@ -297,7 +298,7 @@ void Equation<DoubleType>::DefaultACUpdate(NodeModel &nm, const std::vector<std:
 //    dsAssert(ind != size_t(-1), "UNEXPECTED");
     if (ind == size_t(-1))
     {
-      dsErrors::MissingEquationIndex(*myregion, myname, "", OutputStream::FATAL) ;
+      dsErrors::MissingEquationIndex(*myregion, myname, "", OutputStream::OutputType::FATAL) ;
     }
 
     const ConstNodeList &nl = myregion->GetNodeList();
@@ -307,13 +308,13 @@ void Equation<DoubleType>::DefaultACUpdate(NodeModel &nm, const std::vector<std:
 
     if (!rnm)
     {
-        dsErrors::CreateModelOnRegion(*myregion, realnodemodel, OutputStream::INFO);
+        dsErrors::CreateModelOnRegion(*myregion, realnodemodel, OutputStream::OutputType::INFO);
         rnm = NodeSolution<DoubleType>::CreateNodeSolution(realnodemodel, myregion);
     }
 
     if (!inm)
     {
-        dsErrors::CreateModelOnRegion(*myregion, imagnodemodel, OutputStream::INFO);
+        dsErrors::CreateModelOnRegion(*myregion, imagnodemodel, OutputStream::OutputType::INFO);
         inm = NodeSolution<DoubleType>::CreateNodeSolution(imagnodemodel, myregion);
     }
 
@@ -347,7 +348,7 @@ void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, con
 //    dsAssert(ind != size_t(-1), "UNEXPECTED");
     if (ind == size_t(-1))
     {
-      dsErrors::MissingEquationIndex(*myregion, myname, "", OutputStream::FATAL) ;
+      dsErrors::MissingEquationIndex(*myregion, myname, "", OutputStream::OutputType::FATAL) ;
     }
 
     const ConstNodeList &nl = myregion->GetNodeList();
@@ -357,13 +358,13 @@ void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, con
 
     if (!rnm)
     {
-        dsErrors::CreateModelOnRegion(*myregion, realnodemodel, OutputStream::INFO);
+        dsErrors::CreateModelOnRegion(*myregion, realnodemodel, OutputStream::OutputType::INFO);
         rnm = NodeSolution<DoubleType>::CreateNodeSolution(realnodemodel, myregion);
     }
 
     if (!inm)
     {
-        dsErrors::CreateModelOnRegion(*myregion, imagnodemodel, OutputStream::INFO);
+        dsErrors::CreateModelOnRegion(*myregion, imagnodemodel, OutputStream::OutputType::INFO);
         inm = NodeSolution<DoubleType>::CreateNodeSolution(imagnodemodel, myregion);
     }
 
@@ -392,11 +393,11 @@ void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, con
     const std::string xiname = imagnodemodel + "_gradx";
     if (!myregion->GetNodeModel(xrname))
     {
-      new VectorGradient<DoubleType>(myregion, realnodemodel, VectorGradient<DoubleType>::AVOIDZERO);
+      new VectorGradient<DoubleType>(myregion, realnodemodel, VectorGradientEnum::AVOIDZERO);
     }
     if (!myregion->GetNodeModel(xiname))
     {
-      new VectorGradient<DoubleType>(myregion, imagnodemodel, VectorGradient<DoubleType>::AVOIDZERO);
+      new VectorGradient<DoubleType>(myregion, imagnodemodel, VectorGradientEnum::AVOIDZERO);
     }
 }
 
@@ -408,7 +409,7 @@ void Equation<DoubleType>::EdgeAssembleRHS(dsMath::RHSEntryVec<DoubleType> &v, c
 //    dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
     if (eqindex0 == size_t(-1))
     {
-      dsErrors::MissingEquationIndex(r, myname, "", OutputStream::FATAL) ;
+      dsErrors::MissingEquationIndex(r, myname, "", OutputStream::OutputType::FATAL) ;
     }
 
     const ConstEdgeList &el = r.GetEdgeList();
@@ -435,7 +436,7 @@ void Equation<DoubleType>::TriangleEdgeAssembleRHS(dsMath::RHSEntryVec<DoubleTyp
 //  dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
   if (eqindex0 == size_t(-1))
   {
-    dsErrors::MissingEquationIndex(r, myname, "", OutputStream::FATAL) ;
+    dsErrors::MissingEquationIndex(r, myname, "", OutputStream::OutputType::FATAL) ;
   }
 
   const Region::TriangleToConstEdgeList_t &ttelist = r.GetTriangleToEdgeList();
@@ -465,7 +466,7 @@ void Equation<DoubleType>::TetrahedronEdgeAssembleRHS(dsMath::RHSEntryVec<Double
 //  dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
   if (eqindex0 == size_t(-1))
   {
-    dsErrors::MissingEquationIndex(r, myname, "", OutputStream::FATAL) ;
+    dsErrors::MissingEquationIndex(r, myname, "", OutputStream::OutputType::FATAL) ;
   }
 
   const Region::TetrahedronToConstEdgeDataList_t &ttelist = r.GetTetrahedronToEdgeDataList();
@@ -553,14 +554,14 @@ void Equation<DoubleType>::UnSymmetricEdgeAssembleJacobian(dsMath::RealRowColVal
 //    dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
     if (eqindex0 == size_t(-1))
     {
-      dsErrors::MissingEquationIndex(r, myname, "", OutputStream::FATAL) ;
+      dsErrors::MissingEquationIndex(r, myname, "", OutputStream::OutputType::FATAL) ;
     }
 
     const size_t eqindex1 = r.GetEquationIndex(r.GetEquationNameFromVariable(var));
 //    dsAssert(eqindex1 != size_t(-1), "UNEXPECTED");
     if (eqindex1 == size_t(-1))
     {
-      dsErrors::MissingEquationIndex(r, myname, var, OutputStream::FATAL) ;
+      dsErrors::MissingEquationIndex(r, myname, var, OutputStream::OutputType::FATAL) ;
     }
 
     // assemble the edge components to rhs first
@@ -596,14 +597,14 @@ void Equation<DoubleType>::UnSymmetricTriangleEdgeAssembleJacobian(dsMath::RealR
 //  dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
   if (eqindex0 == size_t(-1))
   {
-    dsErrors::MissingEquationIndex(r, myname, "", OutputStream::FATAL) ;
+    dsErrors::MissingEquationIndex(r, myname, "", OutputStream::OutputType::FATAL) ;
   }
 
   const size_t eqindex1 = r.GetEquationIndex(r.GetEquationNameFromVariable(var));
 //  dsAssert(eqindex1 != size_t(-1), "UNEXPECTED");
   if (eqindex1 == size_t(-1))
   {
-    dsErrors::MissingEquationIndex(r, myname, var, OutputStream::FATAL) ;
+    dsErrors::MissingEquationIndex(r, myname, var, OutputStream::OutputType::FATAL) ;
   }
 
   const Region::TriangleToConstEdgeList_t &ttelist = r.GetTriangleToEdgeList();
@@ -662,14 +663,14 @@ void Equation<DoubleType>::UnSymmetricTetrahedronEdgeAssembleJacobian(dsMath::Re
 //  dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
   if (eqindex0 == size_t(-1))
   {
-    dsErrors::MissingEquationIndex(r, myname, "", OutputStream::FATAL) ;
+    dsErrors::MissingEquationIndex(r, myname, "", OutputStream::OutputType::FATAL) ;
   }
 
   const size_t eqindex1 = r.GetEquationIndex(r.GetEquationNameFromVariable(var));
 //  dsAssert(eqindex1 != size_t(-1), "UNEXPECTED");
   if (eqindex1 == size_t(-1))
   {
-    dsErrors::MissingEquationIndex(r, myname, var, OutputStream::FATAL) ;
+    dsErrors::MissingEquationIndex(r, myname, var, OutputStream::OutputType::FATAL) ;
   }
 
   const Region::TetrahedronToConstEdgeDataList_t &ttelist = r.GetTetrahedronToEdgeDataList();
@@ -737,7 +738,7 @@ void Equation<DoubleType>::NodeAssembleRHS(dsMath::RHSEntryVec<DoubleType> &v, c
 //    dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
     if (eqindex0 == size_t(-1))
     {
-      dsErrors::MissingEquationIndex(r, myname, "", OutputStream::FATAL) ;
+      dsErrors::MissingEquationIndex(r, myname, "", OutputStream::OutputType::FATAL) ;
     }
 
     const ConstNodeList &nl = r.GetNodeList();
@@ -761,7 +762,7 @@ void Equation<DoubleType>::NodeAssembleJacobian(dsMath::RealRowColValueVec<Doubl
 
     if (eqindex0 == size_t(-1))
     {
-      dsErrors::MissingEquationIndex(r, myname, "", OutputStream::FATAL) ;
+      dsErrors::MissingEquationIndex(r, myname, "", OutputStream::OutputType::FATAL) ;
     }
 
     const size_t eqindex1 = r.GetEquationIndex(r.GetEquationNameFromVariable(var));
@@ -769,7 +770,7 @@ void Equation<DoubleType>::NodeAssembleJacobian(dsMath::RealRowColValueVec<Doubl
 
     if (eqindex1 == size_t(-1))
     {
-      dsErrors::MissingEquationIndex(r, myname, var, OutputStream::FATAL) ;
+      dsErrors::MissingEquationIndex(r, myname, var, OutputStream::OutputType::FATAL) ;
     }
 
     const ConstNodeList &nl = r.GetNodeList();
@@ -802,7 +803,7 @@ void Equation<DoubleType>::NodeVolumeAssemble(const std::string &model, dsMath::
 //    dsAssert(nm != NULL, "UNEXPECTED");
   if (!nm)
   {
-    dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::NODE, OutputStream::FATAL);
+    dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
   }
 
   ConstNodeModelPtr nvol = r.GetNodeModel(node_volume);
@@ -810,17 +811,17 @@ void Equation<DoubleType>::NodeVolumeAssemble(const std::string &model, dsMath::
 
   if (!nvol)
   {
-    dsErrors::MissingEquationModel(r, myname, node_volume, dsErrors::ModelInfo::NODE, OutputStream::FATAL);
+    dsErrors::MissingEquationModel(r, myname, node_volume, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
   }
 
-  if ((w == dsMathEnum::RHS) || (w == dsMathEnum::MATRIXANDRHS))
+  if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     // Integrate with volume and charge
     NodeScalarData<DoubleType> nrhs(*nvol);
-    nrhs *= *nm;
+    nrhs.times_equal_model(*nm);
     NodeAssembleRHS(v, nrhs);
   }
-  else if (w == dsMathEnum::MATRIXONLY)
+  else if (w == dsMathEnum::WhatToLoad::MATRIXONLY)
   {
   }
   else
@@ -828,7 +829,7 @@ void Equation<DoubleType>::NodeVolumeAssemble(const std::string &model, dsMath::
     dsAssert(0, "UNEXPECTED");
   }
 
-  if ((w == dsMathEnum::MATRIXONLY) || (w == dsMathEnum::MATRIXANDRHS))
+  if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     VariableList_t::iterator it = vlist.begin();
     for (; it != vlist.end(); ++it)
@@ -841,17 +842,17 @@ void Equation<DoubleType>::NodeVolumeAssemble(const std::string &model, dsMath::
 
       if (!ndm)
       {
-        dsErrors::MissingEquationModel(r, myname, dermodel, dsErrors::ModelInfo::NODE, OutputStream::VERBOSE1);
+        dsErrors::MissingEquationModel(r, myname, dermodel, dsErrors::ModelInfo::NODE, OutputStream::OutputType::VERBOSE1);
       }
       else
       {
         NodeScalarData<DoubleType> nder(*nvol);
-        nder *= *ndm;
+        nder.times_equal_model(*ndm);
         NodeAssembleJacobian(m, nder, var);
       }
     }
   }
-  else if (w == dsMathEnum::RHS)
+  else if (w == dsMathEnum::WhatToLoad::RHS)
   {
   }
   else
@@ -898,22 +899,22 @@ void Equation<DoubleType>::EdgeCoupleAssemble(const std::string &model, dsMath::
     ConstEdgeModelPtr ef = r.GetEdgeModel(model);
     if (!ef)
     {
-      dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+      dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
     }
 
     ConstEdgeModelPtr ec = r.GetEdgeModel(edge_couple);
     if (!ec)
     {
-      dsErrors::MissingEquationModel(r, myname, edge_couple, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+      dsErrors::MissingEquationModel(r, myname, edge_couple, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
     }
 
-    if ((w == dsMathEnum::RHS) || (w == dsMathEnum::MATRIXANDRHS))
+    if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
     {
         EdgeScalarData<DoubleType> eflux = EdgeScalarData<DoubleType>(*ef);
-        eflux *= *ec;
+        eflux.times_equal_model(*ec);
         EdgeAssembleRHS(v, eflux, n0_sign, n1_sign);
     }
-    else if (w == dsMathEnum::MATRIXONLY)
+    else if (w == dsMathEnum::WhatToLoad::MATRIXONLY)
     {
     }
     else
@@ -921,7 +922,7 @@ void Equation<DoubleType>::EdgeCoupleAssemble(const std::string &model, dsMath::
       dsAssert(0, "UNEXPECTED");
     }
 
-    if ((w == dsMathEnum::MATRIXONLY) || (w == dsMathEnum::MATRIXANDRHS))
+    if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
     {
       VariableList_t::iterator it = vlist.begin();
       for ( ; it != vlist.end(); ++it)
@@ -940,8 +941,8 @@ void Equation<DoubleType>::EdgeCoupleAssemble(const std::string &model, dsMath::
 
         if ((!em0) && (!em1))
         {
-          dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::VERBOSE1);
-          dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::EDGE, OutputStream::VERBOSE1);
+          dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
+          dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
         }
         else
         {
@@ -950,25 +951,25 @@ void Equation<DoubleType>::EdgeCoupleAssemble(const std::string &model, dsMath::
 //              dsAssert(em1, "UNEXPECTED");
           if (!em0)
           {
-            dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+            dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
           }
 
           if (!em1)
           {
-            dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::EDGE, OutputStream::FATAL);
+            dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
           }
 
           EdgeScalarData<DoubleType> eder0 = EdgeScalarData<DoubleType>(*em0);
           EdgeScalarData<DoubleType> eder1 = EdgeScalarData<DoubleType>(*em1);
 
-          eder0 *= *ec; /// integrate wrt volume
-          eder1 *= *ec; /// integrate wrt volume
+          eder0.times_equal_model(*ec); /// integrate wrt volume
+          eder1.times_equal_model(*ec); /// integrate wrt volume
 
           UnSymmetricEdgeAssembleJacobian(m, eder0, eder1, var, n0_sign, n1_sign);
         }
       }
     }
-    else if (w == dsMathEnum::RHS)
+    else if (w == dsMathEnum::WhatToLoad::RHS)
     {
     }
     else
@@ -987,24 +988,24 @@ void Equation<DoubleType>::TriangleEdgeCoupleAssemble(const std::string &model, 
   ConstTriangleEdgeModelPtr ef = r.GetTriangleEdgeModel(model);
   if (!ef)
   {
-    dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+    dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
   }
 //    dsAssert(ef != NULL, "UNEXPECTED");
 
   ConstTriangleEdgeModelPtr ec = r.GetTriangleEdgeModel(edge_couple);
   if (!ec)
   {
-    dsErrors::MissingEquationModel(r, myname, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+    dsErrors::MissingEquationModel(r, myname, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
   }
 //    dsAssert(ec != NULL, "UNEXPECTED");
 
-  if ((w == dsMathEnum::RHS) || (w == dsMathEnum::MATRIXANDRHS))
+  if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     TriangleEdgeScalarData<DoubleType> eflux = TriangleEdgeScalarData<DoubleType>(*ef);
-    eflux *= *ec;
+    eflux.times_equal_model(*ec);
     TriangleEdgeAssembleRHS(v, eflux, n0_sign, n1_sign);
   }
-  else if (w == dsMathEnum::MATRIXONLY)
+  else if (w == dsMathEnum::WhatToLoad::MATRIXONLY)
   {
   }
   else
@@ -1012,7 +1013,7 @@ void Equation<DoubleType>::TriangleEdgeCoupleAssemble(const std::string &model, 
     dsAssert(0, "UNEXPECTED");
   }
 
-  if ((w == dsMathEnum::MATRIXONLY) || (w == dsMathEnum::MATRIXANDRHS))
+  if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     VariableList_t::iterator it = vlist.begin();
     for ( ; it != vlist.end(); ++it)
@@ -1034,38 +1035,38 @@ void Equation<DoubleType>::TriangleEdgeCoupleAssemble(const std::string &model, 
 
       if ((!em0) && (!em1) && (!em2))
       {
-        dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::VERBOSE1);
-        dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::VERBOSE1);
-        dsErrors::MissingEquationModel(r, myname, dermodel2, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::VERBOSE1);
+        dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::VERBOSE1);
+        dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::VERBOSE1);
+        dsErrors::MissingEquationModel(r, myname, dermodel2, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::VERBOSE1);
       }
       else
       {
         if (!em0)
         {
-          dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+          dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
         }
         if (!em1)
         {
-          dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+          dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
         }
         if (!em2)
         {
-          dsErrors::MissingEquationModel(r, myname, dermodel2, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+          dsErrors::MissingEquationModel(r, myname, dermodel2, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
         }
 
         TriangleEdgeScalarData<DoubleType> eder0 = TriangleEdgeScalarData<DoubleType>(*em0);
         TriangleEdgeScalarData<DoubleType> eder1 = TriangleEdgeScalarData<DoubleType>(*em1);
         TriangleEdgeScalarData<DoubleType> eder2 = TriangleEdgeScalarData<DoubleType>(*em2);
 
-        eder0 *= *ec; /// integrate wrt volume
-        eder1 *= *ec; /// integrate wrt volume
-        eder2 *= *ec; /// integrate wrt volume
+        eder0.times_equal_model(*ec); /// integrate wrt volume
+        eder1.times_equal_model(*ec); /// integrate wrt volume
+        eder2.times_equal_model(*ec); /// integrate wrt volume
 
         UnSymmetricTriangleEdgeAssembleJacobian(m, eder0, eder1, eder2, var, n0_sign, n1_sign);
       }
     }
   }
-  else if (w == dsMathEnum::RHS)
+  else if (w == dsMathEnum::WhatToLoad::RHS)
   {
   }
   else
@@ -1084,24 +1085,24 @@ void Equation<DoubleType>::TetrahedronEdgeCoupleAssemble(const std::string &mode
   ConstTetrahedronEdgeModelPtr ef = r.GetTetrahedronEdgeModel(model);
   if (!ef)
   {
-    dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+    dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
   }
 //  dsAssert(ef != NULL, "UNEXPECTED");
 
   ConstTetrahedronEdgeModelPtr ec = r.GetTetrahedronEdgeModel(edge_couple);
   if (!ec)
   {
-    dsErrors::MissingEquationModel(r, myname, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+    dsErrors::MissingEquationModel(r, myname, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
   }
 //    dsAssert(ec != NULL, "UNEXPECTED");
 
-  if ((w == dsMathEnum::RHS) || (w == dsMathEnum::MATRIXANDRHS))
+  if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     TetrahedronEdgeScalarData<DoubleType> eflux = TetrahedronEdgeScalarData<DoubleType>(*ef);
-    eflux *= *ec;
+    eflux.times_equal_model(*ec);
     TetrahedronEdgeAssembleRHS(v, eflux, n0_sign, n1_sign);
   }
-  else if (w == dsMathEnum::MATRIXONLY)
+  else if (w == dsMathEnum::WhatToLoad::MATRIXONLY)
   {
   }
   else
@@ -1109,7 +1110,7 @@ void Equation<DoubleType>::TetrahedronEdgeCoupleAssemble(const std::string &mode
     dsAssert(0, "UNEXPECTED");
   }
 
-  if ((w == dsMathEnum::MATRIXONLY) || (w == dsMathEnum::MATRIXANDRHS))
+  if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     VariableList_t::iterator it = vlist.begin();
     for ( ; it != vlist.end(); ++it)
@@ -1134,28 +1135,28 @@ void Equation<DoubleType>::TetrahedronEdgeCoupleAssemble(const std::string &mode
 
       if ((!em0) && (!em1) && (!em2) && (!em3))
       {
-        dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::VERBOSE1);
-        dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::VERBOSE1);
-        dsErrors::MissingEquationModel(r, myname, dermodel2, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::VERBOSE1);
-        dsErrors::MissingEquationModel(r, myname, dermodel3, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::VERBOSE1);
+        dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::VERBOSE1);
+        dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::VERBOSE1);
+        dsErrors::MissingEquationModel(r, myname, dermodel2, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::VERBOSE1);
+        dsErrors::MissingEquationModel(r, myname, dermodel3, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::VERBOSE1);
       }
       else
       {
         if (!em0)
         {
-          dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+          dsErrors::MissingEquationModel(r, myname, dermodel0, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
         }
         if (!em1)
         {
-          dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+          dsErrors::MissingEquationModel(r, myname, dermodel1, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
         }
         if (!em2)
         {
-          dsErrors::MissingEquationModel(r, myname, dermodel2, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+          dsErrors::MissingEquationModel(r, myname, dermodel2, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
         }
         if (!em3)
         {
-          dsErrors::MissingEquationModel(r, myname, dermodel3, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::FATAL);
+          dsErrors::MissingEquationModel(r, myname, dermodel3, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
         }
 
         TetrahedronEdgeScalarData<DoubleType> eder0 = TetrahedronEdgeScalarData<DoubleType>(*em0);
@@ -1163,16 +1164,16 @@ void Equation<DoubleType>::TetrahedronEdgeCoupleAssemble(const std::string &mode
         TetrahedronEdgeScalarData<DoubleType> eder2 = TetrahedronEdgeScalarData<DoubleType>(*em2);
         TetrahedronEdgeScalarData<DoubleType> eder3 = TetrahedronEdgeScalarData<DoubleType>(*em3);
 
-        eder0 *= *ec; /// integrate wrt volume
-        eder1 *= *ec; /// integrate wrt volume
-        eder2 *= *ec; /// integrate wrt volume
-        eder3 *= *ec; /// integrate wrt volume
+        eder0.times_equal_model(*ec); /// integrate wrt volume
+        eder1.times_equal_model(*ec); /// integrate wrt volume
+        eder2.times_equal_model(*ec); /// integrate wrt volume
+        eder3.times_equal_model(*ec); /// integrate wrt volume
 
         UnSymmetricTetrahedronEdgeAssembleJacobian(m, eder0, eder1, eder2, eder3, var, n0_sign, n1_sign);
       }
     }
   }
-  else if (w == dsMathEnum::RHS)
+  else if (w == dsMathEnum::WhatToLoad::RHS)
   {
   }
   else
@@ -1260,5 +1261,8 @@ void Equation<DoubleType>::GetCommandOptions(std::map<std::string, ObjectHolder>
 #warning "Decide how to handle precision"
 #endif
 template class Equation<double>;
-
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class Equation<float128>;
+#endif
 

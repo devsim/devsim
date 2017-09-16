@@ -77,7 +77,7 @@ void InterfaceNodeModel::CalculateValues() const
     os << "There was a floating point exception while evaluating the interface node model " << name
     << " on Device: " << dname << " on Interface: " << GetInterface().GetName() << "\n";
     FPECheck::ClearFPE();
-    GeometryStream::WriteOut(OutputStream::FATAL, GetInterface(), os.str().c_str());
+    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetInterface(), os.str().c_str());
   }
 }
 
@@ -115,6 +115,7 @@ void InterfaceNodeModel::SetValues(const NodeScalarList<DoubleType> &nv)
   uptodate = true;
 }
 
+#if 0
 template <typename DoubleType>
 void InterfaceNodeModel::SetValues(const InterfaceNodeModel &nm)
 {
@@ -132,6 +133,7 @@ void InterfaceNodeModel::SetValues(const InterfaceNodeModel &nm)
     }
   }
 }
+#endif
 
 
 void InterfaceNodeModel::MarkOld()
@@ -184,8 +186,13 @@ const std::string &InterfaceNodeModel::GetInterfaceName() const
   return myinterface->GetName();
 }
 
-template std::vector<double> const& InterfaceNodeModel::GetScalarValues<double>() const;
-template const double &InterfaceNodeModel::GetUniformValue<double>() const;
-template void InterfaceNodeModel::SetValues<double>(std::vector<double> const&) const;
-template void InterfaceNodeModel::SetValues<double>(double const&) const;
+#define DBLTYPE double
+#include "InterfaceNodeModelInstantiate.cc"
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#undef  DBLTYPE
+#define DBLTYPE float128
+#include "Float128.hh"
+#include "InterfaceNodeModelInstantiate.cc"
+#endif
 

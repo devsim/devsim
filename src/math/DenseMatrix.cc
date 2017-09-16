@@ -26,15 +26,6 @@ DenseMatrix<T>::DenseMatrix(size_t d) : dim_(d), factored_(false), info_(0)
 {
   A_.resize(dim_*dim_);
   ipiv_.resize(dim_);
-
-  if (sizeof(T) == sizeof(double))
-  {
-    type_ = REAL;
-  }
-  else if (sizeof(T) == sizeof(doublecomplex))
-  {
-    type_ = COMPLEX;
-  }
 }
 
 template <typename T>
@@ -49,53 +40,43 @@ T DenseMatrix<T>::operator()(size_t r, size_t c) const
   return A_[r + c * dim_];
 }
 
-template <typename T>
-bool DenseMatrix<T>::LUFactor()
+template <typename DoubleType>
+bool DenseMatrix<DoubleType>::LUFactor()
 {
-  if (type_ == REAL)
-  {
-    dgetrf(&dim_, &dim_, reinterpret_cast<double *>(&A_[0]), &dim_, &ipiv_[0], &info_);
-  }
-  else if (type_ == COMPLEX)
-  {
-    zgetrf(&dim_, &dim_, reinterpret_cast<doublecomplex *>(&A_[0]), &dim_, &ipiv_[0], &info_);
-  }
+  getrf(&dim_, &dim_, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0], &info_);
   factored_ = true;
   return (info_ == 0);
 }
 
-template <typename T>
-bool DenseMatrix<T>::Solve(std::vector<T> &B)
+template <typename DoubleType>
+bool DenseMatrix<DoubleType>::Solve(std::vector<DoubleType> &B)
 {
   static char trans = 'N';
   static int  nrhs   = 1;
-//  assert(factored_);
-//  assert(B.size() == size_t(dim_));
+
   if (info_ == 0)
   {
-    if (type_ == REAL)
-    {
 #ifdef _WIN32
-      dgetrs(&trans, &dim_, &nrhs, reinterpret_cast<double *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<double *>(&B[0]), &dim_, &info_, 1);
+    getrs(&trans, &dim_, &nrhs, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<DoubleType *>(&B[0]), &dim_, &info_, 1);
 #else
-      dgetrs(&trans, &dim_, &nrhs, reinterpret_cast<double *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<double *>(&B[0]), &dim_, &info_);
+    getrs(&trans, &dim_, &nrhs, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<DoubleType *>(&B[0]), &dim_, &info_);
 #endif
-    }
-    else if (type_ == COMPLEX)
-    {
-#ifdef _WIN32
-      zgetrs(&trans, &dim_, &nrhs, reinterpret_cast<doublecomplex *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<doublecomplex *>(&B[0]), &dim_, &info_, 1);
-#else
-      zgetrs(&trans, &dim_, &nrhs, reinterpret_cast<doublecomplex *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<doublecomplex *>(&B[0]), &dim_, &info_);
-#endif
-    }
   }
   return (info_ == 0);
 }
 
-//// Manual Template Instantiation
-template class DenseMatrix<double>;
-template class DenseMatrix<std::complex<double> >;
-
 }
+
+//// Manual Template Instantiation
+template class dsMath::DenseMatrix<double>;
+#if 0
+template class dsMath::DenseMatrix<std::complex<double> >;
+#endif
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class dsMath::DenseMatrix<float128>;
+#if 0
+template class dsMath::DenseMatrix<std::complex<float128> >;
+#endif
+#endif
 

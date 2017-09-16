@@ -24,7 +24,7 @@ limitations under the License.
 
 template <typename DoubleType>
 EdgeLength<DoubleType>::EdgeLength(RegionPtr rp) :
-EdgeModel("EdgeLength", rp, EdgeModel::SCALAR)
+EdgeModel("EdgeLength", rp, EdgeModel::DisplayType::SCALAR)
 {
 }
 

@@ -47,8 +47,8 @@ int gcd(int x, int y)
         return x;
     }
 
-    x = abs(x);
-    y = abs(y);
+    x = std::abs(x);
+    y = std::abs(y);
     if (x < y)
     {
         return gcd_do(y,x);

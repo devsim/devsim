@@ -24,7 +24,7 @@ limitations under the License.
 
 template <typename DoubleType>
 EdgeIndex<DoubleType>::EdgeIndex(RegionPtr rp) :
-EdgeModel("edge_index", rp, EdgeModel::SCALAR)
+EdgeModel("edge_index", rp, EdgeModel::DisplayType::SCALAR)
 {
 }
 

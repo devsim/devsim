@@ -21,6 +21,8 @@ SET (PYTHON_INCLUDE $ENV{HOME}/anaconda/include/python2.7)
 # ACML 5.3 available at developer.amd.com
 SET (ZLIB_INCLUDE $ENV{HOME}/anaconda/include)
 
+SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boost_1_64_0)
+SET (QUADMATH_ARCHIVE "-lquadmath")
 IF (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
 ELSE (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
 # TODO: place a symlink in EXTERNAL_LIB pointing to lapack and blas with
@@ -28,9 +30,10 @@ ELSE (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
 SET (MKLROOT
 )
 SET (BLAS_ARCHIVE
+ ${EXTERNAL_LIB}/getrf/build/libgetrf.a
 #http://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
 #requires duplicate library for 1-pass linker
- $ENV{HOME}/anaconda/lib -Wl,--no-as-needed -lmkl_rt -lpthread -lm -ldl
+ -L$ENV{HOME}/anaconda/lib -Wl,--no-as-needed -lmkl_rt -lpthread -lm -ldl
 )
 SET (ZLIB_ARCHIVE $ENV{HOME}/anaconda/lib/libz.a)
 SET (SQLITE3_ARCHIVE $ENV{HOME}/anaconda/lib/libsqlite3.a)

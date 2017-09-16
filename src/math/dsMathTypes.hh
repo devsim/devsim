@@ -22,10 +22,15 @@ limitations under the License.
 namespace dsMath
 {
 
-typedef std::complex<double>         ComplexDouble_t;
-typedef std::vector<ComplexDouble_t> ComplexDoubleVec_t;
+template <typename DoubleType>
+using ComplexDouble_t = std::complex<DoubleType>;
 
-typedef std::vector<double> DoubleVec_t;
+template <typename DoubleType>
+using ComplexDoubleVec_t = std::vector<std::complex<DoubleType>>;
+
+template <typename DoubleType>
+using DoubleVec_t = std::vector<DoubleType>;
+
 typedef std::vector<int>    IntVec_t;
 
 template <typename T, class U >

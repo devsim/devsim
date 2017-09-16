@@ -61,7 +61,7 @@ size_t GetThreadsToStart()
 //// TODO: callback validation for global parameters
       std::ostringstream os;
       os << "Expected valid positive number for \"threads_available\" parameter, but " << dbent.second.GetString() << " was given.\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       ret = 0;
     }
     else
@@ -87,7 +87,7 @@ size_t GetMinimumTaskSize()
 //// TODO: callback validation for global parameters
       std::ostringstream os;
       os << "Expected valid positive number for \"threads_task_size\" parameter, but " << dbent.second.GetString() << " was given.\n";
-      OutputStream::WriteOut(OutputStream::INFO, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       ret = 0;
     }
     else

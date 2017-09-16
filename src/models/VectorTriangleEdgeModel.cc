@@ -25,10 +25,10 @@ limitations under the License.
 
 template <typename DoubleType>
 VectorTriangleEdgeModel<DoubleType>::VectorTriangleEdgeModel(const std::string &edgemodel, RegionPtr rp)
-    : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName + "_y")
+    : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::DisplayType::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName + "_y")
 {
   RegisterCallback(elementEdgeModelName);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TriangleEdgeModel::SCALAR);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::SCALAR);
 }
 
 template <typename DoubleType>
@@ -47,7 +47,7 @@ void VectorTriangleEdgeModel<DoubleType>::calcTriangleEdgeScalarValues() const
   std::vector<DoubleType> evx(3*tl.size());
   std::vector<DoubleType> evy(3*tl.size());
 
-  const TriangleElementField &efield = reg.GetTriangleElementField();
+  const TriangleElementField<DoubleType> &efield = reg.GetTriangleElementField<DoubleType>();
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Triangle &triangle = *tl[i];

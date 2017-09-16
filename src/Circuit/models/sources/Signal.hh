@@ -25,7 +25,7 @@ typedef std::shared_ptr<Signal> SignalPtr;
 
 class Signal {
    public:
-      enum SignalType {DCONLY, PULSE};
+      enum class SignalType {DCONLY, PULSE};
       virtual ~Signal() {};
       virtual double NextBreakPoint(double)=0;
       virtual double CalcVoltage(double)=0;

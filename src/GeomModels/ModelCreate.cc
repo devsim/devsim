@@ -30,33 +30,43 @@ limitations under the License.
 #include "TetrahedronEdgeCouple.hh"
 #include "TetrahedronNodeVolume.hh"
 #include "Region.hh"
+#include "GlobalData.hh"
 
 /**
  * This creates the base models used by all of the other models
  */
+
+namespace {
+template <typename DoubleType>
+void CreateDefaultModelsImpl(RegionPtr rp)
+{
+  new EdgeCouple<DoubleType>(rp);
+  new EdgeLength<DoubleType>(rp);
+  new EdgeIndex<DoubleType>(rp);
+  new NodeVolume<DoubleType>(rp);
+  new EdgeInverseLength<DoubleType>(rp);
+  new NodePosition<DoubleType>(rp);
+  new AtContactNode<DoubleType>(rp);
+  new SurfaceArea<DoubleType>(rp);
+  new UnitVec<DoubleType>(rp);
+
+  const size_t dimension = rp->GetDimension();
+
+  if (dimension == 2)
+  {
+    new TriangleEdgeCouple<DoubleType>(rp);
+    new TriangleNodeVolume<DoubleType>(rp);
+  }
+  else if (dimension == 3)
+  {
+    new TetrahedronEdgeCouple<DoubleType>(rp);
+    new TetrahedronNodeVolume<DoubleType>(rp);
+  }
+}
+}
+
 void CreateDefaultModels(RegionPtr rp)
 {
-    new EdgeCouple<double>(rp);
-    new EdgeLength<double>(rp);
-    new EdgeIndex<double>(rp);
-    new NodeVolume<double>(rp);
-    new EdgeInverseLength<double>(rp);
-    new NodePosition<double>(rp);
-    new AtContactNode<double>(rp);
-    new SurfaceArea<double>(rp);
-    new UnitVec<double>(rp);
-
-    const size_t dimension = rp->GetDimension();
-
-    if (dimension == 2)
-    {
-      new TriangleEdgeCouple<double>(rp);
-      new TriangleNodeVolume<double>(rp);
-    }
-    else if (dimension == 3)
-    {
-      new TetrahedronEdgeCouple<double>(rp);
-      new TetrahedronNodeVolume<double>(rp);
-    }
+  CreateDefaultModelsImpl<double>(rp);
 }
 

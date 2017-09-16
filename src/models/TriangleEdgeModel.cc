@@ -80,7 +80,7 @@ void TriangleEdgeModel::CalculateValues() const
     os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  while evaluating the edge model " << name
     << " on Device: " << GetRegion().GetDevice()->GetName() << " on Region: " << GetRegion().GetName() << "\n";
     FPECheck::ClearFPE();
-    GeometryStream::WriteOut(OutputStream::FATAL, GetRegion(), os.str().c_str());
+    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str().c_str());
   }
 }
 
@@ -146,7 +146,7 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
   //// TODO: optimize for uniform and zero
 
   const Region &region = this->GetRegion();
-  const TriangleEdgeScalarList<DoubleType> &esl = this->GetScalarValues<double>();
+  const TriangleEdgeScalarList<DoubleType> &esl = this->GetScalarValues<DoubleType>();
 
 
   const size_t number_nodes = region.GetNumberNodes();
@@ -159,7 +159,7 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
   const Region::TriangleToConstEdgeList_t &ttcedl = region.GetTriangleToEdgeList();
   const size_t number_triangle = ttcedl.size();
 
-  if ((interpolation_type == TriangleEdgeModel::AVERAGE) || (interpolation_type == TriangleEdgeModel::SUM))
+  if ((interpolation_type == TriangleEdgeModel::InterpolationType::AVERAGE) || (interpolation_type == TriangleEdgeModel::InterpolationType::SUM))
   {
     std::vector<size_t> count(number_nodes);
     for (size_t i = 0; i < number_triangle; ++i)
@@ -170,14 +170,14 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
         const Edge &edge = *cel[j];
         const size_t ni0 = edge.GetHead()->GetIndex();
         const size_t ni1 = edge.GetTail()->GetIndex();
-        const double val = esl[3*i + j];
+        const DoubleType val = esl[3*i + j];
         values[ni0] += val;
         values[ni1] += val;
         ++count[ni0];
         ++count[ni1];
       }
     }
-    if (interpolation_type == TriangleEdgeModel::AVERAGE)
+    if (interpolation_type == TriangleEdgeModel::InterpolationType::AVERAGE)
     {
       for (size_t i = 0; i < number_nodes; ++i)
       {
@@ -189,11 +189,11 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
       }
     }
   }
-  else if (interpolation_type == TriangleEdgeModel::COUPLE)
+  else if (interpolation_type == TriangleEdgeModel::InterpolationType::COUPLE)
   {
     ConstTriangleEdgeModelPtr couple_ptr = region.GetTriangleEdgeModel("ElementEdgeCouple");
     dsAssert(couple_ptr.get(), "UNEXPECTED");
-    const TriangleEdgeScalarList<DoubleType> &element_edge_couples = couple_ptr->GetScalarValues<double>();
+    const TriangleEdgeScalarList<DoubleType> &element_edge_couples = couple_ptr->GetScalarValues<DoubleType>();
 
     std::vector<DoubleType> scales(number_nodes);
 
@@ -207,8 +207,8 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
         const size_t ni1 = edge.GetTail()->GetIndex();
         const size_t index = 3*i + j;
         /// The scale must be larger than 0
-        const double scale = element_edge_couples[index];
-        const double val   = scale * esl[index];
+        const DoubleType scale = element_edge_couples[index];
+        const DoubleType val   = scale * esl[index];
         values[ni0] += val;
         values[ni1] += val;
         scales[ni0] += scale;
@@ -217,7 +217,7 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
     }
     for (size_t i = 0; i < number_nodes; ++i)
     {
-      const double s = scales[i];
+      const DoubleType s = scales[i];
       if (s > 0.0)
       {
         values[i] /= s;
@@ -238,7 +238,7 @@ template <typename DoubleType>
 void TriangleEdgeModel::GetScalarValuesOnElements(std::vector<DoubleType> &ret) const
 {
   const Region &region = this->GetRegion();
-  const TriangleEdgeScalarList<DoubleType> &esl = this->GetScalarValues<double>();
+  const TriangleEdgeScalarList<DoubleType> &esl = this->GetScalarValues<DoubleType>();
 
 
   const size_t number_triangles = region.GetNumberTriangles();
@@ -246,11 +246,11 @@ void TriangleEdgeModel::GetScalarValuesOnElements(std::vector<DoubleType> &ret) 
   ret.clear();
   ret.resize(number_triangles);
 
-  const double scale = 1.0 / 3.0;
+  const DoubleType scale = static_cast<DoubleType>(1.0) / static_cast<DoubleType>(3.0);
   size_t mindex = 0;
   for (size_t i = 0; i < number_triangles; ++i)
   {
-    double &value = ret[i];
+    DoubleType &value = ret[i];
     value += esl[mindex++];
     value += esl[mindex++];
     value += esl[mindex++];
@@ -310,7 +310,7 @@ EdgeScalarList<DoubleType> TriangleEdgeModel::GetValuesOnEdges() const
     const ConstTriangleList &triangle_list = GetRegion().GetEdgeToTriangleList()[i];
     ConstTriangleList::const_iterator it = triangle_list.begin();
     const ConstTriangleList::const_iterator itend = triangle_list.end();
-    double vol = 0.0;
+    DoubleType vol = 0.0;
     for ( ; it != itend; ++it)
     {
       const size_t tindex = (**it).GetIndex();
@@ -323,15 +323,14 @@ EdgeScalarList<DoubleType> TriangleEdgeModel::GetValuesOnEdges() const
   }
   return ev;
 }
- 
-template void TriangleEdgeModel::SetValues<double>(std::vector<double> const&);
-template void TriangleEdgeModel::SetValues<double>(double const&);
-template std::vector<double> const& TriangleEdgeModel::GetScalarValues<double>() const;
-template const double &TriangleEdgeModel::GetUniformValue<double>() const;
-template std::vector<double> TriangleEdgeModel::GetValuesOnEdges<double>() const;
-template void TriangleEdgeModel::GetScalarValuesOnNodes<double>(TriangleEdgeModel::InterpolationType, std::vector<double>&) const;
-template void TriangleEdgeModel::GetScalarValuesOnElements<double>(std::vector<double>&) const;
-template void TriangleEdgeModel::SetValues<double>(std::vector<double> const&) const;
-template void TriangleEdgeModel::SetValues<double>(double const&) const;
 
- 
+#define DBLTYPE double
+#include "TriangleEdgeModelInstantiate.cc"
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#undef  DBLTYPE
+#define DBLTYPE float128
+#include "Float128.hh"
+#include "TriangleEdgeModelInstantiate.cc"
+#endif
+

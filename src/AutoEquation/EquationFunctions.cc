@@ -294,76 +294,76 @@ Eqo::EqObjPtr CreateInterfaceExprModel(const std::string &nm, const std::string 
 
 NodeModel::DisplayType getNodeModelDisplayType(const std::string &dt)
 {
-  NodeModel::DisplayType ret = NodeModel::NODISPLAY;
+  NodeModel::DisplayType ret = NodeModel::DisplayType::NODISPLAY;
   if (dt == "nodisplay")
   {
-    ret = NodeModel::NODISPLAY;
+    ret = NodeModel::DisplayType::NODISPLAY;
   }
   else if (dt == "scalar")
   {
-    ret = NodeModel::SCALAR;
+    ret = NodeModel::DisplayType::SCALAR;
   }
   else
   {
-    ret = NodeModel::UNKNOWN;
+    ret = NodeModel::DisplayType::UNKNOWN;
   }
   return ret;
 }
 
 EdgeModel::DisplayType getEdgeModelDisplayType(const std::string &dt)
 {
-  EdgeModel::DisplayType ret = EdgeModel::NODISPLAY;
+  EdgeModel::DisplayType ret = EdgeModel::DisplayType::NODISPLAY;
   if (dt == "nodisplay")
   {
-    ret = EdgeModel::NODISPLAY;
+    ret = EdgeModel::DisplayType::NODISPLAY;
   }
   else if (dt == "scalar")
   {
-    ret = EdgeModel::SCALAR;
+    ret = EdgeModel::DisplayType::SCALAR;
   }
   else if (dt == "vector")
   {
-    ret = EdgeModel::VECTOR;
+    ret = EdgeModel::DisplayType::VECTOR;
   }
   else
   {
-    ret = EdgeModel::UNKNOWN;
+    ret = EdgeModel::DisplayType::UNKNOWN;
   }
   return ret;
 }
 
 TriangleEdgeModel::DisplayType getTriangleEdgeModelDisplayType(const std::string &dt)
 {
-  TriangleEdgeModel::DisplayType ret = TriangleEdgeModel::NODISPLAY;
+  TriangleEdgeModel::DisplayType ret = TriangleEdgeModel::DisplayType::NODISPLAY;
   if (dt == "nodisplay")
   {
-    ret = TriangleEdgeModel::NODISPLAY;
+    ret = TriangleEdgeModel::DisplayType::NODISPLAY;
   }
   else if (dt == "scalar")
   {
-    ret = TriangleEdgeModel::SCALAR;
+    ret = TriangleEdgeModel::DisplayType::SCALAR;
   }
   else
   {
-    ret = TriangleEdgeModel::UNKNOWN;
+    ret = TriangleEdgeModel::DisplayType::UNKNOWN;
   }
   return ret;
 }
 
 TetrahedronEdgeModel::DisplayType getTetrahedronEdgeModelDisplayType(const std::string &dt)
 {
-  TetrahedronEdgeModel::DisplayType ret = TetrahedronEdgeModel::NODISPLAY;
+  TetrahedronEdgeModel::DisplayType ret = TetrahedronEdgeModel::DisplayType::NODISPLAY;
   if (dt == "nodisplay")
   {
-    ret = TetrahedronEdgeModel::NODISPLAY;
+    ret = TetrahedronEdgeModel::DisplayType::NODISPLAY;
   }
   else if (dt == "scalar")
   {
-    ret = TetrahedronEdgeModel::SCALAR;
+    ret = TetrahedronEdgeModel::DisplayType::SCALAR;
   }
   else
   {
-    ret = TetrahedronEdgeModel::UNKNOWN;
+    ret = TetrahedronEdgeModel::DisplayType::UNKNOWN;
   }
   return ret;
 }
