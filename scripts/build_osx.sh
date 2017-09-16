@@ -24,6 +24,6 @@ set -e
 
 bash ./scripts/setup_osx_10.10.sh
 (cd osx_x86_64_release && make -j2)
-(cd dist && bash package_apple.sh devsim_osx_${TRAVIS_TAG});
+(cd dist && bash package_apple.sh devsim_osx_${1});
 
 

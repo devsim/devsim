@@ -1,10 +1,6 @@
 
 language: cpp
 
-#os:
-#  - linux
-#  - osx
-
 matrix:
   include:
   - os: linux
@@ -18,54 +14,26 @@ matrix:
 #    - master
 
 before_install:
-  #- if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-  #  sudo apt-get install tcl8.5 tcl8.5-dev tcl-dev python2.7 python2.7-dev libblas3gf liblapack3gf;
-  #  fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     docker run -it -d --name centos6 centos:6 &&
     (cd .. && tar czf devsim.tgz devsim && docker cp devsim.tgz centos6:/root/) &&
     docker exec centos6 bash -c "cd /root && tar xzf devsim.tgz";
     fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    (cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz) &&
-    (cd external && curl -L -O http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4-2.tar.gz && tar xzf cgnslib_3.1.4-2.tar.gz);
-    fi
 
-install:
-  #- (cd external && mkdir -p cgnslib_3.1.4/build && cd cgnslib_3.1.4/build && cmake -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
-  #- if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-  #  (cd external/SuperLU_4.3 && sh ../superlu_ubuntu_12.04.sh);
-  #  (cd external/symdiff && bash scripts/setup_ubuntu_12.04.sh && cd linux_x86_64_release && make -j2);
-  #  fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    (cd external && mkdir -p cgnslib_3.1.4/build && cd cgnslib_3.1.4/build && cmake -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install) &&
-    (cd external/SuperLU_4.3 && sh ../superlu_osx_10.10.sh) &&
-    (cd external/symdiff && bash scripts/setup_osx_10.10.sh && cd osx_release && make -j2);
-    fi
+#install:
 
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     docker exec centos6 bash -c "cd /root/devsim && bash scripts/build_centos_6.sh devsim_linux_${TRAVIS_TAG}";
     fi
-  #- if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-  #  bash ./scripts/setup_ubuntu_travisci.sh;
-  #  (cd linux_x86_64_release && make -j2);
-  #  fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    bash ./scripts/setup_osx_10.10.sh &&
-    (cd osx_x86_64_release && make -j2);
+    scripts/build_osx.sh;
     fi
 
 before_deploy:
-  #- if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-  #  (cd dist && bash package_linux.sh devsim_linux_${TRAVIS_TAG})
-  #  fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     (cd dist && docker cp centos6:/root/devsim/dist/devsim_linux_${TRAVIS_TAG}.tgz .);
-    fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    (cd dist && bash package_apple.sh devsim_osx_${TRAVIS_TAG});
     fi
 
 deploy:
