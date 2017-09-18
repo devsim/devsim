@@ -3,7 +3,7 @@ set -e
 
 if [ "$1" = "gcc" ]
   then
-  brew update;
+  brew update > /dev/null;
   if brew ls --versions gcc > /dev/null;
   then
   brew outdated gcc || brew upgrade gcc;
