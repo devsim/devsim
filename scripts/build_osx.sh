@@ -33,8 +33,15 @@ fi
 # this script assumes git clone and submodule initialization has been done
 
 # SuperLU and CGNS Download
+if [ ! -f external/superlu_4.3.tar.gz ]
+then
 (cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
+fi
+
+if [ ! -f external/cgnslib_3.1.4-2.tar.gz ]
+then
 (cd external && curl -L -O http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4-2.tar.gz && tar xzf cgnslib_3.1.4-2.tar.gz)
+fi
 
 # SYMDIFF build
 if [ "$1" = "gcc" ]
@@ -64,7 +71,7 @@ then
 bash ./scripts/setup_osx_10.10.sh
 fi
 (cd osx_x86_64_release && make -j2)
-if [ -z "${2}" ]
+if [ ! -z "${2}" ]
 then
 (cd dist && bash package_apple.sh devsim_osx_${2});
 fi
