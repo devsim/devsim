@@ -31,9 +31,9 @@ script:
     docker exec centos6 bash -c "cd /root/devsim && bash scripts/build_centos_6.sh devsim_linux_${TRAVIS_TAG}";
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    if [ "$COMPILER" == "gcc"]; then
+    if [ "$COMPILER" == "gcc" ]; then
       ./scripts/build_osx.sh $COMPILER "_gcc_${TRAVIS_TAG}";
-    elif [ "$COMPILER" == "clang"]; then
+    elif [ "$COMPILER" == "clang" ]; then
       ./scripts/build_osx.sh $COMPILER "${TRAVIS_TAG}";
     fi
     fi
