@@ -8,6 +8,9 @@ matrix:
     dist: trusty
     services: docker
   - os: osx
+    env: COMPILER=clang
+  - os: osx
+    env: COMPILER=gcc
 
 #branches:
 #  only:
@@ -28,7 +31,7 @@ script:
     docker exec centos6 bash -c "cd /root/devsim && bash scripts/build_centos_6.sh devsim_linux_${TRAVIS_TAG}";
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    ./scripts/build_osx.sh clang "${TRAVIS_TAG}";
+    ./scripts/build_osx.sh $COMPILER "${TRAVIS_TAG}";
     fi
 
 before_deploy:
