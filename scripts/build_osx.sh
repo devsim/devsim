@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ "$1" = "gcc" ]
+if [ "${1}" = "gcc" ]
   then
   brew update > /dev/null;
   if brew ls --versions gcc > /dev/null;
@@ -13,7 +13,7 @@ if [ "$1" = "gcc" ]
   export CC=/usr/local/bin/gcc-7;
   export CXX=/usr/local/bin/g++-7;
   export F77=/usr/local/bin/gfortran-7;
-elif [ "$1" = "clang" ]
+elif [ "${1}" = "clang" ]
   then
   export CC=/usr/bin/gcc;
   export CXX=/usr/bin/g++;
@@ -44,10 +44,10 @@ then
 fi
 
 # SYMDIFF build
-if [ "$1" = "gcc" ]
+if [ "${1}" = "gcc" ]
 then
 (cd external/symdiff && bash scripts/setup_osx_gcc.sh && cd osx_release && make -j2)
-elif [ "$1" = "clang" ]
+elif [ "${1}" = "clang" ]
 then
 (cd external/symdiff && bash scripts/setup_osx_10.10.sh && cd osx_release && make -j2)
 fi
@@ -57,23 +57,23 @@ fi
 # SUPERLU build
 (cd external/SuperLU_4.3 && sh ../superlu_osx_10.10.sh)
 
-if [ "$1" = "gcc" ]
+if [ "${1}" = "gcc" ]
 then
 (cd external/getrf && ./setup_osx.sh && cd build && make -j2)
 fi
 
 
-if [ "$1" = "gcc" ]
+if [ "${1}" = "gcc" ]
 then
 bash ./scripts/setup_osx_gcc.sh
-elif [ "$1" = "clang" ]
+elif [ "${1}" = "clang" ]
 then
 bash ./scripts/setup_osx_10.10.sh
 fi
 (cd osx_x86_64_release && make -j2)
 if [ ! -z "${2}" ]
 then
-(cd dist && bash package_apple.sh devsim_osx_${2});
+(cd dist && bash package_apple.sh ${1} devsim_osx_${2});
 fi
 
 
