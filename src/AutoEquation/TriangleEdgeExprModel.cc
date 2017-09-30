@@ -142,9 +142,6 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
         
 }
 
-#ifndef _WIN32
-#warning "serialize extended option here"
-#endif
 template <typename DoubleType>
 void TriangleEdgeExprModel<DoubleType>::Serialize(std::ostream &of) const
 {
@@ -156,4 +153,10 @@ template class TriangleEdgeExprModel<double>;
 #include "Float128.hh"
 template class TriangleEdgeExprModel<float128>;
 #endif
+
+TriangleEdgeModelPtr CreateTriangleEdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, TriangleEdgeModel::DisplayType dt)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_triangle_edge_model<TriangleEdgeExprModel<double>, TriangleEdgeExprModel<extended_type>>(use_extended, nm, eq, rp, dt);
+}
 

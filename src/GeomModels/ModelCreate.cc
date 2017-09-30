@@ -32,6 +32,10 @@ limitations under the License.
 #include "Region.hh"
 #include "GlobalData.hh"
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+
 /**
  * This creates the base models used by all of the other models
  */
@@ -67,6 +71,10 @@ void CreateDefaultModelsImpl(RegionPtr rp)
 
 void CreateDefaultModels(RegionPtr rp)
 {
+#ifdef DEVSIM_EXTENDED_PRECISION
+  CreateDefaultModelsImpl<float128>(rp);
+#else
   CreateDefaultModelsImpl<double>(rp);
+#endif
 }
 

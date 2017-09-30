@@ -35,15 +35,20 @@ namespace VectorGradientEnum
   extern const char *CalcTypeString[];
 }
 
+NodeModelPtr CreateVectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
+
 template <typename DoubleType>
 class VectorGradient : public NodeModel
 {
     public:
-      VectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
 
       void Serialize(std::ostream &) const;
 
+      VectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
+
     private:
+
+
       DoubleType calcVectorGradient(ConstNodePtr) const;
       void   calcNodeScalarValues() const;
       void   calc1d() const;

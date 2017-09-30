@@ -70,5 +70,14 @@ void VectorTriangleEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class VectorTriangleEdgeModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class VectorTriangleEdgeModel<float128>;
+#endif
 
+TriangleEdgeModelPtr CreateVectorTriangleEdgeModel(const std::string &edgemodel, RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_triangle_edge_model<VectorTriangleEdgeModel<double>, VectorTriangleEdgeModel<extended_type>>(use_extended, edgemodel, rp);
+}
 

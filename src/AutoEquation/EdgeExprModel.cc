@@ -136,9 +136,6 @@ void EdgeExprModel<DoubleType>::calcEdgeScalarValues() const
         
 }
 
-#ifndef _WIN32
-#warning "serialize extended option here"
-#endif
 template <typename DoubleType>
 void EdgeExprModel<DoubleType>::Serialize(std::ostream &of) const
 {
@@ -162,4 +159,9 @@ template class EdgeExprModel<double>;
 #include "Float128.hh"
 template class EdgeExprModel<float128>;
 #endif
+
+EdgeModelPtr CreateEdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, EdgeModel::DisplayType dt, ContactPtr cp)
+{
+  return create_edge_model<EdgeExprModel<double>, EdgeExprModel<extended_type>>(rp->UseExtendedPrecisionModels(), nm, eq, rp, dt, cp);
+}
 

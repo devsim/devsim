@@ -70,11 +70,11 @@ Vector<DoubleType> TriangleEdgeCouple<DoubleType>::calcTriangleEdgeCouple(ConstT
     {
       const Edge &edge = *edgeList[i];
 
-      const Vector<DoubleType> &p0 = edge.GetHead()->Position();
-      const Vector<DoubleType> &p1 = edge.GetTail()->Position();
+      const auto &h0 = edge.GetHead()->Position();
+      const auto &h1 = edge.GetTail()->Position();
 
-      Vector<DoubleType> vm = p0;
-      vm += p1;
+      Vector<DoubleType> vm(h0.Getx(), h0.Gety(), h0.Getz());
+      vm += Vector<DoubleType>(h1.Getx(), h1.Gety(), h1.Getz());
       vm *= 0.5;
       vm -= vc;
       ec[i] = vm.magnitude();
@@ -91,4 +91,8 @@ void TriangleEdgeCouple<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class TriangleEdgeCouple<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TriangleEdgeCouple<float128>;
+#endif
 

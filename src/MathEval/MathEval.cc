@@ -129,6 +129,7 @@ namespace Eqomfp {
   };
 
 #ifdef DEVSIM_EXTENDED_PRECISION
+namespace eval128 {
 float128 abs(float128 x)
 {
   return boost::multiprecision::abs(x);
@@ -144,93 +145,94 @@ float128 log(float128 x)
 
 float128 Bernoulli(float128 x)
 {
-  return Bernoulli(static_cast<double>(x));
+  return ::Bernoulli(static_cast<double>(x));
 }
 
 float128 derBernoulli(float128 x)
 {
-  return derBernoulli(static_cast<double>(x));
+  return ::derBernoulli(static_cast<double>(x));
 }
 
 float128 Fermi(float128 x)
 {
-  return Fermi(static_cast<double>(x));
+  return ::Fermi(static_cast<double>(x));
 }
 
 float128 dFermidx(float128 x)
 {
-  return dFermidx(static_cast<double>(x));
+  return ::dFermidx(static_cast<double>(x));
 }
 
 float128 InvFermi(float128 x)
 {
-  return InvFermi(static_cast<double>(x));
+  return ::InvFermi(static_cast<double>(x));
 }
 
 float128 dInvFermidx(float128 x)
 {
-  return dInvFermidx(static_cast<double>(x));
+  return ::dInvFermidx(static_cast<double>(x));
 }
 
 float128 acosh(float128 x)
 {
-  return cosh(static_cast<double>(x));
+  return std::acosh(static_cast<double>(x));
 }
 
 float128 asinh(float128 x)
 {
-  return asinh(static_cast<double>(x));
+  return std::asinh(static_cast<double>(x));
 }
 
 float128 atanh(float128 x)
 {
-  return atanh(static_cast<double>(x));
+  return std::atanh(static_cast<double>(x));
 }
 
 
 float128 erf(float128 x)
 {
-  return erf(static_cast<double>(x));
+  return ::erf(static_cast<double>(x));
 }
 
 float128 erfc(float128 x)
 {
-  return erfc(static_cast<double>(x));
+  return ::erfc(static_cast<double>(x));
 }
 
 
 float128 derfdx(float128 x)
 {
-  return derfdx(static_cast<double>(x));
+  return ::derfdx(static_cast<double>(x));
 }
 
 
 float128 derfcdx(float128 x)
 {
-  return derfcdx(static_cast<double>(x));
+  return ::derfcdx(static_cast<double>(x));
+}
 }
 
 
 
   UnaryTblEntry<float128> UnaryTable_float128[] = {
-  {"abs",       abs,         "abs(obj)   -- Absolute value"},
-  {"exp",       exp,          "exp(obj)   -- Exponentiation with respect to e"},
-  {"log",       log,          "log(obj)   -- Natural logarithm"},
-  {"B",         Bernoulli,    "B(obj)     -- Bernoulli Function"},
-  {"dBdx",      derBernoulli, "dBdx(obj)  -- derivative Bernoulli wrt arg"},
-  {"step",      step,         "step(obj)  -- step function"},
-  {"sgn",       sgn,          "sgn(obj)   -- sign function"},
-  {"acosh",     acosh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
-  {"asinh",     asinh,        "asinh(obj)   -- inverse hyperbolic sine function"},
-  {"atanh",     atanh,        "atanh(obj)   -- inverse hyperbolic tangent function"},
-  {"erf",       erf,          "erf(obj)   -- error function"},
-  {"erfc",      erfc,         "erfc(obj)  -- complementary error function"},
-  {"derfdx",    derfdx,       "derfdx(obj)   -- derivative error function"},
-  {"derfcdx",   derfcdx,      "derfcdx(obj)  -- derivative of complementary error function"},
-  {"Fermi",     Fermi,        "Fermi(obj)  -- Fermi Integral"},
-  {"dFermidx",  dFermidx,     "dFermidx(obj)  -- derivative of Fermi Integral"},
-  {"InvFermi",     InvFermi,        "InvFermi(obj)  -- inverse of the Fermi Integral"},
-  {"dInvFermidx",  dInvFermidx,     "dInvFermidx(obj)  -- derivative of InvFermi Integral"},
+  {"abs",      eval128::abs,         "abs(obj)   -- Absolute value"},
+  {"exp",      eval128::exp,          "exp(obj)   -- Exponentiation with respect to e"},
+  {"log",      eval128::log,          "log(obj)   -- Natural logarithm"},
+  {"B",        eval128::Bernoulli,    "B(obj)     -- Bernoulli Function"},
+  {"dBdx",     eval128::derBernoulli, "dBdx(obj)  -- derivative Bernoulli wrt arg"},
+  {"step",     step,         "step(obj)  -- step function"},
+  {"sgn",      sgn,          "sgn(obj)   -- sign function"},
+  {"acosh",    eval128::acosh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
+  {"asinh",    eval128::asinh,        "asinh(obj)   -- inverse hyperbolic sine function"},
+  {"atanh",    eval128::atanh,        "atanh(obj)   -- inverse hyperbolic tangent function"},
+  {"erf",      eval128::erf,          "erf(obj)   -- error function"},
+  {"erfc",     eval128::erfc,         "erfc(obj)  -- complementary error function"},
+  {"derfdx",   eval128::derfdx,       "derfdx(obj)   -- derivative error function"},
+  {"derfcdx",  eval128::derfcdx,      "derfcdx(obj)  -- derivative of complementary error function"},
+  {"Fermi",    eval128::Fermi,        "Fermi(obj)  -- Fermi Integral"},
+  {"dFermidx", eval128::dFermidx,     "dFermidx(obj)  -- derivative of Fermi Integral"},
+  {"InvFermi",     eval128::InvFermi,        "InvFermi(obj)  -- inverse of the Fermi Integral"},
+  {"dInvFermidx",  eval128::dInvFermidx,     "dInvFermidx(obj)  -- derivative of InvFermi Integral"},
   {"!",  logical_not,     "!obj  -- Logical Not"},
   {"vec_sum",   vec_sum, "Vector Summation"},
   {"vec_max",   vec_max, "Vector Maximum"},
@@ -430,9 +432,6 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
     {
       if (vvals[i] == NULL)
       {
-#ifndef _WIN32
-#warning "Fix precision"
-#endif
         tclObjVector[i + 1] = ObjectHolder(static_cast<double>(dvals[i]));
       }
       else
@@ -461,9 +460,6 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
 
         if (isvec)
         {          
-#ifndef _WIN32
-#warning "Fix precision"
-#endif
           tclObjVector[i+1] = ObjectHolder(static_cast<double>(vvals[i]->operator[](j)));
         }
       }

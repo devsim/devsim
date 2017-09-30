@@ -41,16 +41,20 @@ namespace AverageEdgeModelEnum
   AverageEdgeModelEnum::AverageType_t GetTypeName(const std::string &, std::string &);
 }
 
+EdgeModelPtr CreateAverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr /*rp*/);
+EdgeModelPtr CreateAverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, const std::string &/*var*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr /*rp*/);
+
 template <typename DoubleType>
 class AverageEdgeModel : public EdgeModel
 {
     public:
 
-        AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
-        AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, const std::string &/*var*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
         ~AverageEdgeModel();
 
         void Serialize(std::ostream &) const;
+
+        AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
+        AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, const std::string &/*var*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
 
     private:
         template <typename T>

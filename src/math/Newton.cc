@@ -385,10 +385,12 @@ void Newton<DoubleType>::LoadCircuitRHSAC(std::vector<std::complex<DoubleType>> 
 template <typename DoubleType>
 void Newton<DoubleType>::LoadMatrixAndRHSAC(Matrix<DoubleType> &matrix, std::vector<std::complex<DoubleType>> &rhs, permvec_t &permvec, DoubleType frequency)
 {
-#ifndef _WIN32
-#warning "Use correct M_PI for precision"
+#ifdef DEVSIM_EXTENDED_PRECISION
+  static const DoubleType two_pi = boost::math::constants::two_pi<DoubleType>();
+#else
+  static const DoubleType two_pi = 2.0*M_PI;
 #endif
-  const std::complex<DoubleType> jOmega  = static_cast<DoubleType>(2.0 * M_PI) * std::complex<DoubleType>(0,1.0) * frequency;
+  const std::complex<DoubleType> jOmega  = two_pi * std::complex<DoubleType>(0,1.0) * frequency;
 
   std::vector<DoubleType>                   r(rhs.size());
   std::vector<std::complex<DoubleType>> c(rhs.size());

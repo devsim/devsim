@@ -368,7 +368,6 @@ TetrahedronEdgeModel::DisplayType getTetrahedronEdgeModelDisplayType(const std::
   return ret;
 }
 
-template <typename DoubleType>
 ret_pair CreateNodeExprModel(const std::string &nm, const std::string &expr, RegionPtr rp, NodeModel::DisplayType dt, ContactPtr cp)
 {
     bool ret = false;
@@ -382,7 +381,7 @@ ret_pair CreateNodeExprModel(const std::string &nm, const std::string &expr, Reg
         /// Or maybe it should when replacing an existing model
         /// Worry about precedence as well (Edge versus Node versus Param)
         /// Create helper function to worry about this, which will be called before this
-        new NodeExprModel<DoubleType>(nm, equation, rp, dt, cp);
+        CreateNodeExprModel(nm, equation, rp, dt, cp);
         error = EngineAPI::getStringValue(equation);
         ret = true;
     }
@@ -390,7 +389,6 @@ ret_pair CreateNodeExprModel(const std::string &nm, const std::string &expr, Reg
 }
 
 
-template <typename DoubleType>
 ret_pair CreateEdgeExprModel(const std::string &nm, const std::string &expr, RegionPtr rp, EdgeModel::DisplayType dt, ContactPtr cp)
 {
     bool ret = false;
@@ -404,14 +402,13 @@ ret_pair CreateEdgeExprModel(const std::string &nm, const std::string &expr, Reg
         /// Or maybe it should when replacing an existing model
         /// Worry about precedence as well (Edge versus Node versus Param)
         /// Create helper function to worry about this, which will be called before this
-        new EdgeExprModel<DoubleType>(nm, equation, rp, dt, cp);
+        CreateEdgeExprModel(nm, equation, rp, dt, cp);
         error = EngineAPI::getStringValue(equation);
         ret = true;
     }
     return std::make_pair(ret, error);
 }
 
-template <typename DoubleType>
 ret_pair CreateTriangleEdgeExprModel(const std::string &nm, const std::string &expr, RegionPtr rp, TriangleEdgeModel::DisplayType dt)
 {
     bool ret = false;
@@ -422,14 +419,13 @@ ret_pair CreateTriangleEdgeExprModel(const std::string &nm, const std::string &e
 
     if (error.empty())
     {
-        new TriangleEdgeExprModel<DoubleType>(nm, equation, rp, dt);
+        CreateTriangleEdgeExprModel(nm, equation, rp, dt);
         error = EngineAPI::getStringValue(equation);
         ret = true;
     }
     return std::make_pair(ret, error);
 }
 
-template <typename DoubleType>
 ret_pair CreateTetrahedronEdgeExprModel(const std::string &nm, const std::string &expr, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
 {
     bool ret = false;
@@ -440,14 +436,13 @@ ret_pair CreateTetrahedronEdgeExprModel(const std::string &nm, const std::string
 
     if (error.empty())
     {
-        new TetrahedronEdgeExprModel<DoubleType>(nm, equation, rp, dt);
+        CreateTetrahedronEdgeExprModel(nm, equation, rp, dt);
         error = EngineAPI::getStringValue(equation);
         ret = true;
     }
     return std::make_pair(ret, error);
 }
 
-template <typename DoubleType>
 ret_pair CreateInterfaceNodeExprModel(const std::string &nm, const std::string &expr, InterfacePtr ip)
 {
     bool ret = false;
@@ -457,7 +452,7 @@ ret_pair CreateInterfaceNodeExprModel(const std::string &nm, const std::string &
     equation = CreateInterfaceExprModel(nm, expr, ip, error);
     if (error.empty())
     {
-        new InterfaceNodeExprModel<DoubleType>(nm, equation, ip);
+        CreateInterfaceNodeExprModel(nm, equation, ip);
         error = EngineAPI::getStringValue(equation);
         ret = true;
     }
@@ -495,10 +490,5 @@ ret_pair SymdiffEval(const std::string &expr)
   return std::make_pair(ret, retstring);
 }
 
-template ret_pair CreateNodeExprModel<double>(const std::string &, const std::string &, RegionPtr, NodeModel::DisplayType, ContactPtr);
-template ret_pair CreateEdgeExprModel<double>(const std::string &, const std::string &, RegionPtr, EdgeModel::DisplayType, ContactPtr);
-template ret_pair CreateTriangleEdgeExprModel<double>(const std::string &, const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
-template ret_pair CreateTetrahedronEdgeExprModel<double>(const std::string &, const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType);
-template ret_pair CreateInterfaceNodeExprModel<double>(const std::string &, const std::string &, InterfacePtr);
 }
 

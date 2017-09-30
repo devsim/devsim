@@ -215,8 +215,8 @@ std::vector<DoubleType> TriangleCylindricalNodeVolume<DoubleType>::calcTriangleC
   {
     const Edge &edge = *edgeList[i];
 
-    const Vector<DoubleType> &p0 = edge.GetHead()->Position();
-    const Vector<DoubleType> &p1 = edge.GetTail()->Position();
+    const Vector<DoubleType> &p0 = ConvertVector<DoubleType>(edge.GetHead()->Position());
+    const Vector<DoubleType> &p1 = ConvertVector<DoubleType>(edge.GetTail()->Position());
 
     ///// This is the midpoint along the edge
     Vector<DoubleType> vm = p0;
@@ -268,4 +268,16 @@ void TriangleCylindricalNodeVolume<DoubleType>::Serialize(std::ostream &of) cons
 }
 
 template class TriangleCylindricalNodeVolume<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TriangleCylindricalNodeVolume<float128>;
+#endif
+
+TriangleEdgeModelPtr CreateTriangleCylindricalNodeVolume(RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_triangle_edge_model<TriangleCylindricalNodeVolume<double>, TriangleCylindricalNodeVolume<extended_type>>(use_extended, rp);
+}
+
+
 

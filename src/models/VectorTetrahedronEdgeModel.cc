@@ -77,4 +77,15 @@ void VectorTetrahedronEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class VectorTetrahedronEdgeModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class VectorTetrahedronEdgeModel<float128>;
+#endif
+
+TetrahedronEdgeModelPtr CreateVectorTetrahedronEdgeModel(const std::string &edgemodel, RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_tetrahedron_edge_model<VectorTetrahedronEdgeModel<double>, VectorTetrahedronEdgeModel<extended_type>>(use_extended, edgemodel, rp);
+}
+
 

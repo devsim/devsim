@@ -55,4 +55,8 @@ void EdgeIndex<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class EdgeIndex<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class EdgeIndex<float128>;
+#endif
 

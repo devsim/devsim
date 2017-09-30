@@ -111,7 +111,7 @@ class Vector {
 
         DoubleType magnitude() const
         {
-          return std::sqrt(x*x + y*y + z*z);
+          return sqrt(x*x + y*y + z*z);
         }
 
         DoubleType dot_prod(const Vector<DoubleType> &v) const
@@ -160,6 +160,12 @@ class Vector {
        DoubleType y;
        DoubleType z;
 };
+
+template <typename DoubleType>
+inline Vector<DoubleType> ConvertVector(const Vector<double> &v)
+{
+  return Vector<DoubleType>(v.Getx(), v.Gety(), v.Getz());
+}
 
 template <typename DoubleType>
 inline Vector<DoubleType> operator-(Vector<DoubleType> &v1, Vector<DoubleType> &v2)

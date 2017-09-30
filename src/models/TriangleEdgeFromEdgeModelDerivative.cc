@@ -132,5 +132,19 @@ void TriangleEdgeFromEdgeModelDerivative<DoubleType>::Serialize(std::ostream &of
 }
 
 template class TriangleEdgeFromEdgeModelDerivative<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TriangleEdgeFromEdgeModelDerivative<float128>;
+#endif
+
+TriangleEdgeModelPtr CreateTriangleEdgeFromEdgeModelDerivative(
+        const std::string &edgemodel,
+        const std::string &derivative,
+        RegionPtr rp
+    )
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_triangle_edge_model<TriangleEdgeFromEdgeModelDerivative<double>, TriangleEdgeFromEdgeModelDerivative<extended_type>>(use_extended, edgemodel, derivative, rp);
+}
 
 

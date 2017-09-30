@@ -22,12 +22,14 @@ limitations under the License.
 class Contact;
 class Interface;
 
+NodeModelPtr CreateCylindricalSurfaceArea(RegionPtr /*rp*/);
+
 template <typename DoubleType>
 class CylindricalSurfaceArea : public NodeModel {
     public:
-        CylindricalSurfaceArea(RegionPtr /*rp*/);
-
         void Serialize(std::ostream &) const;
+
+        CylindricalSurfaceArea(RegionPtr /*rp*/);
 
     private:
         CylindricalSurfaceArea();

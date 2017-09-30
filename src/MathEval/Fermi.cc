@@ -19,9 +19,6 @@ limitations under the License.
 #include <cmath>
 using std::abs;
 #include <cstdlib>
-#ifndef _WIN32
-#warning "Extended Precision Version"
-#endif
 namespace
 {
 // TODO: "These coefficients only worked out for amd64 in current configuration"

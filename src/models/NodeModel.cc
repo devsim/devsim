@@ -148,25 +148,6 @@ void NodeModel::SetValues(const NodeScalarList<DoubleType> &nv)
   uptodate = true;
 }
 
-#if 0
-void NodeModel::SetValues(const NodeModel &nm)
-{
-  if (&nm != this)
-  {
-    if (nm.IsUniform())
-    {
-      const double v = nm.GetUniformValue<double>();
-      NodeModel::SetValues(v);
-    }
-    else
-    {
-      const NodeScalarList<double> &v = nm.GetScalarValues<double>();
-      NodeModel::SetValues(v);
-    }
-  }
-}
-#endif
-
 template <typename DoubleType>
 void NodeModel::SetValues(const DoubleType &v) const
 {

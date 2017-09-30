@@ -18,16 +18,20 @@ limitations under the License.
 #ifndef VECTOR_TETRAHEDRON_EDGE_FROM_EDGE_MODEL_HH
 #define VECTOR_TETRAHEDRON_EDGE_FROM_EDGE_MODEL_HH
 #include "TetrahedronEdgeModel.hh"
+TetrahedronEdgeModelPtr CreateVectorTetrahedronEdgeModel(const std::string &, RegionPtr);
+
 template <typename DoubleType>
 class VectorTetrahedronEdgeModel : public TetrahedronEdgeModel {
     public:
+
+        void Serialize(std::ostream &) const;
+
         //// Out naming convention is that the name given is the edge model
         //// The element edge model is edgemodel_ex, edgemodel_ey
         VectorTetrahedronEdgeModel(const std::string &, RegionPtr);
 
-        void Serialize(std::ostream &) const;
-
     private:
+
         void calcTetrahedronEdgeScalarValues() const;
 
         const std::string elementEdgeModelName;

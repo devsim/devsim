@@ -80,17 +80,16 @@ size_t threadBaseClass::getThreadId()
 
 void threadBaseClass::start()
 {
-//#warning "fix all these up so they check errors
 #if _WIN32
 	ThreadStuff *p = new ThreadStuff;
 	id = p;
-	p->hhandle = CreateThread( 
+	p->hhandle = CreateThread(
             NULL,                   // default security attributes
-            0,                      // use default stack size  
+            0,                      // use default stack size
             threadFactory,       // thread function name
-            this,          // argument to thread function 
-            0,                      // use default creation flags 
-			&(p->id));   // returns the thread identifier 
+            this,          // argument to thread function
+            0,                      // use default creation flags
+			&(p->id));   // returns the thread identifier
 #else
   int ret=pthread_create(reinterpret_cast<pthread_t *>(&id), NULL, threadFactory, this);
   if (ret != 0)

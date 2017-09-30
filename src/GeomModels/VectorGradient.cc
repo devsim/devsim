@@ -52,14 +52,14 @@ VectorGradient<DoubleType>::VectorGradient(RegionPtr rp, const std::string &name
     if (dimension == 2)
     {
       RegisterCallback("unity");
-      yfield_ = NodeSolution<DoubleType>::CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
+      yfield_ = CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
     }
     else if (dimension == 3)
     {
       RegisterCallback("unity");
       RegisterCallback("unitz");
-      yfield_ = NodeSolution<DoubleType>::CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
-      zfield_ = NodeSolution<DoubleType>::CreateNodeSolution(name + "_gradz", rp, this->GetSelfPtr());
+      yfield_ = CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
+      zfield_ = CreateNodeSolution(name + "_gradz", rp, this->GetSelfPtr());
     }
 }
 
@@ -310,5 +310,11 @@ template class VectorGradient<double>;
 #include "Float128.hh"
 template class VectorGradient<float128>;
 #endif
+
+NodeModelPtr CreateVectorGradient(RegionPtr rp, const std::string &name, VectorGradientEnum::CalcType ct)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_node_model<VectorGradient<double>, VectorGradient<extended_type>>(use_extended, rp, name, ct);
+}
 
 

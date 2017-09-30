@@ -73,5 +73,17 @@ void TriangleEdgeFromEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class TriangleEdgeFromEdgeModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TriangleEdgeFromEdgeModel<float128>;
+#endif
+
+
+TriangleEdgeModelPtr CreateTriangleEdgeFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_triangle_edge_model<TriangleEdgeFromEdgeModel<double>, TriangleEdgeFromEdgeModel<extended_type>>(use_extended, edgemodel, rp);
+}
+
 
 

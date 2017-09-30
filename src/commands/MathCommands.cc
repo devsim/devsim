@@ -30,58 +30,24 @@ limitations under the License.
 #include "Validate.hh"
 #include "CheckFunctions.hh"
 #include "dsAssert.hh"
+#include "GlobalData.hh"
 #include <sstream>
 
 using namespace dsValidate;
 
 namespace dsCommand {
+
+template <typename DoubleType>
 void
-solveCmd(CommandHandler &data)
+solveCmdImpl(CommandHandler &data)
 {
   std::string errorString;
-
-  const std::string commandName = data.GetCommandName();
-
-//    GlobalData &gdata = GlobalData::GetInstance();
-
-  /// Will need someway of setting circuit node
-  /// (This would be on the contact and not the contact equation??)
-  static dsGetArgs::Option option[] =
-  {
-    {"type",               "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-    {"absolute_error",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"relative_error",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"maximum_iterations", "20", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::OPTIONAL},
-    {"frequency",    "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"output_node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
-    {"solver_type",  "direct", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
-    {"tdelta",       "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"charge_error", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"gamma",        "1.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    // empty string converts to bool for python
-    {"info", "", dsGetArgs::optionType::BOOLEAN, dsGetArgs::requiredType::OPTIONAL},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
-  };
-//      {"callback",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
-
-  dsGetArgs::switchList switches = NULL;
-
-
-  bool error = data.processOptions(option, switches, errorString);
-
-  if (error)
-  {
-      data.SetErrorResult(errorString);
-      return;
-  }
-
 //    const std::string commandName = data.GetCommandName();
-
   const std::string &type = data.GetStringOption("type");
   const std::string &solver_type = data.GetStringOption("solver_type");
 
-  const double tdelta = data.GetDoubleOption("tdelta");
-  const double gamma  = data.GetDoubleOption("gamma");
+  const DoubleType tdelta = data.GetDoubleOption("tdelta");
+  const DoubleType gamma  = data.GetDoubleOption("gamma");
 
   const bool convergence_info = data.GetBooleanOption("info");
   ObjectHolderMap_t ohm;
@@ -144,28 +110,28 @@ solveCmd(CommandHandler &data)
     }
 #endif
 
-  const double charge_error = data.GetDoubleOption("charge_error");
-  const double absolute_error = data.GetDoubleOption("absolute_error");
-  const double relative_error = data.GetDoubleOption("relative_error");
+  const DoubleType charge_error = data.GetDoubleOption("charge_error");
+  const DoubleType absolute_error = data.GetDoubleOption("absolute_error");
+  const DoubleType relative_error = data.GetDoubleOption("relative_error");
   const int    maximum_iterations = data.GetIntegerOption("maximum_iterations");
-  const double frequency = data.GetDoubleOption("frequency");
+  const DoubleType frequency = data.GetDoubleOption("frequency");
   const std::string &outputNode = data.GetStringOption("output_node");
 
-  dsMath::Newton<double> solver;
+  dsMath::Newton<DoubleType> solver;
   solver.SetAbsError(absolute_error);
   solver.SetRelError(relative_error);
   solver.SetQRelError(charge_error);
   solver.SetMaxIter(maximum_iterations);
 
-  std::unique_ptr<dsMath::LinearSolver<double>> linearSolver;
+  std::unique_ptr<dsMath::LinearSolver<DoubleType>> linearSolver;
 
   if (solver_type == "direct")
   {
-    linearSolver = std::unique_ptr<dsMath::LinearSolver<double>>(new dsMath::DirectLinearSolver<double>);
+    linearSolver = std::unique_ptr<dsMath::LinearSolver<DoubleType>>(new dsMath::DirectLinearSolver<DoubleType>);
   }
   else if (solver_type == "iterative")
   {
-    linearSolver = std::unique_ptr<dsMath::LinearSolver<double>>(new dsMath::IterativeLinearSolver<double>);
+    linearSolver = std::unique_ptr<dsMath::LinearSolver<DoubleType>>(new dsMath::IterativeLinearSolver<DoubleType>);
   }
   else
   {
@@ -184,7 +150,7 @@ solveCmd(CommandHandler &data)
 
   if (type == "dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCOnly<double>(), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCOnly<DoubleType>(), p_ohm);
   }
   else if (type == "ac")
   {
@@ -196,19 +162,19 @@ solveCmd(CommandHandler &data)
   }
   else if (type == "transient_dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TransientDC<double>(), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TransientDC<DoubleType>(), p_ohm);
   }
   else if (type == "transient_bdf1")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF1<double>(tdelta, gamma), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF1<DoubleType>(tdelta, gamma), p_ohm);
   }
   else if (type == "transient_tr")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TR<double>(tdelta, gamma), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TR<DoubleType>(tdelta, gamma), p_ohm);
   }
   else if (type == "transient_bdf2")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF2<double>(tdelta, gamma), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF2<DoubleType>(tdelta, gamma), p_ohm);
   }
 
   if (!res)
@@ -230,6 +196,66 @@ solveCmd(CommandHandler &data)
   {
     data.SetErrorResult(errorString);
     return;
+  }
+}
+
+void
+solveCmd(CommandHandler &data)
+{
+  std::string errorString;
+
+  const std::string commandName = data.GetCommandName();
+
+
+  /// Will need someway of setting circuit node
+  /// (This would be on the contact and not the contact equation??)
+  static dsGetArgs::Option option[] =
+  {
+    {"type",               "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+    {"absolute_error",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"relative_error",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"maximum_iterations", "20", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::OPTIONAL},
+    {"frequency",    "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"output_node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+    {"solver_type",  "direct", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+    {"tdelta",       "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"charge_error", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    {"gamma",        "1.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
+    // empty string converts to bool for python
+    {"info", "", dsGetArgs::optionType::BOOLEAN, dsGetArgs::requiredType::OPTIONAL},
+    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+  };
+//      {"callback",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+
+  dsGetArgs::switchList switches = NULL;
+
+
+  bool error = data.processOptions(option, switches, errorString);
+
+  if (error)
+  {
+      data.SetErrorResult(errorString);
+      return;
+  }
+
+  {
+    bool extended_solver = false;
+    GlobalData &gdata = GlobalData::GetInstance();
+    auto dbent = gdata.GetDBEntryOnGlobal("extended_solver");
+    if (dbent.first)
+    {
+      auto oh = dbent.second.GetBoolean();
+      extended_solver = (oh.first && oh.second);
+    }
+
+    if (extended_solver)
+    {
+      solveCmdImpl<extended_type>(data);
+    }
+    else
+    {
+      solveCmdImpl<double>(data);
+    }
   }
 }
 

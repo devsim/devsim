@@ -44,8 +44,11 @@ void EdgeLength<DoubleType>::calcEdgeScalarValues() const
 template <typename DoubleType>
 DoubleType EdgeLength<DoubleType>::calcEdgeLength(ConstEdgePtr ep) const
 {
-    Vector<DoubleType> vm = ep->GetNodeList()[0]->Position();
-    vm -= ep->GetNodeList()[1]->Position();
+    const auto &h0 = ep->GetNodeList()[0]->Position();
+    const auto &h1 = ep->GetNodeList()[1]->Position();
+
+    Vector<DoubleType> vm(h0.Getx(), h0.Gety(), h0.Getz());
+    vm -= Vector<DoubleType>(h1.Getx(), h1.Gety(), h1.Getz());
     const DoubleType val = vm.magnitude();
     return val;
 }
@@ -57,4 +60,8 @@ void EdgeLength<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class EdgeLength<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class EdgeLength<float128>;
+#endif
 

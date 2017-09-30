@@ -84,4 +84,8 @@ void TetrahedronNodeVolume<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class TetrahedronNodeVolume<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TetrahedronNodeVolume<float128>;
+#endif
 

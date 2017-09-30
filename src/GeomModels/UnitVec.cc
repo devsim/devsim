@@ -74,11 +74,12 @@ void UnitVec<DoubleType>::calcEdgeScalarValues() const
 template <typename DoubleType>
 Vector<DoubleType> UnitVec<DoubleType>::calcUnitVec(ConstEdgePtr ep) const
 {
-    const Vector<DoubleType> &p0 = ep->GetHead()->Position();
-    const Vector<DoubleType> &p1 = ep->GetTail()->Position();
+    const auto &h0 = ep->GetHead()->Position();
+    const auto &h1 = ep->GetTail()->Position();
 
-    Vector<DoubleType> vm = p1;
-    vm -= p0;
+
+    Vector<DoubleType> vm(h1.Getx(), h1.Gety(), h1.Getz());
+    vm -= Vector<DoubleType>(h0.Getx(), h0.Gety(), h0.Getz());
     vm /= vm.magnitude();
 
     return vm;
@@ -91,4 +92,8 @@ void UnitVec<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class UnitVec<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class UnitVec<float128>;
+#endif
 

@@ -81,4 +81,15 @@ void CylindricalEdgeNodeVolume<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class CylindricalEdgeNodeVolume<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class CylindricalEdgeNodeVolume<float128>;
+#endif
+
+EdgeModelPtr CreateCylindricalEdgeNodeVolume(RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_edge_model<CylindricalEdgeNodeVolume<double>, CylindricalEdgeNodeVolume<extended_type>>(use_extended, rp);
+}
+
 

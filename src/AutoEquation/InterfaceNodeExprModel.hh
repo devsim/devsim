@@ -25,16 +25,21 @@ namespace Eqo {
     typedef std::shared_ptr<EquationObject> EqObjPtr;
 
 }
+
+InterfaceNodeModelPtr CreateInterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
+
 // need to set general node properties, such as positive only
 template <typename DoubleType>
 class InterfaceNodeExprModel : public InterfaceNodeModel
 {
     public:
-        InterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
 
         void Serialize(std::ostream &) const;
 
+        InterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
+
     private:
+
         void calcNodeScalarValues() const;
         void RegisterModels();
 
@@ -45,3 +50,4 @@ class InterfaceNodeExprModel : public InterfaceNodeModel
 };
 
 #endif
+

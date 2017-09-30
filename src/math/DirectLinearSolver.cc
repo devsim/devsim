@@ -122,4 +122,8 @@ bool DirectLinearSolver<DoubleType>::NoiseSolveImpl(Matrix<DoubleType> &mat, Pre
 }
 
 template class dsMath::DirectLinearSolver<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class dsMath::DirectLinearSolver<float128>;
+#endif
 

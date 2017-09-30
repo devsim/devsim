@@ -26,13 +26,15 @@ namespace Eqo {
 
 }
 
+TetrahedronEdgeModelPtr CreateTetrahedronEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TetrahedronEdgeModel::DisplayType);
+
 template <typename DoubleType>
 class TetrahedronEdgeExprModel : public TetrahedronEdgeModel
 {
     public:
-        TetrahedronEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TetrahedronEdgeModel::DisplayType);
-
         void Serialize(std::ostream &) const;
+
+        TetrahedronEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TetrahedronEdgeModel::DisplayType);
 
     private:
         void RegisterModels();

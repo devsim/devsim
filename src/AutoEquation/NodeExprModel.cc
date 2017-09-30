@@ -146,9 +146,6 @@ void NodeExprModel<DoubleType>::setInitialValues()
     DefaultInitializeValues();
 }
 
-#ifndef _WIN32
-#warning "serialize extended option here"
-#endif
 template <typename DoubleType>
 void NodeExprModel<DoubleType>::Serialize(std::ostream &of) const
 {
@@ -172,4 +169,10 @@ template class NodeExprModel<double>;
 #include "Float128.hh"
 template class NodeExprModel<float128>;
 #endif
+
+NodeModelPtr CreateNodeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, NodeModel::DisplayType dt, ContactPtr cp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_node_model<NodeExprModel<double>, NodeExprModel<extended_type>>(use_extended, nm, eq, rp, dt, cp);
+}
 

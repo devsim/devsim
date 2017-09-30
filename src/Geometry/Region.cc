@@ -1448,32 +1448,28 @@ void Region::BackupSolutions(const std::string &suffix)
     NodeModelPtr bnm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(bname));
     if (!bnm)
     {
-      if (std::dynamic_pointer_cast<const NodeSolution<double>>(nm))
+      if (std::dynamic_pointer_cast<const NodeSolution<extended_type>>(nm))
       {
-        bnm = NodeSolution<double>::CreateNodeSolution(bname, this);
+        bnm = CreateNodeSolution(bname, this);
       }
-#ifdef DEVSIM_EXTENDED_PRECISION
-      else if (std::dynamic_pointer_cast<const NodeSolution<float128>>(nm))
+      else if (std::dynamic_pointer_cast<const NodeSolution<double>>(nm))
       {
-        bnm = NodeSolution<float128>::CreateNodeSolution(bname, this);
+        bnm = CreateNodeSolution(bname, this);
       }
-#endif
       else
       {
         dsAssert(false, std::string("Node Model: \"") + *it + "\" is not a Node Solution" );
       }
     }
 
-    if (std::dynamic_pointer_cast<NodeSolution<double>>(bnm))
+    if (std::dynamic_pointer_cast<NodeSolution<extended_type>>(bnm))
+    {
+      bnm->SetValues(nm->GetScalarValues<extended_type>());
+    }
+    else if (std::dynamic_pointer_cast<NodeSolution<double>>(bnm))
     {
       bnm->SetValues(nm->GetScalarValues<double>());
     }
-#ifdef DEVSIM_EXTENDED_PRECISION
-    else if (std::dynamic_pointer_cast<NodeSolution<float128>>(bnm))
-    {
-      bnm->SetValues(nm->GetScalarValues<float128>());
-    }
-#endif
   }
 }
 
@@ -1800,6 +1796,35 @@ ConstTetrahedronPtr Region::FindTetrahedron(ConstNodePtr n0, ConstNodePtr n1, Co
 
   return ret;
 }
+
+bool Region::UseExtendedPrecisionType(const std::string &t) const
+{
+  bool ret = false;
+#ifdef DEVSIM_EXTENDED_PRECISION
+  const GlobalData &ginst = GlobalData::GetInstance();
+  GlobalData::DBEntry_t dbent = ginst.GetDBEntryOnRegion(this, t);
+  if (dbent.first)
+  {
+    const auto &x = dbent.second.GetBoolean();
+    if (x.first)
+    {
+      ret = x.second;
+    }
+  }
+#endif
+  return ret;
+}
+
+bool Region::UseExtendedPrecisionModels() const
+{
+  return UseExtendedPrecisionType("extended_model");
+}
+
+bool Region::UseExtendedPrecisionEquations() const
+{
+  return UseExtendedPrecisionType("extended_equation");
+}
+
 
 #define DBLTYPE double
 #include "RegionInstantiate.cc"

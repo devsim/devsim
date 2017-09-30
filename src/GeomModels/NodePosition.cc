@@ -30,10 +30,10 @@ template <typename DoubleType>
 NodePosition<DoubleType>::NodePosition(RegionPtr rp)
     : NodeModel("x", rp, NodeModel::DisplayType::SCALAR)
 {
-  yposition = NodeSolution<DoubleType>::CreateNodeSolution("y", rp, this->GetSelfPtr());
-  zposition = NodeSolution<DoubleType>::CreateNodeSolution("z", rp, this->GetSelfPtr());
-  node_index = NodeSolution<DoubleType>::CreateNodeSolution("node_index", rp, this->GetSelfPtr());
-  coordinate_index = NodeSolution<DoubleType>::CreateNodeSolution("coordinate_index", rp, this->GetSelfPtr());
+  yposition = CreateNodeSolution("y", rp, this->GetSelfPtr());
+  zposition = CreateNodeSolution("z", rp, this->GetSelfPtr());
+  node_index = CreateNodeSolution("node_index", rp, this->GetSelfPtr());
+  coordinate_index = CreateNodeSolution("coordinate_index", rp, this->GetSelfPtr());
 }
 
 template <typename DoubleType>
@@ -47,7 +47,7 @@ void NodePosition<DoubleType>::calcNodeScalarValues() const
     std::vector<DoubleType> ci(nl.size());
     for (size_t i = 0; i < nx.size(); ++i)
     {
-        const Vector<DoubleType> &pos = nl[i]->Position();
+        const auto &pos = nl[i]->Position();
         nx[i] = pos.Getx();
         ny[i] = pos.Gety();
         nz[i] = pos.Getz();
@@ -74,4 +74,8 @@ void NodePosition<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class NodePosition<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class NodePosition<float128>;
+#endif
 

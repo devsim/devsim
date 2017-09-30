@@ -19,21 +19,23 @@ limitations under the License.
 #define NODESOLUTION_HH
 #include "NodeModel.hh"
 #include <string>
-// need to set general node propeties, such as positive only
+
+NodeModelPtr CreateNodeSolution(const std::string &, RegionPtr);
+NodeModelPtr CreateNodeSolution(const std::string &, RegionPtr, NodeModelPtr);
+
 template <typename DoubleType>
 class NodeSolution : public NodeModel
 {
     public:
+
+        void Serialize(std::ostream &) const;
+
         NodeSolution(const std::string &, RegionPtr);
         // This model depends on this model to calculate values
         NodeSolution(const std::string &, RegionPtr, NodeModelPtr);
 
-        static NodeModelPtr CreateNodeSolution(const std::string &, RegionPtr);
-        static NodeModelPtr CreateNodeSolution(const std::string &, RegionPtr, NodeModelPtr);
-
-        void Serialize(std::ostream &) const;
-
     private:
+
         void calcNodeScalarValues() const;
         void setInitialValues();
         // If we are an auxilary model, create our values from the parent

@@ -46,14 +46,14 @@ SurfaceArea<DoubleType>::SurfaceArea(RegionPtr rp)
     RegisterCallback("unitx");
     RegisterCallback("unity");
 
-    nsurf_x = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
-    nsurf_y = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
+    nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
+    nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
   }
   else if (dimension == 3)
   {
-    nsurf_x = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
-    nsurf_y = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
-    nsurf_z = NodeSolution<DoubleType>::CreateNodeSolution("NSurfaceNormal_z", rp, this->GetSelfPtr());
+    nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
+    nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
+    nsurf_z = CreateNodeSolution("NSurfaceNormal_z", rp, this->GetSelfPtr());
   }
   RegisterCallback("@@@InterfaceChange");
   RegisterCallback("@@@ContactChange");
@@ -453,18 +453,23 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
 
     const Vector<DoubleType> &triangleCenter = triangleCenters[ti];
 
-    const Vector<DoubleType> &np0 = nodeList[0]->Position();
-    const Vector<DoubleType> &np1 = nodeList[1]->Position();
-    const Vector<DoubleType> &np2 = nodeList[2]->Position();
+    const auto &h0 = nodeList[0]->Position();
+    const auto &h1 = nodeList[1]->Position();
+    const auto &h2 = nodeList[2]->Position();
+
+    const Vector<DoubleType> np0(h0.Getx(), h0.Gety(), h0.Getz());
+    const Vector<DoubleType> np1(h1.Getx(), h1.Gety(), h1.Getz());
+    const Vector<DoubleType> np2(h2.Getx(), h2.Gety(), h2.Getz());
 
     //// vector from triangle center to edge node
     //// vector between edge nodes
     //// area is 0.5 * base * height
     //// area split between both nodes
+    const static DoubleType quarter = 0.25;
 
     const Vector<DoubleType> &v01   = np0 - np1;
     const Vector<DoubleType> &vc01  = np0 - triangleCenter;
-    const Vector<DoubleType> &vec01 = 0.25 * cross_prod(v01, vc01);
+    const Vector<DoubleType> &vec01 = quarter * cross_prod(v01, vc01);
     const DoubleType  vol01 = magnitude(vec01);
 
     ProcessAreaAndNormal(ni0, nv, nvx, nvy, nvz, vec01, vol01);
@@ -472,7 +477,7 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
 
     const Vector<DoubleType> &v02   = np0 - np2;
     const Vector<DoubleType> &vc02  = np0 - triangleCenter;
-    const Vector<DoubleType> &vec02 = 0.25 * cross_prod(v02, vc02);
+    const Vector<DoubleType> &vec02 = quarter * cross_prod(v02, vc02);
     const DoubleType  vol02 = magnitude(vec02);
 
     ProcessAreaAndNormal(ni0, nv, nvx, nvy, nvz, vec02, vol02);
@@ -480,7 +485,7 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
 
     const Vector<DoubleType> &v12   = np1 - np2;
     const Vector<DoubleType> &vc12  = np1 - triangleCenter;
-    const Vector<DoubleType> &vec12 = 0.25 * cross_prod(v12, vc12);
+    const Vector<DoubleType> &vec12 = quarter * cross_prod(v12, vc12);
     const DoubleType  vol12 = magnitude(vec12);
 
     ProcessAreaAndNormal(ni1, nv, nvx, nvy, nvz, vec12, vol12);
@@ -542,4 +547,8 @@ void SurfaceArea<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class SurfaceArea<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class SurfaceArea<float128>;
+#endif
 

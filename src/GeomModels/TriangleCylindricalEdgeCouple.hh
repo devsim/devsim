@@ -23,15 +23,20 @@ limitations under the License.
 template <typename T>
 class Vector;
 
+
+TriangleEdgeModelPtr CreateTriangleCylindricalEdgeCouple(RegionPtr);
+
 // Coupling length
 template <typename DoubleType>
 class TriangleCylindricalEdgeCouple : public TriangleEdgeModel {
     public:
-        TriangleCylindricalEdgeCouple(RegionPtr);
 
         void Serialize(std::ostream &) const;
 
+        TriangleCylindricalEdgeCouple(RegionPtr);
+
     private:
+
         TriangleCylindricalEdgeCouple();
         TriangleCylindricalEdgeCouple(const TriangleCylindricalEdgeCouple &);
         TriangleCylindricalEdgeCouple &operator=(const TriangleCylindricalEdgeCouple &);
@@ -39,3 +44,4 @@ class TriangleCylindricalEdgeCouple : public TriangleEdgeModel {
         void calcTriangleEdgeScalarValues() const;
 };
 #endif
+

@@ -53,20 +53,6 @@ NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, Node
 }
 
 template <typename DoubleType>
-NodeModelPtr NodeSolution<DoubleType>::CreateNodeSolution(const std::string &nm, RegionPtr rp)
-{
-  NodeModel *p = new NodeSolution(nm, rp);
-  return p->GetSelfPtr();
-}
-
-template <typename DoubleType>
-NodeModelPtr NodeSolution<DoubleType>::CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp)
-{
-  NodeModel *p = new NodeSolution(nm, rp, nmp);
-  return p->GetSelfPtr();
-}
-
-template <typename DoubleType>
 void NodeSolution<DoubleType>::calcNodeScalarValues() const
 {
     if (!parentModelName.empty())
@@ -125,4 +111,15 @@ template class NodeSolution<double>;
 #include "Float128.hh"
 template class NodeSolution<float128>;
 #endif
+
+NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp)
+{
+  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp);
+}
+
+NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp)
+{
+  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, nmp);
+}
+
 

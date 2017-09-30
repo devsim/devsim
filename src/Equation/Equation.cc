@@ -309,13 +309,13 @@ void Equation<DoubleType>::DefaultACUpdate(NodeModel &nm, const std::vector<std:
     if (!rnm)
     {
         dsErrors::CreateModelOnRegion(*myregion, realnodemodel, OutputStream::OutputType::INFO);
-        rnm = NodeSolution<DoubleType>::CreateNodeSolution(realnodemodel, myregion);
+        rnm = CreateNodeSolution(realnodemodel, myregion);
     }
 
     if (!inm)
     {
         dsErrors::CreateModelOnRegion(*myregion, imagnodemodel, OutputStream::OutputType::INFO);
-        inm = NodeSolution<DoubleType>::CreateNodeSolution(imagnodemodel, myregion);
+        inm = CreateNodeSolution(imagnodemodel, myregion);
     }
 
     NodeScalarList<DoubleType> realout(nl.size());
@@ -359,13 +359,13 @@ void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, con
     if (!rnm)
     {
         dsErrors::CreateModelOnRegion(*myregion, realnodemodel, OutputStream::OutputType::INFO);
-        rnm = NodeSolution<DoubleType>::CreateNodeSolution(realnodemodel, myregion);
+        rnm = CreateNodeSolution(realnodemodel, myregion);
     }
 
     if (!inm)
     {
         dsErrors::CreateModelOnRegion(*myregion, imagnodemodel, OutputStream::OutputType::INFO);
-        inm = NodeSolution<DoubleType>::CreateNodeSolution(imagnodemodel, myregion);
+        inm = CreateNodeSolution(imagnodemodel, myregion);
     }
 
     NodeScalarList<DoubleType> realout(nl.size());
@@ -393,11 +393,11 @@ void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, con
     const std::string xiname = imagnodemodel + "_gradx";
     if (!myregion->GetNodeModel(xrname))
     {
-      new VectorGradient<DoubleType>(myregion, realnodemodel, VectorGradientEnum::AVOIDZERO);
+      CreateVectorGradient(myregion, realnodemodel, VectorGradientEnum::AVOIDZERO);
     }
     if (!myregion->GetNodeModel(xiname))
     {
-      new VectorGradient<DoubleType>(myregion, imagnodemodel, VectorGradientEnum::AVOIDZERO);
+      CreateVectorGradient(myregion, imagnodemodel, VectorGradientEnum::AVOIDZERO);
     }
 }
 
@@ -1257,9 +1257,6 @@ void Equation<DoubleType>::GetCommandOptions(std::map<std::string, ObjectHolder>
   this->GetCommandOptions_Impl(omap);
 }
 
-#ifndef _WIN32
-#warning "Decide how to handle precision"
-#endif
 template class Equation<double>;
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"

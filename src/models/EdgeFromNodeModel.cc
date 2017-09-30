@@ -103,4 +103,14 @@ void EdgeFromNodeModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class EdgeFromNodeModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class EdgeFromNodeModel<float128>;
+#endif
+
+EdgeModelPtr CreateEdgeFromNodeModel(const std::string &edgemodel0, const std::string &edgemodel1, const std::string &nodemodel, const RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_edge_model<EdgeFromNodeModel<double>, EdgeFromNodeModel<extended_type>>(use_extended, edgemodel0, edgemodel1, nodemodel, rp);
+}
 

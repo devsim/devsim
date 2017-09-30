@@ -18,9 +18,19 @@ limitations under the License.
 #ifndef TRIANGLE_EDGE_FROM_EDGE_MODEL_DERIVATIVE_HH
 #define TRIANGLE_EDGE_FROM_EDGE_MODEL_DERIVATIVE_HH
 #include "TriangleEdgeModel.hh"
+
+TriangleEdgeModelPtr CreateTriangleEdgeFromEdgeModelDerivative(
+  const std::string &/*edgemodel*/,
+  const std::string &/*nodemodel*/,
+  RegionPtr /*rp*/
+);
+
 template <typename DoubleType>
 class TriangleEdgeFromEdgeModelDerivative : public TriangleEdgeModel {
     public:
+
+        void Serialize(std::ostream &) const;
+
         //// Out naming convention is that the name given is the edge model
         //// The element edge model is edgemodel_ex, edgemodel_ey
         TriangleEdgeFromEdgeModelDerivative(
@@ -29,9 +39,8 @@ class TriangleEdgeFromEdgeModelDerivative : public TriangleEdgeModel {
           RegionPtr /*rp*/
         );
 
-        void Serialize(std::ostream &) const;
-
     private:
+
         void calcTriangleEdgeScalarValues() const;
 
         const std::string edgeModelName;

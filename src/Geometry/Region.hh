@@ -21,6 +21,9 @@ limitations under the License.
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
+typedef float128 extended_type;
+#else
+typedef double extended_type;
 #endif
 
 #include <memory>
@@ -403,7 +406,8 @@ class Region
     template <typename DoubleType>
     void SetModelExprDataCache(ModelExprDataCachePtr<DoubleType>);
 
-
+    bool UseExtendedPrecisionModels() const;
+    bool UseExtendedPrecisionEquations() const;
    private:
       Region();
       Region (const Region &);
@@ -427,6 +431,8 @@ class Region
       void CreateTriangleToTetrahedronList();
       void SetTriangleCenters();
       void SetTetrahedronCenters();
+
+      bool UseExtendedPrecisionType(const std::string &t) const;
 
       template <typename DoubleType>
       struct GeometryField
