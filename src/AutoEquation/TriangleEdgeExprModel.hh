@@ -26,15 +26,19 @@ namespace Eqo {
 
 }
 
+TriangleEdgeModelPtr CreateTriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TriangleEdgeModel::DisplayType);
+
 template <typename DoubleType>
 class TriangleEdgeExprModel : public TriangleEdgeModel
 {
     public:
-        TriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TriangleEdgeModel::DisplayType);
 
         void Serialize(std::ostream &) const;
 
+        TriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TriangleEdgeModel::DisplayType);
+
     private:
+
         void RegisterModels();
         TriangleEdgeExprModel();
         TriangleEdgeExprModel(const TriangleEdgeExprModel &);

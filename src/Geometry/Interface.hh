@@ -163,9 +163,13 @@ class Interface {
         template <typename DoubleType>
         void SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<DoubleType>);
 
+        bool UseExtendedPrecisionModels() const;
+        bool UseExtendedPrecisionEquations() const;
+
     private:
         void FindEdges() const;
         void FindTriangles() const;
+        bool UseExtendedPrecisionType(const std::string &) const;
 
         Interface();
         Interface(const Interface &);

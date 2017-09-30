@@ -109,24 +109,6 @@ inline void getrs( char *trans, int *n, int *nrhs, float128 *a, int *lda, int *i
 }
 
 #if 0
-inline void getrf( int *m, int *n, float128complex *a, int *lda, int *ipiv, int *info )
-{
-#ifndef _WIN32
-#warning "IMPLEMENT!!!!"
-#endif
-*info = 1;
-}
-
-inline void getrs( char *trans, int *n, int *nrhs, float128complex *a, int *lda, int *ipiv, float128complex *b, int *ldb, int *info)
-{
-#ifndef _WIN32
-#warning "IMPLEMENT!!!!"
-#endif
-*info = 1;
-}
-#endif
-
-#if 0
 void drotg(float128 *a, double *b, double *c, double *d);
 
 void zrotg(std::complex<float128> *a, std::complex<double> *b, std::complex<double> *c, std::complex<double> *d);

@@ -26,13 +26,15 @@ namespace Eqo {
 
 }
 
+EdgeModelPtr CreateEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, EdgeModel::DisplayType, ContactPtr);
+
 template <typename DoubleType>
 class EdgeExprModel : public EdgeModel
 {
     public:
-        EdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, EdgeModel::DisplayType, ContactPtr cp = NULL);
-
         void Serialize(std::ostream &) const;
+
+        EdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, EdgeModel::DisplayType, ContactPtr cp = NULL);
 
     private:
         void RegisterModels();

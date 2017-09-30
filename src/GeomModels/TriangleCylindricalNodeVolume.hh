@@ -25,15 +25,19 @@ class Triangle;
 typedef Triangle *TrianglePtr;
 typedef const Triangle *ConstTrianglePtr;
 
+TriangleEdgeModelPtr CreateTriangleCylindricalNodeVolume(RegionPtr);
+
 template <typename DoubleType>
 class TriangleCylindricalNodeVolume : public TriangleEdgeModel
 {
     public:
-        TriangleCylindricalNodeVolume(RegionPtr);
 
         void Serialize(std::ostream &) const;
 
+        TriangleCylindricalNodeVolume(RegionPtr);
+
     private:
+
         TriangleCylindricalNodeVolume();
         TriangleCylindricalNodeVolume(const TriangleCylindricalNodeVolume &);
         TriangleCylindricalNodeVolume &operator=(const TriangleCylindricalNodeVolume &);

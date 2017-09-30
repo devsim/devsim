@@ -60,8 +60,10 @@ void TetrahedronEdgeCouple<DoubleType>::calcTetrahedronEdgeCouple() const
   for (size_t i = 0; i < edgeList.size(); ++i)
   { 
       const Edge &edge = *(edgeList[i]);
-      Vector<DoubleType> edgeCenter = edge.GetHead()->Position();
-      edgeCenter += edge.GetTail()->Position();
+      const auto &h0 = edge.GetHead()->Position();
+      const auto &h1 = edge.GetTail()->Position();
+      Vector<DoubleType> edgeCenter(h0.Getx(), h0.Gety(), h0.Getz());
+      edgeCenter += Vector<DoubleType>(h1.Getx(), h1.Gety(), h1.Getz());
       edgeCenter *= 0.5;
       edgeCenters[i] = edgeCenter;
   }
@@ -113,4 +115,8 @@ void TetrahedronEdgeCouple<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class TetrahedronEdgeCouple<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TetrahedronEdgeCouple<float128>;
+#endif
 

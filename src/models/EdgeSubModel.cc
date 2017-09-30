@@ -113,4 +113,8 @@ void EdgeSubModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class EdgeSubModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class EdgeSubModel<float128>;
+#endif
 

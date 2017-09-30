@@ -80,5 +80,9 @@ void AtContactNode<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class AtContactNode<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class AtContactNode<float128>;
+#endif
 
 

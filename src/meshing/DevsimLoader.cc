@@ -735,7 +735,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         if (model_type == Solution::ModelType::NODE)
         {
           //// This creates a uniform model with value 0.0
-          NodeModelPtr nodesol = NodeSolution<double>::CreateNodeSolution(sname, rp);
+          NodeModelPtr nodesol = CreateNodeSolution(sname, rp);
           if (data_type == Solution::DataType::UNIFORM)
           {
             nodesol->SetValues<double>(sol.GetUniformValue());
@@ -887,7 +887,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
 //      Solution::ModelType  model_type = sol.GetModelType();
 //      Solution::DataType   data_type  = sol.GetDataType();
       //// TODO: need to assert it was successful
-      dsHelper::ret_pair rval = dsHelper::CreateInterfaceNodeExprModel<double>(sname, "0;", ip);
+      dsHelper::ret_pair rval = dsHelper::CreateInterfaceNodeExprModel(sname, "0;", ip);
       if (!rval.first)
       {
         std::ostringstream os;

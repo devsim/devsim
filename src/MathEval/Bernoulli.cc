@@ -23,9 +23,6 @@ using std::abs;
 //#include <values.h>
 #include <limits>
 
-#ifndef _WIN32
-#warning "Extended Precision Version"
-#endif
 const double lnmax = log(std::numeric_limits<double>().max());
 
 #if 1

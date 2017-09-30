@@ -74,4 +74,14 @@ void CylindricalEdgeCouple<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class CylindricalEdgeCouple<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class CylindricalEdgeCouple<float128>;
+#endif
+
+EdgeModelPtr CreateCylindricalEdgeCouple(RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_edge_model<CylindricalEdgeCouple<double>, CylindricalEdgeCouple<extended_type>>(use_extended, rp);
+}
 

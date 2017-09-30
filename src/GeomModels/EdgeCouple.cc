@@ -85,4 +85,9 @@ void EdgeCouple<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class EdgeCouple<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class EdgeCouple<float128>;
+#endif
+
 

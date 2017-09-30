@@ -114,4 +114,8 @@ void TriangleEdgeSubModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class TriangleEdgeSubModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TriangleEdgeSubModel<float128>;
+#endif
 

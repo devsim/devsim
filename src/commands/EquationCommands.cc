@@ -135,7 +135,14 @@ createEquationCmd(CommandHandler &data)
       return;
     }
 
-    new ExprEquation<double>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_model, time_node_model, updateType);
+    if (reg->UseExtendedPrecisionEquations())
+    {
+      new ExprEquation<extended_type>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_model, time_node_model, updateType);
+    }
+    else
+    {
+      new ExprEquation<double>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_model, time_node_model, updateType);
+    }
     data.SetEmptyResult();
 }
 
@@ -332,7 +339,14 @@ createInterfaceEquationCmd(CommandHandler &data)
       return;
     }
 
-    new InterfaceExprEquation<double>(name, interface, variable_name, interface_model, et);
+    if (interface->UseExtendedPrecisionEquations())
+    {
+      new InterfaceExprEquation<extended_type>(name, interface, variable_name, interface_model, et);
+    }
+    else
+    {
+      new InterfaceExprEquation<double>(name, interface, variable_name, interface_model, et);
+    }
     data.SetEmptyResult();
 }
 
@@ -522,11 +536,23 @@ createContactEquationCmd(CommandHandler &data)
       return;
     }
 
-    ContactEquation<double> *ce = new ExprContactEquation<double>(name, variable_name, contact, region,
-        node_model, edge_model, element_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
-    if (!circuit_node.empty())
+    if (region->UseExtendedPrecisionEquations())
     {
-        ce->SetCircuitNode(circuit_node);
+      ContactEquation<extended_type> *ce = new ExprContactEquation<extended_type>(name, variable_name, contact, region,
+          node_model, edge_model, element_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
+      if (!circuit_node.empty())
+      {
+          ce->SetCircuitNode(circuit_node);
+      }
+    }
+    else
+    {
+      ContactEquation<double> *ce = new ExprContactEquation<double>(name, variable_name, contact, region,
+          node_model, edge_model, element_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
+      if (!circuit_node.empty())
+      {
+          ce->SetCircuitNode(circuit_node);
+      }
     }
     data.SetEmptyResult();
 }

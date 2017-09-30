@@ -96,7 +96,7 @@ void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const {
   for (size_t i = 0; i < el.size(); ++i)
   {
     const Edge &edge = *el[i];
-    edgecenters[i] = 0.5 * (edge.GetHead()->GetCoordinate().Position() + edge.GetTail()->GetCoordinate().Position());
+    edgecenters[i] = static_cast<DoubleType>(0.5) * (ConvertVector<DoubleType>(edge.GetHead()->GetCoordinate().Position()) + ConvertVector<DoubleType>(edge.GetTail()->GetCoordinate().Position()));
   }
 
   ConstNodeModelPtr nx;
@@ -139,7 +139,7 @@ void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const {
   for (Interface::ConstNodeList_t::const_iterator it = cnl.begin(); it != cnl.end(); ++it)
   {
     const Node   &node   = **it;
-    const Vector<DoubleType> &inp    = node.GetCoordinate().Position();
+    const Vector<DoubleType> &inp = ConvertVector<DoubleType>(node.GetCoordinate().Position());
   
     const size_t node_index = node.GetIndex();
 
@@ -211,4 +211,14 @@ void InterfaceNormal<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class InterfaceNormal<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class InterfaceNormal<float128>;
+#endif
+
+EdgeModelPtr CreateInterfaceNormal(const std::string &iname, const std::string &idistname, const std::string &normx, const std::string &normy, const std::string &normz, RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_edge_model<InterfaceNormal<double>, InterfaceNormal<extended_type>>(use_extended, iname, idistname, normx, normy, normz, rp);
+}
 

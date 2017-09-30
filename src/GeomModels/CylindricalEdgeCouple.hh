@@ -18,6 +18,9 @@ limitations under the License.
 #ifndef CYLINDRICALEDGECOUPLE_HH
 #define CYLINDRICALEDGECOUPLE_HH
 #include "EdgeModel.hh"
+
+EdgeModelPtr CreateCylindricalEdgeCouple(RegionPtr);
+
 // Coupling length
 template <typename DoubleType>
 class CylindricalEdgeCouple : public EdgeModel {
@@ -35,3 +38,4 @@ class CylindricalEdgeCouple : public EdgeModel {
         void calcEdgeScalarValues() const;
 };
 #endif
+

@@ -18,6 +18,7 @@ limitations under the License.
 #ifndef TRIANGLE_EDGE_FROM_EDGE_MODEL_HH
 #define TRIANGLE_EDGE_FROM_EDGE_MODEL_HH
 #include "TriangleEdgeModel.hh"
+TriangleEdgeModelPtr CreateTriangleEdgeFromEdgeModel(const std::string &, RegionPtr);
 
 template <typename DoubleType>
 class TriangleEdgeFromEdgeModel : public TriangleEdgeModel {
@@ -29,6 +30,7 @@ class TriangleEdgeFromEdgeModel : public TriangleEdgeModel {
         void Serialize(std::ostream &) const;
 
     private:
+
         void calcTriangleEdgeScalarValues() const;
 
         // Detect whether parent model still exists

@@ -19,15 +19,19 @@ limitations under the License.
 #define CYLINDRICALEDGENODEVOLUME_HH
 #include "EdgeModel.hh"
 
+EdgeModelPtr CreateCylindricalEdgeNodeVolume(RegionPtr);
+
 template <typename DoubleType>
 class CylindricalEdgeNodeVolume : public EdgeModel
 {
     public:
-      CylindricalEdgeNodeVolume(RegionPtr);
 
       void Serialize(std::ostream &) const;
 
+      CylindricalEdgeNodeVolume(RegionPtr);
+
     private:
+
       void calcEdgeScalarValues() const;
 
       WeakEdgeModelPtr node1Volume_;

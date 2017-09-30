@@ -97,4 +97,15 @@ void CylindricalNodeVolume<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class CylindricalNodeVolume<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class CylindricalNodeVolume<float128>;
+#endif
+
+NodeModelPtr CreateCylindricalNodeVolume(RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_node_model<CylindricalNodeVolume<double>, CylindricalNodeVolume<extended_type>>(use_extended, rp);
+}
+
 

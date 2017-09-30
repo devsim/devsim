@@ -129,7 +129,7 @@ struct Geometric {
   template <typename DoubleType>
   DoubleType operator()(DoubleType x, DoubleType y) const
   {
-    return std::sqrt(x*y);
+    return sqrt(x*y);
   }
 
   //// more efficient would be using the non-derivative model and scaling
@@ -271,7 +271,8 @@ void AverageEdgeModel<DoubleType>::doMath(ConstNodeModelPtr nmp, ConstNodeModelP
       const Edge &edge = *edgeList[i];
       const size_t ni0 = edge.GetHead()->GetIndex();
       const size_t ni1 = edge.GetTail()->GetIndex();
-      const std::pair<DoubleType, DoubleType> &out = eval(nlist[ni0], 1.0, nlist[ni1], 1.0);
+      static const DoubleType one(1.0);
+      const std::pair<DoubleType, DoubleType> &out = eval(nlist[ni0], one, nlist[ni1], one);
       elist0[i] = out.first;
       elist1[i] = out.second;
     }
@@ -374,9 +375,6 @@ AverageEdgeModelEnum::AverageType_t AverageEdgeModelEnum::GetTypeName(const std:
   return ret;
 }
 
-#ifndef _WIN32
-#warning "serialize extended option here"
-#endif
 template <typename DoubleType>
 void AverageEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 {
@@ -390,4 +388,22 @@ void AverageEdgeModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class AverageEdgeModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class AverageEdgeModel<float128>;
+#endif
+
+EdgeModelPtr CreateAverageEdgeModel(const std::string &edgemodel, const std::string &nodemodel, AverageEdgeModelEnum::AverageType_t averagetype, RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_edge_model<AverageEdgeModel<double>, AverageEdgeModel<extended_type>>(use_extended, edgemodel, nodemodel, averagetype, rp);
+}
+
+EdgeModelPtr CreateAverageEdgeModel(const std::string &edgemodel, const std::string &nodemodel, const std::string &var, AverageEdgeModelEnum::AverageType_t averagetype, RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_edge_model<AverageEdgeModel<double>, AverageEdgeModel<extended_type>>(use_extended, edgemodel, nodemodel, var, averagetype, rp);
+}
+
+
 

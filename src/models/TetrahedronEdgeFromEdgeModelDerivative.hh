@@ -18,9 +18,19 @@ limitations under the License.
 #ifndef TETRAHEDRON_EDGE_FROM_EDGE_MODEL_DERIVATIVE_HH
 #define TETRAHEDRON_EDGE_FROM_EDGE_MODEL_DERIVATIVE_HH
 #include "TetrahedronEdgeModel.hh"
+
+TetrahedronEdgeModelPtr CreateTetrahedronEdgeFromEdgeModelDerivative(
+  const std::string &/*edgemodel*/,
+  const std::string &/*nodemodel*/,
+  RegionPtr /*rp*/
+);
+
 template <typename DoubleType>
 class TetrahedronEdgeFromEdgeModelDerivative : public TetrahedronEdgeModel {
     public:
+
+        void Serialize(std::ostream &) const;
+
         //// Out naming convention is that the name given is the edge model
         //// The element edge model is edgemodel_ex, edgemodel_ey
         TetrahedronEdgeFromEdgeModelDerivative(
@@ -28,8 +38,6 @@ class TetrahedronEdgeFromEdgeModelDerivative : public TetrahedronEdgeModel {
           const std::string &/*nodemodel*/,
           RegionPtr /*rp*/
         );
-
-        void Serialize(std::ostream &) const;
 
     private:
         void calcTetrahedronEdgeScalarValues() const;
@@ -54,3 +62,4 @@ class TetrahedronEdgeFromEdgeModelDerivative : public TetrahedronEdgeModel {
         std::string z_ModelName3;
 };
 #endif
+

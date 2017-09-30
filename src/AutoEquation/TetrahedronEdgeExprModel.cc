@@ -142,9 +142,6 @@ void TetrahedronEdgeExprModel<DoubleType>::calcTetrahedronEdgeScalarValues() con
         
 }
 
-#ifndef _WIN32
-#warning "serialize extended option here"
-#endif
 template <typename DoubleType>
 void TetrahedronEdgeExprModel<DoubleType>::Serialize(std::ostream &of) const
 {
@@ -156,4 +153,10 @@ template class TetrahedronEdgeExprModel<double>;
 #include "Float128.hh"
 template class TetrahedronEdgeExprModel<float128>;
 #endif
+
+TetrahedronEdgeModelPtr CreateTetrahedronEdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_tetrahedron_edge_model<TetrahedronEdgeExprModel<double>, TetrahedronEdgeExprModel<extended_type>>(use_extended, nm, eq, rp, dt);
+}
 

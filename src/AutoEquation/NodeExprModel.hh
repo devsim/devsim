@@ -26,14 +26,19 @@ namespace Eqo {
 
 }
 
+NodeModelPtr CreateNodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, NodeModel::DisplayType, ContactPtr cp);
+
 template <typename DoubleType>
 class NodeExprModel : public NodeModel
 {
     public:
-        NodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, NodeModel::DisplayType, ContactPtr cp = NULL);
 
         void Serialize(std::ostream &) const;
+
+        NodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, NodeModel::DisplayType, ContactPtr cp = NULL);
+
     private:
+
         void RegisterModels();
         NodeExprModel();
         NodeExprModel(const NodeExprModel &);
@@ -44,3 +49,4 @@ class NodeExprModel : public NodeModel
 };
 
 #endif
+

@@ -112,4 +112,8 @@ void NodeVolume<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class NodeVolume<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class NodeVolume<float128>;
+#endif
 

@@ -61,8 +61,6 @@ size_t threadBaseClass::getThreadId()
 
 void threadBaseClass::start()
 {
-//#warning "fix all these up so they check errors
-
 #if 0
   Tcl_ThreadId testid;
   Tcl_CreateThread(&testid, testfoo, (ClientData) NULL, TCL_THREAD_STACK_DEFAULT, TCL_THREAD_NOFLAGS);

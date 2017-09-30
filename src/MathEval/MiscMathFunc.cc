@@ -16,24 +16,31 @@ limitations under the License.
 ***/
 
 #include "MiscMathFunc.hh"
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
 #include <cmath>
 
 template <typename DoubleType>
 DoubleType derfdx(DoubleType x)
 {
-#ifndef _WIN32
-#warning "Use proper literal"
+#ifdef DEVSIM_EXTENDED_PRECISION
+  static const DoubleType two_div_root_pi = 2.0*boost::math::constants::one_div_root_pi<DoubleType>();
+#else
+  static const DoubleType two_div_root_pi = M_2_SQRTPI;
 #endif
-    return M_2_SQRTPI*exp(-x*x);
+  return two_div_root_pi*exp(-x*x);
 }
 
 template <typename DoubleType>
 DoubleType derfcdx(DoubleType x)
 {
-#ifndef _WIN32
-#warning "Use proper literal"
+#ifdef DEVSIM_EXTENDED_PRECISION
+  static const DoubleType mtwo_div_root_pi = -2.0*boost::math::constants::one_div_root_pi<DoubleType>();
+#else
+  static const DoubleType mtwo_div_root_pi = -M_2_SQRTPI;
 #endif
-    return -M_2_SQRTPI*exp(-x*x);
+  return mtwo_div_root_pi*exp(-x*x);
 }
 
 template <typename DoubleType>

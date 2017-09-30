@@ -1,0 +1,16 @@
+document how default models are created
+also:
+
+linearsolver
+equation
+
+permutations for contact, interface, regions
+
+POINTS:
+
+defaultmodels are extendedprecision
+
+complete, but test:
+extended_models
+extended_equations
+extended_solvers

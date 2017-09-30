@@ -18,16 +18,19 @@ limitations under the License.
 #ifndef CYLINDRICALNODEVOLUME_HH
 #define CYLINDRICALNODEVOLUME_HH
 #include "NodeModel.hh"
+NodeModelPtr CreateCylindricalNodeVolume(RegionPtr);
 
 template <typename DoubleType>
 class CylindricalNodeVolume : public NodeModel
 {
     public:
-      CylindricalNodeVolume(RegionPtr);
 
       void Serialize(std::ostream &) const;
 
+      CylindricalNodeVolume(RegionPtr);
+
     private:
+
       void calcNodeScalarValues() const;
       void setInitialValues();
 };

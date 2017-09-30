@@ -474,6 +474,42 @@ void Interface::AddTriangles(const ConstTriangleList &tlist0, const ConstTriangl
   rp1->SignalCallbacks("@@@InterfaceChange");
 }
 
+bool Interface::UseExtendedPrecisionType(const std::string &t) const
+{
+  bool ret = false;
+#ifdef DEVSIM_EXTENDED_PRECISION
+  const GlobalData &ginst = GlobalData::GetInstance();
+  GlobalData::DBEntry_t dbent0 = ginst.GetDBEntryOnRegion(GetRegion0(), t);
+  GlobalData::DBEntry_t dbent1 = ginst.GetDBEntryOnRegion(GetRegion1(), t);
+  if (dbent0.first)
+  {
+    const auto &x = dbent0.second.GetBoolean();
+    if (x.first)
+    {
+      ret = x.second;
+    }
+  }
+  if (dbent1.first)
+  {
+    const auto &x = dbent1.second.GetBoolean();
+    if (x.first)
+    {
+      ret = ret || x.second;
+    }
+  }
+#endif
+  return ret;
+}
+
+bool Interface::UseExtendedPrecisionModels() const
+{
+  return UseExtendedPrecisionType("extended_model");
+}
+
+bool Interface::UseExtendedPrecisionEquations() const
+{
+  return UseExtendedPrecisionType("extended_equation");
+}
 
 template InterfaceModelExprDataCachePtr<double> Interface::GetInterfaceModelExprDataCache();
 template void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<double> p);

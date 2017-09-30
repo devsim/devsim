@@ -206,5 +206,21 @@ class EdgeModel {
         static const char *DisplayTypeString[];
 };
 
+//TODO: "forward???"
+template <typename T1, typename T2, typename ... Args>
+EdgeModelPtr create_edge_model(bool use_extended, Args &&...args)
+{
+  EdgeModel *ret;
+  if (use_extended)
+  {
+    ret = new T2(args...);
+  }
+  else
+  {
+    ret = new T1(args...);
+  }
+  return ret->GetSelfPtr();
+}
+
 #endif
 

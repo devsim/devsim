@@ -156,4 +156,18 @@ void TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::Serialize(std::ostream 
 }
 
 template class TetrahedronEdgeFromEdgeModelDerivative<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TetrahedronEdgeFromEdgeModelDerivative<float128>;
+#endif
+
+TetrahedronEdgeModelPtr CreateTetrahedronEdgeFromEdgeModelDerivative(
+        const std::string &edgemodel,
+        const std::string &derivative,
+        RegionPtr rp
+    )
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_tetrahedron_edge_model<TetrahedronEdgeFromEdgeModelDerivative<double>, TetrahedronEdgeFromEdgeModelDerivative<extended_type>>(use_extended, edgemodel, derivative, rp);
+}
 

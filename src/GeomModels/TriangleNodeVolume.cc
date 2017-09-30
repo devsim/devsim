@@ -83,4 +83,8 @@ void TriangleNodeVolume<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class TriangleNodeVolume<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TriangleNodeVolume<float128>;
+#endif
 

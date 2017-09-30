@@ -113,4 +113,8 @@ void TetrahedronEdgeSubModel<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class TetrahedronEdgeSubModel<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class TetrahedronEdgeSubModel<float128>;
+#endif
 

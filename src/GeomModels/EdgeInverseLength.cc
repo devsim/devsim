@@ -55,4 +55,8 @@ void EdgeInverseLength<DoubleType>::Serialize(std::ostream &of) const
 }
 
 template class EdgeInverseLength<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class EdgeInverseLength<float128>;
+#endif
 

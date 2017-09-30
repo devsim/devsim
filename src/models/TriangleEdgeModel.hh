@@ -186,5 +186,21 @@ class TriangleEdgeModel {
         static const char *DisplayTypeString[];
 };
 
+
+//TODO: "forward???"
+template <typename T1, typename T2, typename ... Args>
+TriangleEdgeModelPtr create_triangle_edge_model(bool use_extended, Args &&...args)
+{
+  TriangleEdgeModel *ret;
+  if (use_extended)
+  {
+    ret = new T2(args...);
+  }
+  else
+  {
+    ret = new T1(args...);
+  }
+  return ret->GetSelfPtr();
+}
 #endif
 

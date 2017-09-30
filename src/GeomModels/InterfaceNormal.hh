@@ -28,13 +28,16 @@ class Edge;
 typedef Edge *EdgePtr;
 typedef const Edge *ConstEdgePtr;
 
+EdgeModelPtr CreateInterfaceNormal(const std::string &, const std::string &, const std::string &, const std::string &, const std::string &,  RegionPtr);
+
 template <typename DoubleType>
 class InterfaceNormal : public EdgeModel
 {
     public:
-        InterfaceNormal(const std::string &, const std::string &, const std::string &, const std::string &, const std::string &,  RegionPtr);
 
         void Serialize(std::ostream &) const;
+
+        InterfaceNormal(const std::string &, const std::string &, const std::string &, const std::string &, const std::string &,  RegionPtr);
 
     private:
         void calcEdgeScalarValues() const;

@@ -26,6 +26,9 @@ limitations under the License.
 #include "MathEval.hh"
 #include "MaterialDB.hh"
 #include "PythonAppInit.hh"
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
 #include <cstdio>
 
 
@@ -55,11 +58,13 @@ int main(int argc, char * argv[])
     dsMesh::MeshKeeper::DestroyInstance();
     NodeKeeper::delete_instance();
     InstanceKeeper::delete_instance();
-#ifndef _WIN32
-#warning "handle multiprecision"
-#endif
+
     MathEval<double>::DestroyInstance();
     TimeData<double>::DestroyInstance();
+#ifdef DEFSIM_EXTENDED_PRECISION
+    MathEval<float128>::DestroyInstance();
+    TimeData<float128>::DestroyInstance();
+#endif
 #endif
     return ret;
 }

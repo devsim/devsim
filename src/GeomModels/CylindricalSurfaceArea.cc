@@ -102,8 +102,8 @@ void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, 
     const Node &node0 = *(edge.GetHead());
     const Node &node1 = *(edge.GetTail());
 
-    const Vector<DoubleType> &p0 = node0.Position();
-    const Vector<DoubleType> &p1 = node1.Position();
+    const Vector<DoubleType> &p0 = ConvertVector<DoubleType>(node0.Position());
+    const Vector<DoubleType> &p1 = ConvertVector<DoubleType>(node1.Position());
 
     /// This is the midpoint between the edges
     Vector<DoubleType> vm = p1;
@@ -243,4 +243,14 @@ void CylindricalSurfaceArea<DoubleType>::setInitialValues()
 }
 
 template class CylindricalSurfaceArea<double>;
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template class CylindricalSurfaceArea<float128>;
+#endif
+
+NodeModelPtr CreateCylindricalSurfaceArea(RegionPtr rp)
+{
+  const bool use_extended = rp->UseExtendedPrecisionModels();
+  return create_node_model<CylindricalSurfaceArea<double>, CylindricalSurfaceArea<extended_type>>(use_extended, rp);
+}
 

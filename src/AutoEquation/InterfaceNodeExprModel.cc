@@ -138,9 +138,6 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
         
 }
 
-#ifndef _WIN32
-#warning "serialize extended option here"
-#endif
 template <typename DoubleType>
 void InterfaceNodeExprModel<DoubleType>::Serialize(std::ostream &of) const
 {
@@ -153,4 +150,10 @@ template class InterfaceNodeExprModel<double>;
 #include "Float128.hh"
 template class InterfaceNodeExprModel<float128>;
 #endif
+
+InterfaceNodeModelPtr CreateInterfaceNodeExprModel(const std::string &nm, Eqo::EqObjPtr eq, InterfacePtr ip)
+{
+  const bool use_extended = ip->UseExtendedPrecisionModels();
+  return create_interface_node_model<InterfaceNodeExprModel<double>, InterfaceNodeExprModel<extended_type>>(use_extended, nm, eq, ip);
+}
 

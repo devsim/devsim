@@ -146,5 +146,21 @@ class InterfaceNodeModel {
         mutable bool inprocess;
         size_t length;
 };
+
+//TODO: "forward???"
+template <typename T1, typename T2, typename ... Args>
+InterfaceNodeModelPtr create_interface_node_model(bool use_extended, Args &&...args)
+{
+  InterfaceNodeModel *ret;
+  if (use_extended)
+  {
+    ret = new T2(args...);
+  }
+  else
+  {
+    ret = new T1(args...);
+  }
+  return ret->GetSelfPtr();
+}
 #endif
 
