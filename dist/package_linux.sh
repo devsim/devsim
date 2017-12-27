@@ -1,4 +1,4 @@
-RC
+#!/bin/bash
 set -e
 if ! [ $1 ]; then
   echo "must specify dir name"
