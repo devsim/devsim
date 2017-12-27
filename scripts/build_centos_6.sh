@@ -5,7 +5,7 @@ set -e
 
 # Centos Specific
 #https://fedoraproject.org/wiki/EPEL
-yum install -y epel-release git bison flex
+yum install -y epel-release git bison flex tcl tcl-devel
 yum install -y cmake3
 yum install -y centos-release-scl
 yum install -y devtoolset-6-gcc devtoolset-6-gcc-c++ devtoolset-6-libquadmath-devel devtoolset-6-gcc-gfortran
