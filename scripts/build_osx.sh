@@ -8,7 +8,8 @@ if [ "${1}" = "gcc" ]
   then
   brew outdated gcc || brew upgrade gcc;
   else
-  brew install gcc;
+  # the overwrite is to fix the linking issue seen on travis ci
+  brew install gcc || brew link --overwrite gcc;
   fi
   export CC=/usr/local/bin/gcc-7;
   export CXX=/usr/local/bin/g++-7;
