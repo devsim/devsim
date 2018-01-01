@@ -7,8 +7,7 @@ ADD_DEFINITIONS(-DTCL_THREADS -fvisibility=hidden)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
 SET (PYTHON_ARCHIVE "-lpython2.7")
-SET (PYTHON_INCLUDE "/System/Library/Frameworks/Python.framework/Headers"
-)
+SET (PYTHON_INCLUDE "/usr/include/python2.7")
 
 SET (TCL_STUB /usr/lib/libtclstub8.5.a)
 SET (BLAS_ARCHIVE  -weak-lblas -weak-llapack)
