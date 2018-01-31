@@ -137,6 +137,11 @@ getParameterCmd(CommandHandler &data)
       regionName = data.GetStringOption("region");
     }
 
+    if (commandName == "get_material" || commandName == "set_material")
+    {
+      contactName = data.GetStringOption("contact");
+    }
+
     Device *dev = NULL;
     Region *reg = NULL;
     Contact *contact = NULL;
