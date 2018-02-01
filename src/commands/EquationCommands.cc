@@ -325,10 +325,14 @@ createInterfaceEquationCmd(CommandHandler &data)
     {
         et = InterfaceExprEquationEnum::FLUXTERM;
     }
+    else if (type == "hybrid")
+    {
+        et = InterfaceExprEquationEnum::HYBRID;
+    }
     else
     {
         std::ostringstream os;
-        os << "-type must be specified as \"continuous\" or \"fluxterm\"\n";
+        os << "-type must be specified as \"continuous\", \"fluxterm\", or \"hybrid\"\n";
         errorString += os.str();
     }
 

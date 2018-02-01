@@ -37,7 +37,8 @@ const char *InterfaceExprEquationEnum::EquationTypeString[] =
 {
   "unknown",
   "continuous",
-  "fluxterm"
+  "fluxterm",
+  "hybrid"
 };
 
 template <typename DoubleType>
@@ -85,6 +86,10 @@ void InterfaceExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueV
             else if (equation_type_ == InterfaceExprEquationEnum::FLUXTERM)
             {
                 InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(interface_node_model_, m, v, p, w, SurfaceAreaModel);
+            }
+            else if (equation_type_ == InterfaceExprEquationEnum::HYBRID)
+            {
+                InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(interface_node_model_, m, v, p, w, SurfaceAreaModel);
             }
             else
             {

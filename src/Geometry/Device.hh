@@ -88,7 +88,7 @@ class Device
       template <typename DoubleType>
       void ACUpdate(const std::vector<std::complex<DoubleType> > &/*result*/);
       template <typename DoubleType>
-      void NoiseUpdate(const std::string &/*output*/, const std::vector<size_t> &/*permvec*/, const std::vector<std::complex<DoubleType> > &/*result*/);
+      void NoiseUpdate(const std::string &/*output*/, const std::vector<PermutationEntry> &/*permvec*/, const std::vector<std::complex<DoubleType> > &/*result*/);
 
       void UpdateContacts();
       // Need to be careful with accessors and stuff

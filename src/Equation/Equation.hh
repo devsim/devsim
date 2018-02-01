@@ -23,6 +23,9 @@ limitations under the License.
 #include <complex>
 #include <map>
 #include <iosfwd>
+
+class PermutationEntry;
+
 template <typename T, typename U> class ScalarData;
 
 class NodeModel;
@@ -106,11 +109,11 @@ class Equation {
         void Update(NodeModel &, const std::vector<DoubleType> &);
 
         void ACUpdate(NodeModel &, const std::vector<std::complex<DoubleType> > &);
-        void NoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &);
+        void NoiseUpdate(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &);
 
         std::string GetNoiseRealName(const std::string &);
         std::string GetNoiseImagName(const std::string &);
-        void DefaultNoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &);
+        void DefaultNoiseUpdate(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &);
 
         DoubleType GetAbsError() const;
         DoubleType GetRelError() const;
@@ -171,7 +174,7 @@ class Equation {
 
         virtual void UpdateValues(NodeModel &, const std::vector<DoubleType> &) = 0;
         virtual void ACUpdateValues(NodeModel &, const std::vector<std::complex<DoubleType> > &) = 0;
-        virtual void NoiseUpdateValues(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &) = 0;
+        virtual void NoiseUpdateValues(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &) = 0;
 
 
         void PositiveSolutionUpdate(const NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &);

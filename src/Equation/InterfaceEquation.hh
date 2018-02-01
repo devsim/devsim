@@ -92,6 +92,8 @@ class InterfaceEquation {
 
 //// No permutation of flux equations.  Flux added (and subtracted) from both of original equations
         void NodeVolumeType2Assemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, const std::string &/*surface_area*/);
+//// Permutation of flux equations.  Flux subtracted from second of original equations
+        void NodeVolumeType3Assemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, const std::string &/*surface_area*/);
 
         const std::string &GetVariable() const
         {

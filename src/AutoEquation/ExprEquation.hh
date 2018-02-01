@@ -32,6 +32,7 @@ namespace Eqo {
 }
 */
 
+class PermutationEntry;
 
 template <typename DoubleType>
 class ExprEquation : public Equation<DoubleType>
@@ -63,7 +64,7 @@ class ExprEquation : public Equation<DoubleType>
 
         void UpdateValues(NodeModel &, const std::vector<DoubleType> &);
         void ACUpdateValues(NodeModel &, const std::vector<std::complex<DoubleType> > &);
-        void NoiseUpdateValues(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &);
+        void NoiseUpdateValues(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &);
 
         /// Need to decide if we are going to contain equations or models?
         /// Assume that 

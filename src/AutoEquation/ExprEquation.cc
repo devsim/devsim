@@ -112,7 +112,7 @@ void ExprEquation<DoubleType>::ACUpdateValues(NodeModel &nm, const std::vector<s
 }
 
 template <typename DoubleType>
-void ExprEquation<DoubleType>::NoiseUpdateValues(const std::string &nm, const std::vector<size_t> &permvec, const std::vector<std::complex<DoubleType> > &rhs)
+void ExprEquation<DoubleType>::NoiseUpdateValues(const std::string &nm, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &rhs)
 {
     Equation<DoubleType>::DefaultNoiseUpdate(nm, permvec, rhs);
 }

@@ -41,6 +41,8 @@ limitations under the License.
 
 #include "EquationErrors.hh"
 
+#include "Permutation.hh"
+
 #include <cmath>
 using std::abs;
 
@@ -119,7 +121,7 @@ void Equation<DoubleType>::ACUpdate(NodeModel &nm, const std::vector<std::comple
 }
 
 template <typename DoubleType>
-void Equation<DoubleType>::NoiseUpdate(const std::string &nm, const std::vector<size_t> &permvec, const std::vector<std::complex<DoubleType> > &rhs)
+void Equation<DoubleType>::NoiseUpdate(const std::string &nm, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &rhs)
 {
     NoiseUpdateValues(nm, permvec, rhs);
 }
@@ -339,7 +341,7 @@ void Equation<DoubleType>::DefaultACUpdate(NodeModel &nm, const std::vector<std:
 }
 
 template <typename DoubleType>
-void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, const std::vector<size_t> &permvec, const std::vector<std::complex<DoubleType> > &result)
+void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &result)
 {
     const std::string &realnodemodel = GetNoiseRealName(outputname);
     const std::string &imagnodemodel = GetNoiseImagName(outputname);
@@ -375,7 +377,8 @@ void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, con
     const ConstNodeList::const_iterator nend = nl.end();
     for ( ; nit != nend; ++nit)
     {
-        const size_t eqrow = permvec[myregion->GetEquationNumber(ind, *nit)];
+        // TODO: we need to make sure we handle when the equation was copied, KeepCopy() == true
+        const size_t eqrow = permvec[myregion->GetEquationNumber(ind, *nit)].GetRow();
 
         if (eqrow != size_t(-1))
         {

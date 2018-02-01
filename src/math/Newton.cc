@@ -151,7 +151,7 @@ void Newton<DoubleType>::AssembleContactsAndInterfaces(RealRowColValueVec<Double
   const PermutationMap::iterator pend = p.end();
   for (; pit != pend; ++pit)
   {
-    permvec.at(pit->first) = (pit->second).GetRow();
+    permvec.at(pit->first) = (pit->second);
   }
 }
 
@@ -255,13 +255,24 @@ void Newton<DoubleType>::LoadIntoMatrixPermutated(const RealRowColValueVec<Doubl
 {
   for (typename RealRowColValueVec<DoubleType>::const_iterator it = rcv.begin(); it != rcv.end(); ++it)
   {
-    size_t row = permvec[it->row];
-    const size_t col = it->col + offset;
-    const T val = scl * it->val;
-    if (row != size_t(-1))
+    auto original_row = it->row;
+    const auto &Entry = permvec[original_row];
+    auto row = Entry.GetRow();
+
+    if (row == size_t(-1))
     {
-      row += offset;
-      mat.AddEntry(row, col, val);
+      continue;
+    }
+
+    const auto col = it->col + offset;
+    const T val = scl * it->val;
+    row += offset;
+    mat.AddEntry(row, col, val);
+
+    if (Entry.KeepCopy())
+    {
+      original_row += offset;
+      mat.AddEntry(original_row, col, val);
     }
   }
 }
@@ -285,12 +296,22 @@ void Newton<DoubleType>::LoadIntoRHSPermutated(const RHSEntryVec<DoubleType> &r,
 {
   for (typename RHSEntryVec<DoubleType>::const_iterator it = r.begin(); it != r.end(); ++it)
   {
-    size_t row = permvec[it->first];
-    if (row != size_t(-1))
+    auto original_row = it->first;
+    const auto &Entry = permvec[original_row];
+    auto row = permvec[it->first].GetRow();
+    if (row == size_t(-1))
     {
-      row += offset;
-      const T val = scl * rhssign * it->second;
-      rhs[row] += val;
+      continue;
+    }
+
+    row += offset;
+    const T val = scl * rhssign * it->second;
+    rhs[row] += val;
+
+    if (Entry.KeepCopy())
+    {
+      original_row += offset;
+      rhs[original_row] += val;
     }
   }
 }
@@ -577,7 +598,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
   permvec_t permvec(numeqns);
   for (size_t i = 0; i < permvec.size(); ++i)
   {
-    permvec[i] = i;
+    permvec[i] = PermutationEntry(i, false);
   }
 
   std::vector<DoubleType> result(numeqns);
@@ -1055,7 +1076,7 @@ bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleTyp
 
   for (size_t i = 0; i < permvec_temp.size(); ++i)
   {
-    permvec_temp[i] = i;
+    permvec_temp[i] = PermutationEntry(i, false);
   }
 
   std::vector<std::complex<DoubleType>> result(numeqns);
@@ -1197,7 +1218,7 @@ bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver
 
   for (size_t i = 0; i < permvec_temp.size(); ++i)
   {
-      permvec_temp[i] = i;
+      permvec_temp[i] = PermutationEntry(i, false);
   }
 
   std::vector<std::complex<DoubleType>> result(numeqns);

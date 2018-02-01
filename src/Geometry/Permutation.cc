@@ -16,25 +16,29 @@ limitations under the License.
 ***/
 
 #include "Permutation.hh"
-PermutationEntry::PermutationEntry(size_t nr)
-    : newrow(nr)
+PermutationEntry::PermutationEntry(size_t nr, bool kc)
+    : newrow(nr), keepcopy(kc)
 {}
 
 PermutationEntry::PermutationEntry()
-    : newrow(size_t(-1)), contact(NULL)
+    : newrow(size_t(-1)), keepcopy(false) //, contact(NULL), interface(NULL)
 {
 }
 
 PermutationEntry::PermutationEntry(const PermutationEntry &f)
-    : newrow(f.newrow)
+    : newrow(f.newrow), keepcopy(f.keepcopy)
 {
 }
 
 PermutationEntry &PermutationEntry::operator=(const PermutationEntry &p)
 {
     if (&p == this)
+    {
         return *this;
+    }
 
     newrow = p.newrow;
+    keepcopy = p.keepcopy;
     return *this;
 }
+
