@@ -1405,7 +1405,7 @@ void Region::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
 }
 
 template <typename DoubleType>
-void Region::NoiseUpdate(const std::string &output, const std::vector<size_t> &permvec, const std::vector<std::complex<DoubleType> > &result)
+void Region::NoiseUpdate(const std::string &output, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &result)
 {
         if (!numequations)
         {

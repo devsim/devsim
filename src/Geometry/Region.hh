@@ -35,6 +35,8 @@ typedef double extended_type;
 #include <set>
 #include <complex>
 
+class PermutationEntry;
+
 template <typename T>
 class Vector;
 
@@ -362,7 +364,7 @@ class Region
     template <typename DoubleType>
     void ACUpdate(const std::vector<std::complex<DoubleType> > &/*result*/);
     template <typename DoubleType>
-    void NoiseUpdate(const std::string &/*output*/, const std::vector<size_t> &/*permvec*/, const std::vector<std::complex<DoubleType> > &/*result*/);
+    void NoiseUpdate(const std::string &/*output*/, const std::vector<PermutationEntry> &/*permvec*/, const std::vector<std::complex<DoubleType> > &/*result*/);
 
     template <typename DoubleType>
     void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);

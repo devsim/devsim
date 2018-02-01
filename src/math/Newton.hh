@@ -25,6 +25,8 @@ limitations under the License.
 #include <complex>
 #include <map>
 
+class PermutationEntry;
+
 class ObjectHolder;
 typedef std::map<std::string, ObjectHolder> ObjectHolderMap_t;
 
@@ -152,7 +154,7 @@ struct TR : public TimeParams<DoubleType>
 template <typename DoubleType>
 class Newton {
     public:
-        typedef std::vector<size_t> permvec_t;
+        typedef std::vector<PermutationEntry> permvec_t;
 
         /// Newton takes on linear solver
         /// near solver selects Preconditioner

@@ -24,6 +24,7 @@ limitations under the License.
 #include "Float128.hh"
 #endif
 
+class PermutationEntry;
 class ObjectHolder;
 
 template <typename DoubleType>
@@ -79,7 +80,7 @@ class EquationHolder {
     void ACUpdate(NodeModel &, const std::vector<std::complex<DoubleType>> &) const;
 
     template <typename DoubleType>
-    void NoiseUpdate(const std::string &, const std::vector<size_t> &, const std::vector<std::complex<DoubleType> > &) const;
+    void NoiseUpdate(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &) const;
 
     template <typename DoubleType>
     void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);

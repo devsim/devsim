@@ -488,7 +488,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel
     {
       const size_t row = region.GetEquationNumber(eqindex, *cit);
       // Permutation of the original bulk equation to nowhere
-      p[row] = PermutationEntry(size_t(-1));
+      p[row] = PermutationEntry(size_t(-1), false);
     }
   }
 

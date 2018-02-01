@@ -356,7 +356,7 @@ void Device::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
 }
 
 template <typename DoubleType>
-void Device::NoiseUpdate(const std::string &output, const std::vector<size_t> &permvec, const std::vector<std::complex<DoubleType> > &result)
+void Device::NoiseUpdate(const std::string &output, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &result)
 {
     RegionList_t::iterator it = regionList.begin(); 
     const RegionList_t::iterator end = regionList.end(); 

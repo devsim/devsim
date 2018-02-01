@@ -19,10 +19,12 @@ limitations under the License.
 #define PERMUTATION_HH
 #include <cstdlib>
 #include <map>
+#if 0
 class Contact;
 typedef const Contact *ConstContactPtr;
 class Interface;
 typedef const Interface *ConstInterfacePtr;
+#endif
 
 class PermutationEntry;
 // the first entry is the original row
@@ -31,11 +33,17 @@ typedef std::map<size_t /*row*/, PermutationEntry> PermutationMap;
 class PermutationEntry
 {
     public:
-        PermutationEntry(size_t /*newrow*/);
+        PermutationEntry(size_t /*newrow*/, bool /*keepcopy*/);
 
-        size_t GetRow()
+        size_t GetRow() const
         {
             return newrow;
+        }
+
+        // special case for handling new interface type
+        bool KeepCopy() const
+        {
+            return keepcopy;
         }
 
 //      // the defaults are needed
@@ -45,7 +53,11 @@ class PermutationEntry
 
     private:
         size_t newrow;
+        bool   keepcopy;
+#if 0
         ConstContactPtr contact;
         ConstInterfacePtr interface;
+#endif
 };
 #endif
+

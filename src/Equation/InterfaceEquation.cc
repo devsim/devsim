@@ -298,11 +298,9 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
         dsAssert(row0 != size_t(-1), "UNEXPECTED");
         dsAssert(row1 != size_t(-1), "UNEXPECTED");
 
-        /// We will need to check later that we don't DoubleType permute from another equation
-        /// That is why we need to encode the contact or interface ptr into the permutation entry (error checking).
         if (w == dsMathEnum::WhatToLoad::PERMUTATIONSONLY)
         {
-            p[row1] = PermutationEntry(row0);
+            p[row1] = PermutationEntry(row0, false);
         }
         else if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
         {
@@ -474,7 +472,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
             const DoubleType rval = rhs[i];
 
             const DoubleType val0 =  rval * sa0vals[node0->GetIndex()];
-            const DoubleType val1 = -rval * sa1vals[node0->GetIndex()];
+            const DoubleType val1 = -rval * sa1vals[node1->GetIndex()];
 
             v.push_back(std::make_pair(row0, val0));
             v.push_back(std::make_pair(row1, val1));
@@ -570,6 +568,192 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
         }
     }
     else if (w == dsMathEnum::WhatToLoad::RHS)
+    {
+    }
+    else
+    {
+        dsAssert(0, "UNEXPECTED");
+    }
+}
+
+template <typename DoubleType>
+void InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(const std::string &interfacenodemodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, const std::string &surface_area)
+{
+
+    const Interface &in = GetInterface();
+    const Region &r0 = *in.GetRegion0();
+    const Region &r1 = *in.GetRegion1();
+    // get variable list
+    // This typedef should go in region class
+    typedef std::vector<std::string> VariableList_t;
+    std::vector<std::string> vlist0 = r0.GetVariableList();
+    std::vector<std::string> vlist1 = r1.GetVariableList();
+
+    const std::string &myname = this->GetName();
+
+    const size_t eqindex0 = r0.GetEquationIndex(myname);
+    const size_t eqindex1 = r1.GetEquationIndex(myname);
+
+    /// It doesn't make sense if the equation doesn't exist in both regions of interface
+    dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
+    dsAssert(eqindex1 != size_t(-1), "UNEXPECTED");
+    dsAssert(!interfacenodemodel.empty(), "UNEXPECTED");
+
+    ConstInterfaceNodeModelPtr inm = in.GetInterfaceNodeModel(interfacenodemodel);
+    dsAssert(inm.get(), "UNEXPECTED");
+    ConstNodeModelPtr sa0 = r0.GetNodeModel(surface_area);
+    dsAssert(sa0.get(), "UNEXPECTED");
+
+    ConstNodeModelPtr sa1 = r1.GetNodeModel(surface_area);
+    dsAssert(sa1.get(), "UNEXPECTED");
+
+    const std::set<ConstNodePtr> &activeNodes = GetActiveNodes();
+    const ConstNodeList_t &nodes0 = in.GetNodes0();
+    const ConstNodeList_t &nodes1 = in.GetNodes1();
+
+    // technically this is the responsibility of the interface to check
+    dsAssert(nodes0.size() == nodes1.size(), "UNEXPECTED");
+
+    /// we will permute out bulk equations for node1 into node0
+    /// we will assemble our interface equation at node1
+    const NodeScalarList<DoubleType> rhs = inm->GetScalarValues<DoubleType>();
+    dsAssert(rhs.size() == nodes1.size(), "UNEXPECTED");
+
+#if 0
+    const NodeScalarList<DoubleType> &sa0vals = sa0->GetScalarValues<DoubleType>();
+#endif
+    const NodeScalarList<DoubleType> &sa1vals = sa1->GetScalarValues<DoubleType>();
+
+    for (size_t i = 0; i < nodes0.size(); ++i)
+    {
+
+        const Node *node0 = nodes0[i];
+        const Node *node1 = nodes1[i];
+
+        if (!(activeNodes.count(node0)) && (activeNodes.count(node1)))
+        {
+          continue;
+        }
+
+        const size_t row0 = r0.GetEquationNumber(eqindex0, node0);
+        const size_t row1 = r1.GetEquationNumber(eqindex1, node1);
+
+        dsAssert(row0 != size_t(-1), "UNEXPECTED");
+        dsAssert(row1 != size_t(-1), "UNEXPECTED");
+
+        if (w == dsMathEnum::WhatToLoad::PERMUTATIONSONLY)
+        {
+          // keeps an unpermutated copy
+          p[row1] = PermutationEntry(row0, true);
+        }
+        else if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
+        {
+          const DoubleType rval = rhs[i];
+
+#if 0
+          const DoubleType val0 =  rval * sa0vals[node0->GetIndex()];
+#endif
+          const DoubleType val1 = -rval * sa1vals[node1->GetIndex()];
+
+#if 0
+          v.push_back(std::make_pair(row0, val0));
+#endif
+          v.push_back(std::make_pair(row1, val1));
+        }
+    }
+
+    if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
+    {
+        // variable list
+        std::vector<vlistdata> vlistd;
+        vlistd.reserve(vlist0.size() + vlist1.size());
+        for (size_t i = 0; i < vlist0.size(); ++i)
+        {
+            const std::string &var = vlist0[i];
+
+            std::string dermodel = interfacenodemodel;
+            dermodel += ":";
+            dermodel += var;
+            dermodel += "@r0";
+            ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(dermodel);
+            if (!idm)
+            {
+                dsErrors::MissingInterfaceEquationModel(r0, *this, dermodel, OutputStream::OutputType::VERBOSE1);
+            }
+            else
+            {
+                vlistd.push_back(vlistdata(dermodel, var, r0, nodes0));
+            }
+        }
+        for (size_t i = 0; i < vlist1.size(); ++i)
+        {
+            const std::string &var = vlist1[i];
+
+            std::string dermodel = interfacenodemodel;
+            dermodel += ":";
+            dermodel += var;
+            dermodel += "@r1";
+            ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(dermodel);
+            if (!idm)
+            {
+                dsErrors::MissingInterfaceEquationModel(r1, *this, dermodel, OutputStream::OutputType::VERBOSE1);
+            }
+            else
+            {
+                vlistd.push_back(vlistdata(dermodel, var, r1, nodes1));
+            }
+        }
+
+        for (size_t j = 0; j < vlistd.size(); ++j)
+        {
+            const std::string   &imname = vlistd[j].interfacemodelname;
+            const std::string   &var    = vlistd[j].var;
+            const Region        &reg    = *vlistd[j].region;
+            const ConstNodeList &nlist  = *vlistd[j].nodelist;
+
+            const size_t eqindex = reg.GetEquationIndex(reg.GetEquationNameFromVariable(var));
+            dsAssert(eqindex != size_t(-1), "UNEXPECTED");
+
+            ConstInterfaceNodeModelPtr idm = in.GetInterfaceNodeModel(imname);
+            dsAssert(idm.get(), "UNEXPECTED"); // Existence is checked when added to vlistd
+
+            const NodeScalarList<DoubleType> &vals = idm->GetScalarValues<DoubleType>();
+            dsAssert(vals.size() == nlist.size(), "UNEXPECTED");
+
+            const NodeScalarList<DoubleType> &sa0vals = sa0->GetScalarValues<DoubleType>();
+            const NodeScalarList<DoubleType> &sa1vals = sa1->GetScalarValues<DoubleType>();
+
+            for (size_t i = 0; i < nlist.size(); ++i)
+            {
+                if (!(activeNodes.count(nodes0[i]) && activeNodes.count(nodes1[i])))
+                {
+                  continue;
+                }
+
+                const Node *node0 = nodes0[i];
+                const Node *node1 = nodes1[i];
+
+                const size_t col = reg.GetEquationNumber(eqindex, nlist[i]);
+                dsAssert(col != size_t(-1), "UNEXPECTED");
+
+                // as stated previously, we are assembling into the second region
+                const size_t row0 = r0.GetEquationNumber(eqindex0, node0);
+                const size_t row1 = r1.GetEquationNumber(eqindex1, node1);
+
+                const DoubleType rval = vals[i];
+
+#if 0
+                const DoubleType val0 =  rval * sa0vals[node0->GetIndex()];
+#endif
+                const DoubleType val1 = -rval * sa1vals[node1->GetIndex()];
+#if 0
+                m.push_back(dsMath::RealRowColVal<DoubleType>(row0, col, +val0));
+#endif
+                m.push_back(dsMath::RealRowColVal<DoubleType>(row1, col, +val1));
+            }
+        }
+    }
+    else if (w == dsMathEnum::WhatToLoad::RHS || w == dsMathEnum::WhatToLoad::PERMUTATIONSONLY)
     {
     }
     else

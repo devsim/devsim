@@ -222,7 +222,7 @@ void EquationHolder::ACUpdate(NodeModel &nm, const std::vector<std::complex<floa
 #endif
 
 template <>
-void EquationHolder::NoiseUpdate(const std::string &nm, const std::vector<size_t> &permvec, const std::vector<std::complex<double> > &rhs) const
+void EquationHolder::NoiseUpdate(const std::string &nm, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<double> > &rhs) const
 {
   if (double_)
   {
@@ -240,7 +240,7 @@ void EquationHolder::NoiseUpdate(const std::string &nm, const std::vector<size_t
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void EquationHolder::NoiseUpdate(const std::string &nm, const std::vector<size_t> &permvec, const std::vector<std::complex<float128> > &rhs) const
+void EquationHolder::NoiseUpdate(const std::string &nm, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<float128> > &rhs) const
 {
   if (double_)
   {

@@ -36,7 +36,7 @@ namespace Eqo {
  */
 namespace InterfaceExprEquationEnum
 {
-  enum EquationType {UNKNOWN, CONTINUOUS, FLUXTERM};
+  enum EquationType {UNKNOWN, CONTINUOUS, FLUXTERM, HYBRID};
   extern const char *EquationTypeString[];
 }
 template <typename DoubleType>
