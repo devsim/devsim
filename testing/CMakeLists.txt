@@ -78,9 +78,11 @@ set_tests_properties("testing/pythonmesh1d_comp" PROPERTIES DEPENDS "testing/pyt
 
 SET (NEWTESTS res1 res2 res3 dio1_utf8 dio2 circ1 circ2 circ3 circ4
 ssac_circ ssac_cap ssac_res ssac_diode utf8_1 mesh1 mesh2 mesh3 mesh4 trimesh1 trimesh2 floops erf1 Fermi1
-mesh2d dio2_2d mos_2d mos_2d_restart mos_2d_restart2 noise_res noise_res_2d mos_2d_temtest dio2_element_2d
+mesh2d dio2_2d mos_2d mos_2d_restart mos_2d_restart2 noise_res noise_res_2d dio2_element_2d
 gmsh_resistor2d gmsh_resistor3d
-transient_circ transient_circ2 transient_circ3 mos_2d_temtest2
+transient_circ transient_circ2 transient_circ3
+#mos_2d_temtest
+#mos_2d_temtest2
 package_cap1
 #sqlite1
 rename1
@@ -97,8 +99,8 @@ ENDFOREACH(I)
 
 # on redhat 6.4 this test fails on the Tcl platform
 #set_tests_properties("testing/fpetest2" PROPERTIES TIMEOUT 5)
-set_tests_properties("testing/mos_2d_temtest" PROPERTIES DEPENDS testing/mos_2d)
-set_tests_properties("testing/mos_2d_temtest2" PROPERTIES DEPENDS testing/mos_2d)
+#set_tests_properties("testing/mos_2d_temtest" PROPERTIES DEPENDS testing/mos_2d)
+#set_tests_properties("testing/mos_2d_temtest2" PROPERTIES DEPENDS testing/mos_2d)
 set_tests_properties("testing/mos_2d_restart" PROPERTIES DEPENDS testing/mos_2d)
 set_tests_properties("testing/mos_2d_restart2" PROPERTIES DEPENDS testing/mos_2d)
 set_tests_properties("testing/sqlite2" PROPERTIES DEPENDS testing/sqlite1)
