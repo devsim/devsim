@@ -265,6 +265,7 @@ MyNewPyPtr(get_device_list,    dsCommand::getDeviceListCmd);
 MyNewPyPtr(get_region_list,    dsCommand::getRegionListCmd);
 MyNewPyPtr(get_interface_list, dsCommand::getRegionListCmd);
 MyNewPyPtr(get_contact_list,   dsCommand::getRegionListCmd);
+MyNewPyPtr(get_element_node_list, dsCommand::getElementNodeListCmd);
 // Material Commands
 MyNewPyPtr(set_parameter,      dsCommand::getParameterCmd);
 MyNewPyPtr(get_parameter,      dsCommand::getParameterCmd);
@@ -379,6 +380,7 @@ MYCOMMAND(get_device_list,    dsCommand::getDeviceListCmd),
 MYCOMMAND(get_region_list,    dsCommand::getRegionListCmd),
 MYCOMMAND(get_interface_list, dsCommand::getRegionListCmd),
 MYCOMMAND(get_contact_list,   dsCommand::getRegionListCmd),
+MYCOMMAND(get_element_node_list, dsCommand::getElementNodeListCmd),
 // Material Commands
 MYCOMMAND(set_parameter,      dsCommand::getParameterCmd),
 MYCOMMAND(get_parameter,      dsCommand::getParameterCmd),

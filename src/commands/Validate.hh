@@ -36,19 +36,16 @@ std::string ValidateDeviceAndRegion(const std::string &/*deviceName*/,
                                       Region * &/*reg*/);
 
 std::string ValidateDeviceAndContact(const std::string &/*deviceName*/,
-                                      const std::string &/*regionName*/,
+                                      const std::string &/*contactName*/,
                                       Device * &/*dev*/,
                                       Contact * &/*cp*/);
 
-#if 0
-//// schedule for removal
-std::string ValidateDeviceAndRegionAndContact(const std::string &/*deviceName*/,
+std::string ValidateDeviceRegionAndContact(const std::string &/*deviceName*/,
                                       const std::string &/*regionName*/,
                                       const std::string &/*contactName*/,
                                       Device * &/*dev*/,
                                       Region * &/*reg*/,
                                       Contact * &/*contact*/);
-#endif
 
 
 

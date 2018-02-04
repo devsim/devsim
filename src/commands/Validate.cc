@@ -21,6 +21,7 @@ limitations under the License.
 #include "GlobalData.hh"
 #include "NodeSolution.hh"
 #include "Interface.hh"
+#include "Contact.hh"
 #include <sstream>
 namespace dsValidate {
 std::string onRegiononDevice(const std::string &rnm, const std::string &dnm)
@@ -117,12 +118,7 @@ std::string ValidateDeviceAndContact(const std::string &deviceName,
 }
 
 
-#if 0
-//// schedule for removal
-/**
- * Note that the contact exists on the device, and not the region.  We can add a contact equation, but nodes would have to exist.
- */
-std::string ValidateDeviceAndRegionAndContact(const std::string &deviceName,
+std::string ValidateDeviceRegionAndContact(const std::string &deviceName,
                                       const std::string &regionName,
                                       const std::string &contactName,
                                       Device * &dev,
@@ -137,7 +133,7 @@ std::string ValidateDeviceAndRegionAndContact(const std::string &deviceName,
     }
 
     contact = dev->GetContact(contactName);
-    if (!contact)
+    if (!contact || (contact->GetRegion() != reg))
     {
         std::ostringstream os;
         os << "Contact \"" << contactName << "\" does not exist " << onRegiononDevice(deviceName, regionName) << "\n";
@@ -145,7 +141,6 @@ std::string ValidateDeviceAndRegionAndContact(const std::string &deviceName,
     }
     return errorString;
 }
-#endif
 
 
 std::string ValidateDeviceAndInterface(const std::string &deviceName,
