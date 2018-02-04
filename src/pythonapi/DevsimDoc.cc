@@ -392,6 +392,23 @@ static const char get_device_list_doc[] =
 "    Gets a list of devices on the simulation.\n"
 ;
 
+static const char get_element_node_list_doc[] =
+"    ds.get_element_node_list (device, region, contact, interface)\n"
+"\n"
+"    Gets a list of nodes for each element on a device, region, contact, or interface.\n"
+"\n"
+"    Parameters\n"
+"    ----------\n"
+"    device : str\n"
+"       The selected device\n"
+"    region : str\n"
+"       The selected region\n"
+"    contact : str, optional\n"
+"       If specified, gets the element nodes for the contact on the specified region\n"
+"    interface : str, optional\n"
+"       If specified, gets the element nodes for the interface on the specified region\n"
+;
+
 static const char get_interface_list_doc[] =
 "    ds.get_interface_list (device)\n"
 "\n"

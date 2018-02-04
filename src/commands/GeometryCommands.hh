@@ -23,6 +23,7 @@ struct Commands;
 extern Commands GeometryCommands[];
 void getDeviceListCmd(CommandHandler &);
 void getRegionListCmd(CommandHandler &);
+void getElementNodeListCmd(CommandHandler &);
 }
 
 #endif
