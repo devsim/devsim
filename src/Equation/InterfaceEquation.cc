@@ -380,8 +380,16 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
                 const size_t col = reg.GetEquationNumber(eqindex, nlist[i]);
                 dsAssert(col != size_t(-1), "UNEXPECTED");
 
+                const Node *node0 = nodes0[i];
+                const Node *node1 = nodes1[i];
+
+                if (!(activeNodes.count(node0)) && (activeNodes.count(node1)))
+                {
+                  continue;
+                }
+
                 // as stated previously, we are assembling into the second region
-                const size_t row1 = r1.GetEquationNumber(eqindex1, nodes1[i]);
+                const size_t row1 = r1.GetEquationNumber(eqindex1, node1);
                 const DoubleType val = vals[i];
 
                 m.push_back(dsMath::RealRowColVal<DoubleType>(row1, col, val));
@@ -456,7 +464,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
             const Node *node0 = nodes0[i];
             const Node *node1 = nodes1[i];
 
-            if (!(activeNodes.count(node0)) && (activeNodes.count(node1)))
+            if (!(activeNodes.count(node0) && activeNodes.count(node1)))
             {
               continue;
             }
@@ -630,7 +638,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(const std::string &i
         const Node *node0 = nodes0[i];
         const Node *node1 = nodes1[i];
 
-        if (!(activeNodes.count(node0)) && (activeNodes.count(node1)))
+        if (!(activeNodes.count(node0) && activeNodes.count(node1)))
         {
           continue;
         }
