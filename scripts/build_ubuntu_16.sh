@@ -39,12 +39,12 @@ cd devsim
 
 # SuperLU and CGNS Download
 (cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
-(cd external && curl -L -O http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4-2.tar.gz && tar xzf cgnslib_3.1.4-2.tar.gz)
+(cd external && curl -L -O https://github.com/CGNS/CGNS/archive/v3.1.4.tar.gz && tar xzf v3.1.4.tar.gz)
 
 # SYMDIFF build
 (cd external/symdiff && bash scripts/setup_ubuntu_14.04.sh && cd linux_x86_64_release && make -j2);
 # CGNSLIB build
-(cd external && mkdir -p cgnslib_3.1.4/build && cd cgnslib_3.1.4/build && cmake -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
+(cd external && mkdir -p CGNS-3.1.4/build && cd cgnslib_3.1.4/build && cmake -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
 # SUPERLU build
 (cd external/SuperLU_4.3 && sh ../superlu_ubuntu_12.04.sh)
 
