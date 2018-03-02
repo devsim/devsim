@@ -48,7 +48,7 @@ cd devsim
 # SYMDIFF build
 (cd external/symdiff && bash scripts/setup_centos_6.sh && cd linux_x86_64_release && make -j2);
 # CGNSLIB build
-(cd external && mkdir -p CGNS-3.1.4/build && cd cgnslib_3.1.4/build && cmake3  -DCMAKE_C_COMPILER=/opt/rh/devtoolset-6/root/usr/bin/gcc -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
+(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake3  -DCMAKE_C_COMPILER=/opt/rh/devtoolset-6/root/usr/bin/gcc -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
 # SUPERLU build
 (cd external/SuperLU_4.3 && sh ../superlu_centos6.sh)
 
