@@ -39,9 +39,9 @@ then
 (cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
 fi
 
-if [ ! -f external/cgnslib_3.1.4-2.tar.gz ]
+if [ ! -f external/v3.1.4.tar.gz ]
 then
-(cd external && curl -L -O http://downloads.sourceforge.net/project/cgns/cgnslib_3.1/cgnslib_3.1.4-2.tar.gz && tar xzf cgnslib_3.1.4-2.tar.gz)
+(cd external && curl -L -O https://github.com/CGNS/CGNS/archive/v3.1.4.tar.gz && tar xzf v3.1.4.tar.gz)
 fi
 
 # SYMDIFF build
@@ -54,7 +54,7 @@ then
 fi
 
 # CGNSLIB build
-(cd external && mkdir -p cgnslib_3.1.4/build && cd cgnslib_3.1.4/build && cmake -DCMAKE_C_COMPILER=${CC} -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
+(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake -DCMAKE_C_COMPILER=${CC} -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
 # SUPERLU build
 (cd external/SuperLU_4.3 && sh ../superlu_osx_10.10.sh)
 
