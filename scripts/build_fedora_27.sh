@@ -11,7 +11,7 @@ sudo dnf install -y git bison flex tcl tcl-devel cmake3 gcc gcc-c++ libquadmath-
 
 
 #download install Miniconda
-mkdir -f ~/DevSim
+mkdir -p ~/DevSim
 cd ~/DevSim
 if [ ! -f Miniconda2-latest-Linux-x86_64.sh ]; then
     curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh;
@@ -21,17 +21,16 @@ fi
 ./anaconda/bin/conda install -y numpy mkl
 
 # add max depth or copy over
-if [ ! -f devsim ]; then
+if [ ! -d ~/DevSim/devsim ]; then
     git clone https://github.com/devsim/devsim
     cd devsim
     git submodule init
     git submodule update
 fi
 
-
 # SuperLU build
 cd ~/DevSim/devsim/external
-if [ ! -f SuperLU_4.3 ]; then
+if [ ! -d SuperLU_4.3 ]; then
     curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz
     tar xzf superlu_4.3.tar.gz
     cd SuperLU_4.3
@@ -54,7 +53,7 @@ cd linux_x86_64_release && make -j2
 
 # Finally, build devsim
 cd ~/DevSim/devsim/
-./scripts/setup_fedora_27.sh
+scripts/setup_fedora_27.sh
 (cd linux_x86_64_release && make -j2)
 #(cd dist && bash package_linux.sh ${1})
 
