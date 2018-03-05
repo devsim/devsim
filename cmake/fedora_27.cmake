@@ -35,9 +35,9 @@ SET (SQLITE3_ARCHIVE -lsqlite3)
 SET (SQLITE3_INCLUDE "/usr/include")
 
 # Cgns
-SET (CGNS_ARCHIVE -lcgns)
+SET (CGNS_ARCHIVE -lcgns -lhdf5)
 SET (CGNS_INCLUDE /usr/include)
 
 # Blas & Lapack
-SET (BLAS_ARCHIVE -llapack -lblas -lhdf5 ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
+SET (BLAS_ARCHIVE -llapack -lblas ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
 #ENDIF (${DEVSIM_CONFIG} STREQUAL "fedora_27
