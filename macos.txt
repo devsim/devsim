@@ -1,18 +1,31 @@
-
-This is the DEVSIM distribution in a zip format.  Extract the files from
+This is the DEVSIM distribution.  Extract the files from
 the archive into your preferred directory.  Product
 documentation is available in the devsim/doc directory.
 
+Default Version:
+
 Mac OS X provides all of the necessary dependencies to run DEVSIM.
 
-If you wish to use
-Anaconda Python 2.7 from http://continuum.io/download
+GCC Version:
 
-Environment variables may be set to point to the distribution
-export PYTHONHOME=${HOME}/anaconda
-export DYLD_INSERT_LIBRARIES=${HOME}/anaconda/lib/libpython2.7.dylib
+The gcc version of this release was built against:
 
-If you wish to use Anaconda and the Intel MKL for the BLAS and LAPACK routines:
-export DYLD_INSERT_LIBRARIES=${HOME}/anaconda/lib/libpython2.7.dylib:${HOME}/anaconda/lib/libmkl_rt.dylib
+* Python 2.7
+* Tcl 8.6
+* Intel MKL
 
+All of these dependencies are available by installing:
+Anaconda Python 2.7
+https://continuum.io/download
+
+Paths may be set by editing and then sourcing the appropriate script for your shell.
+
+csh:
+  source anaconda_vars.csh
+
+bash:
+  source anaconda_vars.sh
+
+If you have problems running the software, please file an issue at:
+https://github.com/devsim/devsim
 

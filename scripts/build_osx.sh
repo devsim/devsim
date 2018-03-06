@@ -14,6 +14,15 @@ if [ "${1}" = "gcc" ]
   export CC=/usr/local/bin/gcc-7;
   export CXX=/usr/local/bin/g++-7;
   export F77=/usr/local/bin/gfortran-7;
+
+  # install boost
+  if brew ls --versions boost > /dev/null;
+  then
+  brew outdated boost || brew upgrade boost;
+  else
+  brew install boost
+  fi
+
 elif [ "${1}" = "clang" ]
   then
   export CC=/usr/bin/gcc;

@@ -1,41 +1,27 @@
-This is the DEVSIM distribution in a zip format.  Extract the files from
-the archive into your preferred directory, e.g. c:\.  Product
-documentation is available in the devsim\doc directory.
+This is the DEVSIM distribution.  Extract the files from
+the archive into your preferred directory.  Product
+documentation is available in the devsim/doc directory.
 
 DEVSIM depends on the following 64 bit applications installed on your system:
 
-Anaconda Python 2.7 from http://continuum.io/download
+* Python 2.7
+* Tcl 8.5
+* Intel MKL
 
-ActiveTcl 8.5 from http://www.activestate.com
+Anaconda Python 2.7
+https://continuum.io/download
+
+ActiveTcl 8.5
+https://www.activestate.com
 * This is only required if you wish to run the Tcl version of DEVSIM.
 
-Visual C++ 2013 Redistributable package 
-http://www.microsoft.com/en-us/download/details.aspx?id=40784
+Microsoft Visual C++ Redistributable for Visual Studio 2017
+https://www.visualstudio.com/downloads
 
-When building this software from source, please download the following
-additional software for instructions to build the dependencies on the windows
-platform.
-https://github.com/devsim/devsim_win32_deps
-
-Test results are available from:
-https://github.com/devsim/devsim_tests_win64
-
-Note that it is may be necessary to set PATH and PYTHONPATH correctly.
-
-In order to use some modules, such pdb, it is necessary to update the devsim
-manifest using mt.exe from the windows SDK.
-"c:\Program Files (x86)\Windows Kits\8.1\bin\x64\mt.exe" -inputresource:c:\Anaconda\python.exe;#1 -out:devsim.exe.manifest
-"c:\Program Files (x86)\Windows Kits\8.1\bin\x64\mt.exe" -manifest devsim.exe.manifest -outputresource:devsim.exe;#1
-
-DEVSIM has the manifest copy from Anaconda in binary releases.
+It is necessary to set PATH and PYTHONPATH correctly.
 
 It is recommended to copy c:\Anaconda\python27.dll into the devsim bin directory.  This is to prevent issues when multiple python distributions are on the system.
 
-If you have issues running the software, please file an issue at:
-http://github.com/devsim/devsim
-
-Attribution:
-This binary release uses the
-Intel Math Kernel Library 11.3
-http://software.intel.com/en-us/intel-mkl
+If you have problems running the software, please file an issue at:
+https://github.com/devsim/devsim
 

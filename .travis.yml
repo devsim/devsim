@@ -32,7 +32,7 @@ script:
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     if [ "$COMPILER" == "gcc" ]; then
-      ./scripts/build_osx.sh $COMPILER "_gcc_${TRAVIS_TAG}";
+      ./scripts/build_osx.sh $COMPILER "gcc_${TRAVIS_TAG}";
     elif [ "$COMPILER" == "clang" ]; then
       ./scripts/build_osx.sh $COMPILER "${TRAVIS_TAG}";
     fi

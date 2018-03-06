@@ -21,8 +21,8 @@ fi
 ${HOME}/anaconda/bin/conda install -y numpy mkl
 
 #download boost library
-(cd /root/devsim/external && curl -O -L https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz)
-(cd /root/devsim/external && tar xzf boost_1_64_0.tar.gz)
+(cd /root/devsim/external && curl -O -L https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz)
+(cd /root/devsim/external && tar xzf boost_1_66_0.tar.gz)
 
 #git clone https://github.com/devsim/symdiff
 #cd symdiff

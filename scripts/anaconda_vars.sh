@@ -3,5 +3,6 @@
 ### environment variables for using anaconda with devsim
 ###
 export LD_LIBRARY_PATH=${HOME}/anaconda/lib
+export DYLD_LIBRARY_PATH=${HOME}/anaconda/lib
 export PYTHONHOME=${HOME}/anaconda
-export TCL_LIBRARY=${HOME}/anaconda/lib/tcl8.5
+export TCL_LIBRARY=${HOME}/anaconda/lib/tcl8.6

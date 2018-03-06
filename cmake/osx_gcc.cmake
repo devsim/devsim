@@ -6,22 +6,30 @@ ADD_DEFINITIONS(-DTCL_THREADS -fvisibility=hidden)
 #IF (${DEVSIM_CONFIG} STREQUAL "osx_10.9")
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
-SET (PYTHON_ARCHIVE "-lpython2.7")
-SET (PYTHON_INCLUDE "/usr/include/python2.7")
+SET (PYTHON_ARCHIVE -L$ENV{HOME}/anaconda/lib -lpython2.7)
+SET (PYTHON_INCLUDE $ENV{HOME}/anaconda/include/python2.7)
 SET (BOOST_INCLUDE "/usr/local/include")
 SET (BOOST_ARCHIVE )
 
 SET (QUADMATH_ARCHIVE "-lquadmath")
-SET (TCL_STUB /usr/lib/libtclstub8.5.a)
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 #SET (BLAS_ARCHIVE  -lblas -llapack)
-SET (BLAS_ARCHIVE  -lblas -llapack ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
+#SET (BLAS_ARCHIVE  -lblas -llapack ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
 #SET (BLAS_ARCHIVE  -weak-lblas -weak-llapack)
+
+SET (MKLROOT $ENV{HOME}/anaconda)
+SET (BLAS_ARCHIVE  ${EXTERNAL_LIB}/getrf/build/libgetrf.a
+ -L${MKLROOT}/lib -lmkl_rt -lpthread -lm -ldl
+#-L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_rt -lpthread -lm -ldl
+)
+
+
 SET (SUPERLULOCATE  ${EXTERNAL_LIB}/SuperLU_4.3)
 SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
 SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/lib/libsuperlu_4.3_x86_64.a)
-SET (TCL_INCLUDE "/usr/include")
-SET (TCL_ARCHIVE "-ltcl8.5" -ldl)
+SET (TCL_INCLUDE "$ENV{HOME}/anaconda/include")
+SET (TCL_ARCHIVE -L$ENV{HOME}/anaconda/lib -ltcl8.6 -ldl)
+#SET (TCL_STUB /usr/lib/libtclstub8.5.a)
 SET (SQLITE3_ARCHIVE "-lsqlite3")
 SET (SQLITE3_INCLUDE "/usr/include")
 SET (CGNS_ARCHIVE ${EXTERNAL_LIB}/cgnslib/lib/libcgns.a)

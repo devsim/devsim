@@ -1,29 +1,25 @@
-
-This is the DEVSIM distribution in a zip format.  Extract the files from
+This is the DEVSIM distribution.  Extract the files from
 the archive into your preferred directory.  Product
 documentation is available in the devsim/doc directory.
 
 DEVSIM depends on the following 64 bit applications installed on your system:
-Python 2.7
 
-Tcl 8.5
-* This is only required if you wish to run the Tcl version of DEVSIM.
+* Python 2.7
+* Tcl 8.6
+* Intel MKL
 
-Both of these dependencies are available in:
-Anaconda Python 2.7 from http://continuum.io/download
+All of these dependencies are available by installing:
+Anaconda Python 2.7
+https://continuum.io/download
 
-If it is necessary to set environment variables to find these dependencies, please try:
-source anaconda_vars.sh
-or
-source anaconda_vars.csh
+Paths may be set by editing and then sourcing the appropriate script for your shell.
 
-to set the appropriate paths
+csh:
+  source anaconda_vars.csh
 
-If you have issues running the software, please file an issue at:
-http://github.com/devsim/devsim
+bash:
+  source anaconda_vars.sh
 
-Attribution:
-This binary release uses the
-Intel Math Kernel Library 11.3
-http://software.intel.com/en-us/intel-mkl
+If you have problems running the software, please file an issue at:
+https://github.com/devsim/devsim
 
