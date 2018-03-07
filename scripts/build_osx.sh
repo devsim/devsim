@@ -33,6 +33,18 @@ else
   exit 1;
 fi
 
+if [ "${1}" = "gcc" ]
+(cd ${HOME} &&
+if [ ! -f Miniconda2-latest-MacOSX-x86_64.sh ]
+then
+curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh;
+bash ~/Miniconda2-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
+fi &&
+${HOME}/anaconda/bin/conda install -y numpy mkl
+)
+fi
+
+
 #For Mac OS X, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
 #https://developer.apple.com/technologies/tools
 #https://developer.apple.com/performance/accelerateframework.html
