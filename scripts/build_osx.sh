@@ -33,15 +33,12 @@ else
   exit 1;
 fi
 
-if [ "${1}" = "gcc" ]
-(cd ${HOME} &&
-if [ ! -f Miniconda2-latest-MacOSX-x86_64.sh ]
+if [ "${1}" = "gcc" ] && [ ! -f ${HOME}/Miniconda2-latest-MacOSX-x86_64.sh ]
 then
+(cd ${HOME} &&
 curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh;
 bash ~/Miniconda2-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
-fi &&
-${HOME}/anaconda/bin/conda install -y numpy mkl
-)
+${HOME}/anaconda/bin/conda install -y numpy mkl;)
 fi
 
 
