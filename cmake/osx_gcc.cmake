@@ -38,7 +38,9 @@ SET (ZLIB_INCLUDE "/usr/include")
 SET (ZLIB_ARCHIVE "-lz")
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
-SET (ADD_LINKER_FLAGS " -flat_namespace")
+# FLAT NAMESPACE CAUSES AN ABORT WHEN EXCEPTIONS ARE THROWN
+# For Example: https://github.com/elemental/Elemental/issues/203
+#SET (ADD_LINKER_FLAGS " -flat_namespace")
 #SET (ADD_RPATH "@executable_path/../lib")
 #ENDIF (${DEVSIM_CONFIG} STREQUAL "osx_10.9")
 
