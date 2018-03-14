@@ -378,9 +378,13 @@ void SuperLUData::DeleteStorage()
 }
 }
 
+#if 0
+// Specialized above
 template bool dsMath::SuperLUData::LUFactorMatrix(CompressedMatrix<double> *cm);
 #ifdef DEVSIM_EXTENDED_PRECISION
 template bool dsMath::SuperLUData::LUFactorMatrix(CompressedMatrix<float128> *cm);
 #endif
+#endif
+
 
 

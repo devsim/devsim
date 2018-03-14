@@ -81,6 +81,11 @@ template <>
 const float128 Newton<float128>::DefaultQRelError = 0.0;
 #endif
 
+template <typename DoubleType>
+Newton<DoubleType>::Newton() : maxiter(DefaultMaxIter), absLimit(DefaultAbsError), relLimit(DefaultRelError), qrelLimit(DefaultQRelError), dimension(0) {}
+
+template <typename DoubleType>
+Newton<DoubleType>::~Newton() {};
 
 template <typename DoubleType>
 size_t Newton<DoubleType>::NumberEquationsAndSetDimension()

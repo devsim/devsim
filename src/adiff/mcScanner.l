@@ -34,6 +34,8 @@ limitations under the License.
 #else
 #include <unistd.h>
 #endif 
+// remove clang compiler warning
+#define register
 %}
 %option noyywrap
 %option nounput

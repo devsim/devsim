@@ -511,14 +511,19 @@ bool Interface::UseExtendedPrecisionEquations() const
   return UseExtendedPrecisionType("extended_equation");
 }
 
+#if 0
+// Specialized above
 template InterfaceModelExprDataCachePtr<double> Interface::GetInterfaceModelExprDataCache();
 template void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<double> p);
+#endif
 template void Interface::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t);
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
+#if 0
 template InterfaceModelExprDataCachePtr<float128> Interface::GetInterfaceModelExprDataCache();
 template void Interface::SetInterfaceModelExprDataCache(InterfaceModelExprDataCachePtr<float128> p);
+#endif
 template void Interface::Assemble(dsMath::RealRowColValueVec<float128> &m, dsMath::RHSEntryVec<float128> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t);
 #endif
 

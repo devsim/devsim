@@ -25,6 +25,8 @@ limitations under the License.
 #include <io.h>
 #define YY_NO_UNISTD_H
 #endif
+// remove clang compiler warning
+#define register
 %}
 %option noyywrap
 %option nounput

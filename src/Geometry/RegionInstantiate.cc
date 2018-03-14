@@ -1,6 +1,9 @@
 
+#if 0
+// see actual implementations in Region.cc
 template ModelExprDataCachePtr<DBLTYPE> Region::GetModelExprDataCache();
 template void Region::SetModelExprDataCache(ModelExprDataCachePtr<DBLTYPE>);
+#endif
 
 template void Region::Update(const std::vector<DBLTYPE> &result);
 template void Region::ACUpdate(const std::vector<std::complex<DBLTYPE> > &result);

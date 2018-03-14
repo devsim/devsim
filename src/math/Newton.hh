@@ -158,8 +158,8 @@ class Newton {
 
         /// Newton takes on linear solver
         /// near solver selects Preconditioner
-        Newton() : maxiter(DefaultMaxIter), absLimit(DefaultAbsError), relLimit(DefaultRelError), qrelLimit(DefaultQRelError), dimension(0) {}
-        ~Newton() {};
+        Newton();
+        ~Newton();
 
         //// INTEGRATE_DC means that we are just gonna Assemble I, Q when done
 
