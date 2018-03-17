@@ -26,8 +26,12 @@ DIST_VER=${DIST_DIR}
 #http://developer.apple.com/library/mac/#documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/CPPROverview.html
 mkdir -p ${DIST_BIN}
 cp ${SRC_DIR}/devsim_py ${DIST_BIN}/devsim
-cp ${SRC_DIR}/devsim_py3 ${DIST_BIN}/devsim_py3
 cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl
+
+if [ "$1" = "gcc" ]
+  then
+cp ${SRC_DIR}/devsim_py3 ${DIST_BIN}/devsim_py3
+fi
 
 if [ "$1" = "gcc" ]
 then

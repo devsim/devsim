@@ -20,6 +20,7 @@ MT_EXE="/cygdrive/c/Program Files (x86)/Windows Kits/8.1/bin/x64/mt.exe"
 # make the bin directory and copy binary in
 mkdir -p ${DIST_BIN}
 cp ${SRC_DIR}/devsim_py.exe ${DIST_BIN}/devsim.exe
+cp ${SRC_DIR}/devsim_py3.exe ${DIST_BIN}/devsim_py3.exe
 cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl.exe
 ##### update the manifest
 (cd ${DIST_BIN} &&

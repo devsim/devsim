@@ -46,9 +46,6 @@ SET (THIRDPARTY ${CMAKE_SOURCE_DIR}/external/devsim_win32_deps)
 #${INTEL_MKL_LINK}
 #)
 SET (BLAS_ARCHIVE 
-#${THIRDPARTY}/CLAPACK64/lib/lapack.lib
-#${THIRDPARTY}/CLAPACK64/lib/blas.lib
-#${THIRDPARTY}/CLAPACK64/lib/libf2c.lib
 c:/Miniconda-x64/Library/lib/mkl_rt.lib
 )
 
@@ -56,6 +53,8 @@ SET (CGNS_ARCHIVE ${THIRDPARTY}/cgnslib64/lib/cgns.lib)
 SET (CGNS_INCLUDE ${THIRDPARTY}/cgnslib64/include)
 SET (PYTHON_ARCHIVE C:/Miniconda-x64/libs/python27.lib)
 SET (PYTHON_INCLUDE C:/Miniconda-x64/include)
+SET (PYTHON3_ARCHIVE C:/Miniconda3-x64/libs/python36.lib)
+SET (PYTHON3_INCLUDE C:/Miniconda3-x64/include)
 SET (SQLITE3_ARCHIVE "${THIRDPARTY}/sqlite-amalgamation-3080600/sqlite3.lib")
 SET (SQLITE3_INCLUDE "${THIRDPARTY}/sqlite-amalgamation-3080600")
 SET (SUPERLULOCATE  ${THIRDPARTY}/SuperLU_4.3)

@@ -115,7 +115,10 @@ matrix:
 install:
   # by default, all script lines are interpreted as batch
   # intel mkl support
+  # the intel channel is required to get the .lib for mkl
   - c:\Miniconda-x64\Scripts\conda install --yes -c intel mkl
+  # need to debug path
+  - c:\Miniconda-x64\Scripts\conda env list
   # install ActiveState Tcl
   - appveyor DownloadFile http://downloads.activestate.com/ActiveTcl/releases/8.5.18.0/ActiveTcl8.5.18.0.298892-win32-x86_64-threaded.exe
   - ActiveTcl8.5.18.0.298892-win32-x86_64-threaded.exe --directory C:\Tcl
