@@ -32,6 +32,7 @@ bool Python_AppInit() {
   if (dsPy::Commands_Init() == false) {
        return false;
   }
+  Py_Initialize();
 #else
   /* Initialize our extension */
   Py_Initialize();

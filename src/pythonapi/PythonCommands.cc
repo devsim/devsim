@@ -47,6 +47,7 @@ namespace dsPy {
 
 namespace {
 struct module_state {
+  module_state() : error(nullptr) {};
   PyObject *error;
 };
 
@@ -422,7 +423,7 @@ void initds()
 
     if (module == NULL)
     {
-        INITERROR;
+      INITERROR;
     }
     struct module_state *st = GETSTATE(module);
 
@@ -433,6 +434,7 @@ void initds()
         Py_DECREF(module);
         INITERROR;
     }
+    PyModule_AddObject(module, "error", st->error);
 
 #if PY_MAJOR_VERSION >=3
   return module;

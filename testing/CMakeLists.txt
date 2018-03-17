@@ -8,6 +8,7 @@ SET (OUTPUTDIR   ${RUNDIR})
 SET (MODELCOMP   ${PROJECT_BINARY_DIR}/src//adiff/Release/modelcomp)
 SET (DEVSIM_TCL  "${PROJECT_BINARY_DIR}/src/main/Release/devsim_tcl")
 SET (DEVSIM_PY   "${PROJECT_BINARY_DIR}/src/main/Release/devsim_py")
+SET (DEVSIM_PY3   "${PROJECT_BINARY_DIR}/src/main/Release/devsim_py3")
 IF (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
 SET (GOLDENDIR   ${PROJECT_SOURCE_DIR}/goldenresults/win32)
 ELSE (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
@@ -19,6 +20,7 @@ SET (DIFF_ARGS --brief)
 SET (RUNDIFFTEST ${PROJECT_SOURCE_DIR}/testing/rundifftest.pl)
 SET (DEVSIM_TCL  ${PROJECT_BINARY_DIR}/src/main/devsim_tcl)
 SET (DEVSIM_PY   ${PROJECT_BINARY_DIR}/src/main/devsim_py)
+SET (DEVSIM_PY3   ${PROJECT_BINARY_DIR}/src/main/devsim_py3)
 SET (GOLDENDIR   ${PROJECT_SOURCE_DIR}/goldenresults/${HOSTNAME})
 SET (RUNDIR      ${PROJECT_SOURCE_DIR}/testing)
 SET (OUTPUTDIR   ${RUNDIR})
@@ -45,6 +47,10 @@ ENDIF (APPLE)
 IF (DEVSIM_PY_TEST_EXE)
 SET (DEVSIM_PY   ${DEVSIM_PY_TEST_EXE})
 ENDIF (DEVSIM_PY_TEST_EXE)
+
+IF (DEVSIM_PY3_TEST_EXE)
+SET (DEVSIM_PY3   ${DEVSIM_PY3_TEST_EXE})
+ENDIF (DEVSIM_PY3_TEST_EXE)
 
 IF (DEVSIM_TCL_TEST_EXE)
 SET (DEVSIM_TCL  ${DEVSIM_TCL_TEST_EXE})
@@ -75,6 +81,13 @@ ENDFOREACH(I)
 
 ADD_TEST("testing/pythonmesh1d_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/pythonmesh1d.msh ${GOLDENDIR}/testing/pythonmesh1d.msh)
 set_tests_properties("testing/pythonmesh1d_comp" PROPERTIES DEPENDS "testing/pythonmesh1d")
+
+SET (NEWPY3TESTS
+  cap3
+)
+FOREACH(I ${NEWPY3TESTS})
+    ADD_TEST("testing/${I}_python3" ${RUNDIFFTEST} "${DEVSIM_PY3} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
+ENDFOREACH(I)
 
 SET (NEWTESTS res1 res2 res3 dio1_utf8 dio2 circ1 circ2 circ3 circ4
 ssac_circ ssac_cap ssac_res ssac_diode utf8_1 mesh1 mesh2 mesh3 mesh4 trimesh1 trimesh2 floops erf1 Fermi1
