@@ -22,21 +22,27 @@ limitations under the License.
 #include "GetGlobalParameter.hh"
 
 extern "C" {
-//int Sqlite3_Init(Tcl_Interp *interp);
 }
-
-#if 0
-namespace mthread {
-  Tcl_ThreadId mthread;
-  extern const char *const mthread_error = "DEVSIM commands outside of main application thread not supported.";
-}
-#endif
 
 
 bool Python_AppInit() {
-    Py_Initialize();
-//    PyEval_InitThreads();
-      OutputStream::WriteOut(OutputStream::OutputType::INFO,
+
+#if PY_MAJOR_VERSION >=3
+  /* Initialize our extension */
+  if (dsPy::Commands_Init() == false) {
+       return false;
+  }
+#else
+  /* Initialize our extension */
+  Py_Initialize();
+  
+  if (dsPy::Commands_Init() == false) {
+       return false;
+  }
+
+#endif
+
+  OutputStream::WriteOut(OutputStream::OutputType::INFO,
 "\n"
 "----------------------------------------\n"
 "\n"
@@ -51,28 +57,6 @@ bool Python_AppInit() {
 "\n"
 "\n"
     );
-
-    Py_SetProgramName(const_cast<char *>("DEVSIM"));
-//    PyEval_ReleaseLock();
-
-#if 0
-      if (Tcl_PkgRequire(interp, "devsim_license", "1.0", 0) == NULL)
-      {
-        return TCL_ERROR;
-      }
-
-      mthread::mthread = Tcl_GetCurrentThread();
-
-      /* Initialize Sqlite3 */
-      if (Sqlite3_Init(interp) == TCL_ERROR) {
-           return TCL_ERROR;
-      }
-#endif
-
-      /* Initialize our extension */
-      if (dsPy::Commands_Init() == false) {
-           return false;
-      }
-      return true;
+  return true;
 }
 

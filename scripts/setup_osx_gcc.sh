@@ -14,6 +14,7 @@ for TYPE in debug release; do
       -DDEVSIM_CONFIG=${DEVSIM_CONFIG} \
       -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}" \
       -DDEVSIM_EXTENDED_PRECISION=ON \
+      -DPYTHON3=ON \
       ..)
   done
 done

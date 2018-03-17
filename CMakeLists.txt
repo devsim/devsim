@@ -3,6 +3,8 @@ PROJECT (DEVSIM)
 OPTION(GENIUSREADER "Build with Genius Reader" ON)
 OPTION(VTKWRITER    "Build with VTK Writer" ON)
 OPTION(TCLMAIN      "Build with TCL Interpreter" ON)
+#Python 2 version is always build
+OPTION(PYTHON3      "Build Python 3 Interpreter" OFF)
 OPTION(DEVSIM_EXTENDED_PRECISION "Build with extended precision" OFF)
 
 

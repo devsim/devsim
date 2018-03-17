@@ -13,9 +13,6 @@ SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 ADD_DEFINITIONS(-DTCL_THREADS -pthread -fvisibility=hidden)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
-SET (PYTHON_INCLUDE $ENV{HOME}/anaconda/include/python2.7)
-# use /opt/acml5.3.0/util/cpuid.exe to find support
-# ACML 5.3 available at developer.amd.com
 SET (ZLIB_INCLUDE $ENV{HOME}/anaconda/include)
 
 SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boost_1_66_0)
@@ -33,5 +30,9 @@ SET (SQLITE3_ARCHIVE $ENV{HOME}/anaconda/lib/libsqlite3.a)
 SET (TCL_INCLUDE "$ENV{HOME}/anaconda/include")
 #SET (TCL_STUB /usr/lib64/libtclstub8.6.a)
 SET (TCL_ARCHIVE -L$ENV{HOME}/anaconda/lib -ltcl8.6 -ldl)
+
+SET (PYTHON_INCLUDE $ENV{HOME}/anaconda/include/python2.7)
 SET (PYTHON_ARCHIVE -L$ENV{HOME}/anaconda/lib -lpython2.7)
+SET (PYTHON3_INCLUDE $ENV{HOME}/anaconda/envs/python3/include/python3.6m)
+SET (PYTHON3_ARCHIVE -L$ENV{HOME}/anaconda/envs/python3/lib -lpython3.6m)
 

@@ -20,11 +20,17 @@ INCLUDE_DIRECTORIES (
     ../pythonapi
     ../commands
     ../common_api
-    ${PYTHON_INCLUDE}
 )
 
 
 ADD_LIBRARY (pythonapi_interpreter ${CXX_SRCS1})
 ADD_LIBRARY (pythonapi_api ${CXX_SRCS2})
+TARGET_INCLUDE_DIRECTORIES (pythonapi_interpreter PUBLIC ${PYTHON_INCLUDE})
+TARGET_INCLUDE_DIRECTORIES (pythonapi_api PUBLIC ${PYTHON_INCLUDE})
 
-
+IF (PYTHON3)
+ADD_LIBRARY (python3api_interpreter ${CXX_SRCS1})
+ADD_LIBRARY (python3api_api ${CXX_SRCS2})
+TARGET_INCLUDE_DIRECTORIES (python3api_interpreter PUBLIC ${PYTHON3_INCLUDE})
+TARGET_INCLUDE_DIRECTORIES (python3api_api PUBLIC ${PYTHON3_INCLUDE})
+ENDIF (PYTHON3)

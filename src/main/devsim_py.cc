@@ -48,8 +48,30 @@ int main(int argc, char * argv[])
 
     dsHelper::CreateDefaultDerivatives();
 
+
+#if PY_MAJOR_VERSION >= 3
+    std::vector<wchar_t *> wargv(argc);
+    for (size_t i = 0; i < argc; ++i)
+    {
+      wargv[i] = Py_DecodeLocale(argv[i], NULL);
+    }
+    Py_SetProgramName(wargv[0]);
+#else
+    Py_SetProgramName(argv[0]);
+#endif
+
     Python_AppInit();
+
+#if PY_MAJOR_VERSION >= 3
+    int ret=Py_Main(argc, &wargv[0]);
+    for (size_t i = 0; i < argc; ++i)
+    {
+      PyMem_RawFree(wargv[i]);
+    }
+    wargv.clear();
+#else
     int ret=Py_Main(argc, argv);
+#endif
 
 //// While this is correct for memory recovery, it creates issues in writing to the output stream after python has exited.
 #ifndef NDEBUG

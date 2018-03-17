@@ -84,15 +84,39 @@ ObjectHolder::ObjectHolder(void *t) : object_(t)
 #endif
 }
 
+namespace {
+
+//https://stackoverflow.com/questions/5356773/python-get-string-representation-of-pyobject
+std::string GetStringFromStringObject(PyObject *obj)
+{
+  std::string ret;
+  if (PyUnicode_CheckExact(obj))
+  {
+    PyObject *sobj = PyUnicode_AsUTF8String(obj);
+    ret = PyBytes_AS_STRING(sobj);
+    Py_DECREF(sobj);
+  }
+  else if (PyBytes_CheckExact(obj))
+  {
+    ret = PyBytes_AS_STRING(obj);
+  }
+  return ret;
+}
+  
+}
+
 std::string ObjectHolder::GetString() const
 {
   std::string ret;
   if (object_)
   {
-    PyObject *strobj = PyObject_Str(reinterpret_cast<PyObject *>(object_));
-    if (strobj)
+    PyObject *obj = reinterpret_cast<PyObject *>(object_);
+    ret = GetStringFromStringObject(obj);
+
+    if (ret.empty())
     {
-      ret = PyString_AsString(strobj);
+      PyObject *strobj = PyObject_Str(obj);
+      ret = GetStringFromStringObject(strobj);
       Py_DECREF(strobj);
     }
   }
@@ -112,13 +136,23 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
       ok  = true;
       val = PyFloat_AsDouble(obj);
     }
-    else if (PyInt_CheckExact(obj) || PyLong_CheckExact(obj))
+#if PY_MAJOR_VERSION < 3
+    else if (PyInt_CheckExact(obj))
     {
       return this->GetInteger();
     }
-    else if (PyString_CheckExact(obj))
+#endif
+    else if (PyLong_CheckExact(obj))
     {
+      return this->GetLong();
+    }
+    else if (PyUnicode_CheckExact(obj) || PyBytes_CheckExact(obj))
+    {
+#if PY_MAJOR_VERSION < 3
       PyObject *fobj = PyFloat_FromString(obj, NULL);
+#else
+      PyObject *fobj = PyFloat_FromString(obj);
+#endif
       if (fobj)
       {
         ok = true;
@@ -187,17 +221,19 @@ ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
   if (object_)
   {
     PyObject *obj = reinterpret_cast<PyObject *>(object_);
-    if (PyInt_CheckExact(obj))
-    {
-      ok = true;
-      val = PyInt_AsLong(obj);
-    }
-    else if (PyLong_CheckExact(obj))
+    if (PyLong_CheckExact(obj))
     {
       ok = true;
       val = PyLong_AsLong(obj);
     }
-    else if (PyString_CheckExact(obj))
+#if PY_MAJOR_VERSION < 3
+    else if (PyInt_CheckExact(obj))
+    {
+      ok = true;
+      val = PyInt_AsLong(obj);
+    }
+#endif
+    else if (PyUnicode_CheckExact(obj) || PyBytes_CheckExact(obj))
     {
       const std::string &s = this->GetString();
       PyErr_Clear();
@@ -430,20 +466,21 @@ void *ObjectHolder::GetObject()
 
 ObjectHolder::ObjectHolder(const std::string &s)
 {
-  object_ = PyString_FromStringAndSize(s.c_str(), s.size());
-//  Py_INCREF(reinterpret_cast<PyObject *>(object_));
+  object_ = PyUnicode_FromStringAndSize(s.c_str(), s.size());
 }
 
 ObjectHolder::ObjectHolder(double v)
 {
   object_ = PyFloat_FromDouble(v);
-//  Py_INCREF(reinterpret_cast<PyObject *>(object_));
 }
 
 ObjectHolder::ObjectHolder(int v)
 {
+#if PY_MAJOR_VERSION < 3
   object_ = PyInt_FromLong(v);
-//  Py_INCREF(reinterpret_cast<PyObject *>(object_));
+#else
+  object_ = PyLong_FromLong(v);
+#endif
 }
 
 ObjectHolder::ObjectHolder(ObjectHolderList_t &list)

@@ -35,10 +35,15 @@ fi
 
 if [ "${1}" = "gcc" ] && [ ! -f ${HOME}/Miniconda2-latest-MacOSX-x86_64.sh ]
 then
+# Python 2
 (cd ${HOME} &&
 curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh;
 bash ~/Miniconda2-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
 ${HOME}/anaconda/bin/conda install -y numpy mkl;)
+
+#Python3
+${HOME}/anaconda/bin/conda create -y --name python3 python=3
+${HOME}/anaconda/bin/conda install -y -n python3 numpy mkl
 fi
 
 

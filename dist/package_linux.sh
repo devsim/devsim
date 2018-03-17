@@ -22,6 +22,7 @@ DIST_VER=${DIST_DIR}
 #chmod +x ${DIST_DIR}/bin/devsim
 mkdir -p ${DIST_BIN}
 cp ${SRC_DIR}/devsim_py ${DIST_DIR}/bin/devsim
+cp ${SRC_DIR}/devsim_py3 ${DIST_BIN}/devsim_py3
 cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl
 # strip unneeded symbols
 #strip --strip-unneeded ${DIST_DIR}/bin/$i

@@ -46,114 +46,20 @@ using namespace dsValidate;
 namespace dsPy {
 
 namespace {
-  std::map<std::string, newcmd> CommandMap;
-  ObjectHolder devsim_exception;
-}
+struct module_state {
+  PyObject *error;
+};
 
-#if 0
-PyObject *
-CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs)
-{
-  //// return exception
-  PyObject *ret = NULL;
-
-  FPECheck::ClearFPE();
-
-  std::string command_name;
-
-
-  if (args)
-  {
-    if (PyTuple_CheckExact(args))
-    {
-      size_t argc = PyTuple_Size(args);
-      if (argc == 1)
-      {
-        PyObject *lobj = PyTuple_GetItem(args, 0);
-        if (PyString_CheckExact(lobj))
-        {
-          command_name = PyString_AsString(lobj);
-        }
-        else
-        {
-          PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), "UNEXPECTED");
-          return ret;
-        }
-      }
-      else if (argc > 1)
-      {
-        std::ostringstream os;
-        os << "Command " << command_name << " does not take positional arguments";
-        PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), os.str().c_str());
-        return ret;
-      }
-    }
-    else
-    {
-      PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), "UNEXPECTED");
-      return ret;
-    }
-  }
-
-  std::map<std::string, newcmd>::iterator it = CommandMap.find(command_name);
-  newcmd cmdptr = (it->second);
-  if (it == CommandMap.end())
-  {
-    PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), "UNEXPECTED");
-    return ret;
-  }
-
-  try
-  {
-
-    dsGetArgs::CommandInfo command_info;
-    command_info.self_         =  self;
-    command_info.args_         =  args;
-    command_info.kwargs_       =  kwargs;
-    command_info.command_name_ =  command_name;
-    command_info.exception_    =  reinterpret_cast<PyObject *>(devsim_exception.GetObject());
-
-    CommandHandler data(&command_info);
-    command_info.command_handler_ = &data;
-    cmdptr(data);
-    ret = reinterpret_cast<PyObject *>(data.GetReturnObject().GetObject());
-    if (ret)
-    {
-      Py_INCREF(ret);
-    }
-  }
-  catch (const dsException &x)
-  {
-    ret = NULL;
-    PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), x.what());
-  }
-  catch (std::bad_alloc &)
-  {
-    ret = NULL;
-    PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), const_cast<char *>("OUT OF MEMORY"));
-  }
-  catch (std::exception &)
-  {
-    ret = NULL;
-    PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), const_cast<char *>("UNEXPECTED ERROR"));
-  }
-
-
-  if (FPECheck::CheckFPE())
-  {
-    std::ostringstream os;
-    os << "There was an uncaught floating point exception of type \"" << FPECheck::getFPEString() << "\"\n";
-    FPECheck::ClearFPE();
-    ret = NULL;
-    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str().c_str());
-  }
-
-
-  return ret;
-}
+#if PY_MAJOR_VERSION >= 3
+#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+#else
+#define GETSTATE(m) (&_state)
+static struct module_state _state;
 #endif
+}
 
-static PyObject * CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs, const char *name, newcmd fptr)
+
+static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, const char *name, newcmd fptr)
 {
   PyObject *ret = NULL;
 
@@ -171,13 +77,13 @@ static PyObject * CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs, 
       {
         std::ostringstream os;
         os << "Command " << command_name << " does not take positional arguments";
-        PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), os.str().c_str());
+        PyErr_SetString(GETSTATE(m)->error, os.str().c_str());
         return ret;
       }
     }
     else
     {
-      PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), "UNEXPECTED");
+      PyErr_SetString(GETSTATE(m)->error, "UNEXPECTED");
       return ret;
     }
   }
@@ -186,14 +92,14 @@ static PyObject * CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs, 
   {
 
     dsGetArgs::CommandInfo command_info;
-    command_info.self_         =  self;
+    command_info.self_         =  m;
     command_info.args_         =  args;
     if (kwargs) {
     Py_INCREF(kwargs);
     }
     command_info.kwargs_       =  kwargs;
     command_info.command_name_ =  command_name;
-    command_info.exception_    =  reinterpret_cast<PyObject *>(devsim_exception.GetObject());
+    command_info.exception_    =  GETSTATE(m)->error;
 
     CommandHandler data(&command_info);
     command_info.command_handler_ = &data;
@@ -207,17 +113,17 @@ static PyObject * CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs, 
   catch (const dsException &x)
   {
     ret = NULL;
-    PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), x.what());
+    PyErr_SetString(GETSTATE(m)->error, x.what());
   }
   catch (std::bad_alloc &)
   {
     ret = NULL;
-    PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), const_cast<char *>("OUT OF MEMORY"));
+    PyErr_SetString(GETSTATE(m)->error, const_cast<char *>("OUT OF MEMORY"));
   }
   catch (std::exception &)
   {
     ret = NULL;
-    PyErr_SetString(reinterpret_cast<PyObject *>(devsim_exception.GetObject()), const_cast<char *>("UNEXPECTED ERROR"));
+    PyErr_SetString(GETSTATE(m)->error, const_cast<char *>("UNEXPECTED ERROR"));
   }
 
 
@@ -241,24 +147,9 @@ PyObject * name ## CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs)
   return CmdDispatch(self, args, kwargs, # name, fptr); \
 }
 
+// https://stackoverflow.com/questions/28857522/python-c-extension-keyword-arguments
+#define MYCOMMAND(name, fptr) {#name, reinterpret_cast<PyCFunction>(name ## CmdDispatch), METH_KEYWORDS | METH_VARARGS, name ## _doc}
 
-#define MYCOMMAND(name, fptr) {#name, reinterpret_cast<PyCFunction>(name ## CmdDispatch), METH_KEYWORDS, name ## _doc}
-
-#if 0
-namespace {
-bool CreateCommand(Interpreter &interp, const std::string &name)
-{
-  std::ostringstream os;
-  os << "def " << name << "(*args, **kwargs):\n"
-    "  return ds.devsim('" << name << "', *args, **kwargs)\n"
-    "ds." << name << "=" << name << "\n"
-    "del " << name << "\n"
-    ;
-  bool ok = interp.RunCommand(os.str());
-  return ok;
-}
-}
-#endif
 
 // Geometry Commands
 MyNewPyPtr(get_device_list,    dsCommand::getDeviceListCmd);
@@ -488,53 +379,84 @@ MYCOMMAND(get_circuit_equation_number, dsCommand::circuitGetCircuitEquationNumbe
 {NULL, NULL, 0, NULL}
 };
 
-void AddCommands()
+
+
+#if PY_MAJOR_VERSION >= 3
+static int devsim_traverse(PyObject *m, visitproc visit, void *arg) {
+    Py_VISIT(GETSTATE(m)->error);
+    return 0;
+}
+
+static int devsim_clear(PyObject *m) {
+    Py_CLEAR(GETSTATE(m)->error);
+    return 0;
+}
+
+
+static struct PyModuleDef moduledef = {
+        PyModuleDef_HEAD_INIT,
+        "ds",
+        NULL,
+        sizeof(struct module_state),
+        devsim_methods,
+        NULL,
+        devsim_traverse,
+        devsim_clear,
+        NULL
+};
+
+#define INITERROR return NULL
+
+PyMODINIT_FUNC
+PyInit_ds(void)
+#else
+#define INITERROR return
+void initds()
+#endif
 {
-
+#if PY_MAJOR_VERSION >= 3
+  PyObject *module = PyModule_Create(&moduledef);
+#else
   PyObject *module = Py_InitModule("ds", devsim_methods);
-  PyObject *ex = PyErr_NewException(const_cast<char *>("ds.error"), NULL, NULL);
-  devsim_exception = ObjectHolder(ex);
-  PyModule_AddObject(module, "error", ex);
+#endif
 
-#if 0
-  Interpreter interp;
-  interp.RunCommand("import ds\n");
-  dsCommand::Commands **tlist = clistlist;
-  for ( ; (*tlist) != NULL; ++tlist)
-  {
-    dsCommand::Commands *clist = *tlist;
-    for ( ; (clist->name) != NULL; ++clist)
+    if (module == NULL)
     {
-      CommandMap[clist->name] = clist->command;
-      CreateCommand(interp, clist->name);
+        INITERROR;
     }
-  }
+    struct module_state *st = GETSTATE(module);
+
+    char *dserror = strdup("ds.error");
+    st->error = PyErr_NewException(dserror, NULL, NULL);
+    free(dserror);
+    if (st->error == NULL) {
+        Py_DECREF(module);
+        INITERROR;
+    }
+
+#if PY_MAJOR_VERSION >=3
+  return module;
 #endif
 }
 
+// https://docs.python.org/3/howto/cporting.html
+// https://docs.python.org/3/extending/embedding.html
+using namespace std;
 bool 
 Commands_Init() {
+#if PY_MAJOR_VERSION >=3
 #if 0
-    bool ok = false;
-
-    ok = true;
-    if (ok)
-    {
-      dsCommand::Commands *clistlist[] =
-      {
-        dsCommand::GeometryCommands,
-        dsCommand::MaterialCommands,
-        dsCommand::ModelCommands,
-        dsCommand::MathCommands,
-        dsCommand::EquationCommands,
-        dsCommand::MeshingCommands,
-        dsCommand::CircuitCommands,
-        NULL
-      };
-      AddCommands(clistlist);
-    }
+  PyObject *module = PyInit_ds();
+  if (module)
+  {
 #endif
-  AddCommands();
+    PyImport_AppendInittab("ds", &PyInit_ds);
+#if 0
+  }
+#endif
+#else
+  initds();
+#endif
 
   return true;
 }
