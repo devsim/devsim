@@ -14,7 +14,7 @@ if [[ ${EUID} -ne 0 ]]; then
 fi
 ${SUDO} dnf install -y git bison flex tcl tcl-devel cmake3 gcc gcc-c++ libquadmath-devel \
      gcc-gfortran bzip2 boost boost-devel cgnslib cgnslib-devel \
-     sqlite-devel python2-devel blas-devel lapack-devel
+     sqlite-devel python2-devel python3-devel blas-devel lapack-devel
 
 mkdir -p ${DSDIR}
 

@@ -11,6 +11,8 @@ SET (QUADMATH_ARCHIVE "-lquadmath")
 # Python
 SET (PYTHON_INCLUDE /usr/include/python2.7)
 SET (PYTHON_ARCHIVE -lpython2.7)
+SET (PYTHON3_INCLUDE /usr/include/python3.6m)
+SET (PYTHON3_ARCHIVE -lpython3.6m)
 
 # Superlu
 SET (SUPERLULOCATE  ${EXTERNAL_LIB}/SuperLU_4.3)
