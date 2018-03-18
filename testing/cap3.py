@@ -210,5 +210,5 @@ try:
   print(get_node_model_values(device=device, region="MySiRegion", name="test"))
 except ds.error as x:
   print(x)
-
+print("The DEVSIM FATAL message is part of the test.  The FPE exception was caught and the program will terminate normally.")
 
