@@ -763,12 +763,19 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
       {
         const Node *h = (*it)->GetHead();
         const Node *t = (*it)->GetTail();
-        const size_t rowh = region.GetEquationNumber(eqindex, h);
-        const size_t rowt = region.GetEquationNumber(eqindex, t);
 
         DoubleType val = esd[(*it)->GetIndex()];
-        v.push_back(std::make_pair(rowh,  val));
-        v.push_back(std::make_pair(rowt, -val));
+
+        if (h == (*cit))
+        {
+          const size_t rowh = region.GetEquationNumber(eqindex, h);
+          v.push_back(std::make_pair(rowh,  val));
+        }
+        else if (t == (*cit))
+        {
+          const size_t rowt = region.GetEquationNumber(eqindex, t);
+          v.push_back(std::make_pair(rowt, -val));
+        }
       }
     }
   }
@@ -817,18 +824,24 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
           {
             const Node *h = (*it)->GetHead();
             const Node *t = (*it)->GetTail();
-            const size_t rowh = region.GetEquationNumber(eqindex, h);
-            const size_t rowt = region.GetEquationNumber(eqindex, t);
             const size_t colh = region.GetEquationNumber(eqindex2, h);
             const size_t colt = region.GetEquationNumber(eqindex2, t);
 
             const DoubleType valh = edd0[(*it)->GetIndex()];
             const DoubleType valt = edd1[(*it)->GetIndex()];
-            //// Copy Pattern from Equation<DoubleType>::UnSymmetricEdgeAssembleJacobian
-            m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colh,  valh));
-            m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colt, -valt));
-            m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colt,  valt));
-            m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colh, -valh));
+
+            if (h == (*cit))
+            {
+              const size_t rowh = region.GetEquationNumber(eqindex, h);
+              m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colh,  valh));
+              m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colt,  valt));
+            }
+            else if (t == (*cit))
+            {
+              const size_t rowt = region.GetEquationNumber(eqindex, t);
+              m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colt, -valt));
+              m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colh, -valh));
+            }
           }
         }
       }
@@ -861,13 +874,19 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
           {
             const Node *h = (*it)->GetHead();
             const Node *t = (*it)->GetTail();
-            const size_t rowh = region.GetEquationNumber(eqindex, h);
-            const size_t rowt = region.GetEquationNumber(eqindex, t);
 
             const DoubleType val = edd[(*it)->GetIndex()];
 
-            m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, ccol,  val));
-            m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, ccol, -val));
+            if (h == (*cit))
+            {
+              const size_t rowh = region.GetEquationNumber(eqindex, h);
+              m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, ccol,  val));
+            }
+            else if (t == (*cit))
+            {
+              const size_t rowt = region.GetEquationNumber(eqindex, t);
+              m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, ccol, -val));
+            }
           }
         }
       }
@@ -946,13 +965,19 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
           {
             const Node *h = edge.GetHead();
             const Node *t = edge.GetTail();
-            const size_t rowh = region.GetEquationNumber(eqindex, h);
-            const size_t rowt = region.GetEquationNumber(eqindex, t);
 
             DoubleType val = esd[3 * tindex + eindex];
 
-            v.push_back(std::make_pair(rowh, n0_sign * val));
-            v.push_back(std::make_pair(rowt, n1_sign * val));
+            if (h == (*cit))
+            {
+              const size_t rowh = region.GetEquationNumber(eqindex, h);
+              v.push_back(std::make_pair(rowh, n0_sign * val));
+            }
+            else if (t == (*cit))
+            {
+              const size_t rowt = region.GetEquationNumber(eqindex, t);
+              v.push_back(std::make_pair(rowt, n1_sign * val));
+            }
           } 
         }
       }
@@ -1020,8 +1045,6 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
                 //// we are guaranteed that the node is across from the edge
                 const Node *const o = tnl[eindex];
 
-                const size_t rowh = region.GetEquationNumber(eqindex, h);
-                const size_t rowt = region.GetEquationNumber(eqindex, t);
                 const size_t colh = region.GetEquationNumber(eqindex2, h);
                 const size_t colt = region.GetEquationNumber(eqindex2, t);
 
@@ -1033,13 +1056,20 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
                 const DoubleType valt = edd1[vindex];
                 const DoubleType valo = edd2[vindex];
 
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colh, n0_sign * valh));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colt, n1_sign * valt));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colt, n0_sign * valt));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colh, n1_sign * valh));
-
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colo, n0_sign * valo));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colo, n1_sign * valo));
+                if (h == (*cit))
+                {
+                  const size_t rowh = region.GetEquationNumber(eqindex, h);
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colh, n0_sign * valh));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colt, n0_sign * valt));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colo, n0_sign * valo));
+                }
+                else if (t == (*cit))
+                {
+                  const size_t rowt = region.GetEquationNumber(eqindex, t);
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colt, n1_sign * valt));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colh, n1_sign * valh));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colo, n1_sign * valo));
+                }
               }
             }
           }
@@ -1081,13 +1111,18 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
               const Node *t = edge.GetTail();
               if ((h == (*cit)) || (t == (*cit)))
               {
-                const size_t rowh = region.GetEquationNumber(eqindex, h);
-                const size_t rowt = region.GetEquationNumber(eqindex, t);
-
                 const DoubleType val = edd[3*tindex + eindex];
 
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, ccol, n0_sign * val));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, ccol, n1_sign * val));
+                if (h == (*cit))
+                {
+                  const size_t rowh = region.GetEquationNumber(eqindex, h);
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, ccol, n0_sign * val));
+                }
+                else if (t == (*cit))
+                {
+                  const size_t rowt = region.GetEquationNumber(eqindex, t);
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, ccol, n1_sign * val));
+                }
               }
             }
           }
@@ -1168,13 +1203,18 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
           {
             const Node *h = edge.GetHead();
             const Node *t = edge.GetTail();
-            const size_t rowh = region.GetEquationNumber(eqindex, h);
-            const size_t rowt = region.GetEquationNumber(eqindex, t);
 
             DoubleType val = esd[6 * tindex + eindex];
-
-            v.push_back(std::make_pair(rowh, n0_sign * val));
-            v.push_back(std::make_pair(rowt, n1_sign * val));
+            if (h == (*cit))
+            {
+              const size_t rowh = region.GetEquationNumber(eqindex, h);
+              v.push_back(std::make_pair(rowh, n0_sign * val));
+            }
+            else if (t == (*cit))
+            {
+              const size_t rowt = region.GetEquationNumber(eqindex, t);
+              v.push_back(std::make_pair(rowt, n1_sign * val));
+            }
           } 
         }
       }
@@ -1249,8 +1289,6 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
                 const Node * ot2 = edgeData.nodeopp[0];
                 const Node * ot3 = edgeData.nodeopp[1];
 
-                const size_t rowh = region.GetEquationNumber(eqindex, h);
-                const size_t rowt = region.GetEquationNumber(eqindex, t);
                 const size_t colh = region.GetEquationNumber(eqindex2, h);
                 const size_t colt = region.GetEquationNumber(eqindex2, t);
 
@@ -1264,15 +1302,22 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
                 const DoubleType valo2 = edd2[vindex];
                 const DoubleType valo3 = edd3[vindex];
 
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colh, n0_sign * valh));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colt, n1_sign * valt));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colt, n0_sign * valt));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colh, n1_sign * valh));
-
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colo2, n0_sign * valo2));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colo2, n1_sign * valo2));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colo3, n0_sign * valo3));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colo3, n1_sign * valo3));
+                if (h == (*cit))
+                {
+                  const size_t rowh = region.GetEquationNumber(eqindex, h);
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colh, n0_sign * valh));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colt, n0_sign * valt));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colo2, n0_sign * valo2));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, colo3, n0_sign * valo3));
+                }
+                else if (t == (*cit))
+                {
+                  const size_t rowt = region.GetEquationNumber(eqindex, t);
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colt, n1_sign * valt));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colh, n1_sign * valh));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colo2, n1_sign * valo2));
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, colo3, n1_sign * valo3));
+                }
               }
             }
           }
@@ -1314,13 +1359,18 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
               const Node *t = edge.GetTail();
               if ((h == (*cit)) || (t == (*cit)))
               {
-                const size_t rowh = region.GetEquationNumber(eqindex, h);
-                const size_t rowt = region.GetEquationNumber(eqindex, t);
-
                 const DoubleType val = edd[6*tindex + eindex];
 
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, ccol, n0_sign * val));
-                m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, ccol, n1_sign * val));
+                if (h == (*cit))
+                {
+                  const size_t rowh = region.GetEquationNumber(eqindex, h);
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowh, ccol, n0_sign * val));
+                }
+                if (t == (*cit))
+                {
+                  const size_t rowt = region.GetEquationNumber(eqindex, t);
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(rowt, ccol, n1_sign * val));
+                }
               }
             }
           }
