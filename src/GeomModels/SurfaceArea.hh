@@ -38,6 +38,7 @@ class SurfaceArea : public NodeModel
       void calcNodeScalarValues() const;
       void setInitialValues();
 
+      WeakNodeModelPtr contact_area;
       WeakNodeModelPtr nsurf_x;
       WeakNodeModelPtr nsurf_y;
       WeakNodeModelPtr nsurf_z;
