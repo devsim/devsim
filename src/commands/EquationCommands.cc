@@ -35,7 +35,9 @@ limitations under the License.
 #include "Validate.hh"
 #include "GlobalData.hh"
 #include "dsAssert.hh"
+#if 0
 #include "OutputStream.hh"
+#endif
 #include <sstream>
 
 using namespace dsValidate;
@@ -348,12 +350,14 @@ createInterfaceEquationCmd(CommandHandler &data)
       return;
     }
 
+#if 0
     if (!variable_name.empty())
     {
       std::ostringstream os;
       os << "variable_name " << variable_name << " is no longer a required option and will be removed in a future version of this software.\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
     }
+#endif
 
     if (interface->UseExtendedPrecisionEquations())
     {
@@ -552,12 +556,14 @@ createContactEquationCmd(CommandHandler &data)
       return;
     }
 
+#if 0
     if (!variable_name.empty())
     {
       std::ostringstream os;
       os << "variable_name " << variable_name << " is no longer a required option and will be removed in a future version of this software.\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
     }
+#endif
 
     if (region->UseExtendedPrecisionEquations())
     {
