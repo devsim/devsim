@@ -7,6 +7,7 @@ SET (CXX_SRCS
     EdgeIndex.cc
     EdgeInverseLength.cc
     AtContactNode.cc
+    SurfaceAreaUtil.cc
     SurfaceArea.cc
     UnitVec.cc
     VectorGradient.cc

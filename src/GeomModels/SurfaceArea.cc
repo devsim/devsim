@@ -16,6 +16,7 @@ limitations under the License.
 ***/
 
 #include "SurfaceArea.hh"
+#include "SurfaceAreaUtil.hh"
 #include "Node.hh"
 #include "Edge.hh"
 #include "Triangle.hh"
@@ -90,68 +91,6 @@ void SurfaceArea<DoubleType>::calcSurfaceArea1d() const
     SetValues(nv);
 }
 
-#if 0
-namespace {
-template <typename T, typename U>
-bool SameInterface2D(T &cti, size_t i0, size_t i1)
-{
-  bool ret = false;
-  if (cti.count(i0) && cti.count(i1))
-  {
-    const typename T::const_iterator it0 = cti.find(i0);
-    const typename T::const_iterator it1 = cti.find(i1);
-    const std::vector<U> &n0 = it0->second;
-    const std::vector<U> &n1 = it1->second;
-    std::vector<U> nout;
-
-    set_intersection(n0.begin(), n0.end(),
-      n1.begin(), n1.end(),
-      std::insert_iterator<std::vector<U> >(nout, nout.begin())
-    );
-
-    ret = !nout.empty();
-  }
-  return ret;
-}
-
-template <typename T, typename U>
-bool SameInterface3D(T &cti, size_t i0, size_t i1, size_t i2)
-{
-  bool ret = false;
-  if (cti.count(i0) && cti.count(i1) && cti.count(i2))
-  {
-    const typename T::const_iterator it0 = cti.find(i0);
-    const typename T::const_iterator it1 = cti.find(i1);
-    const typename T::const_iterator it2 = cti.find(i2);
-    const std::vector<U> &n0 = it0->second;
-    const std::vector<U> &n1 = it1->second;
-    const std::vector<U> &n2 = it2->second;
-
-    std::vector<U> nout0;
-    std::vector<U> nout1;
-
-    set_intersection(n0.begin(), n0.end(),
-      n1.begin(), n1.end(),
-      std::insert_iterator<std::vector<U> >(nout0, nout0.begin())
-    );
-
-    if (!nout0.empty())
-    {
-      set_intersection(nout0.begin(), nout0.end(),
-        n2.begin(), n2.end(),
-        std::insert_iterator<std::vector<U> >(nout1, nout1.begin())
-      );
-
-      ret = !nout1.empty();
-    }
-
-  }
-  return ret;
-}
-
-}
-#endif
-
 template <typename DoubleType>
 void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
 {
@@ -166,19 +105,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
   ConstEdgeModelPtr uy = region.GetEdgeModel("unity");
   dsAssert(uy.get(), "UNEXPECTED");
 
-
-#if 0
-  const Device::CoordinateIndexToInterface_t &cti = device.GetCoordinateIndexToInterface();
-  const Device::CoordinateIndexToContact_t   &ctc = device.GetCoordinateIndexToContact();
-  const ConstEdgeList &el = region.GetEdgeList();
-#endif
-
-
   const ConstNodeList &nl = region.GetNodeList();
   std::vector<DoubleType> nv(nl.size());
-
-  std::vector<size_t> edge_visited(region.GetNumberEdges());
-
 
   dsAssert(!nsurf_x.expired(), "UNEXPECTED");
   dsAssert(!nsurf_y.expired(), "UNEXPECTED");
@@ -234,118 +162,11 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
     }
   }
 
-  for (ConstEdgeList::const_iterator it = edge_list.begin(); it != edge_list.end(); ++it)
-  {
-    const Edge &edge = *(*it);
-
-    //// Here we ignore edges we already visited
-    const size_t ei = edge.GetIndex();
-    if (edge_visited[ei] == 0)
-    {
-      edge_visited[ei] = 1;
-    }
-    else
-    {
-      continue;
-    }
-
-    const Node &node0 = *edge.GetHead();
-#if 0
-    const size_t ci0  = node0.GetCoordinate().GetIndex();
-#endif
-
-    const Node &node1 = *edge.GetTail();
-#if 0
-    const size_t ci1  = node1.GetCoordinate().GetIndex();
-#endif
-
-    //// TODO: there is nothing to stop both an interface and a contact contributing to the surface area of the same node
-    //// TODO: print warning about coincident interface, which is possible with this new approach
-#if 0
-    if (SameInterface2D<const Device::CoordinateIndexToInterface_t, InterfacePtr>(cti, ci0, ci1) || 
-        SameInterface2D<const Device::CoordinateIndexToContact_t, ContactPtr>(ctc, ci0, ci1)
-       )
-    {
-#endif
-    const size_t ni0  = node0.GetIndex();
-    const size_t ni1  = node1.GetIndex();
-
-    const DoubleType length = 0.5*edgeLengths[ei];
-    nv[ni0] += length;
-    nv[ni1] += length;
-
-
-    Vector<DoubleType> vvec(unity[ei]*length, -unitx[ei]*length, 0.0);
-
-    Vector<DoubleType> un0(nvx[ni0], nvy[ni0]);
-    if (dot_prod(vvec, un0) < 0.0)
-    {
-      nvx[ni0] -= vvec.Getx();
-      nvy[ni0] -= vvec.Gety();
-    }
-    else
-    {
-      nvx[ni0] += vvec.Getx();
-      nvy[ni0] += vvec.Gety();
-    }
-
-    Vector<DoubleType> un1(nvx[ni1], nvy[ni1]);
-    if (dot_prod(vvec, un1) < 0.0)
-    {
-      nvx[ni1] -= vvec.Getx();
-      nvy[ni1] -= vvec.Gety();
-    }
-    else
-    {
-      nvx[ni1] += vvec.Getx();
-      nvy[ni1] += vvec.Gety();
-    }
-#if 0
-    }
-#endif
-  }
-  for (size_t i = 0; i < nv.size(); ++i)
-  {
-    const DoubleType area = nv[i];
-    if (area > 0.0)
-    {
-      const DoubleType wt = magnitude(Vector<DoubleType>(nvx[i], nvy[i], 0.0));
-      if (wt > 0.0)
-      {
-        nvx[i] /= wt;
-        nvy[i] /= wt;
-      }
-    }
-  }
+  SurfaceAreaUtil::processEdgeList(edge_list, unitx, unity, edgeLengths, nv, nvx, nvy);
 
   SetValues(nv);
   nsurf_x.lock()->SetValues(nvx);
   nsurf_y.lock()->SetValues(nvy);
-
-}
-
-namespace {
-template <typename DoubleType>
-void ProcessAreaAndNormal(size_t ni0, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz, const Vector<DoubleType> &vnormal, DoubleType volume)
-{
-  nv[ni0] += volume;
-
-  Vector<DoubleType> uvec(nvx[ni0], nvy[ni0], nvz[ni0]);
-
-  if (dot_prod(uvec, vnormal) < 0.0)
-  {
-    nvx[ni0] -= vnormal.Getx();
-    nvy[ni0] -= vnormal.Gety();
-    nvz[ni0] -= vnormal.Getz();
-  }
-  else
-  {
-    nvx[ni0] += vnormal.Getx();
-    nvy[ni0] += vnormal.Gety();
-    nvz[ni0] += vnormal.Getz();
-  }
-}
-
 }
 
 template <typename DoubleType>
@@ -353,12 +174,6 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
 {
   const Region &region = GetRegion();
   const Device &device = *(region.GetDevice());
-
-#if 0
-  const Device::CoordinateIndexToInterface_t &cti = device.GetCoordinateIndexToInterface();
-  const Device::CoordinateIndexToContact_t   &ctc = device.GetCoordinateIndexToContact();
-  const ConstTriangleList &tl = GetRegion().GetTriangleList();
-#endif
 
   const ConstNodeList     &nl = region.GetNodeList();
 
@@ -376,7 +191,6 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
 
   std::vector<DoubleType> nv(nl.size());
 
-  std::vector<size_t> triangle_visited(region.GetNumberTriangles());
 
   Device::ContactList_t   contact_list   = device.GetContactList();
   Device::InterfaceList_t interface_list = device.GetInterfaceList();
@@ -419,96 +233,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
     }
   }
 
-  for (ConstTriangleList::const_iterator it = triangle_list.begin(); it != triangle_list.end(); ++it)
-  {
-    const Triangle &triangle = *(*it);
+  SurfaceAreaUtil::processTriangleList(triangle_list, triangleCenters, nv, nvx, nvy, nvz);
 
-    //// Here we ignore triangles we already visited
-    const size_t ti = triangle.GetIndex();
-    if (triangle_visited[ti] == 0)
-    {
-      triangle_visited[ti] = 1;
-    }
-    else
-    {
-      continue;
-    }
-
-    const ConstNodeList &nodeList = triangle.GetNodeList();
-
-#if 0
-    const size_t ci0  = nodeList[0]->GetCoordinate().GetIndex();
-    const size_t ci1  = nodeList[1]->GetCoordinate().GetIndex();
-    const size_t ci2  = nodeList[2]->GetCoordinate().GetIndex();
-
-    //// TODO: there is nothing to stop both an interface and a contact contributing to the surface area
-    if (SameInterface3D<const Device::CoordinateIndexToInterface_t, InterfacePtr>(cti, ci0, ci1, ci2) || 
-        SameInterface3D<const Device::CoordinateIndexToContact_t, ContactPtr>(ctc, ci0, ci1, ci2)
-       )
-    {
-#endif
-    const size_t &ni0 = nodeList[0]->GetIndex();
-    const size_t &ni1 = nodeList[1]->GetIndex();
-    const size_t &ni2 = nodeList[2]->GetIndex();
-
-    const Vector<DoubleType> &triangleCenter = triangleCenters[ti];
-
-    const auto &h0 = nodeList[0]->Position();
-    const auto &h1 = nodeList[1]->Position();
-    const auto &h2 = nodeList[2]->Position();
-
-    const Vector<DoubleType> np0(h0.Getx(), h0.Gety(), h0.Getz());
-    const Vector<DoubleType> np1(h1.Getx(), h1.Gety(), h1.Getz());
-    const Vector<DoubleType> np2(h2.Getx(), h2.Gety(), h2.Getz());
-
-    //// vector from triangle center to edge node
-    //// vector between edge nodes
-    //// area is 0.5 * base * height
-    //// area split between both nodes
-    const static DoubleType quarter = 0.25;
-
-    const Vector<DoubleType> &v01   = np0 - np1;
-    const Vector<DoubleType> &vc01  = np0 - triangleCenter;
-    const Vector<DoubleType> &vec01 = quarter * cross_prod(v01, vc01);
-    const DoubleType  vol01 = magnitude(vec01);
-
-    ProcessAreaAndNormal(ni0, nv, nvx, nvy, nvz, vec01, vol01);
-    ProcessAreaAndNormal(ni1, nv, nvx, nvy, nvz, vec01, vol01);
-
-    const Vector<DoubleType> &v02   = np0 - np2;
-    const Vector<DoubleType> &vc02  = np0 - triangleCenter;
-    const Vector<DoubleType> &vec02 = quarter * cross_prod(v02, vc02);
-    const DoubleType  vol02 = magnitude(vec02);
-
-    ProcessAreaAndNormal(ni0, nv, nvx, nvy, nvz, vec02, vol02);
-    ProcessAreaAndNormal(ni2, nv, nvx, nvy, nvz, vec02, vol02);
-
-    const Vector<DoubleType> &v12   = np1 - np2;
-    const Vector<DoubleType> &vc12  = np1 - triangleCenter;
-    const Vector<DoubleType> &vec12 = quarter * cross_prod(v12, vc12);
-    const DoubleType  vol12 = magnitude(vec12);
-
-    ProcessAreaAndNormal(ni1, nv, nvx, nvy, nvz, vec12, vol12);
-    ProcessAreaAndNormal(ni2, nv, nvx, nvy, nvz, vec12, vol12);
-#if 0
-    }
-#endif
-  }
-
-  for (size_t i = 0; i < nv.size(); ++i)
-  {
-    const DoubleType area = nv[i];
-    if (area > 0.0)
-    {
-      const DoubleType wt = magnitude(Vector<DoubleType>(nvx[i], nvy[i], nvz[i]));
-      if (wt > 0.0)
-      {
-        nvx[i] /= wt;
-        nvy[i] /= wt;
-        nvz[i] /= wt;
-      }
-    }
-  }
   SetValues(nv);
   nsurf_x.lock()->SetValues(nvx);
   nsurf_y.lock()->SetValues(nvy);
@@ -537,7 +263,7 @@ void SurfaceArea<DoubleType>::calcNodeScalarValues() const
 template <typename DoubleType>
 void SurfaceArea<DoubleType>::setInitialValues()
 {
-    DefaultInitializeValues();
+  DefaultInitializeValues();
 }
 
 template <typename DoubleType>
