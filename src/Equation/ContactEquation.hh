@@ -55,7 +55,7 @@ using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 template <typename DoubleType>
 class ContactEquation {
     public:
-        ContactEquation(const std::string &/*eqn*/, const std::string &/*var*/, ContactPtr, RegionPtr);
+        ContactEquation(const std::string &/*eqn*/, ContactPtr, RegionPtr);
         virtual ~ContactEquation() = 0;
         void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
         const std::string &GetName() const {
@@ -92,11 +92,6 @@ class ContactEquation {
         const Region &GetRegion() const
         {
             return *myregion;
-        }
-
-        const std::string &GetVariable() const
-        {
-          return variable;
         }
 
         void DevsimSerialize(std::ostream &) const;
@@ -144,7 +139,6 @@ class ContactEquation {
         ContactEquation &operator=(const ContactEquation &);
 
         std::string myname;
-        std::string variable;
         std::string circuitnode;
         ContactPtr mycontact;
         RegionPtr  myregion;

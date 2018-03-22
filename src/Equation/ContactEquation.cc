@@ -79,9 +79,8 @@ void ContactEquation<DoubleType>::UpdateContact()
 }
 
 template <typename DoubleType>
-ContactEquation<DoubleType>::ContactEquation(const std::string &nm, const std::string &var,
-        ContactPtr cp, RegionPtr rp)
-    : myname(nm), variable(var), mycontact(cp), myregion(rp), charge(0.0), current(0.0)
+ContactEquation<DoubleType>::ContactEquation(const std::string &nm, ContactPtr cp, RegionPtr rp)
+    : myname(nm), mycontact(cp), myregion(rp), charge(0.0), current(0.0)
 {
     ContactEquationHolder tmp(this);
     cp->AddEquation(tmp);

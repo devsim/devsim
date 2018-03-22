@@ -120,22 +120,6 @@ std::string ContactEquationHolder::GetName() const
   return ret;
 }
 
-std::string ContactEquationHolder::GetVariable() const
-{
-  std::string ret;
-  if (double_)
-  {
-    ret = (*double_).GetVariable();
-  }
-#ifdef DEVSIM_EXTENDED_PRECISION
-  if (float128_)
-  {
-    ret = (*float128_).GetVariable();
-  }
-#endif
-  return ret;
-}
-
 void ContactEquationHolder::UpdateContact() const
 {
   if (double_)

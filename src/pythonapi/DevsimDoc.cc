@@ -128,7 +128,7 @@ static const char contact_equation_doc[] =
 "    name : str\n"
 "       Name of the contact equation being created\n"
 "    variable_name : str, optional\n"
-"       The variable name is used to determine the bulk equation we are replacing at this contact\n"
+"       The variable name is used to determine the bulk equation we are replacing at this contact (deprecated)\n"
 "    circuit_node : str, optional\n"
 "       Name of the circuit we integrate the flux into\n"
 "    edge_charge_model : str, optional\n"
@@ -355,7 +355,7 @@ static const char get_interface_equation_list_doc[] =
 ;
 
 static const char interface_equation_doc[] =
-"    ds.interface_equation (device, interface, name, variable_name, interface_model, type)\n"
+"    ds.interface_equation (device, interface, name, name0, name1, variable_name, interface_model, type)\n"
 "\n"
 "    Command to specify an equation at an interface\n"
 "\n"
@@ -367,8 +367,12 @@ static const char interface_equation_doc[] =
 "       Interface on which to apply this command\n"
 "    name : str\n"
 "       Name of the interface equation being created\n"
-"    variable_name : str\n"
-"       The variable name is used to determine the bulk equation we are coupling this interface to\n"
+"    name0 : str, optional\n"
+"       Name of the equation coupling in region 0 being created (default 'name')\n"
+"    name1 : str, optional\n"
+"       Name of the equation coupling in region 1 being created (default 'name')\n"
+"    variable_name : str, optional\n"
+"       The variable name is used to determine the bulk equation we are coupling this interface to (deprecated)\n"
 "    interface_model : str\n"
 "       When specified, the bulk equations on both sides of the interface are integrated together.  This model is then used to specify how nodal quantities on both sides of the interface are balanced\n"
 "    type : str\n"

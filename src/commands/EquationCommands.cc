@@ -35,6 +35,7 @@ limitations under the License.
 #include "Validate.hh"
 #include "GlobalData.hh"
 #include "dsAssert.hh"
+#include "OutputStream.hh"
 #include <sstream>
 
 using namespace dsValidate;
@@ -279,9 +280,11 @@ createInterfaceEquationCmd(CommandHandler &data)
         {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"interface",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidInterface},
         {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"variable_name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"variable_name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
         {"type",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"interface_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"name0",           "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"name1",           "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
         {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
     };
 
@@ -297,6 +300,8 @@ createInterfaceEquationCmd(CommandHandler &data)
     }
 
     const std::string &name                 = data.GetStringOption("name");
+    const std::string &name0                = data.GetStringOption("name0");
+    const std::string &name1                = data.GetStringOption("name1");
     const std::string &variable_name        = data.GetStringOption("variable_name");
     const std::string &deviceName           = data.GetStringOption("device");
     const std::string &interfaceName        = data.GetStringOption("interface");
@@ -343,13 +348,20 @@ createInterfaceEquationCmd(CommandHandler &data)
       return;
     }
 
+    if (!variable_name.empty())
+    {
+      std::ostringstream os;
+      os << "variable_name " << variable_name << " is no longer a required option and will be removed in a future version of this software.\n";
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
+    }
+
     if (interface->UseExtendedPrecisionEquations())
     {
-      new InterfaceExprEquation<extended_type>(name, interface, variable_name, interface_model, et);
+      new InterfaceExprEquation<extended_type>(name, name0, name1, interface, interface_model, et);
     }
     else
     {
-      new InterfaceExprEquation<double>(name, interface, variable_name, interface_model, et);
+      new InterfaceExprEquation<double>(name, name0, name1, interface, interface_model, et);
     }
     data.SetEmptyResult();
 }
@@ -476,7 +488,6 @@ createContactEquationCmd(CommandHandler &data)
         {"device",        "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"contact",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidContact},
         {"name",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"variable_name", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"node_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"edge_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"element_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
@@ -487,6 +498,7 @@ createContactEquationCmd(CommandHandler &data)
         {"edge_charge_model",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"element_charge_model",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"circuit_node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"variable_name", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
@@ -540,9 +552,16 @@ createContactEquationCmd(CommandHandler &data)
       return;
     }
 
+    if (!variable_name.empty())
+    {
+      std::ostringstream os;
+      os << "variable_name " << variable_name << " is no longer a required option and will be removed in a future version of this software.\n";
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
+    }
+
     if (region->UseExtendedPrecisionEquations())
     {
-      ContactEquation<extended_type> *ce = new ExprContactEquation<extended_type>(name, variable_name, contact, region,
+      ContactEquation<extended_type> *ce = new ExprContactEquation<extended_type>(name, contact, region,
           node_model, edge_model, element_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
       if (!circuit_node.empty())
       {
@@ -551,7 +570,7 @@ createContactEquationCmd(CommandHandler &data)
     }
     else
     {
-      ContactEquation<double> *ce = new ExprContactEquation<double>(name, variable_name, contact, region,
+      ContactEquation<double> *ce = new ExprContactEquation<double>(name, contact, region,
           node_model, edge_model, element_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
       if (!circuit_node.empty())
       {

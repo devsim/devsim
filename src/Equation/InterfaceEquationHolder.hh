@@ -63,6 +63,8 @@ class InterfaceEquationHolder {
     InterfaceEquationHolder(InterfaceEquation<DoubleType> *);
 
     std::string GetName() const;
+    std::string GetName0() const;
+    std::string GetName1() const;
     bool operator==(const InterfaceEquationHolder &) const;
 
     template <typename DoubleType>

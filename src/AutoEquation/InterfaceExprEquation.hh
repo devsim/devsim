@@ -46,9 +46,10 @@ class InterfaceExprEquation : public InterfaceEquation<DoubleType>
 
 
         InterfaceExprEquation(const std::string &, /*Equation Name we are giving ourself*/
-                     InterfacePtr,           /*Region we are being solved in*/
-                     const std::string &, /*variable Name being solved*/
-                     const std::string &, /*InterfaceNodeModel Name for region*/
+                     const std::string &, /* name of equation in region 0 */
+                     const std::string &, /* name of equation in region 1 */
+                     InterfacePtr,        /* Region we are being solved in */
+                     const std::string &, /* InterfaceNodeModel Name for region */
                      InterfaceExprEquationEnum::EquationType
                         );
 

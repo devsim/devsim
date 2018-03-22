@@ -35,9 +35,17 @@ limitations under the License.
 #include <set>
 
 template <typename DoubleType>
-InterfaceEquation<DoubleType>::InterfaceEquation(const std::string &nm, const std::string &var, InterfacePtr ip)
-    : myname(nm), variable(var), myinterface(ip)
+InterfaceEquation<DoubleType>::InterfaceEquation(const std::string &nm, const std::string &nm0, const std::string &nm1, InterfacePtr ip)
+    : myname(nm), myname0(nm0), myname1(nm1), myinterface(ip)
 {
+    if (myname0.empty())
+    {
+      myname0 = myname;
+    }
+    if (myname1.empty())
+    {
+      myname1 = myname;
+    }
     InterfaceEquationHolder tmp(this);
     ip->AddInterfaceEquation(tmp);
 }
@@ -55,7 +63,18 @@ ConstNodeList_t InterfaceEquation<DoubleType>::GetActiveNodesFromList(const Regi
 
   const Device &device = *region.GetDevice();
 
-  const std::string &eqname = GetName();
+  const auto &eqname0 = GetName0();
+  const auto &eqname1 = GetName1();
+
+  std::string eqname;
+  if (region == *(interface.GetRegion0()))
+  {
+    eqname = eqname0;
+  }
+  else if (region == *(interface.GetRegion1()))
+  {
+    eqname = eqname1;
+  }
 
   const Device::CoordinateIndexToContact_t &ctc = device.GetCoordinateIndexToContact();
 
@@ -67,26 +86,18 @@ ConstNodeList_t InterfaceEquation<DoubleType>::GetActiveNodesFromList(const Regi
     const size_t ci = (*it)->GetCoordinate().GetIndex();
 
     Device::CoordinateIndexToContact_t::const_iterator cit = ctc.find(ci);
-//    dsAssert(cit != ctc.end(), "UNEXPECTED");
+
     if (cit != ctc.end())
     {
       std::vector<ContactPtr>::const_iterator vit = (cit->second).begin();
 
       for ( ; vit != (cit->second).end(); ++vit)
       {
-#if 0
-        const std::string &cname = (*vit)->GetName();
-#endif
         const Region &cregion = *((*vit)->GetRegion());
         if (cregion == region)
         {
           const ContactEquationPtrMap_t &cepm = (*vit)->GetEquationPtrList();
-#if 0
-          std::pair<Region::ContactEquationPtrMap_t::const_iterator, Region::ContactEquationPtrMap_t::const_iterator> cpair = cepm.equal_range(cname);
-          Region::ContactEquationPtrMap_t::const_iterator cepmit = cpair.first;
-          Region::ContactEquationPtrMap_t::const_iterator cepmend = cpair.second;
-          for ( ; cepmit != cepmend; ++cepmit)
-#endif
+
           for (ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
           {
            if ((cepmit->second).GetName() == eqname)
@@ -128,19 +139,46 @@ ConstNodeList_t InterfaceEquation<DoubleType>::GetActiveNodesFromList(const Regi
       for ( ; vit != (iit->second).end(); ++vit)
       {
         const Interface &ointerface = **vit;
-//        const std::string &iname = (*vit)->GetName();
         if (ointerface == interface)
         {
           break;
         }
-        else if (region == *(interface.GetRegion0()) ||
-         region == *(interface.GetRegion1()))
+        else if (region == *(ointerface.GetRegion0()) || region == *(ointerface.GetRegion1()))
         {
-          const InterfaceEquationPtrMap_t &iepm = interface.GetInterfaceEquationList();
-          if (iepm.find(eqname) != iepm.end())
+          const InterfaceEquationPtrMap_t &iepm = ointerface.GetInterfaceEquationList();
+          if ((eqname == eqname0) && (eqname == eqname1))
           {
-            addToList = false;
-            break;
+            if (iepm.find(eqname) != iepm.end())
+            {
+              addToList = false;
+              break;
+            }
+          }
+          else
+          {
+            for (auto jt = iepm.begin(); jt != iepm.end(); ++jt)
+            {
+              if (region == *(ointerface.GetRegion0()))
+              {
+                if ((*jt).second.GetName0() == eqname0)
+                {
+                  addToList == false;
+                  break;
+                }
+              }
+              else if (region == *(ointerface.GetRegion1()))
+              {
+                if ((*jt).second.GetName1() == eqname1)
+                {
+                  addToList = false;
+                  break;
+                }
+              }
+            }
+            if (!addToList)
+            {
+              break;
+            }
           }
         }
       }
@@ -211,29 +249,24 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
     std::vector<std::string> vlist0 = r0.GetVariableList();
     std::vector<std::string> vlist1 = r1.GetVariableList();
 
-    const std::string &myname = this->GetName();
+    const auto &myname = this->GetName();
+    const auto &myname0 = this->GetName0();
+    const auto &myname1 = this->GetName1();
 
-    const size_t eqindex0 = r0.GetEquationIndex(myname);
-    const size_t eqindex1 = r1.GetEquationIndex(myname);
-
-    /// It doesn't make sense if the equation doesn't exist in both regions of interface
-#if 0
-    dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
-    dsAssert(eqindex1 != size_t(-1), "UNEXPECTED");
-    dsAssert(!interfacenodemodel.empty(), "UNEXPECTED");
-#endif
+    const size_t eqindex0 = r0.GetEquationIndex(myname0);
+    const size_t eqindex1 = r1.GetEquationIndex(myname1);
 
     {
       std::ostringstream os;
 
       if (eqindex0 == size_t(-1))
       {
-        os << "Could not find equation " << myname << " on region0 " << r0.GetName() << "\n";
+        os << "Could not find equation " << myname0 << " on region0 " << r0.GetName() << " for interface equation " << myname << "\n";
       }
 
       if (eqindex1 == size_t(-1))
       {
-        os << "Could not find equation " << myname << " on region1 " << r1.GetName() << "\n";
+        os << "Could not find equation " << myname1 << " on region1 " << r1.GetName() << " for interface equation " << myname << "\n";
       }
 
       if (interfacenodemodel.empty())
@@ -250,9 +283,6 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
 
     ConstInterfaceNodeModelPtr inm = in.GetInterfaceNodeModel(interfacenodemodel);
 
-#if 0
-    dsAssert(inm != NULL, "UNEXPECTED");
-#endif
     {
       std::ostringstream os;
 
@@ -423,10 +453,12 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
     std::vector<std::string> vlist0 = r0.GetVariableList();
     std::vector<std::string> vlist1 = r1.GetVariableList();
 
-    const std::string &myname = this->GetName();
+    const auto &myname  = this->GetName();
+    const auto &myname0 = this->GetName0();
+    const auto &myname1 = this->GetName1();
 
-    const size_t eqindex0 = r0.GetEquationIndex(myname);
-    const size_t eqindex1 = r1.GetEquationIndex(myname);
+    const size_t eqindex0 = r0.GetEquationIndex(myname0);
+    const size_t eqindex1 = r1.GetEquationIndex(myname1);
 
     /// It doesn't make sense if the equation doesn't exist in both regions of interface
     dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");
@@ -597,10 +629,12 @@ void InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(const std::string &i
     std::vector<std::string> vlist0 = r0.GetVariableList();
     std::vector<std::string> vlist1 = r1.GetVariableList();
 
-    const std::string &myname = this->GetName();
+    const auto &myname  = this->GetName();
+    const auto &myname0 = this->GetName0();
+    const auto &myname1 = this->GetName1();
 
-    const size_t eqindex0 = r0.GetEquationIndex(myname);
-    const size_t eqindex1 = r1.GetEquationIndex(myname);
+    const size_t eqindex0 = r0.GetEquationIndex(myname0);
+    const size_t eqindex1 = r1.GetEquationIndex(myname1);
 
     /// It doesn't make sense if the equation doesn't exist in both regions of interface
     dsAssert(eqindex0 != size_t(-1), "UNEXPECTED");

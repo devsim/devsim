@@ -65,6 +65,38 @@ std::string InterfaceEquationHolder::GetName() const
   return ret;
 }
 
+std::string InterfaceEquationHolder::GetName0() const
+{
+  std::string ret;
+  if (double_)
+  {
+    ret = (*double_).GetName0();
+  }
+#ifdef DEVSIM_EXTENDED_PRECISION
+  if (float128_)
+  {
+    ret = (*float128_).GetName0();
+  }
+#endif
+  return ret;
+}
+
+std::string InterfaceEquationHolder::GetName1() const
+{
+  std::string ret;
+  if (double_)
+  {
+    ret = (*double_).GetName1();
+  }
+#ifdef DEVSIM_EXTENDED_PRECISION
+  if (float128_)
+  {
+    ret = (*float128_).GetName1();
+  }
+#endif
+  return ret;
+}
+
 template<>
 void InterfaceEquationHolder::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {

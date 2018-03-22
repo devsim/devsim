@@ -110,7 +110,6 @@ void Contact::AddEquation(ContactEquationHolder &eq)
 {
   // Replace this with a warning
   const std::string nm  = eq.GetName();
-  const std::string var = eq.GetVariable();
 
   if (contactEquationPtrMap.count(nm))
   {
@@ -120,48 +119,23 @@ void Contact::AddEquation(ContactEquationHolder &eq)
       std::ostringstream os; 
       os << "Warning: Will not replace Contact Equation with itself.\n"
           "Region: " << this->GetName() << ", Equation: " << nm <<
-          ", New Variable: " << var << "\n";
+          "\n";
       GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
     }
     else
     {
-      if (oeq.GetVariable() != var)
-      {
-        std::ostringstream os; 
-        os << "Warning: Adding a new Contact Equation by the same name with a different variable will remove mapping to other variable.\n"
-            "Region: " << this->GetName() << ", Equation: " << nm << ", Old variable: " << oeq.GetVariable() << ", New Variable: " << var << "\n";
-        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
+      std::ostringstream os; 
+      os << "Warning: Replacing Contact Equation with Contact Equation of the same name.\n"
+          "Contact: " << this->GetName() << ", Equation: " << nm << "\n";
+      GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
 
-        variableEquationMap.erase(var);
-        variableEquationMap[var] = nm;
-      }
-      else
-      {
-        std::ostringstream os; 
-        os << "Warning: Replacing Contact Equation with Contact Equation of the same name.\n"
-            "Contact: " << this->GetName() << ", Equation: " << nm << ", Variable: " << var << "\n";
-        GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
-      }
       contactEquationPtrMap[nm] = eq;
         /// the contactEquationIndexMap doesn't change
     }
   }
   else
   {
-    if (variableEquationMap.count(var))
-    {
-      const std::string oenm = variableEquationMap[var];
-      std::ostringstream os; 
-      os << "ERROR: Can't create Contact Equation if its variable is already being used\n"
-          << "New Equation: " << nm << ", Old Equation: " << oenm << ", Variable: "  << var << "\n";
-      GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *this, os.str());
-      dsAssert(false, "UNEXPECTED");
-    }
-    else
-    {
-      contactEquationPtrMap[nm] = eq;
-      variableEquationMap[var] = nm;
-    }
+    contactEquationPtrMap[nm] = eq;
   }
 }
 
@@ -171,12 +145,7 @@ void Contact::DeleteEquation(ContactEquationHolder &eq)
 {
   const std::string nm  = eq.GetName();
   dsAssert(contactEquationPtrMap.count(nm) != 0, "UNEXPECTED");
-
-  const std::string var = eq.GetVariable();
-  dsAssert(variableEquationMap.count(var) != 0, "UNEXPECTED");
-
   contactEquationPtrMap.erase(nm);
-  variableEquationMap.erase(var);
 }
 
 ContactEquationPtrMap_t &Contact::GetEquationPtrList()

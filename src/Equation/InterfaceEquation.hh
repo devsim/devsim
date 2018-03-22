@@ -60,7 +60,7 @@ class InterfaceEquation {
     public:
         /// The first region is the master region.  It shouldn't be permuted out
         /// Region is already owned by the Interface
-        InterfaceEquation(const std::string &/*eqn*/, const std::string &/*var*/, InterfacePtr);
+        InterfaceEquation(const std::string &/*eqn*/, const std::string &/*eqn0*/, const std::string &/*eqn1*/, InterfacePtr);
 
         virtual ~InterfaceEquation() = 0;
 
@@ -68,6 +68,14 @@ class InterfaceEquation {
 
         const std::string &GetName() const {
             return myname;
+        }
+
+        const std::string &GetName0() const {
+            return myname0;
+        }
+
+        const std::string &GetName1() const {
+            return myname1;
         }
 
         const Interface &GetInterface() const
@@ -95,11 +103,6 @@ class InterfaceEquation {
 //// Permutation of flux equations.  Flux subtracted from second of original equations
         void NodeVolumeType3Assemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, const std::string &/*surface_area*/);
 
-        const std::string &GetVariable() const
-        {
-          return variable;
-        }
-
     private:
         /// Use same permutation map and error out if contact had already swapped it out
         virtual void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode) = 0;
@@ -109,7 +112,8 @@ class InterfaceEquation {
         InterfaceEquation &operator=(const InterfaceEquation &);
 
         std::string myname;
-        std::string variable;
+        std::string myname0;
+        std::string myname1;
         InterfacePtr myinterface;
 };
 #endif

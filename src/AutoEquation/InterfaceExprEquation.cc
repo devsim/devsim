@@ -44,11 +44,12 @@ const char *InterfaceExprEquationEnum::EquationTypeString[] =
 template <typename DoubleType>
 InterfaceExprEquation<DoubleType>::InterfaceExprEquation(
     const std::string &eqname,
+    const std::string &eqname0,
+    const std::string &eqname1,
     InterfacePtr ip,
-    const std::string &var,
     const std::string &inmodel,
     InterfaceExprEquationEnum::EquationType et
-    ) : InterfaceEquation<DoubleType>(eqname, var, ip), interface_node_model_(inmodel), equation_type_(et)
+    ) : InterfaceEquation<DoubleType>(eqname, eqname0, eqname1, ip), interface_node_model_(inmodel), equation_type_(et)
 {
     equation_type_ = et;
 }
@@ -109,8 +110,14 @@ void InterfaceExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueV
 template <typename DoubleType>
 void InterfaceExprEquation<DoubleType>::Serialize(std::ostream &of) const
 {
-  of << "COMMAND interface_equation -device \"" << InterfaceEquation<DoubleType>::GetInterface().GetDeviceName() << "\" -interface \"" << InterfaceEquation<DoubleType>::GetInterface().GetName() << "\" -name \"" << InterfaceEquation<DoubleType>::GetName() << "\" -variable_name \"" << InterfaceEquation<DoubleType>::GetVariable()
-    << "\" -interface_model \"" << interface_node_model_
+  const auto &nm  = InterfaceEquation<DoubleType>::GetName();
+  const auto &nm0 = InterfaceEquation<DoubleType>::GetName0();
+  const auto &nm1 = InterfaceEquation<DoubleType>::GetName1();
+
+  of << "COMMAND interface_equation -device \"" << InterfaceEquation<DoubleType>::GetInterface().GetDeviceName() << "\" -interface \"" << InterfaceEquation<DoubleType>::GetInterface().GetName() << "\" -name \"" << nm;
+  of << "\" -name0 \"" << nm0;
+  of << "\" -name1 \"" << nm1;
+  of << "\" -interface_model \"" << interface_node_model_
     << "\" -type \"" << InterfaceExprEquationEnum::EquationTypeString[equation_type_]
     << "\"";
 }
@@ -118,10 +125,15 @@ void InterfaceExprEquation<DoubleType>::Serialize(std::ostream &of) const
 template <typename DoubleType>
 void InterfaceExprEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
 {
+  const auto &nm  = InterfaceEquation<DoubleType>::GetName();
+  const auto &nm0 = InterfaceEquation<DoubleType>::GetName0();
+  const auto &nm1 = InterfaceEquation<DoubleType>::GetName1();
+
   omap["device"] = ObjectHolder(InterfaceEquation<DoubleType>::GetInterface().GetDeviceName());
   omap["interface"] = ObjectHolder(InterfaceEquation<DoubleType>::GetInterface().GetName());
-  omap["name"] = ObjectHolder(InterfaceEquation<DoubleType>::GetName());
-  omap["variable_name"] = ObjectHolder(InterfaceEquation<DoubleType>::GetVariable());
+  omap["name"]  = ObjectHolder(InterfaceEquation<DoubleType>::GetName());
+  omap["name0"] = ObjectHolder(InterfaceEquation<DoubleType>::GetName0());
+  omap["name1"] = ObjectHolder(InterfaceEquation<DoubleType>::GetName1());
   omap["interface_model"] = ObjectHolder(interface_node_model_);
   omap["type"] = ObjectHolder(InterfaceExprEquationEnum::EquationTypeString[equation_type_]);
 }

@@ -29,7 +29,6 @@ limitations under the License.
 template <typename DoubleType>
 ExprContactEquation<DoubleType>::ExprContactEquation(
             const std::string &eq,// nodemodel
-            const std::string &var, // variable
             ContactPtr c,
             RegionPtr  r,
             const std::string &nmi,// nodemodel
@@ -41,7 +40,7 @@ ExprContactEquation<DoubleType>::ExprContactEquation(
             const std::string &nmq,// nodemodel
             const std::string &emq ,// edgemodel
             const std::string &eemq // elementedgemodel
-            ) :  ContactEquation<DoubleType>(eq, var, c, r),
+            ) :  ContactEquation<DoubleType>(eq, c, r),
                  nodemodel_int(nmi),
                  edgemodel_int(emi),
                  elementedgemodel_int(eemi),
@@ -181,7 +180,6 @@ void ExprContactEquation<DoubleType>::Serialize(std::ostream &of) const
         "-device \"" << ContactEquation<DoubleType>::GetDeviceName()
         << "\" -contact \"" << ContactEquation<DoubleType>::GetContactName()
         << "\" -name \"" << ContactEquation<DoubleType>::GetName()
-        << "\" -variable_name \"" <<  ContactEquation<DoubleType>::GetVariable()
         << "\" -edge_charge_model \"" << edgemodel_charge
         << "\" -edge_current_model \"" << edgemodel_current
         << "\" -edge_model \"" << edgemodel_int
@@ -201,7 +199,6 @@ void ExprContactEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::strin
   omap["device"] = ObjectHolder(ContactEquation<DoubleType>::GetDeviceName());
   omap["contact"] = ObjectHolder(ContactEquation<DoubleType>::GetContactName());
   omap["name"] = ObjectHolder(ContactEquation<DoubleType>::GetName());
-  omap["variable_name"] = ObjectHolder( ContactEquation<DoubleType>::GetVariable());
   omap["edge_charge_model"] = ObjectHolder(edgemodel_charge);
   omap["edge_current_model"] = ObjectHolder(edgemodel_current);
   omap["edge_model"] = ObjectHolder(edgemodel_int);

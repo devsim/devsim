@@ -71,7 +71,6 @@ class ContactEquationHolder {
     DoubleType GetCharge() const;
 
     std::string GetName() const;
-    std::string GetVariable() const;
     bool operator==(const ContactEquationHolder &) const;
     void UpdateContact() const;
     template <typename DoubleType>
