@@ -83,7 +83,8 @@ class InterfaceEquation {
             return *myinterface;
         }
 
-        std::set<ConstNodePtr> GetActiveNodes() const;
+        std::set<ConstNodePtr> GetActiveNodes0() const;
+        std::set<ConstNodePtr> GetActiveNodes1() const;
 
         void DevsimSerialize(std::ostream &) const;
         void GetCommandOptions(std::map<std::string, ObjectHolder> &) const;

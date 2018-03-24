@@ -214,24 +214,33 @@ ConstNodeList_t InterfaceEquation<DoubleType>::GetActiveNodesFromList(const Regi
 }
 
 template <typename DoubleType>
-std::set<ConstNodePtr> InterfaceEquation<DoubleType>::GetActiveNodes() const
+std::set<ConstNodePtr> InterfaceEquation<DoubleType>::GetActiveNodes0() const
 {
-  const ConstNodeList_t &inodes0 = GetInterface().GetNodes0();
-  ConstNodeList_t onodes0 = GetActiveNodesFromList(*GetInterface().GetRegion0(), inodes0);
-  const ConstNodeList_t &inodes1 = GetInterface().GetNodes1();
-  ConstNodeList_t onodes1 = GetActiveNodesFromList(*GetInterface().GetRegion1(), inodes1);
+  const auto &inodes0 = GetInterface().GetNodes0();
+  const auto &onodes0 = GetActiveNodesFromList(*GetInterface().GetRegion0(), inodes0);
 
   std::set<ConstNodePtr> ret;
-  for (ConstNodeList_t::iterator it = onodes0.begin(); it != onodes0.end(); ++it)
+  for (auto onode : onodes0)
   {
-    ret.insert(*it);
-  }
-  for (ConstNodeList_t::iterator it = onodes1.begin(); it != onodes1.end(); ++it)
-  {
-    ret.insert(*it);
+    ret.insert(onode);
   }
   return ret;
 }
+
+template <typename DoubleType>
+std::set<ConstNodePtr> InterfaceEquation<DoubleType>::GetActiveNodes1() const
+{
+  const auto &inodes1 = GetInterface().GetNodes1();
+  const auto &onodes1 = GetActiveNodesFromList(*GetInterface().GetRegion1(), inodes1);
+
+  std::set<ConstNodePtr> ret;
+  for (auto onode : onodes1)
+  {
+    ret.insert(onode);
+  }
+  return ret;
+}
+
 
 
 // Should make permutation collection a separate step
@@ -318,8 +327,10 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
 
     }
 
-    const std::set<ConstNodePtr> &activeNodes = GetActiveNodes();
+    const std::set<ConstNodePtr> &activeNodes0 = GetActiveNodes0();
     const ConstNodeList_t &nodes0 = in.GetNodes0();
+
+    const std::set<ConstNodePtr> &activeNodes1 = GetActiveNodes1();
     const ConstNodeList_t &nodes1 = in.GetNodes1();
 
     // technically this is the responsibility of the interface to check
@@ -335,7 +346,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
         const Node *node0 = nodes0[i];
         const Node *node1 = nodes1[i];
 
-        if (!(activeNodes.count(node0) && activeNodes.count(node1)))
+        if (!(activeNodes0.count(node0) && activeNodes1.count(node1)))
         {
           continue;
         }
@@ -433,7 +444,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
                 const Node *node0 = nodes0[i];
                 const Node *node1 = nodes1[i];
 
-                if (!(activeNodes.count(node0)) && (activeNodes.count(node1)))
+                if (!(activeNodes0.count(node0)) && (activeNodes1.count(node1)))
                 {
                   continue;
                 }
@@ -493,8 +504,10 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
     ConstNodeModelPtr sa1 = r1.GetNodeModel(surface_area);
     dsAssert(sa1.get(), "UNEXPECTED");
 
-    const std::set<ConstNodePtr> &activeNodes = GetActiveNodes();
+    const std::set<ConstNodePtr> &activeNodes0 = GetActiveNodes0();
     const ConstNodeList_t &nodes0 = in.GetNodes0();
+
+    const std::set<ConstNodePtr> &activeNodes1 = GetActiveNodes1();
     const ConstNodeList_t &nodes1 = in.GetNodes1();
 
     // technically this is the responsibility of the interface to check
@@ -516,7 +529,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
             const Node *node0 = nodes0[i];
             const Node *node1 = nodes1[i];
 
-            if (!(activeNodes.count(node0) && activeNodes.count(node1)))
+            if (!(activeNodes0.count(node0) && activeNodes1.count(node1)))
             {
               continue;
             }
@@ -602,7 +615,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
 
             for (size_t i = 0; i < nlist.size(); ++i)
             {
-                if (!(activeNodes.count(nodes0[i]) && activeNodes.count(nodes1[i])))
+                if (!(activeNodes0.count(nodes0[i]) && activeNodes1.count(nodes1[i])))
                 {
                   continue;
                 }
@@ -669,7 +682,9 @@ void InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(const std::string &i
     ConstNodeModelPtr sa1 = r1.GetNodeModel(surface_area);
     dsAssert(sa1.get(), "UNEXPECTED");
 
-    const std::set<ConstNodePtr> &activeNodes = GetActiveNodes();
+    const std::set<ConstNodePtr> &activeNodes0 = GetActiveNodes0();
+    const std::set<ConstNodePtr> &activeNodes1 = GetActiveNodes1();
+
     const ConstNodeList_t &nodes0 = in.GetNodes0();
     const ConstNodeList_t &nodes1 = in.GetNodes1();
 
@@ -692,7 +707,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(const std::string &i
         const Node *node0 = nodes0[i];
         const Node *node1 = nodes1[i];
 
-        if (!(activeNodes.count(node0) && activeNodes.count(node1)))
+        if (!(activeNodes0.count(node0) && activeNodes1.count(node1)))
         {
           continue;
         }
@@ -787,7 +802,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(const std::string &i
 
             for (size_t i = 0; i < nlist.size(); ++i)
             {
-                if (!(activeNodes.count(nodes0[i]) && activeNodes.count(nodes1[i])))
+                if (!(activeNodes0.count(nodes0[i]) && activeNodes1.count(nodes1[i])))
                 {
                   continue;
                 }
