@@ -51,7 +51,9 @@ InterfaceEquation<DoubleType>::InterfaceEquation(const std::string &nm, const st
 }
 
 namespace {
-// get contacts with matching equation names
+//
+// if a contact has the same equation mapping, and shares a coincident node with this interface, it is removed
+//
 ConstNodeList_t RemoveContactNodesFromList(const Region &region, const ConstNodeList_t &inodes, const std::string &eqname)
 {
   ConstNodeList_t ret;
@@ -112,6 +114,9 @@ ConstNodeList_t RemoveContactNodesFromList(const Region &region, const ConstNode
   return ret;
 }
 
+//
+// If two interfaces with the same equation mapping share a coincident node, that node is removed
+//
 ConstNodeList_t RemoveInterfaceNodesFromList(const Interface &interface, const Region &region, const ConstNodeList_t &inodes, const std::string &eqname)
 {
   ConstNodeList_t ret;
@@ -139,9 +144,7 @@ ConstNodeList_t RemoveInterfaceNodesFromList(const Interface &interface, const R
     {
       if (*ointerface == interface)
       {
-        // maybe this should be continue
-        // I think we are trying to take the first interface
-        break;
+        continue;
       }
 
       if (region == *(ointerface->GetRegion0()))
