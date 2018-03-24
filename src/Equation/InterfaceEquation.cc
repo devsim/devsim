@@ -50,145 +50,162 @@ InterfaceEquation<DoubleType>::InterfaceEquation(const std::string &nm, const st
     ip->AddInterfaceEquation(tmp);
 }
 
-///// TODO: Regress
+namespace {
+// get contacts with matching equation names
+ConstNodeList_t RemoveContactNodesFromList(const Region &region, const ConstNodeList_t &inodes, const std::string &eqname)
+{
+  ConstNodeList_t ret;
+
+  const Device &device = *region.GetDevice();
+
+  const auto &ctc = device.GetCoordinateIndexToContact();
+
+  // check all interface nodes for presence of a contact with the same equation at the node
+  for (auto &node : inodes)
+  {
+
+    // get coordinate index from node
+    const size_t ci = node->GetCoordinate().GetIndex();
+
+    // find all contacts at this coordinate and check to see if they solve this equation
+    auto cit = ctc.find(ci);
+
+    // There are no contacts on this interface node
+    if (cit == ctc.end())
+    {
+      ret.push_back(node);
+      continue;
+    }
+
+    bool active_node = true;
+
+    for ( auto &contact : cit->second )
+    {
+      const Region &cregion = *(contact->GetRegion());
+
+      if (!(cregion == region))
+      {
+        continue;
+      }
+
+      for ( auto &equation_map : contact->GetEquationPtrList())
+      {
+        if ((equation_map.second).GetName() == eqname)  
+        {
+          active_node = false;
+          break;
+        }
+      }
+
+      if (!active_node)
+      {
+        break;
+      }
+    }
+
+    if (active_node)
+    {
+      ret.push_back(node);
+    }
+  }
+
+  return ret;
+}
+
+ConstNodeList_t RemoveInterfaceNodesFromList(const Interface &interface, const Region &region, const ConstNodeList_t &inodes, const std::string &eqname)
+{
+  ConstNodeList_t ret;
+
+  const Device &device = *region.GetDevice();
+
+  const Device::CoordinateIndexToInterface_t &cti = device.GetCoordinateIndexToInterface();
+
+  for (auto &node : inodes)
+  {
+    const size_t ci = node->GetCoordinate().GetIndex();
+
+    auto iit = cti.find(ci);
+
+    // I think this test is impossible, since this interface should be on the coordinate
+    if (iit == cti.end())
+    {
+      ret.push_back(node);
+      continue;
+    }
+
+    bool active_node = true;
+
+    for ( auto &ointerface : iit->second)
+    {
+      if (*ointerface == interface)
+      {
+        // maybe this should be continue
+        // I think we are trying to take the first interface
+        break;
+      }
+
+      if (region == *(ointerface->GetRegion0()))
+      {
+        for (auto &equation_map : ointerface->GetInterfaceEquationList())
+        {
+          if ((equation_map.second).GetName0() == eqname)
+          {
+            active_node = false;
+            break;
+          }
+        }
+      }
+      else if (region == *(ointerface->GetRegion1()))
+      {
+        for (auto &equation_map : ointerface->GetInterfaceEquationList())
+        {
+          if ((equation_map.second).GetName1() == eqname)
+          {
+            active_node = false;
+            break;
+          }
+        }
+      }
+      if (!active_node)
+      {
+        break;
+      }
+    }
+
+    if (active_node)
+    {
+      ret.push_back(node);
+    }
+  }
+
+  return ret;
+}
+}
+
 ///// If a contact for this equation on this region already exists, we 
 ///// will skip this node
 ///// If an interface for this equation on this region already exists, we skip out on that
 template <typename DoubleType>
 ConstNodeList_t InterfaceEquation<DoubleType>::GetActiveNodesFromList(const Region &region, const ConstNodeList_t &inputnodes) const
 {
-  ConstNodeList_t ret;
 
   const Interface &interface = GetInterface();
 
-  const Device &device = *region.GetDevice();
-
-  const auto &eqname0 = GetName0();
-  const auto &eqname1 = GetName1();
 
   std::string eqname;
+
   if (region == *(interface.GetRegion0()))
   {
-    eqname = eqname0;
+    eqname = GetName0();
   }
   else if (region == *(interface.GetRegion1()))
   {
-    eqname = eqname1;
+    eqname = GetName1();
   }
 
-  const Device::CoordinateIndexToContact_t &ctc = device.GetCoordinateIndexToContact();
+  const auto &cnodes = RemoveContactNodesFromList(region, inputnodes, eqname);
 
-  ConstNodeList_t inodes = inputnodes;
-
-  for (ConstNodeList_t::const_iterator it = inodes.begin(); it != inodes.end(); ++it)
-  {
-    bool addToList = true;
-    const size_t ci = (*it)->GetCoordinate().GetIndex();
-
-    Device::CoordinateIndexToContact_t::const_iterator cit = ctc.find(ci);
-
-    if (cit != ctc.end())
-    {
-      std::vector<ContactPtr>::const_iterator vit = (cit->second).begin();
-
-      for ( ; vit != (cit->second).end(); ++vit)
-      {
-        const Region &cregion = *((*vit)->GetRegion());
-        if (cregion == region)
-        {
-          const ContactEquationPtrMap_t &cepm = (*vit)->GetEquationPtrList();
-
-          for (ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
-          {
-           if ((cepmit->second).GetName() == eqname)
-           {
-             addToList = false;
-             break;
-           }
-          }
-          if (!addToList)
-          {
-            break;
-          }
-        }
-      }
-    }
-    if (addToList)
-    {
-      ret.push_back(*it);
-    }
-  }
-  //// The first interface at the node wins
-
-  inodes = ret;
-  ret.clear();
-  const Device::CoordinateIndexToInterface_t &cti = device.GetCoordinateIndexToInterface();
-
-  for (ConstNodeList_t::const_iterator it = inodes.begin(); it != inodes.end(); ++it)
-  {
-    bool addToList = true;
-    const size_t ci = (*it)->GetCoordinate().GetIndex();
-
-    Device::CoordinateIndexToInterface_t::const_iterator iit = cti.find(ci);
-    dsAssert(iit != cti.end(), "UNEXPECTED");
-
-    if (iit != cti.end())
-    {
-      std::vector<InterfacePtr>::const_iterator vit = (iit->second).begin();
-      
-      for ( ; vit != (iit->second).end(); ++vit)
-      {
-        const Interface &ointerface = **vit;
-        if (ointerface == interface)
-        {
-          break;
-        }
-        else if (region == *(ointerface.GetRegion0()) || region == *(ointerface.GetRegion1()))
-        {
-          const InterfaceEquationPtrMap_t &iepm = ointerface.GetInterfaceEquationList();
-          if ((eqname == eqname0) && (eqname == eqname1))
-          {
-            if (iepm.find(eqname) != iepm.end())
-            {
-              addToList = false;
-              break;
-            }
-          }
-          else
-          {
-            for (auto jt = iepm.begin(); jt != iepm.end(); ++jt)
-            {
-              if (region == *(ointerface.GetRegion0()))
-              {
-                if ((*jt).second.GetName0() == eqname0)
-                {
-                  addToList == false;
-                  break;
-                }
-              }
-              else if (region == *(ointerface.GetRegion1()))
-              {
-                if ((*jt).second.GetName1() == eqname1)
-                {
-                  addToList = false;
-                  break;
-                }
-              }
-            }
-            if (!addToList)
-            {
-              break;
-            }
-          }
-        }
-      }
-    }
-
-    if (addToList)
-    {
-      ret.push_back(*it);
-    }
-  }
+  const auto &ret = RemoveInterfaceNodesFromList(interface, region, cnodes, eqname);
 
   return ret;
 }
