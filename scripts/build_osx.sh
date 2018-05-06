@@ -11,9 +11,9 @@ if [ "${1}" = "gcc" ]
   # the overwrite is to fix the linking issue seen on travis ci
   brew install gcc || brew link --overwrite gcc;
   fi
-  export CC=/usr/local/bin/gcc-7;
-  export CXX=/usr/local/bin/g++-7;
-  export F77=/usr/local/bin/gfortran-7;
+  export CC=/usr/local/bin/gcc-8;
+  export CXX=/usr/local/bin/g++-8;
+  export F77=/usr/local/bin/gfortran-8;
 
   # install boost
   if brew ls --versions boost > /dev/null;
@@ -70,20 +70,20 @@ fi
 # SYMDIFF build
 if [ "${1}" = "gcc" ]
 then
-(cd external/symdiff && bash scripts/setup_osx_gcc.sh && cd osx_release && make -j2)
+(cd external/symdiff && bash scripts/setup_osx_gcc.sh && cd osx_release && make -j4)
 elif [ "${1}" = "clang" ]
 then
-(cd external/symdiff && bash scripts/setup_osx_10.10.sh && cd osx_release && make -j2)
+(cd external/symdiff && bash scripts/setup_osx_10.10.sh && cd osx_release && make -j4)
 fi
 
 # CGNSLIB build
-(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake -DCMAKE_C_COMPILER=${CC} -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
+(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake -DCMAKE_C_COMPILER=${CC} -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j4 && make install)
 # SUPERLU build
 (cd external/SuperLU_4.3 && sh ../superlu_osx_10.10.sh)
 
 if [ "${1}" = "gcc" ]
 then
-(cd external/getrf && ./setup_osx.sh && cd build && make -j2)
+(cd external/getrf && ./setup_osx.sh && cd build && make -j4)
 fi
 
 
@@ -94,7 +94,7 @@ elif [ "${1}" = "clang" ]
 then
 bash ./scripts/setup_osx_10.10.sh
 fi
-(cd osx_x86_64_release && make -j2)
+(cd osx_x86_64_release && make -j4)
 if [ ! -z "${2}" ]
 then
 (cd dist && bash package_apple.sh ${1} devsim_osx_${2});
