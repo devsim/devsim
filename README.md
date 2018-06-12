@@ -30,7 +30,7 @@ Please see INSTALL file for installation instructions from source.  Please see
 NOTICE and LICENSE files for copyright and license information.
 
 ### Documentation:
-Documentation available in doc/devsim.pdf.  Windows specific information is available in windows.txt.
+Documentation available in doc/devsim.pdf and [online](https://www.devsim.org/manual/).  Windows specific information is available in windows.txt.
 
 ### Website:
 The official website is here:
