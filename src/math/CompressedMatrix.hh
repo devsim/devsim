@@ -26,6 +26,8 @@ limitations under the License.
 #include<vector>
 #include<unordered_map>
 
+#include <iosfwd>
+
 namespace dsMath {
 
 enum class MatrixType {REAL, COMPLEX};
@@ -43,8 +45,6 @@ class CompressedMatrix : public Matrix<DoubleType> {
         typedef std::vector<RowInd >        SymbolicMat;
         typedef std::map<int, DoubleType>       ColValueEntry;
         typedef std::vector<ColValueEntry > RowColValueEntries;
-
-        void AddSymbolic(int, int);  // add row,column to element list
 
         void AddEntry(int, int, DoubleType);  // add row,column, value
 
@@ -73,7 +73,7 @@ class CompressedMatrix : public Matrix<DoubleType> {
         const DoubleVec_t<DoubleType>             &GetImag() const;
         const ComplexDoubleVec_t<DoubleType>      GetComplex() const;
 
-        explicit CompressedMatrix(size_t, MatrixType = MatrixType::REAL, CompressionType = CompressionType::CCM);
+        CompressedMatrix(size_t, MatrixType, CompressionType);
 
         void Finalize();
 
@@ -81,6 +81,8 @@ class CompressedMatrix : public Matrix<DoubleType> {
         void TransposeMultiply(const DoubleVec_t<DoubleType> &/*x*/, DoubleVec_t<DoubleType> &/*y*/) const;
         void Multiply(const ComplexDoubleVec_t<DoubleType> &/*x*/, ComplexDoubleVec_t<DoubleType> &/*y*/) const;
         void TransposeMultiply(const ComplexDoubleVec_t<DoubleType> &/*x*/, ComplexDoubleVec_t<DoubleType> &/*y*/) const;
+
+        void DebugMatrix(std::ostream &) const;
 
     protected:
         void CreateMatrix(); // Create compressed columns
@@ -91,6 +93,11 @@ class CompressedMatrix : public Matrix<DoubleType> {
         void DecompressMatrix();
 
     private:
+        void AddSymbolicImpl(int, int);  // add row,column to element list
+        void AddEntryImpl(int, int, DoubleType);  // add row,column, value
+        //void AddEntryImpl(int, int, ComplexDouble_t<DoubleType>);
+        void AddImagEntryImpl(int, int, DoubleType);  // add row,column, value
+
         CompressedMatrix();
         // Make sure that we copy all aspects(including pointers) later on
         CompressedMatrix(const CompressedMatrix<DoubleType> &);

@@ -19,6 +19,7 @@ SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 #SET (BLAS_ARCHIVE  -lblas -llapack ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
 #SET (BLAS_ARCHIVE  -weak-lblas -weak-llapack)
 
+SET (MKL_PARDISO_INCLUDE $ENV{HOME}/anaconda/include)
 SET (MKLROOT $ENV{HOME}/anaconda)
 SET (BLAS_ARCHIVE  ${EXTERNAL_LIB}/getrf/build/libgetrf.a
  -L${MKLROOT}/lib -lmkl_rt -lpthread -lm -ldl

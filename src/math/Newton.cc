@@ -38,6 +38,12 @@ limitations under the License.
 #include "Interpreter.hh"
 #include "dsTimer.hh"
 
+//#undef USE_MKL_PARDISO
+
+#ifdef USE_MKL_PARDISO
+#include "MKLPardisoPreconditioner.hh"
+#endif
+
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 #endif
@@ -494,7 +500,11 @@ Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, s
   }
   else
   {
+#ifdef USE_MKL_PARDISO
+    preconditioner = new MKLPardisoPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS);
+#else
     preconditioner = new SuperLUPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+#endif
   }
   return preconditioner;
 }
@@ -509,7 +519,11 @@ Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermetho
   }
   else
   {
+#ifdef USE_MKL_PARDISO
+    preconditioner = new MKLPardisoPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS);
+#else
     preconditioner = new SuperLUPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+#endif
   }
   return preconditioner;
 }
@@ -518,17 +532,55 @@ Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermetho
 template <typename DoubleType>
 Preconditioner<DoubleType> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns)
 {
+#ifdef USE_MKL_PARDISO
+  return new MKLPardisoPreconditioner<DoubleType>(numeqns, trans_type);
+#else
   return new SuperLUPreconditioner<DoubleType>(numeqns, trans_type, PEnum::LUType_t::FULL);
+#endif
 }
 
-#if 0
-#ifdef DEVSIM_EXTENDED_PRECISION
-Preconditioner<float128> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns)
+template <typename DoubleType>
+CompressedMatrix<DoubleType> *CreateMatrix(Preconditioner<DoubleType> *preconditioner, bool is_complex=false)
 {
-  return new SuperLUPreconditioner<float128>(numeqns, trans_type, PEnum::LUType_t::FULL);
+  const auto numeqns = preconditioner->size();
+
+  auto matrix_type = MatrixType::REAL;
+  if (is_complex)
+  {
+    matrix_type = MatrixType::COMPLEX;
+  }
+
+  auto compression_type = CompressionType::CCM;
+
+  if (dynamic_cast<SuperLUPreconditioner<DoubleType> *>(preconditioner))
+  {
+    compression_type = CompressionType::CCM;
+  }
+  else if (dynamic_cast<BlockPreconditioner<DoubleType> *>(preconditioner))
+  {
+    compression_type = CompressionType::CCM;
+  }
+#ifdef USE_MKL_PARDISO
+  else if (dynamic_cast<MKLPardisoPreconditioner<DoubleType> *>(preconditioner))
+  {
+    compression_type = CompressionType::CCM;
+  }
+#endif
+  else
+  {
+    dsAssert(0, "UNEXPECTED");
+  }
+
+  return new CompressedMatrix<DoubleType>(numeqns, matrix_type, compression_type);
+
 }
-#endif
-#endif
+
+template <typename DoubleType>
+CompressedMatrix<DoubleType> *CreateACMatrix(Preconditioner<DoubleType> *preconditioner)
+{
+  return CreateMatrix(preconditioner, true);
+}
+
 }
 
 namespace {
@@ -585,11 +637,13 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 
   PrintNumberEquations(numeqns, ohm);
 
-  std::unique_ptr<Matrix<DoubleType>> matrix;
   std::unique_ptr<Preconditioner<DoubleType>> preconditioner;
 
-  matrix = std::unique_ptr<Matrix<DoubleType>>(new CompressedMatrix<DoubleType>(numeqns));
+  std::unique_ptr<Matrix<DoubleType>> matrix;
+
   preconditioner = std::unique_ptr<Preconditioner<DoubleType>>(CreatePreconditioner(itermethod, numeqns));
+
+  matrix = std::unique_ptr<Matrix<DoubleType>>(CreateMatrix(preconditioner.get()));
 
   std::vector<DoubleType> rhs(numeqns);
 
@@ -1071,8 +1125,9 @@ bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleTyp
   }
 
 
-  std::unique_ptr<Matrix<DoubleType>> matrix(new CompressedMatrix<DoubleType>(numeqns, MatrixType::COMPLEX, CompressionType::CCM));
   std::unique_ptr<Preconditioner<DoubleType>> preconditioner(CreateACPreconditioner<DoubleType>(PEnum::TransposeType_t::NOTRANS, numeqns));
+
+  std::unique_ptr<Matrix<DoubleType>> matrix(CreateACMatrix<DoubleType>(preconditioner.get()));
 
   std::vector<std::complex<DoubleType>> rhs(numeqns);
 
@@ -1212,9 +1267,9 @@ bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver
   nk.InitializeSolution(circuit_imag_name);
   nk.InitializeSolution("dcop");
 
-
-  std::unique_ptr<Matrix<DoubleType>> matrix(new CompressedMatrix<DoubleType>(numeqns, MatrixType::COMPLEX, CompressionType::CCM));
   std::unique_ptr<Preconditioner<DoubleType>> preconditioner(CreateACPreconditioner<DoubleType>(PEnum::TransposeType_t::TRANS, numeqns));
+
+  std::unique_ptr<Matrix<DoubleType>> matrix(CreateACMatrix<DoubleType>(preconditioner.get()));
 
   std::vector<std::complex<DoubleType>> rhs(numeqns);
 

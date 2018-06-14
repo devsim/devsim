@@ -18,6 +18,7 @@ SET (ZLIB_INCLUDE $ENV{HOME}/anaconda/include)
 SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boost_1_66_0)
 SET (QUADMATH_ARCHIVE "-lquadmath")
 
+SET (MKL_PARDISO_INCLUDE $ENV{HOME}/anaconda/include)
 SET (MKLROOT $ENV{HOME}/anaconda)
 SET (BLAS_ARCHIVE
  ${EXTERNAL_LIB}/getrf/build/libgetrf.a

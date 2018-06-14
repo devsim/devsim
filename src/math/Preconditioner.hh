@@ -39,7 +39,9 @@ class Preconditioner {
     bool LUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const;
     bool LUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const;
 
+#if 0
     void SetTransposeSolve(bool);
+#endif
     bool GetTransposeSolve();
 
     inline size_t size() const {return size_;}

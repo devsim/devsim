@@ -329,8 +329,6 @@ class MeshTriangle
         size_t index2;
 };
 
-//#include "../tclapi/dsAssert.hh"
-#include <iostream>
 class MeshTetrahedron
 {
     public:
@@ -347,13 +345,6 @@ class MeshTetrahedron
           index1 = vec[1];
           index2 = vec[2];
           index3 = vec[3];
-#if 0
-          for (size_t i = 0; i < 3; ++i)
-          {
-            if (vec[i] == vec[i+1])
-            std::cerr << "UNEXPECTED\n";
-          }
-#endif
         }
 
         bool operator==(const MeshTetrahedron &mt) const

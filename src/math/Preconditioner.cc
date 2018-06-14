@@ -41,6 +41,7 @@ void Preconditioner<DoubleType>::SetMatrix(Matrix *m)
 }
 #endif
 
+#if 0
 template <typename DoubleType>
 void Preconditioner<DoubleType>::SetTransposeSolve(bool x)
 {
@@ -53,6 +54,7 @@ void Preconditioner<DoubleType>::SetTransposeSolve(bool x)
     transpose_solve_ = PEnum::TransposeType_t::NOTRANS;
   }
 }
+#endif
 
 template <typename DoubleType>
 bool Preconditioner<DoubleType>::GetTransposeSolve()

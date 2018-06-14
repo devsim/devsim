@@ -15,6 +15,7 @@ ARCH=`uname -m`
       -DDEVSIM_CONFIG=${DEVSIM_CONFIG} \
       -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
       -DDEVSIM_EXTENDED_PRECISION=ON \
+      -DMKL_PARDISO=ON \
       -DPYTHON3=ON \
       ..)
 #  done

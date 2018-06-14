@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2018 Devsim LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,35 +15,38 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***/
 
-#ifndef DS_SUPERLU_PRECONDITIONER_HH
-#define DS_SUPERLU_PRECONDITIONER_HH
+#ifndef DS_MKL_PARDISO_HH
+#define DS_MKL_PARDISO_HH
 #include "Preconditioner.hh"
+#include "mkl_pardiso.h"
+#include "mkl_types.h"
+#include "mkl_spblas.h"
+
 
 namespace dsMath {
 
-class SuperLUData;
+class MKLPardisoData;
 
 template <typename DoubleType>
-class SuperLUPreconditioner : public Preconditioner<DoubleType>
+class MKLPardisoPreconditioner : public Preconditioner<DoubleType>
 {
     public:
-        SuperLUPreconditioner(size_t, PEnum::TransposeType_t, PEnum::LUType_t);
+        MKLPardisoPreconditioner(size_t, PEnum::TransposeType_t);
 
     protected:
         bool DerivedLUFactor(Matrix<DoubleType> *);
         void DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const;
         void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const;
 
-        ~SuperLUPreconditioner();
+        ~MKLPardisoPreconditioner();
 
     private:
-        SuperLUPreconditioner();
+        MKLPardisoPreconditioner();
 
-        SuperLUPreconditioner(const SuperLUPreconditioner &);
-        SuperLUPreconditioner &operator= (const SuperLUPreconditioner &);
+        MKLPardisoPreconditioner(const MKLPardisoPreconditioner &);
+        MKLPardisoPreconditioner &operator= (const MKLPardisoPreconditioner &);
 
-        SuperLUData *superLUData_;
-        PEnum::LUType_t     lutype_;
+        MKLPardisoData  *mklpardisodata_;
 };
 
 }

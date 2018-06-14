@@ -20,7 +20,7 @@ limitations under the License.
 
 #include <memory>
 #include "dsAssert.hh"
-#include <iostream>
+#include <iosfwd>
 #include <string>
 #include <vector>
 #include <map>

@@ -16,6 +16,11 @@ SET (CXX_SRCS
     MathEnum.cc
 )
 
+IF (MKL_PARDISO)
+SET (CXX_SRCS ${CXX_SRCS} MKLPardisoPreconditioner.cc)
+ADD_DEFINITIONS(-DUSE_MKL_PARDISO)
+ENDIF (MKL_PARDISO)
+
 INCLUDE_DIRECTORIES (
     ../utility
     ../Geometry
@@ -27,6 +32,8 @@ INCLUDE_DIRECTORIES (
     ../MathEval
     ../common_api
     ${SUPERLU_INCLUDE}
+    ${MKL_PARDISO_INCLUDE}
 )
 
 ADD_LIBRARY (math ${CXX_SRCS})
+

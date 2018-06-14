@@ -24,7 +24,66 @@ limitations under the License.
 #include <utility>
 #include <algorithm>
 
+#include <iomanip>
+
 namespace dsMath {
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::DebugMatrix(std::ostream &os) const
+{
+  if (matType_ == MatrixType::COMPLEX)
+  {
+    os << "#COMPLEX\n";
+  }
+  else
+  {
+    os << "#REAL\n";
+  }
+
+  if (compressionType_ == CompressionType::CCM)
+  {
+    os << "CCM";
+  }
+  else
+  {
+    os << "CRM";
+  }
+
+  os << " = {\n";
+
+  os << "'ia' : [\n";
+  for (size_t i = 0; i < Ap_.size(); ++i)
+  {
+    os << Ap_[i] << ",\n";
+  }
+  os << "],\n";
+
+  os << "'ja' : [\n";
+  for (size_t i = 0; i < Ai_.size(); ++i)
+  {
+    os << Ai_[i] << ",\n";
+  }
+  os << "],\n";
+
+  os << "'a' : [\n";
+  os << std::setprecision(15);
+  if (matType_ == MatrixType::REAL)
+  {
+    for (size_t i = 0; i < Ax_.size(); ++i)
+    {
+      os << Ax_[i] << ",\n";
+    }
+  }
+  else
+  {
+    for (size_t i = 0; i < Ax_.size(); ++i)
+    {
+      os << "complex(" << Ax_[i]  << "," << Az_[i] << "),\n";
+    }
+  }
+  os << "],\n";
+  os << "}\n";
+}
+
 template <typename DoubleType>
 CompressedMatrix<DoubleType>::CompressedMatrix(size_t sz, MatrixType mt, CompressionType ct) : Matrix<DoubleType>(sz), matType_(mt), compressionType_(ct), compressed(false)
 {
@@ -41,16 +100,11 @@ CompressedMatrix<DoubleType>::~CompressedMatrix()
 {
 }
 
+/*
+*/
 template <typename DoubleType>
-void CompressedMatrix<DoubleType>::AddSymbolic(int r, int c)
+void CompressedMatrix<DoubleType>::AddSymbolicImpl(int r, int c)
 {
-  if (compressionType_ == CompressionType::CRM)
-  {
-    int tmp = r;
-    r = c;
-    c = tmp;
-  }
-
   /// remember compressed column
   /// need to make it possible to add out of band entries
 #ifndef NDEBUG
@@ -88,13 +142,15 @@ void CompressedMatrix<DoubleType>::CreateMatrix()
       Ai_.push_back((*iter).first);
       ++r;
     }
-	if (r > rb)
-	{
+
+    if (r > rb)
+    {
       IntVec_t::iterator abegin = Ai_.begin();
-	  std::advance(abegin, rb);
+      std::advance(abegin, rb);
       std::sort(abegin, Ai_.end());
-	}
-	for (int i = rb; i < r; ++i)
+    }
+
+    for (int i = rb; i < r; ++i)
     {
       rivec[Ai_[i]] = i;
 //        (*iter).second = r; // gives us the position in Ai,Ax
@@ -204,7 +260,7 @@ const dsMath::ComplexDoubleVec_t<DoubleType> CompressedMatrix<DoubleType>::GetCo
 }
 
 template <typename DoubleType>
-void CompressedMatrix<DoubleType>::AddEntry(int r, int c, DoubleType v)
+void CompressedMatrix<DoubleType>::AddEntryImpl(int r, int c, DoubleType v)
 {
 #ifndef NDEBUG
   dsAssert(static_cast<size_t>(r) < this->size(), "UNEXPECTED");
@@ -214,12 +270,6 @@ void CompressedMatrix<DoubleType>::AddEntry(int r, int c, DoubleType v)
   if (v == 0.0)
   {
     return;
-  }
-  else if (compressionType_ == CompressionType::CRM)
-  {
-    int tmp = r;
-    r = c;
-    c = tmp;
   }
 
   if (compressed)
@@ -235,21 +285,34 @@ void CompressedMatrix<DoubleType>::AddEntry(int r, int c, DoubleType v)
     else
     {
       DecompressMatrix();
-      AddSymbolic(r, c);
+      AddSymbolicImpl(r, c);
       OutOfBandEntries_Real[r][c] += v;
     }
   }
   else
   {
-    AddSymbolic(r, c);
+    AddSymbolicImpl(r, c);
     /// the double entry is initialized to zero (property of map)
     OutOfBandEntries_Real[r][c] += v;
   }
 }
 
-/// Model this after AddEntry
 template <typename DoubleType>
-void CompressedMatrix<DoubleType>::AddImagEntry(int r, int c, DoubleType v)
+void CompressedMatrix<DoubleType>::AddEntry(int r, int c, DoubleType v)
+{
+  if (compressionType_ == CompressionType::CRM)
+  {
+    AddEntryImpl(c, r, v);
+  }
+  else
+  {
+    AddEntryImpl(r, c, v);
+  }
+}
+
+/// Model this after 
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::AddImagEntryImpl(int r, int c, DoubleType v)
 {
 #ifndef NDEBUG
   dsAssert(GetMatrixType() == MatrixType::COMPLEX, "UNEXPECTED");
@@ -260,12 +323,6 @@ void CompressedMatrix<DoubleType>::AddImagEntry(int r, int c, DoubleType v)
   if (v == 0.0)
   {
     return;
-  }
-  else if (compressionType_ == CompressionType::CRM)
-  {
-    int tmp = r;
-    r = c;
-    c = tmp;
   }
 
   if (compressed)
@@ -279,28 +336,35 @@ void CompressedMatrix<DoubleType>::AddImagEntry(int r, int c, DoubleType v)
     else
     {
       DecompressMatrix();
-      AddSymbolic(r, c);
+      AddSymbolicImpl(r, c);
       OutOfBandEntries_Imag[r][c] += v;
     }
   }
   else
   {
-    AddSymbolic(r, c);
+    AddSymbolicImpl(r, c);
     /// the double entry is initialized to zero (property of map)
     OutOfBandEntries_Imag[r][c] += v;
   }
 }
 
 template <typename DoubleType>
-void CompressedMatrix<DoubleType>::AddEntry(int r, int c, ComplexDouble_t<DoubleType> v)
+void CompressedMatrix<DoubleType>::AddImagEntry(int r, int c, DoubleType v)
 {
   if (compressionType_ == CompressionType::CRM)
   {
-    int tmp = r;
-    r = c;
-    c = tmp;
+    AddImagEntryImpl(c, r, v);
   }
+  else
+  {
+    AddImagEntryImpl(r, c, v);
+  }
+}
 
+
+template <typename DoubleType>
+void CompressedMatrix<DoubleType>::AddEntry(int r, int c, ComplexDouble_t<DoubleType> v)
+{
   const double rv = v.real();
   const double iv = v.imag();
 
@@ -339,7 +403,7 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
     const size_t end = Ap_[i+1];
     for (size_t j = beg; j < end; ++ j)
     {
-      AddEntry(Ai_[j], i, Ax_[j]);
+      AddEntryImpl(Ai_[j], i, Ax_[j]);
     }
     if (GetMatrixType() == MatrixType::COMPLEX)
     {
@@ -348,7 +412,7 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
         const double z = Az_[j];
         if (z != 0.0)
         {
-          AddEntry(Ai_[j], i, z);
+          AddImagEntryImpl(Ai_[j], i, z);
         }
       }
     }
@@ -373,7 +437,7 @@ void CompressedMatrix<DoubleType>::Finalize()
       const typename ColValueEntry::iterator itend = OutOfBandEntries_Real[i].end();
       for ( ; it != itend; ++it)
       {
-        AddEntry(i, it->first, it->second);
+        AddEntryImpl(i, it->first, it->second);
       }
     }
     OutOfBandEntries_Real.clear();
@@ -387,7 +451,7 @@ void CompressedMatrix<DoubleType>::Finalize()
         const typename ColValueEntry::iterator itend = OutOfBandEntries_Imag[i].end();
         for ( ; it != itend; ++it)
         {
-          AddImagEntry(i, it->first, it->second);
+          AddImagEntryImpl(i, it->first, it->second);
         }
       }
       OutOfBandEntries_Imag.clear();

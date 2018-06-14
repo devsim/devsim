@@ -177,7 +177,7 @@ get_rlist()
 get_clist()
 get_ilist()
 
-solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
+#solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 
 for r in rl:
   equation(**r)

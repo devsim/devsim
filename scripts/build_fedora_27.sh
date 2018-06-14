@@ -22,7 +22,7 @@ mkdir -p ${DSDIR}
 # add max depth or copy over
 if [ ! -d ${DSDIR}/devsim ]; then
     (
-    cd ${DSDIR} &&
+    cd DevSim &&
     git clone https://github.com/devsim/devsim &&
     cd devsim &&
     git submodule init &&

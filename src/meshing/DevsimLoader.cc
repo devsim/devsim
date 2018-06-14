@@ -245,7 +245,7 @@ void createRegion(const MeshRegion &mr, Device *dp, std::vector<const Node *> &n
   {
     std::ostringstream os; 
     os << "Adding " << triangle_list.size() << " triangles " << " with " << triangleduplicate << " duplicate removed\n";
-    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
 
   ////
@@ -258,7 +258,7 @@ void createRegion(const MeshRegion &mr, Device *dp, std::vector<const Node *> &n
     {
       std::ostringstream os; 
       os << "Adding " << tetrahedron_list.size() << " tetrahedra " << " with " << tetrahedronduplicate << " duplicate removed\n";
-      OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
   }
 

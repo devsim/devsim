@@ -15,8 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***/
 
-#include <iostream>
-#include <iomanip>
 #include <vector>
 template <typename DoubleType>
 class kahan {
@@ -42,15 +40,6 @@ class kahan {
         kahan();
         kahan &operator=(const kahan &);
 };
-
-#if 0
-template <typename DoubleType>
-std::ostream &operator<<(std::ostream &obj, const kahan<DoubleType> &k)
-{
-    obj <<  "(" << k.value_ << ", " << k.correction_ << ")";
-    return obj;
-}
-#endif
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
