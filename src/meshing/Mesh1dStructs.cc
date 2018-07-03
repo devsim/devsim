@@ -69,8 +69,8 @@ const size_t &MeshRegion1d::GetIndex1() const
 
 void MeshRegion1d::sortTags(const std::map<std::string, size_t> &v)
 {
-    dsAssert(v.count(tag0) != 0, "UNEXPECTED");
-    dsAssert(v.count(tag1) != 0, "UNEXPECTED");
+    dsAssert(v.count(tag0) != 0, std::string("line for tag ") + tag0 + " does not exist");
+    dsAssert(v.count(tag1) != 0, std::string("line for tag ") + tag1 + " does not exist");
 
     index0 = v.find(tag0)->second;
     index1 = v.find(tag1)->second;
