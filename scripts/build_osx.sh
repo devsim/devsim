@@ -42,7 +42,7 @@ bash ~/Miniconda2-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
 ${HOME}/anaconda/bin/conda install -y numpy mkl mkl-devel mkl-include;)
 
 #Python3
-${HOME}/anaconda/bin/conda create -y --name python3 python=3
+${HOME}/anaconda/bin/conda create -y --name python3 python=3.6
 ${HOME}/anaconda/bin/conda install -y -n python3 numpy mkl-devel mkl-include
 fi
 
