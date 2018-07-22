@@ -39,7 +39,7 @@ https://www.devsim.org
 ### Support:
 
 For support and general discussion, please join our forum:
-https://groups.google.com/forum/#!forum/devsim
+https://groups.google.com/d/forum/devsim
 
 ### Contributing:
 
