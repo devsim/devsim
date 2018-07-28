@@ -28,6 +28,7 @@ mkdir -p ${DIST_BIN}
 cp ${SRC_DIR}/devsim_py ${DIST_BIN}/devsim
 cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl
 
+# because the non gcc build uses the system python interpreter and python 3 is not available
 if [ "$1" = "gcc" ]
   then
 cp ${SRC_DIR}/devsim_py3 ${DIST_BIN}/devsim_py3
@@ -36,12 +37,13 @@ fi
 if [ "$1" = "gcc" ]
 then
 mkdir -p ${DIST_LIB}
-for i in ${DIST_BIN}/devsim ${DIST_BIN}/devsim_tcl
+for i in ${DIST_BIN}/devsim ${DIST_BIN}/devsim_py3 ${DIST_BIN}/devsim_tcl
 do
 # get otool dependencies from the gcc compiler
 for j in `otool -L $i | egrep '\bgcc\b' | sed -e 's/(.*//'`
 do
 cp -vf $j ${DIST_LIB}
+echo install_name_tool -change $j "@executable_path/../lib/`basename $j`" $i
 install_name_tool -change $j "@executable_path/../lib/`basename $j`" $i
 done
 done
