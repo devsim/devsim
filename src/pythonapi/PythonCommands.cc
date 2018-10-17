@@ -14,6 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ***/
+#include <iostream>
 
 #include "Python.h"
 #include "ceval.h"
@@ -425,9 +426,14 @@ extern "C" void DLL_PUBLIC initdevsim_py27()
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
+  std::cout << __LINE__ << "\t" << PY_MAJOR_VERSION << "\t" <<PY_MINOR_VERSION<< std::endl;
+  std::cout << __LINE__ << std::endl;
   PyObject *module = PyModule_Create(&moduledef);
+  std::cout << __LINE__ << std::endl;
 #else
+  std::cout << __LINE__ << std::endl;
   PyObject *module = Py_InitModule("devsim_py27", devsim_methods);
+  std::cout << __LINE__ << std::endl;
 #endif
 
     if (module == NULL)
@@ -439,7 +445,9 @@ extern "C" void DLL_PUBLIC initdevsim_py27()
     Py_INCREF(devsim_exception);
     PyModule_AddObject(module, "error", devsim_exception);
 
+  std::cout << __LINE__ << std::endl;
     devsim_initialization();
+  std::cout << __LINE__ << std::endl;
 
 #if PY_MAJOR_VERSION >=3
   return module;

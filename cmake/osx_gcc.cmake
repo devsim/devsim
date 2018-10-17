@@ -22,7 +22,8 @@ SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 SET (MKL_PARDISO_INCLUDE $ENV{HOME}/anaconda/include)
 SET (MKLROOT $ENV{HOME}/anaconda)
 SET (BLAS_ARCHIVE  ${EXTERNAL_LIB}/getrf/build/libgetrf.a
- -L${MKLROOT}/lib -lmkl_rt -lpthread -lm -ldl
+ -L${MKLROOT}/lib -lmkl_rt -lm -ldl
+# -L${MKLROOT}/lib -lmkl_rt -lpthread -lm -ldl
 #-L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_rt -lpthread -lm -ldl
 )
 
