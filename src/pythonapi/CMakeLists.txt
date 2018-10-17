@@ -22,7 +22,6 @@ INCLUDE_DIRECTORIES (
     ../common_api
 )
 
-# TODO: make sure to get out fpic
 ADD_LIBRARY (pythonapi_interpreter OBJECT ${CXX_SRCS1})
 ADD_LIBRARY (pythonapi_api OBJECT ${CXX_SRCS2})
 TARGET_INCLUDE_DIRECTORIES (pythonapi_interpreter PUBLIC ${PYTHON_INCLUDE})

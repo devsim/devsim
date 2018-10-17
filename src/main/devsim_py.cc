@@ -50,10 +50,11 @@ void devsim_initialization()
     dsHelper::CreateDefaultDerivatives();
 }
 
-#ifdef DEVSIM_PYTHON_EMBEDDED
+#if 0
 void devsim_finalization()
 {
 //// While this is correct for memory recovery, it creates issues in writing to the output stream after python has exited.
+//// it appears that python may not support module unloading
 #ifndef NDEBUG
     MaterialDB::DestroyInstance();
     GlobalData::GetInstance().DestroyInstance();

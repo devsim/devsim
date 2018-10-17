@@ -36,6 +36,7 @@ limitations under the License.
 #include "dsException.hh"
 #include "FPECheck.hh"
 #include "OutputStream.hh"
+#include "import.hh"
 
 #include <new>
 #include <sstream>
@@ -47,6 +48,10 @@ void devsim_initialization();
 using namespace dsValidate;
 
 namespace dsPy {
+
+namespace {
+  PyObject *devsim_exception = NULL;
+};
 
 namespace {
 struct module_state {
@@ -399,7 +404,7 @@ static int devsim_clear(PyObject *m) {
 
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
-        "ds",
+        "devsim_py36",
         NULL,
         sizeof(struct module_state),
         devsim_methods,
@@ -411,33 +416,28 @@ static struct PyModuleDef moduledef = {
 
 #define INITERROR return NULL
 
-PyMODINIT_FUNC
-PyInit_ds(void)
+//PyMODINIT_FUNC // this next line is used instead to use DLL_PUBLIC macro
+extern "C" DLL_PUBLIC PyObject *
+PyInit_devsim_py36(void)
 #else
 #define INITERROR return
-extern "C" void initds()
+extern "C" void DLL_PUBLIC initdevsim_py27()
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
   PyObject *module = PyModule_Create(&moduledef);
 #else
-  PyObject *module = Py_InitModule("ds", devsim_methods);
+  PyObject *module = Py_InitModule("devsim_py27", devsim_methods);
 #endif
 
     if (module == NULL)
     {
       INITERROR;
     }
-    struct module_state *st = GETSTATE(module);
 
-    char *dserror = strdup("ds.error");
-    st->error = PyErr_NewException(dserror, NULL, NULL);
-    free(dserror);
-    if (st->error == NULL) {
-        Py_DECREF(module);
-        INITERROR;
-    }
-    PyModule_AddObject(module, "error", st->error);
+    devsim_exception = PyErr_NewException(const_cast<char *>("ds.error"), NULL, NULL);
+    Py_INCREF(devsim_exception);
+    PyModule_AddObject(module, "error", devsim_exception);
 
     devsim_initialization();
 
@@ -446,7 +446,7 @@ extern "C" void initds()
 #endif
 }
 
-#ifdef DEVSIM_PYTHON_EMBEDDED
+#if 0
 // https://docs.python.org/3/howto/cporting.html
 // https://docs.python.org/3/extending/embedding.html
 using namespace std;
