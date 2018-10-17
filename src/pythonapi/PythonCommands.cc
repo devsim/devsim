@@ -415,7 +415,7 @@ PyMODINIT_FUNC
 PyInit_ds(void)
 #else
 #define INITERROR return
-void initds()
+extern "C" void initds()
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
