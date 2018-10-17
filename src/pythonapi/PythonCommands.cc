@@ -41,7 +41,6 @@ limitations under the License.
 
 #include <new>
 #include <sstream>
-#include <iostream>
 
 // Defined in devsim_py.cc
 void devsim_initialization();
@@ -49,10 +48,6 @@ void devsim_initialization();
 using namespace dsValidate;
 
 namespace dsPy {
-
-namespace {
-  PyObject *devsim_exception = NULL;
-};
 
 namespace {
 struct module_state {
@@ -426,14 +421,9 @@ extern "C" void DLL_PUBLIC initdevsim_py27()
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
-  std::cout << __LINE__ << "\t" << PY_MAJOR_VERSION << "\t" <<PY_MINOR_VERSION<< std::endl;
-  std::cout << __LINE__ << std::endl;
   PyObject *module = PyModule_Create(&moduledef);
-  std::cout << __LINE__ << std::endl;
 #else
-  std::cout << __LINE__ << std::endl;
   PyObject *module = Py_InitModule("devsim_py27", devsim_methods);
-  std::cout << __LINE__ << std::endl;
 #endif
 
     if (module == NULL)
@@ -441,13 +431,17 @@ extern "C" void DLL_PUBLIC initdevsim_py27()
       INITERROR;
     }
 
-    devsim_exception = PyErr_NewException(const_cast<char *>("ds.error"), NULL, NULL);
-    Py_INCREF(devsim_exception);
-    PyModule_AddObject(module, "error", devsim_exception);
+    // TODO: modify symdiff to use this approach
+    struct module_state *st = GETSTATE(module);
+    st->error = PyErr_NewException(const_cast<char *>("ds.error"), NULL, NULL);
+    if (st->error == NULL) {
+        Py_DECREF(module);
+        INITERROR;
+    }
 
-  std::cout << __LINE__ << std::endl;
+    PyModule_AddObject(module, "error", st->error);
+
     devsim_initialization();
-  std::cout << __LINE__ << std::endl;
 
 #if PY_MAJOR_VERSION >=3
   return module;
