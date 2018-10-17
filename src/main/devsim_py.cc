@@ -29,6 +29,7 @@ limitations under the License.
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 #endif
+#include "OutputStream.hh"
 #include <cstdio>
 
 
@@ -48,6 +49,22 @@ void devsim_initialization()
     GlobalData::GetInstance();
 
     dsHelper::CreateDefaultDerivatives();
+
+    OutputStream::WriteOut(OutputStream::OutputType::INFO,
+"\n"
+"----------------------------------------\n"
+"\n"
+" DEVSIM\n"
+"\n"
+" Version: " DEVSIM_VERSION_STRING "\n"
+"\n"
+//// UTF-8 code.
+" Copyright " DEVSIM_COPYRIGHT_YEAR " Devsim LLC\n"
+"\n"
+"----------------------------------------\n"
+"\n"
+"\n"
+    );
 }
 
 #if 0

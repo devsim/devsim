@@ -25,9 +25,9 @@ extern "C" {
 }
 
 
+#if 0
 bool Python_AppInit() {
 
-#ifdef DEVSIM_PYTHON_EMBEDDED
 #if PY_MAJOR_VERSION >=3
   /* Initialize our extension */
   if (dsPy::Commands_Init() == false) {
@@ -42,7 +42,6 @@ bool Python_AppInit() {
        return false;
   }
 
-#endif
 #endif
 
   OutputStream::WriteOut(OutputStream::OutputType::INFO,
@@ -62,4 +61,5 @@ bool Python_AppInit() {
     );
   return true;
 }
+#endif
 
