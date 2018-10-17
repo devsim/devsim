@@ -32,7 +32,8 @@ limitations under the License.
 #include <cstdio>
 
 
-int main(int argc, char * argv[])
+
+void devsim_initialization()
 {
 // fix incorrect Microsoft Visual C++ formatting
 // https://connect.microsoft.com/VisualStudio/feedback/details/1368280
@@ -47,7 +48,30 @@ int main(int argc, char * argv[])
     GlobalData::GetInstance();
 
     dsHelper::CreateDefaultDerivatives();
+}
 
+#ifdef DEVSIM_PYTHON_EMBEDDED
+void devsim_finalization()
+{
+//// While this is correct for memory recovery, it creates issues in writing to the output stream after python has exited.
+#ifndef NDEBUG
+    MaterialDB::DestroyInstance();
+    GlobalData::GetInstance().DestroyInstance();
+    dsMesh::MeshKeeper::DestroyInstance();
+    NodeKeeper::delete_instance();
+    InstanceKeeper::delete_instance();
+
+    MathEval<double>::DestroyInstance();
+    TimeData<double>::DestroyInstance();
+#ifdef DEVSIM_EXTENDED_PRECISION
+    MathEval<float128>::DestroyInstance();
+    TimeData<float128>::DestroyInstance();
+#endif
+#endif
+}
+
+int devsim_main(int argc, char * argv[])
+{
 
 #if PY_MAJOR_VERSION >= 3
     std::vector<wchar_t *> wargv(argc);
@@ -73,22 +97,16 @@ int main(int argc, char * argv[])
     int ret=Py_Main(argc, argv);
 #endif
 
-//// While this is correct for memory recovery, it creates issues in writing to the output stream after python has exited.
-#ifndef NDEBUG
-    MaterialDB::DestroyInstance();
-    GlobalData::GetInstance().DestroyInstance();
-    dsMesh::MeshKeeper::DestroyInstance();
-    NodeKeeper::delete_instance();
-    InstanceKeeper::delete_instance();
-
-    MathEval<double>::DestroyInstance();
-    TimeData<double>::DestroyInstance();
-#ifdef DEFSIM_EXTENDED_PRECISION
-    MathEval<float128>::DestroyInstance();
-    TimeData<float128>::DestroyInstance();
-#endif
-#endif
     return ret;
 }
+
+
+int main(int argc, char * argv[])
+{
+  devsim_initialization();
+  int ret = devsim_main(argc, argv);
+  devsim_finalization();
+}
+#endif
 
 

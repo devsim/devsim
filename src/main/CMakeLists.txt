@@ -39,9 +39,9 @@ SET (LIBRARIES
 
 SET (PYLIBRARIES
     commands
-    pythonapi_interpreter
+#    pythonapi_interpreter
     commands
-    pythonapi_interpreter
+#    pythonapi_interpreter
     Data
     AutoEquation
     meshing
@@ -56,15 +56,15 @@ SET (PYLIBRARIES
     circuitIdeal
     circuitData
     errorSystem
-    pythonapi_api
+#    pythonapi_api
     utility
 )
 
 SET (PY3LIBRARIES
     commands
-    python3api_interpreter
+#    python3api_interpreter
     commands
-    python3api_interpreter
+#    python3api_interpreter
     Data
     AutoEquation
     meshing
@@ -79,7 +79,7 @@ SET (PY3LIBRARIES
     circuitIdeal
     circuitData
     errorSystem
-    python3api_api
+#    python3api_api
     utility
 )
 
@@ -101,13 +101,14 @@ TARGET_INCLUDE_DIRECTORIES (devsim_tcl BEFORE PUBLIC ${TCL_INCLUDE})
 TARGET_LINK_LIBRARIES(devsim_tcl ${LIBRARIES} ${TCL_ARCHIVE} ${SUPERLU_ARCHIVE} ${BLAS_ARCHIVE} ${SQLITE3_ARCHIVE} ${SYMDIFF_ARCHIVE} ${OPTIONAL_LIBS} ${PTHREAD_LIB} ${DLOPEN_LIB})
 ENDIF (TCLMAIN)
 
-ADD_EXECUTABLE (devsim_py devsim_py.cc)
+ADD_LIBRARY (devsim_py SHARED devsim_py.cc $<TARGET_OBJECTS:pythonapi_interpreter> $<TARGET_OBJECTS:pythonapi_api>)
 TARGET_INCLUDE_DIRECTORIES (devsim_py BEFORE PUBLIC ${PYTHON_INCLUDE})
 TARGET_LINK_LIBRARIES(devsim_py ${PYLIBRARIES} ${PYTHON_ARCHIVE} ${SUPERLU_ARCHIVE} ${BLAS_ARCHIVE} ${SQLITE3_ARCHIVE} ${SYMDIFF_ARCHIVE} ${OPTIONAL_LIBS} ${PTHREAD_LIB} ${DLOPEN_LIB})
 
 IF (PYTHON3)
-ADD_EXECUTABLE (devsim_py3 devsim_py.cc)
+ADD_LIBRARY (devsim_py3 SHARED devsim_py.cc $<TARGET_OBJECTS:python3api_interpreter> $<TARGET_OBJECTS:python3api_api>)
 TARGET_INCLUDE_DIRECTORIES (devsim_py3 BEFORE PUBLIC ${PYTHON3_INCLUDE})
+# may be able to remove link against python libraries
 TARGET_LINK_LIBRARIES(devsim_py3 ${PY3LIBRARIES} ${PYTHON3_ARCHIVE} ${SUPERLU_ARCHIVE} ${BLAS_ARCHIVE} ${SQLITE3_ARCHIVE} ${SYMDIFF_ARCHIVE} ${OPTIONAL_LIBS} ${PTHREAD_LIB} ${DLOPEN_LIB})
 ENDIF (PYTHON3)
 

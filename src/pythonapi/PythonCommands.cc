@@ -41,6 +41,9 @@ limitations under the License.
 #include <sstream>
 #include <iostream>
 
+// Defined in devsim_py.cc
+void devsim_initialization();
+
 using namespace dsValidate;
 
 namespace dsPy {
@@ -436,11 +439,14 @@ void initds()
     }
     PyModule_AddObject(module, "error", st->error);
 
+    devsim_initialization();
+
 #if PY_MAJOR_VERSION >=3
   return module;
 #endif
 }
 
+#ifdef DEVSIM_PYTHON_EMBEDDED
 // https://docs.python.org/3/howto/cporting.html
 // https://docs.python.org/3/extending/embedding.html
 using namespace std;
@@ -462,5 +468,6 @@ Commands_Init() {
 
   return true;
 }
+#endif
 }
 
