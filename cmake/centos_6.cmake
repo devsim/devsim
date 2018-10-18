@@ -5,10 +5,10 @@ SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/lib/libsuperlu_4.3.a)
 SET (PTHREAD_LIB -lpthread)
 SET (SQLITE3_INCLUDE $ENV{HOME}/anaconda/include)
 
-SET (CGNS_ARCHIVE ${EXTERNAL_LIB}/cgnslib/lib/libcgns.a)
+SET (CGNS_ARCHIVE -L${EXTERNAL_LIB}/cgnslib/lib -lcgns)
 SET (CGNS_INCLUDE ${EXTERNAL_LIB}/cgnslib/include)
 
-SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
+SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff.so)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 ADD_DEFINITIONS(-DTCL_THREADS -pthread -fvisibility=hidden)
 SET (FLEX /usr/bin/flex)
@@ -37,3 +37,4 @@ SET (PYTHON_ARCHIVE -L$ENV{HOME}/anaconda/lib -lpython2.7)
 SET (PYTHON3_INCLUDE $ENV{HOME}/anaconda/envs/python3/include/python3.6m)
 SET (PYTHON3_ARCHIVE -L$ENV{HOME}/anaconda/envs/python3/lib -lpython3.6m)
 
+SET (CMAKE_POSITION_INDEPENDENT_CODE ON)
