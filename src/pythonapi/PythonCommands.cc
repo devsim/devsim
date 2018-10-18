@@ -14,7 +14,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ***/
-#include <iostream>
 
 #include "Python.h"
 #include "ceval.h"
@@ -42,13 +41,26 @@ limitations under the License.
 #include <new>
 #include <sstream>
 
+// Stringify
+// borrowed from dsAssert.hh
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define PASTETOKENS(x, y) x ## y
+// Module initialization function
+#if PY_MAJOR_VERSION >= 3
+#define HELPER1(x) PASTETOKENS(PyInit_, x)
+#else
+#define HELPER1(x) PASTETOKENS(init, x)
+#endif
+#define DEVSIM_MODULE_INIT HELPER1(DEVSIM_MODULE_NAME)
+#define DEVSIM_MODULE_STRING TOSTRING(DEVSIM_MODULE_NAME)
+
 // Defined in devsim_py.cc
 void devsim_initialization();
 
 using namespace dsValidate;
 
 namespace dsPy {
-
 namespace {
 struct module_state {
   module_state() : error(nullptr) {};
@@ -386,6 +398,7 @@ MYCOMMAND(get_circuit_equation_number, dsCommand::circuitGetCircuitEquationNumbe
 
 
 
+
 #if PY_MAJOR_VERSION >= 3
 static int devsim_traverse(PyObject *m, visitproc visit, void *arg) {
     Py_VISIT(GETSTATE(m)->error);
@@ -400,7 +413,7 @@ static int devsim_clear(PyObject *m) {
 
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
-        "devsim_py36",
+        DEVSIM_MODULE_STRING,
         NULL,
         sizeof(struct module_state),
         devsim_methods,
@@ -414,16 +427,16 @@ static struct PyModuleDef moduledef = {
 
 //PyMODINIT_FUNC // this next line is used instead to use DLL_PUBLIC macro
 extern "C" DLL_PUBLIC PyObject *
-PyInit_devsim_py36(void)
+DEVSIM_MODULE_INIT(void)
 #else
 #define INITERROR return
-extern "C" void DLL_PUBLIC initdevsim_py27()
+extern "C" void DLL_PUBLIC DEVSIM_MODULE_INIT()
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
   PyObject *module = PyModule_Create(&moduledef);
 #else
-  PyObject *module = Py_InitModule("devsim_py27", devsim_methods);
+  PyObject *module = Py_InitModule(DEVSIM_MODULE_STRING, devsim_methods);
 #endif
 
     if (module == NULL)
