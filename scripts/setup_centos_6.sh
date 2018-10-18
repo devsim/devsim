@@ -1,5 +1,5 @@
 DEVSIM_CONFIG="centos_6"
-CMAKE="/usr/bin/cmake3"
+CMAKE="cmake"
 CMAKE_CXX_FLAGS=""
 CXX="/opt/rh/devtoolset-6/root/usr/bin/g++"
 CC="/opt/rh/devtoolset-6/root/usr/bin/gcc"
