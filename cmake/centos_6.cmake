@@ -8,7 +8,7 @@ SET (SQLITE3_INCLUDE $ENV{HOME}/anaconda/include)
 SET (CGNS_ARCHIVE -L${EXTERNAL_LIB}/cgnslib/lib -lcgns)
 SET (CGNS_INCLUDE ${EXTERNAL_LIB}/cgnslib/include)
 
-SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff.so)
+SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 ADD_DEFINITIONS(-DTCL_THREADS -pthread -fvisibility=hidden)
 SET (FLEX /usr/bin/flex)
