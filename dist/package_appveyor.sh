@@ -15,24 +15,22 @@ DIST_DIR=$1
 DIST_BIN=${DIST_DIR}/bin
 #DIST_DATE=`date +%Y%m%d`
 DIST_VER=${DIST_DIR}
-MT_EXE="/cygdrive/c/Program Files (x86)/Windows Kits/8.1/bin/x64/mt.exe"
+######MT_EXE="/cygdrive/c/Program Files (x86)/Windows Kits/8.1/bin/x64/mt.exe"
 
+# debugging
+ls -l ${SRC_DIR}/*.pyd ${SRC_DIR}/*.exe
 # make the bin directory and copy binary in
 mkdir -p ${DIST_BIN}
-cp ${SRC_DIR}/devsim_py.exe ${DIST_BIN}/devsim.exe
-cp ${SRC_DIR}/devsim_py3.exe ${DIST_BIN}/devsim_py3.exe
-cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl.exe
+#cp ${SRC_DIR}/devsim_py.exe ${DIST_BIN}/devsim.exe
+#cp ${SRC_DIR}/devsim_py3.exe ${DIST_BIN}/devsim_py3.exe
+#cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl.exe
+for i in devsim_py27.pyd devsim_py36.pyd devsim_tcl.exe; do cp -v ${SRC_DIR}/$i ${DIST_BIN}; done
 ##### update the manifest
-(cd ${DIST_BIN} &&
-"${MT_EXE}" -inputresource:"c:\\Miniconda-x64\\python.exe;#1" -out:devsim.exe.manifest &&
-"${MT_EXE}" -manifest devsim.exe.manifest -outputresource:"devsim.exe;#1"
-)
-
-
-
-
-
-
+##### hopefully not necessary for pyd files
+#####(cd ${DIST_BIN} &&
+#####"${MT_EXE}" -inputresource:"c:\\Miniconda-x64\\python.exe;#1" -out:devsim.exe.manifest &&
+#####"${MT_EXE}" -manifest devsim.exe.manifest -outputresource:"devsim.exe;#1"
+#####)
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
