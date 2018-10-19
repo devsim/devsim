@@ -25,29 +25,31 @@ DIST_VER=${DIST_DIR}
 # Assume libstdc++ is a standard part of the system
 #http://developer.apple.com/library/mac/#documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/CPPROverview.html
 mkdir -p ${DIST_BIN}
-cp ${SRC_DIR}/devsim_py ${DIST_BIN}/devsim
-cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl
+for i in ${SRC_DIR}/devsim_py27.so; do cp -v $i ${DIST_BIN}; done
+#cp ${SRC_DIR}/devsim_py ${DIST_BIN}/devsim
+#cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl
 
 # because the non gcc build uses the system python interpreter and python 3 is not available
 if [ "$1" = "gcc" ]
   then
-cp ${SRC_DIR}/devsim_py3 ${DIST_BIN}/devsim_py3
+cp -v ${SRC_DIR}/devsim_py36.so ${DIST_BIN}
 fi
 
-if [ "$1" = "gcc" ]
-then
-mkdir -p ${DIST_LIB}
-for i in ${DIST_BIN}/devsim ${DIST_BIN}/devsim_py3 ${DIST_BIN}/devsim_tcl
-do
-# get otool dependencies from the gcc compiler
-for j in `otool -L $i | egrep '\bgcc\b' | sed -e 's/(.*//'`
-do
-cp -vf $j ${DIST_LIB}
-echo install_name_tool -change $j "@executable_path/../lib/`basename $j`" $i
-install_name_tool -change $j "@executable_path/../lib/`basename $j`" $i
-done
-done
-fi
+echo "fixup install_name_tool"
+###if [ "$1" = "gcc" ]
+###then
+###mkdir -p ${DIST_LIB}
+###for i in ${DIST_BIN}/devsim ${DIST_BIN}/devsim_py3 ${DIST_BIN}/devsim_tcl
+###do
+#### get otool dependencies from the gcc compiler
+###for j in `otool -L $i | egrep '\bgcc\b' | sed -e 's/(.*//'`
+###do
+###cp -vf $j ${DIST_LIB}
+###echo install_name_tool -change $j "@executable_path/../lib/`basename $j`" $i
+###install_name_tool -change $j "@executable_path/../lib/`basename $j`" $i
+###done
+###done
+###fi
 
 # strip unneeded symbols
 #strip -arch all -u -r ${DIST_DIR}/bin/$i
