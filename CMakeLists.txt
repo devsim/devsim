@@ -1,6 +1,6 @@
 PROJECT (DEVSIM)
 #cmake_minimum_required(VERSION 2.6)
-OPTION(GENIUSREADER "Build with Genius Reader" ON)
+OPTION(GENIUSREADER "Build with Genius Reader" OFF)
 OPTION(VTKWRITER    "Build with VTK Writer" ON)
 OPTION(TCLMAIN      "Build with TCL Interpreter" ON)
 #Python 2 version is always build
