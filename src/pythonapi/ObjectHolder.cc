@@ -93,12 +93,12 @@ std::string GetStringFromStringObject(PyObject *obj)
   if (PyUnicode_CheckExact(obj))
   {
     PyObject *sobj = PyUnicode_AsUTF8String(obj);
-    ret = PyBytes_AS_STRING(sobj);
+    ret = PyBytes_AsString(sobj);
     Py_DECREF(sobj);
   }
   else if (PyBytes_CheckExact(obj))
   {
-    ret = PyBytes_AS_STRING(obj);
+    ret = PyBytes_AsString(obj);
   }
   return ret;
 }
@@ -494,7 +494,7 @@ ObjectHolder::ObjectHolder(ObjectHolderList_t &list)
     PyObject *ns = reinterpret_cast<PyObject *>(list[i].GetObject());
     Py_INCREF(ns);
     //// steals the reference
-    PyTuple_SET_ITEM(list_object, i, ns);
+    PyTuple_SetItem(list_object, i, ns);
   }
   
   object_ = list_object;
