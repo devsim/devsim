@@ -62,15 +62,10 @@ fi
 # put the tag name in first argument used for distribution
 # this script assumes git clone and submodule initialization has been done
 
-# SuperLU and CGNS Download
+# SuperLU
 if [ ! -f external/superlu_4.3.tar.gz ]
 then
 (cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
-fi
-
-if [ ! -f external/v3.1.4.tar.gz ]
-then
-(cd external && curl -L -O https://github.com/CGNS/CGNS/archive/v3.1.4.tar.gz && tar xzf v3.1.4.tar.gz)
 fi
 
 # SYMDIFF build
@@ -83,7 +78,12 @@ then
 fi
 
 # CGNSLIB build
-(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake -DCMAKE_C_COMPILER=${CC} -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j4 && make install)
+####if [ ! -f external/v3.1.4.tar.gz ]
+####then
+####(cd external && curl -L -O https://github.com/CGNS/CGNS/archive/v3.1.4.tar.gz && tar xzf v3.1.4.tar.gz)
+####fi
+####(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake -DCMAKE_C_COMPILER=${CC} -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j4 && make install)
+
 # SUPERLU build
 (cd external/SuperLU_4.3 && sh ../superlu_osx_10.10.sh)
 
