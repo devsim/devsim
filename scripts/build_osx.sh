@@ -17,9 +17,9 @@ if [ "${1}" = "gcc" ]
 
   # https://github.com/Microsoft/LightGBM/pull/1560
   # removes symlink
-  rm -f '/usr/local/include/c++'
+  #rm -f '/usr/local/include/c++'
   # fix "fatal error: _stdio.h: No such file or directory"
-  sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-9.3"
+  #sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-9.3"
 
   # install boost
   if brew ls --versions boost > /dev/null;
