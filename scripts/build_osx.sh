@@ -16,6 +16,8 @@ if [ "${1}" = "gcc" ]
   export F77=/usr/local/bin/gfortran-8;
 
   # https://github.com/Microsoft/LightGBM/pull/1560
+  # removes symlink
+  rm -f '/usr/local/include/c++'
   # fix "fatal error: _stdio.h: No such file or directory"
   sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-9.3"
 
