@@ -15,6 +15,10 @@ if [ "${1}" = "gcc" ]
   export CXX=/usr/local/bin/g++-8;
   export F77=/usr/local/bin/gfortran-8;
 
+  # https://github.com/Microsoft/LightGBM/pull/1560
+  # fix "fatal error: _stdio.h: No such file or directory"
+  sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-9.3"
+
   # install boost
   if brew ls --versions boost > /dev/null;
   then
