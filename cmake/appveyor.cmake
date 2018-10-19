@@ -16,8 +16,9 @@ ADD_DEFINITIONS(-DSTATIC_BUILD -D_USE_MATH_DEFINES -DTCL_THREADS)
 # warning C4503: Decorated name length truncated
 # warning C4800: casting from point to bool performance warning
 # warning C4996: 'isatty': The POSIX name for this item is deprecated
+# warning C4661: no suitable definition provided for explicit template instantiation request
 # dll linkage warning from python, define HAVE_ROUND
-SET (WARNINGS_IGNORE " /wd4005 /wd4244 /wd4267 /wd4503 /wd4800 /wd4996 /DHAVE_ROUND")
+SET (WARNINGS_IGNORE " /wd4005 /wd4244 /wd4267 /wd4503 /wd4800 /wd4996 /wd4661 /DHAVE_ROUND")
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:strict /EHsc ${WARNINGS_IGNORE}")
 SET (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /fp:strict ${WARNINGS_IGNORE}")
 
