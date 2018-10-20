@@ -13,20 +13,25 @@ SRC_DIR=../${ARCH}/src/main/Release
 DIST_DIR=$1
 #DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
-#DIST_DATE=`date +%Y%m%d`
+DIST_LIB=${DIST_DIR}/lib
+DIST_PYDLL=${DIST_LIB}/devsim
 DIST_VER=${DIST_DIR}
 ######MT_EXE="/cygdrive/c/Program Files (x86)/Windows Kits/8.1/bin/x64/mt.exe"
 
-# debugging
-ls -l ${SRC_DIR}/*.pyd ${SRC_DIR}/*.exe
+
 # make the bin directory and copy binary in
 mkdir -p ${DIST_BIN}
-#cp ${SRC_DIR}/devsim_py.exe ${DIST_BIN}/devsim.exe
-#cp ${SRC_DIR}/devsim_py3.exe ${DIST_BIN}/devsim_py3.exe
-#cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl.exe
-for i in devsim_py27.pyd devsim_py36.pyd devsim_py37.pyd devsim_tcl.exe; do cp -v ${SRC_DIR}/$i ${DIST_BIN}; done
+mkdir -p ${DIST_DIR}
+mkdir -p ${DIST_PYDLL}
+
+cp -v ${SRC_DIR}/devsim_py27.pyd ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_py36.pyd ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_py37.pyd ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_tcl.exe ${DIST_BIN}
+cp -v __init__.py ${DIST_PYDLL}
+
 ##### update the manifest
-##### hopefully not necessary for pyd files
+##### this is not necessary for pyd files
 #####(cd ${DIST_BIN} &&
 #####"${MT_EXE}" -inputresource:"c:\\Miniconda-x64\\python.exe;#1" -out:devsim.exe.manifest &&
 #####"${MT_EXE}" -manifest devsim.exe.manifest -outputresource:"devsim.exe;#1"
@@ -57,9 +62,6 @@ Source available from:
 http://www.github.com/devsim/devsim 
 commit ${COMMIT}
 EOF
-
-
-
 /usr/bin/zip -r ${DIST_DIR}.zip ${DIST_DIR}
 done
 

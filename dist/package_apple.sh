@@ -74,7 +74,7 @@ done
 for i in python_packages examples testing
 do
 (cd ../$i; git clean -f -d -x )
-rsync -aP --delete ../$i ${DIST_DIR}
+rsync -aqP --delete ../$i ${DIST_DIR}
 done
 
 
@@ -88,5 +88,5 @@ Source available from:
 http://www.github.com/devsim/devsim 
 commit ${COMMIT}
 EOF
-tar czf ${DIST_VER}.tgz ${DIST_DIR}
+tar czvf ${DIST_VER}.tgz ${DIST_DIR}
 
