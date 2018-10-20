@@ -18,6 +18,7 @@ SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
 DIST_DIR=$2
 DIST_BIN=${DIST_DIR}/bin
 DIST_LIB=${DIST_DIR}/lib
+DIST_PYDLL=${DIST_DIR}/lib/devsim
 DIST_VER=${DIST_DIR}
 
 
@@ -25,17 +26,20 @@ DIST_VER=${DIST_DIR}
 # Assume libstdc++ is a standard part of the system
 #http://developer.apple.com/library/mac/#documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/CPPROverview.html
 mkdir -p ${DIST_BIN}
-for i in ${SRC_DIR}/devsim_py27.so; do cp -v $i ${DIST_BIN}; done
-#cp ${SRC_DIR}/devsim_py ${DIST_BIN}/devsim
-#cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl
+mkdir -p ${DIST_DIR}
+mkdir -p ${DIST_PYDLL}
+
+for i in ${SRC_DIR}/devsim_py27.so; do cp -v $i ${DIST_PYDLL}; done
+cp -v ${SRC_DIR}/devsim_tcl ${DIST_BIN}
+cp -v __init__.py ${DIST_PYDLL}
 
 # because the non gcc build uses the system python interpreter and python 3 is not available
 if [ "$1" = "gcc" ]
   then
-cp -v ${SRC_DIR}/devsim_py36.so ${SRC_DIR}/devsim_py37.so ${DIST_BIN}
+cp -v ${SRC_DIR}/devsim_py36.so ${SRC_DIR}/devsim_py37.so ${DIST_PYDLL}
 fi
 
-echo "fixup install_name_tool"
+#### INSTALL NAME CHANGE
 ###if [ "$1" = "gcc" ]
 ###then
 ###mkdir -p ${DIST_LIB}
