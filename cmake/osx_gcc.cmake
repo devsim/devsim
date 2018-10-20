@@ -10,7 +10,7 @@ SET (PYTHON_INCLUDE $ENV{HOME}/anaconda/include/python2.7)
 SET (PYTHON_ARCHIVE -L$ENV{HOME}/anaconda/lib -lpython2.7)
 SET (PYTHON3_INCLUDE $ENV{HOME}/anaconda/envs/python36/include/python3.6m)
 SET (PYTHON3_ARCHIVE -L$ENV{HOME}/anaconda/envs/python36/lib -lpython3.6m)
-SET (PYTHON3_ARCHIVE2 -L$ENV{HOME}/anaconda/envs/python37/lib -lpython3.7m)
+SET (PYTHON37_ARCHIVE -L$ENV{HOME}/anaconda/envs/python37/lib -lpython3.7m)
 SET (BOOST_INCLUDE "/usr/local/include")
 SET (BOOST_ARCHIVE )
 

@@ -51,7 +51,7 @@ ${HOME}/anaconda/bin/conda install -y numpy mkl mkl-devel mkl-include;)
 ${HOME}/anaconda/bin/conda create -y --name python36 python=3.6
 ${HOME}/anaconda/bin/conda install -y -n python36 #numpy mkl-devel mkl-include
 ${HOME}/anaconda/bin/conda create -y --name python37 python=3.7
-${HOME}/anaconda/bin/conda install -y -n python37 #numpy mkl-devel mkl-include
+#${HOME}/anaconda/bin/conda install -y -n python37 numpy mkl-devel mkl-include
 fi
 
 
