@@ -32,7 +32,7 @@ for i in ${SRC_DIR}/devsim_py27.so; do cp -v $i ${DIST_BIN}; done
 # because the non gcc build uses the system python interpreter and python 3 is not available
 if [ "$1" = "gcc" ]
   then
-cp -v ${SRC_DIR}/devsim_py36.so ${DIST_BIN}
+cp -v ${SRC_DIR}/devsim_py36.so ${SRC_DIR}/devsim_py37.so ${DIST_BIN}
 fi
 
 echo "fixup install_name_tool"

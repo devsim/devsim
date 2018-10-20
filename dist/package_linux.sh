@@ -21,7 +21,7 @@ DIST_VER=${DIST_DIR}
 #cp devsim.sh ${DIST_DIR}/bin/devsim
 #chmod +x ${DIST_DIR}/bin/devsim
 mkdir -p ${DIST_BIN}
-for i in ${SRC_DIR}/devsim_py27.so ${SRC_DIR}/devsim_py36.so; do cp -v $i ${DIST_BIN}; done
+for i in ${SRC_DIR}/devsim_py27.so ${SRC_DIR}/devsim_py36.so ${SRC_DIR}/devsim_py37.so; do cp -v $i ${DIST_BIN}; done
 #cp ${SRC_DIR}/devsim_py ${DIST_DIR}/bin/devsim
 #cp ${SRC_DIR}/devsim_py3 ${DIST_BIN}/devsim_py3
 #cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl

@@ -24,7 +24,7 @@ mkdir -p ${DIST_BIN}
 #cp ${SRC_DIR}/devsim_py.exe ${DIST_BIN}/devsim.exe
 #cp ${SRC_DIR}/devsim_py3.exe ${DIST_BIN}/devsim_py3.exe
 #cp ${SRC_DIR}/devsim_tcl ${DIST_BIN}/devsim_tcl.exe
-for i in devsim_py27.pyd devsim_py36.pyd devsim_tcl.exe; do cp -v ${SRC_DIR}/$i ${DIST_BIN}; done
+for i in devsim_py27.pyd devsim_py36.pyd devsim_py37.pyd devsim_tcl.exe; do cp -v ${SRC_DIR}/$i ${DIST_BIN}; done
 ##### update the manifest
 ##### hopefully not necessary for pyd files
 #####(cd ${DIST_BIN} &&
