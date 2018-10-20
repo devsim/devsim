@@ -13,18 +13,25 @@ SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
 DIST_DIR=$1
 #DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
-#DIST_DATE=`date +%Y%m%d`
+DIST_LIB=${DIST_DIR}/lib
+DIST_PYDLL=${DIST_LIB}/devsim
 DIST_VER=${DIST_DIR}
+
 
 # make the bin directory and copy binary in
 # we need the wrapper script for libstdc++
 #cp devsim.sh ${DIST_DIR}/bin/devsim
 #chmod +x ${DIST_DIR}/bin/devsim
 mkdir -p ${DIST_BIN}
-for i in ${SRC_DIR}/devsim_py27.so ${SRC_DIR}/devsim_py36.so ${SRC_DIR}/devsim_py37.so; do cp -v $i ${DIST_BIN}; done
-#cp ${SRC_DIR}/devsim_py ${DIST_DIR}/bin/devsim
-#cp ${SRC_DIR}/devsim_py3 ${DIST_BIN}/devsim_py3
-#cp ${SRC_DIR}/devsim_tcl ${DIST_DIR}/bin/devsim_tcl
+mkdir -p ${DIST_DIR}
+mkdir -p ${DIST_PYDLL}
+
+cp -v ${SRC_DIR}/devsim_py27.so ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_py36.so ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_py37.so ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_tcl ${DIST_BIN}
+cp -v __init__.py ${DIST_PYDLL}
+
 # strip unneeded symbols
 #strip --strip-unneeded ${DIST_DIR}/bin/$i
 #done

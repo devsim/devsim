@@ -18,7 +18,7 @@ SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
 DIST_DIR=$2
 DIST_BIN=${DIST_DIR}/bin
 DIST_LIB=${DIST_DIR}/lib
-DIST_PYDLL=${DIST_DIR}/lib/devsim
+DIST_PYDLL=${DIST_LIB}/devsim
 DIST_VER=${DIST_DIR}
 
 
@@ -29,14 +29,15 @@ mkdir -p ${DIST_BIN}
 mkdir -p ${DIST_DIR}
 mkdir -p ${DIST_PYDLL}
 
-for i in ${SRC_DIR}/devsim_py27.so; do cp -v $i ${DIST_PYDLL}; done
+cp -v ${SRC_DIR}/devsim_py27.so ${DIST_PYDLL}
 cp -v ${SRC_DIR}/devsim_tcl ${DIST_BIN}
 cp -v __init__.py ${DIST_PYDLL}
 
 # because the non gcc build uses the system python interpreter and python 3 is not available
 if [ "$1" = "gcc" ]
   then
-cp -v ${SRC_DIR}/devsim_py36.so ${SRC_DIR}/devsim_py37.so ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_py36.so ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_py37.so ${DIST_PYDLL}
 fi
 
 #### INSTALL NAME CHANGE
