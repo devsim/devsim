@@ -46,7 +46,6 @@ bool Interpreter::RunCommand(const std::string &command, const std::vector<std::
 
 namespace
 {
-//// this shouldn't fail
 PyObject *GetGlobalDictionary()
 {
   PyObject *main    = PyImport_ImportModule("__main__");
@@ -56,7 +55,18 @@ PyObject *GetGlobalDictionary()
 
 PyObject *GetDevsimDictionary()
 {
-  PyObject *devsim = PyImport_ImportModule("ds");
+  std::string module_name = TOSTRING(DEVSIM_MODULE_NAME);
+  std::string long_module_name = "devsim." + module_name;
+
+  PyObject *devsim = nullptr;
+  devsim = PyImport_ImportModule(long_module_name.c_str());
+  if (!devsim)
+  {
+    devsim = PyImport_ImportModule(module_name.c_str());
+  }
+
+  //PyErr_Print();
+  dsAssert(devsim, std::string("Issue loading module ") + module_name);
   PyObject *globals = PyModule_GetDict(devsim);
   return globals;
 }
