@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ds import *
+from devsim import *
 
 mesh_name = "pn2d"
 result = create_genius_mesh(file=mesh_name+".cgns", mesh=mesh_name)
