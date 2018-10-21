@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from simple_dd import *
-from ds import *
+from devsim import *
 #TODO: make this a class so that paramters can be changed
 contactcharge_node="contactcharge_node"
 contactcharge_edge="contactcharge_edge"

@@ -24,7 +24,7 @@
 #set x [db1 eval {INSERT INTO t1 VALUES('global', 'm0', '9.10938188e-31', 'kg', 'Electron Mass')}];
 #set x [db1 eval {SELECT * FROM t1 ORDER BY material}] 
 #puts $x
-from ds import *
+from devsim import *
 create_db(filename="foodb")
 add_db_entry(material="global", parameter="q", value=1.60217646e-19, unit="coul", description="Electron Charge")
 add_db_entry(material="global", parameter="one", value=2, unit="", description="")

@@ -1,4 +1,6 @@
 
+from devsim import *
+
 print "coordinates"
 coordinates=[]
 for i in range(0,11):
@@ -39,7 +41,6 @@ physical_names = [
 print physical_names
 print
 
-from ds import *
 create_gmsh_mesh(mesh="toy", coordinates=coordinates, physical_names=physical_names, elements=elements)
 add_gmsh_region(mesh="toy", gmsh_name="top", region="top", material="silicon")
 add_gmsh_region(mesh="toy", gmsh_name="bot", region="bot", material="silicon")

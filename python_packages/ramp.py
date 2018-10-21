@@ -14,7 +14,7 @@
 
 import sys
 sys.path.append('../../python_packages')
-from ds import *
+from devsim import *
 import ds
 from simple_physics import *
 

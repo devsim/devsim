@@ -16,7 +16,7 @@
 #### cap2.py
 #### tests physics of cap made of two insulating regions
 ####
-from ds import *
+from devsim import *
 device="MyDevice"
 interface="MySiOx"
 regions =("MyOxRegion", "MySiRegion")
@@ -163,8 +163,6 @@ rl = get_rlist()
 cl = get_clist()
 il = get_ilist()
 
-print()
-print()
 
 for i in rl:
   delete_equation(device=i['device'], region=i['region'], name=i['name'])
@@ -204,11 +202,11 @@ print(get_node_model_values(device=device, region="MySiRegion", name="Potential"
 solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 
 # test exception
-import ds
+import devsim
 node_model(device=device, region="MySiRegion", name="test", equation="log(-1)")
 try:
   print(get_node_model_values(device=device, region="MySiRegion", name="test"))
-except ds.error as x:
+except devsim.error as x:
   print(x)
 print("The DEVSIM FATAL message is part of the test.  The FPE exception was caught and the program will terminate normally.")
 

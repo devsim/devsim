@@ -15,7 +15,7 @@
 
 ##Title: cap1.py
 ##Purpose: Simple example for 1D capacitor
-from ds import *
+from devsim import *
 
 device_info = {'device' : 'MyDevice'}
 region_info = device_info

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ds import *
+from devsim import *
 # basic linear circuit solved by itself
 add_circuit_node(name="n1", variable_update="default")
 add_circuit_node(name="n2", variable_update="default")

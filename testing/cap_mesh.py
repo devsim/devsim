@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ds import *
+from devsim import *
 def cap_mesh(region_name, material_name):
   '''
     Creates a simple cap mesh named cap1 for test purposes with a given region name

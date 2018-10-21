@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ds import *
+from devsim import *
 from python_packages.model_create import *
 
 def CreateElementElectronContinuityEquation(device, region, current_model):

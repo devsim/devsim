@@ -42,7 +42,7 @@ except:
   sys.exit(-1)
 
 
-from ds import *
+from devsim import *
 
 def calculateValues(scalar_efield, eecouple, sx, sy):
   row0 = numpy.array([0, 0, 1])
