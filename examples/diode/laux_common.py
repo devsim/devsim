@@ -42,7 +42,7 @@ except:
   sys.exit(0)
 
 
-from ds import *
+from devsim import *
 #from collections import OrderedDict
 
 dim = None

@@ -42,7 +42,7 @@ except:
   sys.exit(-1)
 
 
-from ds import *
+from devsim import *
 from laux_common import *
 
 

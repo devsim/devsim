@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ds import *
+from devsim import *
 #### molarity 0.001 mole / Liter * 1 L / (1e3 cm^3) * 6.02e23 / mole = 6.02e17 /cm^3
 set_parameter(device="disk", region="solution", name="n_bound", value=6.02e17)
 #### 2q/nm^3 -->  2/nm^3 * (1 nm^3/(1e-7 cm)^3) 

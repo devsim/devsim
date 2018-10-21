@@ -13,7 +13,7 @@
 # limitations under the License.
 
 #### Small Signal simulation
-from ds import *
+from devsim import *
 from python_packages.simple_physics import *
 import diode_common
 

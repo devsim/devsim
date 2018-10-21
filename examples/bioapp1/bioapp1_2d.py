@@ -16,7 +16,7 @@ global device
 device = "disk"
 
 import sys
-from ds import *
+from devsim import *
 
 if len(sys.argv) != 2:
     sys.stderr.write('must specify voltage')
