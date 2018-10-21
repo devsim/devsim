@@ -1,4 +1,4 @@
-from ds import *
+from devsim import *
 import python_packages.pythonmesh
 
 def gmsh_reader(mesh, device, filename="", coordinates="", physical_names="", elements=""):

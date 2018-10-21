@@ -15,7 +15,7 @@
 import sys
 sys.path.append('../../python_packages')
 from devsim import *
-import ds
+import devsim
 from simple_physics import *
 
 def rampbias(device, contact, end_bias, step_size, min_step, max_iter, rel_error, abs_error, callback):
@@ -43,7 +43,7 @@ def rampbias(device, contact, end_bias, step_size, min_step, max_iter, rel_error
     set_parameter(device=device, name=GetContactBiasName(contact), value=next_bias)
     try:
       solve(type="dc", absolute_error=abs_error, relative_error=rel_error, maximum_iterations=max_iter)
-    except ds.error as msg:
+    except devsim.error as msg:
       if msg[0].find("Convergence failure") != 0:
         raise
       set_parameter(device=device, name=GetContactBiasName(contact), value=last_bias)

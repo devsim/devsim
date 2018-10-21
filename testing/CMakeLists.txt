@@ -218,4 +218,7 @@ ADD_TEST("testing/laux1" ${RUNDIFFTEST} "${DEVSIM_PY} laux1.py" ${GOLDENDIR}/tes
 # this is weird since it is dependent on one of our tcl tests
 set_tests_properties("testing/laux1" PROPERTIES DEPENDS testing/trimesh2)
 
-set_tests_properties("${DIODE_DIR}/laux2d" PROPERTIES ENVIRONMENT "DYLD_INSERT_LIBRARIES=$ENV{DYLD_INSERT_LIBRARIES};PYTHONHOME=$ENV{PYTHONHOME}")
+#set_tests_properties("${DIODE_DIR}/laux2d" PROPERTIES ENVIRONMENT "DYLD_INSERT_LIBRARIES=$ENV{DYLD_INSERT_LIBRARIES};PYTHONHOME=$ENV{PYTHONHOME}")
+
+
+

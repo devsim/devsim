@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ds import *
+from devsim import *
 device="twowire"
 
 create_gmsh_mesh(file="twowire.msh", mesh="twowire")

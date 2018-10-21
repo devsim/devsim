@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ds import *
+from devsim import *
 device ="mos2d"
 
 device_width    =1.0e-4

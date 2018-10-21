@@ -15,7 +15,7 @@
 #set_parameter -name threads_available -value 1
 #set_parameter -name threads_task_size -value 1024
 import gmsh_mos2d_create
-from ds import *
+from devsim import *
 from python_packages.simple_physics import *
 from python_packages.ramp import *
 from python_packages.Klaassen import *
