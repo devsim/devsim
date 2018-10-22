@@ -45,7 +45,7 @@ then
 (cd ${HOME} &&
 curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh;
 bash ~/Miniconda2-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
-${HOME}/anaconda/bin/conda install -y numpy mkl mkl-devel mkl-include;)
+${HOME}/anaconda/bin/conda install -y mkl mkl-devel mkl-include;)
 
 #Python3
 ${HOME}/anaconda/bin/conda create -y --name python36 python=3.6
