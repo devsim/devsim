@@ -14,8 +14,9 @@ SET (PYTHON37_ARCHIVE -L$ENV{HOME}/anaconda/envs/python37/lib -lpython3.7m)
 SET (BOOST_INCLUDE "/usr/local/include")
 SET (BOOST_ARCHIVE )
 
-SET (QUADMATH_ARCHIVE /usr/local/Cellar/gcc/8.1.0/lib/gcc/8/libquadmath.a)
-#SET (QUADMATH_ARCHIVE "-lquadmath")
+#SET (QUADMATH_ARCHIVE /usr/local/Cellar/gcc/8.1.0/lib/gcc/8/libquadmath.a)
+# need to make sure numpy and libgfortran are not available to pull the one from brew
+SET (QUADMATH_ARCHIVE "-lquadmath")
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 #SET (BLAS_ARCHIVE  -lblas -llapack)
 #SET (BLAS_ARCHIVE  -lblas -llapack ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
