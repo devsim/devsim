@@ -6,11 +6,6 @@ ADD_DEFINITIONS(-DTCL_THREADS -fvisibility=hidden)
 #IF (${DEVSIM_CONFIG} STREQUAL "osx_10.9")
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
-SET (PYTHON_INCLUDE $ENV{HOME}/anaconda/include/python2.7)
-SET (PYTHON_ARCHIVE -L$ENV{HOME}/anaconda/lib -lpython2.7)
-SET (PYTHON3_INCLUDE $ENV{HOME}/anaconda/envs/python36/include/python3.6m)
-SET (PYTHON3_ARCHIVE -L$ENV{HOME}/anaconda/envs/python36/lib -lpython3.6m)
-SET (PYTHON37_ARCHIVE -L$ENV{HOME}/anaconda/envs/python37/lib -lpython3.7m)
 SET (BOOST_INCLUDE "/usr/local/include")
 SET (BOOST_ARCHIVE )
 
@@ -36,6 +31,9 @@ SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
 SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/lib/libsuperlu_4.3_x86_64.a)
 SET (TCL_INCLUDE "$ENV{HOME}/anaconda/include")
 SET (TCL_ARCHIVE -L$ENV{HOME}/anaconda/lib -ltcl8.6 -ldl)
+
+
+
 #SET (TCL_STUB /usr/lib/libtclstub8.5.a)
 SET (SQLITE3_ARCHIVE "-lsqlite3")
 SET (SQLITE3_INCLUDE "/usr/include")
@@ -50,4 +48,11 @@ SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 #SET (ADD_LINKER_FLAGS " -flat_namespace")
 #SET (ADD_RPATH "@executable_path/../lib")
 #ENDIF (${DEVSIM_CONFIG} STREQUAL "osx_10.9")
+
+SET (PYTHON27_INCLUDE   $ENV{HOME}/anaconda/envs/python27_devsim_build/include/python2.7)
+SET (PYTHON27_ARCHIVE -L$ENV{HOME}/anaconda/envs/python27_devsim_build/lib   -lpython2.7)
+SET (PYTHON36_INCLUDE   $ENV{HOME}/anaconda/envs/python36_devsim_build/include/python3.6m)
+SET (PYTHON36_ARCHIVE -L$ENV{HOME}/anaconda/envs/python36_devsim_build/lib   -lpython3.6m)
+SET (PYTHON37_INCLUDE   $ENV{HOME}/anaconda/envs/python37_devsim_build/include/python3.7m)
+SET (PYTHON37_ARCHIVE -L$ENV{HOME}/anaconda/envs/python37_devsim_build/lib   -lpython3.7m)
 

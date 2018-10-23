@@ -39,19 +39,18 @@ else
   exit 1;
 fi
 
+#minimal conda environments to prevent linking against the wrong libraries
 if [ "${1}" = "gcc" ] && [ ! -f ${HOME}/Miniconda2-latest-MacOSX-x86_64.sh ]
 then
-# Python 2
 (cd ${HOME} &&
 curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh;
-bash ~/Miniconda2-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
-${HOME}/anaconda/bin/conda install -y mkl mkl-devel mkl-include;)
-
+bash ~/Miniconda2-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;)
+# Python 2
+${HOME}/anaconda/bin/conda create  -y --name python27_devsim_build python=2.7
+${HOME}/anaconda/bin/conda install -y --name python27_devsim_build mkl mkl-devel mkl-include
 #Python3
-${HOME}/anaconda/bin/conda create -y --name python36 python=3.6
-#${HOME}/anaconda/bin/conda install -y -n python36 numpy mkl-devel mkl-include
-${HOME}/anaconda/bin/conda create -y --name python37 python=3.7
-#${HOME}/anaconda/bin/conda install -y -n python37 numpy mkl-devel mkl-include
+${HOME}/anaconda/bin/conda create -y --name python36_devsim_build python=3.6
+${HOME}/anaconda/bin/conda create -y --name python37_devsim_build python=3.7
 fi
 
 
