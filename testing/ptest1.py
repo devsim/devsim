@@ -21,7 +21,7 @@ material_name = "Oxide"
 mesh_name = cap_mesh(region_name, material_name)
 create_device(mesh=mesh_name, device=device_name)
 
-from python_packages.simple_physics import *
+from devsim.python_packages.simple_physics import *
 
 SetOxideParameters(device_name, region_name, 300)
 CreateOxidePotentialOnly(device_name, region_name)

@@ -185,7 +185,7 @@ set_tests_properties("${GENIUS_DIR}/genius_diode2d" PROPERTIES DEPENDS "${GENIUS
 
 
 
-ADD_TEST("testing/laux1" ${RUNDIFFTEST} "${DEVSIM_PY3} laux1.py" ${GOLDENDIR}/testing laux1.out ${RUNDIR} ${OUTPUTDIR})
+#ADD_TEST("testing/laux1" ${RUNDIFFTEST} "${DEVSIM_PY2} laux1.py" ${GOLDENDIR}/testing laux1.out ${RUNDIR} ${OUTPUTDIR})
 # this is weird since it is dependent on one of our tcl tests
 set_tests_properties("testing/laux1" PROPERTIES DEPENDS testing/trimesh2)
 

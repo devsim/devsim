@@ -50,10 +50,10 @@ for region in ("dna", "dielectric", "solution"):
 
     x=sum(get_node_model_values(device="disk", region=region, name="CylindricalNodeVolume"))
     y=sum(get_node_model_values(device="disk", region=region, name="NodeVolume"))
-    print "Volume {0} {1} {2}".format(region, x, y)
+    print("Volume {0} {1} {2}".format(region, x, y))
   else:
     y=sum(get_node_model_values(device="disk", region=region, name="NodeVolume"))
-    print "Volume {0} {1}".format(region, y)
+    print("Volume {0} {1}".format(region, y))
 
   # Electric Field Edge Model
   edge_model(device="disk", region=region, name="EField",
