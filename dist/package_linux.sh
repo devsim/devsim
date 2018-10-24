@@ -47,11 +47,12 @@ done
 
 
 #### Python files and the examples
-for i in python_packages examples testing
+for i in examples testing
 do
 (cd ../$i; git clean -f -d -x )
-rsync -aPq --delete ../$i ${DIST_DIR}
+rsync -aqP --delete ../$i ${DIST_DIR}
 done
+rsync -aqP --delete ../python_packages ${DIST_PYDLL}
 
 
 

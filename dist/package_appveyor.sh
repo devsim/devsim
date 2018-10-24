@@ -45,11 +45,12 @@ done
 
 
 #### Python files and the examples
-for i in python_packages examples testing
+for i in examples testing
 do
 (cd ../$i; git clean -f -d -x )
 cp -R ../$i ${DIST_DIR}
 done
+cp -R ../python_packages ${DIST_PYDLL}
 
 
 
