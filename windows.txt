@@ -2,26 +2,28 @@ This is the DEVSIM distribution.  Extract the files from
 the archive into your preferred directory.  Product
 documentation is available in the devsim/doc directory.
 
-DEVSIM depends on the following 64 bit applications installed on your system:
+DEVSIM depends on having one of the following 64 bit applications installed on your system:
 
 * Python 2.7
-* Tcl 8.5
+* Python 3.6
+* Python 3.7
+* Tcl 8.6
 * Intel MKL
 
-Anaconda Python 2.7
+All of these dependencies are available by installing:
+Anaconda Python
 https://continuum.io/download
-
-ActiveTcl 8.5
-https://www.activestate.com
-* This is only required if you wish to run the Tcl version of DEVSIM.
 
 Microsoft Visual C++ Redistributable for Visual Studio 2017
 https://www.visualstudio.com/downloads
 
-It is necessary to set PATH and PYTHONPATH correctly.
+Setting paths:
+set PYTHONPATH=/path/to/devsim/lib
 
-It is recommended to copy c:\Anaconda\python27.dll into the devsim bin directory.  This is to prevent issues when multiple python distributions are on the system.
+Running:
+The module can then be run by importing the devsim module from your python script.
 
-If you have problems running the software, please file an issue at:
-https://github.com/devsim/devsim
+Issues:
+If you have problems running the software, please report an issue at:
+https://groups.google.com/forum/#!forum/devsim
 

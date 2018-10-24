@@ -4,28 +4,33 @@ documentation is available in the devsim/doc directory.
 
 Default Version:
 
-Mac OS X provides all of the necessary dependencies to run DEVSIM.
+Mac OS X provides all of the necessary dependencies to run DEVSIM from the built-in python interpreter.
 
 GCC Version:
 
-The gcc version of this release was built against:
+DEVSIM depends on having one of the following 64 bit applications installed on your system:
 
 * Python 2.7
+* Python 3.6
+* Python 3.7
 * Tcl 8.6
 * Intel MKL
 
 All of these dependencies are available by installing:
-Anaconda Python 2.7
+Anaconda Python
 https://continuum.io/download
 
-Paths may be set by editing and then sourcing the appropriate script for your shell.
-
+Setting paths:
 csh:
-  source anaconda_vars.csh
+  setenv PYTHONPATH /path/to/devsim/lib
 
 bash:
-  source anaconda_vars.sh
+  export PYTHONPATH=/path/to/devsim/lib
 
-If you have problems running the software, please file an issue at:
-https://github.com/devsim/devsim
+Running:
+The module can then be run by importing the devsim module from your python script.
+
+Issues:
+If you have problems running the software, please report an issue at:
+https://groups.google.com/forum/#!forum/devsim
 
