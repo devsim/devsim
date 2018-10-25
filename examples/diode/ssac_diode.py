@@ -14,7 +14,7 @@
 
 #### Small Signal simulation
 from devsim import *
-from python_packages.simple_physics import *
+from devsim.python_packages.simple_physics import *
 import diode_common
 
 #This requires a circuit element to integrated current
@@ -50,11 +50,11 @@ while v < 0.51:
   PrintCurrents(device, "bot")
   solve(type="ac", frequency=1.0)
   cap=get_circuit_node_value(node="V1.I", solution="ssac_imag")/ (2*3.14159)
-  print "capacitance {0} {1}".format(v, cap)
+  print("capacitance {0} {1}".format(v, cap))
   v += 0.1
 
 for x in get_circuit_node_list():
   for y in get_circuit_solution_list():
     z = get_circuit_node_value(node=x, solution=y)
-    print("{0}\t{1}\t{2}".format(x, y, z))
+    print(("{0}\t{1}\t{2}".format(x, y, z)))
 

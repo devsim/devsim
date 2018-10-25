@@ -16,10 +16,10 @@
 #set_parameter -name threads_task_size -value 1024
 import gmsh_mos2d_create
 from devsim import *
-from python_packages.simple_physics import *
-from python_packages.ramp import *
-from python_packages.Klaassen import *
-from python_packages.mos_physics import *
+from devsim.python_packages.simple_physics import *
+from devsim.python_packages.ramp import *
+from devsim.python_packages.Klaassen import *
+from devsim.python_packages.mos_physics import *
 
 # TODO: write out mesh, and then read back in as separate test
 device = "mos2d"
@@ -44,7 +44,7 @@ contacts = get_contact_list(device=device)
 for i in contacts:
   tmp = get_region_list(device=device, contact=i)
   r = tmp[0]
-  print "%s %s" % (r, i)
+  print("%s %s" % (r, i))
   CreateSiliconPotentialOnlyContact(device, r, i)
   set_parameter(device=device, name=GetContactBiasName(i), value=0.0)
 

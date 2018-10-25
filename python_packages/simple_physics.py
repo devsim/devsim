@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from simple_dd import *
+from .simple_dd import *
 from devsim import *
 #TODO: make this a class so that paramters can be changed
 contactcharge_node="contactcharge_node"
@@ -51,7 +51,7 @@ def PrintCurrents(device, contact):
   hole_current    = get_contact_current(device=device, contact=contact, equation=hce_name)
   total_current   = electron_current + hole_current                                        
   voltage         = get_parameter(device=device, name=GetContactBiasName(contact))
-  print "{0}\t{1}\t{2}\t{3}\t{4}".format(contact, voltage, electron_current, hole_current, total_current)
+  print("{0}\t{1}\t{2}\t{3}\t{4}".format(contact, voltage, electron_current, hole_current, total_current))
 
 #in the future, worry about workfunction
 def CreateOxideContact(device, region, contact):
@@ -107,7 +107,7 @@ def CreateSiliconPotentialOnly(device, region):
     Creates the physical models for a Silicon region
   '''
   if not InNodeModelList(device, region, "Potential"):
-    print "Creating Node Solution Potential"
+    print("Creating Node Solution Potential")
     CreateSolution(device, region, "Potential")
   elec_i = "n_i*exp(Potential/V_t)"
   hole_i = "n_i^2/IntrinsicElectrons"
@@ -273,7 +273,7 @@ def CreateOxidePotentialOnly(device, region, update_type="default"):
     Creates Potential solution variable if not available
   '''
   if not InNodeModelList(device, region, "Potential"):
-    print "Creating Node Solution Potential"
+    print("Creating Node Solution Potential")
     CreateSolution(device, region, "Potential")
 
   efield="(Potential@n0 - Potential@n1)*EdgeInverseLength"

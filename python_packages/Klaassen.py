@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from devsim import *
-from python_packages.model_create import *
+from devsim.python_packages.model_create import *
 
 def Set_Mobility_Parameters(device, region):
   #As

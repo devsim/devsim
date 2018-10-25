@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from devsim import *
-from python_packages.simple_physics import *
+from devsim.python_packages.simple_physics import *
 import diode_common
 
 # dio1

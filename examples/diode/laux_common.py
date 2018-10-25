@@ -33,12 +33,15 @@
 # address = {Riverton, NJ, USA},
 #} 
 
+# handle the new way of integer division
+from __future__ import division
+
 import sys
 try:
   import numpy
   import numpy.linalg
 except:
-  print "numpy is not available with your installation and is not being run"
+  print("numpy is not available with your installation and is not being run")
   sys.exit(0)
 
 
@@ -295,26 +298,26 @@ def SetupOutputCompare(device, region, model, variable, output):
   for i in range(dim):
     mname = "ElectricField_" + directions[i]
     output[:,k] = numpy.array(get_element_model_values(device=device, region=region, name=mname))
-    print "%d %s" % (k, mname)
+    print("%d %s" % (k, mname))
     k += 1
   for j in range(nen):
     for i in range(dim):
       mname = "ElectricField_" + directions[i]
       dname = mname + ":Potential@en%d" % j
       output[:,k] = numpy.array(get_element_model_values(device=device, region=region, name=dname))
-      print "%d %s" % (k, dname)
+      print("%d %s" % (k, dname))
       k += 1
 
 def DoCompare(output, output_compare, number_test):
   test2 = output[0:nee*number_test] - output_compare[0:nee*number_test]
-  print numpy.linalg.norm(test2, ord=numpy.inf )
+  print(numpy.linalg.norm(test2, ord=numpy.inf ))
   for row in range(number_test):
     for col in range(5):
       sl1 = slice(nee*row,nee*(row+1))
       sl2 = slice(dim*col,dim*(col+1))
       norm = numpy.linalg.norm(output[(sl1, sl2)]-output_compare[(sl1,sl2)])
       if norm > 1e-4:
-        print "%d %d %g" % (row, col, norm)
+        print("%d %d %g" % (row, col, norm))
 
   row = 0
   if True:
@@ -322,9 +325,9 @@ def DoCompare(output, output_compare, number_test):
     col = 0
     sl1 = slice(nee*row,nee*(row+1))
     sl2 = slice(dim*col,dim*(col+1))
-    print output[(sl1, sl2)]
-    print output_compare[(sl1,sl2)]
-    print output[(sl1, sl2)] - output_compare[(sl1,sl2)]
+    print(output[(sl1, sl2)])
+    print(output_compare[(sl1,sl2)])
+    print(output[(sl1, sl2)] - output_compare[(sl1,sl2)])
 
 def RunTest(device, region, number_test):
   scalar_efield = GetScalarField(device, region, "scalar_efield", "ElectricField")
@@ -332,7 +335,7 @@ def RunTest(device, region, number_test):
   node_indexes = GetNodeIndexes(device, region)
   unit_vectors = GetUnitVectors(device, region)
 
-  number_elements = len(scalar_efield)/nee
+  number_elements = len(scalar_efield)//nee
 
   if number_test < 1:
     number_test = number_elements

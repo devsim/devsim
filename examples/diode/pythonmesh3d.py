@@ -1,5 +1,5 @@
 from devsim import *
-import python_packages.pythonmesh
+import devsim.python_packages.pythonmesh
 
 
 def gmsh_reader(mesh, device, filename="", coordinates="", physical_names="", elements=""):
@@ -13,7 +13,7 @@ def gmsh_reader(mesh, device, filename="", coordinates="", physical_names="", el
   finalize_mesh    (mesh=mesh)
   create_device    (mesh=mesh, device=device)
 
-data = python_packages.pythonmesh.read_gmsh_file("gmsh_diode3d.msh")
+data = devsim.python_packages.pythonmesh.read_gmsh_file("gmsh_diode3d.msh")
 coordinates=data['coordinates']
 elements=data['elements']
 physical_names=data['physical_names']

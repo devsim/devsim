@@ -38,7 +38,7 @@ try:
   import numpy
   import numpy.linalg
 except:
-  print "numpy is not available with your installation and is not being run"
+  print("numpy is not available with your installation and is not being run")
   sys.exit(-1)
 
 

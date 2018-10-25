@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from model_create import *
+from .model_create import *
 def CreateBernoulli (device, region):
   '''
   Creates the Bernoulli function for Scharfetter Gummel

@@ -60,8 +60,8 @@ def read_gmsh_file(filename):
   '''reads gmsh file and converts to python representation'''
   data = parse_gmsh_file(filename)
   #namemap = {}
-  print '%d dimension' % data['dimension']
-  print '%d coordinates' % len(data['coordinates'])
+  print('%d dimension' % data['dimension'])
+  print('%d coordinates' % len(data['coordinates']))
   #for i in sorted(data['physical_names'].keys()):
   #  print "%s %s %d" % (i, data['physical_names'][i], len(data['elements'][i]))
   #  namemap[data['physical_names'][i]] = i

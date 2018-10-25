@@ -1,5 +1,5 @@
 from devsim import *
-import python_packages.pythonmesh
+import devsim.python_packages.pythonmesh
 
 def gmsh_reader(mesh, device, filename="", coordinates="", physical_names="", elements=""):
   if (filename):
@@ -18,7 +18,7 @@ def gmsh_reader(mesh, device, filename="", coordinates="", physical_names="", el
   finalize_mesh(mesh=mesh)
   create_device(mesh=mesh, device=device)
 
-data = python_packages.pythonmesh.read_gmsh_file("gmsh_mos2d.msh")
+data = devsim.python_packages.pythonmesh.read_gmsh_file("gmsh_mos2d.msh")
 coordinates=data['coordinates']
 elements=data['elements']
 physical_names=data['physical_names']

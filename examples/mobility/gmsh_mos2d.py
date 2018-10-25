@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from python_packages.simple_physics import *
-from python_packages.ramp import *
+from devsim.python_packages.simple_physics import *
+from devsim.python_packages.ramp import *
 
 import gmsh_mos2d_create
 device = "mos2d"
@@ -38,7 +38,7 @@ contacts = get_contact_list(device=device)
 for i in contacts:
   tmp = get_region_list(device=device, contact=i)
   r = tmp[0]
-  print "%s %s" % (r, i)
+  print("%s %s" % (r, i))
   CreateSiliconPotentialOnlyContact(device, r, i)
   set_parameter(device=device, name=GetContactBiasName(i), value=0.0)
 

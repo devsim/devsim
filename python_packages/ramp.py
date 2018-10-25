@@ -16,7 +16,7 @@ import sys
 sys.path.append('../../python_packages')
 from devsim import *
 import devsim
-from simple_physics import *
+from .simple_physics import *
 
 def rampbias(device, contact, end_bias, step_size, min_step, max_iter, rel_error, abs_error, callback):
   '''
@@ -29,7 +29,7 @@ def rampbias(device, contact, end_bias, step_size, min_step, max_iter, rel_error
     step_sign=-1
   last_bias=start_bias
   while(abs(last_bias - end_bias) > min_step):
-    print("last end %e %e") % (last_bias, end_bias)
+    print(("last end %e %e") % (last_bias, end_bias))
     next_bias=last_bias + step_sign * step_size
     if next_bias < end_bias:
       next_step_sign=1
@@ -38,8 +38,8 @@ def rampbias(device, contact, end_bias, step_size, min_step, max_iter, rel_error
 
     if next_step_sign != step_sign:
       next_bias=end_bias
-      print "setting to last bias %e" % (end_bias)
-      print "setting next bias %e" % (next_bias)
+      print("setting to last bias %e" % (end_bias))
+      print("setting next bias %e" % (next_bias))
     set_parameter(device=device, name=GetContactBiasName(contact), value=next_bias)
     try:
       solve(type="dc", absolute_error=abs_error, relative_error=rel_error, maximum_iterations=max_iter)
@@ -48,11 +48,11 @@ def rampbias(device, contact, end_bias, step_size, min_step, max_iter, rel_error
         raise
       set_parameter(device=device, name=GetContactBiasName(contact), value=last_bias)
       step_size *= 0.5
-      print "setting new step size %e" % (step_size)
+      print("setting new step size %e" % (step_size))
       if step_size < min_step:
         raise "Min step size too small"
       continue
-    print "Succeeded"
+    print("Succeeded")
     last_bias=next_bias
     callback(device)
 

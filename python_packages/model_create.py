@@ -28,7 +28,7 @@ def CreateNodeModel(device, region, model, expression):
   '''
   result=node_model(device=device, region=region, name=model, equation=expression)
   if debug:
-    print("NODEMODEL {d} {r} {m} \"{re}\"".format(d=device, r=region, m=model, re=result))
+    print(("NODEMODEL {d} {r} {m} \"{re}\"".format(d=device, r=region, m=model, re=result)))
 
 def CreateNodeModelDerivative(device, region, model, expression, *vars):
   '''
@@ -46,7 +46,7 @@ def CreateContactNodeModel(device, contact, model, expression):
   '''
   result=contact_node_model(device=device, contact=contact, name=model, equation=expression)
   if debug:
-    print("CONTACTNODEMODEL {d} {c} {m} \"{re}\"".format(d=device, c=contact, m=model, re=result))
+    print(("CONTACTNODEMODEL {d} {c} {m} \"{re}\"".format(d=device, c=contact, m=model, re=result)))
 
 
 def CreateContactNodeModelDerivative(device, contact, model, expression, variable):
@@ -63,7 +63,7 @@ def CreateEdgeModel (device, region, model, expression):
   '''
   result=edge_model(device=device, region=region, name=model, equation=expression)
   if debug:
-    print "EDGEMODEL {d} {r} {m} \"{re}\"".format(d=device, r=region, m=model, re=result);
+    print("EDGEMODEL {d} {r} {m} \"{re}\"".format(d=device, r=region, m=model, re=result));
 
 def CreateEdgeModelDerivatives(device, region, model, expression, variable):
   '''
@@ -82,7 +82,7 @@ def CreateContactEdgeModel(device, contact, model, expression):
   '''
   result=contact_edge_model(device=device, contact=contact, name=model, equation=expression)
   if debug:
-    print("CONTACTEDGEMODEL {d} {c} {m} \"{re}\"".format(d=device, c=contact, m=model, re=result))
+    print(("CONTACTEDGEMODEL {d} {c} {m} \"{re}\"".format(d=device, c=contact, m=model, re=result)))
 
 def CreateContactEdgeModelDerivative(device, contact, model, expression, variable):
   '''
@@ -96,7 +96,7 @@ def CreateInterfaceModel(device, interface, model, expression):
   '''
   result=interface_model(device=device, interface=interface, name=model, equation=expression)
   if debug:
-    print("INTERFACEMODEL {d} {i} {m} \"{re}\"".format(d=device, i=interface, m=model, re=result))
+    print(("INTERFACEMODEL {d} {i} {m} \"{re}\"".format(d=device, i=interface, m=model, re=result)))
 
 #def CreateInterfaceModelDerivative(device, interface, model, expression, variable):
 #  '''
@@ -133,19 +133,19 @@ def EnsureEdgeFromNodeModelExists(device, region, nodemodel):
     Checks if the edge models exists
   '''
   if not InNodeModelList(device, region, nodemodel):
-    raise("{} must exist" % (nodemodel))
+    raise "{} must exist"
 
   emlist = get_edge_model_list(device=device, region=region)
   emtest = ("{0}@n0".format(nodemodel) and "{0}@n1".format(nodemodel))
   if not emtest:
     if debug:
-      print "INFO: Creating ${0}@n0 and ${0}@n1".format(nodemodel)
+      print("INFO: Creating ${0}@n0 and ${0}@n1".format(nodemodel))
     edge_from_node_model(device=device, region=region, node_model=nodemodel)
 
 def CreateElementModel2d(device, region, model, expression):
   result=element_model(device=device, region=region, name=model, equation=expression)
   if debug:
-    print("ELEMENTMODEL {d} {r} {m} \"{re}\"".format(d=device, r=region, m=model, re=result))
+    print(("ELEMENTMODEL {d} {r} {m} \"{re}\"".format(d=device, r=region, m=model, re=result)))
 
 
 def CreateElementModelDerivative2d(device, region, model_name, expression, *args):
