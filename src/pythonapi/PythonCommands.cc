@@ -446,7 +446,7 @@ extern "C" void DLL_PUBLIC DEVSIM_MODULE_INIT()
 
     // TODO: modify symdiff to use this approach
     struct module_state *st = GETSTATE(module);
-    st->error = PyErr_NewException(const_cast<char *>("ds.error"), NULL, NULL);
+    st->error = PyErr_NewException(const_cast<char *>(DEVSIM_MODULE_STRING ".error"), NULL, NULL);
     if (st->error == NULL) {
         Py_DECREF(module);
         INITERROR;
