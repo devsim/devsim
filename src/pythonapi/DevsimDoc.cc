@@ -1,6 +1,6 @@
 
 static const char add_circuit_node_doc[] =
-"    ds.add_circuit_node (name, value, variable_update)\n"
+"    devsim.add_circuit_node (name, value, variable_update)\n"
 "\n"
 "    Adds a circuit node for use in circuit or multi-device simulation\n"
 "\n"
@@ -15,7 +15,7 @@ static const char add_circuit_node_doc[] =
 ;
 
 static const char circuit_alter_doc[] =
-"    ds.circuit_alter (name, param, value)\n"
+"    devsim.circuit_alter (name, param, value)\n"
 "\n"
 "    Alter the value of a circuit element parameter\n"
 "\n"
@@ -30,7 +30,7 @@ static const char circuit_alter_doc[] =
 ;
 
 static const char circuit_element_doc[] =
-"    ds.circuit_element (name, value, n1, n2, acreal, acimag)\n"
+"    devsim.circuit_element (name, value, n1, n2, acreal, acimag)\n"
 "\n"
 "    Adds a circuit element external to the devices\n"
 "\n"
@@ -51,7 +51,7 @@ static const char circuit_element_doc[] =
 ;
 
 static const char circuit_node_alias_doc[] =
-"    ds.circuit_node_alias (node, alias)\n"
+"    devsim.circuit_node_alias (node, alias)\n"
 "\n"
 "    Create an alias for a circuit node\n"
 "\n"
@@ -64,7 +64,7 @@ static const char circuit_node_alias_doc[] =
 ;
 
 static const char get_circuit_equation_number_doc[] =
-"    ds.get_circuit_equation_number (node)\n"
+"    devsim.get_circuit_equation_number (node)\n"
 "\n"
 "    Returns the row number correspond to circuit node in a region.  Values are only valid when during the course of a solve.\n"
 "\n"
@@ -75,13 +75,13 @@ static const char get_circuit_equation_number_doc[] =
 ;
 
 static const char get_circuit_node_list_doc[] =
-"    ds.get_circuit_node_list ()\n"
+"    devsim.get_circuit_node_list ()\n"
 "\n"
 "    Gets the list of the nodes in the circuit.\n"
 ;
 
 static const char get_circuit_node_value_doc[] =
-"    ds.get_circuit_node_value (solution, node)\n"
+"    devsim.get_circuit_node_value (solution, node)\n"
 "\n"
 "    Gets the value of a circuit node for a given solution type.\n"
 "\n"
@@ -94,13 +94,13 @@ static const char get_circuit_node_value_doc[] =
 ;
 
 static const char get_circuit_solution_list_doc[] =
-"    ds.get_circuit_solution_list ()\n"
+"    devsim.get_circuit_solution_list ()\n"
 "\n"
 "    Gets the list of available circuit solutions.\n"
 ;
 
 static const char set_circuit_node_value_doc[] =
-"    ds.set_circuit_node_value (solution, node, value)\n"
+"    devsim.set_circuit_node_value (solution, node, value)\n"
 "\n"
 "    Sets the value of a circuit node for a given solution type.\n"
 "\n"
@@ -115,7 +115,7 @@ static const char set_circuit_node_value_doc[] =
 ;
 
 static const char contact_equation_doc[] =
-"    ds.contact_equation (device, contact, name, variable_name, circuit_node, edge_charge_model, edge_current_model, edge_model, element_charge_model, element_current_model, element_model, node_charge_model, node_current_model, node_model)\n"
+"    devsim.contact_equation (device, contact, name, variable_name, circuit_node, edge_charge_model, edge_current_model, edge_model, element_charge_model, element_current_model, element_model, node_charge_model, node_current_model, node_model)\n"
 "\n"
 "    Create a contact equation on a device\n"
 "\n"
@@ -152,7 +152,7 @@ static const char contact_equation_doc[] =
 ;
 
 static const char custom_equation_doc[] =
-"    ds.custom_equation (name, procedure)\n"
+"    devsim.custom_equation (name, procedure)\n"
 "\n"
 "    Custom equation assembly.  See :ref:`models__customequation` for a description of how the function should be structured.\n"
 "\n"
@@ -165,7 +165,7 @@ static const char custom_equation_doc[] =
 ;
 
 static const char delete_contact_equation_doc[] =
-"    ds.delete_contact_equation (device, contact, name)\n"
+"    devsim.delete_contact_equation (device, contact, name)\n"
 "\n"
 "    This command deletes an equation from a contact.\n"
 "\n"
@@ -180,7 +180,7 @@ static const char delete_contact_equation_doc[] =
 ;
 
 static const char delete_equation_doc[] =
-"    ds.delete_equation (device, region, name)\n"
+"    devsim.delete_equation (device, region, name)\n"
 "\n"
 "    This command deletes an equation from a region.\n"
 "\n"
@@ -195,7 +195,7 @@ static const char delete_equation_doc[] =
 ;
 
 static const char delete_interface_equation_doc[] =
-"    ds.delete_interface_equation (device, interface, name)\n"
+"    devsim.delete_interface_equation (device, interface, name)\n"
 "\n"
 "    This command deletes an equation from an interface.\n"
 "\n"
@@ -210,7 +210,7 @@ static const char delete_interface_equation_doc[] =
 ;
 
 static const char equation_doc[] =
-"    ds.equation (device, region, name, variable_name, node_model, edge_model, edge_volume_model, time_node_model, element_model, volume_model, variable_update)\n"
+"    devsim.equation (device, region, name, variable_name, node_model, edge_model, edge_volume_model, time_node_model, element_model, volume_model, variable_update)\n"
 "\n"
 "    Specify an equation to solve on a device\n"
 "\n"
@@ -254,7 +254,7 @@ static const char equation_doc[] =
 ;
 
 static const char get_contact_equation_command_doc[] =
-"    ds.get_contact_equation_command (device, contact, name)\n"
+"    devsim.get_contact_equation_command (device, contact, name)\n"
 "\n"
 "    This command gets the options used when creating this contact equation.\n"
 "\n"
@@ -269,7 +269,7 @@ static const char get_contact_equation_command_doc[] =
 ;
 
 static const char get_contact_equation_list_doc[] =
-"    ds.get_contact_equation_list (device, contact)\n"
+"    devsim.get_contact_equation_list (device, contact)\n"
 "\n"
 "    This command gets a list of equations on the specified contact.\n"
 "\n"
@@ -282,7 +282,7 @@ static const char get_contact_equation_list_doc[] =
 ;
 
 static const char get_equation_command_doc[] =
-"    ds.get_equation_command (device, region, name)\n"
+"    devsim.get_equation_command (device, region, name)\n"
 "\n"
 "    This command gets the options used when creating this equation.\n"
 "\n"
@@ -297,7 +297,7 @@ static const char get_equation_command_doc[] =
 ;
 
 static const char get_equation_list_doc[] =
-"    ds.get_equation_list (device, region)\n"
+"    devsim.get_equation_list (device, region)\n"
 "\n"
 "    This command gets a list of equations on the specified region.\n"
 "\n"
@@ -310,7 +310,7 @@ static const char get_equation_list_doc[] =
 ;
 
 static const char get_equation_numbers_doc[] =
-"    ds.get_equation_numbers (device, region, equation, variable)\n"
+"    devsim.get_equation_numbers (device, region, equation, variable)\n"
 "\n"
 "    Returns a list of the equation numbers corresponding to each node in a region.  Values are only valid when during the course of a solve.\n"
 "\n"
@@ -327,7 +327,7 @@ static const char get_equation_numbers_doc[] =
 ;
 
 static const char get_interface_equation_command_doc[] =
-"    ds.get_interface_equation_command (device, interface, name)\n"
+"    devsim.get_interface_equation_command (device, interface, name)\n"
 "\n"
 "    This command gets the options used when creating this interface equation.\n"
 "\n"
@@ -342,7 +342,7 @@ static const char get_interface_equation_command_doc[] =
 ;
 
 static const char get_interface_equation_list_doc[] =
-"    ds.get_interface_equation_list (device, interface)\n"
+"    devsim.get_interface_equation_list (device, interface)\n"
 "\n"
 "    This command gets a list of equations on the specified interface.\n"
 "\n"
@@ -355,7 +355,7 @@ static const char get_interface_equation_list_doc[] =
 ;
 
 static const char interface_equation_doc[] =
-"    ds.interface_equation (device, interface, name, name0, name1, variable_name, interface_model, type)\n"
+"    devsim.interface_equation (device, interface, name, name0, name1, variable_name, interface_model, type)\n"
 "\n"
 "    Command to specify an equation at an interface\n"
 "\n"
@@ -380,7 +380,7 @@ static const char interface_equation_doc[] =
 ;
 
 static const char get_contact_list_doc[] =
-"    ds.get_contact_list (device)\n"
+"    devsim.get_contact_list (device)\n"
 "\n"
 "    Gets a list of contacts on a device.\n"
 "\n"
@@ -391,13 +391,13 @@ static const char get_contact_list_doc[] =
 ;
 
 static const char get_device_list_doc[] =
-"    ds.get_device_list ()\n"
+"    devsim.get_device_list ()\n"
 "\n"
 "    Gets a list of devices on the simulation.\n"
 ;
 
 static const char get_element_node_list_doc[] =
-"    ds.get_element_node_list (device, region, contact, interface)\n"
+"    devsim.get_element_node_list (device, region, contact, interface)\n"
 "\n"
 "    Gets a list of nodes for each element on a device, region, contact, or interface.\n"
 "\n"
@@ -414,7 +414,7 @@ static const char get_element_node_list_doc[] =
 ;
 
 static const char get_interface_list_doc[] =
-"    ds.get_interface_list (device)\n"
+"    devsim.get_interface_list (device)\n"
 "\n"
 "    Gets a list of interfaces on a device.\n"
 "\n"
@@ -425,7 +425,7 @@ static const char get_interface_list_doc[] =
 ;
 
 static const char get_region_list_doc[] =
-"    ds.get_region_list (device, contact, interface)\n"
+"    devsim.get_region_list (device, contact, interface)\n"
 "\n"
 "    Gets a list of regions on a device, contact, or interface.\n"
 "\n"
@@ -440,7 +440,7 @@ static const char get_region_list_doc[] =
 ;
 
 static const char add_db_entry_doc[] =
-"    ds.add_db_entry (material, parameter, value, unit, description)\n"
+"    devsim.add_db_entry (material, parameter, value, unit, description)\n"
 "\n"
 "    Adds an entry to the database\n"
 "\n"
@@ -464,13 +464,13 @@ static const char add_db_entry_doc[] =
 ;
 
 static const char close_db_doc[] =
-"    ds.close_db ()\n"
+"    devsim.close_db ()\n"
 "\n"
 "    Closes the database so that its entries are no longer available\n"
 ;
 
 static const char create_db_doc[] =
-"    ds.create_db (filename)\n"
+"    devsim.create_db (filename)\n"
 "\n"
 "    Create a database to store material properties\n"
 "\n"
@@ -481,7 +481,7 @@ static const char create_db_doc[] =
 ;
 
 static const char get_db_entry_doc[] =
-"    ds.get_db_entry (material, parameter)\n"
+"    devsim.get_db_entry (material, parameter)\n"
 "\n"
 "    This command returns a list containing the value, unit, and description for the requested material db entry\n"
 "\n"
@@ -494,7 +494,7 @@ static const char get_db_entry_doc[] =
 ;
 
 static const char get_dimension_doc[] =
-"    ds.get_dimension (device)\n"
+"    devsim.get_dimension (device)\n"
 "\n"
 "    Get the dimension of the device\n"
 "\n"
@@ -505,7 +505,7 @@ static const char get_dimension_doc[] =
 ;
 
 static const char get_material_doc[] =
-"    ds.get_material (device, region)\n"
+"    devsim.get_material (device, region)\n"
 "\n"
 "    Returns the material for the specified region\n"
 "\n"
@@ -518,7 +518,7 @@ static const char get_material_doc[] =
 ;
 
 static const char get_parameter_doc[] =
-"    ds.get_parameter (device, region, name)\n"
+"    devsim.get_parameter (device, region, name)\n"
 "\n"
 "    Get a parameter on a region, device, or globally.\n"
 "\n"
@@ -538,7 +538,7 @@ static const char get_parameter_doc[] =
 ;
 
 static const char get_parameter_list_doc[] =
-"    ds.get_parameter_list (device, region)\n"
+"    devsim.get_parameter_list (device, region)\n"
 "\n"
 "    Get list of parameter names on region, device, or globally\n"
 "\n"
@@ -556,7 +556,7 @@ static const char get_parameter_list_doc[] =
 ;
 
 static const char open_db_doc[] =
-"    ds.open_db (filename, permissions)\n"
+"    devsim.open_db (filename, permissions)\n"
 "\n"
 "    Open a database storing material properties\n"
 "\n"
@@ -569,13 +569,13 @@ static const char open_db_doc[] =
 ;
 
 static const char save_db_doc[] =
-"    ds.save_db ()\n"
+"    devsim.save_db ()\n"
 "\n"
 "    Saves any new or modified db entries to the database file\n"
 ;
 
 static const char set_material_doc[] =
-"    ds.set_material (device, region, material)\n"
+"    devsim.set_material (device, region, material)\n"
 "\n"
 "    Sets the new material for a region\n"
 "\n"
@@ -590,7 +590,7 @@ static const char set_material_doc[] =
 ;
 
 static const char set_parameter_doc[] =
-"    ds.set_parameter (device, region, name, value)\n"
+"    devsim.set_parameter (device, region, name, value)\n"
 "\n"
 "    Set a parameter on region, device, or globally\n"
 "\n"
@@ -612,7 +612,7 @@ static const char set_parameter_doc[] =
 ;
 
 static const char add_1d_contact_doc[] =
-"    ds.add_1d_contact (material, mesh, name, tag)\n"
+"    devsim.add_1d_contact (material, mesh, name, tag)\n"
 "\n"
 "    Add a contact to a 1D mesh\n"
 "\n"
@@ -629,7 +629,7 @@ static const char add_1d_contact_doc[] =
 ;
 
 static const char add_1d_interface_doc[] =
-"    ds.add_1d_interface (mesh, tag, name)\n"
+"    devsim.add_1d_interface (mesh, tag, name)\n"
 "\n"
 "    Add an interface to a 1D mesh\n"
 "\n"
@@ -644,7 +644,7 @@ static const char add_1d_interface_doc[] =
 ;
 
 static const char add_1d_mesh_line_doc[] =
-"    ds.add_1d_mesh_line (mesh, tag, pos, ns, ps)\n"
+"    devsim.add_1d_mesh_line (mesh, tag, pos, ns, ps)\n"
 "\n"
 "    Add a mesh line to a 1D mesh\n"
 "\n"
@@ -663,7 +663,7 @@ static const char add_1d_mesh_line_doc[] =
 ;
 
 static const char add_1d_region_doc[] =
-"    ds.add_1d_region (mesh, tag1, tag2, region, material)\n"
+"    devsim.add_1d_region (mesh, tag1, tag2, region, material)\n"
 "\n"
 "    Add a region to a 1D mesh\n"
 "\n"
@@ -682,7 +682,7 @@ static const char add_1d_region_doc[] =
 ;
 
 static const char add_2d_contact_doc[] =
-"    ds.add_2d_contact (name, material, mesh, region, xl, xh, yl, yh, bloat)\n"
+"    devsim.add_2d_contact (name, material, mesh, region, xl, xh, yl, yh, bloat)\n"
 "\n"
 "    Add an interface to a 2D mesh\n"
 "\n"
@@ -709,7 +709,7 @@ static const char add_2d_contact_doc[] =
 ;
 
 static const char add_2d_interface_doc[] =
-"    ds.add_2d_interface (mesh, name, region0, region1, xl, xh, yl, yh, bloat)\n"
+"    devsim.add_2d_interface (mesh, name, region0, region1, xl, xh, yl, yh, bloat)\n"
 "\n"
 "    Add an interface to a 2D mesh\n"
 "\n"
@@ -736,7 +736,7 @@ static const char add_2d_interface_doc[] =
 ;
 
 static const char add_2d_mesh_line_doc[] =
-"    ds.add_2d_mesh_line (mesh, pos, ns, ps)\n"
+"    devsim.add_2d_mesh_line (mesh, pos, ns, ps)\n"
 "\n"
 "    Add a mesh line to a 2D mesh\n"
 "\n"
@@ -753,7 +753,7 @@ static const char add_2d_mesh_line_doc[] =
 ;
 
 static const char add_2d_region_doc[] =
-"    ds.add_2d_region (mesh, region, material, xl, xh, yl, yh, bloat)\n"
+"    devsim.add_2d_region (mesh, region, material, xl, xh, yl, yh, bloat)\n"
 "\n"
 "    Add a region to a 2D mesh\n"
 "\n"
@@ -778,7 +778,7 @@ static const char add_2d_region_doc[] =
 ;
 
 static const char add_genius_contact_doc[] =
-"    ds.add_genius_contact (genius_name, material, mesh, name, region)\n"
+"    devsim.add_genius_contact (genius_name, material, mesh, name, region)\n"
 "\n"
 "    Create a contact for an imported Genius mesh\n"
 "\n"
@@ -797,7 +797,7 @@ static const char add_genius_contact_doc[] =
 ;
 
 static const char add_genius_interface_doc[] =
-"    ds.add_genius_interface (genius_name, mesh, name, region0, region1)\n"
+"    devsim.add_genius_interface (genius_name, mesh, name, region0, region1)\n"
 "\n"
 "    Create an interface for an imported Genius mesh\n"
 "\n"
@@ -816,7 +816,7 @@ static const char add_genius_interface_doc[] =
 ;
 
 static const char add_genius_region_doc[] =
-"    ds.add_genius_region (genius_name, mesh, region, material)\n"
+"    devsim.add_genius_region (genius_name, mesh, region, material)\n"
 "\n"
 "    Create a region for an imported Genius  mesh\n"
 "\n"
@@ -833,7 +833,7 @@ static const char add_genius_region_doc[] =
 ;
 
 static const char add_gmsh_contact_doc[] =
-"    ds.add_gmsh_contact (gmsh_name, material, mesh, name, region)\n"
+"    devsim.add_gmsh_contact (gmsh_name, material, mesh, name, region)\n"
 "\n"
 "    Create a mesh to import a Gmsh mesh\n"
 "\n"
@@ -852,7 +852,7 @@ static const char add_gmsh_contact_doc[] =
 ;
 
 static const char add_gmsh_interface_doc[] =
-"    ds.add_gmsh_interface (gmsh_name, mesh, name, region0, region1)\n"
+"    devsim.add_gmsh_interface (gmsh_name, mesh, name, region0, region1)\n"
 "\n"
 "    Create an interface for an imported Gmsh mesh\n"
 "\n"
@@ -871,7 +871,7 @@ static const char add_gmsh_interface_doc[] =
 ;
 
 static const char add_gmsh_region_doc[] =
-"    ds.add_gmsh_region (gmsh_name, mesh, region, material)\n"
+"    devsim.add_gmsh_region (gmsh_name, mesh, region, material)\n"
 "\n"
 "    Create a region for an imported Gmsh mesh\n"
 "\n"
@@ -888,7 +888,7 @@ static const char add_gmsh_region_doc[] =
 ;
 
 static const char create_1d_mesh_doc[] =
-"    ds.create_1d_mesh (mesh)\n"
+"    devsim.create_1d_mesh (mesh)\n"
 "\n"
 "    Create a mesh to create a 1D device\n"
 "\n"
@@ -899,7 +899,7 @@ static const char create_1d_mesh_doc[] =
 ;
 
 static const char create_2d_mesh_doc[] =
-"    ds.create_2d_mesh (mesh)\n"
+"    devsim.create_2d_mesh (mesh)\n"
 "\n"
 "    Create a mesh to create a 2D device\n"
 "\n"
@@ -910,7 +910,7 @@ static const char create_2d_mesh_doc[] =
 ;
 
 static const char create_contact_from_interface_doc[] =
-"    ds.create_contact_from_interface (device, region, interface, material, name)\n"
+"    devsim.create_contact_from_interface (device, region, interface, material, name)\n"
 "\n"
 "    Creates a contact on a device from an existing interface\n"
 "\n"
@@ -929,7 +929,7 @@ static const char create_contact_from_interface_doc[] =
 ;
 
 static const char create_device_doc[] =
-"    ds.create_device (mesh, device)\n"
+"    devsim.create_device (mesh, device)\n"
 "\n"
 "    Create a device from a mesh\n"
 "\n"
@@ -942,7 +942,7 @@ static const char create_device_doc[] =
 ;
 
 static const char create_genius_mesh_doc[] =
-"    ds.create_genius_mesh (file, mesh)\n"
+"    devsim.create_genius_mesh (file, mesh)\n"
 "\n"
 "    This command reads in a Genius mesh written in the CGNS format\n"
 "\n"
@@ -962,7 +962,7 @@ static const char create_genius_mesh_doc[] =
 ;
 
 static const char create_gmsh_mesh_doc[] =
-"    ds.create_gmsh_mesh (mesh, file, coordinates, elements, physical_names)\n"
+"    devsim.create_gmsh_mesh (mesh, file, coordinates, elements, physical_names)\n"
 "\n"
 "    Create a mesh to import a Gmsh mesh\n"
 "\n"
@@ -1008,7 +1008,7 @@ static const char create_gmsh_mesh_doc[] =
 ;
 
 static const char finalize_mesh_doc[] =
-"    ds.finalize_mesh (mesh)\n"
+"    devsim.finalize_mesh (mesh)\n"
 "\n"
 "    Finalize a mesh so no additional mesh specifications can be added and devices can be created.\n"
 "\n"
@@ -1019,7 +1019,7 @@ static const char finalize_mesh_doc[] =
 ;
 
 static const char load_devices_doc[] =
-"    ds.load_devices (file)\n"
+"    devsim.load_devices (file)\n"
 "\n"
 "    Load devices from a DEVSIM file\n"
 "\n"
@@ -1030,7 +1030,7 @@ static const char load_devices_doc[] =
 ;
 
 static const char write_devices_doc[] =
-"    ds.write_devices (file, device, type)\n"
+"    devsim.write_devices (file, device, type)\n"
 "\n"
 "    Write a device to a file for visualization or restart\n"
 "\n"
@@ -1045,7 +1045,7 @@ static const char write_devices_doc[] =
 ;
 
 static const char contact_edge_model_doc[] =
-"    ds.contact_edge_model (device, contact, name, equation, display_type)\n"
+"    devsim.contact_edge_model (device, contact, name, equation, display_type)\n"
 "\n"
 "    Create an edge model evaluated at a contact\n"
 "\n"
@@ -1064,7 +1064,7 @@ static const char contact_edge_model_doc[] =
 ;
 
 static const char contact_node_model_doc[] =
-"    ds.contact_node_model (device, contact, name, equation, display_type)\n"
+"    devsim.contact_node_model (device, contact, name, equation, display_type)\n"
 "\n"
 "    Create an node model evaluated at a contact\n"
 "\n"
@@ -1083,7 +1083,7 @@ static const char contact_node_model_doc[] =
 ;
 
 static const char cylindrical_edge_couple_doc[] =
-"    ds.cylindrical_edge_couple (device, region)\n"
+"    devsim.cylindrical_edge_couple (device, region)\n"
 "\n"
 "    This command creates the ``EdgeCouple`` model for 2D cylindrical simulation\n"
 "\n"
@@ -1109,7 +1109,7 @@ static const char cylindrical_edge_couple_doc[] =
 ;
 
 static const char cylindrical_node_volume_doc[] =
-"    ds.cylindrical_node_volume (device, region)\n"
+"    devsim.cylindrical_node_volume (device, region)\n"
 "\n"
 "    This command creates the ``NodeVolume`` model for 2D cylindrical simulation\n"
 "\n"
@@ -1141,7 +1141,7 @@ static const char cylindrical_node_volume_doc[] =
 ;
 
 static const char cylindrical_surface_area_doc[] =
-"    ds.cylindrical_surface_area (device, region)\n"
+"    devsim.cylindrical_surface_area (device, region)\n"
 "\n"
 "    This command creates the ``SurfaceArea`` model for 2D cylindrical simulation\n"
 "\n"
@@ -1169,7 +1169,7 @@ static const char cylindrical_surface_area_doc[] =
 ;
 
 static const char debug_triangle_models_doc[] =
-"    ds.debug_triangle_models (device, region)\n"
+"    devsim.debug_triangle_models (device, region)\n"
 "\n"
 "    Debugging command used in the development of DEVSIM and used in regressions.\n"
 "\n"
@@ -1182,7 +1182,7 @@ static const char debug_triangle_models_doc[] =
 ;
 
 static const char delete_edge_model_doc[] =
-"    ds.delete_edge_model (device, region, name)\n"
+"    devsim.delete_edge_model (device, region, name)\n"
 "\n"
 "    Deletes an edge model from a region\n"
 "\n"
@@ -1197,7 +1197,7 @@ static const char delete_edge_model_doc[] =
 ;
 
 static const char delete_element_model_doc[] =
-"    ds.delete_element_model (device, region, name)\n"
+"    devsim.delete_element_model (device, region, name)\n"
 "\n"
 "    Deletes a element model from a region\n"
 "\n"
@@ -1212,7 +1212,7 @@ static const char delete_element_model_doc[] =
 ;
 
 static const char delete_interface_model_doc[] =
-"    ds.delete_interface_model (device, interface, name)\n"
+"    devsim.delete_interface_model (device, interface, name)\n"
 "\n"
 "    Deletes an interface model from an interface\n"
 "\n"
@@ -1227,7 +1227,7 @@ static const char delete_interface_model_doc[] =
 ;
 
 static const char delete_node_model_doc[] =
-"    ds.delete_node_model (device, region, name)\n"
+"    devsim.delete_node_model (device, region, name)\n"
 "\n"
 "    Deletes a node model from a region\n"
 "\n"
@@ -1242,7 +1242,7 @@ static const char delete_node_model_doc[] =
 ;
 
 static const char edge_average_model_doc[] =
-"    ds.edge_average_model (device, region, node_model, edge_model, derivative, average_type)\n"
+"    devsim.edge_average_model (device, region, node_model, edge_model, derivative, average_type)\n"
 "\n"
 "    Creates an edge model based on the node model values\n"
 "\n"
@@ -1278,7 +1278,7 @@ static const char edge_average_model_doc[] =
 ;
 
 static const char edge_from_node_model_doc[] =
-"    ds.edge_from_node_model (device, region, node_model)\n"
+"    devsim.edge_from_node_model (device, region, node_model)\n"
 "\n"
 "    For a node model, creates an 2 edge models referring to the node model value at both ends of the edge.\n"
 "\n"
@@ -1303,7 +1303,7 @@ static const char edge_from_node_model_doc[] =
 ;
 
 static const char edge_model_doc[] =
-"    ds.edge_model (device, region, name, equation, display_type)\n"
+"    devsim.edge_model (device, region, name, equation, display_type)\n"
 "\n"
 "    Creates an edge model based on an equation\n"
 "\n"
@@ -1333,7 +1333,7 @@ static const char edge_model_doc[] =
 ;
 
 static const char element_from_edge_model_doc[] =
-"    ds.element_from_edge_model (device, region, edge_model, derivative)\n"
+"    devsim.element_from_edge_model (device, region, edge_model, derivative)\n"
 "\n"
 "    Creates element edge models from an edge model\n"
 "\n"
@@ -1386,7 +1386,7 @@ static const char element_from_edge_model_doc[] =
 ;
 
 static const char element_from_node_model_doc[] =
-"    ds.element_from_node_model (device, region, node_model)\n"
+"    devsim.element_from_node_model (device, region, node_model)\n"
 "\n"
 "    Creates element edge models from a node model\n"
 "\n"
@@ -1413,7 +1413,7 @@ static const char element_from_node_model_doc[] =
 ;
 
 static const char element_model_doc[] =
-"    ds.element_model (device, region, name, equation, display_type)\n"
+"    devsim.element_model (device, region, name, equation, display_type)\n"
 "\n"
 "    Create a model evaluated on element edges.\n"
 "\n"
@@ -1432,7 +1432,7 @@ static const char element_model_doc[] =
 ;
 
 static const char get_edge_model_list_doc[] =
-"    ds.get_edge_model_list (device, region)\n"
+"    devsim.get_edge_model_list (device, region)\n"
 "\n"
 "    Returns a list of the edge models on the device region\n"
 "\n"
@@ -1445,7 +1445,7 @@ static const char get_edge_model_list_doc[] =
 ;
 
 static const char get_edge_model_values_doc[] =
-"    ds.get_edge_model_values (device, region, name)\n"
+"    devsim.get_edge_model_values (device, region, name)\n"
 "\n"
 "    Get the edge model values calculated at each edge.\n"
 "\n"
@@ -1460,7 +1460,7 @@ static const char get_edge_model_values_doc[] =
 ;
 
 static const char get_element_model_list_doc[] =
-"    ds.get_element_model_list (device, region)\n"
+"    devsim.get_element_model_list (device, region)\n"
 "\n"
 "    Returns a list of the element edge models on the device region\n"
 "\n"
@@ -1473,7 +1473,7 @@ static const char get_element_model_list_doc[] =
 ;
 
 static const char get_element_model_values_doc[] =
-"    ds.get_element_model_values (device, region, name)\n"
+"    devsim.get_element_model_values (device, region, name)\n"
 "\n"
 "    Get element model values at each element edge\n"
 "\n"
@@ -1488,7 +1488,7 @@ static const char get_element_model_values_doc[] =
 ;
 
 static const char get_interface_model_list_doc[] =
-"    ds.get_interface_model_list (device, interface)\n"
+"    devsim.get_interface_model_list (device, interface)\n"
 "\n"
 "    Returns a list of the interface models on the interface\n"
 "\n"
@@ -1501,7 +1501,7 @@ static const char get_interface_model_list_doc[] =
 ;
 
 static const char get_interface_model_values_doc[] =
-"    ds.get_interface_model_values (device, interface, name)\n"
+"    devsim.get_interface_model_values (device, interface, name)\n"
 "\n"
 "    Gets interface model values evaluated at each interface node.\n"
 "\n"
@@ -1516,7 +1516,7 @@ static const char get_interface_model_values_doc[] =
 ;
 
 static const char get_node_model_list_doc[] =
-"    ds.get_node_model_list (device, region)\n"
+"    devsim.get_node_model_list (device, region)\n"
 "\n"
 "    Returns a list of the node models on the device region\n"
 "\n"
@@ -1529,7 +1529,7 @@ static const char get_node_model_list_doc[] =
 ;
 
 static const char get_node_model_values_doc[] =
-"    ds.get_node_model_values (device, region, name)\n"
+"    devsim.get_node_model_values (device, region, name)\n"
 "\n"
 "    Get node model values evaluated at each node in a region.\n"
 "\n"
@@ -1544,7 +1544,7 @@ static const char get_node_model_values_doc[] =
 ;
 
 static const char interface_model_doc[] =
-"    ds.interface_model (device, interface, equation)\n"
+"    devsim.interface_model (device, interface, equation)\n"
 "\n"
 "    Create an interface model from an equation.\n"
 "\n"
@@ -1559,7 +1559,7 @@ static const char interface_model_doc[] =
 ;
 
 static const char interface_normal_model_doc[] =
-"    ds.interface_normal_model (device, region, interface)\n"
+"    devsim.interface_normal_model (device, region, interface)\n"
 "\n"
 "    Creates edge models whose components are based on direction and distance to an interface\n"
 "\n"
@@ -1586,7 +1586,7 @@ static const char interface_normal_model_doc[] =
 ;
 
 static const char node_model_doc[] =
-"    ds.node_model (device, region, name, equation, display_type)\n"
+"    devsim.node_model (device, region, name, equation, display_type)\n"
 "\n"
 "    Create a node model from an equation.\n"
 "\n"
@@ -1605,7 +1605,7 @@ static const char node_model_doc[] =
 ;
 
 static const char node_solution_doc[] =
-"    ds.node_solution (device, region, name)\n"
+"    devsim.node_solution (device, region, name)\n"
 "\n"
 "    Create node model whose values are set.\n"
 "\n"
@@ -1620,7 +1620,7 @@ static const char node_solution_doc[] =
 ;
 
 static const char print_edge_values_doc[] =
-"    ds.print_edge_values (device, region, name)\n"
+"    devsim.print_edge_values (device, region, name)\n"
 "\n"
 "    Print edge values for debugging.\n"
 "\n"
@@ -1635,7 +1635,7 @@ static const char print_edge_values_doc[] =
 ;
 
 static const char print_element_values_doc[] =
-"    ds.print_element_values (device, region, name)\n"
+"    devsim.print_element_values (device, region, name)\n"
 "\n"
 "    Print element values for debugging.\n"
 "\n"
@@ -1650,7 +1650,7 @@ static const char print_element_values_doc[] =
 ;
 
 static const char print_node_values_doc[] =
-"    ds.print_node_values (device, region, name)\n"
+"    devsim.print_node_values (device, region, name)\n"
 "\n"
 "    Print node values for debugging.\n"
 "\n"
@@ -1665,7 +1665,7 @@ static const char print_node_values_doc[] =
 ;
 
 static const char register_function_doc[] =
-"    ds.register_function (name, nargs)\n"
+"    devsim.register_function (name, nargs)\n"
 "\n"
 "    This command is used to register a new Python procedure for evaluation by SYMDIFF.\n"
 "\n"
@@ -1678,7 +1678,7 @@ static const char register_function_doc[] =
 ;
 
 static const char set_node_value_doc[] =
-"    ds.set_node_value (device, region, name, index, value)\n"
+"    devsim.set_node_value (device, region, name, index, value)\n"
 "\n"
 "    A uniform value is used if index is not specified.  Note that equation based node models will lose this value if their equation is recalculated.\n"
 "\n"
@@ -1697,7 +1697,7 @@ static const char set_node_value_doc[] =
 ;
 
 static const char set_node_values_doc[] =
-"    ds.set_node_values (device, region, name, init_from, values)\n"
+"    devsim.set_node_values (device, region, name, init_from, values)\n"
 "\n"
 "    Set node model values from another node model, or a list of values.\n"
 "\n"
@@ -1716,7 +1716,7 @@ static const char set_node_values_doc[] =
 ;
 
 static const char symdiff_doc[] =
-"    ds.symdiff (expr)\n"
+"    devsim.symdiff (expr)\n"
 "\n"
 "    This command returns an expression.  All strings are treated as independent variables.  It is primarily used for defining new functions to the parser.\n"
 "\n"
@@ -1727,7 +1727,7 @@ static const char symdiff_doc[] =
 ;
 
 static const char vector_element_model_doc[] =
-"    ds.vector_element_model (device, region, element_model)\n"
+"    devsim.vector_element_model (device, region, element_model)\n"
 "\n"
 "    Create vector components from an element edge model\n"
 "\n"
@@ -1753,7 +1753,7 @@ static const char vector_element_model_doc[] =
 ;
 
 static const char vector_gradient_doc[] =
-"    ds.vector_gradient (device, region, node_model, calc_type)\n"
+"    devsim.vector_gradient (device, region, node_model, calc_type)\n"
 "\n"
 "    Creates the vector gradient for noise analysis\n"
 "\n"
@@ -1781,7 +1781,7 @@ static const char vector_gradient_doc[] =
 ;
 
 static const char get_contact_charge_doc[] =
-"    ds.get_contact_charge (device, contact, equation)\n"
+"    devsim.get_contact_charge (device, contact, equation)\n"
 "\n"
 "    Get charge at the contact\n"
 "\n"
@@ -1796,7 +1796,7 @@ static const char get_contact_charge_doc[] =
 ;
 
 static const char get_contact_current_doc[] =
-"    ds.get_contact_current (device, contact, equation)\n"
+"    devsim.get_contact_current (device, contact, equation)\n"
 "\n"
 "    Get current at the contact\n"
 "\n"
@@ -1811,7 +1811,7 @@ static const char get_contact_current_doc[] =
 ;
 
 static const char solve_doc[] =
-"    ds.solve (type, solver_type, absolute_error, relative_error, charge_error, gamma, tdelta, maximum_iterations, frequency, output_node, info)\n"
+"    devsim.solve (type, solver_type, absolute_error, relative_error, charge_error, gamma, tdelta, maximum_iterations, frequency, output_node, info)\n"
 "\n"
 "    Call the solver.  A small-signal AC source is set with the circuit voltage source.\n"
 "\n"
