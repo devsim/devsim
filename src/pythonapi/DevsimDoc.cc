@@ -505,7 +505,7 @@ static const char get_dimension_doc[] =
 ;
 
 static const char get_material_doc[] =
-"    devsim.get_material (device, region)\n"
+"    devsim.get_material (device, region, contact)\n"
 "\n"
 "    Returns the material for the specified region\n"
 "\n"
@@ -515,6 +515,8 @@ static const char get_material_doc[] =
 "       The selected device\n"
 "    region : str, optional\n"
 "       The selected region\n"
+"    contact : str, optional\n"
+"       Contact on which to apply this command\n"
 ;
 
 static const char get_parameter_doc[] =
@@ -575,7 +577,7 @@ static const char save_db_doc[] =
 ;
 
 static const char set_material_doc[] =
-"    devsim.set_material (device, region, material)\n"
+"    devsim.set_material (device, region, contact, material)\n"
 "\n"
 "    Sets the new material for a region\n"
 "\n"
@@ -585,6 +587,8 @@ static const char set_material_doc[] =
 "       The selected device\n"
 "    region : str, optional\n"
 "       The selected region\n"
+"    contact : str, optional\n"
+"       Contact on which to apply this command\n"
 "    material : str\n"
 "       New material name\n"
 ;
