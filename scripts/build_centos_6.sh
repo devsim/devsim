@@ -8,7 +8,7 @@ ln -sf ${HOME}/anaconda/bin/cmake ${HOME}/bin/cmake
 
 # Centos Specific
 #https://fedoraproject.org/wiki/EPEL
-yum install -y git bison flex
+yum install -y git bison flex tcl tcl-devel
 yum install -y centos-release-scl
 yum install -y devtoolset-6-gcc devtoolset-6-gcc-c++ devtoolset-6-libquadmath-devel devtoolset-6-gcc-gfortran
 
