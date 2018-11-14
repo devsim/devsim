@@ -4,22 +4,28 @@ set -e
 if [ "${1}" = "gcc" ]
   then
   brew update > /dev/null;
-  if brew ls --versions gcc > /dev/null;
-  then
-  brew outdated gcc || brew upgrade gcc;
-  else
-  # the overwrite is to fix the linking issue seen on travis ci
-  brew install gcc || brew link --overwrite gcc;
-  fi
-  export CC=/usr/local/bin/gcc-8;
-  export CXX=/usr/local/bin/g++-8;
-  export F77=/usr/local/bin/gfortran-8;
+  #if brew ls --versions gcc > /dev/null;
+  #then
+  #brew outdated gcc || brew upgrade gcc;
+  #else
+  ## the overwrite is to fix the linking issue seen on travis ci
+  #brew install gcc || brew link --overwrite gcc;
+  #fi
+  #export CC=/usr/local/bin/gcc-8;
+  #export CXX=/usr/local/bin/g++-8;
+  #export F77=/usr/local/bin/gfortran-8;
+  brew install gcc@8
+  brew link gcc
+  export CC=gcc-8;
+  export CXX=g++-8;
+  export F77=gfortran-8;
 
   # https://github.com/Microsoft/LightGBM/pull/1560
   # removes symlink
   #rm -f '/usr/local/include/c++'
   # fix "fatal error: _stdio.h: No such file or directory"
-  sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-9.3"
+# try moving to osx_image: xcode10.1
+#  sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-9.3"
 
   # install boost
   if brew ls --versions boost > /dev/null;

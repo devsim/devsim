@@ -134,7 +134,9 @@ ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
   bool      ok = false;
 
 // a long on windows 64 bit is 32 bits
-#if _WIN64
+// on windows, compiler error
+// note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+#if _WIN32
   long val= 0;
 #else
   ptrdiff_t val= 0;

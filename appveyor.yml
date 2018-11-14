@@ -44,6 +44,8 @@ os: Visual Studio 2017
 init:
   #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - git config --global core.autocrlf input
+  - IF "%PLATFORM%"=="x64" SET CONDA_PATH=c:\Miniconda-x64\Scripts\conda && SET BUILDDIR=win64
+  - IF "%PLATFORM%"=="x86" SET CONDA_PATH=c:\Miniconda\Scripts\conda && SET BUILDDIR=win32
 
 # clone directory
 clone_folder: c:\projects\devsim
@@ -82,14 +84,13 @@ clone_folder: c:\projects\devsim
 #      secure: $#(JFDA)jQ@#$
 
 # this is how to allow failing jobs in the matrix
+#fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
 matrix:
-  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
   allow_failures:
     - platform: x64
       configuration: Release
-
-#    - platform: x86
-#      configuration: Debug
+    - platform: x86
+      configuration: Debug
 
 # build cache to preserve files/folders between builds
 #cache:
@@ -118,7 +119,8 @@ install:
   # the intel channel is required to get the .lib for mkl
   #- c:\Miniconda-x64\Scripts\conda install --yes -c intel mkl
   # The development libraries are now part of standard Anaconda Python
-  - c:\Miniconda-x64\Scripts\conda install --yes mkl mkl-devel mkl-include tk
+  - IF "%PLATFORM%"=="x64" c:\Miniconda-x64\Scripts\conda install --yes mkl mkl-devel mkl-include tk sqlite zlib
+  - IF "%PLATFORM%"=="x86" c:\Miniconda\Scripts\conda install --yes mkl mkl-devel mkl-include tk sqlite zlib
   # need to debug path
   #- c:\Miniconda-x64\Scripts\conda env list
   # install ActiveState Tcl
@@ -131,16 +133,16 @@ install:
   #- C:\cygwin\setup-x86.exe -nNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P 
   # move back to the external directory
   - cd %APPVEYOR_BUILD_FOLDER%\external
-  - c:\cygwin\bin\wget --no-check-certificate -nv https://github.com/devsim/devsim_win32_deps/releases/download/VisualStudio2017v3/devsim_win32_deps.zip
+  - c:\cygwin\bin\wget --no-check-certificate -nv https://github.com/devsim/devsim_win32_deps/releases/download/VisualStudio2017v4/devsim_win32_deps.zip
   - c:\cygwin\bin\unzip -q devsim_win32_deps.zip
   # compile symdiff
   - cd %APPVEYOR_BUILD_FOLDER%
   - git submodule init
   - git submodule update
   - cd external\symdiff
-  - c:\cygwin\bin\bash.exe scripts/setup_appveyor.sh
-  - cd win64
-  - cmake --build . --config Release -- /m /v:q
+  - c:\cygwin\bin\bash.exe scripts/setup_appveyor.sh %PLATFORM%
+  - cd %BUILDDIR%
+  - cmake --build . --config Release -- /m /nologo /verbosity:minimal
 
 # enable patching of AssemblyInfo.* files
 #assembly_info:
@@ -163,7 +165,9 @@ install:
 #---------------------------------#
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
-platform: x64
+platform:
+  - x86
+  - x64
 
 # to add several platforms to build matrix:
 #platform:
@@ -210,8 +214,8 @@ after_build:
 build_script:
   # move back to the source dir
   - cd %APPVEYOR_BUILD_FOLDER%
-  - c:\cygwin\bin\bash.exe scripts/setup_appveyor.sh
-  - cd win64
+  - c:\cygwin\bin\bash.exe scripts/setup_appveyor.sh %PLATFORM%
+  - cd %BUILDDIR%
   - cmake --build . --config Release -- /m /v:m
 
 # to disable automatic builds

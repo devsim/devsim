@@ -32,9 +32,16 @@ SET (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /SAFESEH:NO")
 # windows build
 
 IF (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
+SET (MINICONDA27 c:/Miniconda)
+SET (MINICONDA36 c:/Miniconda36)
+SET (MINICONDA37 c:/Miniconda37)
+SET (BUILDDIR    win32)
 ELSE (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
+SET (MINICONDA27 c:/Miniconda-x64)
+SET (MINICONDA36 c:/Miniconda36-x64)
+SET (MINICONDA37 c:/Miniconda37-x64)
+SET (BUILDDIR    win64)
 # 64 bit
-SET (THIRDPARTY ${CMAKE_SOURCE_DIR}/external/devsim_win32_deps)
 #SET(MKL_DIR
 #"C:/Program Files (x86)/IntelSWTools/compilers_and_libraries_2016/windows/mkl/lib/intel64_win"
 #)
@@ -46,30 +53,34 @@ SET (THIRDPARTY ${CMAKE_SOURCE_DIR}/external/devsim_win32_deps)
 #SET (BLAS_ARCHIVE
 #${INTEL_MKL_LINK}
 #)
-SET (BLAS_ARCHIVE 
-c:/Miniconda-x64/Library/lib/mkl_rt.lib
-)
 
-SET (CGNS_ARCHIVE ${THIRDPARTY}/cgnslib64/lib/cgns.lib)
-SET (CGNS_INCLUDE ${THIRDPARTY}/cgnslib64/include)
-SET (SQLITE3_ARCHIVE "${THIRDPARTY}/sqlite-amalgamation-3080600/sqlite3.lib")
-SET (SQLITE3_INCLUDE "${THIRDPARTY}/sqlite-amalgamation-3080600")
-SET (SUPERLULOCATE  ${THIRDPARTY}/SuperLU_4.3)
-SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/superlu.lib)
-SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
-SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
-SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/win64/src/engine/Release/symdiff_static.lib)
-SET(TCL_INCLUDE "c:/Miniconda-x64/Library/include")
-SET(TCL_ARCHIVE "c:/Miniconda-x64/Library/lib/tcl86t.lib")
-SET(TCL_STUB "c:/Miniconda-x64/Library/lib/tclstub86.lib")
-SET (ZLIB_ARCHIVE "${THIRDPARTY}/zlib64/lib/zlibstatic.lib")
-SET (ZLIB_INCLUDE "${THIRDPARTY}/zlib64/include")
-
-SET (PYTHON27_ARCHIVE C:/Miniconda-x64/libs/python27.lib)
-SET (PYTHON27_INCLUDE C:/Miniconda-x64/include)
-SET (PYTHON36_ARCHIVE C:/Miniconda36-x64/libs/python36.lib)
-SET (PYTHON36_INCLUDE C:/Miniconda36-x64/include)
-SET (PYTHON37_ARCHIVE C:/Miniconda37-x64/libs/python37.lib)
-SET (PYTHON37_INCLUDE C:/Miniconda37-x64/include)
+#SET (CGNS_ARCHIVE ${THIRDPARTY}/cgnslib64/lib/cgns.lib)
+#SET (CGNS_INCLUDE ${THIRDPARTY}/cgnslib64/include)
 ENDIF (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
+
+SET (THIRDPARTY ${CMAKE_SOURCE_DIR}/external/devsim_win32_deps)
+SET (SUPERLULOCATE  ${THIRDPARTY}/SuperLU_4.3)
+SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/${BUILDDIR}/superlu.lib)
+SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
+
+SET (BLAS_ARCHIVE     ${MINICONDA27}/Library/lib/mkl_rt.lib)
+SET (PYTHON27_ARCHIVE ${MINICONDA27}/libs/python27.lib)
+SET (PYTHON27_INCLUDE ${MINICONDA27}/include)
+SET (PYTHON36_ARCHIVE ${MINICONDA36}/libs/python36.lib)
+SET (PYTHON36_INCLUDE ${MINICONDA36}/include)
+SET (PYTHON37_ARCHIVE ${MINICONDA37}/libs/python37.lib)
+SET (PYTHON37_INCLUDE ${MINICONDA37}/include)
+
+SET (SQLITE3_INCLUDE  ${MINICONDA27}/Library/include)
+SET (SQLITE3_ARCHIVE  ${MINICONDA27}/Library/lib/sqlite3.lib)
+
+SET (ZLIB_INCLUDE ${MINICONDA27}/Library/include)
+SET (ZLIB_ARCHIVE ${MINICONDA27}/Library/lib/zlib.lib)
+
+SET(TCL_INCLUDE "${MINICONDA27}/Library/include")
+SET(TCL_ARCHIVE "${MINICONDA27}/Library/lib/tcl86t.lib")
+SET(TCL_STUB    "${MINICONDA27}/Library/lib/tclstub86.lib")
+
+SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
+SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/${BUILDDIR}/src/engine/Release/symdiff_static.lib)
 
