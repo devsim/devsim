@@ -205,7 +205,8 @@ before_package:
 # scripts to run after build
 after_build:
   - cd %APPVEYOR_BUILD_FOLDER%\dist
-  - c:\cygwin\bin\bash.exe package_appveyor.sh devsim_win64_%APPVEYOR_REPO_TAG_NAME%
+  - IF "%PLATFORM%"=="x64" c:\cygwin\bin\bash.exe package_appveyor.sh devsim_win64_%APPVEYOR_REPO_TAG_NAME%
+  - IF "%PLATFORM%"=="x86" c:\cygwin\bin\bash.exe package_appveyor.sh devsim_win32_%APPVEYOR_REPO_TAG_NAME%
 
 #before_deploy:
 #- c:\cygwin\bin\bash.exe package_appveyor.sh devsim_win64_%APPVEYOR_REPO_TAG_NAME%
