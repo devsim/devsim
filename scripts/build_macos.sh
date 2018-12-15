@@ -60,10 +60,10 @@ ${HOME}/anaconda/bin/conda create -y --name python37_devsim_build python=3.7
 fi
 
 
-#For Mac OS X, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
+#For macOS, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
 #https://developer.apple.com/technologies/tools
 #https://developer.apple.com/performance/accelerateframework.html
-#In addition, cmake is needed for Mac OS X.  The package may be downloaded from:
+#In addition, cmake is needed for macOS.  The package may be downloaded from:
 #http://www.cmake.org
 
 # put the tag name in first argument used for distribution
@@ -110,7 +110,7 @@ fi
 (cd osx_x86_64_release && make -j4)
 if [ ! -z "${2}" ]
 then
-(cd dist && bash package_apple.sh ${1} devsim_osx_${2});
+(cd dist && bash package_macos.sh ${1} devsim_macos_${2});
 fi
 
 

@@ -4,7 +4,7 @@ documentation is available in the devsim/doc directory.
 
 Default Version:
 
-Mac OS X provides all of the necessary dependencies to run DEVSIM from the built-in python interpreter.
+macOS provides all of the necessary dependencies to run DEVSIM from the built-in python interpreter.
 
 GCC Version:
 

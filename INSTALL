@@ -4,7 +4,7 @@ Please visit http://www.devsim.org or RELEASE for information about binary avail
 
 Supported Platforms:
 Centos, Red Hat 6
-Mac OS X
+macOS
 Microsoft Windows
 Ubuntu 14, 16
 
@@ -13,7 +13,7 @@ The following scripts encapsulate the installation of dependencies and compilati
 Centos, Redhat 6:
 scripts/build_centos_6.sh
 
-Mac OS X:
+macOS:
 scripts/build_osx.sh
 
 Ubuntu 14:
@@ -22,7 +22,7 @@ scripts/build_ubuntu_14.sh
 Ubuntu 16:
 scripts/build_ubuntu_16.sh
 
-The script used for building and packaging Mac OS X and Centos distributions:
+The script used for building and packaging macOS and Centos distributions:
 .travis.yml
 
 The script used for building and packaging Microsoft Windows:
