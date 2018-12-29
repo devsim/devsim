@@ -48,7 +48,8 @@ cd devsim
 #git submodule update
 
 # SuperLU
-(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
+#(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
+(cd external && tar xzf superlu_4.3.tar.gz)
 
 # quad precision getrf
 (cd external/getrf && bash setup_centos6.sh && cd build && make -j2)

@@ -70,10 +70,11 @@ fi
 # this script assumes git clone and submodule initialization has been done
 
 # SuperLU
-if [ ! -f external/superlu_4.3.tar.gz ]
-then
-(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
-fi
+#if [ ! -f external/superlu_4.3.tar.gz ]
+#then
+#(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
+#fi
+(cd external && tar xzf superlu_4.3.tar.gz)
 
 # SYMDIFF build
 if [ "${1}" = "gcc" ]
@@ -92,7 +93,7 @@ fi
 ####(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake -DCMAKE_C_COMPILER=${CC} -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j4 && make install)
 
 # SUPERLU build
-(cd external/SuperLU_4.3 && sh ../superlu_osx_10.10.sh)
+(cd external/SuperLU_4.3 && sh ../superlu_macos.sh)
 
 if [ "${1}" = "gcc" ]
 then
