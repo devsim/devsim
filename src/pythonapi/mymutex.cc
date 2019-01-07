@@ -27,7 +27,7 @@ limitations under the License.
 #include <pthread.h>
 #endif
 
-mymutex::mymutex() : mutex(NULL)
+mymutex::mymutex() : mutex(nullptr)
 {
 #if _WIN32
     mutex = new CRITICAL_SECTION;
@@ -36,7 +36,7 @@ mymutex::mymutex() : mutex(NULL)
 	// create mutex
     // need to no the defaults for second argument
     mutex = new pthread_mutex_t;
-    int ret = pthread_mutex_init(reinterpret_cast<pthread_mutex_t *>(mutex), NULL);
+    int ret = pthread_mutex_init(reinterpret_cast<pthread_mutex_t *>(mutex), nullptr);
     if (ret != 0)
     {
 	perror("mymutex::mymutex()");

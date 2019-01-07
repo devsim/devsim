@@ -22,7 +22,7 @@ limitations under the License.
 #include <tcl.h>
 #include <iostream>
 
-void *OutputStream::interpreter = NULL;
+void *OutputStream::interpreter = nullptr;
 
 void OutputStream::SetInterpreter(void *interp)
 {
@@ -43,7 +43,7 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
   }
   if (ot == OutputType::INFO)
   {
-    Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stdout", NULL);
+    Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stdout", nullptr);
     if (!tc)
     {
       std::cerr << "Could not find output channel!";
@@ -56,7 +56,7 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
   {
     if ((verbosity == Verbosity_t::V1) || (verbosity == Verbosity_t::V2))
     {
-      Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stdout", NULL);
+      Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stdout", nullptr);
       if (!tc)
       {
           std::cerr << "Could not find output channel!";
@@ -70,7 +70,7 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
   {
     if (verbosity == Verbosity_t::V2)
     {
-      Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stdout", NULL);
+      Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stdout", nullptr);
       if (!tc)
       {
           std::cerr << "Could not find output channel!";
@@ -82,7 +82,7 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
   }
   else if (ot == OutputType::ERROR)
   {
-    Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stderr", NULL);
+    Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stderr", nullptr);
     if (!tc)
     {
       std::cerr << "Could not find output channel!";
@@ -93,7 +93,7 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
   }
   else if (ot == OutputType::FATAL)
   {
-    Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stderr", NULL);
+    Tcl_Channel tc = Tcl_GetChannel(tclInterp, "stderr", nullptr);
     if (!tc)
     {
       std::cerr << "Could not find output channel!";

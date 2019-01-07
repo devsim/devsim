@@ -71,7 +71,7 @@ void GlobalData::AddDevice(DevicePtr dp)
 
 DevicePtr GlobalData::GetDevice(const std::string &nm)
 {
-    Device *dp = NULL;
+    Device *dp = nullptr;
     if (deviceList.count(nm))
     {
         dp = deviceList[nm];

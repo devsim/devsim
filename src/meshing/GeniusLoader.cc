@@ -182,7 +182,7 @@ void GeniusLoader::AddRegion(GeniusRegionPtr grip)
 
 std::vector<int> *GeniusLoader::GetGeniusRegionBoundaryPoints(const std::string &genius_region_name, const std::string &genius_boundary_name)
 {
-  std::vector<int> *ret = NULL;
+  std::vector<int> *ret = nullptr;
 
   do
   {
@@ -191,7 +191,7 @@ std::vector<int> *GeniusLoader::GetGeniusRegionBoundaryPoints(const std::string 
       std::ostringstream os; 
       os << "Cannot find genius region " << genius_region_name << ".\n";
       OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
-      ret = NULL;
+      ret = nullptr;
       break;
     }
 

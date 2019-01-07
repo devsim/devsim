@@ -21,11 +21,11 @@ limitations under the License.
 #include <cstdio>
 #include <errno.h>
 #include "tcl.h"
-mycondition::mycondition() : cond(NULL)
+mycondition::mycondition() : cond(nullptr)
 {
 #if 0
     // Need to define appropriate attributes
-    int ret = pthread_cond_init(&cond, NULL);
+    int ret = pthread_cond_init(&cond, nullptr);
     if (ret != 0)
     {
 	perror("mycondition::mycondition()");
@@ -82,6 +82,6 @@ void mycondition::wait(mymutex &mutex)
 {
   void **cond_address = &cond;
   void **mutex_address = &(mutex.mutex);
-  Tcl_ConditionWait(reinterpret_cast<Tcl_Condition *>(cond_address), reinterpret_cast<Tcl_Mutex *>(mutex_address), NULL);
+  Tcl_ConditionWait(reinterpret_cast<Tcl_Condition *>(cond_address), reinterpret_cast<Tcl_Mutex *>(mutex_address), nullptr);
 }
 

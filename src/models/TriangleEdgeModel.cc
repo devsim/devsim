@@ -30,7 +30,7 @@ limitations under the License.
 const char *TriangleEdgeModel::DisplayTypeString[] = {
   "nodisplay",
   "scalar",
-  NULL
+  nullptr
 };
 
 TriangleEdgeModel::~TriangleEdgeModel()

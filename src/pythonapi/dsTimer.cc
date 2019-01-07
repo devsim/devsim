@@ -56,7 +56,7 @@ dsTimer::~dsTimer()
 dsTimer::dsTimer(const std::string &msg, OutputStream::OutputType outtype) : msg_(msg), output_type_(outtype), tic_(new timeval)
 {
   //// Timer is initialized to now in its constructor
-  gettimeofday(reinterpret_cast<timeval *>(tic_), NULL);
+  gettimeofday(reinterpret_cast<timeval *>(tic_), nullptr);
 
   std::ostringstream os;
   os << "\nBEGIN " << msg_ << "\n";
@@ -66,7 +66,7 @@ dsTimer::dsTimer(const std::string &msg, OutputStream::OutputType outtype) : msg
 dsTimer::~dsTimer()
 {
   timeval toc;
-  gettimeofday(&toc, NULL);
+  gettimeofday(&toc, nullptr);
 
   const timeval &tic = *(reinterpret_cast<timeval *>(tic_));
 

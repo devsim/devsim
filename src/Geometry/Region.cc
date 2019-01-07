@@ -85,7 +85,7 @@ const Node *findNodeOppositeOfTriangleEdge(const Edge &edge, const Triangle &tri
   const Node * const h = edge.GetHead();
   const Node * const t = edge.GetTail();
 
-  const Node *ret = NULL;
+  const Node *ret = nullptr;
 
   const ConstNodeList &tnl = triangle.GetNodeList();
   for (size_t i = 0; i < 3; ++i)
@@ -798,7 +798,7 @@ ConstNodeModelPtr Region::GetNodeModel(const std::string &nm) const
     {
         em = it->second;
     }
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     return em;
 }
 
@@ -810,7 +810,7 @@ ConstEdgeModelPtr Region::GetEdgeModel(const std::string &nm) const
     {
         em = it->second;
     }
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     return em;
 }
 
@@ -822,7 +822,7 @@ ConstTriangleEdgeModelPtr Region::GetTriangleEdgeModel(const std::string &nm) co
     {
         em = it->second;
     }
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     return em;
 }
 
@@ -834,7 +834,7 @@ ConstTetrahedronEdgeModelPtr Region::GetTetrahedronEdgeModel(const std::string &
     {
         em = it->second;
     }
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     return em;
 }
 
@@ -1326,7 +1326,7 @@ size_t Region::GetNumberEquations() const
 
 ConstDevicePtr Region::GetDevice() const
 {
-    dsAssert(device != NULL, "UNEXPECTED");
+    dsAssert(device != nullptr, "UNEXPECTED");
     return device;
 }
 
@@ -1704,7 +1704,7 @@ void Region::SetModelExprDataCache(ModelExprDataCachePtr<float128> p)
 
 ConstEdgePtr Region::FindEdge(ConstNodePtr nh, ConstNodePtr nt) const
 {
-  ConstEdgePtr ret = NULL;
+  ConstEdgePtr ret = nullptr;
 
   ConstEdgeList nout;
   // need these to be sorted ranges so do sort above
@@ -1727,7 +1727,7 @@ ConstEdgePtr Region::FindEdge(ConstNodePtr nh, ConstNodePtr nt) const
 
 ConstTrianglePtr Region::FindTriangle(ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2) const
 {
-  ConstTrianglePtr ret = NULL;
+  ConstTrianglePtr ret = nullptr;
 
   // need these to be sorted ranges so do sort above
   const ConstTriangleList &tl0 = GetNodeToTriangleList()[n0->GetIndex()];
@@ -1759,7 +1759,7 @@ ConstTrianglePtr Region::FindTriangle(ConstNodePtr n0, ConstNodePtr n1, ConstNod
 
 ConstTetrahedronPtr Region::FindTetrahedron(ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2, ConstNodePtr n3) const
 {
-  ConstTetrahedronPtr ret = NULL;
+  ConstTetrahedronPtr ret = nullptr;
 
   // need these to be sorted ranges so do sort above
   const ConstTetrahedronList &tl0 = GetNodeToTetrahedronList()[n0->GetIndex()];

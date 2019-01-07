@@ -303,7 +303,7 @@ void GetTriangles(MeshRegion &cnt, const RegionPtr rp, ConstTriangleList &ctl)
   {
     const MeshTriangle &mtri = *it;
     size_t       mnodes[3] = {mtri.Index0(), mtri.Index1(), mtri.Index2()};
-    ConstNodePtr rnodes[3] = {NULL, NULL, NULL};
+    ConstNodePtr rnodes[3] = {nullptr, nullptr, nullptr};
     size_t j = 0;
     for (size_t i = 0; i < 3; ++i)
     {
@@ -338,7 +338,7 @@ void GetEdges(MeshRegion &cnt, const RegionPtr rp, ConstEdgeList &cel)
   {
     const MeshEdge &medge = *it;
     size_t       mnodes[2] = {medge.Index0(), medge.Index1()};
-    ConstNodePtr rnodes[2] = {NULL, NULL};
+    ConstNodePtr rnodes[2] = {nullptr, nullptr};
     size_t j = 0;
     for (size_t i = 0; i < 2; ++i)
     {
@@ -373,7 +373,7 @@ void GetNodes(MeshRegion &cnt, const RegionPtr rp, ConstNodeList &cnl)
   {
     const MeshNode &mnode = *it;
     size_t       mnodes = mnode.Index();
-    ConstNodePtr rnodes = NULL;
+    ConstNodePtr rnodes = nullptr;
 
     if (mnodes <  nl.size())
     {

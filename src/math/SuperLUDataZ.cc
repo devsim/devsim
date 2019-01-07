@@ -41,8 +41,8 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix<DoubleType> *cm, const 
   if (perm_c_ && (sstatus == SymbolicStatus_t::SAME_SYMBOLIC))
   {
     //// This is so it doesn't get deleted by DeleteStorage
-    perm_c_ = NULL;
-    etree_  = NULL;
+    perm_c_ = nullptr;
+    etree_  = nullptr;
   }
   else
   {
@@ -141,12 +141,12 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix<DoubleType> *cm, const 
   if (lutype_ == PEnum::LUType_t::FULL)
   {
     zgstrf(&options, &AC, relax, panel_size, 
-           etree, NULL, 0, perm_c, perm_r, L, U, &stat, &info_);
+           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
   }
   else if (lutype_ ==  PEnum::LUType_t::INCOMPLETE)
   {
     zgsitrf(&options, &AC, relax, panel_size,
-           etree, NULL, 0, perm_c, perm_r, L, U, &stat, &info_);
+           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
   }
 
 //  dsAssert(info == 0, "MATRIX FACTORIZATION FAILED");

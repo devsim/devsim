@@ -55,7 +55,7 @@ typedef bool (*checkFunction)(const std::string &/*optionname*/, std::string &/*
 
 struct Option {
     const char *name;
-    //// always use "" instead of NULL
+    //// always use "" instead of nullptr
     const char   *defaultValue;
     optionType    type;
     requiredType  rtype;

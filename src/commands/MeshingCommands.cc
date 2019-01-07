@@ -58,10 +58,10 @@ create1dMeshCmd(CommandHandler &data)
     static dsGetArgs::Option option[] =
     {
         {"mesh", "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshCannotExist},
-        {NULL,   NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -76,7 +76,7 @@ create1dMeshCmd(CommandHandler &data)
 
     const std::string &meshName = data.GetStringOption("mesh");
 
-    dsMesh::MeshPtr mp = NULL;
+    dsMesh::MeshPtr mp = nullptr;
     if (commandName == "create_1d_mesh")
     {
         mp = new dsMesh::Mesh1d(meshName);
@@ -103,10 +103,10 @@ finalizeMeshCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] = {
         {"mesh", "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
-        {NULL,   NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -143,15 +143,15 @@ add1dMeshLineCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
-        {"tag",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"pos",    "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED, NULL},
+        {"tag",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"pos",    "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED, nullptr},
 /// this will default to plus spacing
-        {"ns",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"ns",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"ps",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED, mustBePositive},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -208,15 +208,15 @@ add2dMeshLineCmd(CommandHandler &data)
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
-        {"pos",    "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED, NULL},
+        {"pos",    "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED, nullptr},
 /// this will default to plus spacing
-        {"ns",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"ns",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"ps",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED, mustBePositive},
-        {"dir",    "",  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {"dir",    "",  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -286,10 +286,10 @@ add1dInterfaceCmd(CommandHandler &data)
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"tag",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -335,10 +335,10 @@ add1dContactCmd(CommandHandler &data)
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"material", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"tag",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -385,15 +385,15 @@ add2dInterfaceCmd(CommandHandler &data)
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"region0",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"region1",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"xl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"xh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"yl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"yh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"bloat", "1.0e-10",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {"xl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"xh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"yl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"yh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"bloat", "1.0e-10",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -458,15 +458,15 @@ add2dContactCmd(CommandHandler &data)
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"material", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"region",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"xl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"xh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"yl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"yh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"bloat", "1.0e-10",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {"xl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"xh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"yl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"yh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"bloat", "1.0e-10",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -521,10 +521,10 @@ add1dRegionCmd(CommandHandler &data)
         {"material", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"tag1",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"tag2",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -570,15 +570,15 @@ add2dRegionCmd(CommandHandler &data)
         {"mesh",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
         {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"material", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"xl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"xh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"yl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"yh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"bloat", "1.0e-10",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {"xl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"xh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"yl", "-MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"yh", "MAXDOUBLE",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"bloat", "1.0e-10",  dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -629,10 +629,10 @@ createDeviceCmd(CommandHandler &data)
     static dsGetArgs::Option option[] = {
         {"mesh",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustBeFinalized},
         {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustNotBeValidDevice},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -673,11 +673,11 @@ loadDevicesCmd(CommandHandler &data)
 // TODO:  "delete device if there is a problem"
 // TODO:  "specify option to only load the mesh creator, but don't instantiate"
     static dsGetArgs::Option option[] = {
-        {"file",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {"file",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -711,13 +711,13 @@ writeDevicesCmd(CommandHandler &data)
 
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] = {
-        {"file",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
-        {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"type",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {"file",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
+        {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"type",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -814,10 +814,10 @@ createGeniusMeshCmd(CommandHandler &data)
     {
         {"mesh", "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshCannotExist},
         {"file", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,   NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -874,10 +874,10 @@ addGeniusInterfaceCmd(CommandHandler &data)
         {"genius_name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"region0",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"region1",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -930,10 +930,10 @@ addGeniusContactCmd(CommandHandler &data)
         {"material",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"genius_name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"region",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -985,10 +985,10 @@ addGeniusRegionCmd(CommandHandler &data)
         {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"genius_name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"material",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1035,14 +1035,14 @@ createGmshMeshCmd(CommandHandler &data)
     static dsGetArgs::Option option[] =
     {
         {"mesh", "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshCannotExist},
-        {"file", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"coordinates",    "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"physical_names", "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"elements",   "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,   NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {"file", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"coordinates",    "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"physical_names", "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"elements",   "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1170,10 +1170,10 @@ addGmshInterfaceCmd(CommandHandler &data)
         {"gmsh_name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"region0",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"region1",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1222,10 +1222,10 @@ addGmshContactCmd(CommandHandler &data)
         {"material",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"gmsh_name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"region",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1273,10 +1273,10 @@ addGmshRegionCmd(CommandHandler &data)
         {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"gmsh_name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"material",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1327,10 +1327,10 @@ createContactFromInterfaceCmd(CommandHandler &data)
         {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
         {"interface",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidInterface},
-        {NULL,  NULL,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  NULL}
+        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1341,10 +1341,10 @@ createContactFromInterfaceCmd(CommandHandler &data)
         return;
     }
 
-    Device    *device    = NULL;
-    Contact   *contact   = NULL;
-    Interface *interface = NULL;
-    Region    *region    = NULL;
+    Device    *device    = nullptr;
+    Contact   *contact   = nullptr;
+    Interface *interface = nullptr;
+    Region    *region    = nullptr;
 
     const std::string &contactName   = data.GetStringOption("name");
     const std::string &materialName  = data.GetStringOption("material");
@@ -1414,7 +1414,7 @@ Commands MeshingCommands[] = {
     {"add_genius_interface", addGeniusInterfaceCmd},
     {"add_genius_region", addGeniusRegionCmd},
     {"create_contact_from_interface", createContactFromInterfaceCmd},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 }
 

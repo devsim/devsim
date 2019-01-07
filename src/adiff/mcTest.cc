@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 #endif
 #endif
 
-//   YY_BUFFER_STATE yyb = NULL;
+//   YY_BUFFER_STATE yyb = nullptr;
 /*
    if (argc==2)
    {
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 
    int retval = mcparse();
 /*
-   if (yyb != NULL)
+   if (yyb != nullptr)
       mc_delete_buffer(yyb);
 */
 
@@ -834,7 +834,7 @@ else if (atype == ACASSEMBLE)
    if (atype == ACASSEMBLE) 
    {
       out << "\n"
-"   if (mat == NULL)\n"
+"   if (mat == nullptr)\n"
 "      return;\n";
    }
 

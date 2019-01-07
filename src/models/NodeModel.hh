@@ -50,7 +50,7 @@ typedef Region *RegionPtr;
 class NodeModel {
     public:
         enum class DisplayType {NODISPLAY, SCALAR, UNKNOWN};
-        NodeModel(const std::string &, const RegionPtr, NodeModel::DisplayType, const ContactPtr x = NULL);
+        NodeModel(const std::string &, const RegionPtr, NodeModel::DisplayType, const ContactPtr x = nullptr);
         virtual ~NodeModel()=0;
 
         const std::string &GetName() const;
@@ -101,7 +101,7 @@ class NodeModel {
 
         bool AtContact() const
         {
-            return (mycontact != NULL);
+            return (mycontact != nullptr);
         }
 
         const Contact &GetContact() const

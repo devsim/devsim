@@ -370,7 +370,7 @@ void Device::NoiseUpdate(const std::string &output, const std::vector<Permutatio
 
 RegionPtr Device::GetRegion(const std::string &nm)
 {
-    RegionPtr rp = NULL;
+    RegionPtr rp = nullptr;
     if (regionList.count(nm))
     {
         rp = regionList[nm];
@@ -380,7 +380,7 @@ RegionPtr Device::GetRegion(const std::string &nm)
 
 InterfacePtr Device::GetInterface(const std::string &nm) const
 {
-  InterfacePtr rp = NULL;
+  InterfacePtr rp = nullptr;
 
   InterfaceList_t::const_iterator it = interfaceList.find(nm);
 
@@ -393,7 +393,7 @@ InterfacePtr Device::GetInterface(const std::string &nm) const
 
 ContactPtr Device::GetContact(const std::string &nm) const
 {
-  ContactPtr rp = NULL;
+  ContactPtr rp = nullptr;
 
   ContactList_t::const_iterator it = contactList.find(nm);
 

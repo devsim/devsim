@@ -72,7 +72,7 @@ DoubleType MathWrapper<DoubleType>::Evaluate(const std::vector<DoubleType> &vals
 template <typename DoubleType>
 void MathWrapper1<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &/*dvals*/, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
-  dsAssert(vvals[0] != NULL, "UNEXPECTED");
+  dsAssert(vvals[0] != nullptr, "UNEXPECTED");
 
 //  const std::vector<DoubleType> &vals = *vvals[0];
   DoubleType       *vr = &result[vbeg];

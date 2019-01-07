@@ -29,7 +29,7 @@ TriangleElementFieldMatrixHolder<DoubleType>::TriangleElementFieldMatrixHolder()
 {
   for (size_t i = 0; i < 3; ++i)
   {
-    mats[i] = NULL;
+    mats[i] = nullptr;
   }
 }
 

@@ -48,10 +48,10 @@ void getDeviceListCmd(CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -83,9 +83,9 @@ getRegionListCmd(CommandHandler &data)
     {
       static dsGetArgs::Option getregionlistoption[] = {
           {"device", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
-          {"contact", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-          {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-          {NULL, NULL,   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+          {"contact", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+          {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+          {nullptr, nullptr,   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
       };
       option = getregionlistoption;
     }
@@ -93,7 +93,7 @@ getRegionListCmd(CommandHandler &data)
     {
       static dsGetArgs::Option getregionlistoption[] = {
           {"device", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
-          {NULL, NULL,   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+          {nullptr, nullptr,   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
       };
       option = getregionlistoption;
     }
@@ -101,12 +101,12 @@ getRegionListCmd(CommandHandler &data)
     {
         /// This should not be able to happen
         dsAssert(false, "UNEXPECTED");
-        option = NULL;
+        option = nullptr;
     }
 
 
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -118,7 +118,7 @@ getRegionListCmd(CommandHandler &data)
     }
 
     const std::string &deviceName = data.GetStringOption("device");
-    Device *dev = NULL;
+    Device *dev = nullptr;
 
     errorString = ValidateDevice(deviceName, dev);
 
@@ -136,7 +136,7 @@ getRegionListCmd(CommandHandler &data)
           }
           else if (!contactName.empty())
           {
-            Contact *contact = NULL;
+            Contact *contact = nullptr;
             errorString = ValidateDeviceAndContact(deviceName, contactName, dev, contact);
             if ((!errorString.empty()))
             {
@@ -153,7 +153,7 @@ getRegionListCmd(CommandHandler &data)
           }
           else if (!interfaceName.empty())
           {
-            Interface *interface = NULL;
+            Interface *interface = nullptr;
             errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
             if ((!errorString.empty()))
             {
@@ -218,13 +218,13 @@ getElementNodeListCmd(CommandHandler &data)
       static dsGetArgs::Option option[] = {
       {"device", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
       {"region", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
-      {"contact", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-      {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-      {NULL, NULL,   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+      {"contact", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+      {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+      {nullptr, nullptr,   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
       };
 
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -238,10 +238,10 @@ getElementNodeListCmd(CommandHandler &data)
     const std::string &deviceName = data.GetStringOption("device");
 
 
-    Device    *device = NULL;
-    Region    *region = NULL;
-    Contact   *contact = NULL;
-    Interface *interface = NULL;
+    Device    *device = nullptr;
+    Region    *region = nullptr;
+    Contact   *contact = nullptr;
+    Interface *interface = nullptr;
 
     ConstTetrahedronList tetrahedronList;
     ConstTriangleList    triangleList;
@@ -393,7 +393,7 @@ Commands GeometryCommands[] = {
     {"get_interface_list",          getRegionListCmd},
     {"get_contact_list",            getRegionListCmd},
     {"get_element_node_list",       getElementNodeListCmd},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 }

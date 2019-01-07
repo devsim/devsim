@@ -36,7 +36,7 @@ class GetArgs;
 
 struct CommandInfo
 {
-  CommandInfo() : command_handler_(NULL), get_args_(NULL), objv_(NULL), objc_(0), interp_(NULL)
+  CommandInfo() : command_handler_(nullptr), get_args_(nullptr), objv_(nullptr), objc_(0), interp_(nullptr)
   {
   }
 

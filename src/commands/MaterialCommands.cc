@@ -49,11 +49,11 @@ getParameterCmd(CommandHandler &data)
     {
         static dsGetArgs::Option setoption[] =
         {
-            {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+            {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
             {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
             {"value",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-            {NULL,  NULL,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+            {nullptr,  nullptr,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
         };
         option = setoption;
     }
@@ -62,9 +62,9 @@ getParameterCmd(CommandHandler &data)
         static dsGetArgs::Option getoption[] =
         {
             {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, mustBeSpecifiedIfRegionSpecified},
-            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
             {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-            {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+            {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
         };
         option = getoption;
     }
@@ -73,8 +73,8 @@ getParameterCmd(CommandHandler &data)
         static dsGetArgs::Option getoption[] =
         {
             {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, mustBeSpecifiedIfRegionSpecified},
-            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-            {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+            {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
         };
         option = getoption;
     }
@@ -83,10 +83,10 @@ getParameterCmd(CommandHandler &data)
         static dsGetArgs::Option setoption[] =
         {
             {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
-            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-            {"contact",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+            {"contact",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
             {"material", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-            {NULL,  NULL,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+            {nullptr,  nullptr,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
         };
         option = setoption;
     }
@@ -95,9 +95,9 @@ getParameterCmd(CommandHandler &data)
         static dsGetArgs::Option getoption[] =
         {
             {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
-            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-            {"contact",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-            {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+            {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+            {"contact",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+            {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
         };
         option = getoption;
     }
@@ -106,7 +106,7 @@ getParameterCmd(CommandHandler &data)
         static dsGetArgs::Option getoption[] =
         {
             {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, mustBeValidDevice},
-            {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+            {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
         };
         option = getoption;
     }
@@ -114,10 +114,10 @@ getParameterCmd(CommandHandler &data)
     {
         /// This should not be able to happen
         dsAssert(false, "UNEXPECTED");
-        option = NULL;
+        option = nullptr;
     }
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -142,9 +142,9 @@ getParameterCmd(CommandHandler &data)
       contactName = data.GetStringOption("contact");
     }
 
-    Device *dev = NULL;
-    Region *reg = NULL;
-    Contact *contact = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
+    Contact *contact = nullptr;
 
 
     if (!regionName.empty() && !contactName.empty())
@@ -315,8 +315,8 @@ openDBCmd(CommandHandler &data)
       static dsGetArgs::Option openoption[] =
       {
           {"filename",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-          {"permission", "readonly", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-          {NULL,  NULL,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+          {"permission", "readonly", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+          {nullptr,  nullptr,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
       };
       option = openoption;
   }
@@ -324,7 +324,7 @@ openDBCmd(CommandHandler &data)
   {
       static dsGetArgs::Option closeoption[] =
       {
-          {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+          {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
       };
       option = closeoption;
   }
@@ -333,7 +333,7 @@ openDBCmd(CommandHandler &data)
       static dsGetArgs::Option createoption[] =
       {
           {"filename",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-          {NULL,  NULL,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+          {nullptr,  nullptr,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
       };
       option = createoption;
   }
@@ -341,10 +341,10 @@ openDBCmd(CommandHandler &data)
   {
       /// This should not be able to happen
       dsAssert(false, "UNEXPECTED");
-      option = NULL;
+      option = nullptr;
   }
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -446,15 +446,15 @@ addDBEntryCmd(CommandHandler &data)
       {"material",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
       {"parameter",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
       {"value", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-      {"unit", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
-      {"description", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
-      {NULL,  NULL,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+      {"unit", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
+      {"description", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
+      {nullptr,  nullptr,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
   };
 
   option = openoption;
 
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -492,12 +492,12 @@ getDBEntryCmd(CommandHandler &data)
   {
       {"material",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
       {"parameter",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-      {NULL,  NULL,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+      {nullptr,  nullptr,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
   };
 
   option = openoption;
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -547,7 +547,7 @@ Commands MaterialCommands[] = {
     {"add_db_entry",    addDBEntryCmd},
     {"get_db_entry",    getDBEntryCmd},
     {"get_dimension",   getParameterCmd},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 //// TODO: Get material (get name of material)
 //// TODO: Set material (get list of models loaded on material)

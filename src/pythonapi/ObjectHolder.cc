@@ -21,7 +21,7 @@ limitations under the License.
 #include "dsAssert.hh"
 #include <limits>
 
-ObjectHolder::ObjectHolder() : object_(NULL)
+ObjectHolder::ObjectHolder() : object_(nullptr)
 {
 }
 
@@ -70,7 +70,7 @@ void ObjectHolder::clear()
   {
     Py_DECREF(reinterpret_cast<PyObject *>(object_));
   }
-  object_ = NULL;
+  object_ = nullptr;
 }
 
 ObjectHolder::ObjectHolder(void *t) : object_(t)
@@ -149,7 +149,7 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
     else if (PyUnicode_CheckExact(obj) || PyBytes_CheckExact(obj))
     {
 #if PY_MAJOR_VERSION < 3
-      PyObject *fobj = PyFloat_FromString(obj, NULL);
+      PyObject *fobj = PyFloat_FromString(obj, nullptr);
 #else
       PyObject *fobj = PyFloat_FromString(obj);
 #endif

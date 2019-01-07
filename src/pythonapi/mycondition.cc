@@ -27,7 +27,7 @@ limitations under the License.
 #endif
 
 // TODO: "Ensure processes acquire python lock when necessary."
-mycondition::mycondition() : cond(NULL)
+mycondition::mycondition() : cond(nullptr)
 {
 #if _WIN32
 	cond = new CONDITION_VARIABLE;
@@ -35,7 +35,7 @@ mycondition::mycondition() : cond(NULL)
 #else
     cond = new pthread_cond_t;
     // Need to define appropriate attributes
-    int ret = pthread_cond_init(reinterpret_cast<pthread_cond_t *>(cond), NULL);
+    int ret = pthread_cond_init(reinterpret_cast<pthread_cond_t *>(cond), nullptr);
     if (ret != 0)
     {
 	perror("mycondition::mycondition()");

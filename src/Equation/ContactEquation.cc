@@ -205,7 +205,7 @@ DoubleType ContactEquation<DoubleType>::integrateNodeModelOverNodes(const std::s
   if (!nmodel.empty())
   {
     ConstNodeModelPtr nm = region.GetNodeModel(nmodel);
-//    dsAssert(nm != NULL, "UNEXPECTED");
+//    dsAssert(nm != nullptr, "UNEXPECTED");
 
     if (!nm)
     {
@@ -213,7 +213,7 @@ DoubleType ContactEquation<DoubleType>::integrateNodeModelOverNodes(const std::s
     }
 
     ConstNodeModelPtr nv = region.GetNodeModel(node_volume);
-//    dsAssert(nv != NULL, "UNEXPECTED");
+//    dsAssert(nv != nullptr, "UNEXPECTED");
     if (!nv)
     {
       dsErrors::MissingContactEquationModel(region, *this, node_volume, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
@@ -243,14 +243,14 @@ DoubleType ContactEquation<DoubleType>::integrateEdgeModelOverNodes(const std::s
   if (!emodel.empty())
   {
     ConstEdgeModelPtr em = region.GetEdgeModel(emodel);
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
     }
 
     ConstEdgeModelPtr ec = region.GetEdgeModel(edge_couple);
-//    dsAssert(ec != NULL, "UNEXPECTED");
+//    dsAssert(ec != nullptr, "UNEXPECTED");
 
     if (!ec)
     {
@@ -297,14 +297,14 @@ DoubleType ContactEquation<DoubleType>::integrateTriangleEdgeModelOverNodes(cons
   if (!emodel.empty())
   {
     ConstTriangleEdgeModelPtr em = region.GetTriangleEdgeModel(emodel);
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
     }
 
     ConstTriangleEdgeModelPtr ec = region.GetTriangleEdgeModel(edge_couple);
-//    dsAssert(ec != NULL, "UNEXPECTED");
+//    dsAssert(ec != nullptr, "UNEXPECTED");
     if (!ec)
     {
       dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
@@ -366,14 +366,14 @@ DoubleType ContactEquation<DoubleType>::integrateTetrahedronEdgeModelOverNodes(c
   if (!emodel.empty())
   {
     ConstTetrahedronEdgeModelPtr em = region.GetTetrahedronEdgeModel(emodel);
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
     }
 
     ConstTetrahedronEdgeModelPtr ec = region.GetTetrahedronEdgeModel(edge_couple);
-//    dsAssert(ec != NULL, "UNEXPECTED");
+//    dsAssert(ec != nullptr, "UNEXPECTED");
     if (!ec)
     {
       dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
@@ -461,7 +461,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel
 
   //// Perhaps this helps scaling
   ConstNodeModelPtr nv = region.GetNodeModel(node_volume);
-//  dsAssert(nv != NULL, "UNEXPECTED");
+//  dsAssert(nv != nullptr, "UNEXPECTED");
   if (!nv)
   {
     dsErrors::MissingContactEquationModel(region, *this, node_volume, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
@@ -494,7 +494,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     ConstNodeModelPtr nm = region.GetNodeModel(nmodel);
-//    dsAssert(nm != NULL, "UNEXPECTED");
+//    dsAssert(nm != nullptr, "UNEXPECTED");
     if (!nm)
     {
       dsErrors::MissingContactEquationModel(region, *this, nmodel, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
@@ -611,7 +611,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(const std::strin
   }
 
   ConstNodeModelPtr nv = region.GetNodeModel(node_volume);
-//  dsAssert(nv != NULL, "UNEXPECTED");
+//  dsAssert(nv != nullptr, "UNEXPECTED");
   if (!nv)
   {
     dsErrors::MissingContactEquationModel(region, *this, node_volume, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
@@ -621,7 +621,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(const std::strin
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     ConstNodeModelPtr nm = region.GetNodeModel(nmodel);
-//    dsAssert(nm != NULL, "UNEXPECTED");
+//    dsAssert(nm != nullptr, "UNEXPECTED");
     if (!nm)
     {
       dsErrors::MissingContactEquationModel(region, *this, nmodel, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
@@ -719,7 +719,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
 
   //// Perhaps this helps scaling
   ConstEdgeModelPtr ec = region.GetEdgeModel(edge_couple);
-//  dsAssert(ec != NULL, "UNEXPECTED");
+//  dsAssert(ec != nullptr, "UNEXPECTED");
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
@@ -743,7 +743,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     ConstEdgeModelPtr em = region.GetEdgeModel(emodel);
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
@@ -911,7 +911,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
   dsAssert(!emodel.empty(), "UNEXPECTED");
 
   ConstTriangleEdgeModelPtr ec = region.GetTriangleEdgeModel(edge_couple);
-//  dsAssert(ec != NULL, "UNEXPECTED");
+//  dsAssert(ec != nullptr, "UNEXPECTED");
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
@@ -936,7 +936,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     ConstTriangleEdgeModelPtr em = region.GetTriangleEdgeModel(emodel);
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
@@ -1150,7 +1150,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
   dsAssert(!emodel.empty(), "UNEXPECTED");
 
   ConstTetrahedronEdgeModelPtr ec = region.GetTetrahedronEdgeModel(edge_couple);
-//  dsAssert(ec != NULL, "UNEXPECTED");
+//  dsAssert(ec != nullptr, "UNEXPECTED");
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
@@ -1175,7 +1175,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     ConstTetrahedronEdgeModelPtr em = region.GetTetrahedronEdgeModel(emodel);
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
@@ -1422,7 +1422,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
   }
 
   ConstEdgeModelPtr ec = region.GetEdgeModel(edge_couple);
-//  dsAssert(ec != NULL, "UNEXPECTED");
+//  dsAssert(ec != nullptr, "UNEXPECTED");
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
@@ -1431,7 +1431,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     ConstEdgeModelPtr em = region.GetEdgeModel(emodel);
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
@@ -1638,7 +1638,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
 
 
   ConstTriangleEdgeModelPtr ec = region.GetTriangleEdgeModel(edge_couple);
-//  dsAssert(ec != NULL, "UNEXPECTED");
+//  dsAssert(ec != nullptr, "UNEXPECTED");
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
@@ -1647,7 +1647,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     ConstTriangleEdgeModelPtr em = region.GetTriangleEdgeModel(emodel);
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
@@ -1913,7 +1913,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
 
 
   ConstTetrahedronEdgeModelPtr ec = region.GetTetrahedronEdgeModel(edge_couple);
-//  dsAssert(ec != NULL, "UNEXPECTED");
+//  dsAssert(ec != nullptr, "UNEXPECTED");
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
@@ -1922,7 +1922,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     ConstTetrahedronEdgeModelPtr em = region.GetTetrahedronEdgeModel(emodel);
-//    dsAssert(em != NULL, "UNEXPECTED");
+//    dsAssert(em != nullptr, "UNEXPECTED");
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);

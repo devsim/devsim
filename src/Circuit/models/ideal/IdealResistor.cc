@@ -64,7 +64,7 @@ void IdealResistor::assembleTran_impl(const double scl, const NodeKeeper::Soluti
 
 
 
-   if (mat == NULL)
+   if (mat == nullptr)
       return;
 
 

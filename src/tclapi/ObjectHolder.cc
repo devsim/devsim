@@ -20,7 +20,7 @@ limitations under the License.
 #include <tcl.h>
 #include <limits>
 
-ObjectHolder::ObjectHolder() : object_(NULL)
+ObjectHolder::ObjectHolder() : object_(nullptr)
 {
 }
 
@@ -66,7 +66,7 @@ void ObjectHolder::clear()
   {
     Tcl_DecrRefCount(reinterpret_cast<Tcl_Obj *>(object_));
   }
-  object_ = NULL;
+  object_ = nullptr;
 }
 
 ObjectHolder::ObjectHolder(void *t) : object_(t)
@@ -82,7 +82,7 @@ std::string ObjectHolder::GetString() const
   std::string ret;
   if (object_)
   {
-    ret = Tcl_GetStringFromObj(reinterpret_cast<Tcl_Obj *>(object_), NULL);
+    ret = Tcl_GetStringFromObj(reinterpret_cast<Tcl_Obj *>(object_), nullptr);
   }
   return ret;
 }
@@ -94,7 +94,7 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
 
   if (object_)
   {
-    ok = (TCL_OK == Tcl_GetDoubleFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &val));
+    ok = (TCL_OK == Tcl_GetDoubleFromObj(nullptr, reinterpret_cast<Tcl_Obj *>(object_), &val));
   }
 
   return std::make_pair(ok, val);
@@ -108,7 +108,7 @@ ObjectHolder::BooleanEntry_t ObjectHolder::GetBoolean() const
   if (object_)
   {
     int ret = 0;
-    ok = (TCL_OK == Tcl_GetBooleanFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &ret));
+    ok = (TCL_OK == Tcl_GetBooleanFromObj(nullptr, reinterpret_cast<Tcl_Obj *>(object_), &ret));
     val = (ret == 1);
   }
 
@@ -123,7 +123,7 @@ ObjectHolder::IntegerEntry_t ObjectHolder::GetInteger() const
 
   if (object_)
   {
-    ok = (TCL_OK == Tcl_GetIntFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &val));
+    ok = (TCL_OK == Tcl_GetIntFromObj(nullptr, reinterpret_cast<Tcl_Obj *>(object_), &val));
   }
 
   return std::make_pair(ok, val);
@@ -144,7 +144,7 @@ ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
 
   if (object_)
   {
-    ok = (TCL_OK == Tcl_GetLongFromObj(NULL, reinterpret_cast<Tcl_Obj *>(object_), &val));
+    ok = (TCL_OK == Tcl_GetLongFromObj(nullptr, reinterpret_cast<Tcl_Obj *>(object_), &val));
   }
 
   return std::make_pair(ok, val);
@@ -156,7 +156,7 @@ bool ObjectHolder::IsList() const
   if (object_)
   {
     int len;
-    int ret = Tcl_ListObjLength(NULL, reinterpret_cast<Tcl_Obj *>(object_), &len);
+    int ret = Tcl_ListObjLength(nullptr, reinterpret_cast<Tcl_Obj *>(object_), &len);
     ok = (ret == TCL_OK);
   }
   return ok;
@@ -167,11 +167,11 @@ bool ObjectHolder::GetListOfObjects(std::vector<ObjectHolder> &objs) const
   bool ok = false;
   objs.clear();
 
-  Tcl_Obj *ptr = NULL;
+  Tcl_Obj *ptr = nullptr;
   if (IsList())
   {
     int len = 0;
-    int ret = Tcl_ListObjLength(NULL, reinterpret_cast<Tcl_Obj *>(object_), &len);
+    int ret = Tcl_ListObjLength(nullptr, reinterpret_cast<Tcl_Obj *>(object_), &len);
 
     ok = (ret == TCL_OK);
     if (ok)
@@ -179,7 +179,7 @@ bool ObjectHolder::GetListOfObjects(std::vector<ObjectHolder> &objs) const
       objs.reserve(len);
       for (int i = 0; i < len; ++i)
       {
-        ret = Tcl_ListObjIndex(NULL, reinterpret_cast<Tcl_Obj *>(object_), i, &ptr);
+        ret = Tcl_ListObjIndex(nullptr, reinterpret_cast<Tcl_Obj *>(object_), i, &ptr);
         dsAssert(ret == TCL_OK, "UNEXPECTED");
         objs.push_back(ObjectHolder(ptr));
       }
@@ -317,21 +317,21 @@ ObjectHolder::ObjectHolder(int v)
 
 ObjectHolder::ObjectHolder(ObjectHolderList_t &list)
 {
-  Tcl_Obj *listPtr = NULL;
-  listPtr = Tcl_NewListObj(0, NULL);
+  Tcl_Obj *listPtr = nullptr;
+  listPtr = Tcl_NewListObj(0, nullptr);
   Tcl_IncrRefCount(listPtr);
   for (ObjectHolderList_t::iterator it = list.begin(); it != list.end(); ++it)
   {
     Tcl_Obj *obj = reinterpret_cast<Tcl_Obj *>(it->GetObject());
     Tcl_IncrRefCount(obj);
-    Tcl_ListObjAppendElement(NULL, listPtr, obj);
+    Tcl_ListObjAppendElement(nullptr, listPtr, obj);
   }
   object_ = listPtr;
 }
 
 ObjectHolder::ObjectHolder(ObjectHolderMap_t &map)
 {
-  Tcl_Obj *mapPtr = NULL;
+  Tcl_Obj *mapPtr = nullptr;
   mapPtr = Tcl_NewDictObj();
   Tcl_IncrRefCount(mapPtr);
   for (ObjectHolderMap_t::iterator it = map.begin(); it != map.end(); ++it)
@@ -339,7 +339,7 @@ ObjectHolder::ObjectHolder(ObjectHolderMap_t &map)
     const std::string s = it->first;
     Tcl_Obj *key = Tcl_NewStringObj(s.c_str(), s.size());
     Tcl_Obj *val = reinterpret_cast<Tcl_Obj *>((it->second).GetObject());
-    Tcl_DictObjPut(NULL, mapPtr, key, val);
+    Tcl_DictObjPut(nullptr, mapPtr, key, val);
   }
   object_ = mapPtr;
 }

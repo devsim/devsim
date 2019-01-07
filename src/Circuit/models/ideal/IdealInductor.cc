@@ -82,7 +82,7 @@ void IdealInductor::assembleTran_impl(const double scl, const NodeKeeper::Soluti
       rhs.push_back(std::make_pair(node_num_I, eI));
 
 
-   if (mat == NULL)
+   if (mat == nullptr)
       return;
 
    const double d_vl_d_I = L;

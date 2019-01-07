@@ -25,7 +25,7 @@ limitations under the License.
 
 MaterialDB *MaterialDB::instance = 0;
 
-MaterialDB::MaterialDB() : sqlite_(NULL)
+MaterialDB::MaterialDB() : sqlite_(nullptr)
 {
 }
 
@@ -49,7 +49,7 @@ void MaterialDB::ClearEntries()
 bool MaterialDB::OpenDB(const std::string &nm, OpenType_t ot, std::string &errorString)
 {
   bool     ret = false;
-  sqlite3 *db(NULL);
+  sqlite3 *db(nullptr);
 
   errorString.clear();
 
@@ -65,15 +65,15 @@ bool MaterialDB::OpenDB(const std::string &nm, OpenType_t ot, std::string &error
     int s = SQLITE_OK;
     if (ot == OpenType_t::READONLY)
     {
-      s = sqlite3_open_v2(nm.c_str(), &db, SQLITE_OPEN_READONLY, NULL);
+      s = sqlite3_open_v2(nm.c_str(), &db, SQLITE_OPEN_READONLY, nullptr);
     }
     else if (ot == OpenType_t::READWRITE)
     {
-      s = sqlite3_open_v2(nm.c_str(), &db, SQLITE_OPEN_READWRITE, NULL);
+      s = sqlite3_open_v2(nm.c_str(), &db, SQLITE_OPEN_READWRITE, nullptr);
     }
     else if (ot == OpenType_t::CREATE)
     {
-      s = sqlite3_open_v2(nm.c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+      s = sqlite3_open_v2(nm.c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
     }
     if (s == SQLITE_OK)
     {
@@ -99,7 +99,7 @@ void MaterialDB::CloseDB()
   {
     sqlite3_close(sqlite_);
   }
-  sqlite_ = NULL;
+  sqlite_ = nullptr;
   db_name_.clear();
 }
 
@@ -148,8 +148,8 @@ MaterialDB::DBEntry_t MaterialDB::GetDBEntry(const std::string &material_name, c
 //    materialData[material_name][parameter_name];
 
     const std::string query = "SELECT value, unit, description FROM materialdata WHERE material = $m and parameter = $p;";
-    sqlite3_stmt *pstmt = NULL;
-    int err = sqlite3_prepare_v2(sqlite_, query.c_str(), query.size() + 1, &pstmt, NULL);
+    sqlite3_stmt *pstmt = nullptr;
+    int err = sqlite3_prepare_v2(sqlite_, query.c_str(), query.size() + 1, &pstmt, nullptr);
 
     if (err != SQLITE_OK)
     {
@@ -244,10 +244,10 @@ bool MaterialDB::SaveDB(std::string &errorString)
   const std::string &queryu = "UPDATE materialdata SET value = $v, unit = $u, description = $d WHERE material = $m AND parameter = $p;";
   const std::string &queryi = "INSERT INTO materialdata VALUES($m, $p, $v, $u, $d);";
 
-  sqlite3_stmt *pstmtq = NULL;
-  sqlite3_stmt *pstmti = NULL;
+  sqlite3_stmt *pstmtq = nullptr;
+  sqlite3_stmt *pstmti = nullptr;
 
-  int err = sqlite3_prepare_v2(sqlite_, queryu.c_str(), queryu.size() + 1, &pstmtq, NULL);
+  int err = sqlite3_prepare_v2(sqlite_, queryu.c_str(), queryu.size() + 1, &pstmtq, nullptr);
 
   if (err != SQLITE_OK)
   {
@@ -255,7 +255,7 @@ bool MaterialDB::SaveDB(std::string &errorString)
     goto fail;
   }
 
-  err = sqlite3_prepare_v2(sqlite_, queryi.c_str(), queryi.size() + 1, &pstmti, NULL);
+  err = sqlite3_prepare_v2(sqlite_, queryi.c_str(), queryi.size() + 1, &pstmti, nullptr);
 
   if (err != SQLITE_OK)
   {
@@ -362,11 +362,11 @@ bool MaterialDB::CreateDB(const std::string &filename, std::string &errorString)
     return ret;
   }
 
-  char *errmsg = NULL;
+  char *errmsg = nullptr;
 
   int err = sqlite3_exec(sqlite_, "DROP TABLE IF EXISTS materialdata; "
                         "CREATE TABLE materialdata (material text, parameter text, value text, unit text, description text);",
-               NULL, NULL, &errmsg);
+               nullptr, nullptr, &errmsg);
   if (err != SQLITE_OK)
   {
     errorString += errmsg;

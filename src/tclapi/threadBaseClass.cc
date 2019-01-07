@@ -63,14 +63,14 @@ void threadBaseClass::start()
 {
 #if 0
   Tcl_ThreadId testid;
-  Tcl_CreateThread(&testid, testfoo, (ClientData) NULL, TCL_THREAD_STACK_DEFAULT, TCL_THREAD_NOFLAGS);
+  Tcl_CreateThread(&testid, testfoo, (ClientData) nullptr, TCL_THREAD_STACK_DEFAULT, TCL_THREAD_NOFLAGS);
 #else
   void **address = &id;
   Tcl_CreateThread(reinterpret_cast<Tcl_ThreadId *>(address), threadFactory, (ClientData) this, TCL_THREAD_STACK_DEFAULT, TCL_THREAD_JOINABLE);
 #endif
-  //    assert(id == NULL);
+  //    assert(id == nullptr);
 #if 0
-    int ret=pthread_create(&id, NULL, threadFactory, this);
+    int ret=pthread_create(&id, nullptr, threadFactory, this);
     if (ret != 0)
     {
 	perror("threadBaseClass::start()");
@@ -82,9 +82,9 @@ void threadBaseClass::join()
 {
   int result;
   Tcl_JoinThread(reinterpret_cast<Tcl_ThreadId>(id), &result);
-//    assert(id == NULL);
+//    assert(id == nullptr);
 #if 0
-    int ret = pthread_join(id, NULL);
+    int ret = pthread_join(id, nullptr);
     if (ret != 0)
     {
 	perror("threadBaseClass::join()");

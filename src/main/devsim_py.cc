@@ -95,7 +95,7 @@ int devsim_main(int argc, char * argv[])
     std::vector<wchar_t *> wargv(argc);
     for (size_t i = 0; i < argc; ++i)
     {
-      wargv[i] = Py_DecodeLocale(argv[i], NULL);
+      wargv[i] = Py_DecodeLocale(argv[i], nullptr);
     }
     Py_SetProgramName(wargv[0]);
 #else

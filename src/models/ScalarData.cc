@@ -87,7 +87,7 @@ void ScalarData<T, DoubleType>::MakeAssignable() const
   else if (refdata)
   {
     values = refdata->template GetScalarValues<DoubleType>();
-    refdata = NULL;
+    refdata = nullptr;
   }
 }
 

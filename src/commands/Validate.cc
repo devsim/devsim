@@ -47,7 +47,7 @@ std::string onInterfaceonDevice(const std::string &inm, const std::string &dnm)
 
 std::string ValidateDevice(const std::string &deviceName, Device *&dev)
 {
-    dev = NULL;
+    dev = nullptr;
     std::string errorString;
 
     GlobalData &gdata = GlobalData::GetInstance();
@@ -68,8 +68,8 @@ std::string ValidateDeviceAndRegion(const std::string &deviceName,
                                       Device * &dev,
                                       Region * &reg)
 {
-    dev = NULL;
-    reg = NULL;
+    dev = nullptr;
+    reg = nullptr;
 
     std::string errorString;
 
@@ -95,8 +95,8 @@ std::string ValidateDeviceAndContact(const std::string &deviceName,
                                       Device * &dev,
                                       Contact * &con)
 {
-    dev = NULL;
-    con = NULL;
+    dev = nullptr;
+    con = nullptr;
 
     std::string errorString;
 
@@ -125,7 +125,7 @@ std::string ValidateDeviceRegionAndContact(const std::string &deviceName,
                                       Region * &reg,
                                       Contact * &contact)
 {
-    contact = NULL;
+    contact = nullptr;
     std::string errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
     if (!errorString.empty())
     {
@@ -148,8 +148,8 @@ std::string ValidateDeviceAndInterface(const std::string &deviceName,
                                       Device * &dev,
                                       Interface * &interface)
 {
-    dev = NULL;
-    interface = NULL;
+    dev = nullptr;
+    interface = nullptr;
 
     std::string errorString;
 
@@ -177,8 +177,8 @@ std::string ValidateDeviceRegionAndInterface(const std::string &deviceName,
                                       Region * &region,
                                       Interface * &interface)
 {
-    dev = NULL;
-    interface = NULL;
+    dev = nullptr;
+    interface = nullptr;
 
     std::string errorString;
 

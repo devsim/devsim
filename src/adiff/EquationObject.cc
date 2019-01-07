@@ -44,35 +44,35 @@ UnaryTblEntry UnaryTable[] = {
     {"scale",       getConstantFactor,"scale(obj)            -- Get constant factor"},
     {"unsignedval", getUnsignedValue, "unsignedval(obj)      -- Get unsigned value"},
     {"sign",        getSign,          "sign(obj)             -- Get sign as 1 or -1"},
-    {NULL, NULL, NULL}
+    {nullptr, nullptr, nullptr}
 };
 
 BinaryTblEntry BinaryTable[] = {
     {"pow",  pow,  "pow(obj1, obj2)       -- Raise obj1 to the power of obj2"},
     {"diff", diff, "diff(obj1, obj2)      -- Take derivative  of obj1 with respect to obj2"},
-    {NULL, NULL, NULL}
+    {nullptr, nullptr, nullptr}
 };
 
 EqUnaryFuncPtr getUnaryFuncPtr(std::string x) {
     size_t i=0; 
-    while (UnaryTable[i].name != NULL)
+    while (UnaryTable[i].name != nullptr)
     {
         if (x == UnaryTable[i].name)
             return UnaryTable[i].func;
         ++i;
     }
-    return NULL;
+    return nullptr;
 }
 
 EqBinaryFuncPtr getBinaryFuncPtr(std::string x) {
     size_t i=0; 
-    while (BinaryTable[i].name != NULL)
+    while (BinaryTable[i].name != nullptr)
     {
         if (x == BinaryTable[i].name)
             return BinaryTable[i].func;
         ++i;
     }
-    return NULL;
+    return nullptr;
 }
 
 #if 0
@@ -81,13 +81,13 @@ EqObjPtr printHelp() {
     cerr << "\n";
     cerr << "Functions:\n"
             "--------------------------------------------------\n";
-    while (UnaryTable[i].name != NULL)
+    while (UnaryTable[i].name != nullptr)
     {
         cerr << UnaryTable[i].desc << "\n";
         ++i;
     }
     i=0; 
-    while (BinaryTable[i].name != NULL)
+    while (BinaryTable[i].name != nullptr)
     {
         cerr << BinaryTable[i].desc << "\n";
         ++i;
@@ -555,7 +555,7 @@ void Product::ProductVecSimplify(std::vector<EqObjPtr> &tvals)
       for (size_t i = 0; i < len; ++i) 
       {
          Product *foo = dynamic_cast<Product *>(tvals[i].get());
-         if (foo == NULL)
+         if (foo == nullptr)
          {
             tmp.push_back(tvals[i]);
          }
@@ -1143,7 +1143,7 @@ EqObjPtr Add::Simplify()
       for (size_t i = 0; i < len; ++i) 
       {
          Add *foo = dynamic_cast<Add *>(tvals[i].get());
-         if (foo == NULL)
+         if (foo == nullptr)
          {
             tmp.push_back(tvals[i]);
          }
@@ -1380,7 +1380,7 @@ EqObjPtr Exponent::CombineProduct(std::vector<EqObjPtr> y)
    for (size_t i=0; i < len; ++i)
    {
       Exponent *Y = dynamic_cast<Exponent *>(y[i].get());
-      dsAssert(Y!=NULL, "UNEXPECTED");
+      dsAssert(Y!=nullptr, "UNEXPECTED");
       tmp.push_back(Y->value);
    }
    return EqObjPtr(new Exponent(EqObjPtr(new Add(tmp))));

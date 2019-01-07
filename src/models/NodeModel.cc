@@ -29,7 +29,7 @@ limitations under the License.
 const char *NodeModel::DisplayTypeString[] = {
   "nodisplay",
   "scalar",
-  NULL
+  nullptr
 };
 
 bool NodeModel::IsZero() const

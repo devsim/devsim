@@ -33,7 +33,7 @@ const char *EdgeModel::DisplayTypeString[] = {
   "nodisplay",
   "scalar",
   "vector",
-  NULL
+  nullptr
 };
 
 EdgeModel::~EdgeModel()

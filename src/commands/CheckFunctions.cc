@@ -162,7 +162,7 @@ bool mustBeValidDevice(const std::string &optionName, std::string &errorString, 
 
     const std::string &sval = args.GetStringOption(optionName);
 
-    Device *dev = NULL;
+    Device *dev = nullptr;
 
     std::string validate = dsValidate::ValidateDevice(sval, dev);
     if (!validate.empty())
@@ -182,7 +182,7 @@ bool mustNotBeValidDevice(const std::string &optionName, std::string &errorStrin
 
     const std::string &sval = args.GetStringOption(optionName);
 
-    Device *dev = NULL;
+    Device *dev = nullptr;
 
     dsValidate::ValidateDevice(sval, dev);
     if (dev)
@@ -208,8 +208,8 @@ bool mustBeValidRegion(const std::string &optionName, std::string &errorString, 
         const std::string &dname = args.GetStringOption("device");
         const std::string &rname = args.GetStringOption(optionName);
 
-        Device *dev = NULL;
-        Region *reg = NULL;
+        Device *dev = nullptr;
+        Region *reg = nullptr;
 
         std::string validate = dsValidate::ValidateDeviceAndRegion(dname, rname, dev, reg);
         if (!validate.empty())
@@ -232,8 +232,8 @@ bool mustBeValidContact(const std::string &optionName, std::string &errorString,
         const std::string &dname = args.GetStringOption("device");
         const std::string &cname = args.GetStringOption(optionName);
 
-        Device *dev = NULL;
-        Contact *con = NULL;
+        Device *dev = nullptr;
+        Contact *con = nullptr;
 
         std::string validate = dsValidate::ValidateDeviceAndContact(dname, cname, dev, con);
         if (!validate.empty())
@@ -256,8 +256,8 @@ bool mustBeValidInterface(const std::string &optionName, std::string &errorStrin
         const std::string &dname = args.GetStringOption("device");
         const std::string &iname = args.GetStringOption(optionName);
 
-        Device *dev = NULL;
-        Interface *interface = NULL;
+        Device *dev = nullptr;
+        Interface *interface = nullptr;
 
         std::string validate = dsValidate::ValidateDeviceAndInterface(dname, iname, dev, interface);
         if (!validate.empty())

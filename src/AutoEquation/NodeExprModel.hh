@@ -35,7 +35,7 @@ class NodeExprModel : public NodeModel
 
         void Serialize(std::ostream &) const;
 
-        NodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, NodeModel::DisplayType, ContactPtr cp = NULL);
+        NodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, NodeModel::DisplayType, ContactPtr cp = nullptr);
 
     private:
 

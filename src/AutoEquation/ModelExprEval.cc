@@ -50,7 +50,7 @@ template <typename DoubleType>
 ModelExprEval<DoubleType>::ModelExprEval(data_ref_t &vals, const std::string &m, error_t &er) : data_ref(vals), model(m), errors(er), etype(ExpectedType::UNKNOWN)
 {
   const Region *rp = data_ref;
-  dsAssert(rp != NULL, "UNEXPECTED");
+  dsAssert(rp != nullptr, "UNEXPECTED");
 
   if (ConstNodeModelPtr nm = rp->GetNodeModel(model))
   {
@@ -105,7 +105,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateModelType(Eqo::EqOb
   const Region *rp = data_ref;
 
   ModelExprData<DoubleType> out(rp);
-  dsAssert(rp != NULL, "UNEXPECTED");
+  dsAssert(rp != nullptr, "UNEXPECTED");
 
 
   if (ConstNodeModelPtr nm = rp->GetNodeModel(model))
@@ -691,7 +691,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
       if (argv[i].GetType() == datatype::DOUBLE)
       {
         dargs[i] = argv[i].GetDoubleValue();
-        vargs[i] = NULL;
+        vargs[i] = nullptr;
       }
       else if (argv[i].GetType() != datatype::INVALID)
       {
@@ -701,7 +701,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
         {
           dargs[i] = tval.GetScalar();
           vlen = tval.GetLength();
-          vargs[i] = NULL;
+          vargs[i] = nullptr;
         }
         else
         {
@@ -770,7 +770,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
         {
           for (size_t j=0; j < vargs.size(); ++j)
           {
-            if(vargs[j] != NULL)
+            if(vargs[j] != nullptr)
             {
               dargs[j]=vargs[j]->operator[](i);
             }

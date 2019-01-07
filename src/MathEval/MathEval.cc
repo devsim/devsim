@@ -42,10 +42,10 @@ using std::abs;
 #endif
 #endif
 
-template <> MathEval<double> *MathEval<double>::instance_ = NULL;
+template <> MathEval<double> *MathEval<double>::instance_ = nullptr;
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
-template <> MathEval<float128> *MathEval<float128>::instance_ = NULL;
+template <> MathEval<float128> *MathEval<float128>::instance_ = nullptr;
 #endif
 
 namespace Eqomfp {
@@ -100,7 +100,7 @@ namespace Eqomfp {
   {"vec_sum",   vec_sum, "Vector Summation"},
   {"vec_max",   vec_max, "Vector Maximum"},
   {"vec_min",   vec_min, "Vector Minimum"},
-  {NULL, NULL, NULL}
+  {nullptr, nullptr, nullptr}
   };
 
   BinaryTblEntry<double> BinaryTable_double[] = {
@@ -113,19 +113,19 @@ namespace Eqomfp {
   {"<=",  logical_lte,  "obj1 <= obj2       -- logical less than equal"},
   {">",  logical_gt,  "obj1 > obj2       -- logical greater"},
   {">=",  logical_gte,  "obj1 >= obj2       -- logical greater than equal"},
-  {NULL, NULL, NULL}
+  {nullptr, nullptr, nullptr}
   };
 
   TernaryTblEntry<double> TernaryTable_double[] = {
   {"ifelse",  ifelsefunc,  "ifelse(obj1, obj2, obj3) -- if (obj1) then (obj2) else (obj3)"},
   {"kahan3",  kahan3,  "kahan(obj1, obj2, obj3) -- kahan summation"},
-  {NULL, NULL, NULL}
+  {nullptr, nullptr, nullptr}
   };
 
   QuaternaryTblEntry<double> QuaternaryTable_double[] = {
   {"dot2d",  dot2dfunc,  "dot2d(ax, ay, bx, by) -- ax*bx + ay*by"},
   {"kahan4",  kahan4,  "kahan(obj1, obj2, obj3, obj4) -- kahan summation"},
-  {NULL, NULL, NULL}
+  {nullptr, nullptr, nullptr}
   };
 
 #ifdef DEVSIM_EXTENDED_PRECISION
@@ -237,7 +237,7 @@ float128 derfcdx(float128 x)
   {"vec_sum",   vec_sum, "Vector Summation"},
   {"vec_max",   vec_max, "Vector Maximum"},
   {"vec_min",   vec_min, "Vector Minimum"},
-  {NULL, NULL, NULL}
+  {nullptr, nullptr, nullptr}
   };
 
   BinaryTblEntry<float128> BinaryTable_float128[] = {
@@ -250,17 +250,17 @@ float128 derfcdx(float128 x)
   {"<=",  logical_lte,  "obj1 <= obj2       -- logical less than equal"},
   {">",  logical_gt,  "obj1 > obj2       -- logical greater"},
   {">=",  logical_gte,  "obj1 >= obj2       -- logical greater than equal"},
-    {NULL, NULL, NULL}
+    {nullptr, nullptr, nullptr}
   };
   TernaryTblEntry<float128> TernaryTable_float128[] = {
   {"ifelse",  ifelsefunc,  "ifelse(obj1, obj2, obj3) -- if (obj1) then (obj2) else (obj3)"},
   {"kahan3",  kahan3,  "kahan(obj1, obj2, obj3) -- kahan summation"},
-    {NULL, NULL, NULL}
+    {nullptr, nullptr, nullptr}
   };
   QuaternaryTblEntry<float128> QuaternaryTable_float128[] = {
   {"dot2d",  dot2dfunc,  "dot2d(ax, ay, bx, by) -- ax*bx + ay*by"},
   {"kahan4",  kahan4,  "kahan(obj1, obj2, obj3, obj4) -- kahan summation"},
-    {NULL, NULL, NULL}
+    {nullptr, nullptr, nullptr}
   };
 #endif
 
@@ -346,31 +346,31 @@ template <typename DoubleType>
 void MathEval<DoubleType>::DestroyInstance()
 {
   delete instance_;
-  instance_ = NULL;
+  instance_ = nullptr;
 }
 
 template <typename DoubleType>
 void MathEval<DoubleType>::InitializeBuiltInMathFunc()
 {
-  for (size_t i = 0; Eqomfp::Tables::GetUnaryTable<DoubleType>(i).name != NULL; ++i)
+  for (size_t i = 0; Eqomfp::Tables::GetUnaryTable<DoubleType>(i).name != nullptr; ++i)
   {
     const std::string &name   = Eqomfp::Tables::GetUnaryTable<DoubleType>(i).name;
     Eqomfp::unaryfuncptr<DoubleType> func = Eqomfp::Tables::GetUnaryTable<DoubleType>(i).func;
     FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper1<DoubleType>(name, func));
   }
-  for (size_t i = 0; Eqomfp::Tables::GetBinaryTable<DoubleType>(i).name != NULL; ++i)
+  for (size_t i = 0; Eqomfp::Tables::GetBinaryTable<DoubleType>(i).name != nullptr; ++i)
   {
     const std::string &name   = Eqomfp::Tables::GetBinaryTable<DoubleType>(i).name;
     Eqomfp::binaryfuncptr<DoubleType> func = Eqomfp::Tables::GetBinaryTable<DoubleType>(i).func;
     FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper2<DoubleType>(name, func));
   }
-  for (size_t i = 0; Eqomfp::Tables::GetTernaryTable<DoubleType>(i).name != NULL; ++i)
+  for (size_t i = 0; Eqomfp::Tables::GetTernaryTable<DoubleType>(i).name != nullptr; ++i)
   {
     const std::string &name   = Eqomfp::Tables::GetTernaryTable<DoubleType>(i).name;
     Eqomfp::ternaryfuncptr<DoubleType> func = Eqomfp::Tables::GetTernaryTable<DoubleType>(i).func;
     FuncPtrMap_[name]       = Eqomfp::MathWrapperPtr<DoubleType>(new Eqomfp::MathWrapper3<DoubleType>(name, func));
   }
-  for (size_t i = 0; Eqomfp::Tables::GetQuaternaryTable<DoubleType>(i).name != NULL; ++i)
+  for (size_t i = 0; Eqomfp::Tables::GetQuaternaryTable<DoubleType>(i).name != nullptr; ++i)
   {
     const std::string &name   = Eqomfp::Tables::GetQuaternaryTable<DoubleType>(i).name;
     Eqomfp::quaternaryfuncptr<DoubleType> func = Eqomfp::Tables::GetQuaternaryTable<DoubleType>(i).func;
@@ -430,7 +430,7 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
     size_t numelems = 0;
     for (size_t i = 0; i < cnt; ++i)
     {
-      if (vvals[i] == NULL)
+      if (vvals[i] == nullptr)
       {
         tclObjVector[i + 1] = ObjectHolder(static_cast<double>(dvals[i]));
       }
@@ -456,7 +456,7 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
     {
       for (size_t i = 0; i < cnt; ++i)
       {
-        bool isvec = vvals[i] != NULL;
+        bool isvec = vvals[i] != nullptr;
 
         if (isvec)
         {          

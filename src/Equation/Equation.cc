@@ -803,7 +803,7 @@ void Equation<DoubleType>::NodeVolumeAssemble(const std::string &model, dsMath::
   VariableList_t vlist = r.GetVariableList();
 
   ConstNodeModelPtr nm = r.GetNodeModel(model);
-//    dsAssert(nm != NULL, "UNEXPECTED");
+//    dsAssert(nm != nullptr, "UNEXPECTED");
   if (!nm)
   {
     dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
@@ -993,14 +993,14 @@ void Equation<DoubleType>::TriangleEdgeCoupleAssemble(const std::string &model, 
   {
     dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
   }
-//    dsAssert(ef != NULL, "UNEXPECTED");
+//    dsAssert(ef != nullptr, "UNEXPECTED");
 
   ConstTriangleEdgeModelPtr ec = r.GetTriangleEdgeModel(edge_couple);
   if (!ec)
   {
     dsErrors::MissingEquationModel(r, myname, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
   }
-//    dsAssert(ec != NULL, "UNEXPECTED");
+//    dsAssert(ec != nullptr, "UNEXPECTED");
 
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
@@ -1090,14 +1090,14 @@ void Equation<DoubleType>::TetrahedronEdgeCoupleAssemble(const std::string &mode
   {
     dsErrors::MissingEquationModel(r, myname, model, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
   }
-//  dsAssert(ef != NULL, "UNEXPECTED");
+//  dsAssert(ef != nullptr, "UNEXPECTED");
 
   ConstTetrahedronEdgeModelPtr ec = r.GetTetrahedronEdgeModel(edge_couple);
   if (!ec)
   {
     dsErrors::MissingEquationModel(r, myname, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
   }
-//    dsAssert(ec != NULL, "UNEXPECTED");
+//    dsAssert(ec != nullptr, "UNEXPECTED");
 
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {

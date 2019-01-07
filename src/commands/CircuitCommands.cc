@@ -76,10 +76,10 @@ void addCircuitNodeCmd(CommandHandler &data)
         {"name",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"variable_update",      "default", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"value",                "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -168,15 +168,15 @@ circuitElementCmd(CommandHandler &data)
     static dsGetArgs::Option option[] =
     {
         {"name",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"n1",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
-        {"n2",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
+        {"n1",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
+        {"n2",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
         {"value",   "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
         {"acreal",   "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
         {"acimag",   "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -221,7 +221,7 @@ circuitElementCmd(CommandHandler &data)
 
     NodeKeeper &nk = NodeKeeper::instance();
     InstanceKeeper &ik = InstanceKeeper::instance();
-    InstanceModel  *im = NULL;
+    InstanceModel  *im = nullptr;
 
     if (type == 'V' || type == 'v')
     {
@@ -288,12 +288,12 @@ circuitAlterCmd(CommandHandler &data)
     static dsGetArgs::Option option[] =
     {
         {"name",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"param", "value", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"value", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {"param", "value", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"value", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -394,10 +394,10 @@ circuitNodeAliasCmd(CommandHandler &data)
     {
         {"node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"alias", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -453,10 +453,10 @@ void circuitGetCircuitNodeListCmd(CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -497,10 +497,10 @@ void circuitGetCircuitSolutionListCmd (CommandHandler &data)
     /// (This would be on the contact and not the contact equation??)
     static dsGetArgs::Option option[] =
     {
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -532,11 +532,11 @@ void circuitGetCircuitNodeValueCmd (CommandHandler &data)
     {
         {"node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"solution",  "dcop", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, stringCannotBeEmpty},
-        {"value",  "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {"value",  "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -599,10 +599,10 @@ circuitGetCircuitEquationNumberCmd (CommandHandler &data)
   static dsGetArgs::Option option[] =
   {
     {"node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -650,7 +650,7 @@ Commands CircuitCommands[] = {
     {"get_circuit_node_value", circuitGetCircuitNodeValueCmd},
     {"set_circuit_node_value", circuitGetCircuitNodeValueCmd},
     {"get_circuit_equation_number", circuitGetCircuitEquationNumberCmd},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 }

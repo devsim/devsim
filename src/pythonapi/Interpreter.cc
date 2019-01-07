@@ -22,7 +22,7 @@ limitations under the License.
 
 //#include <iostream>
 
-Interpreter::Interpreter() //: interp_(NULL)
+Interpreter::Interpreter() //: interp_(nullptr)
 {  
 }
 
@@ -75,7 +75,7 @@ ObjectHolder GetCommandFromInterpreter(const std::string &commandname, std::stri
 {
   ObjectHolder ret;
 
-  PyObject *globals = NULL;
+  PyObject *globals = nullptr;
 
   std::string search_name;
 
@@ -181,7 +181,7 @@ bool Interpreter::RunCommand(std::vector<ObjectHolder> &objects)
   ObjectHolder args = CreateTuple(objects, 1, objects.size() - 1);
 
   PyErr_Clear();
-  PyObject *robj = PyObject_Call(reinterpret_cast<PyObject *>(command_object.GetObject()), reinterpret_cast<PyObject *>(args.GetObject()), NULL);
+  PyObject *robj = PyObject_Call(reinterpret_cast<PyObject *>(command_object.GetObject()), reinterpret_cast<PyObject *>(args.GetObject()), nullptr);
   result_ = ObjectHolder(robj);
   if (robj)
   {
@@ -254,7 +254,7 @@ bool Interpreter::RunCommand(const std::string &commandString)
     ProcessError(commandString, error_string_);
   }
 
-  return (res != NULL);
+  return (res != nullptr);
 }
 #endif
 

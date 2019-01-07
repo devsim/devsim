@@ -45,7 +45,7 @@ void IdealCapacitor::assembleTran_impl(const double scl, const NodeKeeper::Solut
       rhs.push_back(std::make_pair(node_num_vtop, evtop));
 
 
-   if (mat == NULL)
+   if (mat == nullptr)
       return;
 
    const double d_iq_d_vtop = C;

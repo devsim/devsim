@@ -42,8 +42,8 @@ typedef Interface *InterfacePtr;
 
 namespace dsHelper {
 typedef std::pair<bool, std::string> ret_pair;
-ret_pair CreateNodeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, NodeModel::DisplayType /*dtype*/, ContactPtr cp = NULL);
-ret_pair CreateEdgeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, EdgeModel::DisplayType /*dtype*/, ContactPtr cp = NULL);
+ret_pair CreateNodeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, NodeModel::DisplayType /*dtype*/, ContactPtr cp = nullptr);
+ret_pair CreateEdgeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, EdgeModel::DisplayType /*dtype*/, ContactPtr cp = nullptr);
 ret_pair CreateTriangleEdgeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, TriangleEdgeModel::DisplayType /*dtype*/);
 ret_pair CreateTetrahedronEdgeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, TetrahedronEdgeModel::DisplayType /*dtype*/);
 ret_pair CreateInterfaceNodeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, InterfacePtr /*ip*/);

@@ -129,7 +129,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
   {
     std::ostringstream os;
     Option *it = options;
-    while ((*it).name != NULL)
+    while ((*it).name != nullptr)
     {
       std::string name = (*it).name;
       if ((*it).rtype == requiredType::REQUIRED)
@@ -155,7 +155,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
     std::ostringstream os;
     std::string errorString;
     Option *it = options;
-    while ((*it).name != NULL)
+    while ((*it).name != nullptr)
     {
       if ((*it).func)
       {

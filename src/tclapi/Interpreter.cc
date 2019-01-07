@@ -23,7 +23,7 @@ limitations under the License.
 
 //#include <iostream>
 
-Interpreter::Interpreter() //: interp_(NULL)
+Interpreter::Interpreter() //: interp_(nullptr)
 {  
 }
 

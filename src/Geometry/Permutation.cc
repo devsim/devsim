@@ -21,7 +21,7 @@ PermutationEntry::PermutationEntry(size_t nr, bool kc)
 {}
 
 PermutationEntry::PermutationEntry()
-    : newrow(size_t(-1)), keepcopy(false) //, contact(NULL), interface(NULL)
+    : newrow(size_t(-1)), keepcopy(false) //, contact(nullptr), interface(nullptr)
 {
 }
 

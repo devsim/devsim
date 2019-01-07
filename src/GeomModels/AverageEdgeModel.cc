@@ -35,7 +35,7 @@ AverageEdgeModelEnum::TypeNameMap_t AverageEdgeModelEnum::AverageTypeNames[] = {
         {"geometric", AverageEdgeModelEnum::GEOMETRIC},
         {"gradient", AverageEdgeModelEnum::GRADIENT},
         {"negative_gradient", AverageEdgeModelEnum::NEGATIVE_GRADIENT},
-        {NULL, AverageEdgeModelEnum::UNKNOWN}};
+        {nullptr, AverageEdgeModelEnum::UNKNOWN}};
 
 template <typename DoubleType>
 AverageEdgeModel<DoubleType>::~AverageEdgeModel()
@@ -349,7 +349,7 @@ AverageEdgeModelEnum::AverageType_t AverageEdgeModelEnum::GetTypeName(const std:
 {
   AverageEdgeModelEnum::AverageType_t ret = AverageEdgeModelEnum::UNKNOWN;
   AverageEdgeModelEnum::TypeNameMap_t *typeit = AverageEdgeModelEnum::AverageTypeNames;
-  while (typeit->str != NULL)
+  while (typeit->str != nullptr)
   {
     if (typeit->str == name)
     {
@@ -364,7 +364,7 @@ AverageEdgeModelEnum::AverageType_t AverageEdgeModelEnum::GetTypeName(const std:
     AverageEdgeModelEnum::TypeNameMap_t *typeit = AverageEdgeModelEnum::AverageTypeNames;
     std::ostringstream os;
     os << "\"" << name << "\" is not a valid average type, available options are";
-    while (typeit->str != NULL)
+    while (typeit->str != nullptr)
     {
       os << " \"" << typeit->str << "\"";
       ++typeit;

@@ -31,7 +31,7 @@ TetrahedronElementFieldMatrixHolder<DoubleType>::TetrahedronElementFieldMatrixHo
 {
   for (size_t i = 0; i < 4; ++i)
   {
-    mats[i] = NULL;
+    mats[i] = nullptr;
     for (size_t j = 0; j < 3; ++j)
     {
       edgeIndexes[i][j] = 0;

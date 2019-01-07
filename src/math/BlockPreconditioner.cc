@@ -61,7 +61,7 @@ BlockPreconditioner<DoubleType>::~BlockPreconditioner()
 }
 
 template <typename DoubleType>
-BlockPreconditioner<DoubleType>::BlockPreconditioner(size_t numeqns, PEnum::TransposeType_t transpose) : Preconditioner<DoubleType>(numeqns, transpose), block_matrix_(NULL), block_preconditioner_(NULL), drop_tolerance_(0.5)
+BlockPreconditioner<DoubleType>::BlockPreconditioner(size_t numeqns, PEnum::TransposeType_t transpose) : Preconditioner<DoubleType>(numeqns, transpose), block_matrix_(nullptr), block_preconditioner_(nullptr), drop_tolerance_(0.5)
 {
   block_preconditioner_ = new SuperLUPreconditioner<DoubleType>(numeqns, transpose, PEnum::LUType_t::FULL);
 }
@@ -282,7 +282,7 @@ template <typename DoubleType>
 bool BlockPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
 {
   CompressedMatrix<DoubleType> *cm = dynamic_cast<CompressedMatrix<DoubleType> *>(m);
-  dsAssert(cm != NULL, "UNEXPECTED");
+  dsAssert(cm != nullptr, "UNEXPECTED");
   dsAssert(cm->GetCompressionType() == CompressionType::CCM, "UNEXPECTED");
 
   if (!block_matrix_)

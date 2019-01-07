@@ -37,7 +37,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
 
   for (int i = 1; i < objc; ++i)
   {
-    std::string optname = Tcl_GetStringFromObj(objv[i], NULL);
+    std::string optname = Tcl_GetStringFromObj(objv[i], nullptr);
     if ((optname.size() > 0) && (optname[0] == '-'))
     {
       /// Get the stuff past the dash
@@ -133,7 +133,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
   {
     std::ostringstream os;
     Option *it = options;
-    while ((*it).name != NULL)
+    while ((*it).name != nullptr)
     {
       std::string name = (*it).name;
       if ((*it).rtype == requiredType::REQUIRED)
@@ -150,7 +150,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
     if (status == TCL_ERROR)
     {
         error = os.str();
-        Tcl_SetErrorCode(interp, error.c_str(), NULL);
+        Tcl_SetErrorCode(interp, error.c_str(), nullptr);
     }
   }
 
@@ -160,7 +160,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
     std::ostringstream os;
     std::string errorString;
     Option *it = options;
-    while ((*it).name != NULL)
+    while ((*it).name != nullptr)
     {
       if ((*it).func)
       {

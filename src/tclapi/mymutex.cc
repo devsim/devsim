@@ -36,7 +36,7 @@ mymutex::mymutex() : mutex(0)
 #if 0
     // create mutex
     // need to no the defaults for second argument
-    int ret = pthread_mutex_init(&mutex, NULL);
+    int ret = pthread_mutex_init(&mutex, nullptr);
     if (ret != 0)
     {
 	perror("mymutex::mymutex()");

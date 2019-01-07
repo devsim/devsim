@@ -58,17 +58,17 @@ createEquationCmd(CommandHandler &data)
         {"region",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
         {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"variable_name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"node_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"edge_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"edge_volume_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"element_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"volume_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"time_node_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"variable_update", "default", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {"node_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"edge_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"edge_volume_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"element_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"volume_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"time_node_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"variable_update", "default", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -93,8 +93,8 @@ createEquationCmd(CommandHandler &data)
     /// Maybe this should be a property of a NodeSolution instead of an equation
     const std::string &variable_update = data.GetStringOption("variable_update");
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -161,10 +161,10 @@ getEquationListCmd(CommandHandler &data)
     {
         {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -178,8 +178,8 @@ getEquationListCmd(CommandHandler &data)
     const std::string &deviceName      = data.GetStringOption("device");
     const std::string &regionName      = data.GetStringOption("region");
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -215,10 +215,10 @@ deleteEquationCmd(CommandHandler &data)
         {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
         {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -233,8 +233,8 @@ deleteEquationCmd(CommandHandler &data)
     const std::string &deviceName      = data.GetStringOption("device");
     const std::string &regionName      = data.GetStringOption("region");
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
     EquationHolder eqn;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
@@ -282,15 +282,15 @@ createInterfaceEquationCmd(CommandHandler &data)
         {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"interface",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidInterface},
         {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"variable_name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
+        {"variable_name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"type",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"interface_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"name0",           "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"name1",           "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {"interface_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"name0",           "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"name1",           "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -310,8 +310,8 @@ createInterfaceEquationCmd(CommandHandler &data)
     const std::string &interface_model = data.GetStringOption("interface_model");
     const std::string &type                 = data.GetStringOption("type");
 
-    Device    *dev = NULL;
-    Interface *interface = NULL;
+    Device    *dev = nullptr;
+    Interface *interface = nullptr;
 
     errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
     if (!errorString.empty())
@@ -382,10 +382,10 @@ getInterfaceEquationListCmd(CommandHandler &data)
     {
         {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"interface",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidInterface},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
     bool error = data.processOptions(option, switches, errorString);
 
@@ -398,8 +398,8 @@ getInterfaceEquationListCmd(CommandHandler &data)
     const std::string &deviceName           = data.GetStringOption("device");
     const std::string &interfaceName        = data.GetStringOption("interface");
 
-    Device    *dev = NULL;
-    Interface *interface = NULL;
+    Device    *dev = nullptr;
+    Interface *interface = nullptr;
 
     errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
 
@@ -425,10 +425,10 @@ deleteInterfaceEquationCmd(CommandHandler &data)
         {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"interface",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidInterface},
         {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
     bool error = data.processOptions(option, switches, errorString);
 
@@ -442,8 +442,8 @@ deleteInterfaceEquationCmd(CommandHandler &data)
     const std::string &deviceName           = data.GetStringOption("device");
     const std::string &interfaceName        = data.GetStringOption("interface");
 
-    Device    *dev = NULL;
-    Interface *interface = NULL;
+    Device    *dev = nullptr;
+    Interface *interface = nullptr;
     InterfaceEquationHolder ieqn;
 
     errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
@@ -503,14 +503,14 @@ createContactEquationCmd(CommandHandler &data)
         {"element_charge_model",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"circuit_node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"variable_name", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
 // TODO:"Test element_model"
 // TODO:"Test element_current_model"
 // TODO:"Test element_charge_model"
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -536,9 +536,9 @@ createContactEquationCmd(CommandHandler &data)
     const std::string &element_current_model   = data.GetStringOption("element_current_model");
     const std::string &circuit_node         = data.GetStringOption("circuit_node");
 
-    Device    *dev = NULL;
-    Region    *region = NULL;
-    Contact   *contact = NULL;
+    Device    *dev = nullptr;
+    Region    *region = nullptr;
+    Contact   *contact = nullptr;
 
     errorString = ValidateDeviceAndContact(deviceName, contactName, dev, contact);
 
@@ -599,10 +599,10 @@ getContactEquationListCmd(CommandHandler &data)
     {
         {"device",        "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"contact",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidContact},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
     bool error = data.processOptions(option, switches, errorString);
 
@@ -615,8 +615,8 @@ getContactEquationListCmd(CommandHandler &data)
     const std::string &deviceName           = data.GetStringOption("device");
     const std::string &contactName          = data.GetStringOption("contact");
 
-    Device    *dev = NULL;
-    Contact   *contact = NULL;
+    Device    *dev = nullptr;
+    Contact   *contact = nullptr;
 
     errorString = ValidateDeviceAndContact(deviceName, contactName, dev, contact);
 
@@ -644,10 +644,10 @@ deleteContactEquationCmd(CommandHandler &data)
         {"device",        "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"contact",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidContact},
         {"name",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
     bool error = data.processOptions(option, switches, errorString);
 
@@ -661,9 +661,9 @@ deleteContactEquationCmd(CommandHandler &data)
     const std::string &deviceName           = data.GetStringOption("device");
     const std::string &contactName          = data.GetStringOption("contact");
 
-    Device    *dev = NULL;
-    Region    *region = NULL;
-    Contact   *contact = NULL;
+    Device    *dev = nullptr;
+    Region    *region = nullptr;
+    Contact   *contact = nullptr;
     ContactEquationHolder ceqn;
 
     errorString = ValidateDeviceAndContact(deviceName, contactName, dev, contact);
@@ -713,10 +713,10 @@ createCustomEquationCmd(CommandHandler &data)
     {
         {"name",        "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"procedure",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -749,12 +749,12 @@ getEquationNumbersCmd(CommandHandler &data)
   {
     {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
     {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
-    {"variable", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-    {"equation", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {"variable", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+    {"equation", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -779,8 +779,8 @@ getEquationNumbersCmd(CommandHandler &data)
     errorString += "-variable and -equation cannot both be specified\n";
   }
 
-  Device *dev = NULL;
-  Region *reg = NULL;
+  Device *dev = nullptr;
+  Region *reg = nullptr;
 
   errorString += ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -843,7 +843,7 @@ Commands EquationCommands[] = {
     {"get_equation_command",    deleteEquationCmd},
     {"get_contact_equation_command", deleteContactEquationCmd},
     {"get_interface_equation_command", deleteInterfaceEquationCmd},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 }
 

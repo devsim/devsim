@@ -32,7 +32,7 @@ limitations under the License.
 const char *TetrahedronEdgeModel::DisplayTypeString[] = {
   "nodisplay",
   "scalar",
-  NULL
+  nullptr
 };
 
 TetrahedronEdgeModel::~TetrahedronEdgeModel()

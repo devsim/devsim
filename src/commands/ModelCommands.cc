@@ -91,10 +91,10 @@ createNodeSolutionCmd(CommandHandler &data)
         {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
         {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -109,8 +109,8 @@ createNodeSolutionCmd(CommandHandler &data)
     const std::string &regionName = data.GetStringOption("region");
     const std::string &name = data.GetStringOption("name");
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
     if (!errorString.empty())
     {
@@ -169,12 +169,12 @@ createNodeModelCmd(CommandHandler &data)
         {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
         {"name",   "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"equation",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
-        {"display_type",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {"equation",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
+        {"display_type",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -193,8 +193,8 @@ createNodeModelCmd(CommandHandler &data)
     const std::string &equation = data.GetStringOption("equation");
     std::string dtype = data.GetStringOption("display_type");
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
     const size_t dimension = dev->GetDimension();
@@ -404,12 +404,12 @@ createContactNodeModelCmd(CommandHandler &data)
         {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"contact",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidContact},
         {"name",   "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"equation",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, NULL},
-        {"display_type",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {"equation",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
+        {"display_type",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -428,8 +428,8 @@ createContactNodeModelCmd(CommandHandler &data)
     const std::string &equation = data.GetStringOption("equation");
     std::string dtype = data.GetStringOption("display_type");
 
-    Device *dev = NULL;
-    Contact *cp = NULL;
+    Device *dev = nullptr;
+    Contact *cp = nullptr;
     errorString = ValidateDeviceAndContact(deviceName, contactName, dev, cp);
 
     NodeModel::DisplayType ndt = NodeModel::DisplayType::SCALAR;
@@ -535,10 +535,10 @@ createCylindricalCmd(CommandHandler &data)
   {
     {"device",         "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
     {"region",         "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -552,8 +552,8 @@ createCylindricalCmd(CommandHandler &data)
   const std::string &deviceName    = data.GetStringOption("device");
   const std::string &regionName    = data.GetStringOption("region");
 
-  Device *dev = NULL;
-  Region *reg = NULL;
+  Device *dev = nullptr;
+  Region *reg = nullptr;
 
   errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
   if (!errorString.empty())
@@ -617,10 +617,10 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
     {"region",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
     {"node_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
     {"calc_type", "default", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -637,8 +637,8 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
   const std::string &regionName = data.GetStringOption("region");
   const std::string &name = data.GetStringOption("node_model");
 
-  Device *dev = NULL;
-  Region *reg = NULL;
+  Device *dev = nullptr;
+  Region *reg = nullptr;
 
   errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
   if (!errorString.empty())
@@ -738,11 +738,11 @@ createEdgeAverageModelCmd(CommandHandler &data)
     {"node_model",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
     {"edge_model",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
     {"average_type", "arithmetic", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, stringCannotBeEmpty},
-    {"derivative", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {"derivative", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -762,8 +762,8 @@ createEdgeAverageModelCmd(CommandHandler &data)
   const std::string &derivativeModel  = data.GetStringOption("derivative");
   const std::string &averageType      = data.GetStringOption("average_type");
 
-  Device *dev = NULL;
-  Region *reg = NULL;
+  Device *dev = nullptr;
+  Region *reg = nullptr;
 
   errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
   if (!errorString.empty())
@@ -833,10 +833,10 @@ createInterfaceNodeModelCmd(CommandHandler &data)
         {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"name",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"equation","", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -855,8 +855,8 @@ createInterfaceNodeModelCmd(CommandHandler &data)
     const std::string &name = data.GetStringOption("name");
     const std::string &equation = data.GetStringOption("equation");
 
-    Device    *dev = NULL;
-    Interface *interface = NULL;
+    Device    *dev = nullptr;
+    Interface *interface = nullptr;
 
     errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
     if (!errorString.empty())
@@ -899,12 +899,12 @@ setNodeValuesCmd(CommandHandler &data)
         {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"init_from", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"values",    "", dsGetArgs::optionType::LIST,   dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {"init_from", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"values",    "", dsGetArgs::optionType::LIST,   dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -940,8 +940,8 @@ setNodeValuesCmd(CommandHandler &data)
     }
     
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -1020,12 +1020,12 @@ setNodeValueCmd(CommandHandler &data)
         {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"index", "-1", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {"value", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED,  NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {"index", "-1", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"value", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::REQUIRED,  nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1042,8 +1042,8 @@ setNodeValueCmd(CommandHandler &data)
     const int index = data.GetIntegerOption("index");
     const double value = data.GetDoubleOption("value");
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -1119,10 +1119,10 @@ printNodeValuesCmd(CommandHandler &data)
       {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
       {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
       {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-      {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+      {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -1137,8 +1137,8 @@ printNodeValuesCmd(CommandHandler &data)
   const std::string &regionName = data.GetStringOption("region");
   const std::string &name = data.GetStringOption("name");
 
-  Device *dev = NULL;
-  Region *reg = NULL;
+  Device *dev = nullptr;
+  Region *reg = nullptr;
 
   errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -1204,10 +1204,10 @@ printEdgeValuesCmd(CommandHandler &data)
     {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
     {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
     {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -1222,8 +1222,8 @@ printEdgeValuesCmd(CommandHandler &data)
   const std::string &regionName = data.GetStringOption("region");
   const std::string &name = data.GetStringOption("name");
 
-  Device *dev = NULL;
-  Region *reg = NULL;
+  Device *dev = nullptr;
+  Region *reg = nullptr;
 
   errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -1290,10 +1290,10 @@ printElementEdgeValuesCmd(CommandHandler &data)
     {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
     {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
     {"name",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -1308,8 +1308,8 @@ printElementEdgeValuesCmd(CommandHandler &data)
   const std::string &regionName = data.GetStringOption("region");
   const std::string &name = data.GetStringOption("name");
 
-  Device *dev = NULL;
-  Region *reg = NULL;
+  Device *dev = nullptr;
+  Region *reg = nullptr;
 
   errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -1417,10 +1417,10 @@ getInterfaceValuesCmd(CommandHandler &data)
     {"device",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
     {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
     {"name",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -1437,8 +1437,8 @@ getInterfaceValuesCmd(CommandHandler &data)
   const std::string &interfaceName = data.GetStringOption("interface");
   const std::string &name = data.GetStringOption("name");
 
-  Device    *dev = NULL;
-  Interface *interface = NULL;
+  Device    *dev = nullptr;
+  Interface *interface = nullptr;
 
   errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
   if (!errorString.empty())
@@ -1491,10 +1491,10 @@ getNodeModelListCmd(CommandHandler &data)
   {
       {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
       {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-      {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+      {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -1508,8 +1508,8 @@ getNodeModelListCmd(CommandHandler &data)
   const std::string &deviceName = data.GetStringOption("device");
   const std::string &regionName = data.GetStringOption("region");
 
-  Device *dev = NULL;
-  Region *reg = NULL;
+  Device *dev = nullptr;
+  Region *reg = nullptr;
 
   errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
 
@@ -1559,10 +1559,10 @@ getInterfaceModelListCmd(CommandHandler &data)
     {
         {"device",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1578,8 +1578,8 @@ getInterfaceModelListCmd(CommandHandler &data)
     const std::string &deviceName = data.GetStringOption("device");
     const std::string &interfaceName = data.GetStringOption("interface");
 
-    Device    *dev = NULL;
-    Interface *interface = NULL;
+    Device    *dev = nullptr;
+    Interface *interface = nullptr;
 
     errorString = ValidateDeviceAndInterface(deviceName, interfaceName, dev, interface);
     if (!errorString.empty())
@@ -1608,10 +1608,10 @@ createVectorElementModelCmd(CommandHandler &data)
         {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
         {"element_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1628,8 +1628,8 @@ createVectorElementModelCmd(CommandHandler &data)
     const std::string &regionName = data.GetStringOption("region");
     const std::string &name = data.GetStringOption("element_model");
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
     if (!errorString.empty())
@@ -1697,11 +1697,11 @@ createTriangleFromEdgeModelCmd(CommandHandler &data)
         {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
         {"edge_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"derivative", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {"derivative", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1719,8 +1719,8 @@ createTriangleFromEdgeModelCmd(CommandHandler &data)
     const std::string &name = data.GetStringOption("edge_model");
     const std::string &derivative = data.GetStringOption("derivative");
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
     if (!errorString.empty())
@@ -1820,10 +1820,10 @@ debugTriangleCmd(CommandHandler &data)
     {
         {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
 
@@ -1840,8 +1840,8 @@ debugTriangleCmd(CommandHandler &data)
     const std::string &deviceName = data.GetStringOption("device");
     const std::string &regionName = data.GetStringOption("region");
 
-    Device *dev = NULL;
-    Region *reg = NULL;
+    Device *dev = nullptr;
+    Region *reg = nullptr;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, reg);
     if (!errorString.empty())
@@ -1907,10 +1907,10 @@ createInterfaceNormalModelCmd(CommandHandler &data)
         {"device",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"region",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
         {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, NULL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -1927,9 +1927,9 @@ createInterfaceNormalModelCmd(CommandHandler &data)
     const std::string &regionName = data.GetStringOption("region");
     const std::string &interfaceName = data.GetStringOption("interface");
 
-    Device    *dev       = NULL;
-    Region    *region    = NULL;
-    Interface *interface = NULL;
+    Device    *dev       = nullptr;
+    Region    *region    = nullptr;
+    Interface *interface = nullptr;
 
     errorString = ValidateDeviceRegionAndInterface(deviceName, regionName, interfaceName, dev, region, interface);
     if (dev && (dev->GetDimension() == 1 && commandName == "interface_normal_model"))
@@ -1975,10 +1975,10 @@ symdiffCmd(CommandHandler &data)
   static dsGetArgs::Option option[] =
   {
     {"expr",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -2029,10 +2029,10 @@ registerFunctionCmd(CommandHandler &data)
   {
     {"name",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED},
     {"nargs", "", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::REQUIRED},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -2098,7 +2098,7 @@ Commands ModelCommands[] = {
     {"cylindrical_edge_couple",  createCylindricalCmd},
     {"cylindrical_node_volume",  createCylindricalCmd},
     {"cylindrical_surface_area", createCylindricalCmd},
-    {NULL, NULL}
+    {nullptr, nullptr}
 //// This node and edge model commands include contact
 //get_node_model_command
 //get_edge_model_command

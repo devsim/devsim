@@ -20,12 +20,12 @@ limitations under the License.
 
 namespace dsDevsimParse {
 int meshlineno;
-dsMesh::DevsimLoaderPtr  DevsimLoader = NULL;
-dsMesh::MeshRegionPtr    MeshRegion = NULL;
-dsMesh::MeshContactPtr   MeshContact = NULL;
-dsMesh::MeshInterfacePtr MeshInterface = NULL;
-dsMesh::SolutionPtr      Sol= NULL;
-dsMesh::EquationPtr      Equation= NULL;
+dsMesh::DevsimLoaderPtr  DevsimLoader = nullptr;
+dsMesh::MeshRegionPtr    MeshRegion = nullptr;
+dsMesh::MeshContactPtr   MeshContact = nullptr;
+dsMesh::MeshInterfacePtr MeshInterface = nullptr;
+dsMesh::SolutionPtr      Sol= nullptr;
+dsMesh::EquationPtr      Equation= nullptr;
 std::string errors;
 }
 
@@ -42,12 +42,12 @@ void DeletePointers()
 
     //// This is owned by the meshkeeper
     //// We should look to see if this is wise to keep around.  But, it has already been added to the MeshKeeper
-//    DevsimLoader = NULL;
-    MeshRegion = NULL;
-    MeshContact = NULL;
-    MeshInterface = NULL;
-    Sol = NULL;
-    Equation = NULL;
+//    DevsimLoader = nullptr;
+    MeshRegion = nullptr;
+    MeshContact = nullptr;
+    MeshInterface = nullptr;
+    Sol = nullptr;
+    Equation = nullptr;
 }
 }
 

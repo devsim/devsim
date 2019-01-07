@@ -220,7 +220,7 @@ void Newton<DoubleType>::LoadMatrixAndRHSOnCircuit(RealRowColValueVec<DoubleType
     }
     else if (w == dsMathEnum::WhatToLoad::RHS)
     {
-      RealRowColValueVec<double> *m = NULL;
+      RealRowColValueVec<double> *m = nullptr;
       ik.AssembleTRMatrix(m, *sol, drhs, 1.0);
     }
     else
@@ -680,7 +680,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
   for (size_t iter = 0; (iter < maxiter) && (!converged) && (divergence_count < 5); ++iter)
   {
     ObjectHolderMap_t iteration_map;
-    ObjectHolderMap_t *p_iteration_map = NULL;
+    ObjectHolderMap_t *p_iteration_map = nullptr;
     if (ohm)
     {
       p_iteration_map = &iteration_map;

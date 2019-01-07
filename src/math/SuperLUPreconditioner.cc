@@ -25,7 +25,7 @@ limitations under the License.
 
 namespace dsMath {
 template <typename DoubleType>
-SuperLUPreconditioner<DoubleType>::SuperLUPreconditioner(size_t sz, PEnum::TransposeType_t transpose, PEnum::LUType_t lutype) : Preconditioner<DoubleType>(sz, transpose), superLUData_(NULL), lutype_(lutype)
+SuperLUPreconditioner<DoubleType>::SuperLUPreconditioner(size_t sz, PEnum::TransposeType_t transpose, PEnum::LUType_t lutype) : Preconditioner<DoubleType>(sz, transpose), superLUData_(nullptr), lutype_(lutype)
 {
 }
 

@@ -32,7 +32,7 @@ class GetArgs;
 
 struct CommandInfo
 {
-  CommandInfo() : command_handler_(NULL), get_args_(NULL), self_(NULL), args_(NULL), kwargs_(NULL), exception_(NULL)
+  CommandInfo() : command_handler_(nullptr), get_args_(nullptr), self_(nullptr), args_(nullptr), kwargs_(nullptr), exception_(nullptr)
   {
   }
 

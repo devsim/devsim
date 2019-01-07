@@ -84,14 +84,14 @@ void threadBaseClass::start()
 	ThreadStuff *p = new ThreadStuff;
 	id = p;
 	p->hhandle = CreateThread(
-            NULL,                   // default security attributes
+            nullptr,                   // default security attributes
             0,                      // use default stack size
             threadFactory,       // thread function name
             this,          // argument to thread function
             0,                      // use default creation flags
 			&(p->id));   // returns the thread identifier
 #else
-  int ret=pthread_create(reinterpret_cast<pthread_t *>(&id), NULL, threadFactory, this);
+  int ret=pthread_create(reinterpret_cast<pthread_t *>(&id), nullptr, threadFactory, this);
   if (ret != 0)
   {
       perror("threadBaseClass::start()");
@@ -105,7 +105,7 @@ void threadBaseClass::join()
   ThreadStuff *p = reinterpret_cast<ThreadStuff *>(id);
   WaitForSingleObject(p->hhandle, INFINITE);
 #else
-  int ret = pthread_join(reinterpret_cast<pthread_t >(id), NULL);
+  int ret = pthread_join(reinterpret_cast<pthread_t >(id), nullptr);
   if (ret != 0)
   {
       perror("threadBaseClass::join()");

@@ -34,7 +34,7 @@ limitations under the License.
 const char *VectorGradientEnum::CalcTypeString[] = {
   "default",
   "avoidzero",
-  NULL
+  nullptr
 };
 
 template <typename DoubleType>

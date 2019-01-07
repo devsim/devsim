@@ -190,7 +190,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateI
     const std::string &m= EngineAPI::getStringValue(arg);
 
     InterfaceModelExprData<DoubleType> out;
-    const Region *r = NULL;
+    const Region *r = nullptr;
     std::string model;
 
     GetRegionAndName(m, model, r);
@@ -605,7 +605,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
       if (argv[i].GetType() == datatype::DOUBLE)
       {
         dargs[i] = argv[i].GetDoubleValue();
-        vargs[i] = NULL;
+        vargs[i] = nullptr;
       }
       else if (argv[i].GetType() != datatype::INVALID)
       {
@@ -614,7 +614,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
         {
           dargs[i] = tval.GetScalar();
           vlen = tval.GetLength();
-          vargs[i] = NULL;
+          vargs[i] = nullptr;
         }
         else
         {
@@ -637,7 +637,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
       {
           for (size_t j=0; j < vargs.size(); ++j)
           {
-              if(vargs[j] != NULL)
+              if(vargs[j] != nullptr)
               {
                   dargs[j]=vargs[j]->operator[](i);
               }

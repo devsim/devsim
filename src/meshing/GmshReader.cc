@@ -22,11 +22,11 @@ limitations under the License.
 
 namespace dsGmshParse {
 int meshlineno;
-dsMesh::GmshLoaderPtr    GmshLoader = NULL;
-//dsMesh::MeshRegionPtr    MeshRegion = NULL;
-//dsMesh::MeshContactPtr   MeshContact = NULL;
-//dsMesh::MeshInterfacePtr MeshInterface = NULL;
-//dsMesh::SolutionPtr      Sol= NULL;
+dsMesh::GmshLoaderPtr    GmshLoader = nullptr;
+//dsMesh::MeshRegionPtr    MeshRegion = nullptr;
+//dsMesh::MeshContactPtr   MeshContact = nullptr;
+//dsMesh::MeshInterfacePtr MeshInterface = nullptr;
+//dsMesh::SolutionPtr      Sol= nullptr;
 std::string errors;
 }
 

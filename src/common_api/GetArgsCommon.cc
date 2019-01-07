@@ -22,7 +22,7 @@ const char * optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT", "LI
 GetArgs::GetArgs(optionList opts, switchList sl) : options(opts), switches(sl)
 {
   Option *it = options;
-  while ((*it).name != NULL)
+  while ((*it).name != nullptr)
   {
     optionMap[(*it).name] = it;
     ++it;

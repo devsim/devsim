@@ -22,7 +22,7 @@ limitations under the License.
 #include "ObjectHolder.hh"
 #include <iostream>
 
-void *OutputStream::interpreter = NULL;
+void *OutputStream::interpreter = nullptr;
 
 void OutputStream::SetInterpreter(void *interp)
 {

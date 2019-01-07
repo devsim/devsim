@@ -51,7 +51,7 @@ solveCmdImpl(CommandHandler &data)
 
   const bool convergence_info = data.GetBooleanOption("info");
   ObjectHolderMap_t ohm;
-  ObjectHolderMap_t *p_ohm = NULL;
+  ObjectHolderMap_t *p_ohm = nullptr;
   if (convergence_info)
   {
     p_ohm = &ohm;
@@ -223,11 +223,11 @@ solveCmd(CommandHandler &data)
     {"gamma",        "1.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
     // empty string converts to bool for python
     {"info", "", dsGetArgs::optionType::BOOLEAN, dsGetArgs::requiredType::OPTIONAL},
-    {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 //      {"callback",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
 
-  dsGetArgs::switchList switches = NULL;
+  dsGetArgs::switchList switches = nullptr;
 
 
   bool error = data.processOptions(option, switches, errorString);
@@ -270,10 +270,10 @@ getContactCurrentCmd(CommandHandler &data)
         {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"equation", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"contact",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {NULL,  NULL, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = NULL;
+    dsGetArgs::switchList switches = nullptr;
 
 
     bool error = data.processOptions(option, switches, errorString);
@@ -288,9 +288,9 @@ getContactCurrentCmd(CommandHandler &data)
     const std::string &contactName  = data.GetStringOption("contact");
     const std::string &equationName = data.GetStringOption("equation");
 
-    Device   *device = NULL;
-//    Region   *region = NULL;
-    Contact  *contact = NULL;
+    Device   *device = nullptr;
+//    Region   *region = nullptr;
+    Contact  *contact = nullptr;
     ContactEquationHolder eqn;
 
     errorString = ValidateDeviceAndContact(deviceName, contactName, device, contact);
@@ -356,7 +356,7 @@ Commands MathCommands[] = {
     {"get_contact_current",  getContactCurrentCmd},
     {"get_contact_charge",   getContactCurrentCmd},
     {"solve",                solveCmd},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 }

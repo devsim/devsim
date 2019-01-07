@@ -78,7 +78,7 @@ static struct module_state _state;
 
 static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, const char *name, newcmd fptr)
 {
-  PyObject *ret = NULL;
+  PyObject *ret = nullptr;
 
   FPECheck::ClearFPE();
 
@@ -129,17 +129,17 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
   }
   catch (const dsException &x)
   {
-    ret = NULL;
+    ret = nullptr;
     PyErr_SetString(GETSTATE(m)->error, x.what());
   }
   catch (std::bad_alloc &)
   {
-    ret = NULL;
+    ret = nullptr;
     PyErr_SetString(GETSTATE(m)->error, const_cast<char *>("OUT OF MEMORY"));
   }
   catch (std::exception &)
   {
-    ret = NULL;
+    ret = nullptr;
     PyErr_SetString(GETSTATE(m)->error, const_cast<char *>("UNEXPECTED ERROR"));
   }
 
@@ -149,7 +149,7 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
     std::ostringstream os;
     os << "There was an uncaught floating point exception of type"" << FPECheck::getFPEString() << ""n";
     FPECheck::ClearFPE();
-    ret = NULL;
+    ret = nullptr;
     OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str().c_str());
   }
 
@@ -393,7 +393,7 @@ MYCOMMAND(get_circuit_solution_list,   dsCommand::circuitGetCircuitSolutionListC
 MYCOMMAND(get_circuit_node_value,      dsCommand::circuitGetCircuitNodeValueCmd),
 MYCOMMAND(set_circuit_node_value,      dsCommand::circuitGetCircuitNodeValueCmd),
 MYCOMMAND(get_circuit_equation_number, dsCommand::circuitGetCircuitEquationNumberCmd),
-{NULL, NULL, 0, NULL}
+{nullptr, nullptr, 0, nullptr}
 };
 
 
@@ -414,16 +414,16 @@ static int devsim_clear(PyObject *m) {
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
         DEVSIM_MODULE_STRING,
-        NULL,
+        nullptr,
         sizeof(struct module_state),
         devsim_methods,
-        NULL,
+        nullptr,
         devsim_traverse,
         devsim_clear,
-        NULL
+        nullptr
 };
 
-#define INITERROR return NULL
+#define INITERROR return nullptr
 
 //PyMODINIT_FUNC // this next line is used instead to use DLL_PUBLIC macro
 extern "C" DLL_PUBLIC PyObject *
@@ -439,15 +439,15 @@ extern "C" void DLL_PUBLIC DEVSIM_MODULE_INIT()
   PyObject *module = Py_InitModule(DEVSIM_MODULE_STRING, devsim_methods);
 #endif
 
-    if (module == NULL)
+    if (module == nullptr)
     {
       INITERROR;
     }
 
     // TODO: modify symdiff to use this approach
     struct module_state *st = GETSTATE(module);
-    st->error = PyErr_NewException(const_cast<char *>(DEVSIM_MODULE_STRING ".error"), NULL, NULL);
-    if (st->error == NULL) {
+    st->error = PyErr_NewException(const_cast<char *>(DEVSIM_MODULE_STRING ".error"), nullptr, nullptr);
+    if (st->error == nullptr) {
         Py_DECREF(module);
         INITERROR;
     }

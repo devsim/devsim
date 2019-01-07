@@ -22,7 +22,7 @@ limitations under the License.
 #include "cgnslib.h"
 #include <sstream>
 namespace dsGeniusParse {
-//dsMesh::GeniusLoaderPtr    GeniusLoader = NULL;
+//dsMesh::GeniusLoaderPtr    GeniusLoader = nullptr;
 std::string errors;
 bool fatal_cgns_error = false;
 bool print_cgns_messages = true;
@@ -330,7 +330,7 @@ bool ReadGeniusFile(const std::string &fname, const std::string &meshName, std::
           if (ptset_type == PointList)
           {
             boco.points.resize(npnts);
-            cg_boco_read(fn, B, zi, bi, &boco.points[0], NULL);
+            cg_boco_read(fn, B, zi, bi, &boco.points[0], nullptr);
           }
 
           cg_goto(fn, B, "Zone_t", zi, "ZoneBC_t", 1, "BC_t", bi, "end");

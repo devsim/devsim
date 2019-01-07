@@ -34,7 +34,7 @@ class EdgeExprModel : public EdgeModel
     public:
         void Serialize(std::ostream &) const;
 
-        EdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, EdgeModel::DisplayType, ContactPtr cp = NULL);
+        EdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, EdgeModel::DisplayType, ContactPtr cp = nullptr);
 
     private:
         void RegisterModels();

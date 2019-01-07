@@ -21,15 +21,15 @@ limitations under the License.
 //// as well as the nodes opposite of those triangles
 class EdgeData {
   public:
-  EdgeData() : edge(NULL)
+  EdgeData() : edge(nullptr)
   {
-    triangle[0] = NULL;
-    triangle[1] = NULL;
+    triangle[0] = nullptr;
+    triangle[1] = nullptr;
     /// The index is local to TetrahedronToTriangleList
     triangle_index[0] = size_t(-1);
     triangle_index[1] = size_t(-1);
-    nodeopp[0] = NULL;
-    nodeopp[1] = NULL;
+    nodeopp[0] = nullptr;
+    nodeopp[1] = nullptr;
   }
   ConstEdgePtr     edge;
   ConstTrianglePtr triangle[2];

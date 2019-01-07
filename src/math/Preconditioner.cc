@@ -27,7 +27,7 @@ Preconditioner<DoubleType>::~Preconditioner()
 }
 
 template <typename DoubleType>
-Preconditioner<DoubleType>::Preconditioner(size_t numeqns, PEnum::TransposeType_t transpose) : size_(numeqns), factored(false), transpose_solve_(transpose), matrix_(NULL)
+Preconditioner<DoubleType>::Preconditioner(size_t numeqns, PEnum::TransposeType_t transpose) : size_(numeqns), factored(false), transpose_solve_(transpose), matrix_(nullptr)
 {
 }
 

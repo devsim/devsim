@@ -116,7 +116,7 @@ using tetrahedronEdgeScalarData_ptr = std::shared_ptr<TetrahedronEdgeScalarData<
 template <typename DoubleType>
 class ModelExprData {
     public:
-        explicit ModelExprData(const Region *r = NULL) : val(0.0), type(datatype::INVALID), reg(r) {};
+        explicit ModelExprData(const Region *r = nullptr) : val(0.0), type(datatype::INVALID), reg(r) {};
         ModelExprData(DoubleType x, const Region *r);
         ModelExprData(ConstNodeModelPtr x, const Region *r);
         ModelExprData(ConstEdgeModelPtr x, const Region *r);

@@ -52,7 +52,7 @@ int check_perm(const int n, const int * const perm)
 #endif
 
 
-SuperLUData::SuperLUData(size_t numeqns, bool tran, PEnum::LUType_t lutype) : numeqns_(numeqns), transpose_(tran), lutype_(lutype), perm_r_(NULL), perm_c_(NULL), etree_(NULL), L_(NULL), U_(NULL), info_(0)
+SuperLUData::SuperLUData(size_t numeqns, bool tran, PEnum::LUType_t lutype) : numeqns_(numeqns), transpose_(tran), lutype_(lutype), perm_r_(nullptr), perm_c_(nullptr), etree_(nullptr), L_(nullptr), U_(nullptr), info_(0)
 {
 }
 
@@ -118,8 +118,8 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
   if (perm_c_ && (sstatus == SymbolicStatus_t::SAME_SYMBOLIC))
   {
     //// This is so it doesn't get deleted by DeleteStorage
-    perm_c_ = NULL;
-    etree_  = NULL;
+    perm_c_ = nullptr;
+    etree_  = nullptr;
   }
   else
   {
@@ -217,12 +217,12 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
   if (lutype_ == PEnum::LUType_t::FULL)
   {
     dgstrf(&options, &AC, relax, panel_size, 
-           etree, NULL, 0, perm_c, perm_r, L, U, &stat, &info_);
+           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
   }
   else if (lutype_ == PEnum::LUType_t::INCOMPLETE)
   {
     dgsitrf(&options, &AC, relax, panel_size,
-           etree, NULL, 0, perm_c, perm_r, L, U, &stat, &info_);
+           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
   }
 
 //  dsAssert(info == 0, "MATRIX FACTORIZATION FAILED");
@@ -347,33 +347,33 @@ void SuperLUData::DeleteStorage()
   if (perm_r_)
   {
     SUPERLU_FREE (perm_r_);
-    perm_r_ = NULL;
+    perm_r_ = nullptr;
   }
 
   if (perm_c_)
   {
     SUPERLU_FREE (perm_c_);
-    perm_c_ = NULL;
+    perm_c_ = nullptr;
   }
 
   if (etree_)
   {
     SUPERLU_FREE (etree_);
-    etree_ = NULL;
+    etree_ = nullptr;
   }
 
   if (L_)
   {
     Destroy_SuperNode_Matrix(L_);
     SUPERLU_FREE (L_);
-    L_ = NULL;
+    L_ = nullptr;
   }
 
   if (U_)
   {
     Destroy_CompCol_Matrix(U_);
     SUPERLU_FREE (U_);
-    U_ = NULL;
+    U_ = nullptr;
   }
 }
 }

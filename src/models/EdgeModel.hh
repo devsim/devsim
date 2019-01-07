@@ -60,7 +60,7 @@ typedef const Edge *ConstEdgePtr;
 class EdgeModel {
     public:
         enum class DisplayType {NODISPLAY, SCALAR, VECTOR, UNKNOWN};
-        EdgeModel(const std::string &, const RegionPtr, EdgeModel::DisplayType, const ContactPtr x = NULL);
+        EdgeModel(const std::string &, const RegionPtr, EdgeModel::DisplayType, const ContactPtr x = nullptr);
         virtual ~EdgeModel();
 
         const std::string &GetName() const {
@@ -107,7 +107,7 @@ class EdgeModel {
 
         bool AtContact() const
         {
-            return (mycontact != NULL);
+            return (mycontact != nullptr);
         }
 
         const Contact &GetContact() const

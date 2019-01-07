@@ -66,7 +66,7 @@ void MeshKeeper::AddMesh(MeshPtr mp)
 
 MeshPtr MeshKeeper::GetMesh(const std::string &nm)
 {
-    MeshPtr mp = NULL;
+    MeshPtr mp = nullptr;
     if (meshList.count(nm))
     {
         mp = meshList[nm];
