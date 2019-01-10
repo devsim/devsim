@@ -247,9 +247,9 @@ static const char equation_doc[] =
 "    In order to set the node volumes for integration of the ``edge_volume_model``, it is possible to do something like this:\n"
 "\n"
 "    ..\n"
-"      ds.edge_model(device=\"device\", region=\"region\", name=\"EdgeNodeVolume\", equation=\"0.5*SurfaceArea*EdgeLength\")\n"
-"      ds.set_parameter(name=\"edge_node0_volume_model\", value=\"EdgeNodeVolume\")\n"
-"      ds.set_parameter(name=\"edge_node1_volume_model\", value=\"EdgeNodeVolume\")\n"
+"      devsim.edge_model(device=\"device\", region=\"region\", name=\"EdgeNodeVolume\", equation=\"0.5*SurfaceArea*EdgeLength\")\n"
+"      devsim.set_parameter(name=\"edge_node0_volume_model\", value=\"EdgeNodeVolume\")\n"
+"      devsim.set_parameter(name=\"edge_node1_volume_model\", value=\"EdgeNodeVolume\")\n"
 "\n"
 ;
 
@@ -460,7 +460,7 @@ static const char add_db_entry_doc[] =
 "    Notes\n"
 "    -----\n"
 "\n"
-"    The :meth:`ds.save_db` command is used to commit these added entries permanently to the database.\n"
+"    The :meth:`devsim.save_db` command is used to commit these added entries permanently to the database.\n"
 ;
 
 static const char close_db_doc[] =
@@ -554,7 +554,7 @@ static const char get_parameter_list_doc[] =
 "    Notes\n"
 "    -----\n"
 "\n"
-"    Note that the ``device`` and ``region`` options are optional.  If the region is not specified, the parameter is retrieved for the entire device.  If the device is not specified, the parameter is retrieved for all devices.  Unlike the :meth:`ds.getParameter`, parameter names on the the device are not retrieved if they do not exist on the region.  Similarly, the parameter names over all devices are not retrieved if they do not exist on the device.\n"
+"    Note that the ``device`` and ``region`` options are optional.  If the region is not specified, the parameter is retrieved for the entire device.  If the device is not specified, the parameter is retrieved for all devices.  Unlike the :meth:`devsim.getParameter`, parameter names on the the device are not retrieved if they do not exist on the region.  Similarly, the parameter names over all devices are not retrieved if they do not exist on the device.\n"
 ;
 
 static const char open_db_doc[] =
@@ -1106,7 +1106,7 @@ static const char cylindrical_edge_couple_doc[] =
 "    - ``ElementCylindricalEdgeCouple`` (Element Edge Model)\n"
 "    - ``CylindricalEdgeCouple`` (Edge Model)\n"
 "\n"
-"    The :meth:`ds.set_parameter` must be used to set\n"
+"    The :meth:`devsim.set_parameter` must be used to set\n"
 "\n"
 "    - ``raxis_variable``, the variable (``x`` or ``y``) which is the radial axis variable in the cylindrical coordinate system\n"
 "    - ``raxis_zero``, the location of the z axis for the radial axis variable\n"
@@ -1137,7 +1137,7 @@ static const char cylindrical_node_volume_doc[] =
 "\n"
 "    The ``ElementCylindricalNodeVolume@en0`` and ``ElementCylindricalNodeVolume@en1`` represent the node volume at each end of the element edge.\n"
 "\n"
-"    The :meth:`ds.set_parameter` must be used to set\n"
+"    The :meth:`devsim.set_parameter` must be used to set\n"
 "\n"
 "    - ``raxis_variable``, the variable (``x`` or ``y``) which is the radial axis variable in the cylindrical coordinate system\n"
 "    - ``raxis_zero``, the location of the z axis for the radial axis variable\n"
@@ -1165,7 +1165,7 @@ static const char cylindrical_surface_area_doc[] =
 "\n"
 "    and is the cylindrical surface area along each contact and interface node in the device region.\n"
 "\n"
-"    The :meth:`ds.set_parameter` must be used to set\n"
+"    The :meth:`devsim.set_parameter` must be used to set\n"
 "\n"
 "    - ``raxis_variable``, the variable (``x`` or ``y``) which is the radial axis variable in the cylindrical coordinate system\n"
 "    - ``raxis_zero``, the location of the z axis for the radial axis variable\n"
@@ -1272,13 +1272,13 @@ static const char edge_average_model_doc[] =
 "\n"
 "    ..\n"
 "\n"
-"      ds.edge_average_model(device=device, region=region, node_model=\"Potential\", edge_model=\"ElecticField\", average_type=\"negative_gradient\")\n"
+"      devsim.edge_average_model(device=device, region=region, node_model=\"Potential\", edge_model=\"ElecticField\", average_type=\"negative_gradient\")\n"
 "\n"
 "    and the derivatives ``ElectricField:Potential@n0`` and ``ElectricField:Potential@n1`` are then created from\n"
 "\n"
 "    ..\n"
 "\n"
-"      ds.edge_average_model(device=device, region=region, node_model=\"Potential\", edge_model=\"ElecticField\", average_type=\"negative_gradient\", derivative=\"Potential\")\n"
+"      devsim.edge_average_model(device=device, region=region, node_model=\"Potential\", edge_model=\"ElecticField\", average_type=\"negative_gradient\", derivative=\"Potential\")\n"
 ;
 
 static const char edge_from_node_model_doc[] =
@@ -1302,7 +1302,7 @@ static const char edge_from_node_model_doc[] =
 "\n"
 "    ..\n"
 "\n"
-"      ds.edge_from_node_model(device=device, region=region, node_model=\"Potential\")\n"
+"      devsim.edge_from_node_model(device=device, region=region, node_model=\"Potential\")\n"
 "\n"
 ;
 
@@ -1333,7 +1333,7 @@ static const char edge_model_doc[] =
 "    - ``model_y_onNode``\n"
 "    - ``model_z_onNode`` (3D)\n"
 "\n"
-"    This averaging scheme does not produce accurate results, and it is recommended to use the :meth:`ds.element_from_edge_model` to create components better suited for visualization.  See :ref:`ch__visualization` for more information about creating data files for external visualization programs.\n"
+"    This averaging scheme does not produce accurate results, and it is recommended to use the :meth:`devsim.element_from_edge_model` to create components better suited for visualization.  See :ref:`ch__visualization` for more information about creating data files for external visualization programs.\n"
 ;
 
 static const char element_from_edge_model_doc[] =
@@ -1781,7 +1781,7 @@ static const char vector_gradient_doc[] =
 "    - ``model_grady`` (2D and 3D)\n"
 "    - ``model_gradz`` (3D)\n"
 "\n"
-"    It is important not to use these models for simulation, since DEVSIM, does not have a way of evaluating the derivatives of these models.  The models can be used for integrating the impedance field, and other postprocessing.  The :meth:`ds.element_from_edge_model` command can be used to create gradients for use in a simulation.\n"
+"    It is important not to use these models for simulation, since DEVSIM, does not have a way of evaluating the derivatives of these models.  The models can be used for integrating the impedance field, and other postprocessing.  The :meth:`devsim.element_from_edge_model` command can be used to create gradients for use in a simulation.\n"
 ;
 
 static const char get_contact_charge_doc[] =
