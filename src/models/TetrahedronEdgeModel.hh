@@ -196,11 +196,11 @@ TetrahedronEdgeModelPtr create_tetrahedron_edge_model(bool use_extended, Args &&
   TetrahedronEdgeModel *ret;
   if (use_extended)
   {
-    ret = new T2(args...);
+    ret = new T2(std::forward<Args>(args)...);
   }
   else
   {
-    ret = new T1(args...);
+    ret = new T1(std::forward<Args>(args)...);
   }
   return ret->GetSelfPtr();
 }

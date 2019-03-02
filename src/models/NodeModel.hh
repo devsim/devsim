@@ -202,18 +202,17 @@ class NodeModel {
         static const char *DisplayTypeString[];
 };
 
-//TODO: "forward???"
 template <typename T1, typename T2, typename ... Args>
 NodeModelPtr create_node_model(bool use_extended, Args &&...args)
 {
   NodeModel *ret;
   if (use_extended)
   {
-    ret = new T2(args...);
+    ret = new T2(std::forward<Args>(args)...);
   }
   else
   {
-    ret = new T1(args...);
+    ret = new T1(std::forward<Args>(args)...);
   }
   return ret->GetSelfPtr();
 }

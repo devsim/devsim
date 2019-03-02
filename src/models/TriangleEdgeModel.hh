@@ -187,18 +187,17 @@ class TriangleEdgeModel {
 };
 
 
-//TODO: "forward???"
 template <typename T1, typename T2, typename ... Args>
 TriangleEdgeModelPtr create_triangle_edge_model(bool use_extended, Args &&...args)
 {
   TriangleEdgeModel *ret;
   if (use_extended)
   {
-    ret = new T2(args...);
+    ret = new T2(std::forward<Args>(args)...);
   }
   else
   {
-    ret = new T1(args...);
+    ret = new T1(std::forward<Args>(args)...);
   }
   return ret->GetSelfPtr();
 }

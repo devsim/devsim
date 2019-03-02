@@ -147,18 +147,17 @@ class InterfaceNodeModel {
         size_t length;
 };
 
-//TODO: "forward???"
 template <typename T1, typename T2, typename ... Args>
 InterfaceNodeModelPtr create_interface_node_model(bool use_extended, Args &&...args)
 {
   InterfaceNodeModel *ret;
   if (use_extended)
   {
-    ret = new T2(args...);
+    ret = new T2(std::forward<Args>(args)...);
   }
   else
   {
-    ret = new T1(args...);
+    ret = new T1(std::forward<Args>(args)...);
   }
   return ret->GetSelfPtr();
 }
