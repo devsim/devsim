@@ -18,6 +18,7 @@ limitations under the License.
 #include "Bernoulli.hh"
 #include <cmath>
 
+
 /*
 first get working with expm1, then expand to extended precision
 work on simplification at limits later if profiling reveals performance issues
@@ -32,7 +33,7 @@ T Bernoulli(T x)
   if (x != 0.0)
   {
     // in the limit toward 0, then the denominator goes to x + 0.5*x^2
-    const auto ex1 = std::expm1(x);
+    const auto ex1 = expm1(x);
 
     if (x != ex1)
     {
@@ -54,8 +55,8 @@ T derBernoulli(T x)
   //// (exp(x) - 1 - x * exp(x)) / pow(exp(x) - 1, 2)
   if (x != 0.0)
   {
-    const auto ex1 = std::expm1(x);
-    const auto ex2 = - x * std::exp(x);
+    const auto ex1 = expm1(x);
+    const auto ex2 = - x * exp(x);
     ret  = ex1;
     ret += ex2;
     ret /= (ex1*ex1);
@@ -82,6 +83,11 @@ T derBernoulli(T x)
 
 template double Bernoulli<double>(double);
 template double derBernoulli<double>(double);
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template float128 Bernoulli<float128>(float128);
+template float128 derBernoulli<float128>(float128);
+#endif
 
 
 #if 0

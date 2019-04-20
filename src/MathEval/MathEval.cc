@@ -143,16 +143,6 @@ float128 log(float128 x)
   return boost::multiprecision::log(x);
 }
 
-float128 Bernoulli(float128 x)
-{
-  return ::Bernoulli<double>(static_cast<double>(x));
-}
-
-float128 derBernoulli(float128 x)
-{
-  return ::derBernoulli<double>(static_cast<double>(x));
-}
-
 float128 Fermi(float128 x)
 {
   return ::Fermi(static_cast<double>(x));
@@ -218,8 +208,8 @@ float128 derfcdx(float128 x)
   {"abs",      eval128::abs,         "abs(obj)   -- Absolute value"},
   {"exp",      eval128::exp,          "exp(obj)   -- Exponentiation with respect to e"},
   {"log",      eval128::log,          "log(obj)   -- Natural logarithm"},
-  {"B",        eval128::Bernoulli,    "B(obj)     -- Bernoulli Function"},
-  {"dBdx",     eval128::derBernoulli, "dBdx(obj)  -- derivative Bernoulli wrt arg"},
+  {"B",        Bernoulli,    "B(obj)     -- Bernoulli Function"},
+  {"dBdx",     derBernoulli, "dBdx(obj)  -- derivative Bernoulli wrt arg"},
   {"step",     step,         "step(obj)  -- step function"},
   {"sgn",      sgn,          "sgn(obj)   -- sign function"},
   {"acosh",    eval128::acosh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
