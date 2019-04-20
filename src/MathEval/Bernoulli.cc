@@ -91,10 +91,17 @@ DoubleType derBernoulli(DoubleType x)
   else
   {
     const auto ex1 = expm1(x);
-    const auto ex2 = ex1 - (x * exp(x));
-//    const auto ex2 = (1 - x) * exp(x) - 1;
-    ret = ex2;
-    ret *= pow(ex1, -2);
+
+    //// so if x is approximately equal to exp(x) - 1, we need to protect 
+    //// the derivative from blowing up
+    if (x != ex1)
+    {
+      //// TODO: compare each of these two representations.
+      const auto ex2 = ex1 - (x * exp(x));
+  //    const auto ex2 = (1 - x) * exp(x) - 1;
+      ret = ex2;
+      ret *= pow(ex1, -2);
+    }
   }
 
   return ret;
