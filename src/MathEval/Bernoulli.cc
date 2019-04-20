@@ -19,6 +19,30 @@ limitations under the License.
 #include <cmath>
 #include <limits>
 
+template <typename DoubleType>
+DoubleType BernoulliImpl(DoubleType x)
+{
+  DoubleType ret = 1.0;
+  static const auto pleps = -log(std::numeric_limits<DoubleType>().epsilon());
+  const auto fx = fabs(x);
+
+  if (fx < pleps)
+  {
+    // in the limit toward 0, then the denominator goes to x + 0.5*x^2
+    const auto ex1 = expm1(x);
+    ret = x * pow(ex1, -1);
+  }
+  else if (x > 0.0)
+  {
+    ret = x * exp(-x);
+  }
+  else
+  {
+    ret = -x;
+  }
+
+  return ret;
+}
 
 /*
 first get working with expm1, then expand to extended precision
@@ -27,40 +51,46 @@ work on simplification at limits later if profiling reveals performance issues
 template <typename DoubleType>
 DoubleType Bernoulli(DoubleType x)
 {
-
-  static const auto lnmax = log(std::numeric_limits<DoubleType>().max());
-  static const auto nleps = log(std::numeric_limits<DoubleType>().epsilon());
-  static const auto pleps = -nleps;
-
-  DoubleType ret = 1.0; 
+  DoubleType ret = 1.0;
 
   // TODO: need proper representation of 0 for quad precision
-  if (x == 0.0)
+  if (x != 0.0)
   {
+    ret = BernoulliImpl<DoubleType>(x);
   }
-#if 0
-  else if (x >= lnmax)
+
+  return ret;
+}
+
+
+// for the non-trivial case where x != 0.0
+template <typename DoubleType>
+DoubleType derBernoulliImpl(DoubleType x)
+{
+  static const auto pleps = -log(std::numeric_limits<DoubleType>().epsilon());
+  const auto fx = fabs(x);
+
+  DoubleType ret = -0.5;
+  if (fx < pleps)
   {
-    ret = 0.0;
+    const auto ex1 = expm1(x);
+
+    //// This condition is IMPORTANT for convergence
+    if (x != ex1)
+    {
+      const auto ex2 = ex1 - (x * exp(x));
+  //  const auto ex2 = (1 - x) * exp(x) - 1;
+      ret = ex2;
+      ret *= pow(ex1, -2);
+    }
   }
-#endif
-  else if (x >= pleps)
+  else if (x > 0.0)
   {
-    ret = x * exp(-x);
-  }
-  else if (x <= nleps)
-  {
-    ret = -x;
+    ret = exp(-x) * (1.0 - x);
   }
   else
   {
-    // in the limit toward 0, then the denominator goes to x + 0.5*x^2
-    const auto ex1 = expm1(x);
-
-    if (x != ex1)
-    {
-      ret = x / ex1;
-    }
+    ret = - 1.0 - x * exp(x);
   }
 
   return ret;
@@ -70,57 +100,16 @@ DoubleType Bernoulli(DoubleType x)
 template <typename DoubleType>
 DoubleType derBernoulli(DoubleType x)
 {
-  static const auto nlnmax = -log(std::numeric_limits<DoubleType>().max());
-  static const auto nleps = log(std::numeric_limits<DoubleType>().epsilon());
-  static const auto pleps = -nleps;
 
   DoubleType ret = -0.5;
 
   //// (exp(x) - 1 - x * exp(x)) / pow(exp(x) - 1, 2)
-  if (x == 0.0)
+  if (x != 0.0)
   {
-  }
-  else if (x >= pleps)
-  {
-    ret = exp(-x) * (1.0 - x);
-  }
-  else if (x <= nleps)
-  {
-    ret = - 1.0 - x * exp(x);
-  }
-  else
-  {
-    const auto ex1 = expm1(x);
-
-    //// so if x is approximately equal to exp(x) - 1, we need to protect 
-    //// the derivative from blowing up
-    if (x != ex1)
-    {
-      //// TODO: compare each of these two representations.
-      const auto ex2 = ex1 - (x * exp(x));
-  //    const auto ex2 = (1 - x) * exp(x) - 1;
-      ret = ex2;
-      ret *= pow(ex1, -2);
-    }
+    ret = derBernoulliImpl<DoubleType>(x);
   }
 
   return ret;
-#if 0
-    const auto ex1 = std::expm1(x);
-    const auto t1 = ex1 + 1.0;
-    // if expm1(x) == exp(x)
-    if (ex1 == t1)
-    {
-      ret = 1.0;
-      ret += x;
-      ret /= ex1;
-    }
-    else
-    {
-      ret = ex1 + x * std::exp(x);
-      ret /= ex1 * ex1;
-    }
-#endif
 }
 
 template double Bernoulli<double>(double);
@@ -132,6 +121,7 @@ template float128 derBernoulli<float128>(float128);
 #endif
 
 
+//// The following code is done using taylor expansions versus using the expm1 function
 #if 0
 #include <cmath>
 using std::abs;
@@ -233,7 +223,7 @@ inline double derBernoulliExp(const double x)
     double den = 1.0;
     double xv = x;
     num -= 1./3. * xv;
-    den += xv; 
+    den += xv;
     xv *= x;
     num -= 1./8. * xv;
     den += 7./12. * xv;
@@ -298,7 +288,7 @@ inline double derBernoulli3(double x)
     const double ex = exp(x);
     const double ex1 = ex - 1;
     if (ex != ex1)
-    { 
+    {
       //return (1.0 - x * ex / ex1) / ex1;
       return (ex*(1.0-x) - 1.0) / pow((ex - 1.0),2.0);
     }
@@ -339,11 +329,11 @@ double Bernoulli(double x)
 {
     const double fx = std::abs(x);
     double ret;
-    if ( fx < 1.0e-4 ) 
+    if ( fx < 1.0e-4 )
     {
         ret = 1.0 / (1.0 + 0.5 * x + x * x / 6.0);
     }
-    else if ( fx < lnmax ) 
+    else if ( fx < lnmax )
     {
         ret = x / (exp(x)-1.0);
     }
