@@ -29,24 +29,37 @@ DoubleType Bernoulli(DoubleType x)
 {
 
   static const auto lnmax = log(std::numeric_limits<DoubleType>().max());
+  static const auto nleps = log(std::numeric_limits<DoubleType>().epsilon());
+  static const auto pleps = -nleps;
+
   DoubleType ret = 1.0; 
 
   // TODO: need proper representation of 0 for quad precision
-  if (x != 0.0)
+  if (x == 0.0)
   {
-    if (x >= lnmax)
-    {
-      ret = 0.0;
-    }
-    else
-    {
-      // in the limit toward 0, then the denominator goes to x + 0.5*x^2
-      const auto ex1 = expm1(x);
+  }
+#if 0
+  else if (x >= lnmax)
+  {
+    ret = 0.0;
+  }
+#endif
+  else if (x >= pleps)
+  {
+    ret = x * exp(-x);
+  }
+  else if (x <= nleps)
+  {
+    ret = -x;
+  }
+  else
+  {
+    // in the limit toward 0, then the denominator goes to x + 0.5*x^2
+    const auto ex1 = expm1(x);
 
-      if (x != ex1)
-      {
-        ret = x / ex1;
-      }
+    if (x != ex1)
+    {
+      ret = x / ex1;
     }
   }
 
@@ -57,30 +70,34 @@ DoubleType Bernoulli(DoubleType x)
 template <typename DoubleType>
 DoubleType derBernoulli(DoubleType x)
 {
-  static const auto lnmax = log(std::numeric_limits<DoubleType>().max());
+  static const auto nlnmax = -log(std::numeric_limits<DoubleType>().max());
+  static const auto nleps = log(std::numeric_limits<DoubleType>().epsilon());
+  static const auto pleps = -nleps;
 
   DoubleType ret = -0.5;
 
-
   //// (exp(x) - 1 - x * exp(x)) / pow(exp(x) - 1, 2)
-  if (x != 0.0)
+  if (x == 0.0)
   {
-    if ( x <= lnmax)
-    {
-        ret = - 1.0;
-    }
-    else if (x >= lnmax)
-    {
-        ret = (1-x)*exp(-x);
-    }
-    else
-    {
-      const auto ex1 = expm1(x);
-      const auto ex2 = - x * exp(x);
-      ret  = ex1;
-      ret += ex2;
-      ret /= (ex1*ex1);
-    }
+  }
+  else if (x >= pleps)
+  {
+    ret = exp(-x) * (1.0 - x);
+  }
+  else if (x <= nleps)
+  {
+    ret = - 1.0 - x * exp(x);
+  }
+  else
+  {
+    const auto ex1 = expm1(x);
+    const auto ex2 = ex1 - (x * exp(x));
+//    const auto ex2 = (1 - x) * exp(x) - 1;
+    ret = ex2;
+    ret *= pow(ex1, -2);
+  }
+
+  return ret;
 #if 0
     const auto ex1 = std::expm1(x);
     const auto t1 = ex1 + 1.0;
@@ -97,9 +114,6 @@ DoubleType derBernoulli(DoubleType x)
       ret /= ex1 * ex1;
     }
 #endif
-    
-  }
-  return ret;
 }
 
 template double Bernoulli<double>(double);
