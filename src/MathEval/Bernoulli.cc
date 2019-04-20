@@ -17,6 +17,7 @@ limitations under the License.
 
 #include "Bernoulli.hh"
 #include <cmath>
+#include <limits>
 
 
 /*
@@ -27,17 +28,25 @@ template <typename DoubleType>
 DoubleType Bernoulli(DoubleType x)
 {
 
+  static const auto lnmax = log(std::numeric_limits<DoubleType>().max());
   DoubleType ret = 1.0; 
 
   // TODO: need proper representation of 0 for quad precision
   if (x != 0.0)
   {
-    // in the limit toward 0, then the denominator goes to x + 0.5*x^2
-    const auto ex1 = expm1(x);
-
-    if (x != ex1)
+    if (x >= lnmax)
     {
-      ret = x / ex1;
+      ret = 0.0;
+    }
+    else
+    {
+      // in the limit toward 0, then the denominator goes to x + 0.5*x^2
+      const auto ex1 = expm1(x);
+
+      if (x != ex1)
+      {
+        ret = x / ex1;
+      }
     }
   }
 
@@ -48,6 +57,7 @@ DoubleType Bernoulli(DoubleType x)
 template <typename DoubleType>
 DoubleType derBernoulli(DoubleType x)
 {
+  static const auto lnmax = log(std::numeric_limits<DoubleType>().max());
 
   DoubleType ret = -0.5;
 
@@ -55,11 +65,22 @@ DoubleType derBernoulli(DoubleType x)
   //// (exp(x) - 1 - x * exp(x)) / pow(exp(x) - 1, 2)
   if (x != 0.0)
   {
-    const auto ex1 = expm1(x);
-    const auto ex2 = - x * exp(x);
-    ret  = ex1;
-    ret += ex2;
-    ret /= (ex1*ex1);
+    if ( x <= lnmax)
+    {
+        ret = - 1.0;
+    }
+    else if (x >= lnmax)
+    {
+        ret = (1-x)*exp(-x);
+    }
+    else
+    {
+      const auto ex1 = expm1(x);
+      const auto ex2 = - x * exp(x);
+      ret  = ex1;
+      ret += ex2;
+      ret /= (ex1*ex1);
+    }
 #if 0
     const auto ex1 = std::expm1(x);
     const auto t1 = ex1 + 1.0;
