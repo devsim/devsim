@@ -145,12 +145,12 @@ float128 log(float128 x)
 
 float128 Bernoulli(float128 x)
 {
-  return ::Bernoulli(static_cast<double>(x));
+  return ::Bernoulli<double>(static_cast<double>(x));
 }
 
 float128 derBernoulli(float128 x)
 {
-  return ::derBernoulli(static_cast<double>(x));
+  return ::derBernoulli<double>(static_cast<double>(x));
 }
 
 float128 Fermi(float128 x)

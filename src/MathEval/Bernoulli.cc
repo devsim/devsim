@@ -22,10 +22,11 @@ limitations under the License.
 first get working with expm1, then expand to extended precision
 work on simplification at limits later if profiling reveals performance issues
 */
-double Bernoulli(double x)
+template <typename T>
+T Bernoulli(T x)
 {
 
-  double ret = 1.0; 
+  T ret = 1.0; 
 
   // TODO: need proper representation of 0 for quad precision
   if (x != 0.0)
@@ -43,10 +44,11 @@ double Bernoulli(double x)
 }
 
 // TODO: need proper representation of 0, 0.5, 1.0 for quad precision
-double derBernoulli(double x)
+template <typename T>
+T derBernoulli(T x)
 {
 
-  double ret = -0.5;
+  T ret = -0.5;
 
 
   //// (exp(x) - 1 - x * exp(x)) / pow(exp(x) - 1, 2)
@@ -77,6 +79,10 @@ double derBernoulli(double x)
   }
   return ret;
 }
+
+template double Bernoulli<double>(double);
+template double derBernoulli<double>(double);
+
 
 #if 0
 #include <cmath>

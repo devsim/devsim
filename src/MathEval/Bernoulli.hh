@@ -17,6 +17,8 @@ limitations under the License.
 
 #ifndef BERNOULLI_HH
 #define BERNOULLI_HH
-double Bernoulli(double x);
-double derBernoulli(double x);
+template <typename T>
+T Bernoulli(T x);
+template <typename T>
+T derBernoulli(T x);
 #endif
