@@ -181,9 +181,9 @@ edge_model -device $device -region $region -name "vdiff:Potential@n1"  -equation
 edge_model -device $device -region $region -name "Bern01"             -equation "B(vdiff);"
 edge_model -device $device -region $region -name "Bern01:Potential@n0" -equation "dBdx(vdiff)*vdiff:Potential@n0;"
 edge_model -device $device -region $region -name "Bern01:Potential@n1" -equation "dBdx(vdiff)*vdiff:Potential@n1;"
-edge_model -device $device -region $region -name "Bern10"             -equation "B(-vdiff);"
-edge_model -device $device -region $region -name "Bern10:Potential@n0" -equation "-dBdx(-vdiff)*vdiff:Potential@n0;"
-edge_model -device $device -region $region -name "Bern10:Potential@n1" -equation "-dBdx(-vdiff)*vdiff:Potential@n1;"
+edge_model -device $device -region $region -name "Bern10"             -equation "B(vdiff) + vdiff;"
+edge_model -device $device -region $region -name "Bern10:Potential@n0" -equation "Bern01:Potential@n0 + vdiff:Potential@n0"
+edge_model -device $device -region $region -name "Bern10:Potential@n1" -equation "Bern01:Potential@n1 + vdiff:Potential@n1"
 
 ####
 #### Electron Current
