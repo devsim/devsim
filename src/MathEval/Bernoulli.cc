@@ -17,6 +17,69 @@ limitations under the License.
 
 #include "Bernoulli.hh"
 #include <cmath>
+
+/*
+first get working with expm1, then expand to extended precision
+work on simplification at limits later if profiling reveals performance issues
+*/
+double Bernoulli(double x)
+{
+
+  double ret = 1.0; 
+
+  // TODO: need proper representation of 0 for quad precision
+  if (x != 0.0)
+  {
+    // in the limit toward 0, then the denominator goes to x + 0.5*x^2
+    const auto ex1 = std::expm1(x);
+
+    if (x != ex1)
+    {
+      ret = x / ex1;
+    }
+  }
+
+  return ret;
+}
+
+// TODO: need proper representation of 0, 0.5, 1.0 for quad precision
+double derBernoulli(double x)
+{
+
+  double ret = -0.5;
+
+
+  //// (exp(x) - 1 - x * exp(x)) / pow(exp(x) - 1, 2)
+  if (x != 0.0)
+  {
+    const auto ex1 = std::expm1(x);
+    const auto ex2 = - x * std::exp(x);
+    ret  = ex1;
+    ret += ex2;
+    ret /= (ex1*ex1);
+#if 0
+    const auto ex1 = std::expm1(x);
+    const auto t1 = ex1 + 1.0;
+    // if expm1(x) == exp(x)
+    if (ex1 == t1)
+    {
+      ret = 1.0;
+      ret += x;
+      ret /= ex1;
+    }
+    else
+    {
+      ret = ex1 + x * std::exp(x);
+      ret /= ex1 * ex1;
+    }
+#endif
+    
+  }
+  return ret;
+}
+
+#if 0
+#include <cmath>
 using std::abs;
 //#include <climits>
 #include <cstdlib>
@@ -265,4 +328,5 @@ double derBernoulli(double x)
     }
     return ret;
 }
+#endif
 #endif
