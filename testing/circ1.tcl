@@ -198,19 +198,15 @@ equation -device $device -region $region -name PotentialEquation -variable_name 
 ####
 #### vdiff, Bern01, Bern10
 ####
-edge_model -device $device -region $region -name "vdiff"              -equation "(Potential@n0 - Potential@n1)/ThermalVoltage;"
+edge_model -device $device -region $region -name "vdiff"               -equation "(Potential@n0 - Potential@n1)/ThermalVoltage;"
 edge_model -device $device -region $region -name "vdiff:Potential@n0"  -equation "ThermalVoltage^(-1);"
 edge_model -device $device -region $region -name "vdiff:Potential@n1"  -equation "-ThermalVoltage^(-1);"
-edge_model -device $device -region $region -name "Bern01"             -equation "B(vdiff);"
+edge_model -device $device -region $region -name "Bern01"              -equation "B(vdiff);"
 edge_model -device $device -region $region -name "Bern01:Potential@n0" -equation "diff(B(vdiff), Potential@n0);"
 edge_model -device $device -region $region -name "Bern01:Potential@n1" -equation "diff(B(vdiff), Potential@n1);"
-#edge_model -device $device -region $region -name "Bern01:Potential@n0" -equation "dBdx(vdiff)*vdiff:Potential@n0;"
-#edge_model -device $device -region $region -name "Bern01:Potential@n1" -equation "dBdx(vdiff)*vdiff:Potential@n1;"
-edge_model -device $device -region $region -name "Bern10"             -equation "B(-vdiff);"
-edge_model -device $device -region $region -name "Bern10:Potential@n0" -equation "diff(B(-vdiff), Potential@n0);"
-edge_model -device $device -region $region -name "Bern10:Potential@n1" -equation "diff(B(-vdiff), Potential@n1);"
-#edge_model -device $device -region $region -name "Bern10:Potential@n0" -equation "-dBdx(-vdiff)*vdiff:Potential@n0;"
-#edge_model -device $device -region $region -name "Bern10:Potential@n1" -equation "-dBdx(-vdiff)*vdiff:Potential@n1;"
+edge_model -device $device -region $region -name "Bern10"              -equation "Bern01 + vdiff;"
+edge_model -device $device -region $region -name "Bern10:Potential@n0" -equation "Bern01:Potential@n0 + vdiff:Potential@n0"
+edge_model -device $device -region $region -name "Bern10:Potential@n1" -equation "Bern01:Potential@n1 + vdiff:Potential@n1"
 
 ####
 #### Electron Current

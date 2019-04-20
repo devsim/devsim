@@ -127,15 +127,15 @@ node_model -device $device -region $region -name "PotentialNodeCharge:Holes"    
 equation -device $device -region $region -name PotentialEquation -variable_name Potential -node_model "PotentialNodeCharge" \
     -element_model "PotentialEdgeFlux" -time_node_model "" -variable_update log_damp 
 
-edge_model -device $device -region $region -name "vdiff"              -equation "(Potential@n0 - Potential@n1)/V_t;"
+edge_model -device $device -region $region -name "vdiff"               -equation "(Potential@n0 - Potential@n1)/V_t;"
 edge_model -device $device -region $region -name "vdiff:Potential@n0"  -equation "V_t^(-1);"
 edge_model -device $device -region $region -name "vdiff:Potential@n1"  -equation "-V_t^(-1);"
-edge_model -device $device -region $region -name "Bern01"             -equation "B(vdiff);"
+edge_model -device $device -region $region -name "Bern01"              -equation "B(vdiff);"
 edge_model -device $device -region $region -name "Bern01:Potential@n0" -equation "dBdx(vdiff)*vdiff:Potential@n0;"
 edge_model -device $device -region $region -name "Bern01:Potential@n1" -equation "dBdx(vdiff)*vdiff:Potential@n1;"
-edge_model -device $device -region $region -name "Bern10"             -equation "B(-vdiff);"
-edge_model -device $device -region $region -name "Bern10:Potential@n0" -equation "-dBdx(-vdiff)*vdiff:Potential@n0;"
-edge_model -device $device -region $region -name "Bern10:Potential@n1" -equation "-dBdx(-vdiff)*vdiff:Potential@n1;"
+edge_model -device $device -region $region -name "Bern10"              -equation "Bern01 + vdiff;"
+edge_model -device $device -region $region -name "Bern10:Potential@n0" -equation "Bern01:Potential@n0 + vdiff:Potential@n0"
+edge_model -device $device -region $region -name "Bern10:Potential@n1" -equation "Bern01:Potential@n1 + vdiff:Potential@n1"
 
 set Jn       "ElectronCharge*mu_n*EdgeInverseLength*V_t*(Electrons@n1*Bern10 - Electrons@n0*Bern01)";
 set dJndn0   "simplify(diff( $Jn, Electrons@n0));";
