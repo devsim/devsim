@@ -37,7 +37,6 @@ DoubleType BernoulliImpl(DoubleType x)
     }
     else
     {
-      
       DoubleType d = 1.0 + 0.5 * x;
       ret = 1.0 / d;
     }
