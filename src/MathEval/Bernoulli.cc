@@ -19,12 +19,21 @@ limitations under the License.
 #include <cmath>
 #include <limits>
 
+namespace {
+template <typename DoubleType>
+DoubleType GetLogEpsilon()
+{
+  static auto ret = fabs(log(std::numeric_limits<DoubleType>().epsilon()));
+  return ret;
+}
+}
+
 template <typename DoubleType>
 DoubleType BernoulliImpl(DoubleType x)
 {
   DoubleType ret = 1.0;
   // TODO: possible race condition in multithreading
-  static const auto pleps = -log(std::numeric_limits<DoubleType>().epsilon());
+  static const auto pleps = GetLogEpsilon<DoubleType>();
 
   const auto fx = fabs(x);
 
@@ -76,7 +85,7 @@ DoubleType Bernoulli(DoubleType x)
 template <typename DoubleType>
 DoubleType derBernoulliImpl(DoubleType x)
 {
-  static const auto pleps = -log(std::numeric_limits<DoubleType>().epsilon());
+  static const auto pleps = GetLogEpsilon<DoubleType>();
   const auto fx = fabs(x);
 
   DoubleType ret = -0.5;
@@ -132,10 +141,12 @@ DoubleType derBernoulli(DoubleType x)
 
 template double Bernoulli<double>(double);
 template double derBernoulli<double>(double);
+constexpr double lneps_double = GetLogEpsilon<double>();
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 template float128 Bernoulli<float128>(float128);
 template float128 derBernoulli<float128>(float128);
+static float128 lneps_float128 = GetLogEpsilon<float128>();
 #endif
 
 
