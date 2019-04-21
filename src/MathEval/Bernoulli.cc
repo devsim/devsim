@@ -24,13 +24,22 @@ DoubleType BernoulliImpl(DoubleType x)
 {
   DoubleType ret = 1.0;
   static const auto pleps = -log(std::numeric_limits<DoubleType>().epsilon());
+
   const auto fx = fabs(x);
 
   if (fx < pleps)
   {
-    // in the limit toward 0, then the denominator goes to x + 0.5*x^2
     const auto ex1 = expm1(x);
-    ret = x * pow(ex1, -1);
+    if (x != ex1)
+    {
+      ret = x * pow(ex1, -1);
+    }
+    else
+    {
+      
+      DoubleType d = 1.0 + 0.5 * x;
+      ret = 1.0 / d;
+    }
   }
   else if (x > 0.0)
   {
@@ -76,12 +85,21 @@ DoubleType derBernoulliImpl(DoubleType x)
     const auto ex1 = expm1(x);
 
     //// This condition is IMPORTANT for convergence
+    //// TODO: it should be possible to calculate the breakpoint for this condition
     if (x != ex1)
     {
       const auto ex2 = ex1 - (x * exp(x));
   //  const auto ex2 = (1 - x) * exp(x) - 1;
       ret = ex2;
       ret *= pow(ex1, -2);
+    }
+    else
+    {
+      DoubleType num = -1./2.;
+      DoubleType den =  1.0 + x;
+      num -= x /3.;
+      den += x;
+      ret = num / den;
     }
   }
   else if (x > 0.0)
