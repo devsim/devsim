@@ -23,6 +23,7 @@ template <typename DoubleType>
 DoubleType BernoulliImpl(DoubleType x)
 {
   DoubleType ret = 1.0;
+  // TODO: possible race condition in multithreading
   static const auto pleps = -log(std::numeric_limits<DoubleType>().epsilon());
 
   const auto fx = fabs(x);
