@@ -23,6 +23,9 @@ namespace {
 template <typename DoubleType>
 DoubleType GetLogEpsilon()
 {
+  // https://stackoverflow.com/questions/1661529/is-meyers-implementation-of-the-singleton-pattern-thread-safe
+  // If control enters the declaration concurrently while the variable is being initialized,
+  // the concurrent execution shall wait for completion of the initialization.
   static auto ret = fabs(log(std::numeric_limits<DoubleType>().epsilon()));
   return ret;
 }
@@ -32,7 +35,6 @@ template <typename DoubleType>
 DoubleType BernoulliImpl(DoubleType x)
 {
   DoubleType ret = 1.0;
-  // TODO: possible race condition in multithreading
   static const auto pleps = GetLogEpsilon<DoubleType>();
 
   const auto fx = fabs(x);
