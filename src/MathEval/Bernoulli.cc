@@ -141,12 +141,10 @@ DoubleType derBernoulli(DoubleType x)
 
 template double Bernoulli<double>(double);
 template double derBernoulli<double>(double);
-constexpr double lneps_double = GetLogEpsilon<double>();
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 template float128 Bernoulli<float128>(float128);
 template float128 derBernoulli<float128>(float128);
-static float128 lneps_float128 = GetLogEpsilon<float128>();
 #endif
 
 
