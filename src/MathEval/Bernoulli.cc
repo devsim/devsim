@@ -17,6 +17,151 @@ limitations under the License.
 
 #include "Bernoulli.hh"
 #include <cmath>
+#include <limits>
+
+namespace {
+template <typename DoubleType>
+DoubleType GetLogEpsilon()
+{
+  // https://stackoverflow.com/questions/1661529/is-meyers-implementation-of-the-singleton-pattern-thread-safe
+  // If control enters the declaration concurrently while the variable is being initialized,
+  // the concurrent execution shall wait for completion of the initialization.
+  static auto ret = fabs(log(std::numeric_limits<DoubleType>().epsilon()));
+  return ret;
+}
+}
+
+template <typename DoubleType>
+DoubleType BernoulliImpl(DoubleType x)
+{
+  DoubleType ret = 1.0;
+  static const auto pleps = GetLogEpsilon<DoubleType>();
+
+  const auto fx = fabs(x);
+
+  if (fx < pleps)
+  {
+    const auto ex1 = expm1(x);
+    if (x != ex1)
+    {
+      ret = x * pow(ex1, -1);
+    }
+    else
+    {
+      DoubleType d = 1.0 + 0.5 * x;
+#if 0
+      // this terms did not affect testing
+      d += x*x / 6.;
+#endif
+      ret = 1.0 / d;
+    }
+  }
+  else if (x > 0.0)
+  {
+    ret = x * exp(-x);
+  }
+  else
+  {
+    ret = -x;
+  }
+
+  return ret;
+}
+
+/*
+first get working with expm1, then expand to extended precision
+work on simplification at limits later if profiling reveals performance issues
+*/
+template <typename DoubleType>
+DoubleType Bernoulli(DoubleType x)
+{
+  DoubleType ret = 1.0;
+
+  // TODO: need proper representation of 0 for quad precision
+  if (x != 0.0)
+  {
+    ret = BernoulliImpl<DoubleType>(x);
+  }
+
+  return ret;
+}
+
+
+// for the non-trivial case where x != 0.0
+template <typename DoubleType>
+DoubleType derBernoulliImpl(DoubleType x)
+{
+  static const auto pleps = GetLogEpsilon<DoubleType>();
+  const auto fx = fabs(x);
+
+  DoubleType ret = -0.5;
+  if (fx < pleps)
+  {
+    const auto ex1 = expm1(x);
+
+    //// This condition is IMPORTANT for convergence
+    //// TODO: it should be possible to calculate the breakpoint for this condition
+    if (x != ex1)
+    {
+      const auto ex2 = ex1 - (x * exp(x));
+  //  const auto ex2 = (1 - x) * exp(x) - 1;
+      ret = ex2;
+      ret *= pow(ex1, -2);
+    }
+    else
+    {
+      DoubleType num = static_cast<DoubleType>(-0.5);
+      DoubleType den = static_cast<DoubleType>( 1.0);
+      num -= x / static_cast<DoubleType>(3.);
+      den += x;
+#if 0
+      // these terms did not affect testing
+      num -= x*x / static_cast<DoubleType>(8.);
+      den += (7.*x*x)/12.;
+#endif
+      ret = num / den;
+    }
+  }
+  else if (x > 0.0)
+  {
+    ret = exp(-x) * (1.0 - x);
+  }
+  else
+  {
+    ret = - 1.0 - x * exp(x);
+  }
+
+  return ret;
+}
+
+// TODO: need proper representation of 0, 0.5, 1.0 for quad precision
+template <typename DoubleType>
+DoubleType derBernoulli(DoubleType x)
+{
+
+  DoubleType ret = -0.5;
+
+  //// (exp(x) - 1 - x * exp(x)) / pow(exp(x) - 1, 2)
+  if (x != 0.0)
+  {
+    ret = derBernoulliImpl<DoubleType>(x);
+  }
+
+  return ret;
+}
+
+template double Bernoulli<double>(double);
+template double derBernoulli<double>(double);
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+template float128 Bernoulli<float128>(float128);
+template float128 derBernoulli<float128>(float128);
+#endif
+
+
+//// The following code is done using taylor expansions versus using the expm1 function
+#if 0
+#include <cmath>
 using std::abs;
 //#include <climits>
 #include <cstdlib>
@@ -116,7 +261,7 @@ inline double derBernoulliExp(const double x)
     double den = 1.0;
     double xv = x;
     num -= 1./3. * xv;
-    den += xv; 
+    den += xv;
     xv *= x;
     num -= 1./8. * xv;
     den += 7./12. * xv;
@@ -181,7 +326,7 @@ inline double derBernoulli3(double x)
     const double ex = exp(x);
     const double ex1 = ex - 1;
     if (ex != ex1)
-    { 
+    {
       //return (1.0 - x * ex / ex1) / ex1;
       return (ex*(1.0-x) - 1.0) / pow((ex - 1.0),2.0);
     }
@@ -222,11 +367,11 @@ double Bernoulli(double x)
 {
     const double fx = std::abs(x);
     double ret;
-    if ( fx < 1.0e-4 ) 
+    if ( fx < 1.0e-4 )
     {
         ret = 1.0 / (1.0 + 0.5 * x + x * x / 6.0);
     }
-    else if ( fx < lnmax ) 
+    else if ( fx < lnmax )
     {
         ret = x / (exp(x)-1.0);
     }
@@ -265,4 +410,5 @@ double derBernoulli(double x)
     }
     return ret;
 }
+#endif
 #endif

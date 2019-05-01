@@ -160,9 +160,9 @@ edge_model -device $device -region $region -name "vdiff:ψ@n1"  -equation "-V_T^
 edge_model -device $device -region $region -name "Bern01"      -equation "B(vdiff);"
 edge_model -device $device -region $region -name "Bern01:ψ@n0" -equation "dBdx(vdiff)*vdiff:ψ@n0;"
 edge_model -device $device -region $region -name "Bern01:ψ@n1" -equation "dBdx(vdiff)*vdiff:ψ@n1;"
-edge_model -device $device -region $region -name "Bern10"      -equation "B(-vdiff);"
-edge_model -device $device -region $region -name "Bern10:ψ@n0" -equation "-dBdx(-vdiff)*vdiff:ψ@n0;"
-edge_model -device $device -region $region -name "Bern10:ψ@n1" -equation "-dBdx(-vdiff)*vdiff:ψ@n1;"
+edge_model -device $device -region $region -name "Bern10"      -equation "Bern01 + vdiff;"
+edge_model -device $device -region $region -name "Bern10:ψ@n0" -equation "Bern01:ψ@n0 + vdiff:ψ@n0"
+edge_model -device $device -region $region -name "Bern10:ψ@n1" -equation "Bern01:ψ@n1 + vdiff:ψ@n1"
 
 set_parameter -device $device -region $region -name "μ_n" -value 400
 set_parameter -device $device -region $region -name "μ_p" -value 200
