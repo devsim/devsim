@@ -36,8 +36,7 @@ cp -v __init__.py ${DIST_PYDLL}
 # because the non gcc build uses the system python interpreter and python 3 is not available
 if [ "$1" = "gcc" ]
   then
-cp -v ${SRC_DIR}/devsim_py36.so ${DIST_PYDLL}
-cp -v ${SRC_DIR}/devsim_py37.so ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_py3.so ${DIST_PYDLL}
 fi
 
 # INSTALL NAME CHANGE

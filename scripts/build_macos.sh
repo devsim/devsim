@@ -55,7 +55,7 @@ bash ~/Miniconda2-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;)
 ${HOME}/anaconda/bin/conda create  -y --name python27_devsim_build python=2.7
 ${HOME}/anaconda/bin/conda install -y --name python27_devsim_build mkl mkl-devel mkl-include
 #Python3
-${HOME}/anaconda/bin/conda create -y --name python36_devsim_build python=3.6
+#${HOME}/anaconda/bin/conda create -y --name python36_devsim_build python=3.6
 ${HOME}/anaconda/bin/conda create -y --name python37_devsim_build python=3.7
 fi
 
