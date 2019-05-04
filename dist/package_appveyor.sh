@@ -17,13 +17,14 @@ fi
 
 #DIST_DIR=devsim_${PLATFORM}_${ARCH}
 DIST_DIR=$1
-#DIST_DIR=$1_${ARCH}
 DIST_BIN=${DIST_DIR}/bin
 DIST_LIB=${DIST_DIR}/lib
 DIST_PYDLL=${DIST_LIB}/devsim
 DIST_VER=${DIST_DIR}
-######MT_EXE="/cygdrive/c/Program Files (x86)/Windows Kits/8.1/bin/x64/mt.exe"
-
+# DO NOT HAVE TRAILING SLASHES!
+SYMDIFF_LIBRARY_DIR=../external/symdiff/lib/symdiff
+SYMDIFF_EXAMPLES_DIR=../external/symdiff/examples
+SYMDIFF_DOCUMENTATION_DIR=../external/symdiff/doc
 
 # make the bin directory and copy binary in
 mkdir -p ${DIST_BIN}
@@ -35,6 +36,9 @@ cp -v ${SRC_DIR}/devsim_py3.pyd ${DIST_PYDLL}
 cp -v ${SRC_DIR}/devsim_tcl.exe ${DIST_BIN}
 cp -v __init__.py ${DIST_PYDLL}
 
+# goes to lib/symdiff
+cp -R ${SYMDIFF_LIBRARY_DIR} ${DIST_LIB}
+
 ##### update the manifest
 ##### this is not necessary for pyd files
 #####(cd ${DIST_BIN} &&
@@ -44,6 +48,8 @@ cp -v __init__.py ${DIST_PYDLL}
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
+cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
+
 for i in INSTALL NOTICE LICENSE RELEASE windows.txt; do
 cp ../$i ${DIST_DIR}
 done
@@ -57,7 +63,9 @@ cp -R ../$i ${DIST_DIR}
 done
 cp -R ../python_packages ${DIST_PYDLL}
 
-
+mkdir -p ${DIST_DIR}/examples/symdiff
+# add trailing slash for rsync
+cp -R ${SYMDIFF_EXAMPLES_DIR}/* ${DIST_DIR}/examples/symdiff
 
 COMMIT=`git rev-parse --verify HEAD`
 cat <<EOF > ${DIST_DIR}/VERSION

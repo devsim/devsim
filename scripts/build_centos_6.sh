@@ -55,7 +55,7 @@ cd devsim
 (cd external/getrf && bash setup_centos6.sh && cd build && make -j2)
 
 # SYMDIFF build
-(cd external/symdiff && bash scripts/setup_centos_6.sh && cd linux_x86_64_release && make -j2);
+(cd external/symdiff && bash ../symdiff_centos.sh && cd linux_x86_64_release && make -j2);
 
 # CGNSLIB build
 ####(cd external && curl -L -O https://github.com/CGNS/CGNS/archive/v3.1.4.tar.gz && tar xzf v3.1.4.tar.gz)

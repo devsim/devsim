@@ -14,13 +14,16 @@ fi
 
 ARCH=x86_64
 PLATFORM=osx
-SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
+DEVSIM_SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
 DIST_DIR=$2
 DIST_BIN=${DIST_DIR}/bin
 DIST_LIB=${DIST_DIR}/lib
 DIST_PYDLL=${DIST_LIB}/devsim
 DIST_VER=${DIST_DIR}
-
+# DO NOT HAVE TRAILING SLASHES!
+SYMDIFF_LIBRARY_DIR=../external/symdiff/lib/symdiff
+SYMDIFF_EXAMPLES_DIR=../external/symdiff/examples
+SYMDIFF_DOCUMENTATION_DIR=../external/symdiff/doc
 
 # make the bin directory and copy binary in
 # Assume libstdc++ is a standard part of the system
@@ -29,14 +32,17 @@ mkdir -p ${DIST_BIN}
 mkdir -p ${DIST_DIR}
 mkdir -p ${DIST_PYDLL}
 
-cp -v ${SRC_DIR}/devsim_py27.so ${DIST_PYDLL}
-cp -v ${SRC_DIR}/devsim_tcl ${DIST_BIN}
+cp -v ${DEVSIM_SRC_DIR}/devsim_py27.so ${DIST_PYDLL}
+cp -v ${DEVSIM_SRC_DIR}/devsim_tcl ${DIST_BIN}
 cp -v __init__.py ${DIST_PYDLL}
+
+# goes to lib/symdiff
+rsync -aqP --delete ${SYMDIFF_LIBRARY_DIR} ${DIST_LIB}
 
 # because the non gcc build uses the system python interpreter and python 3 is not available
 if [ "$1" = "gcc" ]
   then
-cp -v ${SRC_DIR}/devsim_py3.so ${DIST_PYDLL}
+cp -v ${DEVSIM_SRC_DIR}/devsim_py3.so ${DIST_PYDLL}
 fi
 
 # INSTALL NAME CHANGE
@@ -48,8 +54,9 @@ mkdir -p ${DIST_LIB}/gcc
 ###
 ### python libs
 ###
-for i in ${DIST_PYDLL}/devsim_py*.so
+for i in ${DIST_PYDLL}/devsim_py*.so ${DIST_LIB}/symdiff/symdiff_py*.so
 do
+echo $i
 # get otool dependencies from the gcc compiler
 for j in `otool -L $i | egrep '\bgcc\b' | sed -e 's/(.*//'`
 do
@@ -80,6 +87,8 @@ fi
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
+cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
+
 for i in INSTALL NOTICE LICENSE RELEASE macos.txt scripts/anaconda_vars.sh scripts/anaconda_vars.csh; do
 cp ../$i ${DIST_DIR}
 done
@@ -93,6 +102,9 @@ rsync -aqP --delete ../$i ${DIST_DIR}
 done
 rsync -aqP --delete ../python_packages ${DIST_PYDLL}
 
+mkdir -p ${DIST_DIR}/examples/symdiff
+# add trailing slash for rsync
+rsync -aqP --delete ${SYMDIFF_EXAMPLES_DIR}/ ${DIST_DIR}/examples/symdiff
 
 
 COMMIT=`git rev-parse --verify HEAD`

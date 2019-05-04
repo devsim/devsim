@@ -79,7 +79,7 @@ fi
 # SYMDIFF build
 if [ "${1}" = "gcc" ]
 then
-(cd external/symdiff && bash scripts/setup_osx_gcc.sh && cd osx_release && make -j4)
+(cd external/symdiff && bash ../symdiff_macos.sh && cd osx_release && make -j4)
 elif [ "${1}" = "clang" ]
 then
 (cd external/symdiff && bash scripts/setup_osx_10.10.sh && cd osx_release && make -j4)
