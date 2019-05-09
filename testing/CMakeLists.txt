@@ -16,9 +16,9 @@ SET (OUTPUTDIR   ${RUNDIR})
 SET (MODELCOMP   ${PROJECT_BINARY_DIR}/src/adiff/modelcomp)
 ENDIF (WIN32)
 
-IF (DEVSIM_PY2_TEST_EXE)
-SET (DEVSIM_PY2   ${DEVSIM_PY2_TEST_EXE})
-ENDIF (DEVSIM_PY2_TEST_EXE)
+#IF (DEVSIM_PY2_TEST_EXE)
+#SET (DEVSIM_PY2   ${DEVSIM_PY2_TEST_EXE})
+#ENDIF (DEVSIM_PY2_TEST_EXE)
 
 IF (DEVSIM_PY3_TEST_EXE)
 SET (DEVSIM_PY3   ${DEVSIM_PY3_TEST_EXE})
@@ -34,7 +34,17 @@ ENDIF (DEVSIM_TEST_GOLDENDIR)
 
 ENABLE_TESTING()
 
-SET (NEWPYTESTS
+#SET (NEWPYTESTS
+#)
+#
+#FOREACH(I ${NEWPYTESTS})
+#    ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_PY2} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
+#ENDFOREACH(I)
+
+ADD_TEST("testing/pythonmesh1d_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/pythonmesh1d.msh ${GOLDENDIR}/testing/pythonmesh1d.msh)
+set_tests_properties("testing/pythonmesh1d_comp" PROPERTIES DEPENDS "testing/pythonmesh1d")
+
+SET (NEWPY3TESTS
   cap2
   equation1
   ptest1
@@ -46,22 +56,12 @@ SET (NEWPYTESTS
   laux1
   pythonmesh1d
 )
-
-FOREACH(I ${NEWPYTESTS})
-    ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_PY2} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
-ENDFOREACH(I)
-
-ADD_TEST("testing/pythonmesh1d_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/pythonmesh1d.msh ${GOLDENDIR}/testing/pythonmesh1d.msh)
-set_tests_properties("testing/pythonmesh1d_comp" PROPERTIES DEPENDS "testing/pythonmesh1d")
-
-SET (NEWPY3TESTS
-  cap3
-)
 FOREACH(I ${NEWPY3TESTS})
-    ADD_TEST("testing/${I}_python3" ${RUNDIFFTEST} "${DEVSIM_PY3} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
+    ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_PY3} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
 ENDFOREACH(I)
 
-SET (NEWTESTS res1 res2 res3 dio1_utf8 dio2 circ1 circ2 circ3 circ4
+SET (NEWTESTS
+res1 res2 res3 dio1_utf8 dio2 circ1 circ2 circ3 circ4
 ssac_circ ssac_cap ssac_res ssac_diode utf8_1 mesh1 mesh2 mesh3 mesh4 trimesh1 trimesh2 floops erf1 Fermi1
 mesh2d dio2_2d mos_2d mos_2d_restart mos_2d_restart2 noise_res noise_res_2d dio2_element_2d
 gmsh_resistor2d gmsh_resistor3d

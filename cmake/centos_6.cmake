@@ -13,8 +13,8 @@ SET (QUADMATH_ARCHIVE "-lquadmath")
 
 
 
-SET (MKL_PARDISO_INCLUDE $ENV{HOME}/anaconda/envs/python27_devsim_build/include)
-SET (MKL_LIB_DIR $ENV{HOME}/anaconda/envs/python27_devsim_build/lib)
+SET (MKL_PARDISO_INCLUDE $ENV{HOME}/anaconda/envs/python37_devsim_build/include)
+SET (MKL_LIB_DIR $ENV{HOME}/anaconda/envs/python37_devsim_build/lib)
 #http://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
 #requires duplicate library for 1-pass linker
 SET (BLAS_ARCHIVE
@@ -43,8 +43,8 @@ SET (ZLIB_ARCHIVE $ENV{HOME}/anaconda/lib/libz.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)
 
-SET (PYTHON27_INCLUDE   $ENV{HOME}/anaconda/envs/python27_devsim_build/include/python2.7)
-SET (PYTHON27_ARCHIVE -L$ENV{HOME}/anaconda/envs/python27_devsim_build/lib   -lpython2.7)
+#SET (PYTHON27_INCLUDE   $ENV{HOME}/anaconda/envs/python27_devsim_build/include/python2.7)
+#SET (PYTHON27_ARCHIVE -L$ENV{HOME}/anaconda/envs/python27_devsim_build/lib   -lpython2.7)
 #SET (PYTHON36_INCLUDE   $ENV{HOME}/anaconda/envs/python36_devsim_build/include/python3.6m)
 #SET (PYTHON36_ARCHIVE -L$ENV{HOME}/anaconda/envs/python36_devsim_build/lib   -lpython3.6m)
 SET (PYTHON37_INCLUDE   $ENV{HOME}/anaconda/envs/python37_devsim_build/include/python3.7m)

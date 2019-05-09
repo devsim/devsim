@@ -22,10 +22,10 @@ INCLUDE_DIRECTORIES (
     ../common_api
 )
 
-ADD_LIBRARY (pythonapi_interpreter_py27 OBJECT ${CXX_SRCS1})
-ADD_LIBRARY (pythonapi_api_py27 OBJECT ${CXX_SRCS2})
-TARGET_INCLUDE_DIRECTORIES (pythonapi_interpreter_py27 BEFORE PRIVATE ${PYTHON27_INCLUDE})
-target_compile_definitions(pythonapi_interpreter_py27 PRIVATE -DDEVSIM_MODULE_NAME=devsim_py27)
+#ADD_LIBRARY (pythonapi_interpreter_py27 OBJECT ${CXX_SRCS1})
+#ADD_LIBRARY (pythonapi_api_py27 OBJECT ${CXX_SRCS2})
+#TARGET_INCLUDE_DIRECTORIES (pythonapi_interpreter_py27 BEFORE PRIVATE ${PYTHON27_INCLUDE})
+#target_compile_definitions(pythonapi_interpreter_py27 PRIVATE -DDEVSIM_MODULE_NAME=devsim_py27)
 
 
 IF (PYTHON3)

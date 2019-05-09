@@ -54,8 +54,7 @@ def calculateValues(scalar_efield, eecouple, sx, sy):
   e_opp  = [0] * 2
   efx = [0] *len(scalar_efield)
   efy = [0] *len(scalar_efield)
-  ## this presents what could be a serious issue
-  for ei in range(len(scalar_efield)/3):
+  for ei in range(len(scalar_efield)//3):
     for i in range(3):
       e_base = 3*ei + i
       k = 0
@@ -110,7 +109,7 @@ eecouple = get_element_model_values(device=device, region=region, name="ElementE
 
 (ex, ey) = calculateValues(scalar_efield, eecouple, sx, sy)
 for i in range(len(ex)):
-  print "%g\t%g\t%g\t%g" %( ex[i], ey[i], efieldx[i], efieldy[i])
+  print("%g\t%g\t%g\t%g" %( ex[i], ey[i], efieldx[i], efieldy[i]))
 
 #
 # now verify derivatives
@@ -139,7 +138,7 @@ for i in range(2):
 
 element_model(device=device, region=region, name="scalar_edge_index", equation="edge_index")
 scalar_edge_index = get_element_model_values(device=device, region=region, name="scalar_edge_index")
-scalar_edge_index = map(lambda x : int(x), scalar_edge_index)
+scalar_edge_index = [int(x) for x in scalar_edge_index]
 element_from_node_model(node_model="node_index", device=device, region=region)
 
 nelem = len(efieldx)
@@ -173,7 +172,7 @@ diff_field = [0]*nelem
 dest_map = [0]*nelem # maps global node of element to this particular edge
 for dnode in range(3): #this is the node we are taking the derivative with respect to
                        # it is the global node index and will be figure out shortly
-  for i in range(nelem/3):
+  for i in range(nelem//3):
     bi = 3*i  # this is the base element edge(0)
     dindex = element_node_indexes[bi][dnode]# this is the node we are taking the derivative with respect to
     for j in range(3): # this is the edge of interest
@@ -196,9 +195,9 @@ for dnode in range(3): #this is the node we are taking the derivative with respe
 #print element_node_indexes
 
 for i in range(3):
-  print "index %d" % i
+  print("index %d" % i)
   for j in range(nelem):
-    print "%g\t%g\t%g\t%g" %( ddata_x[j][i], ddata_y[j][i], cdata_x[j][i], cdata_y[j][i])
+    print("%g\t%g\t%g\t%g" %( ddata_x[j][i], ddata_y[j][i], cdata_x[j][i], cdata_y[j][i]))
 
 #print element_node_indexes
 #print potential_diff

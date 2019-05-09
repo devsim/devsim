@@ -53,8 +53,8 @@ def myassemble(what, timemode):
     rcv.extend([n2, n1, mG2])
     rcv.extend([n2, n2, G2])
 
-  print rcv
-  print rv
+  print(rcv)
+  print(rv)
   return [rcv, rv]
 
 custom_equation(name="test1", procedure="myassemble")

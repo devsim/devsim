@@ -3,7 +3,9 @@ set -e
 
 if [ "${1}" = "gcc" ]
   then
-  brew update > /dev/null;
+  # try to fix build error
+  #export HOMEBREW_NO_INSTALL_CLEANUP=1
+  #brew update > /dev/null;
   #if brew ls --versions gcc > /dev/null;
   #then
   #brew outdated gcc || brew upgrade gcc;
@@ -14,11 +16,10 @@ if [ "${1}" = "gcc" ]
   #export CC=/usr/local/bin/gcc-8;
   #export CXX=/usr/local/bin/g++-8;
   #export F77=/usr/local/bin/gfortran-8;
-  brew install gcc@8
-  brew link gcc
-  export CC=gcc-8;
-  export CXX=g++-8;
-  export F77=gfortran-8;
+  #brew install gcc@8 || brew link --overwrite gcc
+  export CC=/usr/local/Cellar/gcc/8.2.0/bin/gcc-8;
+  export CXX=/usr/local/Cellar/gcc/8.2.0/bin/g++-8
+  export F77=/usr/local/Cellar/gcc/8.2.0/bin/gfortran-8;
 
   # https://github.com/Microsoft/LightGBM/pull/1560
   # removes symlink
@@ -28,12 +29,12 @@ if [ "${1}" = "gcc" ]
 #  sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-9.3"
 
   # install boost
-  if brew ls --versions boost > /dev/null;
-  then
-  brew outdated boost || brew upgrade boost;
-  else
-  brew install boost
-  fi
+  #if brew ls --versions boost > /dev/null;
+  #then
+  #brew outdated boost || brew upgrade boost;
+  #else
+  #brew install boost
+  #fi
 
 elif [ "${1}" = "clang" ]
   then
@@ -46,17 +47,18 @@ else
 fi
 
 #minimal conda environments to prevent linking against the wrong libraries
-if [ "${1}" = "gcc" ] && [ ! -f ${HOME}/Miniconda2-latest-MacOSX-x86_64.sh ]
+if [ "${1}" = "gcc" ] && [ ! -f ${HOME}/Miniconda3-latest-MacOSX-x86_64.sh ]
 then
 (cd ${HOME} &&
-curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh;
-bash ~/Miniconda2-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;)
+curl -O https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh;
+bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;)
 # Python 2
-${HOME}/anaconda/bin/conda create  -y --name python27_devsim_build python=2.7
-${HOME}/anaconda/bin/conda install -y --name python27_devsim_build mkl mkl-devel mkl-include
+#${HOME}/anaconda/bin/conda create  -y --name python27_devsim_build python=2.7
+#${HOME}/anaconda/bin/conda install -y --name python27_devsim_build mkl mkl-devel mkl-include
 #Python3
 #${HOME}/anaconda/bin/conda create -y --name python36_devsim_build python=3.6
-${HOME}/anaconda/bin/conda create -y --name python37_devsim_build python=3.7
+${HOME}/anaconda/bin/conda create  -y --name python37_devsim_build python=3.7
+${HOME}/anaconda/bin/conda install -y --name python37_devsim_build mkl mkl-devel mkl-include
 fi
 
 

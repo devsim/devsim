@@ -15,18 +15,18 @@ yum install -y devtoolset-6-gcc devtoolset-6-gcc-c++ devtoolset-6-libquadmath-de
 
 #minimal conda environments to prevent linking against the wrong libraries
 cd ${HOME}
-if [ ! -f Miniconda2-latest-Linux-x86_64.sh ]
+if [ ! -f Miniconda3-latest-Linux-x86_64.sh ]
 then
-curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh;
-bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p ${HOME}/anaconda;
+curl -O https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh;
+bash ~/Miniconda3-latest-Linux-x86_64.sh -b -p ${HOME}/anaconda;
 # Python 2
 # install cmake in base environment
 ${HOME}/anaconda/bin/conda install -y cmake
-${HOME}/anaconda/bin/conda create  -y --name python27_devsim_build python=2.7
-${HOME}/anaconda/bin/conda install -y --name python27_devsim_build mkl mkl-devel mkl-include
+#${HOME}/anaconda/bin/conda create  -y --name python27_devsim_build python=2.7
 #Python3
 #${HOME}/anaconda/bin/conda create -y --name python36_devsim_build python=3.6
-${HOME}/anaconda/bin/conda create -y --name python37_devsim_build python=3.7
+${HOME}/anaconda/bin/conda create  -y --name python37_devsim_build python=3.7
+${HOME}/anaconda/bin/conda install -y --name python37_devsim_build mkl mkl-devel mkl-include
 fi
 
 #download boost library

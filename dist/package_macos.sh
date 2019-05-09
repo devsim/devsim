@@ -32,7 +32,7 @@ mkdir -p ${DIST_BIN}
 mkdir -p ${DIST_DIR}
 mkdir -p ${DIST_PYDLL}
 
-cp -v ${DEVSIM_SRC_DIR}/devsim_py27.so ${DIST_PYDLL}
+#cp -v ${DEVSIM_SRC_DIR}/devsim_py27.so ${DIST_PYDLL}
 cp -v ${DEVSIM_SRC_DIR}/devsim_tcl ${DIST_BIN}
 cp -v __init__.py ${DIST_PYDLL}
 

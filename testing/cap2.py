@@ -94,8 +94,8 @@ interface_equation(device=device, interface=interface, name="PotentialEquation",
 
 solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 
-print(get_contact_charge(device=device, contact="top", equation="PotentialEquation"))
-print(get_contact_charge(device=device, contact="bot", equation="PotentialEquation"))
+print((get_contact_charge(device=device, contact="top", equation="PotentialEquation")))
+print((get_contact_charge(device=device, contact="bot", equation="PotentialEquation")))
 
 print_edge_values(device=device, region="MySiRegion", name="PotentialEdgeFlux")
 print_edge_values(device=device, region="MyOxRegion", name="PotentialEdgeFlux")
@@ -107,8 +107,8 @@ print_edge_values(device=device, region="MyOxRegion", name="PotentialEdgeFlux")
 solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=30)
 print_edge_values(device=device, region="MySiRegion", name="PotentialEdgeFlux")
 print_edge_values(device=device, region="MyOxRegion", name="PotentialEdgeFlux")
-print(get_contact_charge(device=device, contact="top", equation="PotentialEquation"))
-print(get_contact_charge(device=device, contact="bot", equation="PotentialEquation"))
+print((get_contact_charge(device=device, contact="top", equation="PotentialEquation")))
+print((get_contact_charge(device=device, contact="bot", equation="PotentialEquation")))
 
 set_parameter(device=device, name="Permittivity", value=11.1*8.85e-14)
 set_parameter(device=device, region="MySiRegion", name="Permittivity", value=11.1*8.85e-14)
@@ -121,41 +121,41 @@ print_edge_values(device=device, region="MySiRegion", name="ElectricField")
 print_edge_values(device=device, region="MyOxRegion", name="ElectricField")
 print_node_values(device=device, region="MySiRegion", name="Potential")
 print_node_values(device=device, region="MyOxRegion", name="Potential")
-print (get_contact_charge(device=device, contact="top", equation="PotentialEquation"))
-print (get_contact_charge(device=device, contact="bot", equation="PotentialEquation"))
+print((get_contact_charge(device=device, contact="top", equation="PotentialEquation")))
+print((get_contact_charge(device=device, contact="bot", equation="PotentialEquation")))
 
 
 
 def get_rlist():
   rlist = []
   for r in get_region_list(device=device):
-    print "Region: " + r
+    print("Region: " + r)
     for e in get_equation_list(device=device, region=r):
-      print "Equation: " + e
+      print("Equation: " + e)
       cmd = get_equation_command(device=device, region=r, name=e)
-      print "Options: " + str(cmd)
+      print("Options: " + str(cmd))
       rlist.append(get_equation_command(device=device, region=r, name=e))
   return rlist
 
 def get_clist():
   clist = []
   for c in get_contact_list(device=device):
-    print "Contact: " + c
+    print("Contact: " + c)
     for e in get_contact_equation_list(device=device, contact=c):
-      print "Contact Equation: " + e
+      print("Contact Equation: " + e)
       cmd = get_contact_equation_command(device=device, contact=c, name=e)
-      print "Options: " + str(cmd)
+      print("Options: " + str(cmd))
       clist.append(cmd)
   return clist
 
 def get_ilist():
   ilist = []
   for i in get_interface_list(device=device):
-    print "Interface: " + i
+    print("Interface: " + i)
     for e in get_interface_equation_list(device=device, interface=i):
-      print "Interface Equation: " + e
+      print("Interface Equation: " + e)
       cmd = get_interface_equation_command(device=device, interface=i, name=e)
-      print "Options: " + str(cmd)
+      print("Options: " + str(cmd))
       ilist.append(cmd)
   return ilist
 
@@ -163,8 +163,8 @@ rl = get_rlist()
 cl = get_clist()
 il = get_ilist()
 
-print
-print
+print()
+print()
 
 for i in rl:
   delete_equation(device=i['device'], region=i['region'], name=i['name'])
@@ -191,15 +191,15 @@ solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30
 node_solution(device=device, region="MySiRegion", name="testing")
 set_node_value(device=device, region="MySiRegion", name="testing", value=8, index=3)
 nv = get_node_model_values(device=device, region="MySiRegion", name="Potential")
-print nv
+print(nv)
 set_node_value(device=device, region="MySiRegion", name="Potential", value=1.1)
-print get_node_model_values(device=device, region="MySiRegion", name="Potential")
+print(get_node_model_values(device=device, region="MySiRegion", name="Potential"))
 set_node_value(device=device, region="MySiRegion", name="Potential", value=0, index=3)
-print get_node_model_values(device=device, region="MySiRegion", name="Potential")
+print(get_node_model_values(device=device, region="MySiRegion", name="Potential"))
 set_node_values(device=device, region="MySiRegion", name="Potential", init_from="testing")
-print get_node_model_values(device=device, region="MySiRegion", name="Potential")
+print(get_node_model_values(device=device, region="MySiRegion", name="Potential"))
 set_node_values(device=device, region="MySiRegion", name="Potential", values=nv)
-print get_node_model_values(device=device, region="MySiRegion", name="Potential")
+print(get_node_model_values(device=device, region="MySiRegion", name="Potential"))
 
 solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 
@@ -207,7 +207,7 @@ solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30
 import devsim
 node_model(device=device, region="MySiRegion", name="test", equation="log(-1)")
 try:
-  print(get_node_model_values(device=device, region="MySiRegion", name="test"))
+  print((get_node_model_values(device=device, region="MySiRegion", name="test")))
 except devsim.error as x:
   print(x)
 print("The DEVSIM FATAL message is part of the test.  The FPE exception was caught and the program will terminate normally.")

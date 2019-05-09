@@ -30,6 +30,7 @@ namespace mthread {
 int Tcl_AppInit(Tcl_Interp *interp) {
       SetMainInterpreter(interp);
       OutputStream::SetInterpreter(interp);
+#if 0
       OutputStream::WriteOut(OutputStream::OutputType::INFO,
 "\n"
 "----------------------------------------\n"
@@ -45,6 +46,7 @@ int Tcl_AppInit(Tcl_Interp *interp) {
 "\n"
 "\n"
     );
+#endif
 
       /* Initialize Tcl */
       if (Tcl_Init(interp) == TCL_ERROR) {

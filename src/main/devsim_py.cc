@@ -50,6 +50,7 @@ void devsim_initialization()
 
     dsHelper::CreateDefaultDerivatives();
 
+#if 0
     OutputStream::WriteOut(OutputStream::OutputType::INFO,
 "\n"
 "----------------------------------------\n"
@@ -65,6 +66,7 @@ void devsim_initialization()
 "\n"
 "\n"
     );
+#endif
 }
 
 #if 0

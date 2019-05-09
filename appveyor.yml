@@ -44,8 +44,8 @@ os: Visual Studio 2017
 init:
   #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - git config --global core.autocrlf input
-  - IF "%PLATFORM%"=="x64" SET CONDA_PATH=c:\Miniconda-x64\Scripts\conda && SET BUILDDIR=win64
-  - IF "%PLATFORM%"=="x86" SET CONDA_PATH=c:\Miniconda\Scripts\conda && SET BUILDDIR=win32
+  - IF "%PLATFORM%"=="x64" SET CONDA_PATH=c:\Miniconda37-x64\Scripts\conda && SET BUILDDIR=win64
+  - IF "%PLATFORM%"=="x86" SET CONDA_PATH=c:\Miniconda37\Scripts\conda && SET BUILDDIR=win32
 
 # clone directory
 clone_folder: c:\projects\devsim
@@ -119,8 +119,8 @@ install:
   # the intel channel is required to get the .lib for mkl
   #- c:\Miniconda-x64\Scripts\conda install --yes -c intel mkl
   # The development libraries are now part of standard Anaconda Python
-  - IF "%PLATFORM%"=="x64" c:\Miniconda-x64\Scripts\conda install --yes mkl mkl-devel mkl-include tk sqlite zlib
-  - IF "%PLATFORM%"=="x86" c:\Miniconda\Scripts\conda install --yes mkl mkl-devel mkl-include tk sqlite zlib
+  - IF "%PLATFORM%"=="x64" c:\Miniconda37-x64\Scripts\conda install --yes mkl mkl-devel mkl-include tk sqlite zlib
+  - IF "%PLATFORM%"=="x86" c:\Miniconda37\Scripts\conda install --yes mkl mkl-devel mkl-include tk sqlite zlib
   # need to debug path
   #- c:\Miniconda-x64\Scripts\conda env list
   # install ActiveState Tcl

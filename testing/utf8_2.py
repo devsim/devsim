@@ -43,8 +43,8 @@ create_device(mesh="dog", device = device)
 set_parameter(name = "Permittivity", value=(3.9*8.85e-14), **region_info)
 set_parameter(name = "ElectricCharge", value=1.6e-19, **region_info)
 
-print(get_parameter(name="Permittivity", **region_info))
-print(get_parameter(name="ElectricCharge", **region_info))
+print((get_parameter(name="Permittivity", **region_info)))
+print((get_parameter(name="ElectricCharge", **region_info)))
 
 node_solution(name="ψ", **region_info)
 edge_from_node_model(node_model="ψ", **region_info)
@@ -91,8 +91,8 @@ contact_equation( device=device , contact= "bot" , name= "ψEquation" , variable
 
 solve( type="dc", absolute_error= 1.0 , relative_error= 1e-10 , maximum_iterations= 30)
 
-print(get_contact_charge(device=device , contact="top", equation="ψEquation"))
-print(get_contact_charge(device=device , contact="bot", equation="ψEquation"))
+print((get_contact_charge(device=device , contact="top", equation="ψEquation")))
+print((get_contact_charge(device=device , contact="bot", equation="ψEquation")))
 
 #write_devices(file='cap1.msh', type='devsim')
 

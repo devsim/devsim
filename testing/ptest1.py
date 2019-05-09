@@ -32,7 +32,7 @@ set_parameter(name="bot_bias", value=0.0)
 #for i in (0.0, 1.0):
 set_parameter(name="top_bias", value=1.0)
 solve( type="dc", absolute_error= 1.0 , relative_error= 1e-10 , maximum_iterations=30)
-print(get_contact_charge(device=device_name, contact="top", equation="PotentialEquation"))
-print(get_contact_charge(device=device_name, contact="bot", equation="PotentialEquation"))
-print get_edge_model_values(device=device_name, region=region_name, name="PotentialEdgeFlux")
+print((get_contact_charge(device=device_name, contact="top", equation="PotentialEquation")))
+print((get_contact_charge(device=device_name, contact="bot", equation="PotentialEquation")))
+print(get_edge_model_values(device=device_name, region=region_name, name="PotentialEdgeFlux"))
 
