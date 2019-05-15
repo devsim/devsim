@@ -61,7 +61,7 @@ for region in regions:
       edge_model="PotentialEdgeFlux", time_node_model="", variable_update="default") 
 
 set_parameter(device=device, region="MySiRegion", name="topbias"   , value=1.0)
-set_parameter(device=device, region="MyOxRegion", name="bottombias", value=0.0)
+set_parameter(device=device, region="MyOxRegion", name="botbias", value=0.0)
 
 
 conteq="Permittivity*ElectricField"
@@ -70,8 +70,8 @@ node_model(device=device, region="MySiRegion", name="topnode_model",           e
 node_model(device=device, region="MySiRegion", name="topnode_model:Potential", equation="1")
 edge_model(device=device, region="MySiRegion", name="contactcharge_edge_top",  equation=conteq)
 
-node_model(device=device, region="MyOxRegion", name="bottomnode_model",           equation="Potential - bottombias")
-node_model(device=device, region="MyOxRegion", name="bottomnode_model:Potential", equation="1")
+node_model(device=device, region="MyOxRegion", name="botnode_model",           equation="Potential - botbias")
+node_model(device=device, region="MyOxRegion", name="botnode_model:Potential", equation="1")
 edge_model(device=device, region="MyOxRegion", name="contactcharge_edge_bottom",  equation=conteq)
 
 contact_equation(device=device, contact="top", name="PotentialEquation", variable_name="Potential",
@@ -80,7 +80,7 @@ contact_equation(device=device, contact="top", name="PotentialEquation", variabl
 			node_current_model="",   edge_current_model="")
 
 contact_equation(device=device, contact="bot", name="PotentialEquation", variable_name="Potential",
-			node_model="bottomnode_model", edge_model="",
+			node_model="botnode_model", edge_model="",
 			node_charge_model="", edge_charge_model="contactcharge_edge_bottom",
 			node_current_model="", edge_current_model="")
 
@@ -202,13 +202,4 @@ set_node_values(device=device, region="MySiRegion", name="Potential", values=nv)
 print(get_node_model_values(device=device, region="MySiRegion", name="Potential"))
 
 solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
-
-# test exception
-import devsim
-node_model(device=device, region="MySiRegion", name="test", equation="log(-1)")
-try:
-  print((get_node_model_values(device=device, region="MySiRegion", name="test")))
-except devsim.error as x:
-  print(x)
-print("The DEVSIM FATAL message is part of the test.  The FPE exception was caught and the program will terminate normally.")
 
