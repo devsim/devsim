@@ -32,7 +32,7 @@ mkdir -p ${DIST_DIR}
 mkdir -p ${DIST_PYDLL}
 
 cp -v ${SRC_DIR}/devsim_py3.pyd ${DIST_PYDLL}
-cp -v ${SRC_DIR}/devsim_tcl.exe ${DIST_BIN}
+#cp -v ${SRC_DIR}/devsim_tcl.exe ${DIST_BIN}
 cp -v __init__.py ${DIST_PYDLL}
 
 # goes to lib/symdiff

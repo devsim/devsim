@@ -27,10 +27,8 @@ for TYPE in debug release; do
         -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
         -DPYTHON3_ARCHIVE=${PYTHON3_ARCHIVE} \
         -DPYTHON3_BIN=${PYTHON3_BIN} \
-        -DTCL_INCLUDE=${TCL_INCLUDE} \
-        -DTCL_ARCHIVE=${TCL_ARCHIVE} \
-        -DTCL_BIN=${TCL_BIN} \
         -DPYTHON3=ON \
+        -DTCLMAIN=OFF \
         ..)
 #  done
 done
