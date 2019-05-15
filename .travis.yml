@@ -40,9 +40,9 @@ script:
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     if [ "$COMPILER" == "gcc" ]; then
-      ./scripts/build_macos.sh $COMPILER "gcc_${TRAVIS_TAG}";
-    elif [ "$COMPILER" == "clang" ]; then
       ./scripts/build_macos.sh $COMPILER "${TRAVIS_TAG}";
+    elif [ "$COMPILER" == "clang" ]; then
+      ./scripts/build_macos.sh $COMPILER "clang_${TRAVIS_TAG}";
     fi
     fi
 

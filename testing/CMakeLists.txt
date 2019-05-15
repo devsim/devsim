@@ -41,11 +41,8 @@ ENABLE_TESTING()
 #    ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_PY2} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
 #ENDFOREACH(I)
 
-ADD_TEST("testing/pythonmesh1d_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/pythonmesh1d.msh ${GOLDENDIR}/testing/pythonmesh1d.msh)
-set_tests_properties("testing/pythonmesh1d_comp" PROPERTIES DEPENDS "testing/pythonmesh1d")
-
 SET (NEWPY3TESTS
-  cap2
+  cap2 ssac_cap
   equation1
   ptest1
   ptest2
@@ -55,44 +52,49 @@ SET (NEWPY3TESTS
   utf8_2
   laux1
   pythonmesh1d
+  Fermi1
+  kahan
+  fpetest1
+  fpetest2
+  res1 res2 res3 ssac_res noise_res
+  symdiff1
+  erf1
+  mesh1 mesh2 mesh3 mesh4
+  mesh2d
+  transient_circ
+  transient_circ2
+  transient_circ3
+circ1
+circ2
+circ3
+circ4
+ssac_circ
+trimesh1
+trimesh2
+noise_res_2d
+dio2_element_2d
+mos_2d 
+mos_2d_restart
+mos_2d_restart2
 )
 FOREACH(I ${NEWPY3TESTS})
     ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_PY3} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
 ENDFOREACH(I)
 
-SET (NEWTESTS
-res1 res2 res3 dio1_utf8 dio2 circ1 circ2 circ3 circ4
-ssac_circ ssac_cap ssac_res ssac_diode utf8_1 mesh1 mesh2 mesh3 mesh4 trimesh1 trimesh2 floops erf1 Fermi1
-mesh2d dio2_2d mos_2d mos_2d_restart mos_2d_restart2 noise_res noise_res_2d dio2_element_2d
-gmsh_resistor2d gmsh_resistor3d
-transient_circ transient_circ2 transient_circ3
-#mos_2d_temtest
-#mos_2d_temtest2
-package_cap1
-#sqlite1
-rename1
-symdiff1
-#thread_1
-fpetest1
-#fpetest2
-kahan
-)
-FOREACH(I ${NEWTESTS})
-    ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_TCL} ${I}.tcl" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
-ENDFOREACH(I)
+#SET (NEWTESTS
+#)
+#FOREACH(I ${NEWTESTS})
+#    ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_TCL} ${I}.tcl" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
+#ENDFOREACH(I)
 
-
-# on redhat 6.4 this test fails on the Tcl platform
-#set_tests_properties("testing/fpetest2" PROPERTIES TIMEOUT 5)
-#set_tests_properties("testing/mos_2d_temtest" PROPERTIES DEPENDS testing/mos_2d)
-#set_tests_properties("testing/mos_2d_temtest2" PROPERTIES DEPENDS testing/mos_2d)
 set_tests_properties("testing/mos_2d_restart" PROPERTIES DEPENDS testing/mos_2d)
 set_tests_properties("testing/mos_2d_restart2" PROPERTIES DEPENDS testing/mos_2d)
-set_tests_properties("testing/sqlite2" PROPERTIES DEPENDS testing/sqlite1)
 set_tests_properties("testing/sqlite3" PROPERTIES DEPENDS testing/sqlite2)
 set_tests_properties("testing/mesh4" PROPERTIES DEPENDS testing/mesh3)
 set_tests_properties("testing/trimesh2" PROPERTIES DEPENDS testing/trimesh1)
 
+ADD_TEST("testing/pythonmesh1d_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/pythonmesh1d.msh ${GOLDENDIR}/testing/pythonmesh1d.msh)
+set_tests_properties("testing/pythonmesh1d_comp" PROPERTIES DEPENDS "testing/pythonmesh1d")
 ADD_TEST("testing/mesh3_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mesh3.msh ${GOLDENDIR}/testing/mesh3.msh)
 set_tests_properties("testing/mesh3_comp" PROPERTIES DEPENDS testing/mesh3)
 ADD_TEST("testing/mesh4_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mesh4.msh ${GOLDENDIR}/testing/mesh4.msh)
@@ -101,8 +103,6 @@ ADD_TEST("testing/trimesh2_msh_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/trimesh2.msh
 set_tests_properties("testing/trimesh2_msh_comp" PROPERTIES DEPENDS testing/trimesh1)
 ADD_TEST("testing/trimesh3_msh_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/trimesh3.msh ${GOLDENDIR}/testing/trimesh3.msh)
 set_tests_properties("testing/trimesh3_msh_comp" PROPERTIES DEPENDS testing/trimesh2)
-ADD_TEST("testing/floops_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/floops.flps ${GOLDENDIR}/testing/floops.flps)
-set_tests_properties("testing/floops_comp" PROPERTIES DEPENDS testing/floops)
 ADD_TEST("testing/mesh2d_flps_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mesh2d.flps ${GOLDENDIR}/testing/mesh2d.flps)
 set_tests_properties("testing/mesh2d_flps_comp" PROPERTIES DEPENDS testing/mesh2d)
 ADD_TEST("testing/mesh2d_msh_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mesh2d.msh ${GOLDENDIR}/testing/mesh2d.msh)
@@ -116,8 +116,6 @@ ADD_TEST("testing/mos_2d_dd_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mos_2d_dd.msh $
 set_tests_properties("testing/mos_2d_dd_comp" PROPERTIES DEPENDS testing/mos_2d)
 ADD_TEST("testing/mos_2d_restart2_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/mos_2d_restart2.msh ${GOLDENDIR}/testing/mos_2d_restart2.msh)
 set_tests_properties("testing/mos_2d_restart2_comp" PROPERTIES DEPENDS testing/mos_2d_restart2)
-ADD_TEST("testing/gmsh_resistor3d_comp" ${DIFF} ${DIFF_ARGS} ${RUNDIR}/gmsh_resistor3d.dat ${GOLDENDIR}/testing/gmsh_resistor3d.dat)
-set_tests_properties("testing/gmsh_resistor3d_comp" PROPERTIES DEPENDS testing/gmsh_resistor3d)
 
 #### Disable these tests
 IF (0)
@@ -173,15 +171,15 @@ FOREACH(I ${MAGNETIC_TESTS})
     ADD_TEST("${MAGNETIC_DIR}/${I}" ${RUNDIFFTEST} "${DEVSIM_PY3} ${I}.py" ${GOLDENDIR}/${MAGNETIC_DIR} ${I}.out ${MAGNETIC_PATH} ${MAGNETIC_PATH})
 ENDFOREACH(I)
 
-SET (GENIUS_DIR  examples/genius)
-SET (GENIUS_PATH ${PROJECT_SOURCE_DIR}/${GENIUS_DIR})
-SET (GENIUS_TESTS read_nmos read_pn2d genius_diode2d)
-FOREACH(I ${GENIUS_TESTS})
-    ADD_TEST("${GENIUS_DIR}/${I}" ${RUNDIFFTEST} "${DEVSIM_PY3} ${I}.py" ${GOLDENDIR}/${GENIUS_DIR} ${I}.out ${GENIUS_PATH} ${GENIUS_PATH})
-ENDFOREACH(I)
-ADD_TEST("${GENIUS_DIR}/pn2d_comp" ${DIFF} ${DIFF_ARGS} ${GENIUS_PATH}/pn2d.msh ${GOLDENDIR}/${GENIUS_DIR}/pn2d.msh)
-set_tests_properties("${GENIUS_DIR}/pn2d_comp" PROPERTIES DEPENDS "${GENIUS_DIR}/read_pn2d")
-set_tests_properties("${GENIUS_DIR}/genius_diode2d" PROPERTIES DEPENDS "${GENIUS_DIR}/pn2d_comp")
+#SET (GENIUS_DIR  examples/genius)
+#SET (GENIUS_PATH ${PROJECT_SOURCE_DIR}/${GENIUS_DIR})
+#SET (GENIUS_TESTS read_nmos read_pn2d genius_diode2d)
+#FOREACH(I ${GENIUS_TESTS})
+#    ADD_TEST("${GENIUS_DIR}/${I}" ${RUNDIFFTEST} "${DEVSIM_PY3} ${I}.py" ${GOLDENDIR}/${GENIUS_DIR} ${I}.out ${GENIUS_PATH} ${GENIUS_PATH})
+#ENDFOREACH(I)
+#ADD_TEST("${GENIUS_DIR}/pn2d_comp" ${DIFF} ${DIFF_ARGS} ${GENIUS_PATH}/pn2d.msh ${GOLDENDIR}/${GENIUS_DIR}/pn2d.msh)
+#set_tests_properties("${GENIUS_DIR}/pn2d_comp" PROPERTIES DEPENDS "${GENIUS_DIR}/read_pn2d")
+#set_tests_properties("${GENIUS_DIR}/genius_diode2d" PROPERTIES DEPENDS "${GENIUS_DIR}/pn2d_comp")
 
 
 
