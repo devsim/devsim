@@ -140,7 +140,7 @@ install:
   - git submodule init
   - git submodule update
   - cd external\symdiff
-  - c:\cygwin\bin\bash.exe ../setup_appveyor.sh %PLATFORM%
+  - c:\cygwin\bin\bash.exe ../symdiff_appveyor.sh %PLATFORM%
   - cd %BUILDDIR%
   - cmake --build . --config Release -- /m /nologo /verbosity:minimal
 
