@@ -121,11 +121,7 @@ install:
   # The development libraries are now part of standard Anaconda Python
   - IF "%PLATFORM%"=="x64" c:\Miniconda37-x64\Scripts\conda install --yes mkl mkl-devel mkl-include sqlite zlib
   - IF "%PLATFORM%"=="x86" c:\Miniconda37\Scripts\conda install --yes mkl mkl-devel mkl-include sqlite zlib
-  # need to debug path
   #- c:\Miniconda-x64\Scripts\conda env list
-  # install ActiveState Tcl
-  #- appveyor DownloadFile http://downloads.activestate.com/ActiveTcl/releases/8.5.18.0/ActiveTcl8.5.18.0.298892-win32-x86_64-threaded.exe
-  #- ActiveTcl8.5.18.0.298892-win32-x86_64-threaded.exe --directory C:\Tcl
   # install cygwin
   - appveyor DownloadFile https://cygwin.com/setup-x86.exe
   - setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P bison -P perl -P unzip -P wget -P zip

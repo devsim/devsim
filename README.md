@@ -17,7 +17,7 @@ Binary releases are currently available from [GitHub](https://github.com/devsim/
 
 ### Software Features:
 * [Documentation](https://www.devsim.org/manual/)
-* Python and Tcl scripting 
+* Python scripting 
 * DC, small-signal AC, impedance field method, transient
 * User specified partial differential equations (PDE).
 * 1D, 2D, and 3D simulation

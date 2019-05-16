@@ -6,7 +6,6 @@ DEVSIM depends on having one of the following 64 bit applications installed on y
 
 * Python 3.6
 * Python 3.7
-* Tcl 8.6
 * Intel MKL
 
 All of these dependencies are available by installing:

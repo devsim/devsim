@@ -6,21 +6,12 @@ Supported Platforms:
 Centos, Red Hat 6
 macOS
 Microsoft Windows
-Ubuntu 14, 16
-
-The following scripts encapsulate the installation of dependencies and compilation of the software.
 
 Centos, Redhat 6:
 scripts/build_centos_6.sh
 
 macOS:
-scripts/build_osx.sh
-
-Ubuntu 14:
-scripts/build_ubuntu_14.sh
-
-Ubuntu 16:
-scripts/build_ubuntu_16.sh
+scripts/build_macos.sh
 
 The script used for building and packaging macOS and Centos distributions:
 .travis.yml
@@ -29,44 +20,21 @@ The script used for building and packaging Microsoft Windows:
 appveyor.yml
 
 Please note that the following options are enabled by default.
-OPTION(GENIUSREADER "Build with Genius Reader" ON)
+OPTION(GENIUSREADER "Build with Genius Reader" OFF)
 OPTION(VTKWRITER    "Build with VTK Writer" ON)
-OPTION(TCLMAIN      "Build with TCL Interpreter" ON)
+OPTION(TCLMAIN      "Build with TCL Interpreter" OFF)
 
 By setting these options to OFF in the build directory, (CMakeCache.txt), the number of required dependencies is significantly reduced.
-
-A version of Python 2.7 would then be required on any machine running DEVSIM.
 
 If you have any issues with installation, please contact us through the github website:
 https://github.com/devsim/devsim/issues
 
-
 Note that the -j2 option for make and ctest is for building and testing in 2 parallel threads.  This number can be changed to run as many simultaneous processes as desired.
-
-Download DEVSIM:
-git clone https://github.com/devsim/devsim.git
-cd devsim
-git submodule init
-git submodule update
 
 If there are issues during the build, try using:
 make VERBOSE=1
 
 in order to see what the build process is doing at the point of failure.
-
-Note that tests are based on exact text differences between files.  Different configuration options may affect results.  The following two tests will fail for the Red Hat 6.5 configuration:
-thread_1 (Failed)
-fpetest2 (Timeout)
-
-Many of the tests are written in Tcl, because that was the original
-interpreter.
-cd testing
-../linux_x86_64_release/src/main/devsim_tcl sqlite1.tcl
-
-The devsim_py examples import modules with a relative path, so you'd want
-to do:
-cd examples/diode
-../../linux_x86_64_release/src/main/devsim_py diode_2d.py
 
 You can see how tests are run in:
 testing/CMakeLists.txt
