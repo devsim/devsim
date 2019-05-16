@@ -45,8 +45,7 @@ devsim.finalize_mesh(mesh="dog")
 devsim.create_device(mesh="dog", device=device)
 
 test_common.SetupResistorConstants(device, region)
-test_common.SetupInitialResistorSystem(device, region)
-devsim.node_model(device=device, region=region, name="NetDoping", equation="1.0e17")
+test_common.SetupInitialResistorSystem(device, region, net_doping=1e17)
 
 test_common.SetupInitialResistorContact(device=device, contact="top", use_circuit_bias=True, circuit_node="topbias")
 test_common.SetupInitialResistorContact(device=device, contact="bot", use_circuit_bias=False)

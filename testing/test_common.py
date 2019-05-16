@@ -89,16 +89,17 @@ def SetupResistorConstants(device, region):
   ):
     devsim.set_parameter(device=device, region=region, name=name, value=value)
 
-def SetupInitialResistorSystem(device, region):
+def SetupInitialResistorSystem(device, region, net_doping=1e16):
   '''
     resistor physics
   '''
+  devsim.set_parameter(device=device, region=region, name='net_doping', value=net_doping)
   devsim.node_solution(device=device, region=region, name='Potential')
   devsim.edge_from_node_model(device=device, region=region, node_model='Potential')
 
   # node models
   for name, equation in (
-    ("NetDoping",                 "1.0e16"),
+    ("NetDoping",                 "net_doping"),
     ("IntrinsicElectrons",        "NetDoping"),
     ("IntrinsicCharge",           "-IntrinsicElectrons + NetDoping"),
     ("IntrinsicCharge:Potential", "-IntrinsicElectrons:Potential"),

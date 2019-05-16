@@ -19,8 +19,8 @@ import test_common
 
 devsim.circuit_element(name="V1", n1="topbias", n2=0, acreal=1.0)
 test_common.CreateSimpleMesh(res1.device, res1.region)
+devsim.set_parameter(name="botbias", value=0.0)
 res1.run_initial_bias(use_circuit_bias=True)
-
 
 for v in (0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10):
   devsim.circuit_alter(name="V1", value=v)

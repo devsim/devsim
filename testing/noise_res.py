@@ -19,8 +19,8 @@ import test_common
 
 devsim.circuit_element(name="V1", n1="topbias", n2=0, acreal=1.0)
 test_common.CreateNoiseMesh(res1.device, res1.region)
-res1.run_initial_bias(use_circuit_bias=True)
-devsim.node_model(device=res1.device, region=res1.region, name="NetDoping", equation="1.0e17")
+devsim.set_parameter(name="botbias", value=0.0)
+res1.run_initial_bias(use_circuit_bias=True, net_doping=1e17)
 
 
 for v in (0.0, 1e-3):
