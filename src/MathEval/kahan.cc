@@ -19,6 +19,91 @@ limitations under the License.
 #include <cmath>
 using std::abs;
 
+
+#include <vector>
+
+template <typename DoubleType>
+class kahan {
+    public:
+        explicit kahan(DoubleType v) : value_(v), correction_(0.0) {}
+        kahan(const kahan & v) : value_(v.value_), correction_(v.correction_) {}
+
+
+        kahan &operator+=(DoubleType v);
+        kahan &operator-=(DoubleType v);
+
+        ~kahan() {};
+
+        operator DoubleType()
+        {
+            return value_ + correction_;
+        }
+
+        DoubleType value_;
+        DoubleType correction_;
+
+    private:
+        kahan();
+        kahan &operator=(const kahan &);
+};
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+
+template <typename DoubleType>
+DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c)
+{
+#ifdef DEVSIM_EXTENDED_PRECISION
+  float128 k(a);
+#else
+  kahan<DoubleType> k(a);
+#endif
+  k += b;
+  k += c;
+  return static_cast<DoubleType>(k);
+}
+
+template <typename DoubleType>
+DoubleType kahan4(DoubleType a, DoubleType b, DoubleType c, DoubleType d)
+{
+#ifdef DEVSIM_EXTENDED_PRECISION
+  float128 k(a);
+#else
+  kahan<DoubleType> k(a);
+#endif
+  k += b;
+  k += c;
+  k += d;
+  return static_cast<DoubleType>(k);
+}
+
+#if 0
+int main()
+{
+    std::vector<double> x;
+    x.push_back(1e20);
+    x.push_back(297.);
+    x.push_back(-1e20);
+    x.push_back(-1e3);
+    
+    std::cout << std::scientific << std::setprecision(15);
+
+    kahan a(0.0);
+    double b(0.0);
+    for (size_t i = 0; i < x.size(); ++i)
+    {
+        double v = x[i];
+        a += v;
+        b += v;
+        std::cout << v << " " << a << " " << static_cast<DoubleType>(a) << " " << b << std::endl;
+    }
+
+
+//    std::cout << 
+}
+#endif
+
 template <typename DoubleType>
 kahan<DoubleType> &kahan<DoubleType>::operator+=(DoubleType v)
 {
@@ -54,9 +139,13 @@ kahan<DoubleType> &kahan<DoubleType>::operator-=(DoubleType v)
 }
 
 template class kahan<double>;
+template double kahan3(double, double, double);
+template double kahan4(double, double, double, double);
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 template class kahan<float128>;
+template float128 kahan3(float128, float128, float128);
+template float128 kahan4(float128, float128, float128, float128);
 #endif
 
 
