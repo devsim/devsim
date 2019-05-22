@@ -1,13 +1,12 @@
 
-CMAKE=/cygdrive/C/Program\ Files\ \(x86\)/CMake/bin/cmake.exe
+CMAKE="/cygdrive/C/Program Files (x86)/CMake/bin/cmake.exe"
 DEVSIM_CONFIG=appveyor
-#mkdir -p win32
-#(cd win32; "$CMAKE" -G "Visual Studio 14" -DDEVSIM_CONFIG=${DEVSIM_CONFIG} ..)
-if [ "$1" = x86 ]; then
+
+if [ "${1}" = x86 ]; then
 GENERATOR="Visual Studio 15 2017"
 BUILDDIR="win32"
 fi
-if [ "$1" = x64 ]; then
+if [ "${1}" = x64 ]; then
 GENERATOR="Visual Studio 15 2017 Win64"
 BUILDDIR="win64"
 fi

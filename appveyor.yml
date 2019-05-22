@@ -125,12 +125,12 @@ install:
   # install cygwin
   - appveyor DownloadFile https://cygwin.com/setup-x86.exe
   - setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P bison -P perl -P unzip -P wget -P zip
-  #- C:\cygwin\setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P unzip -P wget -P zip
-  #- C:\cygwin\setup-x86.exe -nNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P 
+  # compile SuperLU
+  - cd %APPVEYOR_BUILD_FOLDER%\external
+  - c:\cygwin\bin\bash.exe ./build_superlu_appveyor.sh %PLATFORM%
+
   # move back to the external directory
   - cd %APPVEYOR_BUILD_FOLDER%\external
-  - c:\cygwin\bin\wget --no-check-certificate -nv https://github.com/devsim/devsim_win32_deps/releases/download/VisualStudio2017v4/devsim_win32_deps.zip
-  - c:\cygwin\bin\unzip -q devsim_win32_deps.zip
   # compile symdiff
   - cd %APPVEYOR_BUILD_FOLDER%
   - git submodule init
