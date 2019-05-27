@@ -40,7 +40,7 @@ class MathEval {
     static MathEval &GetInstance();
     static void DestroyInstance();
 
-    void AddTclMath(const std::string &, size_t);
+    bool AddTclMath(const std::string &, ObjectHolder, size_t, std::string & /*error_string*/);
     void RemoveTclMath(const std::string &);
 
   private:
@@ -52,9 +52,8 @@ class MathEval {
     static MathEval *instance_;
     std::map<std::string, Eqomfp::MathWrapperPtr<DoubleType>> FuncPtrMap_;
 
-    typedef std::map<std::string, size_t> tclMathFuncMap_t;
+    typedef std::map<std::string, std::pair<ObjectHolder, size_t> > tclMathFuncMap_t;
     tclMathFuncMap_t                      tclMathFuncMap_;
-    mutable std::vector<ObjectHolder>     tclObjVector;
 
     void InitializeBuiltInMathFunc();
 };

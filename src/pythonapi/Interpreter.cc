@@ -30,6 +30,7 @@ Interpreter::~Interpreter()
 {
 }
 
+#if 0
 /* for now run in main intepreter*/
 bool Interpreter::RunCommand(const std::string &command, const std::vector<std::string> &arguments)
 {
@@ -43,6 +44,7 @@ bool Interpreter::RunCommand(const std::string &command, const std::vector<std::
   }
   return RunCommand(objs);
 }
+#endif
 
 namespace
 {
@@ -162,7 +164,37 @@ void ProcessError(const std::string &commandname, std::string &error_string)
 }
 }
 
+bool Interpreter::RunCommand(ObjectHolder &procedure, std::vector<ObjectHolder> &objects)
+{
+  bool ret = false;
+  error_string_.clear();
 
+  if (!error_string_.empty())
+  {
+    ret = false;
+    return ret;
+  }
+
+  //// This really can't fail
+  ObjectHolder args = CreateTuple(objects, 0, objects.size());
+
+  PyErr_Clear();
+  PyObject *robj = PyObject_Call(reinterpret_cast<PyObject *>(procedure.GetObject()), reinterpret_cast<PyObject *>(args.GetObject()), nullptr);
+  result_ = ObjectHolder(robj);
+  if (robj)
+  {
+    ret = true;
+  }
+  else
+  {
+    ret = false;
+    ProcessError("Python Command", error_string_);
+  }
+
+  return ret;
+}
+
+#if 0
 bool Interpreter::RunCommand(std::vector<ObjectHolder> &objects)
 {
   bool ret = false;
@@ -195,6 +227,7 @@ bool Interpreter::RunCommand(std::vector<ObjectHolder> &objects)
 
   return ret;
 }
+#endif
 
 bool Interpreter::RunInternalCommand(const std::string &commandname, const std::vector<std::pair<std::string, ObjectHolder> > &arguments)
 {

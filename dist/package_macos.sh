@@ -66,16 +66,17 @@ install_name_tool -change $j "@loader_path/../gcc/`basename $j`" $i
 done
 done
 
-for i in ${DIST_BIN}/devsim_tcl
-do
-# get otool dependencies from the gcc compiler
-for j in `otool -L $i | egrep '\bgcc\b' | sed -e 's/(.*//'`
-do
-cp -vf $j ${DIST_LIB}/gcc
-echo install_name_tool -change $j "@executable_path/../lib/gcc/`basename $j`" $i
-install_name_tool -change $j "@executable_path/../lib/gcc/`basename $j`" $i
-done
-done
+#for i in ${DIST_BIN}/devsim_tcl
+#do
+## get otool dependencies from the gcc compiler
+#for j in `otool -L $i | egrep '\bgcc\b' | sed -e 's/(.*//'`
+#do
+#cp -vf $j ${DIST_LIB}/gcc
+#echo install_name_tool -change $j "@executable_path/../lib/gcc/`basename $j`" $i
+#install_name_tool -change $j "@executable_path/../lib/gcc/`basename $j`" $i
+#done
+#done
+
 fi
 
 # strip unneeded symbols

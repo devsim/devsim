@@ -31,10 +31,10 @@ add_1d_region   (mesh="dog", material="Si", region=region, tag1="top", tag2="bot
 finalize_mesh(mesh="dog")
 create_device(mesh="dog", device=device)
 
-symdiff(expr="declare(gee(x,y));")
-symdiff(expr="declare(sin(x));")
-symdiff(expr="define(cos(x), -sin(x));")
-symdiff(expr="define(sin(x),  cos(x));")
+symdiff(expr="declare(gee(x,y))")
+symdiff(expr="declare(sin(x))")
+symdiff(expr="define(cos(x), -sin(x))")
+symdiff(expr="define(sin(x),  cos(x))")
 
 #proc cos {x} {
 #  return [expr cos($x)]
@@ -49,12 +49,12 @@ symdiff(expr="define(sin(x),  cos(x));")
 def gee(x, y):
   return x
 
-register_function(name="cos", nargs=1)
-register_function(name="sin", nargs=1)
-register_function(name="gee", nargs=2)
-node_model(device=device, region=region, name="foo", equation="sin(3.14159*0.25);")
-node_model(device=device, region=region, name="gee", equation="gee(x, 1);")
-node_model(device=device, region=region, name="bar", equation="diff(sin(x),x);")
+register_function(name="cos", procedure=cos, nargs=1)
+register_function(name="sin", procedure=sin, nargs=1)
+register_function(name="gee", procedure=gee, nargs=2)
+node_model(device=device, region=region, name="gee", equation="gee(x, 1)")
+node_model(device=device, region=region, name="foo", equation="sin(3.14159*0.25)")
+node_model(device=device, region=region, name="bar", equation="diff(sin(x),x)")
 print_node_values(device=device, region=region, name="gee")
 print_node_values(device=device, region=region, name="foo")
 print_node_values(device=device, region=region, name="bar")

@@ -57,7 +57,7 @@ def myassemble(what, timemode):
   print(rv)
   return [rcv, rv]
 
-custom_equation(name="test1", procedure="myassemble")
+custom_equation(name="test1", procedure=myassemble)
 solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3)
 
 circuit_alter(name="V1", value=2.0)

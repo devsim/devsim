@@ -100,16 +100,6 @@ solveCmdImpl(CommandHandler &data)
     return;
   }
 
-#if 0
-    const std::string &callback = data.GetStringOption("callback");
-    if (!callback.empty())
-    {
-        errorString = "callback is not implemented yet\n";
-        Tcl_SetResult(interp, const_cast<char *>(errorString.c_str()), TCL_VOLATILE);
-        return TCL_ERROR;
-    }
-#endif
-
   const DoubleType charge_error = data.GetDoubleOption("charge_error");
   const DoubleType absolute_error = data.GetDoubleOption("absolute_error");
   const DoubleType relative_error = data.GetDoubleOption("relative_error");

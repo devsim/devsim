@@ -268,6 +268,20 @@ bool ObjectHolder::IsList() const
   return ok;
 }
 
+bool ObjectHolder::IsCallable() const
+{
+  bool ok = false;
+  if (object_)
+  {
+    PyObject *obj = reinterpret_cast<PyObject *>(object_);
+    if (PyCallable_Check(obj))
+    {
+      ok = true;
+    }
+  }
+  return ok;
+}
+
 bool ObjectHolder::GetListOfObjects(ObjectHolderList_t &objs) const
 {
   bool ok = false;

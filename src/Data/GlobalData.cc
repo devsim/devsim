@@ -397,12 +397,16 @@ void GlobalData::SignalCallbacksOnMaterialChange(const std::string &material_nam
   }
 }
 
-bool GlobalData::AddTclEquation(const std::string &name, const std::string &procedure, std::string &error)
+bool GlobalData::AddTclEquation(const std::string &name, ObjectHolder procedure, std::string &error)
 {
   bool ret = false;
   if (tclEquationList.count(name))
   {
     error += std::string("Tcl equation \"") + name + "\" already exists";
+  }
+  else if (!procedure.IsCallable())
+  {
+    error += std::string("Tcl equation \"") + name + "\" does not provide a callable procedure";
   }
   else
   {

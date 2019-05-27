@@ -85,11 +85,9 @@ class GlobalData
         void SetInterpreter(void *);
         void *GetInterpreter();
 
-        bool AddTclEquation(const std::string &/*name*/, const std::string &/*procedure*/, std::string &/*error*/);
+        bool AddTclEquation(const std::string &/*name*/, ObjectHolder/*procedure*/, std::string &/*error*/);
 
-        void DeleteTclEquation(const std::string &/*name*/, const std::string &/*procedure*/);
-
-        typedef std::map<std::string, std::string> TclEquationList_t;
+        typedef std::map<std::string, ObjectHolder> TclEquationList_t;
 
         const TclEquationList_t &GetTclEquationList();
         

@@ -228,21 +228,9 @@ getParameterCmd(CommandHandler &data)
         names = gdata.GetDBEntryListOnGlobal();
       }
 
-//      if (!names.empty())
       {
         data.SetStringListResult(names);
       }
-/*
-      else
-      {
-          std::ostringstream os;
-          os << "Cannot find any parameters\n";
-          errorString = os.str();
-          error = TCL_ERROR;
-          data.SetErrorResult(errorString);
-          return error;
-      }
-*/
     }
     else if (commandName == "set_parameter")
     {

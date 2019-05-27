@@ -27,11 +27,23 @@ class Interpreter
     Interpreter();
     ~Interpreter();
 
+public:
+#if 0
     bool RunCommand(std::vector<ObjectHolder> &/*command*/);
+#endif
+    bool RunCommand(ObjectHolder & /*command*/, std::vector<ObjectHolder> &/*arguments*/);
+#if 0
     bool RunCommand(const std::string &/*command*/, const std::vector<std::string> &/*arguments*/);
-    bool RunCommand(const std::string &/*command*/, const std::vector<std::pair<std::string, ObjectHolder> > &/*arguments*/);
+#endif
     bool RunInternalCommand(const std::string &/*command*/, const std::vector<std::pair<std::string, ObjectHolder> > &/*arguments*/);
+
+private:
+    bool RunCommand(const std::string &/*command*/, const std::vector<std::pair<std::string, ObjectHolder> > &/*arguments*/);
+#if 0
     bool RunCommand(const std::string &/*command*/);
+#endif
+
+public:
     const std::string &GetErrorString() const
     {
       return error_string_;
@@ -44,8 +56,8 @@ class Interpreter
 
     std::string GetVariable(const std::string &name);
 
-
   private:
+
     Interpreter &operator=(const Interpreter &);
     Interpreter(const Interpreter &);
 

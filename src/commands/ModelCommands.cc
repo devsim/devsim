@@ -2027,9 +2027,10 @@ registerFunctionCmd(CommandHandler &data)
   using namespace dsGetArgs;
   static dsGetArgs::Option option[] =
   {
-    {"name",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED},
-    {"nargs", "", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::REQUIRED},
-    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    {"name",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED},
+    {"procedure", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED},
+    {"nargs",     "", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::REQUIRED},
+    {nullptr,     nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
   dsGetArgs::switchList switches = nullptr;
@@ -2046,7 +2047,8 @@ registerFunctionCmd(CommandHandler &data)
 //  const std::string commandName = data.GetCommandName();
 
   const std::string &name  = data.GetStringOption("name");
-  const int nargs = data.GetIntegerOption("nargs");
+  const int nargs          = data.GetIntegerOption("nargs");
+  ObjectHolder procedure   = data.GetObjectHolder("procedure");
 
   int num = nargs;
 
@@ -2056,7 +2058,15 @@ registerFunctionCmd(CommandHandler &data)
     data.SetErrorResult(errorString);
     return;
   }
-  MathEval<double>::GetInstance().AddTclMath(name, static_cast<size_t>(nargs));
+
+  MathEval<double>::GetInstance().AddTclMath(name, procedure, static_cast<size_t>(nargs), errorString);
+
+  if (!errorString.empty())
+  {
+    data.SetErrorResult(errorString);
+    return;
+  }
+
   data.SetEmptyResult();
 }
 

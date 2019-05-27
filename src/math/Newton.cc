@@ -1340,18 +1340,17 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
 
   const GlobalData::TclEquationList_t &tlist = gdata.GetTclEquationList();
 
-  std::vector<std::string> arguments;
-  arguments.reserve(2);
-  arguments.push_back(dsMathEnum::WhatToLoadString[static_cast<size_t>(w)]);
-  arguments.push_back(dsMathEnum::TimeModeString[static_cast<size_t>(t)]);
+  std::vector<ObjectHolder> arguments{
+    ObjectHolder(dsMathEnum::WhatToLoadString[static_cast<size_t>(w)]),
+    ObjectHolder(dsMathEnum::TimeModeString[static_cast<size_t>(t)])
+  };
 
   Interpreter MyInterp;
   std::string     result;
   for (GlobalData::TclEquationList_t::const_iterator it = tlist.begin(); it != tlist.end(); ++it)
   {
     const std::string &name = it->first;
-    const std::string &proc = it->second;
-
+    auto proc = it->second;
 
     bool ok = MyInterp.RunCommand(proc, arguments);
 
@@ -1359,7 +1358,7 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
     if (!ok)
     {
       std::ostringstream os; 
-      os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" with result \"" << MyInterp.GetErrorString() << "\"\n";
+      os << "Error when evaluating custom_equation \"" << name << "\" with result \"" << MyInterp.GetErrorString() << "\"\n";
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
     }
     else
@@ -1372,7 +1371,7 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
       if ((!ok) || (objects.size() != 2))
       {
         std::ostringstream os; 
-        os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" cannot extract list of length 2 containing matrix and rhs entries\n";
+        os << "Error when evaluating custom_equation \"" << name << "\" cannot extract list of length 2 containing matrix and rhs entries\n";
         OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
       }
 
@@ -1388,7 +1387,7 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
         if ((!ok) || ((len % 2) != 0))
         {
           std::ostringstream os; 
-          os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" rhs entry list of length \"" << len << "\" is not divisible by 2\n";
+          os << "Error when evaluating custom_equation \"" << name << "\" rhs entry list of length \"" << len << "\" is not divisible by 2\n";
           OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
         }
         else
@@ -1405,7 +1404,7 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
             else
             {
               std::ostringstream os; 
-              os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" rhs val entry " << objects[i].GetString() << " " << objects[i+1].GetString() << "\n";
+              os << "Error when evaluating custom_equation \"" << name << "\" rhs val entry " << objects[i].GetString() << " " << objects[i+1].GetString() << "\n";
               OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
             }
 
@@ -1421,7 +1420,7 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
         if ((!ok) || ((len % 3) != 0))
         {
           std::ostringstream os; 
-          os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" matrix entry list of length \"" << len << "\" is not divisible by 3\n";
+          os << "Error when evaluating custom_equation \"" << name << "\" matrix entry list of length \"" << len << "\" is not divisible by 3\n";
           OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
         }
         else
@@ -1440,7 +1439,7 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
             else
             {
               std::ostringstream os; 
-              os << "Error when evaluating custom_equation \"" << name << "\" evaluating Tcl Procedure \"" << proc << "\" matrix entry " <<
+              os << "Error when evaluating custom_equation \"" << name << "\" matrix entry " <<
                 objects[i].GetString() << " " << objects[i+1].GetString() << " " << objects[i+2].GetString() << "\n";
               OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
             }

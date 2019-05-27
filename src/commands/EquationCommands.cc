@@ -712,7 +712,7 @@ createCustomEquationCmd(CommandHandler &data)
     static dsGetArgs::Option option[] =
     {
         {"name",        "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"procedure",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+        {"procedure",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED},
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
@@ -727,10 +727,11 @@ createCustomEquationCmd(CommandHandler &data)
         return;
     }
 
-    const std::string &name                 = data.GetStringOption("name");
-    const std::string &procedure            = data.GetStringOption("procedure");
+    const std::string &name = data.GetStringOption("name");
+    auto  procedure         = data.GetObjectHolder("procedure");
 
     gdata.AddTclEquation(name, procedure, errorString);
+
     data.SetEmptyResult();
 
     if (!errorString.empty())

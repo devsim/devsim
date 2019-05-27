@@ -62,6 +62,7 @@ class ObjectHolder {
     IntegerEntry_t GetInteger() const;
     LongEntry_t    GetLong() const;
     bool           IsList() const;
+    bool           IsCallable() const;
     bool           GetDoubleList(std::vector<double> &) const;
     bool           GetStringList(std::vector<std::string> &) const;
     bool           GetIntegerList(std::vector<int> &) const;

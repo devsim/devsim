@@ -404,17 +404,25 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
 
   dsAssert(it != tclMathFuncMap_.end(), "UNEXPECTED");
 
-  const size_t tclcount = it->second;
+  const size_t tclcount = (it->second).second;
 
   const size_t cnt = vvals.size();
 
-  if (tclcount == cnt)
+  std::vector<ObjectHolder> tclObjVector;
+
+  if (tclcount != cnt)
   {
+    std::ostringstream os;
+    os << "function registered with \"" << tclcount << "\" arguments and \"" << cnt << "\" were provided: \"" << func << "\"";
+    error += os.str();
+  }
+  else
+  {
+    ObjectHolder procedure = (it->second).first;
+
     Interpreter MyInterp;
     //// put the objects in here
-    tclObjVector.resize(cnt + 1);
-
-    tclObjVector[0] = ObjectHolder(func);
+    tclObjVector.resize(cnt);
 
     size_t numvecs  = 0;
     size_t numelems = 0;
@@ -422,11 +430,11 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
     {
       if (vvals[i] == nullptr)
       {
-        tclObjVector[i + 1] = ObjectHolder(static_cast<double>(dvals[i]));
+        tclObjVector[i] = ObjectHolder(static_cast<double>(dvals[i]));
       }
       else
       {
-        tclObjVector[i + 1].clear();
+        tclObjVector[i].clear();
         ++numvecs;
         if (numelems == 0)
         {
@@ -450,11 +458,11 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
 
         if (isvec)
         {          
-          tclObjVector[i+1] = ObjectHolder(static_cast<double>(vvals[i]->operator[](j)));
+          tclObjVector[i] = ObjectHolder(static_cast<double>(vvals[i]->operator[](j)));
         }
       }
 
-      bool ok = MyInterp.RunCommand(tclObjVector);
+      bool ok = MyInterp.RunCommand(procedure, tclObjVector);
 
       if (ok)
       {
@@ -479,12 +487,6 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
         break;
       }
     }
-  }
-  else
-  {
-    std::ostringstream os;
-    os << "function registered with \"" << tclcount << "\" arguments and \"" << cnt << "\" were provided: \"" << func << "\"";
-    error += os.str();
   }
 }
 
@@ -524,11 +526,28 @@ void MathEval<DoubleType>::EvaluateMathFunc(const std::string &func, std::vector
 }
 
 template <typename DoubleType>
+bool MathEval<DoubleType>::AddTclMath(const std::string &funcname, ObjectHolder procedure, size_t numargs, std::string &error)
+{
+  if (!procedure.IsCallable())
+  {
+    std::ostringstream os;
+    os << "procedure given for \"" << funcname << "\" is not callable";
+    error += os.str();
+  }
+  else
+  {
+    tclMathFuncMap_[funcname] = std::make_pair(procedure, numargs);
+  }
+  return error.empty();
+}
+#if 0
+template <typename DoubleType>
 void MathEval<DoubleType>::AddTclMath(const std::string &funcname, size_t numargs)
 {
   ///Really need to make sure number of arguments make sense in tcl api
   tclMathFuncMap_[funcname] = numargs;
 }
+#endif
 
 template <typename DoubleType>
 void MathEval<DoubleType>::RemoveTclMath(const std::string &funcname)
