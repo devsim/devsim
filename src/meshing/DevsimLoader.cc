@@ -735,7 +735,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         if (model_type == Solution::ModelType::NODE)
         {
           //// This creates a uniform model with value 0.0
-          NodeModelPtr nodesol = CreateNodeSolution(sname, rp);
+          NodeModelPtr nodesol = CreateNodeSolution(sname, rp, NodeModel::DisplayType::SCALAR);
           if (data_type == Solution::DataType::UNIFORM)
           {
             nodesol->SetValues<double>(sol.GetUniformValue());

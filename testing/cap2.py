@@ -203,3 +203,16 @@ print(get_node_model_values(device=device, region="MySiRegion", name="Potential"
 
 solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 
+print_edge_values(device=device, region="MySiRegion", name="ElectricField")
+edge_solution(device=device, region="MySiRegion", name="testcopy1")
+print_edge_values(device=device, region="MySiRegion", name="testcopy1")
+set_edge_values(device=device, region="MySiRegion", name="testcopy1", init_from="ElectricField")
+print_edge_values(device=device, region="MySiRegion", name="testcopy1")
+v = list(get_edge_model_values(device=device, region="MySiRegion", name="testcopy1"))
+v[0] = -1
+v[-1] = +2
+set_edge_values(device=device, region="MySiRegion", name="testcopy1", values=v)
+print_edge_values(device=device, region="MySiRegion", name="testcopy1")
+edge_model(device=device, region="MySiRegion", name="testcopy2", equation="ElectricField-testcopy1")
+print_edge_values(device=device, region="MySiRegion", name="testcopy2")
+

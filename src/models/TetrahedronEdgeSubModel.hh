@@ -19,16 +19,17 @@ limitations under the License.
 #define TETRAHEDRON_EDGE_SUB_MODEL_HH
 #include "TetrahedronEdgeModel.hh"
 #include <string>
-// need to set general node propeties, such as positive only
-// 
-// This is modeled after NodeSolution
+
+TetrahedronEdgeModelPtr CreateTetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType);
+TetrahedronEdgeModelPtr CreateTetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType, TetrahedronEdgeModelPtr);
+
 template <typename DoubleType>
 class TetrahedronEdgeSubModel : public TetrahedronEdgeModel
 {
     public:
         TetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType dt);
         // This model depends on this model to calculate values
-        TetrahedronEdgeSubModel(const std::string &, RegionPtr, ConstTetrahedronEdgeModelPtr, TetrahedronEdgeModel::DisplayType dt);
+        TetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr);
 
         void Serialize(std::ostream &) const;
 

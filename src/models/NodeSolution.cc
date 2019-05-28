@@ -28,28 +28,21 @@ limitations under the License.
 #include <sstream>
 
 template <typename DoubleType>
-NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp)
+NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, NodeModel::DisplayType dt)
     :
-        NodeModel(nm, rp, NodeModel::DisplayType::SCALAR),
+        NodeModel(nm, rp, dt),
         parentModel()
 {
-#if 0
-    os << "creating NodeSolution " << nm << "\n";
-#endif
 }
 
 template <typename DoubleType>
-NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp)
+NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, NodeModel::DisplayType dt, NodeModelPtr nmp)
     :
-        // dirty hack
-        NodeModel(nm, rp, NodeModel::DisplayType::SCALAR),
+        NodeModel(nm, rp, dt),
         parentModel(nmp)
 {
   parentModelName = parentModel.lock()->GetName();
   RegisterCallback(parentModelName);
-#if 0
-    os << "creating NodeSolution " << nm << " with parent " << parentModel->GetName() << "\n";
-#endif
 }
 
 template <typename DoubleType>
@@ -57,9 +50,6 @@ void NodeSolution<DoubleType>::calcNodeScalarValues() const
 {
     if (!parentModelName.empty())
     {
-#if 0
-        os << "updating NodeSolution " << GetName() << " from parent " << parentModel->GetName() << "\n";
-#endif
         ConstNodeModelPtr nmp = GetRegion().GetNodeModel(parentModelName);
         if (!parentModel.expired())
         {
@@ -112,14 +102,14 @@ template class NodeSolution<double>;
 template class NodeSolution<float128>;
 #endif
 
-NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp)
+NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModel::DisplayType dt)
 {
-  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp);
+  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt);
 }
 
-NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModelPtr nmp)
+NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModel::DisplayType dt, NodeModelPtr nmp)
 {
-  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, nmp);
+  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt, nmp);
 }
 
 

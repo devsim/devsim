@@ -49,11 +49,11 @@ TriangleEdgeFromEdgeModelDerivative<DoubleType>::TriangleEdgeFromEdgeModelDeriva
 
   RegisterCallback(edgeModelName0);
   RegisterCallback(edgeModelName1);
-  new TriangleEdgeSubModel<DoubleType>(x_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
-  new TriangleEdgeSubModel<DoubleType>(x_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName0, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName1, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName2, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::NODISPLAY);
+  new TriangleEdgeSubModel<DoubleType>(x_ModelName1, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TriangleEdgeSubModel<DoubleType>(x_ModelName2, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName0, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName1, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName2, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
 }
 
 //// Need to figure out the deleter situation from sub models

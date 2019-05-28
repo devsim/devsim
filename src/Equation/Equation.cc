@@ -311,13 +311,13 @@ void Equation<DoubleType>::DefaultACUpdate(NodeModel &nm, const std::vector<std:
     if (!rnm)
     {
         dsErrors::CreateModelOnRegion(*myregion, realnodemodel, OutputStream::OutputType::INFO);
-        rnm = CreateNodeSolution(realnodemodel, myregion);
+        rnm = CreateNodeSolution(realnodemodel, myregion, NodeModel::DisplayType::SCALAR);
     }
 
     if (!inm)
     {
         dsErrors::CreateModelOnRegion(*myregion, imagnodemodel, OutputStream::OutputType::INFO);
-        inm = CreateNodeSolution(imagnodemodel, myregion);
+        inm = CreateNodeSolution(imagnodemodel, myregion, NodeModel::DisplayType::SCALAR);
     }
 
     NodeScalarList<DoubleType> realout(nl.size());
@@ -361,13 +361,13 @@ void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, con
     if (!rnm)
     {
         dsErrors::CreateModelOnRegion(*myregion, realnodemodel, OutputStream::OutputType::INFO);
-        rnm = CreateNodeSolution(realnodemodel, myregion);
+        rnm = CreateNodeSolution(realnodemodel, myregion, NodeModel::DisplayType::SCALAR);
     }
 
     if (!inm)
     {
         dsErrors::CreateModelOnRegion(*myregion, imagnodemodel, OutputStream::OutputType::INFO);
-        inm = CreateNodeSolution(imagnodemodel, myregion);
+        inm = CreateNodeSolution(imagnodemodel, myregion, NodeModel::DisplayType::SCALAR);
     }
 
     NodeScalarList<DoubleType> realout(nl.size());

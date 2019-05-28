@@ -20,8 +20,8 @@ limitations under the License.
 #include "NodeModel.hh"
 #include <string>
 
-NodeModelPtr CreateNodeSolution(const std::string &, RegionPtr);
-NodeModelPtr CreateNodeSolution(const std::string &, RegionPtr, NodeModelPtr);
+NodeModelPtr CreateNodeSolution(const std::string &, RegionPtr, NodeModel::DisplayType);
+NodeModelPtr CreateNodeSolution(const std::string &, RegionPtr, NodeModel::DisplayType, NodeModelPtr);
 
 template <typename DoubleType>
 class NodeSolution : public NodeModel
@@ -30,9 +30,9 @@ class NodeSolution : public NodeModel
 
         void Serialize(std::ostream &) const;
 
-        NodeSolution(const std::string &, RegionPtr);
+        NodeSolution(const std::string &, RegionPtr, NodeModel::DisplayType);
         // This model depends on this model to calculate values
-        NodeSolution(const std::string &, RegionPtr, NodeModelPtr);
+        NodeSolution(const std::string &, RegionPtr, NodeModel::DisplayType, NodeModelPtr);
 
     private:
 

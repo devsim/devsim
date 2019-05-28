@@ -54,17 +54,17 @@ TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::TetrahedronEdgeFromEdgeModel
 
   RegisterCallback(edgeModelName0);
   RegisterCallback(edgeModelName1);
-  new TetrahedronEdgeSubModel<DoubleType>(x_ModelName1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(x_ModelName2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(x_ModelName3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName0, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName0, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
-  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::NODISPLAY);
+  new TetrahedronEdgeSubModel<DoubleType>(x_ModelName1, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(x_ModelName2, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(x_ModelName3, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName0, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName1, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName2, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName3, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName0, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName1, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName2, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName3, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
 }
 
 //// Need to figure out the deleter situation from sub models

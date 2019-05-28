@@ -52,14 +52,14 @@ VectorGradient<DoubleType>::VectorGradient(RegionPtr rp, const std::string &name
     if (dimension == 2)
     {
       RegisterCallback("unity");
-      yfield_ = CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
+      yfield_ = CreateNodeSolution(name + "_grady", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
     }
     else if (dimension == 3)
     {
       RegisterCallback("unity");
       RegisterCallback("unitz");
-      yfield_ = CreateNodeSolution(name + "_grady", rp, this->GetSelfPtr());
-      zfield_ = CreateNodeSolution(name + "_gradz", rp, this->GetSelfPtr());
+      yfield_ = CreateNodeSolution(name + "_grady", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+      zfield_ = CreateNodeSolution(name + "_gradz", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
     }
 }
 

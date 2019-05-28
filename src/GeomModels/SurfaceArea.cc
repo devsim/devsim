@@ -38,7 +38,7 @@ SurfaceArea<DoubleType>::SurfaceArea(RegionPtr rp)
 {
   const size_t dimension = GetRegion().GetDimension();
 
-  contact_area = CreateNodeSolution("ContactSurfaceArea", rp, this->GetSelfPtr());
+  contact_area = CreateNodeSolution("ContactSurfaceArea", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
 
   if (dimension == 1)
   {
@@ -50,14 +50,14 @@ SurfaceArea<DoubleType>::SurfaceArea(RegionPtr rp)
     RegisterCallback("unitx");
     RegisterCallback("unity");
 
-    nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
-    nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
+    nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
   }
   else if (dimension == 3)
   {
-    nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, this->GetSelfPtr());
-    nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, this->GetSelfPtr());
-    nsurf_z = CreateNodeSolution("NSurfaceNormal_z", rp, this->GetSelfPtr());
+    nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    nsurf_z = CreateNodeSolution("NSurfaceNormal_z", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
   }
   RegisterCallback("@@@InterfaceChange");
   RegisterCallback("@@@ContactChange");

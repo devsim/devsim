@@ -30,10 +30,10 @@ template <typename DoubleType>
 NodePosition<DoubleType>::NodePosition(RegionPtr rp)
     : NodeModel("x", rp, NodeModel::DisplayType::SCALAR)
 {
-  yposition = CreateNodeSolution("y", rp, this->GetSelfPtr());
-  zposition = CreateNodeSolution("z", rp, this->GetSelfPtr());
-  node_index = CreateNodeSolution("node_index", rp, this->GetSelfPtr());
-  coordinate_index = CreateNodeSolution("coordinate_index", rp, this->GetSelfPtr());
+  yposition = CreateNodeSolution("y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  zposition = CreateNodeSolution("z", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  node_index = CreateNodeSolution("node_index", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  coordinate_index = CreateNodeSolution("coordinate_index", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
 template <typename DoubleType>

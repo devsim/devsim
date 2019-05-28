@@ -19,9 +19,10 @@ limitations under the License.
 #define EDGESUBMODEL_HH
 #include "EdgeModel.hh"
 #include <string>
-// need to set general node propeties, such as positive only
-// 
-// This is modeled after NodeSolution
+
+EdgeModelPtr CreateEdgeSubModel(const std::string &, RegionPtr, EdgeModel::DisplayType);
+EdgeModelPtr CreateEdgeSubModel(const std::string &, RegionPtr, EdgeModel::DisplayType, EdgeModelPtr);
+
 template <typename DoubleType>
 class EdgeSubModel : public EdgeModel
 {
@@ -47,5 +48,5 @@ class EdgeSubModel : public EdgeModel
         // Detect whether parent model still exists
         mutable std::string parentModelName;
 };
-
 #endif
+

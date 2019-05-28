@@ -1336,6 +1336,21 @@ static const char edge_model_doc[] =
 "    This averaging scheme does not produce accurate results, and it is recommended to use the :meth:`devsim.element_from_edge_model` to create components better suited for visualization.  See :ref:`ch__visualization` for more information about creating data files for external visualization programs.\n"
 ;
 
+static const char edge_solution_doc[] =
+"    devsim.edge_solution (device, region, name)\n"
+"\n"
+"    Create node model whose values are set.\n"
+"\n"
+"    Parameters\n"
+"    ----------\n"
+"    device : str\n"
+"       The selected device\n"
+"    region : str\n"
+"       The selected region\n"
+"    name : str\n"
+"       Name of the solution being created\n"
+;
+
 static const char element_from_edge_model_doc[] =
 "    devsim.element_from_edge_model (device, region, edge_model, derivative)\n"
 "\n"
@@ -1433,6 +1448,21 @@ static const char element_model_doc[] =
 "       Equation used to describe the element edge model being created\n"
 "    display_type : str, optional\n"
 "       Option for output display in graphical viewer (default 'scalar')\n"
+;
+
+static const char element_solution_doc[] =
+"    devsim.element_solution (device, region, name)\n"
+"\n"
+"    Create node model whose values are set.\n"
+"\n"
+"    Parameters\n"
+"    ----------\n"
+"    device : str\n"
+"       The selected device\n"
+"    region : str\n"
+"       The selected region\n"
+"    name : str\n"
+"       Name of the solution being created\n"
 ;
 
 static const char get_edge_model_list_doc[] =
@@ -1669,7 +1699,7 @@ static const char print_node_values_doc[] =
 ;
 
 static const char register_function_doc[] =
-"    devsim.register_function (name, nargs)\n"
+"    devsim.register_function (name, nargs, procedure)\n"
 "\n"
 "    This command is used to register a new Python procedure for evaluation by SYMDIFF.\n"
 "\n"
@@ -1679,6 +1709,46 @@ static const char register_function_doc[] =
 "       Name of the function\n"
 "    nargs : str\n"
 "       Number of arguments to the function\n"
+"    procedure : str\n"
+"       The procedure to be called\n"
+;
+
+static const char set_edge_values_doc[] =
+"    devsim.set_edge_values (device, region, name, init_from, values)\n"
+"\n"
+"    Set edge model values from another edge model, or a list of values.\n"
+"\n"
+"    Parameters\n"
+"    ----------\n"
+"    device : str\n"
+"       The selected device\n"
+"    region : str\n"
+"       The selected region\n"
+"    name : str\n"
+"       Name of the edge model being initialized\n"
+"    init_from : str, optional\n"
+"       Node model we are using to initialize the edge solution\n"
+"    values : list, optional\n"
+"       List of values for each edge in the region.\n"
+;
+
+static const char set_element_values_doc[] =
+"    devsim.set_element_values (device, region, name, init_from, values)\n"
+"\n"
+"    Set element model values from another element model, or a list of values.\n"
+"\n"
+"    Parameters\n"
+"    ----------\n"
+"    device : str\n"
+"       The selected device\n"
+"    region : str\n"
+"       The selected region\n"
+"    name : str\n"
+"       Name of the element model being initialized\n"
+"    init_from : str, optional\n"
+"       Node model we are using to initialize the element solution\n"
+"    values : list, optional\n"
+"       List of values for each element in the region.\n"
 ;
 
 static const char set_node_value_doc[] =

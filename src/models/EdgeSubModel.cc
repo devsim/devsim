@@ -118,3 +118,13 @@ template class EdgeSubModel<double>;
 template class EdgeSubModel<float128>;
 #endif
 
+EdgeModelPtr CreateEdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt)
+{
+  return create_edge_model<EdgeSubModel<double>, EdgeSubModel<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt);
+}
+
+EdgeModelPtr CreateEdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt, EdgeModelPtr emp)
+{
+  return create_edge_model<EdgeSubModel<double>, EdgeSubModel<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt, emp);
+}
+

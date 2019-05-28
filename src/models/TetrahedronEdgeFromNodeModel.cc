@@ -29,9 +29,9 @@ TetrahedronEdgeFromNodeModel<DoubleType>::TetrahedronEdgeFromNodeModel(const std
     : TetrahedronEdgeModel(en0, rp, TetrahedronEdgeModel::DisplayType::SCALAR), nodeModelName(nodemodel), edgeModel1Name(en1), edgeModel2Name(en2), edgeModel3Name(en3)
 {
   RegisterCallback(nodemodel);
-  new TetrahedronEdgeSubModel<DoubleType>(en1, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
-  new TetrahedronEdgeSubModel<DoubleType>(en2, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
-  new TetrahedronEdgeSubModel<DoubleType>(en3, rp, this->GetSelfPtr(), TetrahedronEdgeModel::DisplayType::SCALAR);
+  new TetrahedronEdgeSubModel<DoubleType>(en1, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(en2, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  new TetrahedronEdgeSubModel<DoubleType>(en3, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
 

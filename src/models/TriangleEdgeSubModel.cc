@@ -37,7 +37,7 @@ TriangleEdgeSubModel<DoubleType>::TriangleEdgeSubModel(const std::string &nm, Re
 }
 
 template <typename DoubleType>
-TriangleEdgeSubModel<DoubleType>::TriangleEdgeSubModel(const std::string &nm, RegionPtr rp, ConstTriangleEdgeModelPtr nmp, TriangleEdgeModel::DisplayType dt)
+TriangleEdgeSubModel<DoubleType>::TriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt, ConstTriangleEdgeModelPtr nmp)
     :
         TriangleEdgeModel(nm, rp, dt),
         parentModel(nmp)
@@ -61,7 +61,7 @@ TriangleEdgeModelPtr TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubMode
 template <typename DoubleType>
 TriangleEdgeModelPtr TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt, ConstTriangleEdgeModelPtr nmp)
 {
-  TriangleEdgeModel *p = new TriangleEdgeSubModel(nm, rp, nmp, dt);
+  TriangleEdgeModel *p = new TriangleEdgeSubModel(nm, rp, dt, nmp);
   return p->GetSelfPtr();
 }
 
@@ -70,9 +70,6 @@ void TriangleEdgeSubModel<DoubleType>::calcTriangleEdgeScalarValues() const
 {
     if (!parentModelName.empty())
     {
-#if 0
-      os << "updating TriangleEdgeSubModel " << GetName() << " from parent " << parentModel->GetName() << "\n";
-#endif
       ConstTriangleEdgeModelPtr emp = GetRegion().GetTriangleEdgeModel(parentModelName);
       if (!parentModel.expired())
       {
@@ -118,4 +115,14 @@ template class TriangleEdgeSubModel<double>;
 #include "Float128.hh"
 template class TriangleEdgeSubModel<float128>;
 #endif
+
+TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt)
+{
+  return create_triangle_edge_model<TriangleEdgeSubModel<double>, TriangleEdgeSubModel<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt);
+}
+
+TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt, TriangleEdgeModelPtr emp)
+{
+  return create_triangle_edge_model<TriangleEdgeSubModel<double>, TriangleEdgeSubModel<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt, emp);
+}
 

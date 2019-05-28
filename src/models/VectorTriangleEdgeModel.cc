@@ -28,7 +28,7 @@ VectorTriangleEdgeModel<DoubleType>::VectorTriangleEdgeModel(const std::string &
     : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::DisplayType::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName + "_y")
 {
   RegisterCallback(elementEdgeModelName);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, this->GetSelfPtr(), TriangleEdgeModel::DisplayType::SCALAR);
+  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
 template <typename DoubleType>

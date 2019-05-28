@@ -1450,11 +1450,11 @@ void Region::BackupSolutions(const std::string &suffix)
     {
       if (std::dynamic_pointer_cast<const NodeSolution<extended_type>>(nm))
       {
-        bnm = CreateNodeSolution(bname, this);
+        bnm = CreateNodeSolution(bname, this, NodeModel::DisplayType::SCALAR);
       }
       else if (std::dynamic_pointer_cast<const NodeSolution<double>>(nm))
       {
-        bnm = CreateNodeSolution(bname, this);
+        bnm = CreateNodeSolution(bname, this, NodeModel::DisplayType::SCALAR);
       }
       else
       {

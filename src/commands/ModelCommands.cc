@@ -27,6 +27,9 @@ limitations under the License.
 #include "NodeModel.hh"
 #include "EdgeModel.hh"
 #include "NodeSolution.hh"
+#include "EdgeSubModel.hh"
+#include "TriangleEdgeSubModel.hh"
+#include "TetrahedronEdgeSubModel.hh"
 #include "InterfaceNodeModel.hh"
 #include "EdgeFromNodeModel.hh"
 #include "TriangleEdgeModel.hh"
@@ -66,6 +69,7 @@ limitations under the License.
 #include <sstream>
 #include <iomanip>
 #include <utility>
+#include <functional>
 
 using namespace dsValidate;
 
@@ -82,8 +86,7 @@ void
 createNodeSolutionCmd(CommandHandler &data)
 {
     std::string errorString;
-
-//    const std::string commandName = data.GetCommandName();
+    const std::string &commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
@@ -118,38 +121,45 @@ createNodeSolutionCmd(CommandHandler &data)
         return;
     }
 
-    ConstNodeModelPtr existingNodeModel = reg->GetNodeModel(name);
-    ConstEdgeModelPtr existingEdgeModel = reg->GetEdgeModel(name);
-
-    if (existingEdgeModel.get())
+    if (commandName == "node_solution")
     {
-        errorString = "Name ";
-        errorString += name;
-        errorString += " already exists";
-        errorString += " as an Edge model";
-        data.SetErrorResult(errorString);
-        return;
+      CreateNodeSolution(name, reg, NodeModel::DisplayType::SCALAR);
     }
-
-    if (existingNodeModel)
+    else if (commandName == "edge_solution")
     {
-      std::ostringstream os;
-      os << "Using existing values of Node Model " << name << " to initialize node solution values.\n";
-      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
-  
-      /// must be a copy since we are deleting the existing one
-      const NodeScalarList<extended_type> nsl = existingNodeModel->GetScalarValues<extended_type>();
-      existingNodeModel.reset();
-      NodeModelPtr nm = CreateNodeSolution(name, reg);
-      nm->SetValues(nsl);
-      data.SetEmptyResult();
-
+      CreateEdgeSubModel(name, reg, EdgeModel::DisplayType::SCALAR);
+    }
+    else if (commandName == "element_solution")
+    {
+      const size_t dimension = dev->GetDimension();
+      if (dimension == 1)
+      {
+        errorString += "1D not supported for " + commandName + "\n";
+      }
+      else if (dimension == 2)
+      {
+        CreateTriangleEdgeSubModel(name, reg, TriangleEdgeModel::DisplayType::SCALAR);
+      }
+      else if (dimension == 3)
+      {
+        CreateTetrahedronEdgeSubModel(name, reg, TetrahedronEdgeModel::DisplayType::SCALAR);
+      }
     }
     else
     {
-      CreateNodeSolution(name, reg);
+      errorString += "command not processed";
+    }
+
+    if (errorString.empty())
+    {
       data.SetEmptyResult();
     }
+    else
+    {
+      data.SetErrorResult(errorString);
+    }
+
+    return;
 }
 
 /// Leverages both node and edge model
@@ -891,7 +901,7 @@ setNodeValuesCmd(CommandHandler &data)
 {
     std::string errorString;
 
-//    const std::string commandName = data.GetCommandName();
+    const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
     static dsGetArgs::Option option[] =
@@ -938,7 +948,6 @@ setNodeValuesCmd(CommandHandler &data)
         errorString += os.str();
       }
     }
-    
 
     Device *dev = nullptr;
     Region *reg = nullptr;
@@ -951,61 +960,176 @@ setNodeValuesCmd(CommandHandler &data)
         return;
     }
 
-    NodeModelPtr nm_name        = std::const_pointer_cast<NodeModel, const NodeModel>(reg->GetNodeModel(name));
-    if (!nm_name.get())
-    {
-        std::ostringstream os;
-        os << "Model " << name << " does not exist\n";
-        errorString += os.str();
-    }
-    else if (!initializer.empty())
-    {
-      ConstNodeModelPtr nm_initializer = reg->GetNodeModel(initializer);
+    const auto dimension = dev->GetDimension();
 
-      if (!nm_initializer.get())
+    size_t values_expected = 0;
+
+    std::function<void(const std::vector<double> &)> setter;
+#ifdef DEVSIM_EXTENDED_PRECISION
+    std::function<void(const std::vector<float128> &)> extended_setter;
+    std::vector<float128> extended_values;
+#endif
+
+
+    bool model_exists = false;
+    bool initializer_exists = false;
+
+    if (commandName == "set_node_values")
+    {
+      auto nm_name        = std::const_pointer_cast<NodeModel, const NodeModel>(reg->GetNodeModel(name));
+      auto nm_initializer = reg->GetNodeModel(initializer);
+      values_expected = reg->GetNumberNodes();
+
+      model_exists       = static_cast<bool>(nm_name);
+      initializer_exists = static_cast<bool>(nm_initializer);
+
+      setter          = [nm_name](const std::vector<double> &v) {nm_name->SetValues(v);};
+#ifdef DEVSIM_EXTENDED_PRECISION
+      extended_setter = [nm_name](const std::vector<float128> &v) {nm_name->SetValues(v);};
+#endif
+
+      if (!initializer_exists)
       {
-          std::ostringstream os;
-          os << "-init_from " << nm_initializer << " does not exist\n";
-          errorString += os.str();
       }
       else if (std::dynamic_pointer_cast<NodeSolution<double>>(nm_name))
       {
-          nm_name->SetValues(nm_initializer->GetScalarValues<double>());
-          data.SetEmptyResult();
+          values = nm_initializer->GetScalarValues<double>();
       }
 #ifdef DEVSIM_EXTENDED_PRECISION
       else if (std::dynamic_pointer_cast<NodeSolution<float128>>(nm_name))
       {
-          nm_name->SetValues(nm_initializer->GetScalarValues<float128>());
-          data.SetEmptyResult();
+          extended_values = nm_initializer->GetScalarValues<float128>();
       }
 #endif
-      else
+    }
+    else if (commandName == "set_edge_values")
+    {
+      auto nm_name        = std::const_pointer_cast<EdgeModel, const EdgeModel>(reg->GetEdgeModel(name));
+      auto nm_initializer = reg->GetEdgeModel(initializer);
+      values_expected = reg->GetNumberEdges();
+
+      model_exists       = static_cast<bool>(nm_name);
+      initializer_exists = static_cast<bool>(nm_initializer);
+
+      setter          = [nm_name](const std::vector<double> &v) {nm_name->SetValues(v);};
+#ifdef DEVSIM_EXTENDED_PRECISION
+      extended_setter = [nm_name](const std::vector<float128> &v) {nm_name->SetValues(v);};
+#endif
+
+      if (!initializer_exists)
       {
-          std::ostringstream os;
-          os << "-name " << nm_name << " is not a node solution\n";
-          errorString += os.str();
+      }
+      else if (std::dynamic_pointer_cast<EdgeSubModel<double>>(nm_name))
+      {
+          values = nm_initializer->GetScalarValues<double>();
+      }
+#ifdef DEVSIM_EXTENDED_PRECISION
+      else if (std::dynamic_pointer_cast<EdgeSubModel<float128>>(nm_name))
+      {
+          extended_values = nm_initializer->GetScalarValues<float128>();
+      }
+#endif
+    }
+    else if (commandName == "set_element_values")
+    {
+      if (dimension == 1)
+      {
+        errorString += "1D not supported for " + commandName + "\n";
+      }
+      else if (dimension == 2)
+      {
+        auto nm_name        = std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(reg->GetTriangleEdgeModel(name));
+        auto nm_initializer = reg->GetTriangleEdgeModel(initializer);
+        values_expected = (3 * reg->GetNumberTriangles());
+
+        model_exists       = static_cast<bool>(nm_name);
+        initializer_exists = static_cast<bool>(nm_initializer);
+
+        setter          = [nm_name](const std::vector<double> &v) {nm_name->SetValues(v);};
+#ifdef DEVSIM_EXTENDED_PRECISION
+        extended_setter = [nm_name](const std::vector<float128> &v) {nm_name->SetValues(v);};
+#endif
+
+        if (!initializer_exists)
+        {
+        }
+        else if (std::dynamic_pointer_cast<TriangleEdgeSubModel<double>>(nm_name))
+        {
+            values = nm_initializer->GetScalarValues<double>();
+        }
+#ifdef DEVSIM_EXTENDED_PRECISION
+        else if (std::dynamic_pointer_cast<TriangleEdgeSubModel<float128>>(nm_name))
+        {
+            extended_values = nm_initializer->GetScalarValues<float128>();
+        }
+#endif
+      }
+      else if (dimension == 3)
+      {
+        auto nm_name        = std::const_pointer_cast<TetrahedronEdgeModel, const TetrahedronEdgeModel>(reg->GetTetrahedronEdgeModel(name));
+        auto nm_initializer = reg->GetTetrahedronEdgeModel(initializer);
+        values_expected = (6 * reg->GetNumberTetrahedrons());
+
+        model_exists       = static_cast<bool>(nm_name);
+        initializer_exists = static_cast<bool>(nm_initializer);
+
+        setter          = [nm_name](const std::vector<double> &v) {nm_name->SetValues(v);};
+#ifdef DEVSIM_EXTENDED_PRECISION
+        extended_setter = [nm_name](const std::vector<float128> &v) {nm_name->SetValues(v);};
+#endif
+
+        if (!initializer_exists)
+        {
+        }
+        else if (std::dynamic_pointer_cast<TetrahedronEdgeSubModel<double>>(nm_name))
+        {
+            values = nm_initializer->GetScalarValues<double>();
+        }
+#ifdef DEVSIM_EXTENDED_PRECISION
+        else if (std::dynamic_pointer_cast<TetrahedronEdgeSubModel<float128>>(nm_name))
+        {
+            extended_values = nm_initializer->GetScalarValues<float128>();
+        }
+#endif
       }
     }
+
+    if (!model_exists)
+    {
+      std::ostringstream os;
+      os << "Model " << name << " does not exist\n";
+      errorString += os.str();
+    }
+    else if ((!initializer.empty()) && (!initializer_exists))
+    {
+      std::ostringstream os;
+      os << "-init_from " << initializer << " does not exist\n";
+      errorString += os.str();
+    }
+    else if (values.size() == values_expected)
+    {
+      dsAssert(static_cast<bool>(setter), "UNEXPECTED");
+      setter(values);
+    }
+#ifdef DEVSIM_EXTENDED_PRECISION
+    else if (extended_values.size() == values_expected)
+    {
+      dsAssert(static_cast<bool>(setter), "UNEXPECTED");
+      extended_setter(extended_values);
+    }
+#endif
     else
     {
-      if (values.size() !=  reg->GetNumberNodes())
-      {
-          std::ostringstream os;
-          os << "values list does not have right number of nodes for region.\n";
-          errorString += os.str();
-      }
-      else
-      {
-          std::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetValues(values);
-          data.SetEmptyResult();
-      }
+      dsAssert(0, "UNEXPECTED");
     }
 
     if (!errorString.empty())
     {
-        data.SetErrorResult(errorString);
-        return;
+      data.SetErrorResult(errorString);
+    }
+    else
+    {
+      data.SetEmptyResult();
     }
 }
 
@@ -2097,12 +2221,16 @@ Commands ModelCommands[] = {
     {"interface_normal_model", createInterfaceNormalModelCmd},
     {"node_model",           createNodeModelCmd},
     {"node_solution",        createNodeSolutionCmd},
+    {"edge_solution",        createNodeSolutionCmd},
+    {"element_solution",     createNodeSolutionCmd},
     {"print_edge_values",    printEdgeValuesCmd},
     {"print_element_values", printElementEdgeValuesCmd},
     {"print_node_values",    printNodeValuesCmd},
     {"register_function",     registerFunctionCmd},
     {"set_node_values",      setNodeValuesCmd},
-    {"set_node_value",      setNodeValueCmd},
+    {"set_node_value",       setNodeValueCmd},
+    {"set_edge_values",      setNodeValuesCmd},
+    {"set_element_values",   setNodeValuesCmd},
     {"symdiff",               symdiffCmd},
     {"vector_gradient",      createEdgeFromNodeModelCmd},
     {"cylindrical_edge_couple",  createCylindricalCmd},
@@ -2121,13 +2249,5 @@ Commands ModelCommands[] = {
 //TODO:  "get dependency list of models"
 //TODO:  "Evaluate expression"
 
-//TODO: set_edge_value
 //TODO: set_interface_value
-
-
-//TODO: have atcontact option for node model instead of separate model
-//TODO: delete_contact_model
-//TODO: get_contact_values (or should this be just a regular node model)
-//TODO: "get contact model list"
-
 

@@ -36,7 +36,7 @@ TetrahedronEdgeSubModel<DoubleType>::TetrahedronEdgeSubModel(const std::string &
 }
 
 template <typename DoubleType>
-TetrahedronEdgeSubModel<DoubleType>::TetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, ConstTetrahedronEdgeModelPtr nmp, TetrahedronEdgeModel::DisplayType dt)
+TetrahedronEdgeSubModel<DoubleType>::TetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr nmp)
     :
         TetrahedronEdgeModel(nm, rp, dt),
         parentModel(nmp)
@@ -44,9 +44,6 @@ TetrahedronEdgeSubModel<DoubleType>::TetrahedronEdgeSubModel(const std::string &
     parentModelName = parentModel.lock()->GetName();
 
     RegisterCallback(parentModelName);
-#if 0
-    os << "creating TetrahedronEdgeSubModel " << nm << " with parent " << parentModel->GetName() << "\n";
-#endif
 }
 
 template <typename DoubleType>
@@ -59,7 +56,7 @@ TetrahedronEdgeModelPtr TetrahedronEdgeSubModel<DoubleType>::CreateTetrahedronEd
 template <typename DoubleType>
 TetrahedronEdgeModelPtr TetrahedronEdgeSubModel<DoubleType>::CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr nmp)
 {
-  TetrahedronEdgeModel *p = new TetrahedronEdgeSubModel(nm, rp, nmp, dt);
+  TetrahedronEdgeModel *p = new TetrahedronEdgeSubModel(nm, rp, dt, nmp);
   return p->GetSelfPtr();
 }
 
@@ -117,4 +114,14 @@ template class TetrahedronEdgeSubModel<double>;
 #include "Float128.hh"
 template class TetrahedronEdgeSubModel<float128>;
 #endif
+
+TetrahedronEdgeModelPtr CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
+{
+  return create_tetrahedron_edge_model<TetrahedronEdgeSubModel<double>, TetrahedronEdgeSubModel<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt);
+}
+
+TetrahedronEdgeModelPtr CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt, TetrahedronEdgeModelPtr emp)
+{
+  return create_tetrahedron_edge_model<TetrahedronEdgeSubModel<double>, TetrahedronEdgeSubModel<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt, emp);
+}
 

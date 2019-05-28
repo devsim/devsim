@@ -19,16 +19,17 @@ limitations under the License.
 #define TRIANGLE_EDGE_SUB_MODEL_HH
 #include "TriangleEdgeModel.hh"
 #include <string>
-// need to set general node propeties, such as positive only
-// 
-// This is modeled after NodeSolution
+
+TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
+TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, TriangleEdgeModelPtr);
+
 template <typename DoubleType>
 class TriangleEdgeSubModel : public TriangleEdgeModel
 {
     public:
         TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
         // This model depends on this model to calculate values
-        TriangleEdgeSubModel(const std::string &, RegionPtr, ConstTriangleEdgeModelPtr, TriangleEdgeModel::DisplayType);
+        TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, ConstTriangleEdgeModelPtr);
 
         void Serialize(std::ostream &) const;
 
