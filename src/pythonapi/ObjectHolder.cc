@@ -75,7 +75,7 @@ void ObjectHolder::clear()
 
 ObjectHolder::ObjectHolder(void *t) : object_(t)
 {
-//// Assume the reference already had a reference count increase
+  //// Assume the reference already had a reference count increase
 #if 0
   if (object_)
   {
@@ -297,9 +297,9 @@ bool ObjectHolder::GetListOfObjects(ObjectHolderList_t &objs) const
       objs.resize(len);
       for (size_t i = 0; i < len; ++i)
       {
-        //// this is a borrowed reference
+        //// this is a new reference
         PyObject *lobj = PySequence_GetItem(obj, i);
-        Py_INCREF(lobj);
+        //Py_INCREF(lobj);
         objs[i] = ObjectHolder(lobj);
       }
     }
@@ -521,10 +521,11 @@ ObjectHolder::ObjectHolder(ObjectHolderMap_t &map)
   {
     const std::string &key = it->first;
     PyObject *val = reinterpret_cast<PyObject *>((it->second).GetObject());
-    Py_INCREF(val);
+    //// does not steal the reference
+    //Py_INCREF(val);
     PyDict_SetItemString(map_object, key.c_str(), val);
   }
-  Py_INCREF(map_object);
+  //Py_INCREF(map_object);
   object_ = map_object;
 }
 
