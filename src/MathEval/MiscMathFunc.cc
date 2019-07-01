@@ -76,6 +76,8 @@ template double dot2dfunc(double ax, double ay, double bx, double by);
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
+template float128 derfdx(float128 x);
+template float128 derfcdx(float128 x);
 template float128 vec_sum(float128 x);
 template float128 vec_max(float128 x);
 template float128 vec_min(float128 x);
