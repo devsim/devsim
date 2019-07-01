@@ -20,31 +20,14 @@ limitations under the License.
 #include "dsAssert.hh"
 #include "GetGlobalParameter.hh"
 
-//#include <iostream>
 
-Interpreter::Interpreter() //: interp_(nullptr)
+Interpreter::Interpreter()
 {  
 }
 
 Interpreter::~Interpreter()
 {
 }
-
-#if 0
-/* for now run in main intepreter*/
-bool Interpreter::RunCommand(const std::string &command, const std::vector<std::string> &arguments)
-{
-//  PyObject *interp_ = reinterpret_cast<PyObject *>(GetMainInterpreter());
-
-  std::vector<ObjectHolder> objs(arguments.size() + 1);
-  objs[0] = ObjectHolder(command);
-  for (size_t i = 0; i < arguments.size(); ++i)
-  {
-    objs[i + 1] = ObjectHolder(arguments[i]);
-  }
-  return RunCommand(objs);
-}
-#endif
 
 namespace
 {
@@ -125,13 +108,13 @@ ObjectHolder CreateTuple(std::vector<ObjectHolder> &objects, size_t beg, size_t 
   for (size_t i = 0; i < len; ++i)
   {
     PyObject *p = reinterpret_cast<PyObject *>(objects[beg + i].GetObject());
+    // PyTuple_SetItem steals a reference
     Py_INCREF(p);
     PyTuple_SetItem(args, i, p);
   } 
   return ret;
 }
 
-///// Check for duplicates!
 ObjectHolder CreateDictionary(const std::vector<std::pair<std::string, ObjectHolder> > &objects)
 {
   ObjectHolder ret;
@@ -141,7 +124,8 @@ ObjectHolder CreateDictionary(const std::vector<std::pair<std::string, ObjectHol
   {
     const std::string &key = objects[i].first;
     const PyObject *obj = reinterpret_cast<const PyObject *>((objects[i].second).GetObject());
-    Py_INCREF(const_cast<PyObject *>(obj));
+    //PyDict_SetItemString does not steal a reference
+    //Py_INCREF(const_cast<PyObject *>(obj));
     PyDict_SetItemString(args, key.c_str(), const_cast<PyObject *>(obj));
   }
   return ret;
@@ -175,7 +159,6 @@ bool Interpreter::RunCommand(ObjectHolder &procedure, std::vector<ObjectHolder> 
     return ret;
   }
 
-  //// This really can't fail
   ObjectHolder args = CreateTuple(objects, 0, objects.size());
 
   PyErr_Clear();
@@ -194,41 +177,6 @@ bool Interpreter::RunCommand(ObjectHolder &procedure, std::vector<ObjectHolder> 
   return ret;
 }
 
-#if 0
-bool Interpreter::RunCommand(std::vector<ObjectHolder> &objects)
-{
-  bool ret = false;
-  error_string_.clear();
-
-  std::string commandname = objects[0].GetString();
-
-  ObjectHolder command_object = GetCommandFromInterpreter(commandname, error_string_);
-  if (!error_string_.empty())
-  {
-    ret = false;
-    return ret;
-  }
-
-  //// This really can't fail
-  ObjectHolder args = CreateTuple(objects, 1, objects.size() - 1);
-
-  PyErr_Clear();
-  PyObject *robj = PyObject_Call(reinterpret_cast<PyObject *>(command_object.GetObject()), reinterpret_cast<PyObject *>(args.GetObject()), nullptr);
-  result_ = ObjectHolder(robj);
-  if (robj)
-  {
-    ret = true;
-  }
-  else
-  {
-    ret = false;
-    ProcessError(commandname, error_string_);
-  }
-
-  return ret;
-}
-#endif
-
 bool Interpreter::RunInternalCommand(const std::string &commandname, const std::vector<std::pair<std::string, ObjectHolder> > &arguments)
 {
   std::string newname;
@@ -238,7 +186,6 @@ bool Interpreter::RunInternalCommand(const std::string &commandname, const std::
   return RunCommand(newname, arguments);
 }
 
-//TODO: pass command directly as function reference from python
 bool Interpreter::RunCommand(const std::string &commandname, const std::vector<std::pair<std::string, ObjectHolder> > &arguments)
 {
   bool ret = false;
@@ -272,24 +219,6 @@ bool Interpreter::RunCommand(const std::string &commandname, const std::vector<s
   return ret;
 }
 
-
-#if 0
-bool Interpreter::RunCommand(const std::string &commandString)
-{
-  error_string_.clear();
-  PyErr_Clear();
-  PyObject *globals = GetGlobalDictionary();
-  PyObject *res = PyRun_String(commandString.c_str(), Py_file_input, globals, globals);
-  result_ = ObjectHolder(res);
-
-  if (!res)
-  {
-    ProcessError(commandString, error_string_);
-  }
-
-  return (res != nullptr);
-}
-#endif
 
 std::string Interpreter::GetVariable(const std::string &name)
 {
