@@ -56,6 +56,11 @@ Eqo::EqObjPtr CreateDefaultDerivatives()
         "define(asinh(x), ((1 + (x^2))^(-1/2)));"
         "define(acosh(x), (((x^2) - 1)^(-1/2)));"
         "define(atanh(x), ((1 - (x^2))^(-1)));"
+        "declare(cosh(x));"
+        "define(sinh(x), cosh(x));"
+        "define(cosh(x), sinh(x));"
+        "declare(tanh(x));"
+        "define(tanh(x), 1 - pow(tanh(x), 2));"
         );
 
     Eqo::EqObjPtr testeq = EvalExpr::evaluateExpression(expr, terrors);
