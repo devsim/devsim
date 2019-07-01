@@ -88,6 +88,8 @@ namespace Eqomfp {
   {"acosh",     acosh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
   {"asinh",     asinh,        "asinh(obj)   -- inverse hyperbolic sine function"},
   {"atanh",     atanh,        "atanh(obj)   -- inverse hyperbolic tangent function"},
+  {"cosh",      cosh,         "cosh(obj)   -- hyperbolic sine function"},
+  {"sinh",      sinh,         "sinh(obj)   -- hyperbolic cosine function"},
   {"tanh",      tanh,         "tanh(obj)   -- hyperbolic tangent function"},
   {"erf",       erf,          "erf(obj)   -- error function"},
   {"erfc",      erfc,         "erfc(obj)  -- complementary error function"},
@@ -179,6 +181,16 @@ float128 atanh(float128 x)
   return boost::multiprecision::atanh(x);
 }
 
+float128 cosh(float128 x)
+{
+  return boost::multiprecision::cosh(x);
+}
+
+float128 sinh(float128 x)
+{
+  return boost::multiprecision::sinh(x);
+}
+
 float128 tanh(float128 x)
 {
   return boost::multiprecision::tanh(x);
@@ -212,6 +224,8 @@ using ::derfcdx;
   {"acosh",    eval128::acosh,        "acosh(obj)   -- inverse hyperbolic cosine function"},
   {"asinh",    eval128::asinh,        "asinh(obj)   -- inverse hyperbolic sine function"},
   {"atanh",    eval128::atanh,        "atanh(obj)   -- inverse hyperbolic tangent function"},
+  {"cosh",     eval128::cosh,         "cosh(obj)   -- hyperbolic sine function"},
+  {"sinh",     eval128::sinh,         "sinh(obj)   -- hyperbolic cosine function"},
   {"tanh",     eval128::tanh,         "tanh(obj)   -- hyperbolic tangent function"},
   {"erf",      eval128::erf,          "erf(obj)   -- error function"},
   {"erfc",     eval128::erfc,         "erfc(obj)  -- complementary error function"},
