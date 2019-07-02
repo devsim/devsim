@@ -3,7 +3,7 @@
 CMAKE="cmake"
 CMAKE_CXX_FLAGS=""
 #CXX="/usr/local/bin/g++-8"
-CXX="/usr/local/Cellar/gcc/8.2.0/bin/g++-8"
+#CXX="/usr/local/Cellar/gcc/8.2.0/bin/g++-8"
 TCL_ARCHIVE="/usr/lib/libtclstub8.5.a"
 TCL_INCLUDE="/usr/bin/include"
 TCL_BIN="/usr/bin/tclsh8.5"
