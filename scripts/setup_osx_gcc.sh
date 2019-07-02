@@ -1,6 +1,12 @@
 DEVSIM_CONFIG="osx_gcc"
-CC=/usr/local/bin/gcc-8
-CXX=/usr/local/bin/g++-8
+#CC=/usr/local/bin/gcc-8
+#CXX=/usr/local/bin/g++-8
+if [ -z "${CXX}" ]
+then
+echo "Setting CC and CXX from values needing to match build_macos"
+export CC=/usr/local/Cellar/gcc/8.2.0/bin/gcc-8;
+export CXX=/usr/local/Cellar/gcc/8.2.0/bin/g++-8
+fi
 CMAKE_CXX_FLAGS=""
 for TYPE in debug release; do
   for ARCH in x86_64; do
