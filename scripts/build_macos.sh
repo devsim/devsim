@@ -16,8 +16,7 @@ if [ "${1}" = "gcc" ]
   export CC=/usr/local/bin/gcc-8;
   export CXX=/usr/local/bin/g++-8;
   export F77=/usr/local/bin/gfortran-8;
-  brew install gcc@8 || brew link --overwrite gcc
-  #brew unlink gcc && brew link gcc
+  brew unlink gcc && brew link gcc
   #export CC=/usr/local/Cellar/gcc/8.2.0/bin/gcc-8;
   #export CXX=/usr/local/Cellar/gcc/8.2.0/bin/g++-8
   #export F77=/usr/local/Cellar/gcc/8.2.0/bin/gfortran-8;
