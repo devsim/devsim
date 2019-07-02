@@ -20,6 +20,7 @@ if [ "${1}" = "gcc" ]
   export CC=/usr/local/Cellar/gcc/8.2.0/bin/gcc-8;
   export CXX=/usr/local/Cellar/gcc/8.2.0/bin/g++-8
   export F77=/usr/local/Cellar/gcc/8.2.0/bin/gfortran-8;
+  ls -l /usr/local/opt/gcc/lib/gcc/8
 
   # https://github.com/Microsoft/LightGBM/pull/1560
   # removes symlink
