@@ -105,7 +105,7 @@ const Node *findNodeOppositeOfTriangleEdge(const Edge &edge, const Triangle &tri
 template <typename DoubleType>
 const GradientField<DoubleType> &Region::GetGradientField() const
 {
-  GradientField<DoubleType> *gradientField = GetGeometryField<DoubleType>().gradientField;
+  auto &gradientField = GetGeometryField<DoubleType>().gradientField;
   if (!gradientField)
   {
     gradientField = new GradientField<DoubleType>(this);
@@ -116,7 +116,7 @@ const GradientField<DoubleType> &Region::GetGradientField() const
 template <typename DoubleType>
 const TriangleElementField<DoubleType> &Region::GetTriangleElementField() const
 {
-  TriangleElementField<DoubleType> *triangleElementField = GetGeometryField<DoubleType>().triangleElementField;
+  auto &triangleElementField = GetGeometryField<DoubleType>().triangleElementField;
   if (!triangleElementField)
   {
     triangleElementField = new TriangleElementField<DoubleType>(this);
@@ -127,7 +127,7 @@ const TriangleElementField<DoubleType> &Region::GetTriangleElementField() const
 template <typename DoubleType>
 const TetrahedronElementField<DoubleType> &Region::GetTetrahedronElementField() const
 {
-  TetrahedronElementField<DoubleType> *tetrahedronElementField = GetGeometryField<DoubleType>().tetrahedronElementField;
+  auto &tetrahedronElementField = GetGeometryField<DoubleType>().tetrahedronElementField;
   if (!tetrahedronElementField)
   {
     tetrahedronElementField = new TetrahedronElementField<DoubleType>(this);
