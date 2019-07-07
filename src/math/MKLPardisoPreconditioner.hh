@@ -18,9 +18,6 @@ limitations under the License.
 #ifndef DS_MKL_PARDISO_HH
 #define DS_MKL_PARDISO_HH
 #include "Preconditioner.hh"
-#include "mkl_pardiso.h"
-#include "mkl_types.h"
-#include "mkl_spblas.h"
 
 
 namespace dsMath {
