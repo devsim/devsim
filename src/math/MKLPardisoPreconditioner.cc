@@ -23,6 +23,10 @@ limitations under the License.
 #include <utility>
 #include <complex>
 #include <vector>
+#include "mkl.h"
+#include "mkl_pardiso.h"
+#include "mkl_types.h"
+#include "mkl_spblas.h"
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
@@ -35,6 +39,7 @@ limitations under the License.
 #ifdef DEBUG_MATRIX
 #include <fstream>
 #endif
+#include <iostream>
 
 namespace dsMath {
 
