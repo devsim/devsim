@@ -77,8 +77,9 @@ bool Preconditioner<DoubleType>::LUFactor(Matrix<DoubleType> *mat)
   {
     std::ostringstream os;
     os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  during LU Factorization\n";
-    OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
+    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str().c_str());
     FPECheck::ClearFPE();
+    ret = false;
   }
 
   factored = ret;
