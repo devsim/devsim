@@ -164,11 +164,11 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
 
   if (FPECheck::CheckFPE())
   {
-    FPECheck::ClearFPE();
-
     std::ostringstream os;
     os << "Uncaught FPE: There was an uncaught floating point exception of type \"" << FPECheck::getFPEString() << "\"\n";
     errorString += os.str();
+
+    FPECheck::ClearFPE();
 
     if (ret)
     {
