@@ -105,6 +105,9 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
     }
   }
 
+  std::string errorString;
+  bool        isError = false;
+
   try
   {
 
@@ -121,36 +124,62 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
     CommandHandler data(&command_info);
     command_info.command_handler_ = &data;
     fptr(data);
+
+    isError = data.GetReturnCode() == 0;
+    errorString = data.GetErrorString();
+
     ret = reinterpret_cast<PyObject *>(data.GetReturnObject().GetObject());
+
     if (ret)
     {
-      Py_INCREF(ret);
+      if (!isError)
+      {
+        Py_INCREF(ret);
+      }
+      else
+      {
+        errorString += "UNEXPECTED: Error return with returned object\n";
+        ret = nullptr;
+      }
     }
+
   }
   catch (const dsException &x)
   {
     ret = nullptr;
-    PyErr_SetString(GETSTATE(m)->error, x.what());
+    errorString = x.what();
   }
-  catch (std::bad_alloc &)
+  catch (std::bad_alloc &x)
   {
     ret = nullptr;
-    PyErr_SetString(GETSTATE(m)->error, const_cast<char *>("OUT OF MEMORY"));
+    errorString = "OUT OF MEMORY\n";
+    errorString += x.what();
   }
-  catch (std::exception &)
+  catch (std::exception &x)
   {
     ret = nullptr;
-    PyErr_SetString(GETSTATE(m)->error, const_cast<char *>("UNEXPECTED ERROR"));
+    errorString = "UNEXPECTED ERROR\n";
+    errorString += x.what();
   }
-
 
   if (FPECheck::CheckFPE())
   {
-    std::ostringstream os;
-    os << "There was an uncaught floating point exception of type"" << FPECheck::getFPEString() << ""n";
     FPECheck::ClearFPE();
-    ret = nullptr;
-    OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str().c_str());
+
+    std::ostringstream os;
+    os << "Uncaught FPE: There was an uncaught floating point exception of type \"" << FPECheck::getFPEString() << "\"\n";
+    errorString += os.str();
+
+    if (ret)
+    {
+      Py_DECREF(ret);
+      ret = nullptr;
+    }
+  }
+
+  if (!ret)
+  {
+    PyErr_SetString(GETSTATE(m)->error, const_cast<char *>(errorString.c_str()));
   }
 
   return ret;

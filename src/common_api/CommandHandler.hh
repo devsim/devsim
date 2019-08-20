@@ -100,6 +100,11 @@ class CommandHandler
       return return_code_;
     }
 
+    const std::string &GetErrorString() const
+    {
+      return error_string_;
+    }
+
     ObjectHolder GetReturnObject() const
     {
       return return_object_;
@@ -118,6 +123,7 @@ class CommandHandler
 
     void        *command_info_;
     std::string  command_name;
+    std::string  error_string_;
     int          return_code_;
     ObjectHolder return_object_;
 };
