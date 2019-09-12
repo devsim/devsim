@@ -5,7 +5,7 @@ SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
 
-SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boost_1_66_0)
+SET (BOOST_INCLUDE "$ENV{HOME}/anaconda/include")
 
 SET (QUADMATH_ARCHIVE "-lquadmath")
 

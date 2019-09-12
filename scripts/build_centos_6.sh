@@ -26,12 +26,12 @@ ${HOME}/anaconda/bin/conda install -y cmake
 #Python3
 #${HOME}/anaconda/bin/conda create -y --name python36_devsim_build python=3.6
 ${HOME}/anaconda/bin/conda create  -y --name python37_devsim_build python=3.7
-${HOME}/anaconda/bin/conda install -y --name python37_devsim_build mkl mkl-devel mkl-include
+${HOME}/anaconda/bin/conda install -y --name python37_devsim_build mkl mkl-devel mkl-include boost
 fi
 
 #download boost library
-(cd ${HOME}/devsim/external && curl -O -L https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz)
-(cd ${HOME}/devsim/external && tar xzf boost_1_66_0.tar.gz)
+#(cd ${HOME}/devsim/external && curl -O -L https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz)
+#(cd ${HOME}/devsim/external && tar xzf boost_1_66_0.tar.gz)
 
 #git clone https://github.com/devsim/symdiff
 #cd symdiff

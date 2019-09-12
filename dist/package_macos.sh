@@ -58,13 +58,29 @@ for i in ${DIST_PYDLL}/devsim_py*.so ${DIST_LIB}/symdiff/symdiff_py*.so
 do
 echo $i
 # get otool dependencies from the gcc compiler
-for j in `otool -L $i | egrep '\bgcc\b' | sed -e 's/(.*//'`
+for j in `otool -L $i | egrep '/usr/local/' | sed -e 's/(.*//'`
 do
 cp -vf $j ${DIST_LIB}/gcc
 echo install_name_tool -change $j "@loader_path/../gcc/`basename $j`" $i
 install_name_tool -change $j "@loader_path/../gcc/`basename $j`" $i
 done
 done
+###
+### fix issue on High Sierra (and possibly Mojave)
+###
+chmod u+w ${DIST_LIB}/gcc/*.dylib
+for i in ${DIST_LIB}/gcc/*.dylib
+do
+echo $i
+# get otool dependencies from the gcc compiler
+for j in `otool -L $i | egrep '/usr/local/' | sed -e 's/(.*//'`
+do
+#cp -vf $j ${DIST_LIB}/gcc
+echo install_name_tool -change $j "@loader_path/../gcc/`basename $j`" $i
+install_name_tool -change $j "@loader_path/../gcc/`basename $j`" $i
+done
+done
+
 
 #for i in ${DIST_BIN}/devsim_tcl
 #do
@@ -90,7 +106,7 @@ mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
 cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
 
-for i in INSTALL NOTICE LICENSE RELEASE macos.txt scripts/anaconda_vars.sh scripts/anaconda_vars.csh; do
+for i in INSTALL NOTICE LICENSE RELEASE macos.txt; do
 cp ../$i ${DIST_DIR}
 done
 
