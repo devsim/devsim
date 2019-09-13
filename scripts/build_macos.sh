@@ -17,9 +17,6 @@ if [ "${1}" = "gcc" ]
   export CXX=/usr/local/bin/g++-8;
   export F77=/usr/local/bin/gfortran-8;
   brew unlink gcc && brew link gcc
-  #export CC=/usr/local/Cellar/gcc/8.2.0/bin/gcc-8;
-  #export CXX=/usr/local/Cellar/gcc/8.2.0/bin/g++-8
-  #export F77=/usr/local/Cellar/gcc/8.2.0/bin/gfortran-8;
 
   # https://github.com/Microsoft/LightGBM/pull/1560
   # removes symlink
@@ -27,14 +24,6 @@ if [ "${1}" = "gcc" ]
   # fix "fatal error: _stdio.h: No such file or directory"
 # try moving to osx_image: xcode10.1
 #  sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-9.3"
-
-  # install boost
-  #if brew ls --versions boost > /dev/null;
-  #then
-  #brew outdated boost || brew upgrade boost;
-  #else
-  #brew install boost
-  #fi
 
 elif [ "${1}" = "clang" ]
   then
@@ -47,35 +36,26 @@ else
 fi
 
 #minimal conda environments to prevent linking against the wrong libraries
-if [ "${1}" = "gcc" ] && [ ! -f ${HOME}/Miniconda3-latest-MacOSX-x86_64.sh ]
+cd ${HOME}
+if [ "${1}" = "gcc" ] && [ ! -f Miniconda3-latest-MacOSX-x86_64.sh ]
 then
-(cd ${HOME} &&
 curl -O https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh;
 bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;)
-# Python 2
-#${HOME}/anaconda/bin/conda create  -y --name python27_devsim_build python=2.7
-#${HOME}/anaconda/bin/conda install -y --name python27_devsim_build mkl mkl-devel mkl-include
-#Python3
-#${HOME}/anaconda/bin/conda create -y --name python36_devsim_build python=3.6
 ${HOME}/anaconda/bin/conda create  -y --name python37_devsim_build python=3.7
-${HOME}/anaconda/bin/conda install -y --name python37_devsim_build mkl mkl-devel mkl-include boost
+${HOME}/anaconda/bin/conda install -y --name python37_devsim_build mkl mkl-devel mkl-include boost cmake
 fi
+source ${HOME}/anaconda/bin/activate python37_devsim_build
 
 
 #For macOS, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
 #https://developer.apple.com/technologies/tools
 #https://developer.apple.com/performance/accelerateframework.html
-#In addition, cmake is needed for macOS.  The package may be downloaded from:
-#http://www.cmake.org
 
-# put the tag name in first argument used for distribution
 # this script assumes git clone and submodule initialization has been done
+cd devsim
 
 # SuperLU
-#if [ ! -f external/superlu_4.3.tar.gz ]
-#then
 #(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
-#fi
 (cd external && tar xzf superlu_4.3.tar.gz)
 
 # SYMDIFF build
@@ -97,6 +77,7 @@ fi
 # SUPERLU build
 (cd external/SuperLU_4.3 && sh ../superlu_macos.sh)
 
+# quad precision getrf
 if [ "${1}" = "gcc" ]
 then
 (cd external/getrf && ./setup_osx.sh && cd build && make -j4)
