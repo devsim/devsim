@@ -91,9 +91,6 @@ then
 bash ./scripts/setup_osx_10.10.sh
 fi
 (cd osx_x86_64_release && make -j4)
-if [ ! -z "${2}" ]
-then
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});
-fi
 
 
