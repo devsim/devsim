@@ -36,11 +36,10 @@ else
 fi
 
 #minimal conda environments to prevent linking against the wrong libraries
-cd ${HOME}
 if [ "${1}" = "gcc" ] && [ ! -f Miniconda3-latest-MacOSX-x86_64.sh ]
 then
 curl -O https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh;
-bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
+bash Miniconda3-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
 ${HOME}/anaconda/bin/conda create  -y --name python37_devsim_build python=3.7
 ${HOME}/anaconda/bin/conda install -y --name python37_devsim_build mkl mkl-devel mkl-include boost cmake
 fi
@@ -52,7 +51,7 @@ source ${HOME}/anaconda/bin/activate python37_devsim_build
 #https://developer.apple.com/performance/accelerateframework.html
 
 # this script assumes git clone and submodule initialization has been done
-cd devsim
+#cd devsim
 
 # SuperLU
 #(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
