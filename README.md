@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/devsim/devsim.svg?branch=master)](https://travis-ci.org/devsim/devsim)
 [![Build status](https://ci.appveyor.com/api/projects/status/github/devsim/devsim?branch=master&svg=true)](https://ci.appveyor.com/project/devsim/devsim)
+[![DOI](https://zenodo.org/badge/8838727.svg)](https://zenodo.org/badge/latestdoi/8838727)
 
 ### Introduction:
 **DEVSIM** - TCAD Device Simulator

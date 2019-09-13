@@ -44,6 +44,7 @@ void CommandHandler::SetEmptyResult()
   return_code_ = 1;
   Py_INCREF(Py_None);
   return_object_ = ObjectHolder(Py_None);
+  error_string_.clear();
 }
 
 void CommandHandler::SetErrorResult(const std::string &errorString)
@@ -51,13 +52,14 @@ void CommandHandler::SetErrorResult(const std::string &errorString)
   dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   return_code_ = 0;
   return_object_.clear();
-  PyErr_SetString(info.exception_, errorString.c_str());
+  error_string_ = errorString;
 }
 
 void CommandHandler::SetObjectResult(ObjectHolder obj)
 {
   return_object_ = obj;
   return_code_ = 1;
+  error_string_.clear();
 }
 
 

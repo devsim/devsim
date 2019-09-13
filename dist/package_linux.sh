@@ -44,7 +44,7 @@ mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
 cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
 
-for i in INSTALL NOTICE LICENSE RELEASE linux.txt scripts/anaconda_vars.sh scripts/anaconda_vars.csh; do
+for i in INSTALL NOTICE LICENSE RELEASE linux.txt; do
 cp ../$i ${DIST_DIR}
 done
 
