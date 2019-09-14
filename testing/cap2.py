@@ -216,3 +216,7 @@ print_edge_values(device=device, region="MySiRegion", name="testcopy1")
 edge_model(device=device, region="MySiRegion", name="testcopy2", equation="ElectricField-testcopy1")
 print_edge_values(device=device, region="MySiRegion", name="testcopy2")
 
+delete_edge_model(device=device, region="MySiRegion", name='ElectricField')
+delete_node_model(device=device, region="MySiRegion", name='Potential')
+delete_interface_model(device=device, interface=interface, name="continuousPotential")
+
