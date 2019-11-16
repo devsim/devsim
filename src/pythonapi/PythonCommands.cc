@@ -47,11 +47,7 @@ limitations under the License.
 #define TOSTRING(x) STRINGIFY(x)
 #define PASTETOKENS(x, y) x ## y
 // Module initialization function
-#if PY_MAJOR_VERSION >= 3
 #define HELPER1(x) PASTETOKENS(PyInit_, x)
-#else
-#define HELPER1(x) PASTETOKENS(init, x)
-#endif
 #define DEVSIM_MODULE_INIT HELPER1(DEVSIM_MODULE_NAME)
 #define DEVSIM_MODULE_STRING TOSTRING(DEVSIM_MODULE_NAME)
 
@@ -67,12 +63,7 @@ struct module_state {
   PyObject *error;
 };
 
-#if PY_MAJOR_VERSION >= 3
 #define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
-#else
-#define GETSTATE(m) (&_state)
-static struct module_state _state;
-#endif
 }
 
 
@@ -433,10 +424,6 @@ MYCOMMAND(get_circuit_equation_number, dsCommand::circuitGetCircuitEquationNumbe
 {nullptr, nullptr, 0, nullptr}
 };
 
-
-
-
-#if PY_MAJOR_VERSION >= 3
 static int devsim_traverse(PyObject *m, visitproc visit, void *arg) {
     Py_VISIT(GETSTATE(m)->error);
     return 0;
@@ -465,16 +452,8 @@ static struct PyModuleDef moduledef = {
 //PyMODINIT_FUNC // this next line is used instead to use DLL_PUBLIC macro
 extern "C" DLL_PUBLIC PyObject *
 DEVSIM_MODULE_INIT(void)
-#else
-#define INITERROR return
-extern "C" void DLL_PUBLIC DEVSIM_MODULE_INIT()
-#endif
 {
-#if PY_MAJOR_VERSION >= 3
   PyObject *module = PyModule_Create(&moduledef);
-#else
-  PyObject *module = Py_InitModule(DEVSIM_MODULE_STRING, devsim_methods);
-#endif
 
     if (module == nullptr)
     {
@@ -496,33 +475,7 @@ extern "C" void DLL_PUBLIC DEVSIM_MODULE_INIT()
 
     devsim_initialization();
 
-#if PY_MAJOR_VERSION >=3
   return module;
-#endif
 }
-
-#if 0
-// https://docs.python.org/3/howto/cporting.html
-// https://docs.python.org/3/extending/embedding.html
-using namespace std;
-bool 
-Commands_Init() {
-#if PY_MAJOR_VERSION >=3
-#if 0
-  PyObject *module = PyInit_ds();
-  if (module)
-  {
-#endif
-    PyImport_AppendInittab("ds", &PyInit_ds);
-#if 0
-  }
-#endif
-#else
-  initds();
-#endif
-
-  return true;
-}
-#endif
 }
 

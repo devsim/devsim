@@ -1,6 +1,5 @@
 SET (CXX_SRCS1
    GetArgs.cc
-   PythonAppInit.cc
    PythonCommands.cc
    CommandHandler.cc
    ObjectHolder.cc

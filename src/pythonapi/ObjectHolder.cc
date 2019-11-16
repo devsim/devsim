@@ -136,23 +136,13 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
       ok  = true;
       val = PyFloat_AsDouble(obj);
     }
-#if PY_MAJOR_VERSION < 3
-    else if (PyInt_CheckExact(obj))
-    {
-      return this->GetInteger();
-    }
-#endif
     else if (PyLong_CheckExact(obj))
     {
       return this->GetLong();
     }
     else if (PyUnicode_CheckExact(obj) || PyBytes_CheckExact(obj))
     {
-#if PY_MAJOR_VERSION < 3
-      PyObject *fobj = PyFloat_FromString(obj, nullptr);
-#else
       PyObject *fobj = PyFloat_FromString(obj);
-#endif
       if (fobj)
       {
         ok = true;
@@ -226,13 +216,6 @@ ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
       ok = true;
       val = PyLong_AsLong(obj);
     }
-#if PY_MAJOR_VERSION < 3
-    else if (PyInt_CheckExact(obj))
-    {
-      ok = true;
-      val = PyInt_AsLong(obj);
-    }
-#endif
     else if (PyUnicode_CheckExact(obj) || PyBytes_CheckExact(obj))
     {
       const std::string &s = this->GetString();
@@ -490,11 +473,7 @@ ObjectHolder::ObjectHolder(double v)
 
 ObjectHolder::ObjectHolder(int v)
 {
-#if PY_MAJOR_VERSION < 3
-  object_ = PyInt_FromLong(v);
-#else
   object_ = PyLong_FromLong(v);
-#endif
 }
 
 ObjectHolder::ObjectHolder(ObjectHolderList_t &list)

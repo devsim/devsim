@@ -1,8 +1,5 @@
 PROJECT (DEVSIM CXX)
-#cmake_minimum_required(VERSION 2.6)
-OPTION(GENIUSREADER "Build with Genius Reader" OFF)
 OPTION(VTKWRITER    "Build with VTK Writer" ON)
-OPTION(TCLMAIN      "Build with TCL Interpreter" OFF)
 OPTION(PYTHON3      "Build Python 3 Interpreter" ON)
 OPTION(DEVSIM_EXTENDED_PRECISION "Build with extended precision" OFF)
 OPTION(MKL_PARDISO  "Build with MKL Pardiso" OFF)

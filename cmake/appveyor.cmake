@@ -8,7 +8,7 @@
 SET (FLEX "C:/cygwin/bin/flex.exe")
 SET (BISON "C:/cygwin/bin/bison.exe")
 
-ADD_DEFINITIONS(-DSTATIC_BUILD -D_USE_MATH_DEFINES -DTCL_THREADS)
+ADD_DEFINITIONS(-DSTATIC_BUILD -D_USE_MATH_DEFINES)
 #Math stuff
 # warning C4005: concerning macro redefines in stdint.h
 # warning C4244: conversion from 'size_t' to 'const double'
@@ -53,10 +53,6 @@ SET (SQLITE3_ARCHIVE  ${MINICONDA37}/Library/lib/sqlite3.lib)
 
 SET (ZLIB_INCLUDE ${MINICONDA37}/Library/include)
 SET (ZLIB_ARCHIVE ${MINICONDA37}/Library/lib/zlib.lib)
-
-SET(TCL_INCLUDE "${MINICONDA37}/Library/include")
-SET(TCL_ARCHIVE "${MINICONDA37}/Library/lib/tcl86t.lib")
-SET(TCL_STUB    "${MINICONDA37}/Library/lib/tclstub86.lib")
 
 SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/${BUILDDIR}/src/engine/Release/symdiff_static.lib)

@@ -390,9 +390,8 @@ DoubleType MathEval<DoubleType>::EvaluateMathFunc(const std::string &func, std::
 
   if (tclMathFuncMap_.count(func))
   {
-    static std::vector<const std::vector<DoubleType> *> vvals;
-    vvals.resize(cnt);
-    static std::vector<DoubleType> result(1);
+    std::vector<const std::vector<DoubleType> *> vvals(cnt);
+    std::vector<DoubleType> result(1);
     EvaluateTclMathFunc(func, vals, vvals, error, result);
     if (error.empty())
     {

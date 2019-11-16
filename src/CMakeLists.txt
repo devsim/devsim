@@ -11,7 +11,6 @@ SET (SUBDIRS
     Data
     Circuit
     MathEval
-    tclapi
     errorSystem
     myThread
     utility

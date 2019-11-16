@@ -1309,6 +1309,8 @@ printNodeValuesCmd(CommandHandler &data)
     }
     else if (commandName == "delete_node_model")
     {
+      // fix the reference count to prevent assertion in Region.cc
+      nm_name.reset();
       reg->DeleteNodeModel(name);
       data.SetEmptyResult();
     }
@@ -1393,6 +1395,8 @@ printEdgeValuesCmd(CommandHandler &data)
     }
     else if (commandName == "delete_edge_model")
     {
+      // fix the reference count to prevent assertion in Region.cc
+      nm_name.reset();
       reg->DeleteEdgeModel(name);
       data.SetEmptyResult();
     }
@@ -1493,6 +1497,8 @@ printElementEdgeValuesCmd(CommandHandler &data)
       }
       else if (commandName == "delete_element_model")
       {
+        // fix the reference count to prevent assertion in Region.cc
+        triangle_edge_model.reset();
         reg->DeleteTriangleEdgeModel(name);
         data.SetEmptyResult();
       }
@@ -1519,6 +1525,8 @@ printElementEdgeValuesCmd(CommandHandler &data)
       }
       else if (commandName == "delete_element_model")
       {
+        // fix the reference count to prevent assertion in Region.cc
+        tetrahedron_edge_model.reset();
         reg->DeleteTetrahedronEdgeModel(name);
         data.SetEmptyResult();
       }
@@ -1595,6 +1603,8 @@ getInterfaceValuesCmd(CommandHandler &data)
     }
     else if (commandName == "delete_interface_model")
     {
+      // fix the reference count to prevent assertion in Region.cc
+      imp.reset();
       interface->DeleteInterfaceNodeModel(name);
       data.SetEmptyResult();
     }

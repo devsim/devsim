@@ -23,9 +23,6 @@ SET (CXX_SRCS
     TecplotWriter.cc
 )
 
-IF (GENIUSREADER)
-SET (CXX_SRCS ${CXX_SRCS} GeniusReader.cc GeniusLoader.cc)
-ENDIF (GENIUSREADER)
 IF (VTKWRITER)
 SET (CXX_SRCS ${CXX_SRCS} VTKWriter.cc)
 ENDIF (VTKWRITER)
@@ -42,7 +39,6 @@ INCLUDE_DIRECTORIES (
     ../AutoEquation
     ../Equation
     ../common_api
-    ${CGNS_INCLUDE}
 )
 
 

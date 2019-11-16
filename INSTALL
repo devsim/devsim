@@ -20,9 +20,7 @@ The script used for building and packaging Microsoft Windows:
 appveyor.yml
 
 Please note that the following options are enabled by default.
-OPTION(GENIUSREADER "Build with Genius Reader" OFF)
 OPTION(VTKWRITER    "Build with VTK Writer" ON)
-OPTION(TCLMAIN      "Build with TCL Interpreter" OFF)
 
 By setting these options to OFF in the build directory, (CMakeCache.txt), the number of required dependencies is significantly reduced.
 

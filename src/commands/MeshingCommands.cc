@@ -33,8 +33,6 @@ limitations under the License.
 #include "dsAssert.hh"
 #include "GmshReader.hh"
 #include "GmshLoader.hh"
-#include "GeniusReader.hh"
-#include "GeniusLoader.hh"
 
 #include "Device.hh"
 #include "Region.hh"
@@ -794,7 +792,7 @@ namespace {
 void NoGeniusSupport(CommandHandler &data)
 {
     std::ostringstream os;
-    os << "Genius reader support not available in this version\n";
+    os << "Genius reader no longer supported\n";
     data.SetErrorResult(os.str());
     return;
 }
@@ -804,224 +802,25 @@ void NoGeniusSupport(CommandHandler &data)
 void 
 createGeniusMeshCmd(CommandHandler &data)
 {
-#ifdef GENIUSREADER
-    std::string errorString;
-
-//    const std::string commandName = data.GetCommandName();
-
-    using namespace dsGetArgs;
-    static dsGetArgs::Option option[] =
-    {
-        {"mesh", "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshCannotExist},
-        {"file", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
-    };
-
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
-
-    if (error)
-    {
-        data.SetErrorResult(errorString);
-        return;
-    }
-
-    const std::string &fileName = data.GetStringOption("file");
-    const std::string &meshName = data.GetStringOption("mesh");
-
-    bool ret = dsGeniusParse::LoadMeshes(fileName, meshName, errorString);
-    if (!ret)
-    {
-      data.SetErrorResult(errorString);
-      return;
-    }
-
-    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
-    dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
-    dsMesh::GeniusLoaderPtr gmp = dynamic_cast<dsMesh::GeniusLoaderPtr>(mp);
-    if (!gmp)
-    {
-        std::ostringstream os;
-        os << meshName << " is not a genius mesh\n";
-        data.SetErrorResult(os.str());
-        return;
-    }
-
-    ObjectHolderMap_t out;
-    out["mesh_info"] = gmp->GetMeshInfo();
-    out["messages"] = ObjectHolder(errorString); 
-    data.SetObjectResult(ObjectHolder(out));
-#else
     NoGeniusSupport(data);
-#endif
 }
 
 void 
 addGeniusInterfaceCmd(CommandHandler &data)
 {
-#ifdef GENIUSREADER
-    std::string errorString;
-
-    const std::string commandName = data.GetCommandName();
-
-    using namespace dsGetArgs;
-    
-    static dsGetArgs::Option option[] = {
-        {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
-        {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"genius_name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"region0",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"region1",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
-    };
-
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
-
-    if (error)
-    {
-        data.SetErrorResult(errorString);
-        return;
-    }
-
-    const std::string &meshName = data.GetStringOption("mesh");
-    const std::string &name = data.GetStringOption("name");
-    const std::string &geniusName  = data.GetStringOption("genius_name");
-    const std::string &regionName0  = data.GetStringOption("region0");
-    const std::string &regionName1  = data.GetStringOption("region1");
-
-    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
-    dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
-    dsMesh::GeniusLoaderPtr gmp = dynamic_cast<dsMesh::GeniusLoaderPtr>(mp);
-    if (!gmp)
-    {
-        std::ostringstream os;
-        os << meshName << " is not a genius mesh\n";
-        data.SetErrorResult(os.str());
-        return;
-    }
-    else
-    {
-      gmp->MapNameToInterface(geniusName, name, regionName0, regionName1);
-      data.SetEmptyResult();
-    }
-#else
     NoGeniusSupport(data);
-#endif
 }
 
 void 
 addGeniusContactCmd(CommandHandler &data)
 {
-#ifdef GENIUSREADER
-    std::string errorString;
-
-    const std::string commandName = data.GetCommandName();
-
-    using namespace dsGetArgs;
-    
-    static dsGetArgs::Option option[] = {
-        {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
-        {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"material",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"genius_name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"region",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
-    };
-
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
-
-    if (error)
-    {
-        data.SetErrorResult(errorString);
-        return;
-    }
-
-    const std::string &meshName = data.GetStringOption("mesh");
-    const std::string &name = data.GetStringOption("name");
-    const std::string &geniusName  = data.GetStringOption("genius_name");
-    const std::string &regionName  = data.GetStringOption("region");
-    const std::string &materialName  = data.GetStringOption("material");
-
-    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
-    dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
-    dsMesh::GeniusLoaderPtr gmp = dynamic_cast<dsMesh::GeniusLoaderPtr>(mp);
-    if (!gmp)
-    {
-        std::ostringstream os;
-        os << meshName << " is not a genius mesh\n";
-        data.SetErrorResult(os.str());
-        return;
-    }
-    else
-    {
-      gmp->MapNameToContact(geniusName, name, regionName, materialName);
-      data.SetEmptyResult();
-    }
-#else
     NoGeniusSupport(data);
-#endif
 }
 
 void 
 addGeniusRegionCmd(CommandHandler &data)
 {
-#ifdef GENIUSREADER
-    std::string errorString;
-
-    const std::string commandName = data.GetCommandName();
-
-    using namespace dsGetArgs;
-    
-    static dsGetArgs::Option option[] = {
-        {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
-        {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"genius_name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"material",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
-    };
-
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
-
-    if (error)
-    {
-        data.SetErrorResult(errorString);
-        return;
-    }
-
-    const std::string &meshName = data.GetStringOption("mesh");
-    const std::string &geniusName  = data.GetStringOption("genius_name");
-    const std::string &regionName  = data.GetStringOption("region");
-    const std::string &materialName  = data.GetStringOption("material");
-
-    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
-    dsMesh::MeshPtr mp = mdata.GetMesh(meshName);
-    dsMesh::GeniusLoaderPtr gmp = dynamic_cast<dsMesh::GeniusLoaderPtr>(mp);
-    if (!gmp)
-    {
-        std::ostringstream os;
-        os << meshName << " is not a genius mesh\n";
-        data.SetErrorResult(os.str());
-        return;
-    }
-    else
-    {
-      gmp->MapNameToRegion(geniusName, regionName, materialName);
-      data.SetEmptyResult();
-    }
-#else
     NoGeniusSupport(data);
-#endif
 }
 
 void 

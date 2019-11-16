@@ -1,4 +1,4 @@
-ADD_DEFINITIONS(-DTCL_THREADS -pthread -fvisibility=hidden)
+ADD_DEFINITIONS(-pthread -fvisibility=hidden)
 
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 
@@ -23,15 +23,8 @@ SET (SUPERLULOCATE  ${EXTERNAL_LIB}/SuperLU_4.3)
 SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
 SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/lib/libsuperlu_4.3.a)
 
-#SET (TCL_INCLUDE "$ENV{HOME}/anaconda/include")
-#SET (TCL_ARCHIVE -L$ENV{HOME}/anaconda/lib -ltcl8.6 -ldl)
-#SET (TCL_STUB /usr/lib64/libtclstub8.6.a)
-
 SET (SQLITE3_INCLUDE $ENV{CONDA_PREFIX}/include)
 SET (SQLITE3_ARCHIVE $ENV{CONDA_PREFIX}/lib/libsqlite3.a)
-
-#SET (CGNS_INCLUDE ${EXTERNAL_LIB}/cgnslib/include)
-#SET (CGNS_ARCHIVE -L${EXTERNAL_LIB}/cgnslib/lib -lcgns)
 
 SET (ZLIB_INCLUDE $ENV{CONDA_PREFIX}/include)
 SET (ZLIB_ARCHIVE $ENV{CONDA_PREFIX}/lib/libz.a)
@@ -39,10 +32,6 @@ SET (ZLIB_ARCHIVE $ENV{CONDA_PREFIX}/lib/libz.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)
 
-#SET (PYTHON27_INCLUDE   $ENV{HOME}/anaconda/envs/python27_devsim_build/include/python2.7)
-#SET (PYTHON27_ARCHIVE -L$ENV{HOME}/anaconda/envs/python27_devsim_build/lib   -lpython2.7)
-#SET (PYTHON36_INCLUDE   $ENV{HOME}/anaconda/envs/python36_devsim_build/include/python3.6m)
-#SET (PYTHON36_ARCHIVE -L$ENV{HOME}/anaconda/envs/python36_devsim_build/lib   -lpython3.6m)
 SET (PYTHON37_INCLUDE   $ENV{CONDA_PREFIX}/include/python3.7m)
 SET (PYTHON37_ARCHIVE -L$ENV{CONDA_PREFIX}/lib   -lpython3.7m)
 
