@@ -15,6 +15,12 @@ version: 1.{build}-win64
 # version: 1.0.{build}-{branch}
 
 # branches to build
+# prevent duplicate builds on tagged versions on master
+# development to be done on other branches
+branches:
+  except:
+    - master
+
 #branches:
 # whitelist
 #only:

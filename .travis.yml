@@ -17,12 +17,13 @@ addons:
   homebrew:
     packages:
     - gcc@8
-    - boost
     update: false
 
-#branches:
-#  only:
-#    - master
+# prevent duplicate builds on tagged versions on master
+# development to be done on other branches
+branches:
+  except:
+    - master
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
