@@ -17,21 +17,15 @@ limitations under the License.
 
 #include "MathPacket.hh"
 #include "MathWrapper.hh"
-
-#include "myThreadPool.hh"
-#include "myqueue.hh"
+#include "GetNumberOfThreads.hh"
+#include <future>
+#include <memory>
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 #endif
 
 namespace Eqomfp {
-
-template <typename DoubleType>
-const MathPacket<DoubleType> &MathPacketRange<DoubleType>::GetMathPacket()
-{
-  return mathPacket_;
-}
 
 template <typename DoubleType>
 FPECheck::FPEFlag_t MathPacket<DoubleType>::getFPEFlag() const
@@ -87,31 +81,24 @@ std::string MathPacketRun(const MathWrapper<DoubleType> &func, const std::vector
 {
   std::string errorString;
 
-  //// get from the queue
-  myThreadPool &pool = myThreadPool::GetInstance();
-  myqueue      &queue = pool.GetQueue();
-  const size_t num_threads = queue.GetNumberThreads();
-  const size_t task_size = queue.GetMinimumTaskSize();
+  const size_t num_threads = ThreadInfo::GetNumberOfThreads();
+  const size_t task_size   = ThreadInfo::GetMinimumTaskSize();
 
   if ((num_threads > 1) && vlen > task_size)
   {
     Eqomfp::MathPacket<DoubleType> MyPacket(func, dvals, vvals, result);
 
-    mymutex     cmutex;
-    mycondition ccondition;
-    size_t      num_processed(0);
+    std::vector<std::shared_ptr<Eqomfp::MathPacket<DoubleType>>> packets;
+    std::vector<std::future<void>> futures;
 
-    std::vector<mypacket_ptr> packets;
-
-    ///// TODO: This code should be generalized and made available for all thread scheduling
-    ///// e.g. GetSchedule function for queue
     const size_t step = vlen / num_threads;
     size_t b = 0;
     size_t e = (step == 0) ? vlen : step;
     while (b < e)
     {
-      mypacket_ptr packet = mypacket_ptr(new MathPacketRange<DoubleType>(MyPacket, b, e, cmutex, ccondition, num_processed, vlen));
+      auto packet = std::shared_ptr<Eqomfp::MathPacket<DoubleType>>(new MathPacket<DoubleType>(func, dvals, vvals, result));
       packets.push_back(packet);
+      futures.push_back(std::async(std::launch::async, MathPacketRange<DoubleType>(*packet, b, e)));
 
       b = e;
       e += step;
@@ -123,19 +110,16 @@ std::string MathPacketRun(const MathWrapper<DoubleType> &func, const std::vector
       }
     }
 
-    queue.AddTasks(packets);
-
-    
-    cmutex.lock();
-    while (num_processed < vlen)
+    // process the futures
+    for (auto &p : futures)
     {
-        ccondition.wait(cmutex);
+      p.get();
     }
-    cmutex.unlock();
 
-    for (size_t i = 0; i < packets.size(); ++i)
+    // get the results
+    for (auto &p : packets)
     {
-      MyPacket.join(static_cast<MathPacketRange<DoubleType> &>(*packets[i]).GetMathPacket());
+      MyPacket.join(*p);
     }
 
     errorString += MyPacket.getErrorString();
@@ -155,27 +139,16 @@ std::string MathPacketRun(const MathWrapper<DoubleType> &func, const std::vector
 }
 
 template <typename DoubleType>
-MathPacketRange<DoubleType>::MathPacketRange(MathPacket<DoubleType> mp, size_t b, size_t e,
-    mymutex &mutex,
-    mycondition &cond,
-    size_t &count,
-    size_t mcount) : mathPacket_(mp), beg_(b), end_(e), mutex_(mutex), cond_(cond), count_(count), max_count_(mcount)
+MathPacketRange<DoubleType>::MathPacketRange(MathPacket<DoubleType> &mp, size_t b, size_t e)
+  : mathPacket_(mp), beg_(b), end_(e)
 {
 }
 
 
 template <typename DoubleType>
-void MathPacketRange<DoubleType>::run()
+void MathPacketRange<DoubleType>::operator()()
 {
   mathPacket_(beg_, end_);
-
-  mutex_.lock();
-  count_ += (end_ - beg_);
-  if (count_ == max_count_)
-  {
-    cond_.broadcast();
-  }
-  mutex_.unlock();
 }
 
 template class MathPacket<double>;

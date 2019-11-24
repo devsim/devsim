@@ -10,7 +10,6 @@ SET (CXX_SRCS
 
 INCLUDE_DIRECTORIES (
   ../utility
-  ../myThread
   ../errorSystem
   ../Data
   ../common_api

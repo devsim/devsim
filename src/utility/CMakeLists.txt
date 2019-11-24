@@ -3,6 +3,7 @@ SET (CXX_SRCS
     dsAssert.cc
     dsException.cc
     GetGlobalParameter.cc
+    GetNumberOfThreads.cc
 )
 
 IF (VTKWRITER)

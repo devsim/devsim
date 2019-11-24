@@ -12,7 +12,6 @@ SET (SUBDIRS
     Circuit
     MathEval
     errorSystem
-    myThread
     utility
     commands
     pythonapi

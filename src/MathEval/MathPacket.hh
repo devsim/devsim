@@ -19,13 +19,9 @@ limitations under the License.
 #define MATHPACKET_HH
 
 #include "FPECheck.hh"
-#include "mypacket.hh"
 
 #include <string>
 #include <vector>
-
-class mycondition;
-class mymutex;
 
 namespace Eqomfp {
 
@@ -46,11 +42,9 @@ class MathPacket {
     const std::string & getErrorString() const;
     size_t              getNumberProcessed() const;
   private:
-    MathPacket();
-//    ~MathPacket();
-//    MathPacket(const MathPacket &);
-
-    MathPacket &operator=(const MathPacket &);
+    MathPacket() = delete;
+    MathPacket(const MathPacket &) = delete;
+    MathPacket &operator=(const MathPacket &) = delete;
 
     const MathWrapper<DoubleType>         &wrapperClass_;
     const std::vector<DoubleType>                       &dvals_;
@@ -66,35 +60,18 @@ template <typename DoubleType>
 std::string MathPacketRun(const MathWrapper<DoubleType> &, const std::vector<DoubleType> &, const std::vector<const std::vector<DoubleType> *> &, std::vector<DoubleType> &, size_t);
 
 template <typename DoubleType>
-class MathPacketRange : public mypacket
+class MathPacketRange
 {
   public:
-    //// Copy so we have fpe status of each one
-    MathPacketRange(MathPacket<DoubleType>, size_t, size_t,
-        mymutex &,
-        mycondition &,
-        size_t &,
-        size_t
-    );
-    void run();
-
-    //// intent is to join the copy with the original
-    const MathPacket<DoubleType> &GetMathPacket();
+    MathPacketRange(MathPacket<DoubleType> &, size_t /* beg */, size_t /* end */);
+    void operator()();
 
     ~MathPacketRange() {}
   private:
 
-    MathPacket<DoubleType> mathPacket_;
+    MathPacket<DoubleType> &mathPacket_;
     size_t     beg_;
     size_t     end_;
-    /// Mutex to lock when updating count
-    mymutex     &mutex_;
-    /// Condition variable to signal when done
-    mycondition &cond_;
-    // Count is number of items processed
-    size_t      &count_;
-    size_t       max_count_;
-  
 };
 }
 #endif

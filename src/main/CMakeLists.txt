@@ -26,7 +26,6 @@ SET (PY3LIBRARIES
     math
     MathEval
     models
-    myThread
     circuitSources
     circuitIdeal
     circuitData

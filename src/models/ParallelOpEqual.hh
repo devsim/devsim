@@ -20,9 +20,6 @@ limitations under the License.
 
 //// Only for the typedef
 #include "FPECheck.hh"
-#include "mypacket.hh"
-class mymutex;
-class mycondition;
 
 #include <vector>
 
@@ -80,7 +77,8 @@ class OpEqualPacket {
 
   private:
     OpEqualPacket();
-    OpEqualPacket &operator=(const OpEqualPacket &);
+    OpEqualPacket &operator=(const OpEqualPacket &) = delete;
+    OpEqualPacket(const OpEqualPacket &) = delete;
 
     U                    opEqualTask_;
     FPECheck::FPEFlag_t  fpeFlag_;
@@ -91,31 +89,21 @@ template <typename U> void
 OpEqualRun(U &, size_t /*length*/);
 
 template <typename U>
-class OpEqualRange : public mypacket
+class OpEqualRange
 {
   public:
     //// Copy so we have fpe status of each one
-    OpEqualRange(U, size_t, size_t, mymutex &, mycondition &, size_t &, size_t);
+    OpEqualRange(U &, size_t /*beg*/, size_t /*end*/);
 
-    void run();
-
-    //// intent is to join the copy with the original
-    OpEqualPacket<U> &GetOpEqualPacket();
+    void operator()();
 
     ~OpEqualRange() {}
 
   private:
 
-    OpEqualPacket<U> opEqualPacket_;
+    U            &opEqualPacket_;
     size_t           beg_;
     size_t           end_;
-    /// Mutex to lock when updating count
-    mymutex     &mutex_;
-    /// Condition variable to signal when done
-    mycondition &cond_;
-    // Count is number of items processed
-    size_t      &count_;
-    // Count total count of items processed
     size_t       max_count_;
   
 };

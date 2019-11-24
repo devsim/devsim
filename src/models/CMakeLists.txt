@@ -32,7 +32,6 @@ INCLUDE_DIRECTORIES (
     ../math
     ../errorSystem
     ../MathEval
-    ../myThread
     ../common_api
 )
 

@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2019 Devsim LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,25 +15,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***/
 
+#ifndef GET_NUMBER_OF_THREADS_HH
+#define GET_NUMBER_OF_THREADS_HH
 
-class myqueue;
+namespace ThreadInfo {
 
-class myThreadPool
-{
-  public:
-    static myThreadPool &GetInstance();
+size_t GetNumberOfThreads();
 
-    static void DestroyInstance();
+size_t GetMinimumTaskSize();
+}
 
-    static myqueue &GetQueue();
-
-  private:
-    myThreadPool();
-    myThreadPool(myThreadPool &);
-    myThreadPool &operator=(myThreadPool &);
-    ~myThreadPool();
-
-    static myThreadPool *instance_;
-    static myqueue      *queue_;
-};
+#endif
 

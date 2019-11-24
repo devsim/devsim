@@ -16,16 +16,11 @@ limitations under the License.
 ***/
 
 #include "ParallelOpEqual.hh"
-#include "myThreadPool.hh"
-#include "myqueue.hh"
 #include "ScalarData.hh"
+#include "GetNumberOfThreads.hh"
+#include <future>
+#include <memory>
 
-
-template <typename U>
-OpEqualPacket<U> &OpEqualRange<U>::GetOpEqualPacket()
-{
-  return opEqualPacket_;
-}
 
 template <typename U>
 FPECheck::FPEFlag_t OpEqualPacket<U>::getFPEFlag() const
@@ -70,21 +65,15 @@ void OpEqualPacket<U>::operator()(size_t vbeg, size_t vend)
 template <typename U>
 void OpEqualRun(U &task, size_t vlen)
 {
-  //// get from the queue
-  myThreadPool &pool = myThreadPool::GetInstance();
-  myqueue      &queue = pool.GetQueue();
-  const size_t num_threads = queue.GetNumberThreads();
-  const size_t task_size = queue.GetMinimumTaskSize();
+  const size_t num_threads = ThreadInfo::GetNumberOfThreads();
+  const size_t task_size   = ThreadInfo::GetMinimumTaskSize();
 
   if ((num_threads > 1) && vlen > task_size)
   {
     OpEqualPacket<U> MyPacket(task);
 
-    mymutex     cmutex;
-    mycondition ccondition;
-    size_t      num_processed(0);
-
-    std::vector<mypacket_ptr> packets;
+    std::vector<std::shared_ptr<OpEqualPacket<U>>> packets;
+    std::vector<std::future<void>> futures;
 
     ///// TODO: This code should be generalized and made available for all thread scheduling
     ///// e.g. GetSchedule function for queue
@@ -93,8 +82,9 @@ void OpEqualRun(U &task, size_t vlen)
     size_t e = (step == 0) ? vlen : step;
     while (b < e)
     {
-      mypacket_ptr packet = mypacket_ptr(new OpEqualRange<OpEqualPacket<U> >(MyPacket, b, e, cmutex, ccondition, num_processed, vlen));
+      auto packet = std::shared_ptr<OpEqualPacket<U>>(new OpEqualPacket<U>(task));
       packets.push_back(packet);
+      futures.push_back(std::async(std::launch::async, OpEqualRange<OpEqualPacket<U> >(*packet, b, e)));
 
       b = e;
       e += step;
@@ -106,18 +96,17 @@ void OpEqualRun(U &task, size_t vlen)
       }
     }
 
-    queue.AddTasks(packets);
     
-    cmutex.lock();
-    while (num_processed < vlen)
+    // process the futures
+    for (auto &p : futures)
     {
-        ccondition.wait(cmutex);
+      p.get();
     }
-    cmutex.unlock();
 
-    for (size_t i = 0; i < packets.size(); ++i)
+    // get the results
+    for (auto &p : packets)
     {
-      MyPacket.join(static_cast<OpEqualRange<U> &>(*packets[i]).GetOpEqualPacket());
+      MyPacket.join(*p);
     }
 
     if (FPECheck::CheckFPE(MyPacket.getFPEFlag()))
@@ -135,25 +124,15 @@ void OpEqualRun(U &task, size_t vlen)
 
 
 template <typename U>
-OpEqualRange<U>::OpEqualRange(U mp, size_t b, size_t e,
-    mymutex &mutex,
-    mycondition &cond,
-    size_t &count, size_t mcount) : opEqualPacket_(mp), beg_(b), end_(e), mutex_(mutex), cond_(cond), count_(count), max_count_(mcount)
+OpEqualRange<U>::OpEqualRange(U &mp, size_t b, size_t e) :
+  opEqualPacket_(mp), beg_(b), end_(e)
 {
 }
 
 template <typename U>
-void OpEqualRange<U>::run()
+void OpEqualRange<U>::operator()()
 {
   opEqualPacket_(beg_, end_);
-
-  mutex_.lock();
-  count_ += (end_ - beg_);
-  if (count_ == max_count_)
-  {
-    cond_.broadcast();
-  }
-  mutex_.unlock();
 }
 
 #define DBLTYPE double
