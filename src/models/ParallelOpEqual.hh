@@ -104,8 +104,6 @@ class OpEqualRange
     U            &opEqualPacket_;
     size_t           beg_;
     size_t           end_;
-    size_t       max_count_;
-  
 };
 
 #endif
