@@ -19,7 +19,7 @@ limitations under the License.
 #define DSTIMER_HH
 #include "OutputStream.hh"
 #include <string>
-#include <memory>
+#include <chrono>
 
 class dsTimer {
   public:
@@ -31,6 +31,7 @@ class dsTimer {
 
     const                    std::string msg_;
     OutputStream::OutputType output_type_;
-    void *tic_;
+    std::chrono::time_point<std::chrono::system_clock> tic_;
 };
 #endif
+

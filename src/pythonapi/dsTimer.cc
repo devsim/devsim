@@ -17,20 +17,11 @@ limitations under the License.
 
 #include "dsTimer.hh"
 
-#ifdef _WIN32
-#include <time.h>
-#include <Windows.h>
-#else
 #include <sys/time.h>
-#endif
 #include <sstream>
 
-#ifdef _WIN32
-dsTimer::dsTimer(const std::string &msg, OutputStream::OutputType outtype) : msg_(msg), output_type_(outtype), tic_(new FILETIME)
+dsTimer::dsTimer(const std::string &msg, OutputStream::OutputType outtype) : msg_(msg), output_type_(outtype), tic_(std::chrono::system_clock::now())
 {
-  //// Timer is initialized to now in its constructor
-  GetSystemTimeAsFileTime(reinterpret_cast<FILETIME *>(tic_));
-
   std::ostringstream os;
   os << "\nBEGIN " << msg_ << "\n";
   OutputStream::WriteOut(output_type_, os.str());
@@ -38,43 +29,11 @@ dsTimer::dsTimer(const std::string &msg, OutputStream::OutputType outtype) : msg
 
 dsTimer::~dsTimer()
 {
-  FILETIME toc;
-  GetSystemTimeAsFileTime(reinterpret_cast<FILETIME *>(&toc));
-
-  const FILETIME &tic = *(reinterpret_cast<FILETIME *>(tic_));
-  //// This is in 1000 nanosecond increments
-  unsigned __int64 t0 = ((static_cast<__int64>(tic.dwHighDateTime) << 32) + (tic.dwLowDateTime));
-  unsigned __int64 t1 = ((static_cast<__int64>(toc.dwHighDateTime) << 32) + (tic.dwLowDateTime));
-  double timediff = 1.0e-7 * (t1- t0);
+  auto toc = std::chrono::system_clock::now();
+  auto timediff = std::chrono::duration_cast<std::chrono::milliseconds>(toc - tic_).count();
 
   std::ostringstream os;
-  os << "\nEND " << msg_ << " (" << timediff << ")\n";
-  OutputStream::WriteOut(output_type_, os.str());
-  delete reinterpret_cast<FILETIME *>(tic_);
-}
-#else
-dsTimer::dsTimer(const std::string &msg, OutputStream::OutputType outtype) : msg_(msg), output_type_(outtype), tic_(new timeval)
-{
-  //// Timer is initialized to now in its constructor
-  gettimeofday(reinterpret_cast<timeval *>(tic_), nullptr);
-
-  std::ostringstream os;
-  os << "\nBEGIN " << msg_ << "\n";
+  os << "\nEND " << msg_ << " (" << timediff << " ms)\n";
   OutputStream::WriteOut(output_type_, os.str());
 }
 
-dsTimer::~dsTimer()
-{
-  timeval toc;
-  gettimeofday(&toc, nullptr);
-
-  const timeval &tic = *(reinterpret_cast<timeval *>(tic_));
-
-  double timediff = toc.tv_sec - tic.tv_sec + 1e-6 * (toc.tv_usec - tic.tv_usec);
-
-  std::ostringstream os;
-  os << "\nEND " << msg_ << " (" << timediff << ")\n";
-  OutputStream::WriteOut(output_type_, os.str());
-  delete reinterpret_cast<timeval *>(tic_);
-}
-#endif
