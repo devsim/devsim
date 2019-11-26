@@ -4,6 +4,7 @@ SET (CXX_SRCS
     dsException.cc
     GetGlobalParameter.cc
     GetNumberOfThreads.cc
+    dsTimer.cc
 )
 
 IF (VTKWRITER)
