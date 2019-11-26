@@ -15,24 +15,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***/
 
-//#include "Python.h"
 #include "GlobalData.hh"
-#include "TimeData.hh"
-#include "NodeKeeper.hh"
-#include "InstanceKeeper.hh"
 #include "DefaultDerivatives.hh"
-#include "MeshKeeper.hh"
 #include "FPECheck.hh"
-#include "MathEval.hh"
-#include "MaterialDB.hh"
-#include "PythonAppInit.hh"
-#ifdef DEVSIM_EXTENDED_PRECISION
-#include "Float128.hh"
-#endif
-#include "OutputStream.hh"
-#include <cstdio>
-
-
 
 void devsim_initialization()
 {

@@ -1,18 +1,7 @@
 INCLUDE_DIRECTORIES (
     ../utility
-    ../Geometry
-    ../models
-    ../math
     ../AutoEquation
-    ../GeomModels
-    ../Equation
-    ../errorSystem
-    ../Circuit/data
     ../Data
-    ../meshing
-    ../MathEval
-    ../common_api
-    ../pythonapi
 )
 
 SET (PY3LIBRARIES
