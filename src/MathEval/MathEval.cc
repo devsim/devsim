@@ -36,12 +36,6 @@ using std::abs;
 #include <sstream>
 #include <map>
 
-#if 0
-#ifdef _WIN32
-#include "boost/math/special_functions/erf.hpp"
-#endif
-#endif
-
 template <> MathEval<double> *MathEval<double>::instance_ = nullptr;
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"

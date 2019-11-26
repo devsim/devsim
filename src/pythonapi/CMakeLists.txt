@@ -9,9 +9,6 @@ SET (CXX_SRCS1
 
 SET (CXX_SRCS2
     dsTimer.cc
-    mycondition.cc
-    mymutex.cc
-    threadBaseClass.cc
 )
 
 INCLUDE_DIRECTORIES (
