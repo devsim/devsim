@@ -17,7 +17,6 @@ limitations under the License.
 
 #include "dsTimer.hh"
 
-#include <sys/time.h>
 #include <sstream>
 
 dsTimer::dsTimer(const std::string &msg, OutputStream::OutputType outtype) : msg_(msg), output_type_(outtype), tic_(std::chrono::system_clock::now())
