@@ -19,14 +19,8 @@ limitations under the License.
 #include <signal.h>
 #ifdef __linux__
 #include <fpu_control.h>
-#include <fenv.h>
 #endif
-#ifdef _WIN32
-#include <Float.h>
-#endif
-#ifdef __APPLE__
-#include <fenv.h>
-#endif
+#include <cfenv>
 #include <cmath>
 #include <cassert>
 
@@ -77,30 +71,18 @@ void FPECheck::InitializeFPE()
 
 void FPECheck::ClearFPE()
 {
-#ifdef _WIN32
-    _clearfp();
-#else
     feclearexcept(FE_ALL_EXCEPT);
-#endif
     fpe_raised_ = FPECheck::getClearedFlag();
 }
 
 FPECheck::FPEFlag_t FPECheck::getFPEMask()
 {
-#ifdef _WIN32
-  return (EM_INVALID | EM_ZERODIVIDE | EM_OVERFLOW);
-#else
   return (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
-#endif
 }
 
 FPECheck::FPEFlag_t FPECheck::getFPEFlags()
 {
-#ifdef _WIN32
-  return (_statusfp() & getFPEMask()) | fpe_raised_;
-#else
   return fetestexcept(getFPEMask()) | fpe_raised_;
-#endif
 }
 
 bool FPECheck::CheckFPE()
@@ -115,47 +97,27 @@ bool FPECheck::CheckFPE(FPECheck::FPEFlag_t x)
 
 bool FPECheck::IsInvalid(FPECheck::FPEFlag_t x)
 {
-#ifdef _WIN32
-  return (x & EM_INVALID) != 0;
-#else
   return (x & FE_INVALID) != 0;
-#endif
 }
 
 bool FPECheck::IsDivByZero(FPECheck::FPEFlag_t x)
 {
-#ifdef _WIN32
-  return (x & EM_ZERODIVIDE) != 0;
-#else
   return (x & FE_DIVBYZERO) != 0;
-#endif
 }
 
 bool FPECheck::IsInexact(FPECheck::FPEFlag_t x)
 {
-#ifdef _WIN32
-  return (x & EM_INEXACT) != 0;
-#else
   return (x & FE_INEXACT) != 0;
-#endif
 }
 
 bool FPECheck::IsOverflow(FPECheck::FPEFlag_t x)
 {
-#ifdef _WIN32
-  return (x & EM_OVERFLOW) != 0;
-#else
   return (x & FE_OVERFLOW) != 0;
-#endif
 }
 
 bool FPECheck::IsUnderflow(FPECheck::FPEFlag_t x)
 {
-#ifdef _WIN32
-  return (x & EM_UNDERFLOW) != 0;
-#else
   return (x & FE_UNDERFLOW) != 0;
-#endif
 }
 
 std::string FPECheck::getFPEString(const FPECheck::FPEFlag_t feFlags)
