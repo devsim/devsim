@@ -30,10 +30,13 @@ dsTimer::dsTimer(const std::string &msg, OutputStream::OutputType outtype) : msg
 dsTimer::~dsTimer()
 {
   auto toc = std::chrono::system_clock::now();
-  auto timediff = std::chrono::duration_cast<std::chrono::milliseconds>(toc - tic_).count();
+
+  typedef std::chrono::duration<double> seconds;
+
+  auto timediff = std::chrono::duration_cast<seconds>(toc - tic_).count();
 
   std::ostringstream os;
-  os << "\nEND " << msg_ << " (" << timediff << " ms)\n";
+  os << "\nEND " << msg_ << " (" << timediff << " sec)\n";
   OutputStream::WriteOut(output_type_, os.str());
 }
 
