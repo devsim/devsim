@@ -24,10 +24,6 @@ IF (DEVSIM_PY3_TEST_EXE)
 SET (DEVSIM_PY3   ${DEVSIM_PY3_TEST_EXE})
 ENDIF (DEVSIM_PY3_TEST_EXE)
 
-IF (DEVSIM_TCL_TEST_EXE)
-SET (DEVSIM_TCL  ${DEVSIM_TCL_TEST_EXE})
-ENDIF (DEVSIM_TCL_TEST_EXE)
-
 IF (DEVSIM_TEST_GOLDENDIR)
 SET (GOLDENDIR  ${DEVSIM_TEST_GOLDENDIR})
 ENDIF (DEVSIM_TEST_GOLDENDIR)
@@ -80,12 +76,6 @@ mos_2d_restart2
 FOREACH(I ${NEWPY3TESTS})
     ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_PY3} ${I}.py" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
 ENDFOREACH(I)
-
-#SET (NEWTESTS
-#)
-#FOREACH(I ${NEWTESTS})
-#    ADD_TEST("testing/${I}" ${RUNDIFFTEST} "${DEVSIM_TCL} ${I}.tcl" ${GOLDENDIR}/testing ${I}.out ${RUNDIR} ${OUTPUTDIR})
-#ENDFOREACH(I)
 
 set_tests_properties("testing/mos_2d_restart" PROPERTIES DEPENDS testing/mos_2d)
 set_tests_properties("testing/mos_2d_restart2" PROPERTIES DEPENDS testing/mos_2d)
@@ -182,11 +172,6 @@ ENDFOREACH(I)
 #set_tests_properties("${GENIUS_DIR}/genius_diode2d" PROPERTIES DEPENDS "${GENIUS_DIR}/pn2d_comp")
 
 
-
-#ADD_TEST("testing/laux1" ${RUNDIFFTEST} "${DEVSIM_PY2} laux1.py" ${GOLDENDIR}/testing laux1.out ${RUNDIR} ${OUTPUTDIR})
-# this is weird since it is dependent on one of our tcl tests
 set_tests_properties("testing/laux1" PROPERTIES DEPENDS testing/trimesh2)
-
-
 
 
