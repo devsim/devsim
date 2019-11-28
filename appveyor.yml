@@ -130,7 +130,7 @@ install:
   #- c:\Miniconda-x64\Scripts\conda env list
   # install cygwin
   - appveyor DownloadFile https://cygwin.com/setup-x86.exe
-  - setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P bison -P perl -P unzip -P wget -P zip
+  - setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P bison -P zip
   # compile SuperLU
   - cd %APPVEYOR_BUILD_FOLDER%\external
   - c:\cygwin\bin\bash.exe ./build_superlu_appveyor.sh %PLATFORM%
