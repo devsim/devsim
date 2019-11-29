@@ -37,6 +37,13 @@ if args.testexe:
         if process.returncode != 0:
             raise RuntimeError("%s returned error code %d" % (args.testexe, process.returncode))
 
+f1stat = os.stat(output_file)
+f2stat = os.stat(compare_file)
+
+if f1stat.st_size != f2stat.st_size:
+    raise RuntimeError("%s differs from %s" % (output_file, compare_file))
+
+
 with open(output_file) as f1:
     with open(compare_file) as f2:
         while (True):
