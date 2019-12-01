@@ -163,7 +163,7 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
 
     if (ret)
     {
-      Py_DECREF(ret);
+      Py_XDECREF(ret);
       ret = nullptr;
     }
   }
@@ -430,7 +430,7 @@ static int devsim_traverse(PyObject *m, visitproc visit, void *arg) {
 }
 
 static int devsim_clear(PyObject *m) {
-    Py_CLEAR(GETSTATE(m)->error);
+    Py_XDECREF(GETSTATE(m)->error);
     return 0;
 }
 
@@ -464,7 +464,7 @@ DEVSIM_MODULE_INIT(void)
     struct module_state *st = GETSTATE(module);
     st->error = PyErr_NewException(const_cast<char *>(DEVSIM_MODULE_STRING ".error"), nullptr, nullptr);
     if (st->error == nullptr) {
-        Py_DECREF(module);
+        Py_XDECREF(module);
         INITERROR;
     }
 

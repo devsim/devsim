@@ -42,7 +42,7 @@ ObjectHolder &ObjectHolder::operator=(const ObjectHolder &t)
     {
       if (object_)
       {
-        Py_DECREF(reinterpret_cast<PyObject *>(object_));
+        Py_XDECREF(reinterpret_cast<PyObject *>(object_));
       }
 
       object_ = t.object_;
@@ -60,7 +60,7 @@ ObjectHolder::~ObjectHolder()
 {
   if (object_)
   {
-    Py_DECREF(reinterpret_cast<PyObject *>(object_));
+    Py_XDECREF(reinterpret_cast<PyObject *>(object_));
   }
 }
 
@@ -68,7 +68,7 @@ void ObjectHolder::clear()
 {
   if (object_)
   {
-    Py_DECREF(reinterpret_cast<PyObject *>(object_));
+    Py_XDECREF(reinterpret_cast<PyObject *>(object_));
   }
   object_ = nullptr;
 }
@@ -94,7 +94,7 @@ std::string GetStringFromStringObject(PyObject *obj)
   {
     PyObject *sobj = PyUnicode_AsUTF8String(obj);
     ret = PyBytes_AsString(sobj);
-    Py_DECREF(sobj);
+    Py_XDECREF(sobj);
   }
   else if (PyBytes_CheckExact(obj))
   {
@@ -117,7 +117,7 @@ std::string ObjectHolder::GetString() const
     {
       PyObject *strobj = PyObject_Str(obj);
       ret = GetStringFromStringObject(strobj);
-      Py_DECREF(strobj);
+      Py_XDECREF(strobj);
     }
   }
   return ret;
@@ -147,7 +147,7 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
       {
         ok = true;
         val = PyFloat_AsDouble(fobj);
-        Py_DECREF(fobj);
+        Py_XDECREF(fobj);
       }
       else
       {
@@ -229,7 +229,7 @@ ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
           ok = true;
           val = PyLong_AsLong(iobj);
         }
-        Py_DECREF(iobj);
+        Py_XDECREF(iobj);
       }
       PyErr_Clear();
     }
