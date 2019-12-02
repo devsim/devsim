@@ -430,7 +430,7 @@ static int devsim_traverse(PyObject *m, visitproc visit, void *arg) {
 }
 
 static int devsim_clear(PyObject *m) {
-    Py_XDECREF(GETSTATE(m)->error);
+    Py_CLEAR(GETSTATE(m)->error);
     return 0;
 }
 
@@ -442,8 +442,8 @@ static struct PyModuleDef moduledef = {
         sizeof(struct module_state),
         devsim_methods,
         nullptr,
-        nullptr,
-        nullptr,
+        devsim_traverse,
+        devsim_clear,
         nullptr
 };
 
