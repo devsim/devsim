@@ -163,7 +163,7 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
 
     if (ret)
     {
-      Py_XDECREF(ret);
+      Py_DECREF(ret);
       ret = nullptr;
     }
   }
@@ -424,6 +424,7 @@ MYCOMMAND(get_circuit_equation_number, dsCommand::circuitGetCircuitEquationNumbe
 {nullptr, nullptr, 0, nullptr}
 };
 
+#ifndef _WIN32
 static int devsim_traverse(PyObject *m, visitproc visit, void *arg) {
     Py_VISIT(GETSTATE(m)->error);
     return 0;
@@ -433,7 +434,7 @@ static int devsim_clear(PyObject *m) {
     Py_CLEAR(GETSTATE(m)->error);
     return 0;
 }
-
+#endif
 
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
@@ -442,8 +443,15 @@ static struct PyModuleDef moduledef = {
         sizeof(struct module_state),
         devsim_methods,
         nullptr,
+#ifdef _WIN32
+// Fix memory error found on Windows 10
+// but no other platforms
+        nullptr,
+        nullptr,
+#else
         devsim_traverse,
         devsim_clear,
+#endif
         nullptr
 };
 
@@ -464,7 +472,7 @@ DEVSIM_MODULE_INIT(void)
     struct module_state *st = GETSTATE(module);
     st->error = PyErr_NewException(const_cast<char *>(DEVSIM_MODULE_STRING ".error"), nullptr, nullptr);
     if (st->error == nullptr) {
-        Py_XDECREF(module);
+        Py_DECREF(module);
         INITERROR;
     }
 
