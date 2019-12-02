@@ -442,8 +442,8 @@ static struct PyModuleDef moduledef = {
         sizeof(struct module_state),
         devsim_methods,
         nullptr,
-        devsim_traverse,
-        devsim_clear,
+        nullptr,
+        nullptr,
         nullptr
 };
 
