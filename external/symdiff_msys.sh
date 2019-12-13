@@ -3,24 +3,30 @@
 
 # Note: run this file using bash
 
-ANACONDA="C:/Users/jsanchez/Miniconda3/envs/msys2"
-CMAKE=$(cygpath -w ${ANACONDA}/Library/bin/cmake.exe)
-CXX="C:/msys64/mingw64/bin/g++.exe"
-PYTHON3_ARCHIVE=$(cygpath -w "${ANACONDA}/libs/python3.lib")
-PYTHON3_INCLUDE=$(cygpath -w "${ANACONDA}/include")
-PYTHON3_BIN=$(cygpath -w "${PYTHON3_BASE}/bin/python")
+ANACONDA_PATH=${CONDA_PREFIX}
+CMAKE=$(cygpath -w ${ANACONDA_PATH}/Library/bin/cmake.exe)
 
 GENERATOR="MSYS Makefiles"
-BUILDDIR="msys"
-
+CXX=g++
+PYTHON3_ARCHIVE=$(cygpath -w "${ANACONDA_PATH}/libs/python3.lib")
+PYTHON3_INCLUDE=$(cygpath -w "${ANACONDA_PATH}/include")
+PYTHON3_BIN=$(cygpath -w "${PYTHON3_BASE}/bin/python")
 libpath=`/usr/bin/cygpath -w $PWD/lib`
-
-mkdir -p ${BUILDDIR}
-(cd ${BUILDDIR}; "$CMAKE" -G "${GENERATOR}" -DSYMDIFF_CONFIG=${SYMDIFF_CONFIG} -DTCLMAIN=OFF -DPYTHON3=ON \
-        -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
-        -DPYTHON3_ARCHIVE=${PYTHON3_ARCHIVE} \
+for TYPE in debug release; do
+ARCH=`uname -m`
+    NAME=msys_${ARCH}_${TYPE}
+    mkdir ${NAME}
+    (cd $NAME; ${CMAKE} \
+	-G "${GENERATOR}" \
+	-DCMAKE_BUILD_TYPE=${TYPE} \
 	-DCMAKE_CXX_COMPILER=${CXX} \
-..)
+	-DTCLMAIN=OFF \
+	-DPYTHON3=ON \
+	-DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
+	-DPYTHON3_ARCHIVE=${PYTHON3_ARCHIVE} \
+      ..)
+#  done
+done
 
 #echo $libpath
 # TODO: fix to use conda activate
