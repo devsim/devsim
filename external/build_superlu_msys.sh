@@ -11,7 +11,7 @@ BUILDDIR="SuperLU_4.3/msys"
 bsdtar xzf superlu_4.3.tar.gz && \
 mkdir -p ${BUILDDIR} && \
 cd ${BUILDDIR} && \
-"${CMAKE}" -G "${GENERATOR}" .. && \
+"${CMAKE}" -G "${GENERATOR}" -DCMAKE_BUILD_TYPE=RELEASE .. && \
 "${MAKE}" -j2 \
 )
 
