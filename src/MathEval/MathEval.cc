@@ -82,7 +82,7 @@ double log(double x)
     return std::log(x);
   }
 
-  return FPECheck::ManualCheckAndRaiseFPE(x);
+  return FPECheck::ManualCheckAndRaiseFPE(std::log(x));
 }
 
 double exp(double x)
@@ -92,7 +92,7 @@ double exp(double x)
     return std::exp(x);
   }
 
-  return FPECheck::ManualCheckAndRaiseFPE(x);
+  return FPECheck::ManualCheckAndRaiseFPE(std::exp(x));
 }
 #else
 using std::log;
