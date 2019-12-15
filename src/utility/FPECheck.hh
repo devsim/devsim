@@ -43,6 +43,7 @@ class FPECheck
     static FPECheck::FPEFlag_t getClearedFlag();
 
     static void raiseFPE(FPECheck::FPEFlag_t);
+    static double ManualCheckAndRaiseFPE(const double &x);
 
   private:
     void ClearFP();

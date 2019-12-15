@@ -186,8 +186,21 @@ FPECheck::FPEFlag_t FPECheck::combineFPEFlags(FPECheck::FPEFlag_t x, FPECheck::F
 
 void FPECheck::raiseFPE(FPECheck::FPEFlag_t x)
 {
-  fperaiseexcept(x);
+  feraiseexcept(x);
   fpe_raised_ |= x;
+}
+
+double FPECheck::ManualCheckAndRaiseFPE(const double &x)
+{
+  if (std::isinf(x))
+  {
+    FPECheck::raiseFPE(FE_OVERFLOW);
+  }
+  else if (std::isnan(x))
+  {
+    FPECheck::raiseFPE(FE_INVALID);
+  }
+  return x;
 }
 
 #ifdef TEST_FPE_CODE
