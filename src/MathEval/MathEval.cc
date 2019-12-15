@@ -71,10 +71,39 @@ namespace Eqomfp {
       const char *desc;
   };
 
+
+namespace eval64 {
+#if defined(__MINGW32__) || (__MINGW64__)
+#include "FPECheck.hh"
+double log(double x)
+{
+  if (x > 0.0)
+  {
+    return std::log(x);
+  }
+
+  return FPECheck::ManualCheckAndRaiseFPE(std::log(x));
+}
+
+double exp(double x)
+{
+  if (x < 709.8)
+  {
+    return std::exp(x);
+  }
+
+  return FPECheck::ManualCheckAndRaiseFPE(std::exp(x));
+}
+#else
+using std::log;
+using std::exp;
+#endif
+}
+
   UnaryTblEntry<double> UnaryTable_double[] = {
   {"abs",       abs,         "abs(obj)   -- Absolute value"},
-  {"exp",       exp,          "exp(obj)   -- Exponentiation with respect to e"},
-  {"log",       log,          "log(obj)   -- Natural logarithm"},
+  {"exp",       eval64::exp,  "exp(obj)   -- Exponentiation with respect to e"},
+  {"log",       eval64::log,  "log(obj)   -- Natural logarithm"},
   {"B",         Bernoulli,    "B(obj)     -- Bernoulli Function"},
   {"dBdx",      derBernoulli, "dBdx(obj)  -- derivative Bernoulli wrt arg"},
   {"step",      step,         "step(obj)  -- step function"},
@@ -509,18 +538,6 @@ void MathEval<DoubleType>::EvaluateMathFunc(const std::string &func, std::vector
     typename std::map<std::string, Eqomfp::MathWrapperPtr<DoubleType>>::const_iterator it = FuncPtrMap_.find(func);
     const Eqomfp::MathWrapper<DoubleType> &MyFunc = *(it->second);
     error += Eqomfp::MathPacketRun(MyFunc, dvals, vvals, result, vlen);
-//    MyFunc.Evaluate(dvals, vvals, error, result, 0, vlen);
-    //// TODO: in the future not call this function but the schedular
-#if 0
-    Eqomfp::MathPacket MyPacket(MyFunc, dvals, vvals, result, vlen);
-    MyPacket(0, vlen);
-    error += MyPacket.getErrorString();
-    if (FPECheck::CheckFPE(MyPacket.getFPEFlag()))
-    {
-      //// Raise FPE in the main thread
-      FPECheck::raiseFPE(MyPacket.getFPEFlag());
-    }
-#endif
   }
   else
   {
