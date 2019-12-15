@@ -102,7 +102,7 @@ using std::exp;
 
   UnaryTblEntry<double> UnaryTable_double[] = {
   {"abs",       abs,         "abs(obj)   -- Absolute value"},
-  {"exp",       exp,          "exp(obj)   -- Exponentiation with respect to e"},
+  {"exp",       eval64::exp,  "exp(obj)   -- Exponentiation with respect to e"},
   {"log",       eval64::log,  "log(obj)   -- Natural logarithm"},
   {"B",         Bernoulli,    "B(obj)     -- Bernoulli Function"},
   {"dBdx",      derBernoulli, "dBdx(obj)  -- derivative Bernoulli wrt arg"},
