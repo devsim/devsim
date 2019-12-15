@@ -186,7 +186,7 @@ FPECheck::FPEFlag_t FPECheck::combineFPEFlags(FPECheck::FPEFlag_t x, FPECheck::F
 
 void FPECheck::raiseFPE(FPECheck::FPEFlag_t x)
 {
-  /// consider making this mutexed
+  fperaiseexcept(x);
   fpe_raised_ |= x;
 }
 
@@ -196,15 +196,17 @@ int main()
 {
   FPECheck::InitializeFPE();
 
-  double a = 1;
-  double b = 0;
+  double a = 1e308;
+  double b = 1e-308;
 
   FPECheck::ClearFPE();
-  double x = a/b;
+  double x = a;
+  x /= b;
+  std::cerr << x << std::endl;
   if (FPECheck::CheckFPE())
   {
     std::cerr << "There was an FPE" << std::endl;
-    std::cerr << FPECheck::getFPEString();
+    std::cerr << FPECheck::getFPEString() << "\n";
   }
 
   FPECheck::ClearFPE();
@@ -212,15 +214,15 @@ int main()
   if (FPECheck::CheckFPE())
   {
     std::cerr << "There was an FPE" << std::endl;
-    std::cerr << FPECheck::getFPEString();
+    std::cerr << FPECheck::getFPEString() << "\n";
   }
 
   FPECheck::ClearFPE();
-  double z = log(0.0001);
+  double z = log(-1);
   if (FPECheck::CheckFPE())
   {
     std::cerr << "There was an FPE" << std::endl;
-    std::cerr << FPECheck::getFPEString();
+    std::cerr << FPECheck::getFPEString() << "\n";
   }
 }
 #endif /*TEST_FPE_CODE*/
