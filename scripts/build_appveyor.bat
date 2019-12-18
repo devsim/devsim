@@ -42,7 +42,7 @@ IF DEFINED USE_CYGWIN (
   c:\cygwin\bin\bash.exe package_appveyor.sh devsim_%BUILDDIR%_%APPVEYOR_REPO_TAG_NAME%
   if %errorlevel% neq 0 exit /b %errorlevel%
 ) ELSE (
-  %CONDA_PATH% create -n devsim_build python=3.7
+  %CONDA_PATH% create --yes -n devsim_build python=3.7
   if %errorlevel% neq 0 exit /b %errorlevel%
   %CONDA_PATH% activate devsim_build
   if %errorlevel% neq 0 exit /b %errorlevel%
