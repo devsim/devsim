@@ -1,7 +1,7 @@
 
 :: SET_USE_CYGWIN is true for Visual Studio Builds
 IF "%PLATFORM%"=="x64" SET CONDA_PATH=c:\Miniconda37-x64\Scripts\conda && SET BUILDDIR=win64 && SET USE_CYGWIN=true
-IF "%PLATFORM%"=="x86" SET CONDA_PATH=c:\Miniconda37\Scripts\conda && SET BUILDDIR=win32 && SET_USE_CYGWIN=true
+IF "%PLATFORM%"=="x86" SET CONDA_PATH=c:\Miniconda37\Scripts\conda && SET BUILDDIR=win32 && SET USE_CYGWIN=true
 
 :: GET PREREQUISITES
 IF DEFINED USE_CYGWIN (
@@ -14,7 +14,7 @@ IF DEFINED USE_CYGWIN (
 IF DEFINED USE_CYGWIN (
   cd %APPVEYOR_BUILD_FOLDER%\external
   c:\cygwin\bin\bash.exe ./build_superlu_appveyor.sh %PLATFORM%
-  cd external\symdiff
+  cd %APPVEYOR_BUILD_FOLDER%\external\symdiff
   c:\cygwin\bin\bash.exe ../symdiff_appveyor.sh %PLATFORM%
   cd %BUILDDIR%
   cmake --build . --config Release -- /m /nologo /verbosity:minimal
