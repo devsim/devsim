@@ -87,11 +87,9 @@ matrix:
 
 # scripts that run after cloning repository
 install:
-  # compile SuperLU
-  - cmd: >-
-    cd %APPVEYOR_BUILD_FOLDER%
-    git submodule init
-    git submodule update
+   - cd %APPVEYOR_BUILD_FOLDER%
+   - git submodule init
+   - git submodule update
 
 # enable patching of AssemblyInfo.* files
 #assembly_info:
