@@ -2,7 +2,7 @@
 ### Version 1.4.5
 
 * Platform Support:
-  * An MSYS2/Mingw-w64 build is availble for 64-bit Windows.  This build, labeled ``devsim_msys_v1.4.5``, enables the use of the 128-bit floating point precision already available on the macOS and Linux platforms.
+  * An MSYS2/Mingw-w64 build is available for 64-bit Windows.  This build, labeled ``devsim_msys_v1.4.5``, enables the use of the 128-bit floating point precision already available on the macOS and Linux platforms.
 
 ### Version 1.4.4
 
