@@ -1,6 +1,6 @@
 
 :: SET_USE_CYGWIN is true for Visual Studio Builds
-IF "%PLATFORM%"=="msys" SET CONDA_PATH=c:\Miniconda37-x64\Scripts\conda && SET BUILDDIR=msys
+IF "%PLATFORM%"=="msys" SET CONDA_PATH=c:\Miniconda37-x64\Library\bin\conda.bat && SET BUILDDIR=msys
 IF "%PLATFORM%"=="x64" SET CONDA_PATH=c:\Miniconda37-x64\Scripts\conda && SET BUILDDIR=win64 && SET USE_CYGWIN=true
 IF "%PLATFORM%"=="x86" SET CONDA_PATH=c:\Miniconda37\Scripts\conda && SET BUILDDIR=win32 && SET USE_CYGWIN=true
 
