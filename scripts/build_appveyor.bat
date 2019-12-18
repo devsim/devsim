@@ -1,10 +1,24 @@
 
 :: SET_USE_CYGWIN is true for Visual Studio Builds
-IF "%PLATFORM%"=="msys" SET CONDA_PATH=c:\Miniconda37-x64\Library\bin\conda.bat && SET BUILDDIR=msys
-IF "%PLATFORM%"=="x64" SET CONDA_PATH=c:\Miniconda37-x64\Scripts\conda && SET BUILDDIR=win64 && SET USE_CYGWIN=true
-IF "%PLATFORM%"=="x86" SET CONDA_PATH=c:\Miniconda37\Scripts\conda && SET BUILDDIR=win32 && SET USE_CYGWIN=true
+IF "%PLATFORM%"=="msys" (
+  SET CONDA_PATH=c:\Miniconda37-x64\Library\bin\conda.bat
+  SET BUILDDIR=msys
+  SET PACKAGE_NAME="devsim_msys_%APPVEYOR_REPO_TAG_NAME%"
+)
 
-SET PACKAGE_NAME="devsim_%BUILDDIR%_%APPVEYOR_REPO_TAG_NAME%"
+IF "%PLATFORM%"=="x64" (
+  SET CONDA_PATH=c:\Miniconda37-x64\Scripts\conda
+  SET BUILDDIR=win64
+  SET USE_CYGWIN=true
+  SET PACKAGE_NAME="devsim_win64_%APPVEYOR_REPO_TAG_NAME%"
+)
+
+IF "%PLATFORM%"=="x86" (
+  SET CONDA_PATH=c:\Miniconda37\Scripts\conda
+  SET BUILDDIR=win32
+  SET USE_CYGWIN=true
+  SET PACKAGE_NAME="devsim_win32_%APPVEYOR_REPO_TAG_NAME%"
+)
 
 :: GET PREREQUISITES
 IF DEFINED USE_CYGWIN (
