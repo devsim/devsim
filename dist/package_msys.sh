@@ -62,7 +62,7 @@ rsync -aqP --delete ${SYMDIFF_EXAMPLES_DIR}/ ${DIST_DIR}/examples/symdiff
 COMMIT=`git rev-parse --verify HEAD`
 cat <<EOF > ${DIST_DIR}/VERSION
 Package released as:
-${DIST_VER}.tgz
+${DIST_VER}.zip
 
 Source available from:
 http://www.github.com/devsim/devsim 
@@ -79,7 +79,7 @@ done
 cp -v msys_devsim__init__.py ${DIST_PYDLL}/__init__.py
 cp -v msys_symdiff__init__.py ${DIST_LIB}/symdiff/__init__.py
 
-bsdtar czvf ${DIST_VER}.tgz ${DIST_DIR}
+zip -r ${DIST_VER}.zip ${DIST_DIR}
 
 done
 

@@ -1,7 +1,24 @@
 
 :: SET_USE_CYGWIN is true for Visual Studio Builds
-IF "%PLATFORM%"=="x64" SET CONDA_PATH=c:\Miniconda37-x64\Scripts\conda && SET BUILDDIR=win64 && SET USE_CYGWIN=true
-IF "%PLATFORM%"=="x86" SET CONDA_PATH=c:\Miniconda37\Scripts\conda && SET BUILDDIR=win32 && SET USE_CYGWIN=true
+IF "%PLATFORM%"=="msys" (
+  SET CONDA_PATH=c:\Miniconda37-x64\Library\bin\conda.bat
+  SET BUILDDIR=msys
+  SET PACKAGE_NAME="devsim_msys_%APPVEYOR_REPO_TAG_NAME%"
+)
+
+IF "%PLATFORM%"=="x64" (
+  SET CONDA_PATH=c:\Miniconda37-x64\Scripts\conda
+  SET BUILDDIR=win64
+  SET USE_CYGWIN=true
+  SET PACKAGE_NAME="devsim_win64_%APPVEYOR_REPO_TAG_NAME%"
+)
+
+IF "%PLATFORM%"=="x86" (
+  SET CONDA_PATH=c:\Miniconda37\Scripts\conda
+  SET BUILDDIR=win32
+  SET USE_CYGWIN=true
+  SET PACKAGE_NAME="devsim_win32_%APPVEYOR_REPO_TAG_NAME%"
+)
 
 :: GET PREREQUISITES
 IF DEFINED USE_CYGWIN (
@@ -13,10 +30,8 @@ IF DEFINED USE_CYGWIN (
 
   setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup -P flex -P bison -P zip
   if %errorlevel% neq 0 exit /b %errorlevel%
-)
 
 :: BUILD DEPENDENCIES
-IF DEFINED USE_CYGWIN (
   cd %APPVEYOR_BUILD_FOLDER%\external
   c:\cygwin\bin\bash.exe ./build_superlu_appveyor.sh %PLATFORM%
   if %errorlevel% neq 0 exit /b %errorlevel%
@@ -28,10 +43,8 @@ IF DEFINED USE_CYGWIN (
   cd %BUILDDIR%
   cmake --build . --config Release -- /m /nologo /verbosity:minimal
   if %errorlevel% neq 0 exit /b %errorlevel%
-)
 
 :: BUILD DEVSIM
-IF DEFINED USE_CYGWIN (
   cd %APPVEYOR_BUILD_FOLDER%
   c:\cygwin\bin\bash.exe scripts/setup_appveyor.sh %PLATFORM%
   if %errorlevel% neq 0 exit /b %errorlevel%
@@ -39,12 +52,19 @@ IF DEFINED USE_CYGWIN (
   cd %BUILDDIR%
   cmake --build . --config Release -- /m /v:m
   if %errorlevel% neq 0 exit /b %errorlevel%
-)
 
 :: PACKAGE DEVSIM
-IF DEFINED USE_CYGWIN (
   cd %APPVEYOR_BUILD_FOLDER%\dist
-  c:\cygwin\bin\bash.exe package_appveyor.sh devsim_%BUILDDIR%_%APPVEYOR_REPO_TAG_NAME%
+  c:\cygwin\bin\bash.exe package_appveyor.sh "%PACKAGE_NAME%"
+  if %errorlevel% neq 0 exit /b %errorlevel%
+) ELSE (
+  %CONDA_PATH% create --yes -n devsim_build python=3.7
+  if %errorlevel% neq 0 exit /b %errorlevel%
+  CALL %CONDA_PATH% activate devsim_build
+  if %errorlevel% neq 0 exit /b %errorlevel%
+  conda install --yes mkl mkl-devel mkl-include sqlite zlib boost cmake
+  cd %APPVEYOR_BUILD_FOLDER%
+  c:\msys64\usr\bin\bash %APPVEYOR_BUILD_FOLDER%\scripts\build_msys.sh "%PACKAGE_NAME%"
   if %errorlevel% neq 0 exit /b %errorlevel%
 )
 
