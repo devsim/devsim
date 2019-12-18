@@ -4,6 +4,8 @@ IF "%PLATFORM%"=="msys" SET CONDA_PATH=c:\Miniconda37-x64\Library\bin\conda.bat 
 IF "%PLATFORM%"=="x64" SET CONDA_PATH=c:\Miniconda37-x64\Scripts\conda && SET BUILDDIR=win64 && SET USE_CYGWIN=true
 IF "%PLATFORM%"=="x86" SET CONDA_PATH=c:\Miniconda37\Scripts\conda && SET BUILDDIR=win32 && SET USE_CYGWIN=true
 
+SET PACKAGE_NAME="devsim_%BUILDDIR%_%APPVEYOR_REPO_TAG_NAME%"
+
 :: GET PREREQUISITES
 IF DEFINED USE_CYGWIN (
   %CONDA_PATH% install --yes mkl mkl-devel mkl-include sqlite zlib
@@ -39,7 +41,7 @@ IF DEFINED USE_CYGWIN (
 
 :: PACKAGE DEVSIM
   cd %APPVEYOR_BUILD_FOLDER%\dist
-  c:\cygwin\bin\bash.exe package_appveyor.sh devsim_%BUILDDIR%_%APPVEYOR_REPO_TAG_NAME%
+  c:\cygwin\bin\bash.exe package_appveyor.sh "%PACKAGE_NAME%"
   if %errorlevel% neq 0 exit /b %errorlevel%
 ) ELSE (
   %CONDA_PATH% create --yes -n devsim_build python=3.7
@@ -48,7 +50,7 @@ IF DEFINED USE_CYGWIN (
   if %errorlevel% neq 0 exit /b %errorlevel%
   conda install --yes mkl mkl-devel mkl-include sqlite zlib boost cmake
   cd %APPVEYOR_BUILD_FOLDER%
-  c:\msys64\usr\bin\bash %APPVEYOR_BUILD_FOLDER%\scripts\build_msys.sh devsim_%BUILDDIR%_%APPVEYOR_REPO_TAG_NAME%
+  c:\msys64\usr\bin\bash %APPVEYOR_BUILD_FOLDER%\scripts\build_msys.sh "%PACKAGE_NAME%"
   if %errorlevel% neq 0 exit /b %errorlevel%
 )
 
