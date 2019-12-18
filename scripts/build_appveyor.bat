@@ -44,7 +44,7 @@ IF DEFINED USE_CYGWIN (
 ) ELSE (
   %CONDA_PATH% create --yes -n devsim_build python=3.7
   if %errorlevel% neq 0 exit /b %errorlevel%
-  %CONDA_PATH% activate devsim_build
+  CALL %CONDA_PATH% activate devsim_build
   if %errorlevel% neq 0 exit /b %errorlevel%
   conda install --yes mkl mkl-devel mkl-include sqlite zlib boost cmake
   cd %APPVEYOR_BUILD_FOLDER%
