@@ -42,7 +42,7 @@ IF DEFINED USE_CYGWIN (
   c:\cygwin\bin\bash.exe package_appveyor.sh devsim_%BUILDDIR%_%APPVEYOR_REPO_TAG_NAME%
   if %errorlevel% neq 0 exit /b %errorlevel%
 ) ELSE (
-  %CONDA_PATH% install --yes mkl mkl-devel mkl-include sqlite zlib boost
+  %CONDA_PATH% install --yes mkl mkl-devel mkl-include sqlite zlib boost cmake
   cd %APPVEYOR_BUILD_FOLDER%
   c:\msys64\usr\bin\bash %APPVEYOR_BUILD_FOLDER%\scripts\build_msys.sh devsim_%BUILDDIR%_%APPVEYOR_REPO_TAG_NAME%
   if %errorlevel% neq 0 exit /b %errorlevel%
