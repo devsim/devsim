@@ -155,17 +155,6 @@ FOREACH(I ${MAGNETIC_TESTS})
     ADD_TEST("${MAGNETIC_DIR}/${I}" ${RUNDIFFTEST} --testexe ${DEVSIM_PY3} --args ${I}.py --golden ${GOLDENDIR}/${MAGNETIC_DIR} --output ${I}.out --working ${MAGNETIC_PATH})
 ENDFOREACH(I)
 
-#SET (GENIUS_DIR  examples/genius)
-#SET (GENIUS_PATH ${PROJECT_SOURCE_DIR}/${GENIUS_DIR})
-#SET (GENIUS_TESTS read_nmos read_pn2d genius_diode2d)
-#FOREACH(I ${GENIUS_TESTS})
-#    ADD_TEST("${GENIUS_DIR}/${I}" ${RUNDIFFTEST} --testexe ${DEVSIM_PY3} --args ${I}.py --golden ${GOLDENDIR}/${GENIUS_DIR} --output ${I}.out --working ${GENIUS_PATH})
-#ENDFOREACH(I)
-#ADD_TEST("${GENIUS_DIR}/pn2d_comp" ${RUNDIFFTEST} --output ${GENIUS_PATH}/pn2d.msh --golden ${GOLDENDIR}/${GENIUS_DIR}/pn2d.msh)
-#set_tests_properties("${GENIUS_DIR}/pn2d_comp" PROPERTIES DEPENDS "${GENIUS_DIR}/read_pn2d")
-#set_tests_properties("${GENIUS_DIR}/genius_diode2d" PROPERTIES DEPENDS "${GENIUS_DIR}/pn2d_comp")
-
-
 set_tests_properties("testing/laux1" PROPERTIES DEPENDS testing/trimesh2)
 
 

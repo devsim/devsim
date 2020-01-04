@@ -287,10 +287,6 @@ MyNewPyPtr(create_gmsh_mesh,              dsCommand::createGmshMeshCmd);
 MyNewPyPtr(add_gmsh_contact,              dsCommand::addGmshContactCmd);
 MyNewPyPtr(add_gmsh_interface,            dsCommand::addGmshInterfaceCmd);
 MyNewPyPtr(add_gmsh_region,               dsCommand::addGmshRegionCmd);
-MyNewPyPtr(create_genius_mesh,            dsCommand::createGeniusMeshCmd);
-MyNewPyPtr(add_genius_contact,            dsCommand::addGeniusContactCmd);
-MyNewPyPtr(add_genius_interface,          dsCommand::addGeniusInterfaceCmd);
-MyNewPyPtr(add_genius_region,             dsCommand::addGeniusRegionCmd);
 MyNewPyPtr(create_contact_from_interface, dsCommand::createContactFromInterfaceCmd);
 // Circuit Commands
 MyNewPyPtr(add_circuit_node,            dsCommand::addCircuitNodeCmd);
@@ -406,10 +402,6 @@ MYCOMMAND(create_gmsh_mesh,              dsCommand::createGmshMeshCmd),
 MYCOMMAND(add_gmsh_contact,              dsCommand::addGmshContactCmd),
 MYCOMMAND(add_gmsh_interface,            dsCommand::addGmshInterfaceCmd),
 MYCOMMAND(add_gmsh_region,               dsCommand::addGmshRegionCmd),
-MYCOMMAND(create_genius_mesh,            dsCommand::createGeniusMeshCmd),
-MYCOMMAND(add_genius_contact,            dsCommand::addGeniusContactCmd),
-MYCOMMAND(add_genius_interface,          dsCommand::addGeniusInterfaceCmd),
-MYCOMMAND(add_genius_region,             dsCommand::addGeniusRegionCmd),
 MYCOMMAND(create_contact_from_interface, dsCommand::createContactFromInterfaceCmd),
 // Circuit Commands
 MYCOMMAND(add_circuit_node,            dsCommand::addCircuitNodeCmd),

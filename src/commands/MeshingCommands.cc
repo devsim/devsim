@@ -787,42 +787,6 @@ writeDevicesCmd(CommandHandler &data)
     }
 }
 
-#ifndef GENIUSREADER
-namespace {
-void NoGeniusSupport(CommandHandler &data)
-{
-    std::ostringstream os;
-    os << "Genius reader no longer supported\n";
-    data.SetErrorResult(os.str());
-    return;
-}
-}
-#endif
-
-void 
-createGeniusMeshCmd(CommandHandler &data)
-{
-    NoGeniusSupport(data);
-}
-
-void 
-addGeniusInterfaceCmd(CommandHandler &data)
-{
-    NoGeniusSupport(data);
-}
-
-void 
-addGeniusContactCmd(CommandHandler &data)
-{
-    NoGeniusSupport(data);
-}
-
-void 
-addGeniusRegionCmd(CommandHandler &data)
-{
-    NoGeniusSupport(data);
-}
-
 void 
 createGmshMeshCmd(CommandHandler &data)
 {
@@ -1208,10 +1172,6 @@ Commands MeshingCommands[] = {
     {"add_gmsh_contact", addGmshContactCmd},
     {"add_gmsh_interface", addGmshInterfaceCmd},
     {"add_gmsh_region", addGmshRegionCmd},
-    {"create_genius_mesh", createGeniusMeshCmd},
-    {"add_genius_contact", addGeniusContactCmd},
-    {"add_genius_interface", addGeniusInterfaceCmd},
-    {"add_genius_region", addGeniusRegionCmd},
     {"create_contact_from_interface", createContactFromInterfaceCmd},
     {nullptr, nullptr}
 };
