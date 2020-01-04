@@ -84,6 +84,9 @@ matrix:
 
 # scripts that run after cloning repository
 install:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - git submodule init
+  - git submodule update
   - IF "%PLATFORM%"=="msys" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
   - IF "%PLATFORM%"=="x64" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
   - IF "%PLATFORM%"=="x86" SET CONDA_BIN=c:\Miniconda37\condabin\conda.bat
