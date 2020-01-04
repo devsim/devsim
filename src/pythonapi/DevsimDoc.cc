@@ -781,61 +781,6 @@ static const char add_2d_region_doc[] =
 "       Extend bounding box by this amount when search for mesh to include in region (default 1e-10)\n"
 ;
 
-static const char add_genius_contact_doc[] =
-"    devsim.add_genius_contact (genius_name, material, mesh, name, region)\n"
-"\n"
-"    Create a contact for an imported Genius mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    genius_name : str\n"
-"       boundary condition name in the Genius CGNS file\n"
-"    material : str\n"
-"       material for the contact being created\n"
-"    mesh : str\n"
-"       name of the mesh being generated\n"
-"    name : str\n"
-"       name of the contact begin created\n"
-"    region : str\n"
-"       region that the contact is attached to\n"
-;
-
-static const char add_genius_interface_doc[] =
-"    devsim.add_genius_interface (genius_name, mesh, name, region0, region1)\n"
-"\n"
-"    Create an interface for an imported Genius mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    genius_name : str\n"
-"       boundary condition name in the Genius CGNS file\n"
-"    mesh : str\n"
-"       name of the mesh being generated\n"
-"    name : str\n"
-"       name of the interface begin created\n"
-"    region0 : str\n"
-"       first region that the interface is attached to\n"
-"    region1 : str\n"
-"       second region that the interface is attached to\n"
-;
-
-static const char add_genius_region_doc[] =
-"    devsim.add_genius_region (genius_name, mesh, region, material)\n"
-"\n"
-"    Create a region for an imported Genius  mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    genius_name : str\n"
-"       region name in the Genius CGNS file\n"
-"    mesh : str\n"
-"       name of the mesh being generated\n"
-"    region : str\n"
-"       name of the region begin created\n"
-"    material : str\n"
-"       material for the region being created\n"
-;
-
 static const char add_gmsh_contact_doc[] =
 "    devsim.add_gmsh_contact (gmsh_name, material, mesh, name, region)\n"
 "\n"
@@ -943,26 +888,6 @@ static const char create_device_doc[] =
 "       name of the mesh being used to create a device\n"
 "    device : str\n"
 "       name of the device being created\n"
-;
-
-static const char create_genius_mesh_doc[] =
-"    devsim.create_genius_mesh (file, mesh)\n"
-"\n"
-"    This command reads in a Genius mesh written in the CGNS format\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    file : str\n"
-"       name of the Genius mesh file being read into DEVSIM\n"
-"    mesh : str\n"
-"       name of the mesh being generated\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    If successful, this command will return a dictionary containing information about the regions and boundaries in the mesh.  Please see the example in :ref:`sec__geniusintro` for an example of how this information can be used for adding contacts and interfaces to the structure being created.\n"
-"\n"
-"      If the CGNS file was created with HDF as the underlying storage format, it may be necessary to convert it to ADF using the ``hdf2adf`` command before reading it into DEVSIM.  This command is available as part of the CGNS library when it is compiled with HDF support.  Please :ref:`additional__cgns` for availablility. }\n"
 ;
 
 static const char create_gmsh_mesh_doc[] =
