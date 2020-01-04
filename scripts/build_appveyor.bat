@@ -1,8 +1,10 @@
 
 @echo on
-@SETLOCAL
+:: The following line is important for proper variable expansion
+@SETLOCAL EnableDelayedExpansion
 SET BASEDIR=%cd%
 SET CONDA_BIN=%2
+SET TAG=%3
 
 call %CONDA_BIN% create -y -n devsim_build python=3.7
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -16,7 +18,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 :: SET_USE_VISUALSTUDIO is true for Visual Studio Builds
 IF "%1"=="msys" (
   SET BUILDDIR=msys
-  SET PACKAGE_NAME="devsim_msys_%APPVEYOR_REPO_TAG_NAME%"
+  SET PACKAGE_NAME="devsim_msys_%TAG%"
 )
 
 IF "%1"=="x64" (
@@ -24,7 +26,7 @@ IF "%1"=="x64" (
   SET AOPTION="x64"
   SET BUILDDIR=win64
   SET USE_VISUALSTUDIO=true
-  SET PACKAGE_NAME="devsim_win64_%APPVEYOR_REPO_TAG_NAME%"
+  SET PACKAGE_NAME="devsim_win64_%TAG%"
 )
 
 IF "%1"=="x86" (
@@ -32,15 +34,13 @@ IF "%1"=="x86" (
   SET AOPTION="Win32"
   SET BUILDDIR=win32
   SET USE_VISUALSTUDIO=true
-  SET PACKAGE_NAME="devsim_win32_%APPVEYOR_REPO_TAG_NAME%"
+  SET PACKAGE_NAME="devsim_win32_%TAG%"
 )
 
+SET PATH="c:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%"
 
 :: GET PREREQUISITES
-::IF DEFINED USE_VISUALSTUDIO (
-  if %errorlevel% neq 0 exit /b %errorlevel%
-
-  SET PATH=c:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%
+IF DEFINED USE_VISUALSTUDIO (
 
   :: BUILD DEPENDENCIES
   cd %BASEDIR%\external
@@ -71,13 +71,15 @@ IF "%1"=="x86" (
   c:\msys64\usr\bin\bash package_appveyor.sh %PACKAGE_NAME%
   if %errorlevel% neq 0 exit /b %errorlevel%
 
-::) ELSE (
-::  call conda install --yes -n devsim_build cmake mkl mkl-devel mkl-include sqlite zlib boost cmake
-::
-::  SET PATH=c:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%
-::
-::  cd %BASEDIR%
-::  c:\msys64\usr\bin\bash %BASEDIR%\scripts\build_msys.sh %PACKAGE_NAME%
-::  if %errorlevel% neq 0 exit /b %errorlevel%
-::)
-::
+) ELSE (
+
+  SET PATH=c:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%
+
+  call %CONDA_BIN% install -y -n devsim_build boost
+  if %errorlevel% neq 0 exit /b %errorlevel%
+
+  cd %BASEDIR%
+  c:\msys64\usr\bin\bash %BASEDIR%\scripts\build_msys.sh %PACKAGE_NAME%
+  if %errorlevel% neq 0 exit /b %errorlevel%
+)
+

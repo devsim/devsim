@@ -156,7 +156,7 @@ configuration: Release
 # to run your custom scripts instead of automatic MSBuild
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - scripts\build_appveyor.bat %PLATFORM% %CONDA_BIN%
+  - scripts\build_appveyor.bat %PLATFORM% %CONDA_BIN% %APPVEYOR_REPO_TAG_NAME%
 
 # to run your custom scripts instead of automatic tests
 # test_script:
