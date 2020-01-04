@@ -39,12 +39,7 @@ branches:
 #---------------------------------#
 
 # Operating system (build VM template)
-#os: Visual Studio 2015
-#Attempt to bypass compiler bug
-#http://stackoverflow.com/questions/39301545/strange-issue-with-abscomplex-in-visual-studio-c-2015-update-3
-#image: Visual Studio 2017
-os: Visual Studio 2017
-#image: Previous Visual Studio 2013
+image: Visual Studio 2019
 
 # scripts that are called at very beginning, before repo cloning
 init:
@@ -89,9 +84,9 @@ matrix:
 
 # scripts that run after cloning repository
 install:
-   - cd %APPVEYOR_BUILD_FOLDER%
-   - git submodule init
-   - git submodule update
+  - IF "%PLATFORM%"=="msys" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
+  - IF "%PLATFORM%"=="x64" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
+  - IF "%PLATFORM%"=="x86" SET CONDA_BIN=c:\Miniconda37\condabin\conda.bat
 
 # enable patching of AssemblyInfo.* files
 #assembly_info:
@@ -161,7 +156,7 @@ configuration: Release
 # to run your custom scripts instead of automatic MSBuild
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - scripts\build_appveyor.bat
+  - scripts\build_appveyor.bat %PLATFORM% %CONDA_BIN%
 
 # to run your custom scripts instead of automatic tests
 # test_script:

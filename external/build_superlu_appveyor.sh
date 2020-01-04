@@ -1,21 +1,15 @@
 
 set -e
-CMAKE="/cygdrive/C/Program Files (x86)/CMake/bin/cmake.exe"
 
-if [ "${1}" = x86 ]; then
-GENERATOR="Visual Studio 15 2017"
-BUILDDIR="SuperLU_4.3/win32"
-fi
-if [ "${1}" = x64 ]; then
-GENERATOR="Visual Studio 15 2017 Win64"
-BUILDDIR="SuperLU_4.3/win64"
-fi
+GENERATOR="$1"
+AOPTION="$2"
+BUILDDIR="SuperLU_4.3/$3"
 
 (\
-tar xzf superlu_4.3.tar.gz && \
+bsdtar xzf superlu_4.3.tar.gz && \
 mkdir -p ${BUILDDIR} && \
 cd ${BUILDDIR} && \
-"${CMAKE}" -G "${GENERATOR}" .. && \
-"${CMAKE}" --build . --config Release -- /m /nologo /verbosity:minimal \
+cmake -G "${GENERATOR}" -A "${AOPTION}" .. && \
+cmake --build . --config Release -- //m //nologo //verbosity:minimal \
 )
 

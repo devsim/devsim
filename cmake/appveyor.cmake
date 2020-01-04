@@ -5,8 +5,8 @@
 ##MESSAGE("ARCH ${ARCH}")
 #
 #SET (CMAKE_CXX_WARNING_LEVEL 4)
-SET (FLEX "C:/cygwin/bin/flex.exe")
-SET (BISON "C:/cygwin/bin/bison.exe")
+SET (FLEX  "C:/msys64/usr/bin/flex.exe")
+SET (BISON "C:/msys64/usr/bin/bison.exe")
 
 ADD_DEFINITIONS(-DSTATIC_BUILD -D_USE_MATH_DEFINES)
 #Math stuff
@@ -31,28 +31,20 @@ SET (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /SAFESEH:NO")
 
 # windows build
 
-IF (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
-SET (MINICONDA37 c:/Miniconda37)
-SET (BUILDDIR    win32)
-ELSE (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
-SET (MINICONDA37 c:/Miniconda37-x64)
-SET (BUILDDIR    win64)
-ENDIF (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
-
 SET (SUPERLULOCATE   ${CMAKE_SOURCE_DIR}/external/SuperLU_4.3)
 SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/${BUILDDIR}/Release/superlu.lib)
 SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
 
-SET (BLAS_ARCHIVE     ${MINICONDA37}/Library/lib/mkl_rt.lib)
-SET (MKL_PARDISO_INCLUDE ${MINICONDA37}/Library/include)
-SET (PYTHON3_ARCHIVE ${MINICONDA37}/libs/python3.lib)
-SET (PYTHON37_INCLUDE ${MINICONDA37}/include)
+SET (BLAS_ARCHIVE     ${ANACONDA_PATH}/Library/lib/mkl_rt.lib)
+SET (MKL_PARDISO_INCLUDE ${ANACONDA_PATH}/Library/include)
+SET (PYTHON3_ARCHIVE ${ANACONDA_PATH}/libs/python3.lib)
+SET (PYTHON37_INCLUDE ${ANACONDA_PATH}/include)
 
-SET (SQLITE3_INCLUDE  ${MINICONDA37}/Library/include)
-SET (SQLITE3_ARCHIVE  ${MINICONDA37}/Library/lib/sqlite3.lib)
+SET (SQLITE3_INCLUDE  ${ANACONDA_PATH}/Library/include)
+SET (SQLITE3_ARCHIVE  ${ANACONDA_PATH}/Library/lib/sqlite3.lib)
 
-SET (ZLIB_INCLUDE ${MINICONDA37}/Library/include)
-SET (ZLIB_ARCHIVE ${MINICONDA37}/Library/lib/zlib.lib)
+SET (ZLIB_INCLUDE ${ANACONDA_PATH}/Library/include)
+SET (ZLIB_ARCHIVE ${ANACONDA_PATH}/Library/lib/zlib.lib)
 
 SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/${BUILDDIR}/src/engine/Release/symdiff_static.lib)

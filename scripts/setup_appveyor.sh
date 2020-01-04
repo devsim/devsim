@@ -1,15 +1,11 @@
 
-CMAKE="/cygdrive/C/Program Files (x86)/CMake/bin/cmake.exe"
+set -e
 DEVSIM_CONFIG=appveyor
+GENERATOR="$1"
+AOPTION="$2"
+BUILDDIR="$3"
+CONDA_PREFIX="$4"
 
-if [ "${1}" = x86 ]; then
-GENERATOR="Visual Studio 15 2017"
-BUILDDIR="win32"
-fi
-if [ "${1}" = x64 ]; then
-GENERATOR="Visual Studio 15 2017 Win64"
-BUILDDIR="win64"
-fi
-/usr/bin/mkdir -p ${BUILDDIR}
-(cd ${BUILDDIR}; "$CMAKE" -G "${GENERATOR}" -DDEVSIM_CONFIG=${DEVSIM_CONFIG} -DPYTHON3=ON  -DMKL_PARDISO=ON ..)
+mkdir -p ${BUILDDIR}
+(cd ${BUILDDIR}; cmake -G "${1}" -A $2 -DDEVSIM_CONFIG=${DEVSIM_CONFIG} -DPYTHON3=ON  -DMKL_PARDISO=ON -DANACONDA_PATH=${CONDA_PREFIX} -DBUILDDIR=${BUILDDIR} ..)
 
