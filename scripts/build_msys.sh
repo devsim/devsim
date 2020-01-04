@@ -2,7 +2,7 @@
 set -e
 export PATH=/mingw64/bin:/usr/bin:${PATH}
 # msys Specific
-pacman -Su --noconfirm rsync zip
+#pacman -Su --noconfirm rsync zip
 
 # handle miniconda in appveyor.yml
 
