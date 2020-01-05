@@ -18,13 +18,29 @@ limitations under the License.
 #include "GlobalData.hh"
 #include "DefaultDerivatives.hh"
 #include "FPECheck.hh"
+#include "ObjectHolder.hh"
 
 void devsim_initialization()
 {
     FPECheck::InitializeFPE();
 
-    GlobalData::GetInstance();
+    GlobalData &gdata = GlobalData::GetInstance();
 
     dsHelper::CreateDefaultDerivatives();
+
+    ObjectHolderMap_t features;
+    features["version"] = ObjectHolder(DEVSIM_VERSION_STRING);
+    features["copyright"] = ObjectHolder("DEVSIM LLC Copyright " DEVSIM_COPYRIGHT_YEAR);
+#ifdef DEVSIM_EXTENDED_PRECISION
+    features["extended_precision"] = ObjectHolder(true);
+#else
+    features["extended_precision"] = ObjectHolder(false);
+#endif
+#ifdef USE_MKL_PARDISO
+    features["direct_solver"] = ObjectHolder("mkl_pardiso");
+#else
+    features["direct_solver"] = ObjectHolder("superlu");
+#endif
+    gdata.AddDBEntryOnGlobal("info", ObjectHolder(features));
 }
 

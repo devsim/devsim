@@ -2,6 +2,7 @@ INCLUDE_DIRECTORIES (
     ../utility
     ../AutoEquation
     ../Data
+    ../common_api
 )
 
 SET (PY3LIBRARIES

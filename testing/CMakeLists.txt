@@ -32,6 +32,7 @@ ENABLE_TESTING()
 #ENDFOREACH(I)
 
 SET (NEWPY3TESTS
+  info
   cap2 ssac_cap
   equation1
   ptest1
@@ -134,7 +135,7 @@ set_tests_properties("${BIOAPP1_DIR}/bioapp1_3d_comp" PROPERTIES DEPENDS "${BIOA
 
 SET (DIODE_DIR  examples/diode)
 SET (DIODE_PATH ${PROJECT_SOURCE_DIR}/${DIODE_DIR})
-SET (DIODE_TESTS diode_1d diode_2d gmsh_diode2d gmsh_diode3d ssac_diode laux2d laux3d pythonmesh3d)
+SET (DIODE_TESTS diode_1d diode_2d gmsh_diode2d gmsh_diode3d gmsh_diode3d_float128 ssac_diode laux2d laux3d pythonmesh3d)
 FOREACH(I ${DIODE_TESTS})
     ADD_TEST("${DIODE_DIR}/${I}" ${RUNDIFFTEST} --testexe ${DEVSIM_PY3} --args ${I}.py --golden ${GOLDENDIR}/${DIODE_DIR} --output ${I}.out --working ${DIODE_PATH})
 ENDFOREACH(I)

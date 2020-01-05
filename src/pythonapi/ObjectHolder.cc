@@ -84,6 +84,23 @@ ObjectHolder::ObjectHolder(void *t) : object_(t)
 #endif
 }
 
+ObjectHolder::ObjectHolder(bool tval)
+{
+  PyObject *obj = nullptr;
+  if (tval)
+  {
+    obj = Py_True;
+  }
+  else
+  {
+    obj = Py_False;
+  }
+  Py_INCREF(obj);
+  object_ = obj;
+
+}
+
+
 namespace {
 
 //https://stackoverflow.com/questions/5356773/python-get-string-representation-of-pyobject
@@ -464,6 +481,11 @@ void *ObjectHolder::GetObject()
 ObjectHolder::ObjectHolder(const std::string &s)
 {
   object_ = PyUnicode_FromStringAndSize(s.c_str(), s.size());
+}
+
+ObjectHolder::ObjectHolder(const char *s)
+{
+  object_ = PyUnicode_FromStringAndSize(s, strlen(s));
 }
 
 ObjectHolder::ObjectHolder(double v)

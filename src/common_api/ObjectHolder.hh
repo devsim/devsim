@@ -39,7 +39,9 @@ class ObjectHolder {
     explicit ObjectHolder(void *);
 
     explicit ObjectHolder(const std::string &);
+    explicit ObjectHolder(const char *);
 
+    explicit ObjectHolder(bool);
     explicit ObjectHolder(double);
     explicit ObjectHolder(int);
     //// Guaranteed these do not change passed values

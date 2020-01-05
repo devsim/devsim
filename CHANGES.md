@@ -1,6 +1,15 @@
 
 ### Version 1.4.6
 
+Parameter "info" can be queried for getting version information.  The file ``testing/info.py`` contains an example.
+
+```
+python info.py
+{'copyright': 'DEVSIM LLC Copyright 2009-2020', 'direct_solver': 'mkl_pardiso', 'extended_precision': True, 'version': '1.4.6'}
+```
+
+The example ``examples/diode/gmsh_diode3d_float128`` provides an example where extended precision is enabled.
+
 Microsoft Windows 10 is supported and is now compiled using Microsoft Visual Studio 2019.
 
 Microsoft Windows 7 is no longer supported, as Microsoft has dropped support as of January 14, 2020.
