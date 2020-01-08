@@ -30,7 +30,7 @@ void devsim_initialization()
 
     ObjectHolderMap_t features;
     features["version"] = ObjectHolder(DEVSIM_VERSION_STRING);
-    features["copyright"] = ObjectHolder(u8"Copyright © " DEVSIM_COPYRIGHT_YEAR u8" DEVSIM LLC");
+    features["copyright"] = ObjectHolder(u8"Copyright \u00a9 " DEVSIM_COPYRIGHT_YEAR " DEVSIM LLC");
 #ifdef DEVSIM_EXTENDED_PRECISION
     features["extended_precision"] = ObjectHolder(true);
 #else
