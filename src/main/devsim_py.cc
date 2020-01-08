@@ -30,7 +30,7 @@ void devsim_initialization()
 
     ObjectHolderMap_t features;
     features["version"] = ObjectHolder(DEVSIM_VERSION_STRING);
-    features["copyright"] = ObjectHolder("DEVSIM LLC Copyright " DEVSIM_COPYRIGHT_YEAR);
+    features["copyright"] = ObjectHolder(u8"Copyright © " DEVSIM_COPYRIGHT_YEAR u8" DEVSIM LLC");
 #ifdef DEVSIM_EXTENDED_PRECISION
     features["extended_precision"] = ObjectHolder(true);
 #else
@@ -41,6 +41,8 @@ void devsim_initialization()
 #else
     features["direct_solver"] = ObjectHolder("superlu");
 #endif
+    features["license"] = ObjectHolder("Apache License, Version 2.0");
+    features["website"] = ObjectHolder("https://devsim.org");
     gdata.AddDBEntryOnGlobal("info", ObjectHolder(features));
 }
 

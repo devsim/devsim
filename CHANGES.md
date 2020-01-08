@@ -5,10 +5,11 @@ Parameter "info" can be queried for getting version information.  The file ``tes
 
 ```
 python info.py
-{'copyright': 'DEVSIM LLC Copyright 2009-2020', 'direct_solver': 'mkl_pardiso', 'extended_precision': True, 'version': '1.4.6'}
+{'copyright': 'Copyright © 2009-2020 DEVSIM LLC', 'direct_solver': 'mkl_pardiso', 'extended_precision': True, 'license': 'Apache License, Version 2.0', 'version': '1.4.6', 'website': 'https://devsim.org'}
+
 ```
 
-The example ``examples/diode/gmsh_diode3d_float128`` provides an example where extended precision is enabled.
+The example ``examples/diode/gmsh_diode3d_float128.py`` provides an example where extended precision is enabled.
 
 Microsoft Windows 10 is supported and is now compiled using Microsoft Visual Studio 2019.
 
