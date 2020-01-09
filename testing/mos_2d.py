@@ -66,29 +66,19 @@ devsim.element_from_edge_model(edge_model="ElectricField", device=device, region
 
 devsim.write_devices(file="mos_2d_dd.msh", type="devsim")
 
-def format_value(value):
-  if isinstance(value, str):
-    ret = '"%s"' % value
-  elif isinstance(value, float):
-    ret = "%g" % value
-  else:
-    ret = value
-  return ret
-
-
-with open("mos_2d_params.py", "w") as ofh:
+with open("mos_2d_params.py", "w", encoding="utf-8") as ofh:
   ofh.write('import devsim\n')
   for p in devsim.get_parameter_list():
-    v=format_value(devsim.get_parameter(name=p))
+    v=repr(devsim.get_parameter(name=p))
     ofh.write('devsim.set_parameter(name="%s", value=%s)\n' % (p, v))
   for i in devsim.get_device_list():
     for p in devsim.get_parameter_list(device=i):
-      v=format_value(devsim.get_parameter(device=i, name=p))
+      v=repr(devsim.get_parameter(device=i, name=p))
       ofh.write('devsim.set_parameter(device="%s", name="%s", value=%s)\n' % (i, p, v))
 
   for i in devsim.get_device_list():
     for j in devsim.get_region_list(device=i):
       for p in devsim.get_parameter_list(device=i, region=j):
-        v=format_value(devsim.get_parameter(device=i, region=j, name=p))
+        v=repr(devsim.get_parameter(device=i, region=j, name=p))
         ofh.write('devsim.set_parameter(device="%s", region="%s", name="%s", value=%s)\n' % (i, j, p, v))
 
