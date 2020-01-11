@@ -62,7 +62,7 @@ dio2_element_physics.createSolution(device, region, "Potential")
 #### NetDoping
 ####
 for name, equation in (
-  ("Acceptors", "1.0e18*step(0.5e-5-x)"),
+    ("Acceptors", "1.0e18*step(0.5e-5-x)"),
   ("Donors",    "1.0e18*step(x-0.5e-5)"),
   ("NetDoping", "Donors-Acceptors"),
 ):

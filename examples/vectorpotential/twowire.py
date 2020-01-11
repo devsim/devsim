@@ -41,16 +41,16 @@ for region in ("air", "left", "right"):
              equation="(Az@n1 - Az@n0) * EdgeInverseLength")
 
   edge_model( device=device, region=region, name="delAz:Az@n1",
-             equation="EdgeInverseLength")
+              equation="EdgeInverseLength")
 
   edge_model( device=device, region=region, name="delAz:Az@n0",
-             equation="-EdgeInverseLength")
+              equation="-EdgeInverseLength")
 
   node_model( device=device, region=region, name="Jz",
-             equation="mu * jz")
+              equation="mu * jz")
 
   equation(device=device, region=region, name="Az_Equation",
-             variable_name="Az", edge_model="delAz", node_model="Jz")
+           variable_name="Az", edge_model="delAz", node_model="Jz")
 
 
   vector_gradient(device=device, region=region, node_model="Az", calc_type="default")
@@ -65,7 +65,7 @@ for interface in ("air_left", "air_right"):
   interface_model( device=device, interface=interface, name="continuousAz:Az@r1", equation="-1.0")
 
   interface_equation(device=device, interface=interface,  name="Az_Equation",
-                      variable_name="Az", interface_model="continuousAz", type="continuous")
+                     variable_name="Az", interface_model="continuousAz", type="continuous")
 
 
 #### contact

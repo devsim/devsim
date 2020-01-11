@@ -53,7 +53,7 @@ for n, e in (
     ('ElectricField',              '(ψ@n0 - ψ@n1)*EdgeInverseLength;'),
     ('ElectricField:ψ@n0', 'EdgeInverseLength;'),
     ('ElectricField:ψ@n1', '-EdgeInverseLength;')
-  ) :
+) :
   edge_model(name = n, equation = e, **region_info)
 
 set_parameter(name="topbias",    value = 1.0e-0, **region_info)
@@ -63,7 +63,7 @@ for n, e in(
     ("ψEdgeFlux",              "Permittivity*ElectricField;"),
     ("ψEdgeFlux:ψ@n0", "diff(Permittivity*ElectricField, ψ@n0);"),
     ("ψEdgeFlux:ψ@n1", "-ψEdgeFlux:ψ@n0;")
-  ) :
+) :
   edge_model(name = n, equation = e, **region_info)
 
 equation(name="ψEquation", variable_name="ψ", node_model="", edge_model="ψEdgeFlux", time_node_model="", variable_update="default", **region_info)
@@ -78,14 +78,14 @@ node_model(name = "botnode_model:ψ", equation = "1;", **region_info)
 edge_model(name = "contactcharge_edge_bottom",  equation =conteq, **region_info)
 
 contact_equation( device=device , contact= "top" , name= "ψEquation" , variable_name= "ψ"
-			, node_model="topnode_model", edge_model= ""
-			, node_charge_model= "" , edge_charge_model= "contactcharge_edge_top"
-			, node_current_model= ""   , edge_current_model= "")
+                  , node_model="topnode_model", edge_model= ""
+                  , node_charge_model= "" , edge_charge_model= "contactcharge_edge_top"
+                  , node_current_model= ""   , edge_current_model= "")
 
 contact_equation( device=device , contact= "bot" , name= "ψEquation" , variable_name= "ψ"
-			, node_model="botnode_model", edge_model= ""
-			, node_charge_model= "" , edge_charge_model= "contactcharge_edge_bottom"
-			, node_current_model= ""   , edge_current_model= "")
+                  , node_model="botnode_model", edge_model= ""
+                  , node_charge_model= "" , edge_charge_model= "contactcharge_edge_bottom"
+                  , node_current_model= ""   , edge_current_model= "")
 
 
 

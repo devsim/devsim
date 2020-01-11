@@ -48,13 +48,13 @@ edge_from_node_model(device=device, region=region, node_model="Potential")
 ### the potential at each node
 ###
 edge_model(device=device, region=region, name="ElectricField",
-                 equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
+           equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
 
 edge_model(device=device, region=region, name="ElectricField:Potential@n0",
-                 equation="EdgeInverseLength")
+           equation="EdgeInverseLength")
 
 edge_model(device=device, region=region, name="ElectricField:Potential@n1",
-                 equation="-EdgeInverseLength")
+           equation="-EdgeInverseLength")
 
 ###
 ### Model the D Field
@@ -72,7 +72,7 @@ edge_model(device=device, region=region, name="DField:Potential@n1",
 ### Create the bulk equation
 ###
 equation(device=device, region=region, name="PotentialEquation", variable_name="Potential",
-    edge_model="DField", variable_update="default")
+         edge_model="DField", variable_update="default")
 
 
 ###
@@ -80,14 +80,14 @@ equation(device=device, region=region, name="PotentialEquation", variable_name="
 ###
 for c in ("contact1", "contact2"):
   contact_node_model(device=device, contact=c, name="%s_bc" % c,
-           equation="Potential - %s_bias" % c)
+                     equation="Potential - %s_bias" % c)
 
   contact_node_model(device=device, contact=c, name="%s_bc:Potential" % c,
-             equation="1")
+                     equation="1")
 
   contact_equation(device=device, contact=c, name="PotentialEquation",
-             variable_name="Potential",
-             node_model="%s_bc" % c, edge_charge_model="DField")
+                   variable_name="Potential",
+                   node_model="%s_bc" % c, edge_charge_model="DField")
 
 ###
 ### Set the contact 

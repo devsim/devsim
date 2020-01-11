@@ -41,37 +41,37 @@ devsim.edge_from_node_model(device=device, region=region, node_model="Potential"
 ### the potential at each node
 ###
 devsim.edge_model(device=device, region=region, name="ElectricField",
-                 equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
+                  equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
 
 devsim.edge_model(device=device, region=region, name="ElectricField:Potential@n0",
-                 equation="EdgeInverseLength")
+                  equation="EdgeInverseLength")
 
 devsim.edge_model(device=device, region=region, name="ElectricField:Potential@n1",
-                 equation="-EdgeInverseLength")
+                  equation="-EdgeInverseLength")
 
 ###
 ### Model the D Field
 ###
 devsim.edge_model(device=device, region=region, name="DField",
-           equation="Permittivity*ElectricField")
+                  equation="Permittivity*ElectricField")
 
 devsim.edge_model(device=device, region=region, name="DField:Potential@n0",
-           equation="diff(Permittivity*ElectricField, Potential@n0)")
+                  equation="diff(Permittivity*ElectricField, Potential@n0)")
 
 devsim.edge_model(device=device, region=region, name="DField:Potential@n1",
-           equation="-DField:Potential@n0")
+                  equation="-DField:Potential@n0")
 
 ###
 ### Create the bulk equation
 ###
 devsim.equation(device=device, region=region, name="PotentialEquation", variable_name="Potential",
-    edge_model="DField", variable_update="default")
+                edge_model="DField", variable_update="default")
 
 # the topbias is a circuit node, and we want to prevent it from being overridden by a parameter
 devsim.set_parameter(device=device, region=region, name="botbias", value=0.0)
 
 for name, equation in (
-  ("topnode_model", "Potential - topbias"),
+    ("topnode_model", "Potential - topbias"),
   ("topnode_model:Potential", "1"),
   ("topnode_model:topbias", "-1"),
   ("botnode_model", "Potential - botbias"),
@@ -81,10 +81,10 @@ for name, equation in (
 
 # attached to circuit node
 devsim.contact_equation(device=device, contact="top", name="PotentialEquation", variable_name="Potential",
-			node_model="topnode_model", edge_charge_model="DField", circuit_node="topbias")
+                        node_model="topnode_model", edge_charge_model="DField", circuit_node="topbias")
 # attached to ground
 devsim.contact_equation(device=device, contact="bot", name="PotentialEquation", variable_name="Potential",
-			node_model="botnode_model", edge_charge_model="DField")
+                        node_model="botnode_model", edge_charge_model="DField")
 
 #
 # Voltage source

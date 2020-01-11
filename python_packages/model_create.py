@@ -36,8 +36,8 @@ def CreateNodeModelDerivative(device, region, model, expression, *vars):
   '''
   for v in vars:
     CreateNodeModel(device, region,
-      "{m}:{v}".format(m=model, v=v),
-      "simplify(diff({e},{v}))".format(e=expression, v=v))
+                    "{m}:{v}".format(m=model, v=v),
+                    "simplify(diff({e},{v}))".format(e=expression, v=v))
 
 
 def CreateContactNodeModel(device, contact, model, expression):
@@ -54,8 +54,8 @@ def CreateContactNodeModelDerivative(device, contact, model, expression, variabl
     Creates a contact node model derivative
   '''
   CreateContactNodeModel(device, contact,
-    "{m}:{v}".format(m=model, v=variable),
-    "simplify(diff({e}, {v}))".format(e=expression, v=variable))
+                         "{m}:{v}".format(m=model, v=variable),
+                         "simplify(diff({e}, {v}))".format(e=expression, v=variable))
 
 def CreateEdgeModel (device, region, model, expression):
   '''
@@ -70,11 +70,11 @@ def CreateEdgeModelDerivatives(device, region, model, expression, variable):
     Creates edge model derivatives
   '''
   CreateEdgeModel(device, region,
-    "{m}:{v}@n0".format(m=model, v=variable),
-    "simplify(diff({e}, {v}@n0))".format(e=expression, v=variable))
+                  "{m}:{v}@n0".format(m=model, v=variable),
+                  "simplify(diff({e}, {v}@n0))".format(e=expression, v=variable))
   CreateEdgeModel(device, region,
-    "{m}:{v}@n1".format(m=model, v=variable),
-    "simplify(diff({e}, {v}@n1))".format(e=expression, v=variable))
+                  "{m}:{v}@n1".format(m=model, v=variable),
+                  "simplify(diff({e}, {v}@n1))".format(e=expression, v=variable))
 
 def CreateContactEdgeModel(device, contact, model, expression):
   '''
@@ -164,5 +164,5 @@ def CreateGeometricMeanDerivative(device, region, nmodel, emodel, *args):
     raise ValueError("Must specify a list of variable names")
   for i in args:
     edge_average_model(device=device, region=region, edge_model=emodel, node_model=nmodel,
-     derivative=i, average_type="geometric")
+                       derivative=i, average_type="geometric")
 

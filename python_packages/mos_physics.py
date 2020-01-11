@@ -21,7 +21,7 @@ def CreateElementElectronContinuityEquation(device, region, current_model):
   '''
   equation(device=device, region=region, name="ElectronContinuityEquation", variable_name="Electrons",
            time_node_model="NCharge", node_model="ElectronGeneration",
-	   element_model=current_model, variable_update="positive")
+           element_model=current_model, variable_update="positive")
 
 #TODO: expand for circuit
 def CreateElementContactElectronContinuityEquation(device, contact, current_model):
@@ -30,8 +30,8 @@ def CreateElementContactElectronContinuityEquation(device, contact, current_mode
   '''
   contact_electrons_name = "{0}nodeelectrons".format(contact)
   contact_equation(device=device, contact=contact, name="ElectronContinuityEquation", variable_name="Electrons",
-                          node_model=contact_electrons_name,
-                          element_current_model=current_model)
+                   node_model=contact_electrons_name,
+                   element_current_model=current_model)
 
 #### this version is from the direction of current flow
 #### TODO: version from interface normal distance

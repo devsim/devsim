@@ -51,7 +51,7 @@ set_parameter(device="disk", region="dna", name="charge_density", value=2e21)
 solve(type="dc", relative_error=1e-7, absolute_error=1e11, maximum_iterations=100)
 for region in ("dna", "dielectric", "solution"):
   node_model(device=device, region=region, name="LogDeltaPotential",
-    equation="log(abs(Potential-Potential_zero) + 1e-10)/log(10)")
+             equation="log(abs(Potential-Potential_zero) + 1e-10)/log(10)")
 
 write_devices(file="bioapp1_3d_{0}.dat".format(Ve),  type="tecplot")
 

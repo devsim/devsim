@@ -80,7 +80,7 @@ def CreateNoiseMesh(device, region, material='Si'):
 ####
 def SetupResistorConstants(device, region):
   for name, value in (
-    ("Permittivity",     11.1*8.85e-14),
+      ("Permittivity",     11.1*8.85e-14),
     ("ElectronCharge",   1.6e-19),
     ("IntrinsicDensity", 1.0e10),
     ("ThermalVoltage",   0.0259),
@@ -99,7 +99,7 @@ def SetupInitialResistorSystem(device, region, net_doping=1e16):
 
   # node models
   for name, equation in (
-    ("NetDoping",                 "net_doping"),
+      ("NetDoping",                 "net_doping"),
     ("IntrinsicElectrons",        "NetDoping"),
     ("IntrinsicCharge",           "-IntrinsicElectrons + NetDoping"),
     ("IntrinsicCharge:Potential", "-IntrinsicElectrons:Potential"),
@@ -108,7 +108,7 @@ def SetupInitialResistorSystem(device, region, net_doping=1e16):
 
   # edge models
   for name, equation in (
-    ("ElectricField",              "(Potential@n0 - Potential@n1)*EdgeInverseLength"),
+      ("ElectricField",              "(Potential@n0 - Potential@n1)*EdgeInverseLength"),
     ("ElectricField:Potential@n0", "EdgeInverseLength"),
     ("ElectricField:Potential@n1", "-EdgeInverseLength"),
     ("PotentialEdgeFlux",              "Permittivity*ElectricField"),
@@ -134,7 +134,7 @@ def SetupCarrierResistorSystem(device, region):
   #### PotentialNodeCharge
   ####
   for name, equation in (
-    ("PotentialNodeCharge",           "-ElectronCharge*(-Electrons + NetDoping)"),
+      ("PotentialNodeCharge",           "-ElectronCharge*(-Electrons + NetDoping)"),
     ("PotentialNodeCharge:Electrons", "+ElectronCharge"),
   ):
     devsim.node_model(device=device, region=region, name=name, equation=equation)
@@ -150,7 +150,7 @@ def SetupCarrierResistorSystem(device, region):
   #### vdiff, Bern01, Bern10
   ####
   for name, equation in (
-    ("vdiff",               "(Potential@n0 - Potential@n1)/ThermalVoltage"),
+      ("vdiff",               "(Potential@n0 - Potential@n1)/ThermalVoltage"),
     ("vdiff:Potential@n0",  "ThermalVoltage^(-1)"),
     ("vdiff:Potential@n1",  "-ThermalVoltage^(-1)"),
     ("Bern01",              "B(vdiff)"),
@@ -167,7 +167,7 @@ def SetupCarrierResistorSystem(device, region):
   ####
   current_equation="ElectronCharge*mu_n*EdgeInverseLength*ThermalVoltage*(Electrons@n1*Bern10 - Electrons@n0*Bern01)"
   for name, equation in (
-    ("ElectronCurrent", current_equation),
+      ("ElectronCurrent", current_equation),
     ("ElectronCurrent:Electrons@n0", "simplify(diff(%s, Electrons@n0))" % current_equation),
     ("ElectronCurrent:Electrons@n1", "simplify(diff(%s, Electrons@n1))" % current_equation),
     ("ElectronCurrent:Potential@n0", "simplify(diff(%s, Potential@n0))" % current_equation),
@@ -179,7 +179,7 @@ def SetupCarrierResistorSystem(device, region):
   #### Time derivative term
   ####
   for name, equation in (
-    ("NCharge", "-ElectronCharge * Electrons"),
+      ("NCharge", "-ElectronCharge * Electrons"),
     ("NCharge:Electrons", "-ElectronCharge"),
   ):
     devsim.node_model(device=device, region=region, name=name, equation=equation)
@@ -223,7 +223,7 @@ def SetupCarrierResistorContact(device, contact, use_circuit_bias=False, circuit
     devsim.node_model(device=device, region=region, name="celec", equation="0.5*(NetDoping+(NetDoping^2 + 4 * IntrinsicDensity^2)^(0.5))")
   
   for name, equation in (
-    ("%snodeelectrons" % contact,           "Electrons - celec"),
+      ("%snodeelectrons" % contact,           "Electrons - celec"),
     ("%snodeelectrons:Electrons" % contact, "1."),
   ):
     devsim.contact_node_model(device=device, contact=contact, name=name, equation=equation)
@@ -256,7 +256,7 @@ def SetupElectronSRVAtInterface(device, interface):
   devsim.set_parameter(device=device, name="alpha_n", value=1e-7)
   iexp="(alpha_n@r0)*(Electrons@r0-Electrons@r1)"
   for name, equation in (
-    ("srvElectrons", iexp),
+      ("srvElectrons", iexp),
     ("srvElectrons2", "srvElectrons"),
     ("srvElectrons:Electrons@r0", "diff(%s,Electrons@r0)" % iexp),
     ("srvElectrons:Electrons@r1", "diff(%s,Electrons@r1)" % iexp),

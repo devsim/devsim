@@ -57,13 +57,13 @@ for region in ("dna", "dielectric", "solution"):
 
   # Electric Field Edge Model
   edge_model(device="disk", region=region, name="EField",
-                   equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
+             equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
 
   edge_model(device="disk", region=region, name="EField:Potential@n0",
-                   equation="EdgeInverseLength",)
+             equation="EdgeInverseLength",)
 
   edge_model(device="disk", region=region, name="EField:Potential@n1",
-                   equation="-EdgeInverseLength")
+             equation="-EdgeInverseLength")
 
   edge_model(device="disk", region=region, name="DField",              equation="Permittivity*EField")
   edge_model(device="disk", region=region, name="DField:Potential@n0", equation="Permittivity*EField:Potential@n0")
@@ -133,7 +133,7 @@ for contact in ("top", "bot"):
   node_model(device="disk", region="solution", name="{0}_potential:Potential".format(contact), equation="1")
 
   contact_equation(device="disk", contact=contact, name="PotentialEquation", variable_name="Potential",
-                         node_model="{0}_potential".format(contact), edge_charge_model="DField")
+                   node_model="{0}_potential".format(contact), edge_charge_model="DField")
 
   contact_node_model(device="disk", contact=contact, name="{0}_anion".format(contact), equation="anions - n_bound")
   contact_node_model(device="disk", contact=contact, name="{0}_anion:anions".format(contact), equation="1")

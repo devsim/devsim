@@ -103,7 +103,7 @@ devsim.create_device(mesh="mos", device=device)
 
 
 format_dict= {
-  'gate_doping' : gate_doping,
+    'gate_doping' : gate_doping,
   'source_doping' : source_doping,
   'drain_doping' : drain_doping,
   'body_doping' : body_doping,

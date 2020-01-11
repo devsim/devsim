@@ -74,7 +74,7 @@ rvy="V1.I_ElectronContinuityEquation_real_grady"
 ivy="V1.I_ElectronContinuityEquation_imag_grady"
 
 for name, equation in (
-  ("noisesource", "4*ElectronCharge^2 * ThermalVoltage * mu_n * Electrons"),
+    ("noisesource", "4*ElectronCharge^2 * ThermalVoltage * mu_n * Electrons"),
   ("vfield",      "(%(rvx)s*%(rvx)s+%(ivx)s*%(ivx)s) + (%(rvy)s*%(rvy)s+%(ivy)s*%(ivy)s)" % {"rvx" : rvx, "rvy" : rvy, "ivx" : ivx, "ivy" : ivy}),
   ("noise",       "vfield * noisesource * NodeVolume"),
 ):

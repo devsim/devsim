@@ -21,7 +21,7 @@ region="MyRegion"
 test_common.CreateSimpleMesh(device, region)
 
 for name, equation in (
-  ("NetDoping1", "kahan3(1e20, -1e20, x);"),
+    ("NetDoping1", "kahan3(1e20, -1e20, x);"),
   ("NetDoping2", "kahan4(1e20, -1e20, x,1e14);"),
   ("NetDoping3", "kahan3(x, 1e20, -1e20);"),
   ("NetDoping4", "kahan4(x, 1e20, -1e20, 1e14);"),

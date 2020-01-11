@@ -50,7 +50,7 @@ def parse_gmsh_file(file):
         raise RuntimeError("Unknown %s" % line)
   dimension = max([x[1] for x in physical_names])
   return {
-    'dimension'   : dimension,
+      'dimension'   : dimension,
     'physical_names'       : physical_names,
     'coordinates' : nodes,
     'elements'    : elements
@@ -82,7 +82,7 @@ def read_gmsh_file(filename):
       1 : {},
       2 : {},
       3 : {},
-    }
+  }
   for i, j in enumerate(sorted_physical_names):
     # mapped dimension, physical number, new index
     physical_number_map[j[1]][j[2]] = i
@@ -125,7 +125,7 @@ def read_gmsh_file(filename):
     elements.extend(nodes)
 
   return {
-    'physical_names' : physical_names,
+      'physical_names' : physical_names,
     'coordinates'    : coordinates,
     'elements'       : elements,
   }

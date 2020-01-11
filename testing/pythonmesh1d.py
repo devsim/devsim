@@ -32,7 +32,7 @@ print()
 
 print("physical_names")
 physical_names = [
-  "top",
+    "top",
   "bot",
   "top_contact",
   "bot_contact",

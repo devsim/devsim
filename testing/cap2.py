@@ -45,20 +45,20 @@ for region in regions:
   edge_from_node_model(device=device, region=region, node_model="Potential")
 
   edge_model(device=device, region=region, name="ElectricField",
-                   equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
+             equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
 
   edge_model(device=device, region=region, name="ElectricField:Potential@n0",
-                   equation="EdgeInverseLength")
+             equation="EdgeInverseLength")
 
   edge_model(device=device, region=region, name="ElectricField:Potential@n1",
-                   equation="-EdgeInverseLength")
+             equation="-EdgeInverseLength")
 
   edge_model(device=device, region=region, name="PotentialEdgeFlux", equation="Permittivity*ElectricField")
   edge_model(device=device, region=region, name="PotentialEdgeFlux:Potential@n0", equation="diff(Permittivity*ElectricField, Potential@n0)")
   edge_model(device=device, region=region, name="PotentialEdgeFlux:Potential@n1", equation="-PotentialEdgeFlux:Potential@n0")
 
   equation(device=device, region=region, name="PotentialEquation", variable_name="Potential", node_model="",
-      edge_model="PotentialEdgeFlux", time_node_model="", variable_update="default") 
+           edge_model="PotentialEdgeFlux", time_node_model="", variable_update="default") 
 
 set_parameter(device=device, region="MySiRegion", name="topbias"   , value=1.0)
 set_parameter(device=device, region="MyOxRegion", name="botbias", value=0.0)
@@ -75,14 +75,14 @@ node_model(device=device, region="MyOxRegion", name="botnode_model:Potential", e
 edge_model(device=device, region="MyOxRegion", name="contactcharge_edge_bottom",  equation=conteq)
 
 contact_equation(device=device, contact="top", name="PotentialEquation", variable_name="Potential",
-			node_model="topnode_model", edge_model="",
-			node_charge_model="", edge_charge_model="contactcharge_edge_top",
-			node_current_model="",   edge_current_model="")
+                 node_model="topnode_model", edge_model="",
+                 node_charge_model="", edge_charge_model="contactcharge_edge_top",
+                 node_current_model="",   edge_current_model="")
 
 contact_equation(device=device, contact="bot", name="PotentialEquation", variable_name="Potential",
-			node_model="botnode_model", edge_model="",
-			node_charge_model="", edge_charge_model="contactcharge_edge_bottom",
-			node_current_model="", edge_current_model="")
+                 node_model="botnode_model", edge_model="",
+                 node_charge_model="", edge_charge_model="contactcharge_edge_bottom",
+                 node_current_model="", edge_current_model="")
 
 # type continuous means that regular equations in both regions are swapped into the primary region
 interface_model(device=device, interface=interface, name="continuousPotential", equation="Potential@r0-Potential@r1")

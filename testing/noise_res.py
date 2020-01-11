@@ -33,7 +33,7 @@ devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-7, maximum_iterat
 devsim.solve(type="noise", frequency=1e5, output_node="V1.I")
 devsim.vector_gradient(device=res1.device, region=res1.region, node_model="V1.I_ElectronContinuityEquation_real", calc_type="avoidzero")
 for name in (
-  "V1.I_ElectronContinuityEquation_real",
+    "V1.I_ElectronContinuityEquation_real",
   "V1.I_ElectronContinuityEquation_imag",
   "V1.I_ElectronContinuityEquation_real_gradx",
   "V1.I_ElectronContinuityEquation_imag_gradx",
@@ -44,7 +44,7 @@ rv="V1.I_ElectronContinuityEquation_real_gradx"
 iv="V1.I_ElectronContinuityEquation_imag_gradx"
 
 for name, equation in (
-  ("noisesource", "4*ElectronCharge^2 * ThermalVoltage * mu_n * Electrons"),
+    ("noisesource", "4*ElectronCharge^2 * ThermalVoltage * mu_n * Electrons"),
   ("vfield", "(%(rv)s*%(rv)s+%(iv)s*%(iv)s)" % {'rv' : rv, 'iv' : iv}),
   ("noise", "vec_sum(vfield * noisesource * NodeVolume)"),
 ):

@@ -16,7 +16,7 @@ devsim.set_parameter(name="threads_available", value=2)
 import fpetest1
 
 for name, value in (
-  ("threads_available", 1),
+    ("threads_available", 1),
   ("threads_available", 0),
   ("threads_available", -1),
   ("threads_available", 2),

@@ -56,13 +56,13 @@ devsim.node_model( device=device, region="MyOxRegion", name="botnode_model"     
 devsim.node_model( device=device, region="MyOxRegion", name="botnode_model:Potential", equation="1")
 
 devsim.contact_equation( device=device, contact="top", name="PotentialEquation", variable_name="Potential",
-			 node_model="topnode_model", edge_charge_model="PotentialEdgeFlux")
+                         node_model="topnode_model", edge_charge_model="PotentialEdgeFlux")
 
 devsim.contact_equation( device=device, contact="top", name="PotentialEquation", variable_name="Potential",
-			 node_model="topnode_model", edge_charge_model="PotentialEdgeFlux")
+                         node_model="topnode_model", edge_charge_model="PotentialEdgeFlux")
 
 devsim.contact_equation( device=device, contact="bot", name="PotentialEquation", variable_name="Potential",
-			 node_model="botnode_model", edge_charge_model="PotentialEdgeFlux")
+                         node_model="botnode_model", edge_charge_model="PotentialEdgeFlux")
 
 # type continuous means that regular equations in both regions are swapped into the primary region
 devsim.interface_model( device=device, interface=interface, name="continuousPotential", equation="Potential@r0-Potential@r1")
