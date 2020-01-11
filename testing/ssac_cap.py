@@ -77,7 +77,7 @@ for name, equation in (
   ("botnode_model", "Potential - botbias"),
   ("botnode_model:Potential", "1"),
 ):
-  devsim.node_model(device=device, region=region, name=name, equation=equation)
+    devsim.node_model(device=device, region=region, name=name, equation=equation)
 
 # attached to circuit node
 devsim.contact_equation(device=device, contact="top", name="PotentialEquation", variable_name="Potential",

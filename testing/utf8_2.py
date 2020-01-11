@@ -27,10 +27,10 @@ region = "MyRegion"
 
 create_1d_mesh(mesh="dog")
 for p, s, t in ((0.0, 0.1, "top"), (1.0, 0.1, "bot")):
-  add_1d_mesh_line(mesh = "dog", pos=p, ps = s, tag = t)
+    add_1d_mesh_line(mesh = "dog", pos=p, ps = s, tag = t)
 
 for t in ('top', 'bot'):
-  add_1d_contact(  mesh = "dog", name=t, material="metal", tag=t)
+    add_1d_contact(  mesh = "dog", name=t, material="metal", tag=t)
 
 add_1d_region(   mesh = "dog", material="Si", region = region, tag1 ="top" , tag2 = "bot")
 finalize_mesh(mesh="dog")
@@ -54,7 +54,7 @@ for n, e in (
     ('ElectricField:ψ@n0', 'EdgeInverseLength;'),
     ('ElectricField:ψ@n1', '-EdgeInverseLength;')
 ) :
-  edge_model(name = n, equation = e, **region_info)
+    edge_model(name = n, equation = e, **region_info)
 
 set_parameter(name="topbias",    value = 1.0e-0, **region_info)
 set_parameter(name="botbias", value=0.0, **region_info)
@@ -64,7 +64,7 @@ for n, e in(
     ("ψEdgeFlux:ψ@n0", "diff(Permittivity*ElectricField, ψ@n0);"),
     ("ψEdgeFlux:ψ@n1", "-ψEdgeFlux:ψ@n0;")
 ) :
-  edge_model(name = n, equation = e, **region_info)
+    edge_model(name = n, equation = e, **region_info)
 
 equation(name="ψEquation", variable_name="ψ", node_model="", edge_model="ψEdgeFlux", time_node_model="", variable_update="default", **region_info)
 

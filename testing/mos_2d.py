@@ -22,14 +22,14 @@ silicon_regions = ("gate", "bulk")
 all_regions     = ("gate", "bulk", "oxide")
 
 for i in all_regions:
-  createSolution(device, i, "Potential")
+    createSolution(device, i, "Potential")
 
 for i in silicon_regions:
-  setSiliconParameters(device, i)
-  createSiliconPotentialOnly(device, i)
+    setSiliconParameters(device, i)
+    createSiliconPotentialOnly(device, i)
 for i in oxide_regions:
-  setOxideParameters(device, i)
-  createOxidePotentialOnly(device, "oxide")
+    setOxideParameters(device, i)
+    createOxidePotentialOnly(device, "oxide")
 
 createSiliconPotentialOnlyContact(device, "gate", "gate")
 createSiliconPotentialOnlyContact(device, "bulk", "drain")
@@ -67,18 +67,18 @@ devsim.element_from_edge_model(edge_model="ElectricField", device=device, region
 devsim.write_devices(file="mos_2d_dd.msh", type="devsim")
 
 with open("mos_2d_params.py", "w", encoding="utf-8") as ofh:
-  ofh.write('import devsim\n')
-  for p in devsim.get_parameter_list():
-    v=repr(devsim.get_parameter(name=p))
-    ofh.write('devsim.set_parameter(name="%s", value=%s)\n' % (p, v))
-  for i in devsim.get_device_list():
-    for p in devsim.get_parameter_list(device=i):
-      v=repr(devsim.get_parameter(device=i, name=p))
-      ofh.write('devsim.set_parameter(device="%s", name="%s", value=%s)\n' % (i, p, v))
+    ofh.write('import devsim\n')
+    for p in devsim.get_parameter_list():
+        v=repr(devsim.get_parameter(name=p))
+        ofh.write('devsim.set_parameter(name="%s", value=%s)\n' % (p, v))
+    for i in devsim.get_device_list():
+        for p in devsim.get_parameter_list(device=i):
+            v=repr(devsim.get_parameter(device=i, name=p))
+            ofh.write('devsim.set_parameter(device="%s", name="%s", value=%s)\n' % (i, p, v))
 
-  for i in devsim.get_device_list():
-    for j in devsim.get_region_list(device=i):
-      for p in devsim.get_parameter_list(device=i, region=j):
-        v=repr(devsim.get_parameter(device=i, region=j, name=p))
-        ofh.write('devsim.set_parameter(device="%s", region="%s", name="%s", value=%s)\n' % (i, j, p, v))
+    for i in devsim.get_device_list():
+        for j in devsim.get_region_list(device=i):
+            for p in devsim.get_parameter_list(device=i, region=j):
+                v=repr(devsim.get_parameter(device=i, region=j, name=p))
+                ofh.write('devsim.set_parameter(device="%s", region="%s", name="%s", value=%s)\n' % (i, j, p, v))
 

@@ -26,8 +26,8 @@ for name, equation in (
   ("NetDoping3", "kahan3(x, 1e20, -1e20);"),
   ("NetDoping4", "kahan4(x, 1e20, -1e20, 1e14);"),
 ):
-  devsim.node_model(device=device, region=region, name=name, equation=equation)
-  print(devsim.get_node_model_values(device=device, region=region, name=name))
+    devsim.node_model(device=device, region=region, name=name, equation=equation)
+    print(devsim.get_node_model_values(device=device, region=region, name=name))
 
 print(devsim.symdiff(expr="diff(kahan3(a,b,c),c);"))
 print(devsim.symdiff(expr="diff(kahan4(a,b,c,d),c);"))

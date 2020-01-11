@@ -24,10 +24,10 @@ res1.run_initial_bias(use_circuit_bias=True, net_doping=1e17)
 
 
 for v in (0.0, 1e-3):
-  devsim.circuit_alter(name="V1", value=v)
-  devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-7, maximum_iterations=30)
-  for contact in res1.contacts:
-    test_common.printResistorCurrent(device=res1.device, contact=contact)
+    devsim.circuit_alter(name="V1", value=v)
+    devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-7, maximum_iterations=30)
+    for contact in res1.contacts:
+        test_common.printResistorCurrent(device=res1.device, contact=contact)
 devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-7, maximum_iterations=30)
 
 devsim.solve(type="noise", frequency=1e5, output_node="V1.I")
@@ -38,7 +38,7 @@ for name in (
   "V1.I_ElectronContinuityEquation_real_gradx",
   "V1.I_ElectronContinuityEquation_imag_gradx",
 ):
-  devsim.print_node_values(device=res1.device, region=res1.region, name=name)
+    devsim.print_node_values(device=res1.device, region=res1.region, name=name)
 
 rv="V1.I_ElectronContinuityEquation_real_gradx"
 iv="V1.I_ElectronContinuityEquation_imag_gradx"
@@ -48,6 +48,6 @@ for name, equation in (
   ("vfield", "(%(rv)s*%(rv)s+%(iv)s*%(iv)s)" % {'rv' : rv, 'iv' : iv}),
   ("noise", "vec_sum(vfield * noisesource * NodeVolume)"),
 ):
-  devsim.node_model(device=res1.device, region=res1.region, name=name, equation=equation)
-  devsim.print_node_values(device=res1.device, region=res1.region, name=name)
+    devsim.node_model(device=res1.device, region=res1.region, name=name, equation=equation)
+    devsim.print_node_values(device=res1.device, region=res1.region, name=name)
 

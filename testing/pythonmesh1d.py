@@ -4,22 +4,22 @@ from devsim import *
 print("coordinates")
 coordinates=[]
 for i in range(0,11):
-  coordinates.extend([float(i), 0.0, 0.0])
+    coordinates.extend([float(i), 0.0, 0.0])
 print(coordinates)
 print()
 
 print("elements")
 elements=[]
 for i in range(0,5):
-  # line type, physical region 0
-  x=[1, 0, i, i+1]
-  print(x)
-  elements.extend(x)
+    # line type, physical region 0
+    x=[1, 0, i, i+1]
+    print(x)
+    elements.extend(x)
 for i in range(5,10):
-  # line type, physical region 1
-  x=[1, 1, i, i+1]
-  print(x)
-  elements.extend([1, 1, i, i+1])
+    # line type, physical region 1
+    x=[1, 1, i, i+1]
+    print(x)
+    elements.extend([1, 1, i, i+1])
 
 #points for boundary conditions
 elements.extend([0, 2, 0])

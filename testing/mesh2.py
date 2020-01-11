@@ -17,8 +17,8 @@ import devsim
 devsim.load_devices( file="mesh2.msh")
 
 for x in devsim.get_device_list():
-  for y in devsim.get_region_list(device=x):
-    print("%s %s" % (x, y))
+    for y in devsim.get_region_list(device=x):
+        print("%s %s" % (x, y))
 
 device="MyDevice"
 interface="MySiOx"
@@ -31,18 +31,18 @@ devsim.set_parameter( device=device, region="MyOxRegion", name="Permittivity", v
 devsim.set_parameter( device=device, region="MyOxRegion", name="ElectricCharge", value=1.6e-19)
 
 for region in regions:
-  devsim.node_solution( device=device, region=region, name="Potential")
-  devsim.edge_from_node_model( device=device, region=region, node_model="Potential")
+    devsim.node_solution( device=device, region=region, name="Potential")
+    devsim.edge_from_node_model( device=device, region=region, node_model="Potential")
 
-  devsim.edge_model( device=device, region=region, name="ElectricField", equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
-  devsim.edge_model( device=device, region=region, name="ElectricField:Potential@n0", equation="EdgeInverseLength")
-  devsim.edge_model( device=device, region=region, name="ElectricField:Potential@n1", equation="-EdgeInverseLength")
+    devsim.edge_model( device=device, region=region, name="ElectricField", equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
+    devsim.edge_model( device=device, region=region, name="ElectricField:Potential@n0", equation="EdgeInverseLength")
+    devsim.edge_model( device=device, region=region, name="ElectricField:Potential@n1", equation="-EdgeInverseLength")
 
-  devsim.edge_model( device=device, region=region, name="PotentialEdgeFlux", equation="Permittivity*ElectricField")
-  devsim.edge_model( device=device, region=region, name="PotentialEdgeFlux:Potential@n0", equation="diff(Permittivity*ElectricField, Potential@n0)")
-  devsim.edge_model( device=device, region=region, name="PotentialEdgeFlux:Potential@n1", equation="-PotentialEdgeFlux:Potential@n0")
+    devsim.edge_model( device=device, region=region, name="PotentialEdgeFlux", equation="Permittivity*ElectricField")
+    devsim.edge_model( device=device, region=region, name="PotentialEdgeFlux:Potential@n0", equation="diff(Permittivity*ElectricField, Potential@n0)")
+    devsim.edge_model( device=device, region=region, name="PotentialEdgeFlux:Potential@n1", equation="-PotentialEdgeFlux:Potential@n0")
 
-  devsim.equation( device=device, region=region, name="PotentialEquation", variable_name="Potential", edge_model="PotentialEdgeFlux", variable_update="default")
+    devsim.equation( device=device, region=region, name="PotentialEquation", variable_name="Potential", edge_model="PotentialEdgeFlux", variable_update="default")
 
 devsim.set_parameter( device=device, name="topbias",    value=1.0)
 devsim.set_parameter( device=device, name="botbias", value=0.0)
@@ -73,14 +73,14 @@ devsim.interface_equation( device=device, interface=interface, name="PotentialEq
 
 
 def print_charge():
-  print(devsim.get_contact_charge( device=device, contact="top", equation="PotentialEquation"))
-  print(devsim.get_contact_charge( device=device, contact="bot", equation="PotentialEquation"))
+    print(devsim.get_contact_charge( device=device, contact="top", equation="PotentialEquation"))
+    print(devsim.get_contact_charge( device=device, contact="bot", equation="PotentialEquation"))
 def print_flux():
-  devsim.print_edge_values(device=device, region="MySiRegion", name="PotentialEdgeFlux")
-  devsim.print_edge_values(device=device, region="MyOxRegion", name="PotentialEdgeFlux")
+    devsim.print_edge_values(device=device, region="MySiRegion", name="PotentialEdgeFlux")
+    devsim.print_edge_values(device=device, region="MyOxRegion", name="PotentialEdgeFlux")
 def set_permittivities(ox, si):
-  devsim.set_parameter( device=device, region="MySiRegion", name="Permittivity", value=si*8.85e-14)
-  devsim.set_parameter( device=device, region="MyOxRegion", name="Permittivity", value=ox*8.85e-14)
+    devsim.set_parameter( device=device, region="MySiRegion", name="Permittivity", value=si*8.85e-14)
+    devsim.set_parameter( device=device, region="MyOxRegion", name="Permittivity", value=ox*8.85e-14)
 
 devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 print_charge()

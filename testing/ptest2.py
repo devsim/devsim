@@ -56,8 +56,8 @@ CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
 CreateSiliconPotentialOnly(device, region)
 
 for i in get_contact_list(device=device):
-  set_parameter(device=device, name=GetContactBiasName(i), value=0.0)
-  CreateSiliconPotentialOnlyContact(device, region, i)
+    set_parameter(device=device, name=GetContactBiasName(i), value=0.0)
+    CreateSiliconPotentialOnlyContact(device, region, i)
 
 solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=30)
 
@@ -74,7 +74,7 @@ set_node_values(device=device, region=region, name="Electrons", init_from="Intri
 set_node_values(device=device, region=region, name="Holes",     init_from="IntrinsicHoles")
 CreateSiliconDriftDiffusion(device, region)
 for i in get_contact_list(device=device):
-  CreateSiliconDriftDiffusionAtContact(device, region, i)
+    CreateSiliconDriftDiffusionAtContact(device, region, i)
 
 solve(type="dc", absolute_error=1e10, relative_error=1e-12, maximum_iterations=30)
 x= get_node_model_values(device=device, region=region, name="x")
@@ -88,11 +88,11 @@ x= get_node_model_values(device=device, region=region, name="x")
 
 v = 0.1
 while v < 0.99:
-  set_parameter(device=device, name=GetContactBiasName("top"), value=v)
-  solve(type="dc", absolute_error=1e10, relative_error=1e-12, maximum_iterations=30)
-  PrintCurrents(device, "top")
-  PrintCurrents(device, "bot")
-  v += 0.1
+    set_parameter(device=device, name=GetContactBiasName("top"), value=v)
+    solve(type="dc", absolute_error=1e10, relative_error=1e-12, maximum_iterations=30)
+    PrintCurrents(device, "top")
+    PrintCurrents(device, "bot")
+    v += 0.1
 
 
 

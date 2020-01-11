@@ -29,8 +29,8 @@ test_common.CreateSimpleMesh(device=devices[0], region=region)
 devsim.create_device(mesh="dog", device=devices[1])
 
 for device in devices:
-  test_common.SetupResistorConstants(device=device, region="")
-  test_common.SetupInitialResistorSystem(device, region)
+    test_common.SetupResistorConstants(device=device, region="")
+    test_common.SetupInitialResistorSystem(device, region)
 
 devsim.add_circuit_node(name="cnode0", variable_update="default")
 devsim.add_circuit_node(name="cnode1", variable_update="default")
@@ -52,12 +52,12 @@ devsim.circuit_node_alias(node="GND",    alias="MyDevice2_bot")
 devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=30)
 
 for device in devices:
-  print(device)
-  for name in ("Potential", "IntrinsicElectrons"):
-    devsim.print_node_values(device=device, region=region, name=name)
+    print(device)
+    for name in ("Potential", "IntrinsicElectrons"):
+        devsim.print_node_values(device=device, region=region, name=name)
 
 for device in devices:
-  test_common.SetupCarrierResistorSystem(device=device, region=region)
+    test_common.SetupCarrierResistorSystem(device=device, region=region)
 
 test_common.SetupCarrierResistorContact(device="MyDevice1", contact="top", use_circuit_bias=True, circuit_node="MyDevice1_top")
 test_common.SetupCarrierResistorContact(device="MyDevice1", contact="bot", use_circuit_bias=True, circuit_node="MyDevice1_bot")
@@ -67,9 +67,9 @@ test_common.SetupCarrierResistorContact(device="MyDevice2", contact="bot", use_c
 
 
 for v in (0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10):
-  devsim.circuit_alter(name="V1", value=v)
-  devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-9, maximum_iterations=30)
-  for device in devices:
-    test_common.printResistorCurrent(device=device, contact="top")
-    test_common.printResistorCurrent(device=device, contact="bot")
+    devsim.circuit_alter(name="V1", value=v)
+    devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-9, maximum_iterations=30)
+    for device in devices:
+        test_common.printResistorCurrent(device=device, contact="top")
+        test_common.printResistorCurrent(device=device, contact="bot")
 

@@ -111,15 +111,15 @@ equation(device=device, region=region, name="PotentialEquation", variable_name="
 ### Contact models and equations
 ###
 for c in ("top", "bot"):
-  contact_node_model(device=device, contact=c, name="%s_bc" % c,
-                     equation="Potential - %s_bias" % c)
+    contact_node_model(device=device, contact=c, name="%s_bc" % c,
+                       equation="Potential - %s_bias" % c)
 
-  contact_node_model(device=device, contact=c, name="%s_bc:Potential" % c,
-                     equation="1")
+    contact_node_model(device=device, contact=c, name="%s_bc:Potential" % c,
+                       equation="1")
 
-  contact_equation(device=device, contact=c, name="PotentialEquation",
-                   variable_name="Potential",
-                   node_model="%s_bc" % c, edge_charge_model="DField")
+    contact_equation(device=device, contact=c, name="PotentialEquation",
+                     variable_name="Potential",
+                     node_model="%s_bc" % c, edge_charge_model="DField")
 
 ###
 ### Set the contact 

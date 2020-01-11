@@ -43,18 +43,18 @@ diode_common.DriftDiffusionInitialSolution(device, region, circuit_contacts=["to
 
 v=0.0
 while v < 0.51: 
-  circuit_alter(name="V1", value=v)
-  solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
-  #TODO: get out circuit information
+    circuit_alter(name="V1", value=v)
+    solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
+    #TODO: get out circuit information
 #  PrintCurrents(device, "top")
-  PrintCurrents(device, "bot")
-  solve(type="ac", frequency=1.0)
-  cap=get_circuit_node_value(node="V1.I", solution="ssac_imag")/ (2*3.14159)
-  print("capacitance {0} {1}".format(v, cap))
-  v += 0.1
+    PrintCurrents(device, "bot")
+    solve(type="ac", frequency=1.0)
+    cap=get_circuit_node_value(node="V1.I", solution="ssac_imag")/ (2*3.14159)
+    print("capacitance {0} {1}".format(v, cap))
+    v += 0.1
 
 for x in get_circuit_node_list():
-  for y in get_circuit_solution_list():
-    z = get_circuit_node_value(node=x, solution=y)
-    print(("{0}\t{1}\t{2}".format(x, y, z)))
+    for y in get_circuit_solution_list():
+        z = get_circuit_node_value(node=x, solution=y)
+        print(("{0}\t{1}\t{2}".format(x, y, z)))
 

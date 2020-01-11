@@ -35,11 +35,11 @@
 
 import sys
 try:
-  import numpy
-  import numpy.linalg
+    import numpy
+    import numpy.linalg
 except:
-  print("numpy is not available with your installation and is not being run")
-  sys.exit(-1)
+    print("numpy is not available with your installation and is not being run")
+    sys.exit(-1)
 
 
 from devsim import *

@@ -70,9 +70,9 @@ devsim.set_parameter(name="raxis_zero", value=0.0)
 devsim.set_parameter(name="raxis_variable", value="x")
 
 for region in ("r0", "r1", "r2"):
-  devsim.cylindrical_node_volume(  device=device, region=region)
-  devsim.cylindrical_edge_couple(  device=device, region=region)
-  devsim.cylindrical_surface_area( device=device, region=region)
+    devsim.cylindrical_node_volume(  device=device, region=region)
+    devsim.cylindrical_edge_couple(  device=device, region=region)
+    devsim.cylindrical_surface_area( device=device, region=region)
 
 devsim.write_devices(file="mesh2d.flps", type="floops")
 devsim.write_devices(file="mesh2d.msh",  type="devsim")

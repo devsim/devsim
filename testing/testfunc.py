@@ -47,7 +47,7 @@ symdiff(expr="define(sin(x),  cos(x))")
 # This is a degenerate case causing the result object of this procedure to be the same as
 # one of our original arguments
 def gee(x, y):
-  return x
+    return x
 
 register_function(name="cos", procedure=cos, nargs=1)
 register_function(name="sin", procedure=sin, nargs=1)

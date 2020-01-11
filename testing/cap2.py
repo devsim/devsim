@@ -41,24 +41,24 @@ set_parameter(device=device, region="MyOxRegion", name="Permittivity", value=3.9
 set_parameter(device=device, region="MyOxRegion", name="ElectricCharge", value=1.6e-19)
 
 for region in regions:
-  node_solution(device=device, region=region, name="Potential")
-  edge_from_node_model(device=device, region=region, node_model="Potential")
+    node_solution(device=device, region=region, name="Potential")
+    edge_from_node_model(device=device, region=region, node_model="Potential")
 
-  edge_model(device=device, region=region, name="ElectricField",
-             equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
+    edge_model(device=device, region=region, name="ElectricField",
+               equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
 
-  edge_model(device=device, region=region, name="ElectricField:Potential@n0",
-             equation="EdgeInverseLength")
+    edge_model(device=device, region=region, name="ElectricField:Potential@n0",
+               equation="EdgeInverseLength")
 
-  edge_model(device=device, region=region, name="ElectricField:Potential@n1",
-             equation="-EdgeInverseLength")
+    edge_model(device=device, region=region, name="ElectricField:Potential@n1",
+               equation="-EdgeInverseLength")
 
-  edge_model(device=device, region=region, name="PotentialEdgeFlux", equation="Permittivity*ElectricField")
-  edge_model(device=device, region=region, name="PotentialEdgeFlux:Potential@n0", equation="diff(Permittivity*ElectricField, Potential@n0)")
-  edge_model(device=device, region=region, name="PotentialEdgeFlux:Potential@n1", equation="-PotentialEdgeFlux:Potential@n0")
+    edge_model(device=device, region=region, name="PotentialEdgeFlux", equation="Permittivity*ElectricField")
+    edge_model(device=device, region=region, name="PotentialEdgeFlux:Potential@n0", equation="diff(Permittivity*ElectricField, Potential@n0)")
+    edge_model(device=device, region=region, name="PotentialEdgeFlux:Potential@n1", equation="-PotentialEdgeFlux:Potential@n0")
 
-  equation(device=device, region=region, name="PotentialEquation", variable_name="Potential", node_model="",
-           edge_model="PotentialEdgeFlux", time_node_model="", variable_update="default") 
+    equation(device=device, region=region, name="PotentialEquation", variable_name="Potential", node_model="",
+             edge_model="PotentialEdgeFlux", time_node_model="", variable_update="default") 
 
 set_parameter(device=device, region="MySiRegion", name="topbias"   , value=1.0)
 set_parameter(device=device, region="MyOxRegion", name="botbias", value=0.0)
@@ -127,37 +127,37 @@ print((get_contact_charge(device=device, contact="bot", equation="PotentialEquat
 
 
 def get_rlist():
-  rlist = []
-  for r in get_region_list(device=device):
-    print("Region: " + r)
-    for e in get_equation_list(device=device, region=r):
-      print("Equation: " + e)
-      cmd = get_equation_command(device=device, region=r, name=e)
-      print("Options: " + str(cmd))
-      rlist.append(get_equation_command(device=device, region=r, name=e))
-  return rlist
+    rlist = []
+    for r in get_region_list(device=device):
+        print("Region: " + r)
+        for e in get_equation_list(device=device, region=r):
+            print("Equation: " + e)
+            cmd = get_equation_command(device=device, region=r, name=e)
+            print("Options: " + str(cmd))
+            rlist.append(get_equation_command(device=device, region=r, name=e))
+    return rlist
 
 def get_clist():
-  clist = []
-  for c in get_contact_list(device=device):
-    print("Contact: " + c)
-    for e in get_contact_equation_list(device=device, contact=c):
-      print("Contact Equation: " + e)
-      cmd = get_contact_equation_command(device=device, contact=c, name=e)
-      print("Options: " + str(cmd))
-      clist.append(cmd)
-  return clist
+    clist = []
+    for c in get_contact_list(device=device):
+        print("Contact: " + c)
+        for e in get_contact_equation_list(device=device, contact=c):
+            print("Contact Equation: " + e)
+            cmd = get_contact_equation_command(device=device, contact=c, name=e)
+            print("Options: " + str(cmd))
+            clist.append(cmd)
+    return clist
 
 def get_ilist():
-  ilist = []
-  for i in get_interface_list(device=device):
-    print("Interface: " + i)
-    for e in get_interface_equation_list(device=device, interface=i):
-      print("Interface Equation: " + e)
-      cmd = get_interface_equation_command(device=device, interface=i, name=e)
-      print("Options: " + str(cmd))
-      ilist.append(cmd)
-  return ilist
+    ilist = []
+    for i in get_interface_list(device=device):
+        print("Interface: " + i)
+        for e in get_interface_equation_list(device=device, interface=i):
+            print("Interface Equation: " + e)
+            cmd = get_interface_equation_command(device=device, interface=i, name=e)
+            print("Options: " + str(cmd))
+            ilist.append(cmd)
+    return ilist
 
 rl = get_rlist()
 cl = get_clist()
@@ -167,11 +167,11 @@ print()
 print()
 
 for i in rl:
-  delete_equation(device=i['device'], region=i['region'], name=i['name'])
+    delete_equation(device=i['device'], region=i['region'], name=i['name'])
 for i in il:
-  delete_interface_equation(device=i['device'], interface=i['interface'], name=i['name'])
+    delete_interface_equation(device=i['device'], interface=i['interface'], name=i['name'])
 for i in cl:
-  delete_contact_equation(device=i['device'], contact=i['contact'], name=i['name'])
+    delete_contact_equation(device=i['device'], contact=i['contact'], name=i['name'])
 
 get_rlist()
 get_clist()
@@ -180,11 +180,11 @@ get_ilist()
 #solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 
 for r in rl:
-  equation(**r)
+    equation(**r)
 for c in cl:
-  contact_equation(**c)
+    contact_equation(**c)
 for i in il:
-  interface_equation(**i)
+    interface_equation(**i)
 
 solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 

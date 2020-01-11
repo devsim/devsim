@@ -27,25 +27,25 @@ import dio2_element_physics
 #### Meshing
 ####
 def createMesh(device, region):
-  devsim.create_2d_mesh  (mesh="dog")
-  devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=0     , ps=1e-6)
-  devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=0.5e-5, ps=1e-8)
-  devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=1e-5  , ps=1e-6)
-  devsim.add_2d_mesh_line(mesh="dog", dir="y", pos=0     , ps=1e-6)
-  devsim.add_2d_mesh_line(mesh="dog", dir="y", pos=1e-5  , ps=1e-6)
+    devsim.create_2d_mesh  (mesh="dog")
+    devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=0     , ps=1e-6)
+    devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=0.5e-5, ps=1e-8)
+    devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=1e-5  , ps=1e-6)
+    devsim.add_2d_mesh_line(mesh="dog", dir="y", pos=0     , ps=1e-6)
+    devsim.add_2d_mesh_line(mesh="dog", dir="y", pos=1e-5  , ps=1e-6)
 
-  devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=-1e-8   , ps=1e-8)
-  devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=1.001e-5, ps=1e-8)
+    devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=-1e-8   , ps=1e-8)
+    devsim.add_2d_mesh_line(mesh="dog", dir="x", pos=1.001e-5, ps=1e-8)
 
-  devsim.add_2d_region   (mesh="dog", material="Si", region=region)
-  devsim.add_2d_region   (mesh="dog", material="Si", region="air1", xl=-1e-8,  xh=0)
-  devsim.add_2d_region   (mesh="dog", material="Si", region="air2", xl=1.0e-5, xh=1.001e-5)
+    devsim.add_2d_region   (mesh="dog", material="Si", region=region)
+    devsim.add_2d_region   (mesh="dog", material="Si", region="air1", xl=-1e-8,  xh=0)
+    devsim.add_2d_region   (mesh="dog", material="Si", region="air2", xl=1.0e-5, xh=1.001e-5)
 
-  devsim.add_2d_contact  (mesh="dog", name="top", region=region, yl=0.8e-5, yh=1e-5, xl=0, xh=0, bloat=1e-10, material="metal")
-  devsim.add_2d_contact  (mesh="dog", name="bot", region=region, xl=1e-5,   xh=1e-5, bloat=1e-10, material="metal")
+    devsim.add_2d_contact  (mesh="dog", name="top", region=region, yl=0.8e-5, yh=1e-5, xl=0, xh=0, bloat=1e-10, material="metal")
+    devsim.add_2d_contact  (mesh="dog", name="bot", region=region, xl=1e-5,   xh=1e-5, bloat=1e-10, material="metal")
 
-  devsim.finalize_mesh   (mesh="dog")
-  devsim.create_device   (mesh="dog", device=device)
+    devsim.finalize_mesh   (mesh="dog")
+    devsim.create_device   (mesh="dog", device=device)
 
 
 
@@ -66,7 +66,7 @@ for name, equation in (
   ("Donors",    "1.0e18*step(x-0.5e-5)"),
   ("NetDoping", "Donors-Acceptors"),
 ):
-  devsim.node_model(device=device, region=region, name=name, equation=equation)
+    devsim.node_model(device=device, region=region, name=name, equation=equation)
 
 dio2_element_physics.createPotentialOnly(device, region)
 
@@ -111,11 +111,11 @@ devsim.set_parameter(device=device, region=region, name="topbias", value=0.0)
 
 v=0
 while v < 0.51:
-  devsim.set_parameter(device=device, region=region, name="topbias", value=v)
-  devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
-  dio2_element_physics.printCurrents(device, "top", v)
-  dio2_element_physics.printCurrents(device, "bot", 0.0)
-  v += 0.1
+    devsim.set_parameter(device=device, region=region, name="topbias", value=v)
+    devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
+    dio2_element_physics.printCurrents(device, "top", v)
+    dio2_element_physics.printCurrents(device, "bot", 0.0)
+    v += 0.1
 
 devsim.write_devices(file="dio2_element_2d_dd.flps", type="floops")
 devsim.write_devices(file="dio2_element_2d_dd", type="vtk")

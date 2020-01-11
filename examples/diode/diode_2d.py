@@ -49,9 +49,9 @@ solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=3
 ####
 v = 0.0
 while v < 0.51:
-  set_parameter(device=device, name=GetContactBiasName("top"), value=v)
-  solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
-  PrintCurrents(device, "top")
-  PrintCurrents(device, "bot")
-  v += 0.1
+    set_parameter(device=device, name=GetContactBiasName("top"), value=v)
+    solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
+    PrintCurrents(device, "top")
+    PrintCurrents(device, "bot")
+    v += 0.1
 

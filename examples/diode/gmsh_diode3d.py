@@ -51,11 +51,11 @@ solve(type="dc", absolute_error=1e10, relative_error=1e-8, maximum_iterations=50
 
 v = 0.1
 while v < 0.51:
-  set_parameter(device=device, name=GetContactBiasName("top"), value=v)
-  solve(type="dc", absolute_error=1e10, relative_error=1e-8, maximum_iterations=30)
-  PrintCurrents(device, "top")
-  PrintCurrents(device, "bot")
-  v += 0.1
+    set_parameter(device=device, name=GetContactBiasName("top"), value=v)
+    solve(type="dc", absolute_error=1e10, relative_error=1e-8, maximum_iterations=30)
+    PrintCurrents(device, "top")
+    PrintCurrents(device, "bot")
+    v += 0.1
 
 element_from_edge_model(edge_model="ElectricField",   device=device, region=region)
 element_from_edge_model(edge_model="ElectronCurrent", device=device, region=region)

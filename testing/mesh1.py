@@ -17,8 +17,8 @@ import devsim
 devsim.load_devices( file="mesh1.msh")
 
 for x in devsim.get_device_list():
-  for y in devsim.get_region_list(device=x):
-    print("%s %s" % (x, y))
+    for y in devsim.get_region_list(device=x):
+        print("%s %s" % (x, y))
 
 device="MyDevice"
 region="MyRegion"

@@ -34,38 +34,38 @@ set_parameter(device=device, region="left",  name="jz", value=1)
 set_parameter(device=device, region="right", name="jz", value=-1)
 
 for region in ("air", "left", "right"):
-  node_solution(device=device, region=region, name="Az")
-  edge_from_node_model(device=device, region=region, node_model="Az")
+    node_solution(device=device, region=region, name="Az")
+    edge_from_node_model(device=device, region=region, node_model="Az")
 
-  edge_model(device=device, region=region, name="delAz",
-             equation="(Az@n1 - Az@n0) * EdgeInverseLength")
+    edge_model(device=device, region=region, name="delAz",
+               equation="(Az@n1 - Az@n0) * EdgeInverseLength")
 
-  edge_model( device=device, region=region, name="delAz:Az@n1",
-              equation="EdgeInverseLength")
+    edge_model( device=device, region=region, name="delAz:Az@n1",
+                equation="EdgeInverseLength")
 
-  edge_model( device=device, region=region, name="delAz:Az@n0",
-              equation="-EdgeInverseLength")
+    edge_model( device=device, region=region, name="delAz:Az@n0",
+                equation="-EdgeInverseLength")
 
-  node_model( device=device, region=region, name="Jz",
-              equation="mu * jz")
+    node_model( device=device, region=region, name="Jz",
+                equation="mu * jz")
 
-  equation(device=device, region=region, name="Az_Equation",
-           variable_name="Az", edge_model="delAz", node_model="Jz")
+    equation(device=device, region=region, name="Az_Equation",
+             variable_name="Az", edge_model="delAz", node_model="Jz")
 
 
-  vector_gradient(device=device, region=region, node_model="Az", calc_type="default")
+    vector_gradient(device=device, region=region, node_model="Az", calc_type="default")
 
-  node_model( device=device, region=region, name="Bx", equation="Az_grady")
-  node_model( device=device, region=region, name="By", equation="-Az_gradx")
+    node_model( device=device, region=region, name="Bx", equation="Az_grady")
+    node_model( device=device, region=region, name="By", equation="-Az_gradx")
 
 #### interfaces
 for interface in ("air_left", "air_right"):
-  interface_model( device=device, interface=interface, name="continuousAz",       equation="Az@r0 - Az@r1")
-  interface_model( device=device, interface=interface, name="continuousAz:Az@r0", equation="1.0")
-  interface_model( device=device, interface=interface, name="continuousAz:Az@r1", equation="-1.0")
+    interface_model( device=device, interface=interface, name="continuousAz",       equation="Az@r0 - Az@r1")
+    interface_model( device=device, interface=interface, name="continuousAz:Az@r0", equation="1.0")
+    interface_model( device=device, interface=interface, name="continuousAz:Az@r1", equation="-1.0")
 
-  interface_equation(device=device, interface=interface,  name="Az_Equation",
-                     variable_name="Az", interface_model="continuousAz", type="continuous")
+    interface_equation(device=device, interface=interface,  name="Az_Equation",
+                       variable_name="Az", interface_model="continuousAz", type="continuous")
 
 
 #### contact

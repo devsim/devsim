@@ -58,13 +58,13 @@ test_common.SetupCarrierResistorContact(device=device, contact="top", use_circui
 test_common.SetupCarrierResistorContact(device=device, contact="bot", use_circuit_bias=False)
 
 for v in (0.0, 1e-3):
-  devsim.circuit_alter(name="V1", value=v)
-  devsim.solve(type='dc', absolute_error=1.0e10, relative_error=1e-7, maximum_iterations=30)
-  test_common.printResistorCurrent(device=device, contact="top")
-  test_common.printResistorCurrent(device=device, contact="bot")
+    devsim.circuit_alter(name="V1", value=v)
+    devsim.solve(type='dc', absolute_error=1.0e10, relative_error=1e-7, maximum_iterations=30)
+    test_common.printResistorCurrent(device=device, contact="top")
+    test_common.printResistorCurrent(device=device, contact="bot")
 
 for i in range(4):
-  devsim.solve(type='dc', absolute_error=1.0e10, relative_error=1e-7, maximum_iterations=30)
+    devsim.solve(type='dc', absolute_error=1.0e10, relative_error=1e-7, maximum_iterations=30)
 
 devsim.solve(type="noise", frequency=1e5, output_node="V1.I")
 
@@ -78,7 +78,7 @@ for name, equation in (
   ("vfield",      "(%(rvx)s*%(rvx)s+%(ivx)s*%(ivx)s) + (%(rvy)s*%(rvy)s+%(ivy)s*%(ivy)s)" % {"rvx" : rvx, "rvy" : rvy, "ivx" : ivx, "ivy" : ivy}),
   ("noise",       "vfield * noisesource * NodeVolume"),
 ):
-  devsim.node_model(device=device, region=region, name=name, equation=equation)
+    devsim.node_model(device=device, region=region, name=name, equation=equation)
 
 print(sum(devsim.get_node_model_values(device=device, region=region, name="noise")))
 

@@ -33,41 +33,41 @@ add_db_entry(material="dna",            parameter="Permittivity", value=4  * 8.8
 set_parameter(device="disk", region="solution", name="V_t",   value=0.0238)
 
 for region in ("dna", "dielectric", "solution"):
-  node_solution(device="disk", region=region, name="Potential")
-  edge_from_node_model(device="disk", region=region, node_model="Potential")
+    node_solution(device="disk", region=region, name="Potential")
+    edge_from_node_model(device="disk", region=region, node_model="Potential")
 
-  if dimension == 2:
-    set_parameter(device="disk", name="raxis_variable", value="x")
-    set_parameter(device="disk", name="raxis_zero",     value=0)
-    cylindrical_node_volume(device="disk", region=region)
-    cylindrical_edge_couple(device="disk", region=region)
+    if dimension == 2:
+        set_parameter(device="disk", name="raxis_variable", value="x")
+        set_parameter(device="disk", name="raxis_zero",     value=0)
+        cylindrical_node_volume(device="disk", region=region)
+        cylindrical_edge_couple(device="disk", region=region)
 
-    set_parameter(name="node_volume_model",          value="CylindricalNodeVolume")
-    set_parameter(name="edge_couple_model",          value="CylindricalEdgeCouple")
-    set_parameter(name="element_edge_couple_model",  value="ElementCylindricalEdgeCouple")
-    set_parameter(name="element_node0_volume_model", value="ElementCylindricalNodeVolume@en0")
-    set_parameter(name="element_node1_volume_model", value="ElementCylindricalNodeVolume@en1")
+        set_parameter(name="node_volume_model",          value="CylindricalNodeVolume")
+        set_parameter(name="edge_couple_model",          value="CylindricalEdgeCouple")
+        set_parameter(name="element_edge_couple_model",  value="ElementCylindricalEdgeCouple")
+        set_parameter(name="element_node0_volume_model", value="ElementCylindricalNodeVolume@en0")
+        set_parameter(name="element_node1_volume_model", value="ElementCylindricalNodeVolume@en1")
 
-    x=sum(get_node_model_values(device="disk", region=region, name="CylindricalNodeVolume"))
-    y=sum(get_node_model_values(device="disk", region=region, name="NodeVolume"))
-    print("Volume {0} {1} {2}".format(region, x, y))
-  else:
-    y=sum(get_node_model_values(device="disk", region=region, name="NodeVolume"))
-    print("Volume {0} {1}".format(region, y))
+        x=sum(get_node_model_values(device="disk", region=region, name="CylindricalNodeVolume"))
+        y=sum(get_node_model_values(device="disk", region=region, name="NodeVolume"))
+        print("Volume {0} {1} {2}".format(region, x, y))
+    else:
+        y=sum(get_node_model_values(device="disk", region=region, name="NodeVolume"))
+        print("Volume {0} {1}".format(region, y))
 
-  # Electric Field Edge Model
-  edge_model(device="disk", region=region, name="EField",
-             equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
+    # Electric Field Edge Model
+    edge_model(device="disk", region=region, name="EField",
+               equation="(Potential@n0 - Potential@n1)*EdgeInverseLength")
 
-  edge_model(device="disk", region=region, name="EField:Potential@n0",
-             equation="EdgeInverseLength",)
+    edge_model(device="disk", region=region, name="EField:Potential@n0",
+               equation="EdgeInverseLength",)
 
-  edge_model(device="disk", region=region, name="EField:Potential@n1",
-             equation="-EdgeInverseLength")
+    edge_model(device="disk", region=region, name="EField:Potential@n1",
+               equation="-EdgeInverseLength")
 
-  edge_model(device="disk", region=region, name="DField",              equation="Permittivity*EField")
-  edge_model(device="disk", region=region, name="DField:Potential@n0", equation="Permittivity*EField:Potential@n0")
-  edge_model(device="disk", region=region, name="DField:Potential@n1", equation="Permittivity*EField:Potential@n1")
+    edge_model(device="disk", region=region, name="DField",              equation="Permittivity*EField")
+    edge_model(device="disk", region=region, name="DField:Potential@n0", equation="Permittivity*EField:Potential@n0")
+    edge_model(device="disk", region=region, name="DField:Potential@n1", equation="Permittivity*EField:Potential@n1")
 
 #create anions and cations solution variable in solution (positive only applied in equation)
 node_solution(device="disk", region="solution", name="cations")
@@ -89,9 +89,9 @@ equation(device="disk", region="solution", name="PotentialEquation", variable_na
 
 
 for region in ("dna", "dielectric"):
-  node_model(device="disk", region=region, name="NetCharge", equation="-q*charge_density")
-  equation(device="disk", region=region, name="PotentialEquation", variable_name="Potential",
-           node_model="NetCharge", edge_model="DField", variable_update="default")
+    node_model(device="disk", region=region, name="NetCharge", equation="-q*charge_density")
+    equation(device="disk", region=region, name="PotentialEquation", variable_name="Potential",
+             node_model="NetCharge", edge_model="DField", variable_update="default")
 
 #create fluxes in solution
 # This is complicated, but the Bernoulli functions are a representation of Sharfetter Gummel
@@ -117,8 +117,8 @@ edge_model(device="disk", region="solution", name="CationFlux", equation="{0}".f
 
 #derivatives w.r.t. the solution variables
 for v in ("Potential@n0", "Potential@n1", "anions@n0", "anions@n1", "cations@n0", "cations@n1"):
-  edge_model(device="disk", region="solution", name="AnionFlux:{0}".format(v),  equation="simplify(diff({0},{1}))".format(Ja, v))
-  edge_model(device="disk", region="solution", name="CationFlux:{0}".format(v), equation="simplify(diff({0},{1}))".format(Jc, v))
+    edge_model(device="disk", region="solution", name="AnionFlux:{0}".format(v),  equation="simplify(diff({0},{1}))".format(Ja, v))
+    edge_model(device="disk", region="solution", name="CationFlux:{0}".format(v), equation="simplify(diff({0},{1}))".format(Jc, v))
 
 #create continuity equations in solution
 equation(device="disk", region="solution", name="AnionContinuityEquation", variable_name="anions",
@@ -129,31 +129,31 @@ equation(device="disk", region="solution", name="CationContinuityEquation", vari
 
 #create n0, and potential boundary condition at contact 
 for contact in ("top", "bot"):
-  node_model(device="disk", region="solution", name="{0}_potential".format(contact), equation="Potential - {0}_bias".format(contact))
-  node_model(device="disk", region="solution", name="{0}_potential:Potential".format(contact), equation="1")
+    node_model(device="disk", region="solution", name="{0}_potential".format(contact), equation="Potential - {0}_bias".format(contact))
+    node_model(device="disk", region="solution", name="{0}_potential:Potential".format(contact), equation="1")
 
-  contact_equation(device="disk", contact=contact, name="PotentialEquation", variable_name="Potential",
-                   node_model="{0}_potential".format(contact), edge_charge_model="DField")
+    contact_equation(device="disk", contact=contact, name="PotentialEquation", variable_name="Potential",
+                     node_model="{0}_potential".format(contact), edge_charge_model="DField")
 
-  contact_node_model(device="disk", contact=contact, name="{0}_anion".format(contact), equation="anions - n_bound")
-  contact_node_model(device="disk", contact=contact, name="{0}_anion:anions".format(contact), equation="1")
-  contact_equation(device="disk", contact=contact, name="AnionContinuityEquation", variable_name="anions", node_model="{0}_anion".format(contact))
+    contact_node_model(device="disk", contact=contact, name="{0}_anion".format(contact), equation="anions - n_bound")
+    contact_node_model(device="disk", contact=contact, name="{0}_anion:anions".format(contact), equation="1")
+    contact_equation(device="disk", contact=contact, name="AnionContinuityEquation", variable_name="anions", node_model="{0}_anion".format(contact))
 
-  contact_node_model(device="disk", contact=contact, name="{0}_cation".format(contact), equation="cations - n_bound")
-  contact_node_model(device="disk", contact=contact, name="{0}_cation:cations".format(contact), equation="1")
-  contact_equation(device="disk", contact=contact, name="CationContinuityEquation", variable_name="cations", node_model="{0}_cation".format(contact))
+    contact_node_model(device="disk", contact=contact, name="{0}_cation".format(contact), equation="cations - n_bound")
+    contact_node_model(device="disk", contact=contact, name="{0}_cation:cations".format(contact), equation="1")
+    contact_equation(device="disk", contact=contact, name="CationContinuityEquation", variable_name="cations", node_model="{0}_cation".format(contact))
 
 
 #create potential continuity at interfaces
 for interface in ("dna_solution", "dielectric_solution"):
-  interface_model(device="disk", interface=interface, name="continuousPotential", equation="Potential@r0-Potential@r1")
-  interface_model(device="disk", interface=interface, name="continuousPotential:Potential@r0", equation="1")
-  interface_model(device="disk", interface=interface, name="continuousPotential:Potential@r1", equation="-1")
-  interface_equation(device="disk", interface=interface, name="PotentialEquation", variable_name="Potential", interface_model="continuousPotential", type="continuous")
+    interface_model(device="disk", interface=interface, name="continuousPotential", equation="Potential@r0-Potential@r1")
+    interface_model(device="disk", interface=interface, name="continuousPotential:Potential@r0", equation="1")
+    interface_model(device="disk", interface=interface, name="continuousPotential:Potential@r1", equation="-1")
+    interface_equation(device="disk", interface=interface, name="PotentialEquation", variable_name="Potential", interface_model="continuousPotential", type="continuous")
 
 # For visualization
 for region in ("dna", "dielectric", "solution"):
-  element_from_edge_model(edge_model="EField",     device="disk", region=region)
+    element_from_edge_model(edge_model="EField",     device="disk", region=region)
 element_from_edge_model(edge_model="AnionFlux",  device="disk", region="solution")
 element_from_edge_model(edge_model="CationFlux", device="disk", region="solution")
 

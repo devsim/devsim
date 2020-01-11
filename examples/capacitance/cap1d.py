@@ -79,15 +79,15 @@ equation(device=device, region=region, name="PotentialEquation", variable_name="
 ### Contact models and equations
 ###
 for c in ("contact1", "contact2"):
-  contact_node_model(device=device, contact=c, name="%s_bc" % c,
-                     equation="Potential - %s_bias" % c)
+    contact_node_model(device=device, contact=c, name="%s_bc" % c,
+                       equation="Potential - %s_bias" % c)
 
-  contact_node_model(device=device, contact=c, name="%s_bc:Potential" % c,
-                     equation="1")
+    contact_node_model(device=device, contact=c, name="%s_bc:Potential" % c,
+                       equation="1")
 
-  contact_equation(device=device, contact=c, name="PotentialEquation",
-                   variable_name="Potential",
-                   node_model="%s_bc" % c, edge_charge_model="DField")
+    contact_equation(device=device, contact=c, name="PotentialEquation",
+                     variable_name="Potential",
+                     node_model="%s_bc" % c, edge_charge_model="DField")
 
 ###
 ### Set the contact 
@@ -104,5 +104,5 @@ solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30
 ### Print the charge on the contacts
 ###
 for c in ("contact1", "contact2"):
-  print ("contact: %s charge: %1.5e" % (c, get_contact_charge(device=device, contact=c, equation="PotentialEquation")))
+    print ("contact: %s charge: %1.5e" % (c, get_contact_charge(device=device, contact=c, equation="PotentialEquation")))
 
