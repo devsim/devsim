@@ -1295,10 +1295,10 @@ printNodeValuesCmd(CommandHandler &data)
     {
       std::ostringstream os;
       os << name << "\n";
-      for (size_t i = 0; i < nsl.size(); ++i)
+      os << std::scientific << std::setprecision(5);
+      for (auto v : nsl)
       {
-//// Should makes this a simple test list return
-          os << std::scientific << std::setprecision(5) << nsl[i] << "\n";
+          os << v << "\n";
       }
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       data.SetEmptyResult();
@@ -1380,11 +1380,10 @@ printEdgeValuesCmd(CommandHandler &data)
     {
       std::ostringstream os;
       os << name << "\n";
-      for (size_t i = 0; i < nsl.size(); ++i)
+      os << std::scientific << std::setprecision(5);
+      for (auto v : nsl)
       {
-//// Should makes this a simple test list return
-//// The tclprecision can be set
-          os << std::scientific << std::setprecision(5) << nsl[i] << "\n";
+          os << v << "\n";
       }
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       data.SetEmptyResult();
@@ -1482,11 +1481,10 @@ printElementEdgeValuesCmd(CommandHandler &data)
       {
         std::ostringstream os;
         os << name << "\n";
-        for (size_t i = 0; i < nsl.size(); ++i)
+        os << std::scientific << std::setprecision(5);
+        for (auto v : nsl)
         {
-  //// Should makes this a simple test list return
-  //// The tclprecision can be set
-            os << std::scientific << std::setprecision(5) << nsl[i] << "\n";
+            os << v << "\n";
         }
         OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
         data.SetEmptyResult();
@@ -1510,11 +1508,10 @@ printElementEdgeValuesCmd(CommandHandler &data)
       {
         std::ostringstream os;
         os << name << "\n";
-        for (size_t i = 0; i < nsl.size(); ++i)
+        os << std::scientific << std::setprecision(5);
+        for (auto v : nsl)
         {
-  //// Should makes this a simple test list return
-  //// The tclprecision can be set
-            os << std::scientific << std::setprecision(5) << nsl[i] << "\n";
+            os << v << "\n";
         }
         OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
         data.SetEmptyResult();
