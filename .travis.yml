@@ -21,9 +21,9 @@ addons:
 
 # prevent duplicate builds on tagged versions on master
 # development to be done on other branches
-branches:
-  except:
-    - master
+#branches:
+#  except:
+#    - master
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
