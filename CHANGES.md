@@ -1,21 +1,33 @@
 
 ### Version 1.4.6
 
-Parameter "info" can be queried for getting version information.  The file ``testing/info.py`` contains an example.
+#### Version Information
+
+Parameter ``info`` can be queried for getting version information.  The file ``testing/info.py`` contains an example.
 
 ```
-python info.py
-{'copyright': 'Copyright © 2009-2020 DEVSIM LLC', 'direct_solver': 'mkl_pardiso', 'extended_precision': True, 'license': 'Apache License, Version 2.0', 'version': '1.4.6', 'website': 'https://devsim.org'}
-
+  python info.py
+  {'copyright': 'Copyright © 2009-2020 DEVSIM LLC', 'direct_solver': 'mkl_pardiso', 'extended_precision': True, 'license': 'Apache License, Version 2.0', 'version': '1.4.6', 'website': 'https://devsim.org'}
 ```
+
+#### Extended Precision
 
 The example ``examples/diode/gmsh_diode3d_float128.py`` provides an example where extended precision is enabled.
+
+#### Python Formatting
+
+The Python scripts in the ``examples`` and ``testing`` directories have been reformatted to be more consistent with language standards.
+
+#### Platforms
 
 Microsoft Windows 10 is supported and is now compiled using Microsoft Visual Studio 2019.
 
 Microsoft Windows 7 is no longer supported, as Microsoft has dropped support as of January 14, 2020.
 
-Support for reading Genius Device Simulator Meshes has been removed from the software and documentation.
+#### External Meshing
+
+Support for reading meshes from Genius Device Simulator has been completely removed from DEVSIM.
+
 
 ### Version 1.4.5
 
