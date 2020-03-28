@@ -16,6 +16,7 @@
 from devsim import *
 from devsim.python_packages.simple_physics import *
 import diode_common
+import math
 
 #This requires a circuit element to integrated current
 circuit_element(name="V1", n1=GetContactBiasName("top"), n2=0, value=0.0, acreal=1.0, acimag=0.0)
@@ -49,7 +50,7 @@ while v < 0.51:
 #  PrintCurrents(device, "top")
     PrintCurrents(device, "bot")
     solve(type="ac", frequency=1.0)
-    cap=get_circuit_node_value(node="V1.I", solution="ssac_imag")/ (2*3.14159)
+    cap=get_circuit_node_value(node="V1.I", solution="ssac_imag")/ (-2*math.pi)
     print("capacitance {0} {1}".format(v, cap))
     v += 0.1
 

@@ -192,7 +192,7 @@ def CreateSRH(device, region):
 def CreateECE(device, region, mu_n):
     CreateElectronCurrent(device, region, mu_n)
 
-    NCharge = "ElectronCharge * Electrons"
+    NCharge = "-ElectronCharge * Electrons"
     CreateNodeModel(device, region, "NCharge", NCharge)
     CreateNodeModelDerivative(device, region, "NCharge", NCharge, "Electrons")
 
@@ -202,7 +202,7 @@ def CreateECE(device, region, mu_n):
 
 def CreateHCE(device, region, mu_p):
     CreateHoleCurrent(device, region, mu_p)
-    PCharge = "-ElectronCharge * Holes"
+    PCharge = "ElectronCharge * Holes"
     CreateNodeModel(device, region, "PCharge", PCharge)
     CreateNodeModelDerivative(device, region, "PCharge", PCharge, "Holes")
 
