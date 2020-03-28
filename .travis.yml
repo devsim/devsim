@@ -16,7 +16,7 @@ matrix:
 addons:
   homebrew:
     packages:
-    - gcc@8
+    - gcc@9
     update: false
 
 # prevent duplicate builds on tagged versions on master

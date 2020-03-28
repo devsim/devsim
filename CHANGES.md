@@ -3,6 +3,8 @@
 
 In the simple physics models, the sign for time-derivative terms was wrong for the electron and hole continuity equations.  This affects small-signal and noise simulations.  The example at ``examples/diode/ssac_diode.py`` was updated to reflect the error.
 
+Fix build script issue for macOS on Travis CI, updated the compiler to ``g++-9``.
+
 ### Version 1.4.6
 
 #### Version Information

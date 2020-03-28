@@ -13,10 +13,10 @@ if [ "${1}" = "gcc" ]
   ## the overwrite is to fix the linking issue seen on travis ci
   #brew install gcc || brew link --overwrite gcc;
   #fi
-  export CC=/usr/local/bin/gcc-8;
-  export CXX=/usr/local/bin/g++-8;
-  export F77=/usr/local/bin/gfortran-8;
-  brew unlink gcc && brew link gcc
+  export CC=/usr/local/bin/gcc-9;
+  export CXX=/usr/local/bin/g++-9;
+  export F77=/usr/local/bin/gfortran-9;
+#  brew unlink gcc && brew link gcc
 
   # https://github.com/Microsoft/LightGBM/pull/1560
   # removes symlink
