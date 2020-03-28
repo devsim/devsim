@@ -9,9 +9,9 @@ yum install -y devtoolset-8-gcc devtoolset-8-gcc-c++ devtoolset-8-libquadmath-de
 
 export CMAKE="cmake"
 export CMAKE_CXX_FLAGS=""
-export CC="/opt/rh/devtoolset-6/root/usr/bin/gcc"
-export CXX="/opt/rh/devtoolset-6/root/usr/bin/g++"
-export F77="/opt/rh/devtoolset-6/root/usr/bin/gfortran"
+export CC="/opt/rh/devtoolset-8/root/usr/bin/gcc"
+export CXX="/opt/rh/devtoolset-8/root/usr/bin/g++"
+export F77="/opt/rh/devtoolset-8/root/usr/bin/gfortran"
 
 #minimal conda environments to prevent linking against the wrong libraries
 cd ${HOME}
@@ -41,7 +41,7 @@ cd devsim
 
 # CGNSLIB build
 ####(cd external && curl -L -O https://github.com/CGNS/CGNS/archive/v3.1.4.tar.gz && tar xzf v3.1.4.tar.gz)
-####(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake3  -DCMAKE_C_COMPILER=/opt/rh/devtoolset-6/root/usr/bin/gcc -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
+####(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake3  -DCMAKE_C_COMPILER=/opt/rh/devtoolset-8/root/usr/bin/gcc -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j2 && make install)
 # SUPERLU build
 (cd external/SuperLU_4.3 && sh ../superlu_centos6.sh)
 
