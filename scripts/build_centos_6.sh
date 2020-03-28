@@ -5,8 +5,13 @@ set -e
 #https://fedoraproject.org/wiki/EPEL
 yum install -y git bison flex
 yum install -y centos-release-scl
-yum install -y devtoolset-6-gcc devtoolset-6-gcc-c++ devtoolset-6-libquadmath-devel devtoolset-6-gcc-gfortran
+yum install -y devtoolset-8-gcc devtoolset-8-gcc-c++ devtoolset-8-libquadmath-devel devtoolset-8-gcc-gfortran
 
+export CMAKE="cmake"
+export CMAKE_CXX_FLAGS=""
+export CC="/opt/rh/devtoolset-6/root/usr/bin/gcc"
+export CXX="/opt/rh/devtoolset-6/root/usr/bin/g++"
+export F77="/opt/rh/devtoolset-6/root/usr/bin/gfortran"
 
 #minimal conda environments to prevent linking against the wrong libraries
 cd ${HOME}

@@ -13,6 +13,8 @@ if [ "${1}" = "gcc" ]
   ## the overwrite is to fix the linking issue seen on travis ci
   #brew install gcc || brew link --overwrite gcc;
   #fi
+  export CMAKE="cmake"
+  export CMAKE_CXX_FLAGS=""
   export CC=/usr/local/bin/gcc-9;
   export CXX=/usr/local/bin/g++-9;
   export F77=/usr/local/bin/gfortran-9;
@@ -27,6 +29,8 @@ if [ "${1}" = "gcc" ]
 
 elif [ "${1}" = "clang" ]
   then
+  export CMAKE="cmake"
+  export CMAKE_CXX_FLAGS=""
   export CC=/usr/bin/gcc;
   export CXX=/usr/bin/g++;
   export F77="";
