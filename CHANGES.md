@@ -5,6 +5,8 @@ In the simple physics models, the sign for time-derivative terms was wrong for t
 
 Fix build script issue for macOS on Travis CI, updated the compiler to ``g++-9``.
 
+Update Centos 6 build from ``devtoolset-6`` to ``devtoolset-8``.
+
 ### Version 1.4.6
 
 #### Version Information
