@@ -17,7 +17,7 @@ export F77="/opt/rh/devtoolset-8/root/usr/bin/gfortran"
 cd ${HOME}
 if [ ! -f Miniconda3-latest-Linux-x86_64.sh ]
 then
-curl -O https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh;
+curl -L -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh;
 bash Miniconda3-latest-Linux-x86_64.sh -b -p ${HOME}/anaconda;
 ${HOME}/anaconda/bin/conda create  -y --name python37_devsim_build python=3.7
 ${HOME}/anaconda/bin/conda install -y --name python37_devsim_build mkl mkl-devel mkl-include boost cmake
