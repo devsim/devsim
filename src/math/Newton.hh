@@ -196,7 +196,7 @@ class Newton {
         void LoadIntoRHSPermutated(const RHSEntryVec<DoubleType> &, std::vector<T> &, const permvec_t &, T scl = 1.0, size_t offset = 0);
     private:
         void InitializeTransientAssemble(const TimeMethods::TimeParams<DoubleType> &, size_t, std::vector<DoubleType> &);
-        bool CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &, const std::vector<DoubleType> &);
+        bool CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &, const std::vector<DoubleType> &, ObjectHolderMap_t *ohm);
         void UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &, size_t, const std::vector<DoubleType> &, std::vector<DoubleType> &);
 
         void PrintDeviceErrors(const Device &device, ObjectHolderMap_t *);

@@ -809,7 +809,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
     //// Check to see if your projection was correct
     if (timeinfo.IsIntegration())
     {
-      converged = CheckTransientProjection(timeinfo, newQ);
+      converged = converged && CheckTransientProjection(timeinfo, newQ, ohm);
     }
   }
 
@@ -999,7 +999,7 @@ void Newton<DoubleType>::InitializeTransientAssemble(const TimeMethods::TimePara
 }
 
 template <typename DoubleType>
-bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &timeinfo, const std::vector<DoubleType> &newQ)
+bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &timeinfo, const std::vector<DoubleType> &newQ, ObjectHolderMap_t *ohm)
 {
   const size_t numeqns = newQ.size();
   bool converged = true;
@@ -1028,6 +1028,12 @@ bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<
   std::ostringstream os;
   os << "Charge Relative Error " << std::scientific << std::setprecision(5) << qrel << "\n";
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+
+  if (ohm)
+  {
+    (*ohm)["charge_error"] = ObjectHolder(static_cast<double>(qrel));
+  };
+
   if (qrel > qrelLimit)
   {
     converged = false;
