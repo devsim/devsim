@@ -1,4 +1,8 @@
 
+### Version 1.4.8
+
+In transient mode, the convergence test was flawed so that the ``charge_error`` was the only convergence check required for convergence.  The software now ensures all convergence criteria are met.
+
 ### Version 1.4.7
 
 #### Models
