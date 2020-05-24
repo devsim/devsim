@@ -51,7 +51,8 @@ done
 #### Python files and the examples
 for i in examples testing
 do
-(cd ../$i; git clean -f -d -x )
+#issue with git clean behavior on appveyor
+#(cd ../$i; git clean -f -d -x )
 rsync -aqP --delete ../$i ${DIST_DIR}
 done
 rsync -aqP --delete ../python_packages ${DIST_PYDLL}
