@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 if ! [ $1 ]; then
   echo "must specify dir name"
   exit 2;
