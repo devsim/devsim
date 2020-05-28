@@ -798,11 +798,11 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
           else if (data_type == Solution::DataType::DATA)
           {
             Solution::values_t vals  = sol.GetValues();
-            if (vals.size() != 3 * rp->GetNumberEdges())
+            if (vals.size() != 3 * rp->GetNumberTriangles())
             {
               ret = false;
               std::ostringstream os;
-              os << "Triangle edge data " << sname << " has a different number of values (" << vals.size() << ") then specified for the region " << rname << " (" << 3 * rp->GetNumberEdges() << ")\n";
+              os << "Triangle edge data " << sname << " has a different number of values (" << vals.size() << ") then specified for the region " << rname << " (" << 3 * rp->GetNumberTriangles() << ")\n";
               OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
             }
             else
@@ -827,11 +827,11 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
           else if (data_type == Solution::DataType::DATA)
           {
             Solution::values_t vals  = sol.GetValues();
-            if (vals.size() != 6 * rp->GetNumberEdges())
+            if (vals.size() != 6 * rp->GetNumberTetrahedrons())
             {
               ret = false;
               std::ostringstream os;
-              os << "Tetrahedron edge data " << sname << " has a different number of values (" << vals.size() << ") then specified for the region " << rname << " (" << 6 * rp->GetNumberEdges() << ")\n";
+              os << "Tetrahedron edge data " << sname << " has a different number of values (" << vals.size() << ") then specified for the region " << rname << " (" << 6 * rp->GetNumberTetrahedrons() << ")\n";
               OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
             }
             else
