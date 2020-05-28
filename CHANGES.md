@@ -1,5 +1,5 @@
 
-### Version 1.4.8
+### Version 1.4.9
 
 Support for loading mesh files containing element edge data.
 
