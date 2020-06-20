@@ -135,7 +135,7 @@ class TetrahedronEdgeModel {
 
         size_t GetLength() const
         {
-          return length;
+          return model_data.GetLength();
         }
 
         bool IsZero() const;
@@ -185,7 +185,6 @@ class TetrahedronEdgeModel {
         mutable bool uptodate;
         mutable bool inprocess;
         DisplayType displayType;
-        size_t length;
         static const char *DisplayTypeString[];
 };
 

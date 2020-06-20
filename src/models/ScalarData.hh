@@ -139,7 +139,7 @@ class ScalarData {
 
         void MakeAssignable() const;
 
-        ScalarData();
+        ScalarData() = delete;
         mutable const reftype *refdata;
         mutable std::vector<DoubleType> values;
         mutable bool           isuniform;

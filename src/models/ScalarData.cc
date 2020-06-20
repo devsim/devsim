@@ -70,11 +70,6 @@ ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::operator=(const ScalarData
 }
 
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType>::ScalarData() : refdata(0), isuniform(true), uniform_value(0.0), length(0)
-{
-}
-
-template <typename T, typename DoubleType>
 void ScalarData<T, DoubleType>::MakeAssignable() const
 {
   if (isuniform)
