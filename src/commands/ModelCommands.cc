@@ -1289,10 +1289,10 @@ printNodeValuesCmd(CommandHandler &data)
   else
   {
 
-    const NodeScalarList<double> &nsl = nm_name->GetScalarValues<double>();
-
     if (commandName == "print_node_values")
     {
+      const NodeScalarList<double> &nsl = nm_name->GetScalarValues<double>();
+
       std::ostringstream os;
       os << name << "\n";
       os << std::scientific << std::setprecision(5);
@@ -1305,6 +1305,8 @@ printNodeValuesCmd(CommandHandler &data)
     }
     else if (commandName == "get_node_model_values")
     {
+      const NodeScalarList<double> &nsl = nm_name->GetScalarValues<double>();
+
       SetListAsResult(data, "Node Model", name, nsl);
     }
     else if (commandName == "delete_node_model")
@@ -1375,9 +1377,9 @@ printEdgeValuesCmd(CommandHandler &data)
   }
   else
   {
-    const EdgeScalarList<double> &nsl = nm_name->GetScalarValues<double>();
     if (commandName == "print_edge_values")
     {
+      const EdgeScalarList<double> &nsl = nm_name->GetScalarValues<double>();
       std::ostringstream os;
       os << name << "\n";
       os << std::scientific << std::setprecision(5);
@@ -1390,6 +1392,7 @@ printEdgeValuesCmd(CommandHandler &data)
     }
     else if (commandName == "get_edge_model_values")
     {
+      const EdgeScalarList<double> &nsl = nm_name->GetScalarValues<double>();
       SetListAsResult(data, "Edge Model", name, nsl);
     }
     else if (commandName == "delete_edge_model")
@@ -1476,9 +1479,10 @@ printElementEdgeValuesCmd(CommandHandler &data)
 
     if (triangle_edge_model)
     {
-      const TriangleEdgeScalarList<double> &nsl = triangle_edge_model->GetScalarValues<double>();
       if (commandName == "print_element_values")
       {
+        const TriangleEdgeScalarList<double> &nsl = triangle_edge_model->GetScalarValues<double>();
+
         std::ostringstream os;
         os << name << "\n";
         os << std::scientific << std::setprecision(5);
@@ -1491,6 +1495,8 @@ printElementEdgeValuesCmd(CommandHandler &data)
       }
       else if (commandName == "get_element_model_values")
       {
+        const TriangleEdgeScalarList<double> &nsl = triangle_edge_model->GetScalarValues<double>();
+
         SetListAsResult(data, "Element Edge Model", name, nsl);
       }
       else if (commandName == "delete_element_model")
@@ -1503,9 +1509,10 @@ printElementEdgeValuesCmd(CommandHandler &data)
     }
     else if (tetrahedron_edge_model)
     {
-      const TetrahedronEdgeScalarList<double> &nsl = tetrahedron_edge_model->GetScalarValues<double>();
       if (commandName == "print_element_values")
       {
+        const TetrahedronEdgeScalarList<double> &nsl = tetrahedron_edge_model->GetScalarValues<double>();
+
         std::ostringstream os;
         os << name << "\n";
         os << std::scientific << std::setprecision(5);
@@ -1518,6 +1525,8 @@ printElementEdgeValuesCmd(CommandHandler &data)
       }
       else if (commandName == "get_element_model_values")
       {
+        const TetrahedronEdgeScalarList<double> &nsl = tetrahedron_edge_model->GetScalarValues<double>();
+
         SetListAsResult(data, "Element Edge Model", name, nsl);
       }
       else if (commandName == "delete_element_model")
