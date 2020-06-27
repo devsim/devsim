@@ -12,8 +12,11 @@ All of these dependencies are available by installing:
 Anaconda Python
 https://continuum.io/download
 
-Microsoft Visual C++ Redistributable for Visual Studio 2017
+Microsoft Visual C++ Redistributable for Visual Studio 2019
 https://www.visualstudio.com/downloads
+
+x86 (32 bit): https://aka.ms/vs/16/release/VC_redist.x86.exe
+x64 (64 bit): https://aka.ms/vs/16/release/VC_redist.x64.exe
 
 Setting paths:
 set PYTHONPATH=/path/to/devsim/lib
