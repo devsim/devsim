@@ -49,14 +49,14 @@ bool DenseMatrix<DoubleType>::LUFactor()
 }
 
 template <typename DoubleType>
-bool DenseMatrix<DoubleType>::Solve(std::vector<DoubleType> &B)
+bool DenseMatrix<DoubleType>::Solve(DoubleType *B)
 {
   static char trans = 'N';
   static int  nrhs   = 1;
 
   if (info_ == 0)
   {
-    getrs(&trans, &dim_, &nrhs, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0], reinterpret_cast<DoubleType *>(&B[0]), &dim_, &info_);
+    getrs(&trans, &dim_, &nrhs, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0], B, &dim_, &info_);
   }
   return (info_ == 0);
 }

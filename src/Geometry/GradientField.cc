@@ -161,12 +161,14 @@ Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Triangle &triang
 
   const std::vector<ConstNodePtr> &nl = triangle.GetNodeList();
 
-  static std::vector<DoubleType> B(3);
+  thread_local std::vector<DoubleType> B(3);
+
   for (size_t i = 0; i < 3; ++i)
   {
     B[i] = nvals[nl[i]->GetIndex()];
   }
-  bool info = M.Solve(B);
+
+  bool info = M.Solve(B.data());
 
   if (info)
   {
@@ -194,7 +196,7 @@ Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Tetrahedron &tet
 
   const std::vector<ConstNodePtr> &nl = tetrahedron.GetNodeList();
 
-  static std::vector<DoubleType> B(3);
+  thread_local std::vector<DoubleType> B(3);
   const DoubleType nv0 = nvals[nl[0]->GetIndex()];
 
   for (size_t i = 1; i < 4; ++i)
@@ -202,7 +204,7 @@ Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Tetrahedron &tet
     const DoubleType nvr = nvals[nl[i]->GetIndex()] - nv0;
     B[i-1] = nvr;
   }
-  bool info = M.Solve(B);
+  bool info = M.Solve(B.data());
 
   if (info)
   {

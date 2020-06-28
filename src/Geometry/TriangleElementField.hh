@@ -22,6 +22,7 @@ template <typename T>
 class Vector;
 #include <vector>
 #include <cstddef>
+#include <array>
 
 class Region;
 class Triangle;
@@ -52,12 +53,17 @@ class TriangleElementField {
 
     ~TriangleElementField();
 
-    std::vector<Vector<DoubleType> > GetTriangleElementField(const Triangle &, const TriangleEdgeModel &) const;
-    std::vector<Vector<DoubleType> > GetTriangleElementField(const Triangle &, const EdgeModel &) const;
-    std::vector<Vector<DoubleType> > GetTriangleElementField(const Triangle &, const std::vector<DoubleType> &) const;
-    std::vector<std::vector<Vector<DoubleType> > > GetTriangleElementField(const Triangle &, const EdgeModel &, const EdgeModel &) const;
+    std::vector<Vector<DoubleType> > GetTriangleElementField(const Triangle &, const TriangleEdgeModel &, const TriangleEdgeModel &) const;
+    std::vector<Vector<DoubleType> > GetTriangleElementField(const Triangle &, const TriangleEdgeModel &, const EdgeModel &) const;
+    std::vector<Vector<DoubleType> > GetTriangleElementField(const Triangle &, const TriangleEdgeModel &, const std::vector<DoubleType> &) const;
+    std::vector<std::vector<Vector<DoubleType> > > GetTriangleElementField(const Triangle &, const TriangleEdgeModel &, const EdgeModel &, const EdgeModel &) const;
 
   private:
+    typedef std::array<Vector<DoubleType>, 3> EdgePairVectors_t;
+    typedef std::array<std::array<Vector<DoubleType>, 3>, 3> DerivativeEdgePairVectors_t;
+    const EdgePairVectors_t &GetEdgePairVectors(const Triangle &, const std::vector<DoubleType> &) const;
+    const DerivativeEdgePairVectors_t &GetDerivativeEdgePairVectors(const Triangle &, const std::vector<DoubleType> &, const std::vector<DoubleType> &) const;
+
     TriangleElementField();
     TriangleElementField(const TriangleElementField &);
     TriangleElementField  &operator=(TriangleElementField &);

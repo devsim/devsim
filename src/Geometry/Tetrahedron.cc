@@ -36,8 +36,8 @@ Vector<DoubleType> GetCenter(const std::vector<ConstNodePtr> &nodes)
 {
   const Vector<DoubleType> &v0 = ConvertPosition<DoubleType>(nodes[0]->Position());
 
-  static std::vector<Vector<DoubleType> > vecs(3);
-  static std::vector<DoubleType> B(3);
+  thread_local std::vector<Vector<DoubleType> > vecs(3);
+  thread_local std::vector<DoubleType> B(3);
 
   for (size_t i = 0; i < 3; ++i)
   {
@@ -63,7 +63,7 @@ Vector<DoubleType> GetCenter(const std::vector<ConstNodePtr> &nodes)
     OutputStream::WriteOut(OutputStream::OutputType::FATAL, "BAD TETRAHEDRON");
   }
 
-  const bool info = M.Solve(B);
+  const bool info = M.Solve(B.data());
   if (!info)
   {
     OutputStream::WriteOut(OutputStream::OutputType::FATAL, "BAD TETRAHEDRON");
