@@ -3,7 +3,7 @@
 
 Fixed crash when evaluating element edge model in 3D.
 
-Fixed error potential error using ``delete_node_model`` and similar deletion commands.
+Fixed potential error using ``delete_node_model`` and similar deletion commands.
 
 ### Version 1.4.9
 
