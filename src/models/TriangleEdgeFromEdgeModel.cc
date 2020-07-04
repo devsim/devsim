@@ -45,6 +45,9 @@ void TriangleEdgeFromEdgeModel<DoubleType>::calcTriangleEdgeScalarValues() const
   const ConstTriangleEdgeModelPtr tempy = reg.GetTriangleEdgeModel(y_ModelName);
   dsAssert(tempy.get(), "UNEXPECTED");
 
+  const ConstTriangleEdgeModelPtr eec = reg.GetTriangleEdgeModel("ElementEdgeCouple");
+  dsAssert(eec.get(), "UNEXPECTED");
+
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
 
   std::vector<DoubleType> evx(3*tl.size());
@@ -54,7 +57,7 @@ void TriangleEdgeFromEdgeModel<DoubleType>::calcTriangleEdgeScalarValues() const
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Triangle &triangle = *tl[i];
-    const std::vector<Vector<DoubleType> > &v = efield.GetTriangleElementField(triangle, *emp);
+    const std::vector<Vector<DoubleType> > &v = efield.GetTriangleElementField(triangle, *eec, *emp);
     for (size_t j = 0; j < 3; ++j)
     {
       evx[3*i + j] = v[j].Getx();

@@ -23,6 +23,7 @@ limitations under the License.
 #include "Edge.hh"
 #include "TriangleEdgeModel.hh"
 #include "dsAssert.hh"
+#include <array>
 
 template <typename DoubleType>
 TriangleElementFieldMatrixHolder<DoubleType>::TriangleElementFieldMatrixHolder()
@@ -117,7 +118,7 @@ void TriangleElementField<DoubleType>::CalcMatrices() const
 }
 
 template <typename DoubleType>
-std::vector<Vector<DoubleType> > TriangleElementField<DoubleType>::GetTriangleElementField(const Triangle &triangle, const TriangleEdgeModel &em) const
+std::vector<Vector<DoubleType> > TriangleElementField<DoubleType>::GetTriangleElementField(const Triangle &triangle, const TriangleEdgeModel &eec, const TriangleEdgeModel &em) const
 {
   const size_t triangleIndex = triangle.GetIndex();
 
@@ -131,12 +132,12 @@ std::vector<Vector<DoubleType> > TriangleElementField<DoubleType>::GetTriangleEl
     edgedata[i] = evals[edgeIndex];
   }
 
-  return GetTriangleElementField(triangle, edgedata);
+  return GetTriangleElementField(triangle, eec, edgedata);
 
 }
 
 template <typename DoubleType>
-std::vector<Vector<DoubleType> > TriangleElementField<DoubleType>::GetTriangleElementField(const Triangle &triangle, const EdgeModel &em) const
+std::vector<Vector<DoubleType> > TriangleElementField<DoubleType>::GetTriangleElementField(const Triangle &triangle, const TriangleEdgeModel &eec, const EdgeModel &em) const
 {
   const size_t triangleIndex = triangle.GetIndex();
   const Region::TriangleToConstEdgeList_t &ttelist = myregion_->GetTriangleToEdgeList();
@@ -152,52 +153,63 @@ std::vector<Vector<DoubleType> > TriangleElementField<DoubleType>::GetTriangleEl
     edgedata[i] = evals[edgeIndex];
   }
 
-  return GetTriangleElementField(triangle, edgedata);
+  return GetTriangleElementField(triangle, eec, edgedata);
 
 }
 
-//// This is an abstraction so we can call the same routine for either element edge or regular edge data
 template <typename DoubleType>
-std::vector<Vector<DoubleType> > TriangleElementField<DoubleType>::GetTriangleElementField(const Triangle &triangle, const std::vector<DoubleType> &edgedata) const
+const typename TriangleElementField<DoubleType>::EdgePairVectors_t &TriangleElementField<DoubleType>::GetEdgePairVectors(const Triangle &triangle, const std::vector<DoubleType> &edgedata) const
 {
-
-  std::vector<Vector<DoubleType> > ret(3);
-
   if (dense_mats_.empty())
   {
     CalcMatrices();
   }
 
   const size_t triangleIndex = triangle.GetIndex();
+  thread_local typename TriangleElementField<DoubleType>::EdgePairVectors_t results;
+  thread_local std::array<DoubleType, 2> B;
 
-  ConstTriangleEdgeModelPtr eec = myregion_->GetTriangleEdgeModel("ElementEdgeCouple");
-  dsAssert(eec.get(), "UNEXPECTED");
-  const TriangleEdgeScalarList<DoubleType> &ecouple = eec->GetScalarValues<DoubleType>();
-
-  std::vector<DoubleType> B(2);
-
-  //// These are the components projected onto the element
-  std::vector<Vector<DoubleType> >  results(3);
-  std::vector<DoubleType>  edgeweights(3);
-
-  //// populate edgeweights
   for (size_t mi = 0; mi < 3; ++mi)
   {
-    //// Get the appropriate edge couples
-    //// note that the index correspondes to the edge, not the mindex
-    edgeweights[mi] = ecouple[3*triangleIndex + mi];
-
     //// Calculate the values
     B[0] = edgedata[row0_[mi]];
     B[1] = edgedata[row1_[mi]];
 
     dsMath::RealDenseMatrix<DoubleType> &M = *dense_mats_[triangleIndex].mats[mi];
 
-    bool info = M.Solve(B);
+    bool info = M.Solve(B.data());
     dsAssert(info, "UNEXPECTED");
 
     //// this is the combination of edge i and edge j
     results[mi] = Vector<DoubleType>(B[0], B[1], 0.0);
+  }
+
+
+  return results;
+}
+
+//// This is an abstraction so we can call the same routine for either element edge or regular edge data
+template <typename DoubleType>
+std::vector<Vector<DoubleType> > TriangleElementField<DoubleType>::GetTriangleElementField(const Triangle &triangle, const TriangleEdgeModel &eec, const std::vector<DoubleType> &edgedata) const
+{
+
+  std::vector<Vector<DoubleType> > ret(3);
+
+  const size_t triangleIndex = triangle.GetIndex();
+
+  const TriangleEdgeScalarList<DoubleType> &ecouple = eec.GetScalarValues<DoubleType>();
+
+
+  const auto &results = GetEdgePairVectors(triangle, edgedata);
+  //// These are the components projected onto the element
+  thread_local std::array<DoubleType, 3>  edgeweights;
+
+  //// populate edgeweights
+  for (size_t mi = 0; mi < 3; ++mi)
+  {
+    //// Get the appropriate edge couples
+    //// note that the index corresponds to the edge, not the mindex
+    edgeweights[mi] = ecouple[3*triangleIndex + mi];
   }
 
   //// This is the edge index being filled in
@@ -223,53 +235,27 @@ std::vector<Vector<DoubleType> > TriangleElementField<DoubleType>::GetTriangleEl
   return ret;
 }
 
-//// eindex is the desired edge in (0, 1, 2), nindex is the derivative node we are evaluating
-//// em0 is the @n0
-//// em1 is the @n1
 template <typename DoubleType>
-std::vector<std::vector<Vector<DoubleType> > > TriangleElementField<DoubleType>::GetTriangleElementField(const Triangle &triangle, const EdgeModel &em0, const EdgeModel &em1) const
+const typename TriangleElementField<DoubleType>::DerivativeEdgePairVectors_t &TriangleElementField<DoubleType>::GetDerivativeEdgePairVectors(const Triangle &triangle, const std::vector<DoubleType> &evals0, const std::vector<DoubleType> &evals1) const
 {
-  /// ordered by [nindex][eindex]
-  std::vector<std::vector<Vector<DoubleType> > > ret(3);
-  for (size_t i = 0; i < 3; ++i)
-  {
-    ret[i].resize(3);
-  }
-
   if (dense_mats_.empty())
   {
     CalcMatrices();
   }
 
-  const EdgeScalarList<DoubleType> &evals0 = em0.GetScalarValues<DoubleType>();
-  const EdgeScalarList<DoubleType> &evals1 = em1.GetScalarValues<DoubleType>();
-
   const size_t triangleIndex = triangle.GetIndex();
+  const auto &ttelist = myregion_->GetTriangleToEdgeList();
+  const auto &el = ttelist[triangleIndex];
+  const auto &nl = triangle.GetNodeList();
 
-  ConstTriangleEdgeModelPtr eec = myregion_->GetTriangleEdgeModel("ElementEdgeCouple");
-  dsAssert(eec.get(), "UNEXPECTED");
-  const TriangleEdgeScalarList<DoubleType> &ecouple = eec->GetScalarValues<DoubleType>();
+  thread_local typename TriangleElementField<DoubleType>::DerivativeEdgePairVectors_t results;
 
-  const Region::TriangleToConstEdgeList_t &ttelist = myregion_->GetTriangleToEdgeList();
-
-  const std::vector<ConstEdgePtr> &el = ttelist[triangleIndex];
-
-  const std::vector<ConstNodePtr> &nl = triangle.GetNodeList();
-
-  std::vector<DoubleType> B(2);
-  std::vector<DoubleType>  edgeweights(3);
+  thread_local std::array<DoubleType, 2> B;
 
   //// The first index is which node derivative
   //// The edge index is which edge pair
-  std::vector<std::vector<Vector<DoubleType> > > results(3);
-  for (size_t i = 0; i < 3; ++i)
-  {
-    results[i].resize(3);
-  }
-
   for (size_t mi = 0; mi < 3; ++mi)
   {
-    edgeweights[mi] = ecouple[3*triangleIndex + mi];
 
     const Edge * const edge0 = el[row0_[mi]];
     const Edge * const edge1 = el[row1_[mi]];
@@ -305,11 +291,46 @@ std::vector<std::vector<Vector<DoubleType> > > TriangleElementField<DoubleType>:
       B[1] = ev1;
 
       dsMath::RealDenseMatrix<DoubleType> &M = *dense_mats_[triangleIndex].mats[mi];
-      bool info = M.Solve(B);
+      bool info = M.Solve(B.data());
       dsAssert(info, "UNEXPECTED");
 
       results[ni][mi] = Vector<DoubleType>(B[0], B[1], 0.0);
     }
+  }
+
+  return results;
+}
+
+//// eindex is the desired edge in (0, 1, 2), nindex is the derivative node we are evaluating
+//// em0 is the @n0
+//// em1 is the @n1
+template <typename DoubleType>
+std::vector<std::vector<Vector<DoubleType> > > TriangleElementField<DoubleType>::GetTriangleElementField(const Triangle &triangle, const TriangleEdgeModel &eec, const EdgeModel &em0, const EdgeModel &em1) const
+{
+  /// ordered by [nindex][eindex]
+  std::vector<std::vector<Vector<DoubleType> > > ret(3);
+  for (size_t i = 0; i < 3; ++i)
+  {
+    ret[i].resize(3);
+  }
+
+  const EdgeScalarList<DoubleType> &evals0 = em0.GetScalarValues<DoubleType>();
+  const EdgeScalarList<DoubleType> &evals1 = em1.GetScalarValues<DoubleType>();
+
+  const size_t triangleIndex = triangle.GetIndex();
+  const auto &ttelist = myregion_->GetTriangleToEdgeList();
+  const auto &el = ttelist[triangleIndex];
+  const auto &nl = triangle.GetNodeList();
+
+  const auto &results = GetDerivativeEdgePairVectors(triangle, evals0, evals1);
+
+  const TriangleEdgeScalarList<DoubleType> &ecouple = eec.GetScalarValues<DoubleType>();
+
+  thread_local std::array<DoubleType, 3> edgeweights;
+
+  for (size_t mi = 0; mi < 3; ++mi)
+  {
+    edgeweights[mi] = ecouple[3*triangleIndex + mi];
   }
 
   for (size_t ni = 0; ni < 3; ++ni)

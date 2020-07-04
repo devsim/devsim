@@ -40,7 +40,7 @@ template <typename T> class DenseMatrix {
     bool LUFactor();
 
     //// Done inplace
-    bool Solve(std::vector<T> &);
+    bool Solve(T *);
 
   private:
     DenseMatrix &operator=(const DenseMatrix &);

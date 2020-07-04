@@ -22,6 +22,7 @@ template <typename T>
 class Vector;
 #include <vector>
 #include <cstddef>
+#include <array>
 
 class Region;
 class Tetrahedron;
@@ -60,10 +61,14 @@ class TetrahedronElementField {
     std::vector<Vector<DoubleType> > GetTetrahedronElementField(const Tetrahedron &, const TetrahedronEdgeModel &) const;
     std::vector<Vector<DoubleType> > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &) const;
     std::vector<Vector<DoubleType> > GetTetrahedronElementField(const Tetrahedron &, const std::vector<DoubleType> &) const;
-    //// Gets the weighted average for a given edge index (0, 1, 2) w.r.t. given node index (0, 1, 2)
     std::vector<std::vector<Vector<DoubleType> > > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &, const EdgeModel &) const;
 
   private:
+    typedef std::array<Vector<DoubleType>, 4> NodeVectors_t;
+    typedef std::array<std::array<Vector<DoubleType>, 4>, 4> DerivativeNodeVectors_t;
+    const NodeVectors_t &GetNodeVectors(const Tetrahedron &, const std::vector<DoubleType> &) const;
+    const DerivativeNodeVectors_t &GetDerivativeNodeVectors(const Tetrahedron &, const std::vector<DoubleType> &, const std::vector<DoubleType> &) const;
+
     TetrahedronElementField();
     TetrahedronElementField(const TetrahedronElementField &);
     TetrahedronElementField  &operator=(TetrahedronElementField &);
