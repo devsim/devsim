@@ -1,4 +1,8 @@
 
+### Version 1.4.11
+
+Fixed issue where command option names where not shown in the documentation.
+
 ### Version 1.4.10
 
 Fixed crash when evaluating element edge model in 3D.
