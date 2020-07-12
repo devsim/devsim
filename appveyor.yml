@@ -15,16 +15,16 @@ version: 1.{build}-win64
 # version: 1.0.{build}-{branch}
 
 # branches to build
-# prevent duplicate builds on tagged versions on master
+# prevent duplicate builds on tagged versions on main
 # development to be done on other branches
 branches:
   except:
-    - master
+    - main
 
 #branches:
 # whitelist
 #only:
-#  - master
+#  - main
 
 # Do not build on tags (GitHub only)
 #skip_tags: true
@@ -191,5 +191,5 @@ deploy:
     force_update: true
     on:
       appveyor_repo_tag: true      # deploy on tag push only
-      #branch: master                # release from master branch only
+      #branch: main                # release from main branch only
 
