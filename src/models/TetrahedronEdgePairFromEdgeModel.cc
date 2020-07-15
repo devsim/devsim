@@ -65,7 +65,7 @@ void TetrahedronEdgePairFromEdgeModel<DoubleType>::calcTetrahedronEdgeScalarValu
     }
   }
 
-  
+
   const TetrahedronElementField<DoubleType> &efield = reg.GetTetrahedronElementField<DoubleType>();
   std::array<typename TetrahedronElementField<DoubleType>::EdgeVectors_t, 2> v;
   for (size_t i = 0; i < tl.size(); ++i)
