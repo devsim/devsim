@@ -59,6 +59,22 @@ TetrahedronElementField<DoubleType>::TetrahedronElementField(const Region *r) : 
 {
 }
 
+template <typename DoubleType>
+void TetrahedronElementField<DoubleType>::PopulateEdgeData(const Tetrahedron &tetrahedron, const EdgeModel &em, std::vector<DoubleType> &edgedata) const
+{
+  const size_t tetrahedronIndex = tetrahedron.GetIndex();
+  const Region::TetrahedronToConstEdgeDataList_t &ttelist = myregion_->GetTetrahedronToEdgeDataList();
+  const ConstEdgeDataList &edgeDataList = ttelist[tetrahedronIndex];
+
+  const EdgeScalarList<DoubleType> &evals = em.GetScalarValues<DoubleType>();
+
+  for (size_t i = 0; i < 6; ++i)
+  {
+    const size_t edgeIndex = (edgeDataList[i]->edge)->GetIndex();
+    edgedata[i] = evals[edgeIndex];
+  }
+}
+
 //// The matrices we develop are for each of the 4 nodes on the Tetrahedron
 //// Each node has 3 edges connected to it
 template <typename DoubleType>
@@ -146,40 +162,29 @@ void TetrahedronElementField<DoubleType>::CalcMatrices() const
 }
 
 template <typename DoubleType>
-std::vector<Vector<DoubleType> > TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const EdgeModel &em) const
+void TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const EdgeModel &em, TetrahedronElementField<DoubleType>::EdgeVectors_t &result) const
 {
-  const size_t tetrahedronIndex = tetrahedron.GetIndex();
-  const Region::TetrahedronToConstEdgeDataList_t &ttelist = myregion_->GetTetrahedronToEdgeDataList();
-  const ConstEdgeDataList &edgeDataList = ttelist[tetrahedronIndex];
-
-  const EdgeScalarList<DoubleType> &evals = em.GetScalarValues<DoubleType>();
-
-  std::vector<DoubleType> edgedata(6);
-  for (size_t i = 0; i < 6; ++i)
-  {
-    const size_t edgeIndex = (edgeDataList[i]->edge)->GetIndex();
-    edgedata[i] = evals[edgeIndex];
-  }
-
-  return GetTetrahedronElementField(tetrahedron, edgedata);
+  thread_local std::vector<DoubleType> edgedata(6);
+  PopulateEdgeData(tetrahedron, em, edgedata);
+  GetTetrahedronElementField(tetrahedron, edgedata, result);
 
 }
 
 template <typename DoubleType>
-std::vector<Vector<DoubleType> > TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const TetrahedronEdgeModel &em) const
+void TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const TetrahedronEdgeModel &em, TetrahedronElementField<DoubleType>::EdgeVectors_t &result) const
 {
   const size_t tetrahedronIndex = tetrahedron.GetIndex();
 
   const TetrahedronEdgeScalarList<DoubleType> &evals = em.GetScalarValues<DoubleType>();
 
-  std::vector<DoubleType> edgedata(6);
+  thread_local std::vector<DoubleType> edgedata(6);
   for (size_t i = 0; i < 6; ++i)
   {
     const size_t edgeIndex = 6*tetrahedronIndex + i;
     edgedata[i] = evals[edgeIndex];
   }
 
-  return GetTetrahedronElementField(tetrahedron, edgedata);
+  GetTetrahedronElementField(tetrahedron, edgedata, result);
 
 }
 
@@ -218,32 +223,77 @@ const typename TetrahedronElementField<DoubleType>::NodeVectors_t &TetrahedronEl
 
   return nodeVectors;
 }
-
 template <typename DoubleType>
-std::vector<Vector<DoubleType> > TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const std::vector<DoubleType> &edgedata) const
+void TetrahedronElementField<DoubleType>::GetFieldPairs(const Tetrahedron &tetrahedron, const std::vector<DoubleType> &edgedata, VectorPairs_t &node_based) const
 {
-  std::vector<Vector<DoubleType> > ret(6);
-
   const auto &nodeVectors = GetNodeVectors(tetrahedron, edgedata);
 
   const size_t tetrahedronIndex = tetrahedron.GetIndex();
+  const auto &nodeList = tetrahedron.GetNodeList();
+  const auto &edgeDataList = myregion_->GetTetrahedronToEdgeDataList()[tetrahedronIndex];
 
-  /// for each of the nodes
   for (size_t i = 0; i < 4; ++i)
   {
-    const Vector<DoubleType> &val = static_cast<DoubleType>(0.5) * nodeVectors[i];
-
+    const auto *np = nodeList[i];
+    const auto &val = nodeVectors[i];
     //// calculate the average on the edge
     for (size_t j = 0; j < 3; ++j)
     {
       const size_t eindex = dense_mats_[tetrahedronIndex].edgeIndexes[i][j];
+      const auto *edge = edgeDataList[eindex]->edge;
 
-      //// use equal weighting for each node on the edge
-      ret[eindex] += val;
+      size_t nei;
+      if (edge->GetHead() == np)
+      {
+        nei = 0;
+      }
+      else if (edge->GetTail() == np)
+      {
+        nei = 1;
+      }
+      else
+      {
+        dsAssert(false, "UNEXPECTED");
+      }
+
+      node_based[eindex][nei] = val;
     }
   }
+}
 
-  return ret;
+template <typename DoubleType>
+void TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const std::vector<DoubleType> &edgedata, TetrahedronElementField<DoubleType>::EdgeVectors_t &result) const
+{
+  /// for each of the nodes
+  thread_local VectorPairs_t node_based;
+  GetFieldPairs(tetrahedron, edgedata, node_based);
+
+  static const auto weight = static_cast<DoubleType>(0.5);
+  for (size_t i = 0; i < 6; ++i)
+  {
+    auto &rentry = result[i];
+    auto &nbentry = node_based[i];
+    rentry = nbentry[0] + nbentry[1];
+    rentry *= weight;
+  }
+}
+
+template <typename DoubleType>
+void TetrahedronElementField<DoubleType>::GetTetrahedronElementFieldPairs(const Tetrahedron &tetrahedron, const EdgeModel &em, TetrahedronElementField<DoubleType>::EdgeVectors_t &result0, TetrahedronElementField<DoubleType>::EdgeVectors_t &result1) const
+{
+  thread_local std::vector<DoubleType> edgedata(6);
+  PopulateEdgeData(tetrahedron, em, edgedata);
+
+  /// for each of the nodes
+  thread_local VectorPairs_t node_based;
+  GetFieldPairs(tetrahedron, edgedata, node_based);
+
+  for (size_t i = 0; i < 6; ++i)
+  {
+    auto &nbentry = node_based[i];
+    result0[i] = nbentry[0];
+    result1[i] = nbentry[1];
+  }
 }
 
 template <typename DoubleType>
@@ -308,22 +358,9 @@ const typename TetrahedronElementField<DoubleType>::DerivativeNodeVectors_t &Tet
   }
   return nodeVectors;
 }
-
-//// em0 is the @n0
-//// em1 is the @n1
-//// return matrix is based as 2nd index as edge (0-5), 1st index as derivative w.r.t. node (0-3)
-//// where 2 the first triangle node off edge and 3 is the 2nd triangle node off edge
-//return as [nodeindex][edgeindex]
 template <typename DoubleType>
-std::vector<std::vector<Vector<DoubleType> > > TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const EdgeModel &em0, const EdgeModel &em1) const
+void TetrahedronElementField<DoubleType>::GetDerivativeFieldPairs(const Tetrahedron &tetrahedron, const EdgeModel &em0, const EdgeModel &em1, TetrahedronElementField<DoubleType>::DerivativeVectorPairs_t &node_based_derivatives) const
 {
-  // sized for the 4 derivative nodes
-  std::vector<std::vector<Vector<DoubleType> > > ret(4);
-  for (size_t i = 0; i < 4; ++i)
-  {
-    // has 6 edges
-    ret[i].resize(6);
-  }
 
   const EdgeScalarList<DoubleType> &evals0 = em0.GetScalarValues<DoubleType>();
   const EdgeScalarList<DoubleType> &evals1 = em1.GetScalarValues<DoubleType>();
@@ -339,13 +376,14 @@ std::vector<std::vector<Vector<DoubleType> > > TetrahedronElementField<DoubleTyp
   /// for each of the nodes
   for (size_t i = 0; i < 4; ++i)
   {
+    const auto *np = nodeList[i];
     /// for each of the derivatives
     for (size_t j = 0; j < 4; ++j)
     {
       // the node ordering on the tetrahedron, not the element edge
       const ConstNodePtr dnode = nodeList[j];
 
-      const Vector<DoubleType> &val = static_cast<DoubleType>(0.5) * nodeVectors[i][j];
+      const Vector<DoubleType> &val = nodeVectors[i][j];
 
       //// calculate the average on the edge
       for (size_t k = 0; k < 3; ++k)
@@ -361,27 +399,91 @@ std::vector<std::vector<Vector<DoubleType> > > TetrahedronElementField<DoubleTyp
         const ConstNodePtr nh = edge_ptr->GetHead();
         const ConstNodePtr nt = edge_ptr->GetTail();
 
+        size_t nd = 0;
         if (nh == dnode)
         {
-          ret[0][eindex] += val;
+          nd = 0;
         }
         else if (nt == dnode)
         {
-          ret[1][eindex] += val;
+          nd = 1;
         }
         else if (edata.nodeopp[0] == dnode)
         {
-          ret[2][eindex] += val;
+          nd = 2;
         }
         else if (edata.nodeopp[1] == dnode)
         {
-          ret[3][eindex] += val;
+          nd = 3;
         }
+        else
+        {
+          dsAssert(false, "UNEXPECTED");
+        }
+
+        size_t nei = 0;
+        if (nh == np)
+        {
+          nei = 0;
+        }
+        else if (nt == np)
+        {
+          nei = 1;
+        }
+        else
+        {
+          dsAssert(false, "UNEXPECTED");
+        }
+  
+        node_based_derivatives[nd][eindex][nei] = val;
+        //ret[nd][eindex][np] = val;
       }
     }
   }
+}
 
-  return ret;
+//// em0 is the @n0
+//// em1 is the @n1
+//// return matrix is based as 2nd index as edge (0-5), 1st index as derivative w.r.t. node (0-3)
+//// where 2 the first triangle node off edge and 3 is the 2nd triangle node off edge
+//return as [nodeindex][edgeindex]
+template <typename DoubleType>
+void TetrahedronElementField<DoubleType>::GetTetrahedronElementField(const Tetrahedron &tetrahedron, const EdgeModel &em0, const EdgeModel &em1, TetrahedronElementField<DoubleType>::DerivativeEdgeVectors_t &result) const
+{
+  // result sized for the 4 derivative nodes
+  // has 6 edges
+
+  thread_local TetrahedronElementField<DoubleType>::DerivativeVectorPairs_t node_based_derivatives;
+  GetDerivativeFieldPairs(tetrahedron, em0, em1, node_based_derivatives);
+
+  static const auto weight = static_cast<DoubleType>(0.5);
+  for (size_t i = 0; i < 4; ++i)
+  {
+    for (size_t j = 0; j < 6; ++j)
+    {
+      auto &rentry = result[i][j];
+      auto &nbentry = node_based_derivatives[i][j];
+      rentry = nbentry[0] + nbentry[1];
+      rentry *= weight;
+    }
+  }
+}
+
+template <typename DoubleType>
+void TetrahedronElementField<DoubleType>::GetTetrahedronElementFieldPairs(const Tetrahedron &tetrahedron, const EdgeModel &em0, const EdgeModel &em1, TetrahedronElementField<DoubleType>::DerivativeEdgeVectors_t &result0, TetrahedronElementField<DoubleType>::DerivativeEdgeVectors_t &result1) const
+{
+  thread_local TetrahedronElementField<DoubleType>::DerivativeVectorPairs_t node_based_derivatives;
+  GetDerivativeFieldPairs(tetrahedron, em0, em1, node_based_derivatives);
+
+  for (size_t i = 0; i < 4; ++i)
+  {
+    for (size_t j = 0; j < 6; ++j)
+    {
+      auto &nbentry = node_based_derivatives[i][j];
+      result0[i][j] = nbentry[0];
+      result1[i][j] = nbentry[1];
+    }
+  }
 }
 
 template class TetrahedronElementField<double>;

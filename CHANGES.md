@@ -1,6 +1,8 @@
 
 ### Version 1.4.11
 
+The ``element_pair_from_edge_model`` is available to calculate element edge components averaged onto each node of the element edge.  This makes it possible to create an edge weighting scheme different from those used in ``element_from_edge_model``.
+
 Fixed issue where command option names where not shown in the documentation.
 
 ### Version 1.4.10

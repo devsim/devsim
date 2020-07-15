@@ -123,12 +123,13 @@ void TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::calcTetrahedronEdgeScal
   }
 
   const TetrahedronElementField<DoubleType> &efield = reg.GetTetrahedronElementField<DoubleType>();
+  typename TetrahedronElementField<DoubleType>::DerivativeEdgeVectors_t v;
 
   //// For each tetrahedron
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Tetrahedron &tetrahedron = *tl[i];
-    const std::vector<std::vector<Vector<DoubleType> > > &v = efield.GetTetrahedronElementField(tetrahedron, *emp[0], *emp[1]);
+    efield.GetTetrahedronElementField(tetrahedron, *emp[0], *emp[1], v);
     for (size_t nindex = 0; nindex < 4; ++nindex)
     {
       for (size_t eindex = 0; eindex < 6; ++eindex)
@@ -152,7 +153,7 @@ void TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::calcTetrahedronEdgeScal
 template <typename DoubleType>
 void TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::Serialize(std::ostream &of) const
 {
-  of << "COMMAND element_from_edge_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -edge_model \"" << edgeModelName << "\" -derivative \"" << nodeModelName << "\"";
+  of << "COMMAND element_pair_from_edge_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -edge_model \"" << edgeModelName << "\" -derivative \"" << nodeModelName << "\"";
 }
 
 template class TetrahedronEdgeFromEdgeModelDerivative<double>;

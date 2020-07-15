@@ -1,1841 +1,1843 @@
 
 static const char add_circuit_node_doc[] =
-"    devsim.add_circuit_node (name, value, variable_update)\n"
-"\n"
-"    Adds a circuit node for use in circuit or multi-device simulation\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    name : str\n"
-"       Name of the circuit node being created\n"
-"    value : Float, optional\n"
-"       initial value (default 0.0)\n"
-"    variable_update : {'default', 'log_damp', 'positive'}\n"
-"       update type for circuit variable\n"
-;
+R"(    devsim.add_circuit_node (name, value, variable_update)
+
+    Adds a circuit node for use in circuit or multi-device simulation
+
+    Parameters
+    ----------
+    name : str
+       Name of the circuit node being created
+    value : Float, optional
+       initial value (default 0.0)
+    variable_update : {'default', 'log_damp', 'positive'}
+       update type for circuit variable
+)";
 
 static const char circuit_alter_doc[] =
-"    devsim.circuit_alter (name, param, value)\n"
-"\n"
-"    Alter the value of a circuit element parameter\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    name : str\n"
-"       Name of the circuit node being created\n"
-"    param : str, optional\n"
-"       parameter being modified (default 'value')\n"
-"    value : Float\n"
-"       value for the parameter\n"
-;
+R"(    devsim.circuit_alter (name, param, value)
+
+    Alter the value of a circuit element parameter
+
+    Parameters
+    ----------
+    name : str
+       Name of the circuit node being created
+    param : str, optional
+       parameter being modified (default 'value')
+    value : Float
+       value for the parameter
+)";
 
 static const char circuit_element_doc[] =
-"    devsim.circuit_element (name, value, n1, n2, acreal, acimag)\n"
-"\n"
-"    Adds a circuit element external to the devices\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    name : str\n"
-"       Name of the circuit element being created.  A prefix of 'V' is for voltage source, 'I' for current source, 'R' for resistor, 'L' for inductor, and 'C' for capacitor.\n"
-"    value : Float, optional\n"
-"       value for the default parameter of the circuit element (default 0.0)\n"
-"    n1 : str\n"
-"       circuit node\n"
-"    n2 : str\n"
-"       circuit node\n"
-"    acreal : Float, optional\n"
-"       real part of AC source for voltage (default 0.0)\n"
-"    acimag : Float, optional\n"
-"       imag part of AC source for voltage (default 0.0)\n"
-;
+R"(    devsim.circuit_element (name, value, n1, n2, acreal, acimag)
+
+    Adds a circuit element external to the devices
+
+    Parameters
+    ----------
+    name : str
+       Name of the circuit element being created.  A prefix of 'V' is for voltage source, 'I' for current source, 'R' for resistor, 'L' for inductor, and 'C' for capacitor.
+    value : Float, optional
+       value for the default parameter of the circuit element (default 0.0)
+    n1 : str
+       circuit node
+    n2 : str
+       circuit node
+    acreal : Float, optional
+       real part of AC source for voltage (default 0.0)
+    acimag : Float, optional
+       imag part of AC source for voltage (default 0.0)
+)";
 
 static const char circuit_node_alias_doc[] =
-"    devsim.circuit_node_alias (node, alias)\n"
-"\n"
-"    Create an alias for a circuit node\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    node : str\n"
-"       circuit node being aliased\n"
-"    alias : str\n"
-"       alias for the circuit node\n"
-;
+R"(    devsim.circuit_node_alias (node, alias)
+
+    Create an alias for a circuit node
+
+    Parameters
+    ----------
+    node : str
+       circuit node being aliased
+    alias : str
+       alias for the circuit node
+)";
 
 static const char get_circuit_equation_number_doc[] =
-"    devsim.get_circuit_equation_number (node)\n"
-"\n"
-"    Returns the row number correspond to circuit node in a region.  Values are only valid when during the course of a solve.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    node : str\n"
-"       circuit node\n"
-;
+R"(    devsim.get_circuit_equation_number (node)
+
+    Returns the row number correspond to circuit node in a region.  Values are only valid when during the course of a solve.
+
+    Parameters
+    ----------
+    node : str
+       circuit node
+)";
 
 static const char get_circuit_node_list_doc[] =
-"    devsim.get_circuit_node_list ()\n"
-"\n"
-"    Gets the list of the nodes in the circuit.\n"
-;
+R"(    devsim.get_circuit_node_list ()
+
+    Gets the list of the nodes in the circuit.
+)";
 
 static const char get_circuit_node_value_doc[] =
-"    devsim.get_circuit_node_value (solution, node)\n"
-"\n"
-"    Gets the value of a circuit node for a given solution type.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    solution : str, optional\n"
-"       name of the solution. 'dcop' is the name for the DC solution (default 'dcop')\n"
-"    node : str\n"
-"       circuit node of interest\n"
-;
+R"(    devsim.get_circuit_node_value (solution, node)
+
+    Gets the value of a circuit node for a given solution type.
+
+    Parameters
+    ----------
+    solution : str, optional
+       name of the solution. 'dcop' is the name for the DC solution (default 'dcop')
+    node : str
+       circuit node of interest
+)";
 
 static const char get_circuit_solution_list_doc[] =
-"    devsim.get_circuit_solution_list ()\n"
-"\n"
-"    Gets the list of available circuit solutions.\n"
-;
+R"(    devsim.get_circuit_solution_list ()
+
+    Gets the list of available circuit solutions.
+)";
 
 static const char set_circuit_node_value_doc[] =
-"    devsim.set_circuit_node_value (solution, node, value)\n"
-"\n"
-"    Sets the value of a circuit node for a given solution type.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    solution : str, optional\n"
-"       name of the solution. 'dcop' is the name for the DC solution (default 'dcop')\n"
-"    node : str\n"
-"       circuit node of interest\n"
-"    value : Float, optional\n"
-"       new value (default 0.0)\n"
-;
+R"(    devsim.set_circuit_node_value (solution, node, value)
+
+    Sets the value of a circuit node for a given solution type.
+
+    Parameters
+    ----------
+    solution : str, optional
+       name of the solution. 'dcop' is the name for the DC solution (default 'dcop')
+    node : str
+       circuit node of interest
+    value : Float, optional
+       new value (default 0.0)
+)";
 
 static const char contact_equation_doc[] =
-"    devsim.contact_equation (device, contact, name, variable_name, circuit_node, edge_charge_model, edge_current_model, edge_model, element_charge_model, element_current_model, element_model, node_charge_model, node_current_model, node_model)\n"
-"\n"
-"    Create a contact equation on a device\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    contact : str\n"
-"       Contact on which to apply this command\n"
-"    name : str\n"
-"       Name of the contact equation being created\n"
-"    variable_name : str, optional\n"
-"       The variable name is used to determine the bulk equation we are replacing at this contact (deprecated)\n"
-"    circuit_node : str, optional\n"
-"       Name of the circuit we integrate the flux into\n"
-"    edge_charge_model : str, optional\n"
-"       Name of the edge model used to determine the charge at this contact\n"
-"    edge_current_model : str, optional\n"
-"       Name of the edge model used to determine the current flowing out of this contact\n"
-"    edge_model : str, optional\n"
-"       Name of the edge model being integrated at each edge at this contact\n"
-"    element_charge_model : str, optional\n"
-"       Name of the element edge model used to determine the charge at this contact\n"
-"    element_current_model : str, optional\n"
-"       Name of the element edge model used to determine the current flowing out of this contact\n"
-"    element_model : str, optional\n"
-"       Name of the element edge model being integrated at each edge at this contact\n"
-"    node_charge_model : str, optional\n"
-"       Name of the node model used to determine the charge at this contact\n"
-"    node_current_model : str, optional\n"
-"       Name of the node model used to determine the current flowing out of this contact\n"
-"    node_model : str, optional\n"
-"       Name of the node_model being integrated at each node at this contact\n"
-;
+R"(    devsim.contact_equation (device, contact, name, variable_name, circuit_node, edge_charge_model, edge_current_model, edge_model, element_charge_model, element_current_model, element_model, node_charge_model, node_current_model, node_model)
+
+    Create a contact equation on a device
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    contact : str
+       Contact on which to apply this command
+    name : str
+       Name of the contact equation being created
+    variable_name : str, optional
+       The variable name is used to determine the bulk equation we are replacing at this contact (deprecated)
+    circuit_node : str, optional
+       Name of the circuit we integrate the flux into
+    edge_charge_model : str, optional
+       Name of the edge model used to determine the charge at this contact
+    edge_current_model : str, optional
+       Name of the edge model used to determine the current flowing out of this contact
+    edge_model : str, optional
+       Name of the edge model being integrated at each edge at this contact
+    element_charge_model : str, optional
+       Name of the element edge model used to determine the charge at this contact
+    element_current_model : str, optional
+       Name of the element edge model used to determine the current flowing out of this contact
+    element_model : str, optional
+       Name of the element edge model being integrated at each edge at this contact
+    node_charge_model : str, optional
+       Name of the node model used to determine the charge at this contact
+    node_current_model : str, optional
+       Name of the node model used to determine the current flowing out of this contact
+    node_model : str, optional
+       Name of the node_model being integrated at each node at this contact
+)";
 
 static const char custom_equation_doc[] =
-"    devsim.custom_equation (name, procedure)\n"
-"\n"
-"    Custom equation assembly.  See :ref:`models__customequation` for a description of how the function should be structured.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    name : str\n"
-"       Name of the custom equation being created\n"
-"    procedure : str\n"
-"       The procedure to be called\n"
-;
+R"(    devsim.custom_equation (name, procedure)
+
+    Custom equation assembly.  See :ref:`models__customequation` for a description of how the function should be structured.
+
+    Parameters
+    ----------
+    name : str
+       Name of the custom equation being created
+    procedure : str
+       The procedure to be called
+)";
 
 static const char delete_contact_equation_doc[] =
-"    devsim.delete_contact_equation (device, contact, name)\n"
-"\n"
-"    This command deletes an equation from a contact.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    contact : str\n"
-"       Contact on which to apply this command\n"
-"    name : str\n"
-"       Name of the contact equation being deleted\n"
-;
+R"(    devsim.delete_contact_equation (device, contact, name)
+
+    This command deletes an equation from a contact.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    contact : str
+       Contact on which to apply this command
+    name : str
+       Name of the contact equation being deleted
+)";
 
 static const char delete_equation_doc[] =
-"    devsim.delete_equation (device, region, name)\n"
-"\n"
-"    This command deletes an equation from a region.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the equation being deleted\n"
-;
+R"(    devsim.delete_equation (device, region, name)
+
+    This command deletes an equation from a region.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the equation being deleted
+)";
 
 static const char delete_interface_equation_doc[] =
-"    devsim.delete_interface_equation (device, interface, name)\n"
-"\n"
-"    This command deletes an equation from an interface.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-"    name : str\n"
-"       Name of the interface equation being deleted\n"
-;
+R"(    devsim.delete_interface_equation (device, interface, name)
+
+    This command deletes an equation from an interface.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    interface : str
+       Interface on which to apply this command
+    name : str
+       Name of the interface equation being deleted
+)";
 
 static const char equation_doc[] =
-"    devsim.equation (device, region, name, variable_name, node_model, edge_model, edge_volume_model, time_node_model, element_model, volume_model, variable_update)\n"
-"\n"
-"    Specify an equation to solve on a device\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the equation being created\n"
-"    variable_name : str\n"
-"       Name of the node_solution being solved\n"
-"    node_model : str, optional\n"
-"       Name of the node_model being integrated at each node in the device volume\n"
-"    edge_model : str, optional\n"
-"       Name of the edge model being integrated over each edge in the device volume\n"
-"    edge_volume_model : str, optional\n"
-"       Name of the edge model being integrated over the volume of each edge in the device volume\n"
-"    time_node_model : str, optional\n"
-"       Name of the time dependent node_model being integrated at each node in the device volume\n"
-"    element_model : str, optional\n"
-"       Name of the element_model being integrated over each edge in the device volume\n"
-"    volume_model : str, optional\n"
-"       Name of the element_model being integrated over the volume of each edge in the device volume\n"
-"    variable_update : str, optional\n"
-"       update type for circuit variable (default 'default')\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    The integration variables can be changed in 2D for cylindrical coordinate systems by setting the appropriate parameters as described in :ref:`sec__cylindrical`.\n"
-"\n"
-"    In order to set the node volumes for integration of the ``edge_volume_model``, it is possible to do something like this:\n"
-"\n"
-"    ..\n"
-"      devsim.edge_model(device=\"device\", region=\"region\", name=\"EdgeNodeVolume\", equation=\"0.5*SurfaceArea*EdgeLength\")\n"
-"      devsim.set_parameter(name=\"edge_node0_volume_model\", value=\"EdgeNodeVolume\")\n"
-"      devsim.set_parameter(name=\"edge_node1_volume_model\", value=\"EdgeNodeVolume\")\n"
-"\n"
-;
+R"(    devsim.equation (device, region, name, variable_name, node_model, edge_model, edge_volume_model, time_node_model, element_model, volume_model, variable_update)
+
+    Specify an equation to solve on a device
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the equation being created
+    variable_name : str
+       Name of the node_solution being solved
+    node_model : str, optional
+       Name of the node_model being integrated at each node in the device volume
+    edge_model : str, optional
+       Name of the edge model being integrated over each edge in the device volume
+    edge_volume_model : str, optional
+       Name of the edge model being integrated over the volume of each edge in the device volume
+    time_node_model : str, optional
+       Name of the time dependent node_model being integrated at each node in the device volume
+    element_model : str, optional
+       Name of the element_model being integrated over each edge in the device volume
+    volume_model : str, optional
+       Name of the element_model being integrated over the volume of each edge in the device volume
+    variable_update : {'default', 'log_damp', 'positive'}
+       update type for circuit variable
+
+    Notes
+    -----
+
+    The integration variables can be changed in 2D for cylindrical coordinate systems by setting the appropriate parameters as described in :ref:`sec__cylindrical`.
+
+    In order to set the node volumes for integration of the ``edge_volume_model``, it is possible to do something like this:
+
+    ..
+      devsim.edge_model(device="device", region="region", name="EdgeNodeVolume", equation="0.5*SurfaceArea*EdgeLength")
+      devsim.set_parameter(name="edge_node0_volume_model", value="EdgeNodeVolume")
+      devsim.set_parameter(name="edge_node1_volume_model", value="EdgeNodeVolume")
+
+)";
 
 static const char get_contact_equation_command_doc[] =
-"    devsim.get_contact_equation_command (device, contact, name)\n"
-"\n"
-"    This command gets the options used when creating this contact equation.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    contact : str\n"
-"       Contact on which to apply this command\n"
-"    name : str\n"
-"       Name of the contact equation being command options returned\n"
-;
+R"(    devsim.get_contact_equation_command (device, contact, name)
+
+    This command gets the options used when creating this contact equation.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    contact : str
+       Contact on which to apply this command
+    name : str
+       Name of the contact equation being command options returned
+)";
 
 static const char get_contact_equation_list_doc[] =
-"    devsim.get_contact_equation_list (device, contact)\n"
-"\n"
-"    This command gets a list of equations on the specified contact.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    contact : str\n"
-"       Contact on which to apply this command\n"
-;
+R"(    devsim.get_contact_equation_list (device, contact)
+
+    This command gets a list of equations on the specified contact.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    contact : str
+       Contact on which to apply this command
+)";
 
 static const char get_equation_command_doc[] =
-"    devsim.get_equation_command (device, region, name)\n"
-"\n"
-"    This command gets the options used when creating this equation.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the equation being command options returned\n"
-;
+R"(    devsim.get_equation_command (device, region, name)
+
+    This command gets the options used when creating this equation.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the equation being command options returned
+)";
 
 static const char get_equation_list_doc[] =
-"    devsim.get_equation_list (device, region)\n"
-"\n"
-"    This command gets a list of equations on the specified region.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-;
+R"(    devsim.get_equation_list (device, region)
+
+    This command gets a list of equations on the specified region.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+)";
 
 static const char get_equation_numbers_doc[] =
-"    devsim.get_equation_numbers (device, region, equation, variable)\n"
-"\n"
-"    Returns a list of the equation numbers corresponding to each node in a region.  Values are only valid when during the course of a solve.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    equation : str, optional\n"
-"       Name of the equation\n"
-"    variable : str, optional\n"
-"       Name of the variable\n"
-;
+R"(    devsim.get_equation_numbers (device, region, equation, variable)
+
+    Returns a list of the equation numbers corresponding to each node in a region.  Values are only valid when during the course of a solve.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    equation : str, optional
+       Name of the equation
+    variable : str, optional
+       Name of the variable
+)";
 
 static const char get_interface_equation_command_doc[] =
-"    devsim.get_interface_equation_command (device, interface, name)\n"
-"\n"
-"    This command gets the options used when creating this interface equation.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-"    name : str\n"
-"       Name of the interface equation being command options returned\n"
-;
+R"(    devsim.get_interface_equation_command (device, interface, name)
+
+    This command gets the options used when creating this interface equation.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    interface : str
+       Interface on which to apply this command
+    name : str
+       Name of the interface equation being command options returned
+)";
 
 static const char get_interface_equation_list_doc[] =
-"    devsim.get_interface_equation_list (device, interface)\n"
-"\n"
-"    This command gets a list of equations on the specified interface.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-;
+R"(    devsim.get_interface_equation_list (device, interface)
+
+    This command gets a list of equations on the specified interface.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    interface : str
+       Interface on which to apply this command
+)";
 
 static const char interface_equation_doc[] =
-"    devsim.interface_equation (device, interface, name, name0, name1, variable_name, interface_model, type)\n"
-"\n"
-"    Command to specify an equation at an interface\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-"    name : str\n"
-"       Name of the interface equation being created\n"
-"    name0 : str, optional\n"
-"       Name of the equation coupling in region 0 being created (default 'name')\n"
-"    name1 : str, optional\n"
-"       Name of the equation coupling in region 1 being created (default 'name')\n"
-"    variable_name : str, optional\n"
-"       The variable name is used to determine the bulk equation we are coupling this interface to (deprecated)\n"
-"    interface_model : str\n"
-"       When specified, the bulk equations on both sides of the interface are integrated together.  This model is then used to specify how nodal quantities on both sides of the interface are balanced\n"
-"    type : str\n"
-"       Specifies the type of boundary condition\n"
-;
+R"(    devsim.interface_equation (device, interface, name, name0, name1, variable_name, interface_model, type)
+
+    Command to specify an equation at an interface
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    interface : str
+       Interface on which to apply this command
+    name : str
+       Name of the interface equation being created
+    name0 : str, optional
+       Name of the equation coupling in region 0 being created (default 'name')
+    name1 : str, optional
+       Name of the equation coupling in region 1 being created (default 'name')
+    variable_name : str, optional
+       The variable name is used to determine the bulk equation we are coupling this interface to (deprecated)
+    interface_model : str
+       When specified, the bulk equations on both sides of the interface are integrated together.  This model is then used to specify how nodal quantities on both sides of the interface are balanced
+    type : {'continuous', 'fluxterm', 'hybrid'} required
+       Specifies the type of boundary condition
+)";
 
 static const char get_contact_list_doc[] =
-"    devsim.get_contact_list (device)\n"
-"\n"
-"    Gets a list of contacts on a device.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-;
+R"(    devsim.get_contact_list (device)
+
+    Gets a list of contacts on a device.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+)";
 
 static const char get_device_list_doc[] =
-"    devsim.get_device_list ()\n"
-"\n"
-"    Gets a list of devices on the simulation.\n"
-;
+R"(    devsim.get_device_list ()
+
+    Gets a list of devices on the simulation.
+)";
 
 static const char get_element_node_list_doc[] =
-"    devsim.get_element_node_list (device, region, contact, interface)\n"
-"\n"
-"    Gets a list of nodes for each element on a device, region, contact, or interface.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    contact : str, optional\n"
-"       If specified, gets the element nodes for the contact on the specified region\n"
-"    interface : str, optional\n"
-"       If specified, gets the element nodes for the interface on the specified region\n"
-;
+R"(    devsim.get_element_node_list (device, region, contact, interface)
+
+    Gets a list of nodes for each element on a device, region, contact, or interface.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    contact : str, optional
+       If specified, gets the element nodes for the contact on the specified region
+    interface : str, optional
+       If specified, gets the element nodes for the interface on the specified region
+)";
 
 static const char get_interface_list_doc[] =
-"    devsim.get_interface_list (device)\n"
-"\n"
-"    Gets a list of interfaces on a device.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-;
+R"(    devsim.get_interface_list (device)
+
+    Gets a list of interfaces on a device.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+)";
 
 static const char get_region_list_doc[] =
-"    devsim.get_region_list (device, contact, interface)\n"
-"\n"
-"    Gets a list of regions on a device, contact, or interface.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    contact : str, optional\n"
-"       If specified, gets the name of the region belonging to this contact on the device\n"
-"    interface : str, optional\n"
-"       If specified, gets the name of the regions belonging to this interface on the device\n"
-;
+R"(    devsim.get_region_list (device, contact, interface)
+
+    Gets a list of regions on a device, contact, or interface.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    contact : str, optional
+       If specified, gets the name of the region belonging to this contact on the device
+    interface : str, optional
+       If specified, gets the name of the regions belonging to this interface on the device
+)";
 
 static const char add_db_entry_doc[] =
-"    devsim.add_db_entry (material, parameter, value, unit, description)\n"
-"\n"
-"    Adds an entry to the database\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    material : str\n"
-"       Material name requested. ``global`` refers to all regions whose material does not have the parameter name specified\n"
-"    parameter : str\n"
-"       Parameter name\n"
-"    value : str\n"
-"       Value assigned for the parameter\n"
-"    unit : str\n"
-"       String describing the units for this parameter name\n"
-"    description : str\n"
-"       Description of the parameter for this material type.\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    The :meth:`devsim.save_db` command is used to commit these added entries permanently to the database.\n"
-;
+R"(    devsim.add_db_entry (material, parameter, value, unit, description)
+
+    Adds an entry to the database
+
+    Parameters
+    ----------
+    material : str
+       Material name requested. ``global`` refers to all regions whose material does not have the parameter name specified
+    parameter : str
+       Parameter name
+    value : str
+       Value assigned for the parameter
+    unit : str
+       String describing the units for this parameter name
+    description : str
+       Description of the parameter for this material type.
+
+    Notes
+    -----
+
+    The :meth:`devsim.save_db` command is used to commit these added entries permanently to the database.
+)";
 
 static const char close_db_doc[] =
-"    devsim.close_db ()\n"
-"\n"
-"    Closes the database so that its entries are no longer available\n"
-;
+R"(    devsim.close_db ()
+
+    Closes the database so that its entries are no longer available
+)";
 
 static const char create_db_doc[] =
-"    devsim.create_db (filename)\n"
-"\n"
-"    Create a database to store material properties\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    filename : str\n"
-"       filename to create for the db\n"
-;
+R"(    devsim.create_db (filename)
+
+    Create a database to store material properties
+
+    Parameters
+    ----------
+    filename : str
+       filename to create for the db
+)";
 
 static const char get_db_entry_doc[] =
-"    devsim.get_db_entry (material, parameter)\n"
-"\n"
-"    This command returns a list containing the value, unit, and description for the requested material db entry\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    material : str\n"
-"       Material name\n"
-"    parameter : str\n"
-"       Parameter name\n"
-;
+R"(    devsim.get_db_entry (material, parameter)
+
+    This command returns a list containing the value, unit, and description for the requested material db entry
+
+    Parameters
+    ----------
+    material : str
+       Material name
+    parameter : str
+       Parameter name
+)";
 
 static const char get_dimension_doc[] =
-"    devsim.get_dimension (device)\n"
-"\n"
-"    Get the dimension of the device\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str, optional\n"
-"       The selected device\n"
-;
+R"(    devsim.get_dimension (device)
+
+    Get the dimension of the device
+
+    Parameters
+    ----------
+    device : str, optional
+       The selected device
+)";
 
 static const char get_material_doc[] =
-"    devsim.get_material (device, region, contact)\n"
-"\n"
-"    Returns the material for the specified region\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str, optional\n"
-"       The selected device\n"
-"    region : str, optional\n"
-"       The selected region\n"
-"    contact : str, optional\n"
-"       Contact on which to apply this command\n"
-;
+R"(    devsim.get_material (device, region, contact)
+
+    Returns the material for the specified region
+
+    Parameters
+    ----------
+    device : str, optional
+       The selected device
+    region : str, optional
+       The selected region
+    contact : str, optional
+       Contact on which to apply this command
+)";
 
 static const char get_parameter_doc[] =
-"    devsim.get_parameter (device, region, name)\n"
-"\n"
-"    Get a parameter on a region, device, or globally.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str, optional\n"
-"       The selected device\n"
-"    region : str, optional\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the parameter name being retrieved\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    Note that the ``device`` and ``region`` options are optional.  If the region is not specified, the parameter is retrieved for the entire device.  If the device is not specified, the parameter is retrieved for all devices.  If the parameter is not found on the region, it is retrieved on the device.  If it is not found on the device, it is retrieved over all devices.\n"
-;
+R"(    devsim.get_parameter (device, region, name)
+
+    Get a parameter on a region, device, or globally.
+
+    Parameters
+    ----------
+    device : str, optional
+       The selected device
+    region : str, optional
+       The selected region
+    name : str
+       Name of the parameter name being retrieved
+
+    Notes
+    -----
+
+    Note that the ``device`` and ``region`` options are optional.  If the region is not specified, the parameter is retrieved for the entire device.  If the device is not specified, the parameter is retrieved for all devices.  If the parameter is not found on the region, it is retrieved on the device.  If it is not found on the device, it is retrieved over all devices.
+)";
 
 static const char get_parameter_list_doc[] =
-"    devsim.get_parameter_list (device, region)\n"
-"\n"
-"    Get list of parameter names on region, device, or globally\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str, optional\n"
-"       The selected device\n"
-"    region : str, optional\n"
-"       The selected region\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    Note that the ``device`` and ``region`` options are optional.  If the region is not specified, the parameter is retrieved for the entire device.  If the device is not specified, the parameter is retrieved for all devices.  Unlike the :meth:`devsim.getParameter`, parameter names on the the device are not retrieved if they do not exist on the region.  Similarly, the parameter names over all devices are not retrieved if they do not exist on the device.\n"
-;
+R"(    devsim.get_parameter_list (device, region)
+
+    Get list of parameter names on region, device, or globally
+
+    Parameters
+    ----------
+    device : str, optional
+       The selected device
+    region : str, optional
+       The selected region
+
+    Notes
+    -----
+
+    Note that the ``device`` and ``region`` options are optional.  If the region is not specified, the parameter is retrieved for the entire device.  If the device is not specified, the parameter is retrieved for all devices.  Unlike the :meth:`devsim.getParameter`, parameter names on the the device are not retrieved if they do not exist on the region.  Similarly, the parameter names over all devices are not retrieved if they do not exist on the device.
+)";
 
 static const char open_db_doc[] =
-"    devsim.open_db (filename, permissions)\n"
-"\n"
-"    Open a database storing material properties\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    filename : str\n"
-"       filename to create for the db\n"
-"    permissions : str, optional\n"
-"       permissions on the db (default 'readonly')\n"
-;
+R"(    devsim.open_db (filename, permissions)
+
+    Open a database storing material properties
+
+    Parameters
+    ----------
+    filename : str
+       filename to create for the db
+    permissions : {'readonly', 'readwrite'}
+       permissions on the db
+)";
 
 static const char save_db_doc[] =
-"    devsim.save_db ()\n"
-"\n"
-"    Saves any new or modified db entries to the database file\n"
-;
+R"(    devsim.save_db ()
+
+    Saves any new or modified db entries to the database file
+)";
 
 static const char set_material_doc[] =
-"    devsim.set_material (device, region, contact, material)\n"
-"\n"
-"    Sets the new material for a region\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str, optional\n"
-"       The selected device\n"
-"    region : str, optional\n"
-"       The selected region\n"
-"    contact : str, optional\n"
-"       Contact on which to apply this command\n"
-"    material : str\n"
-"       New material name\n"
-;
+R"(    devsim.set_material (device, region, contact, material)
+
+    Sets the new material for a region
+
+    Parameters
+    ----------
+    device : str, optional
+       The selected device
+    region : str, optional
+       The selected region
+    contact : str, optional
+       Contact on which to apply this command
+    material : str
+       New material name
+)";
 
 static const char set_parameter_doc[] =
-"    devsim.set_parameter (device, region, name, value)\n"
-"\n"
-"    Set a parameter on region, device, or globally\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str, optional\n"
-"       The selected device\n"
-"    region : str, optional\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the parameter name being retrieved\n"
-"    value : any\n"
-"       value to set for the parameter\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    Note that the device and region options are optional.  If the region is not specified, the parameter is set for the entire device.  If the device is not specified, the parameter is set for all devices.\n"
-;
+R"(    devsim.set_parameter (device, region, name, value)
+
+    Set a parameter on region, device, or globally
+
+    Parameters
+    ----------
+    device : str, optional
+       The selected device
+    region : str, optional
+       The selected region
+    name : str
+       Name of the parameter name being retrieved
+    value : any
+       value to set for the parameter
+
+    Notes
+    -----
+
+    Note that the device and region options are optional.  If the region is not specified, the parameter is set for the entire device.  If the device is not specified, the parameter is set for all devices.
+)";
 
 static const char add_1d_contact_doc[] =
-"    devsim.add_1d_contact (material, mesh, name, tag)\n"
-"\n"
-"    Add a contact to a 1D mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    material : str\n"
-"       material for the contact being created\n"
-"    mesh : str\n"
-"       Mesh to add the contact to\n"
-"    name : str\n"
-"       Name for the contact being created\n"
-"    tag : str\n"
-"       Text label for the position to add the contact\n"
-;
+R"(    devsim.add_1d_contact (material, mesh, name, tag)
+
+    Add a contact to a 1D mesh
+
+    Parameters
+    ----------
+    material : str
+       material for the contact being created
+    mesh : str
+       Mesh to add the contact to
+    name : str
+       Name for the contact being created
+    tag : str
+       Text label for the position to add the contact
+)";
 
 static const char add_1d_interface_doc[] =
-"    devsim.add_1d_interface (mesh, tag, name)\n"
-"\n"
-"    Add an interface to a 1D mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       Mesh to add the interface to\n"
-"    tag : str\n"
-"       Text label for the position to add the interface\n"
-"    name : str\n"
-"       Name for the interface being created\n"
-;
+R"(    devsim.add_1d_interface (mesh, tag, name)
+
+    Add an interface to a 1D mesh
+
+    Parameters
+    ----------
+    mesh : str
+       Mesh to add the interface to
+    tag : str
+       Text label for the position to add the interface
+    name : str
+       Name for the interface being created
+)";
 
 static const char add_1d_mesh_line_doc[] =
-"    devsim.add_1d_mesh_line (mesh, tag, pos, ns, ps)\n"
-"\n"
-"    Add a mesh line to a 1D mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       Mesh to add the line to\n"
-"    tag : str, optional\n"
-"       Text label for the position\n"
-"    pos : str\n"
-"       Position for the mesh point\n"
-"    ns : Float, optional\n"
-"       Spacing from this point in the negative direction (default ps value)\n"
-"    ps : Float\n"
-"       Spacing from this point in the positive direction\n"
-;
+R"(    devsim.add_1d_mesh_line (mesh, tag, pos, ns, ps)
+
+    Add a mesh line to a 1D mesh
+
+    Parameters
+    ----------
+    mesh : str
+       Mesh to add the line to
+    tag : str, optional
+       Text label for the position
+    pos : str
+       Position for the mesh point
+    ns : Float, optional
+       Spacing from this point in the negative direction (default ps value)
+    ps : Float
+       Spacing from this point in the positive direction
+)";
 
 static const char add_1d_region_doc[] =
-"    devsim.add_1d_region (mesh, tag1, tag2, region, material)\n"
-"\n"
-"    Add a region to a 1D mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       Mesh to add the line to\n"
-"    tag1 : str\n"
-"       Text label for the position bounding the region being added\n"
-"    tag2 : str\n"
-"       Text label for the position bounding the region being added\n"
-"    region : str\n"
-"       Name for the region being created\n"
-"    material : str\n"
-"       Material for the region being created\n"
-;
+R"(    devsim.add_1d_region (mesh, tag1, tag2, region, material)
+
+    Add a region to a 1D mesh
+
+    Parameters
+    ----------
+    mesh : str
+       Mesh to add the line to
+    tag1 : str
+       Text label for the position bounding the region being added
+    tag2 : str
+       Text label for the position bounding the region being added
+    region : str
+       Name for the region being created
+    material : str
+       Material for the region being created
+)";
 
 static const char add_2d_contact_doc[] =
-"    devsim.add_2d_contact (name, material, mesh, region, xl, xh, yl, yh, bloat)\n"
-"\n"
-"    Add an interface to a 2D mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    name : str\n"
-"       Name for the contact being created\n"
-"    material : str\n"
-"       material for the contact being created\n"
-"    mesh : str\n"
-"       Mesh to add the contact to\n"
-"    region : str\n"
-"       Name of the region included in the contact\n"
-"    xl : Float, optional\n"
-"       x position for corner of bounding box (default -MAXDOUBLE)\n"
-"    xh : Float, optional\n"
-"       x position for corner of bounding box (default +MAXDOUBLE)\n"
-"    yl : Float, optional\n"
-"       y position for corner of bounding box (default -MAXDOUBLE)\n"
-"    yh : Float, optional\n"
-"       y position for corner of bounding box (default +MAXDOUBLE)\n"
-"    bloat : Float, optional\n"
-"       Extend bounding box by this amount when search for mesh to include in region (default 1e-10)\n"
-;
+R"(    devsim.add_2d_contact (name, material, mesh, region, xl, xh, yl, yh, bloat)
+
+    Add an interface to a 2D mesh
+
+    Parameters
+    ----------
+    name : str
+       Name for the contact being created
+    material : str
+       material for the contact being created
+    mesh : str
+       Mesh to add the contact to
+    region : str
+       Name of the region included in the contact
+    xl : Float, optional
+       x position for corner of bounding box (default -MAXDOUBLE)
+    xh : Float, optional
+       x position for corner of bounding box (default +MAXDOUBLE)
+    yl : Float, optional
+       y position for corner of bounding box (default -MAXDOUBLE)
+    yh : Float, optional
+       y position for corner of bounding box (default +MAXDOUBLE)
+    bloat : Float, optional
+       Extend bounding box by this amount when search for mesh to include in region (default 1e-10)
+)";
 
 static const char add_2d_interface_doc[] =
-"    devsim.add_2d_interface (mesh, name, region0, region1, xl, xh, yl, yh, bloat)\n"
-"\n"
-"    Add an interface to a 2D mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       Mesh to add the interface to\n"
-"    name : str\n"
-"       Name for the interface being created\n"
-"    region0 : str\n"
-"       Name of the region included in the interface\n"
-"    region1 : str\n"
-"       Name of the region included in the interface\n"
-"    xl : Float, optional\n"
-"       x position for corner of bounding box (default -MAXDOUBLE)\n"
-"    xh : Float, optional\n"
-"       x position for corner of bounding box (default +MAXDOUBLE)\n"
-"    yl : Float, optional\n"
-"       y position for corner of bounding box (default -MAXDOUBLE)\n"
-"    yh : Float, optional\n"
-"       y position for corner of bounding box (default +MAXDOUBLE)\n"
-"    bloat : Float, optional\n"
-"       Extend bounding box by this amount when search for mesh to include in region (default 1e-10)\n"
-;
+R"(    devsim.add_2d_interface (mesh, name, region0, region1, xl, xh, yl, yh, bloat)
+
+    Add an interface to a 2D mesh
+
+    Parameters
+    ----------
+    mesh : str
+       Mesh to add the interface to
+    name : str
+       Name for the interface being created
+    region0 : str
+       Name of the region included in the interface
+    region1 : str
+       Name of the region included in the interface
+    xl : Float, optional
+       x position for corner of bounding box (default -MAXDOUBLE)
+    xh : Float, optional
+       x position for corner of bounding box (default +MAXDOUBLE)
+    yl : Float, optional
+       y position for corner of bounding box (default -MAXDOUBLE)
+    yh : Float, optional
+       y position for corner of bounding box (default +MAXDOUBLE)
+    bloat : Float, optional
+       Extend bounding box by this amount when search for mesh to include in region (default 1e-10)
+)";
 
 static const char add_2d_mesh_line_doc[] =
-"    devsim.add_2d_mesh_line (mesh, pos, ns, ps)\n"
-"\n"
-"    Add a mesh line to a 2D mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       Mesh to add the line to\n"
-"    pos : str\n"
-"       Position for the mesh point\n"
-"    ns : Float\n"
-"       Spacing from this point in the negative direction\n"
-"    ps : Float\n"
-"       Spacing from this point in the positive direction\n"
-;
+R"(    devsim.add_2d_mesh_line (mesh, pos, ns, ps)
+
+    Add a mesh line to a 2D mesh
+
+    Parameters
+    ----------
+    mesh : str
+       Mesh to add the line to
+    pos : str
+       Position for the mesh point
+    ns : Float
+       Spacing from this point in the negative direction
+    ps : Float
+       Spacing from this point in the positive direction
+)";
 
 static const char add_2d_region_doc[] =
-"    devsim.add_2d_region (mesh, region, material, xl, xh, yl, yh, bloat)\n"
-"\n"
-"    Add a region to a 2D mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       Mesh to add the region to\n"
-"    region : str\n"
-"       Name for the region being created\n"
-"    material : str\n"
-"       Material for the region being created\n"
-"    xl : Float, optional\n"
-"       x position for corner of bounding box (default -MAXDOUBLE)\n"
-"    xh : Float, optional\n"
-"       x position for corner of bounding box (default +MAXDOUBLE)\n"
-"    yl : Float, optional\n"
-"       y position for corner of bounding box (default -MAXDOUBLE)\n"
-"    yh : Float, optional\n"
-"       y position for corner of bounding box (default +MAXDOUBLE)\n"
-"    bloat : Float, optional\n"
-"       Extend bounding box by this amount when search for mesh to include in region (default 1e-10)\n"
-;
+R"(    devsim.add_2d_region (mesh, region, material, xl, xh, yl, yh, bloat)
+
+    Add a region to a 2D mesh
+
+    Parameters
+    ----------
+    mesh : str
+       Mesh to add the region to
+    region : str
+       Name for the region being created
+    material : str
+       Material for the region being created
+    xl : Float, optional
+       x position for corner of bounding box (default -MAXDOUBLE)
+    xh : Float, optional
+       x position for corner of bounding box (default +MAXDOUBLE)
+    yl : Float, optional
+       y position for corner of bounding box (default -MAXDOUBLE)
+    yh : Float, optional
+       y position for corner of bounding box (default +MAXDOUBLE)
+    bloat : Float, optional
+       Extend bounding box by this amount when search for mesh to include in region (default 1e-10)
+)";
 
 static const char add_gmsh_contact_doc[] =
-"    devsim.add_gmsh_contact (gmsh_name, material, mesh, name, region)\n"
-"\n"
-"    Create a mesh to import a Gmsh mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    gmsh_name : str\n"
-"       physical group name in the Gmsh file\n"
-"    material : str\n"
-"       material for the contact being created\n"
-"    mesh : str\n"
-"       name of the mesh being generated\n"
-"    name : str\n"
-"       name of the contact begin created\n"
-"    region : str\n"
-"       region that the contact is attached to\n"
-;
+R"(    devsim.add_gmsh_contact (gmsh_name, material, mesh, name, region)
+
+    Create a mesh to import a Gmsh mesh
+
+    Parameters
+    ----------
+    gmsh_name : str
+       physical group name in the Gmsh file
+    material : str
+       material for the contact being created
+    mesh : str
+       name of the mesh being generated
+    name : str
+       name of the contact begin created
+    region : str
+       region that the contact is attached to
+)";
 
 static const char add_gmsh_interface_doc[] =
-"    devsim.add_gmsh_interface (gmsh_name, mesh, name, region0, region1)\n"
-"\n"
-"    Create an interface for an imported Gmsh mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    gmsh_name : str\n"
-"       physical group name in the Gmsh file\n"
-"    mesh : str\n"
-"       name of the mesh being generated\n"
-"    name : str\n"
-"       name of the interface begin created\n"
-"    region0 : str\n"
-"       first region that the interface is attached to\n"
-"    region1 : str\n"
-"       second region that the interface is attached to\n"
-;
+R"(    devsim.add_gmsh_interface (gmsh_name, mesh, name, region0, region1)
+
+    Create an interface for an imported Gmsh mesh
+
+    Parameters
+    ----------
+    gmsh_name : str
+       physical group name in the Gmsh file
+    mesh : str
+       name of the mesh being generated
+    name : str
+       name of the interface begin created
+    region0 : str
+       first region that the interface is attached to
+    region1 : str
+       second region that the interface is attached to
+)";
 
 static const char add_gmsh_region_doc[] =
-"    devsim.add_gmsh_region (gmsh_name, mesh, region, material)\n"
-"\n"
-"    Create a region for an imported Gmsh mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    gmsh_name : str\n"
-"       physical group name in the Gmsh file\n"
-"    mesh : str\n"
-"       name of the mesh being generated\n"
-"    region : str\n"
-"       name of the region begin created\n"
-"    material : str\n"
-"       material for the region being created\n"
-;
+R"(    devsim.add_gmsh_region (gmsh_name, mesh, region, material)
+
+    Create a region for an imported Gmsh mesh
+
+    Parameters
+    ----------
+    gmsh_name : str
+       physical group name in the Gmsh file
+    mesh : str
+       name of the mesh being generated
+    region : str
+       name of the region begin created
+    material : str
+       material for the region being created
+)";
 
 static const char create_1d_mesh_doc[] =
-"    devsim.create_1d_mesh (mesh)\n"
-"\n"
-"    Create a mesh to create a 1D device\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       name of the 1D mesh being created\n"
-;
+R"(    devsim.create_1d_mesh (mesh)
+
+    Create a mesh to create a 1D device
+
+    Parameters
+    ----------
+    mesh : str
+       name of the 1D mesh being created
+)";
 
 static const char create_2d_mesh_doc[] =
-"    devsim.create_2d_mesh (mesh)\n"
-"\n"
-"    Create a mesh to create a 2D device\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       name of the 2D mesh being created\n"
-;
+R"(    devsim.create_2d_mesh (mesh)
+
+    Create a mesh to create a 2D device
+
+    Parameters
+    ----------
+    mesh : str
+       name of the 2D mesh being created
+)";
 
 static const char create_contact_from_interface_doc[] =
-"    devsim.create_contact_from_interface (device, region, interface, material, name)\n"
-"\n"
-"    Creates a contact on a device from an existing interface\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-"    material : str\n"
-"       material for the contact being created\n"
-"    name : str\n"
-"       name of the contact begin created\n"
-;
+R"(    devsim.create_contact_from_interface (device, region, interface, material, name)
+
+    Creates a contact on a device from an existing interface
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    interface : str
+       Interface on which to apply this command
+    material : str
+       material for the contact being created
+    name : str
+       name of the contact begin created
+)";
 
 static const char create_device_doc[] =
-"    devsim.create_device (mesh, device)\n"
-"\n"
-"    Create a device from a mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       name of the mesh being used to create a device\n"
-"    device : str\n"
-"       name of the device being created\n"
-;
+R"(    devsim.create_device (mesh, device)
+
+    Create a device from a mesh
+
+    Parameters
+    ----------
+    mesh : str
+       name of the mesh being used to create a device
+    device : str
+       name of the device being created
+)";
 
 static const char create_gmsh_mesh_doc[] =
-"    devsim.create_gmsh_mesh (mesh, file, coordinates, elements, physical_names)\n"
-"\n"
-"    Create a mesh to import a Gmsh mesh\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       name of the mesh being generated\n"
-"    file : str, optional\n"
-"       name of the Gmsh mesh file being read into DEVSIM\n"
-"    coordinates : list, optional\n"
-"       List of coordinate positions on mesh.\n"
-"    elements : list, optional\n"
-"       List of elements on the mesh.\n"
-"    physical_names : list, optional\n"
-"       List of names for each contact, interface, and region on mesh.\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    This file will import a Gmsh format mesh from a file.  Alternatively, the mesh structure may be passed in as as arguments:\n"
-"\n"
-"    ``coordinates`` is a float list of positions in the mesh.  Each coordinate adds an x, y, and z position so that the coordinate list length is 3 times the number of coordinates.\n"
-"\n"
-"    ``physical_names`` is a list of contact, interface, and region names.  It is referenced by index by the ``elements`` list. \n"
-"\n"
-"    ``elements`` is a list of elements.  Each element adds\n"
-"\n"
-"    * Element Type (float)\n"
-"\n"
-"      - 0 node\n"
-"      - 1 edge \n"
-"      - 2 triangle\n"
-"      - 3 tetrahedron\n"
-"\n"
-"    * Physical Index\n"
-"\n"
-"      - This indexes into the ``physical_names`` list.\n"
-"\n"
-"    * Nodes\n"
-"\n"
-"      - Each node of the element indexes into the coordinates list.\n"
-"\n"
-;
+R"(    devsim.create_gmsh_mesh (mesh, file, coordinates, elements, physical_names)
+
+    Create a mesh to import a Gmsh mesh
+
+    Parameters
+    ----------
+    mesh : str
+       name of the mesh being generated
+    file : str, optional
+       name of the Gmsh mesh file being read into DEVSIM
+    coordinates : list, optional
+       List of coordinate positions on mesh.
+    elements : list, optional
+       List of elements on the mesh.
+    physical_names : list, optional
+       List of names for each contact, interface, and region on mesh.
+
+    Notes
+    -----
+
+    This file will import a Gmsh format mesh from a file.  Alternatively, the mesh structure may be passed in as as arguments:
+
+    ``coordinates`` is a float list of positions in the mesh.  Each coordinate adds an x, y, and z position so that the coordinate list length is 3 times the number of coordinates.
+
+    ``physical_names`` is a list of contact, interface, and region names.  It is referenced by index by the ``elements`` list. 
+
+    ``elements`` is a list of elements.  Each element adds
+
+    * Element Type (float)
+
+      - 0 node
+      - 1 edge 
+      - 2 triangle
+      - 3 tetrahedron
+
+    * Physical Index
+
+      - This indexes into the ``physical_names`` list.
+
+    * Nodes
+
+      - Each node of the element indexes into the coordinates list.
+
+)";
 
 static const char finalize_mesh_doc[] =
-"    devsim.finalize_mesh (mesh)\n"
-"\n"
-"    Finalize a mesh so no additional mesh specifications can be added and devices can be created.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    mesh : str\n"
-"       Mesh to finalize\n"
-;
+R"(    devsim.finalize_mesh (mesh)
+
+    Finalize a mesh so no additional mesh specifications can be added and devices can be created.
+
+    Parameters
+    ----------
+    mesh : str
+       Mesh to finalize
+)";
 
 static const char load_devices_doc[] =
-"    devsim.load_devices (file)\n"
-"\n"
-"    Load devices from a DEVSIM file\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    file : str\n"
-"       name of the file to load the meshes from\n"
-;
+R"(    devsim.load_devices (file)
+
+    Load devices from a DEVSIM file
+
+    Parameters
+    ----------
+    file : str
+       name of the file to load the meshes from
+)";
 
 static const char write_devices_doc[] =
-"    devsim.write_devices (file, device, type)\n"
-"\n"
-"    Write a device to a file for visualization or restart\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    file : str\n"
-"       name of the file to write the meshes to\n"
-"    device : str, optional\n"
-"       name of the device to write\n"
-"    type : {'devsim', 'devsim_data', 'floops', 'tecplot', 'vtk'}\n"
-"       format to use\n"
-;
+R"(    devsim.write_devices (file, device, type)
+
+    Write a device to a file for visualization or restart
+
+    Parameters
+    ----------
+    file : str
+       name of the file to write the meshes to
+    device : str, optional
+       name of the device to write
+    type : {'devsim', 'devsim_data', 'floops', 'tecplot', 'vtk'}
+       format to use
+)";
 
 static const char contact_edge_model_doc[] =
-"    devsim.contact_edge_model (device, contact, name, equation, display_type)\n"
-"\n"
-"    Create an edge model evaluated at a contact\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    contact : str\n"
-"       Contact on which to apply this command\n"
-"    name : str\n"
-"       Name of the contact edge model being created\n"
-"    equation : str\n"
-"       Equation used to describe the contact edge model being created\n"
-"    display_type : {'vector', 'nodisplay', 'scalar'}\n"
-"       Option for output display in graphical viewer\n"
-;
+R"(    devsim.contact_edge_model (device, contact, name, equation, display_type)
+
+    Create an edge model evaluated at a contact
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    contact : str
+       Contact on which to apply this command
+    name : str
+       Name of the contact edge model being created
+    equation : str
+       Equation used to describe the contact edge model being created
+    display_type : {'vector', 'nodisplay', 'scalar'}
+       Option for output display in graphical viewer
+)";
 
 static const char contact_node_model_doc[] =
-"    devsim.contact_node_model (device, contact, name, equation, display_type)\n"
-"\n"
-"    Create an node model evaluated at a contact\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    contact : str\n"
-"       Contact on which to apply this command\n"
-"    name : str\n"
-"       Name of the contact node model being created\n"
-"    equation : str\n"
-"       Equation used to describe the contact node model being created\n"
-"    display_type : {'scalar', 'nodisplay'}\n"
-"       Option for output display in graphical viewer\n"
-;
+R"(    devsim.contact_node_model (device, contact, name, equation, display_type)
+
+    Create an node model evaluated at a contact
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    contact : str
+       Contact on which to apply this command
+    name : str
+       Name of the contact node model being created
+    equation : str
+       Equation used to describe the contact node model being created
+    display_type : {'scalar', 'nodisplay'}
+       Option for output display in graphical viewer
+)";
 
 static const char cylindrical_edge_couple_doc[] =
-"    devsim.cylindrical_edge_couple (device, region)\n"
-"\n"
-"    This command creates the ``EdgeCouple`` model for 2D cylindrical simulation\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    This model is only available in 2D.  The created variables are\n"
-"\n"
-"    - ``ElementCylindricalEdgeCouple`` (Element Edge Model)\n"
-"    - ``CylindricalEdgeCouple`` (Edge Model)\n"
-"\n"
-"    The :meth:`devsim.set_parameter` must be used to set\n"
-"\n"
-"    - ``raxis_variable``, the variable (``x`` or ``y``) which is the radial axis variable in the cylindrical coordinate system\n"
-"    - ``raxis_zero``, the location of the z axis for the radial axis variable\n"
-;
+R"(    devsim.cylindrical_edge_couple (device, region)
+
+    This command creates the ``EdgeCouple`` model for 2D cylindrical simulation
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+
+    Notes
+    -----
+
+    This model is only available in 2D.  The created variables are
+
+    - ``ElementCylindricalEdgeCouple`` (Element Edge Model)
+    - ``CylindricalEdgeCouple`` (Edge Model)
+
+    The :meth:`devsim.set_parameter` must be used to set
+
+    - ``raxis_variable``, the variable (``x`` or ``y``) which is the radial axis variable in the cylindrical coordinate system
+    - ``raxis_zero``, the location of the z axis for the radial axis variable
+)";
 
 static const char cylindrical_node_volume_doc[] =
-"    devsim.cylindrical_node_volume (device, region)\n"
-"\n"
-"    This command creates the ``NodeVolume`` model for 2D cylindrical simulation\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    This model is only available in 2D.  The created variables are\n"
-"\n"
-"    - ``ElementCylindricalNodeVolume@en0`` (Element Edge Model)\n"
-"    - ``ElementCylindricalNodeVolume@en1`` (Element Edge Model)\n"
-"    - ``CylindricalEdgeNodeVolume@n0`` (Edge Model)\n"
-"    - ``CylindricalEdgeNodeVolume@n1`` (Edge Model)\n"
-"    - ``CylindricalNodeVolume`` (Node Model)\n"
-"\n"
-"    The ``ElementCylindricalNodeVolume@en0`` and ``ElementCylindricalNodeVolume@en1`` represent the node volume at each end of the element edge.\n"
-"\n"
-"    The :meth:`devsim.set_parameter` must be used to set\n"
-"\n"
-"    - ``raxis_variable``, the variable (``x`` or ``y``) which is the radial axis variable in the cylindrical coordinate system\n"
-"    - ``raxis_zero``, the location of the z axis for the radial axis variable\n"
-"\n"
-;
+R"(    devsim.cylindrical_node_volume (device, region)
+
+    This command creates the ``NodeVolume`` model for 2D cylindrical simulation
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+
+    Notes
+    -----
+
+    This model is only available in 2D.  The created variables are
+
+    - ``ElementCylindricalNodeVolume@en0`` (Element Edge Model)
+    - ``ElementCylindricalNodeVolume@en1`` (Element Edge Model)
+    - ``CylindricalEdgeNodeVolume@n0`` (Edge Model)
+    - ``CylindricalEdgeNodeVolume@n1`` (Edge Model)
+    - ``CylindricalNodeVolume`` (Node Model)
+
+    The ``ElementCylindricalNodeVolume@en0`` and ``ElementCylindricalNodeVolume@en1`` represent the node volume at each end of the element edge.
+
+    The :meth:`devsim.set_parameter` must be used to set
+
+    - ``raxis_variable``, the variable (``x`` or ``y``) which is the radial axis variable in the cylindrical coordinate system
+    - ``raxis_zero``, the location of the z axis for the radial axis variable
+
+)";
 
 static const char cylindrical_surface_area_doc[] =
-"    devsim.cylindrical_surface_area (device, region)\n"
-"\n"
-"    This command creates the ``SurfaceArea`` model for 2D cylindrical simulation\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    This model is only available in 2D.  The created variables are\n"
-"\n"
-"    - ``CylindricalSurfaceArea`` (Node Model)\n"
-"\n"
-"    and is the cylindrical surface area along each contact and interface node in the device region.\n"
-"\n"
-"    The :meth:`devsim.set_parameter` must be used to set\n"
-"\n"
-"    - ``raxis_variable``, the variable (``x`` or ``y``) which is the radial axis variable in the cylindrical coordinate system\n"
-"    - ``raxis_zero``, the location of the z axis for the radial axis variable\n"
-"\n"
-;
+R"(    devsim.cylindrical_surface_area (device, region)
+
+    This command creates the ``SurfaceArea`` model for 2D cylindrical simulation
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+
+    Notes
+    -----
+
+    This model is only available in 2D.  The created variables are
+
+    - ``CylindricalSurfaceArea`` (Node Model)
+
+    and is the cylindrical surface area along each contact and interface node in the device region.
+
+    The :meth:`devsim.set_parameter` must be used to set
+
+    - ``raxis_variable``, the variable (``x`` or ``y``) which is the radial axis variable in the cylindrical coordinate system
+    - ``raxis_zero``, the location of the z axis for the radial axis variable
+
+)";
 
 static const char debug_triangle_models_doc[] =
-"    devsim.debug_triangle_models (device, region)\n"
-"\n"
-"    Debugging command used in the development of DEVSIM and used in regressions.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-;
+R"(    devsim.debug_triangle_models (device, region)
+
+    Debugging command used in the development of DEVSIM and used in regressions.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+)";
 
 static const char delete_edge_model_doc[] =
-"    devsim.delete_edge_model (device, region, name)\n"
-"\n"
-"    Deletes an edge model from a region\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the edge model being deleted\n"
-;
+R"(    devsim.delete_edge_model (device, region, name)
+
+    Deletes an edge model from a region
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the edge model being deleted
+)";
 
 static const char delete_element_model_doc[] =
-"    devsim.delete_element_model (device, region, name)\n"
-"\n"
-"    Deletes a element model from a region\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the node model being deleted\n"
-;
+R"(    devsim.delete_element_model (device, region, name)
+
+    Deletes a element model from a region
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the node model being deleted
+)";
 
 static const char delete_interface_model_doc[] =
-"    devsim.delete_interface_model (device, interface, name)\n"
-"\n"
-"    Deletes an interface model from an interface\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-"    name : str\n"
-"       Name of the interface model being deleted\n"
-;
+R"(    devsim.delete_interface_model (device, interface, name)
+
+    Deletes an interface model from an interface
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    interface : str
+       Interface on which to apply this command
+    name : str
+       Name of the interface model being deleted
+)";
 
 static const char delete_node_model_doc[] =
-"    devsim.delete_node_model (device, region, name)\n"
-"\n"
-"    Deletes a node model from a region\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the node model being deleted\n"
-;
+R"(    devsim.delete_node_model (device, region, name)
+
+    Deletes a node model from a region
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the node model being deleted
+)";
 
 static const char edge_average_model_doc[] =
-"    devsim.edge_average_model (device, region, node_model, edge_model, derivative, average_type)\n"
-"\n"
-"    Creates an edge model based on the node model values\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    node_model : str\n"
-"       The node model from which we are creating the edge model.  If ``derivative`` is specified, the edge model is created from ``nodeModel:derivativeModel``\n"
-"    edge_model : str\n"
-"       The edge model name being created.  If ``derivative`` is specified, the edge models created are ``edgeModel:derivativeModel@n0`` ``edgeModel:derivativeModel@n1``, which are the derivatives with respect to the derivative model on each side of the edge\n"
-"    derivative : str, optional\n"
-"       The node model of the variable for which the derivative is being taken.  The node model ``nodeModel:derivativeModel`` is used to create the resulting edge models.\n"
-"    average_type : str, optional\n"
-"       The node models on both sides of the edge are averaged together to create one of the following types of averages. (default 'arithmetic')\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    For a node model, creates 2 edge models referring to the node model value at both ends of the edge.  For example, to calculate electric field:\n"
-"\n"
-"    ..\n"
-"\n"
-"      devsim.edge_average_model(device=device, region=region, node_model=\"Potential\", edge_model=\"ElecticField\", average_type=\"negative_gradient\")\n"
-"\n"
-"    and the derivatives ``ElectricField:Potential@n0`` and ``ElectricField:Potential@n1`` are then created from\n"
-"\n"
-"    ..\n"
-"\n"
-"      devsim.edge_average_model(device=device, region=region, node_model=\"Potential\", edge_model=\"ElecticField\", average_type=\"negative_gradient\", derivative=\"Potential\")\n"
-;
+R"(    devsim.edge_average_model (device, region, node_model, edge_model, derivative, average_type)
+
+    Creates an edge model based on the node model values
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    node_model : str
+       The node model from which we are creating the edge model.  If ``derivative`` is specified, the edge model is created from ``nodeModel:derivativeModel``
+    edge_model : str
+       The edge model name being created.  If ``derivative`` is specified, the edge models created are ``edgeModel:derivativeModel@n0`` ``edgeModel:derivativeModel@n1``, which are the derivatives with respect to the derivative model on each side of the edge
+    derivative : str, optional
+       The node model of the variable for which the derivative is being taken.  The node model ``nodeModel:derivativeModel`` is used to create the resulting edge models.
+    average_type : {'arithmetic', 'geometric', 'gradient', 'negative_gradient'}
+       The node models on both sides of the edge are averaged together to create one of the following types of averages.
+
+    Notes
+    -----
+
+    For a node model, creates 2 edge models referring to the node model value at both ends of the edge.  For example, to calculate electric field:
+
+    ..
+
+      devsim.edge_average_model(device=device, region=region, node_model="Potential", edge_model="ElecticField", average_type="negative_gradient")
+
+    and the derivatives ``ElectricField:Potential@n0`` and ``ElectricField:Potential@n1`` are then created from
+
+    ..
+
+      devsim.edge_average_model(device=device, region=region, node_model="Potential", edge_model="ElecticField", average_type="negative_gradient", derivative="Potential")
+)";
 
 static const char edge_from_node_model_doc[] =
-"    devsim.edge_from_node_model (device, region, node_model)\n"
-"\n"
-"    For a node model, creates an 2 edge models referring to the node model value at both ends of the edge.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    node_model : str\n"
-"       The node model from which we are creating the edge model\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    For example, to calculate electric field:\n"
-"\n"
-"    ..\n"
-"\n"
-"      devsim.edge_from_node_model(device=device, region=region, node_model=\"Potential\")\n"
-"\n"
-;
+R"(    devsim.edge_from_node_model (device, region, node_model)
+
+    For a node model, creates an 2 edge models referring to the node model value at both ends of the edge.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    node_model : str
+       The node model from which we are creating the edge model
+
+    Notes
+    -----
+
+    For example, to calculate electric field:
+
+    ..
+
+      devsim.edge_from_node_model(device=device, region=region, node_model="Potential")
+
+)";
 
 static const char edge_model_doc[] =
-"    devsim.edge_model (device, region, name, equation, display_type)\n"
-"\n"
-"    Creates an edge model based on an equation\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the edge model being created\n"
-"    equation : str\n"
-"       Equation used to describe the edge model being created\n"
-"    display_type : str, optional\n"
-"       Option for output display in graphical viewer (default 'scalar')\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    The ``vector`` option uses an averaging scheme for the edge values projected in the direction of each edge.  For a given model, ``model``, the generated components in the visualization files is:\n"
-"\n"
-"    - ``model_x_onNode``\n"
-"    - ``model_y_onNode``\n"
-"    - ``model_z_onNode`` (3D)\n"
-"\n"
-"    This averaging scheme does not produce accurate results, and it is recommended to use the :meth:`devsim.element_from_edge_model` to create components better suited for visualization.  See :ref:`ch__visualization` for more information about creating data files for external visualization programs.\n"
-;
+R"(    devsim.edge_model (device, region, name, equation, display_type)
+
+    Creates an edge model based on an equation
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the edge model being created
+    equation : str
+       Equation used to describe the edge model being created
+    display_type : {'scalar', 'nodisplay', 'vector'}
+       Option for output display in graphical viewer
+
+    Notes
+    -----
+
+    The ``vector`` option uses an averaging scheme for the edge values projected in the direction of each edge.  For a given model, ``model``, the generated components in the visualization files is:
+
+    - ``model_x_onNode``
+    - ``model_y_onNode``
+    - ``model_z_onNode`` (3D)
+
+    This averaging scheme does not produce accurate results, and it is recommended to use the :meth:`devsim.element_from_edge_model` to create components better suited for visualization.  See :ref:`ch__visualization` for more information about creating data files for external visualization programs.
+)";
 
 static const char edge_solution_doc[] =
-"    devsim.edge_solution (device, region, name)\n"
-"\n"
-"    Create node model whose values are set.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the solution being created\n"
-;
+R"(    devsim.edge_solution (device, region, name)
+
+    Create node model whose values are set.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the solution being created
+)";
 
 static const char element_from_edge_model_doc[] =
-"    devsim.element_from_edge_model (device, region, edge_model, derivative)\n"
-"\n"
-"    Creates element edge models from an edge model\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    edge_model : str\n"
-"       The edge model from which we are creating the element model\n"
-"    derivative : str, optional\n"
-"       The variable we are taking with respect to edge_model\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    For an edge model ``emodel``, creates an element models referring to the directional components on each edge of the element:\n"
-"\n"
-"    - ``emodel_x``\n"
-"    - ``emodel_y``\n"
-"\n"
-"    If the ``derivative`` ``variable`` option is specified, the ``emodel@n0`` and ``emodel@n1`` are used to create:\n"
-"\n"
-"    - ``emodel_x:variable@en0``\n"
-"    - ``emodel_y:variable@en0``\n"
-"    - ``emodel_x:variable@en1``\n"
-"    - ``emodel_y:variable@en1``\n"
-"    - ``emodel_x:variable@en2``\n"
-"    - ``emodel_y:variable@en2``\n"
-"\n"
-"    in 2D for each node on a triangular element. and \n"
-"\n"
-"    - ``emodel_x:variable@en0``\n"
-"    - ``emodel_y:variable@en0``\n"
-"    - ``emodel_z:variable@en0``\n"
-"    - ``emodel_x:variable@en1``\n"
-"    - ``emodel_y:variable@en1``\n"
-"    - ``emodel_z:variable@en1``\n"
-"    - ``emodel_x:variable@en2``\n"
-"    - ``emodel_y:variable@en2``\n"
-"    - ``emodel_z:variable@en2``\n"
-"    - ``emodel_x:variable@en3``\n"
-"    - ``emodel_y:variable@en3``\n"
-"    - ``emodel_z:variable@en3``\n"
-"\n"
-"    in 3D for each node on a tetrahedral element.\n"
-"\n"
-"    The suffix ``en0`` refers to the first node on the edge of the element and ``en1`` refers to the second node.  ``en2`` and ``en3`` specifies the derivatives with respect the variable at the nodes opposite the edges on the element being considered.\n"
-;
+R"(    devsim.element_from_edge_model (device, region, edge_model, derivative)
+
+    Creates element edge models from an edge model
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    edge_model : str
+       The edge model from which we are creating the element model
+    derivative : str, optional
+       The variable we are taking with respect to edge_model
+
+    Notes
+    -----
+
+    For an edge model ``emodel``, creates an element models referring to the directional components on each edge of the element:
+
+    - ``emodel_x``
+    - ``emodel_y``
+
+    If the ``derivative`` ``variable`` option is specified, the ``emodel@n0`` and ``emodel@n1`` are used to create:
+
+    - ``emodel_x:variable@en0``
+    - ``emodel_y:variable@en0``
+    - ``emodel_x:variable@en1``
+    - ``emodel_y:variable@en1``
+    - ``emodel_x:variable@en2``
+    - ``emodel_y:variable@en2``
+
+    in 2D for each node on a triangular element. and 
+
+    - ``emodel_x:variable@en0``
+    - ``emodel_y:variable@en0``
+    - ``emodel_z:variable@en0``
+    - ``emodel_x:variable@en1``
+    - ``emodel_y:variable@en1``
+    - ``emodel_z:variable@en1``
+    - ``emodel_x:variable@en2``
+    - ``emodel_y:variable@en2``
+    - ``emodel_z:variable@en2``
+    - ``emodel_x:variable@en3``
+    - ``emodel_y:variable@en3``
+    - ``emodel_z:variable@en3``
+
+    in 3D for each node on a tetrahedral element.
+
+    The suffix ``en0`` refers to the first node on the edge of the element and ``en1`` refers to the second node.  ``en2`` and ``en3`` specifies the derivatives with respect the variable at the nodes opposite the edges on the element being considered.
+)";
+
+static const char element_pair_from_edge_model_doc[] = "";
 
 static const char element_from_node_model_doc[] =
-"    devsim.element_from_node_model (device, region, node_model)\n"
-"\n"
-"    Creates element edge models from a node model\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    node_model : str\n"
-"       The node model from which we are creating the edge model\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    This command creates an element edge model from a node model so that each corner of the element is represented.  A node model, ``nmodel``, would be be accessible as \n"
-"\n"
-"    - ``nmodel@en0``\n"
-"    - ``nmodel@en1``\n"
-"    - ``nmodel@en2``\n"
-"    - ``nmodel@en3`` (3D)\n"
-"\n"
-"    where ``en0``, and ``en1`` refers to the nodes on the element's edge.  In 2D, ``en2`` refers to the node on the triangle node opposite the edge.  In 3D, ``en2`` and ``en3`` refers to the nodes on the nodes off the element edge on the tetrahedral element.\n"
-;
+R"(    devsim.element_from_node_model (device, region, node_model)
+
+    Creates element edge models from a node model
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    node_model : str
+       The node model from which we are creating the edge model
+
+    Notes
+    -----
+
+    This command creates an element edge model from a node model so that each corner of the element is represented.  A node model, ``nmodel``, would be be accessible as 
+
+    - ``nmodel@en0``
+    - ``nmodel@en1``
+    - ``nmodel@en2``
+    - ``nmodel@en3`` (3D)
+
+    where ``en0``, and ``en1`` refers to the nodes on the element's edge.  In 2D, ``en2`` refers to the node on the triangle node opposite the edge.  In 3D, ``en2`` and ``en3`` refers to the nodes on the nodes off the element edge on the tetrahedral element.
+)";
 
 static const char element_model_doc[] =
-"    devsim.element_model (device, region, name, equation, display_type)\n"
-"\n"
-"    Create a model evaluated on element edges.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the element edge model being created\n"
-"    equation : str\n"
-"       Equation used to describe the element edge model being created\n"
-"    display_type : str, optional\n"
-"       Option for output display in graphical viewer (default 'scalar')\n"
-;
+R"(    devsim.element_model (device, region, name, equation, display_type)
+
+    Create a model evaluated on element edges.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the element edge model being created
+    equation : str
+       Equation used to describe the element edge model being created
+    display_type : {'scalar', 'nodisplay'}
+       Option for output display in graphical viewer
+)";
 
 static const char element_solution_doc[] =
-"    devsim.element_solution (device, region, name)\n"
-"\n"
-"    Create node model whose values are set.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the solution being created\n"
-;
+R"(    devsim.element_solution (device, region, name)
+
+    Create node model whose values are set.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the solution being created
+)";
 
 static const char get_edge_model_list_doc[] =
-"    devsim.get_edge_model_list (device, region)\n"
-"\n"
-"    Returns a list of the edge models on the device region\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-;
+R"(    devsim.get_edge_model_list (device, region)
+
+    Returns a list of the edge models on the device region
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+)";
 
 static const char get_edge_model_values_doc[] =
-"    devsim.get_edge_model_values (device, region, name)\n"
-"\n"
-"    Get the edge model values calculated at each edge.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the edge model values being returned as a list\n"
-;
+R"(    devsim.get_edge_model_values (device, region, name)
+
+    Get the edge model values calculated at each edge.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the edge model values being returned as a list
+)";
 
 static const char get_element_model_list_doc[] =
-"    devsim.get_element_model_list (device, region)\n"
-"\n"
-"    Returns a list of the element edge models on the device region\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-;
+R"(    devsim.get_element_model_list (device, region)
+
+    Returns a list of the element edge models on the device region
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+)";
 
 static const char get_element_model_values_doc[] =
-"    devsim.get_element_model_values (device, region, name)\n"
-"\n"
-"    Get element model values at each element edge\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the element edge model values being returned as a list\n"
-;
+R"(    devsim.get_element_model_values (device, region, name)
+
+    Get element model values at each element edge
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the element edge model values being returned as a list
+)";
 
 static const char get_interface_model_list_doc[] =
-"    devsim.get_interface_model_list (device, interface)\n"
-"\n"
-"    Returns a list of the interface models on the interface\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-;
+R"(    devsim.get_interface_model_list (device, interface)
+
+    Returns a list of the interface models on the interface
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    interface : str
+       Interface on which to apply this command
+)";
 
 static const char get_interface_model_values_doc[] =
-"    devsim.get_interface_model_values (device, interface, name)\n"
-"\n"
-"    Gets interface model values evaluated at each interface node.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-"    name : str\n"
-"       Name of the interface model values being returned as a list\n"
-;
+R"(    devsim.get_interface_model_values (device, interface, name)
+
+    Gets interface model values evaluated at each interface node.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    interface : str
+       Interface on which to apply this command
+    name : str
+       Name of the interface model values being returned as a list
+)";
 
 static const char get_node_model_list_doc[] =
-"    devsim.get_node_model_list (device, region)\n"
-"\n"
-"    Returns a list of the node models on the device region\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-;
+R"(    devsim.get_node_model_list (device, region)
+
+    Returns a list of the node models on the device region
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+)";
 
 static const char get_node_model_values_doc[] =
-"    devsim.get_node_model_values (device, region, name)\n"
-"\n"
-"    Get node model values evaluated at each node in a region.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the node model values being returned as a list\n"
-;
+R"(    devsim.get_node_model_values (device, region, name)
+
+    Get node model values evaluated at each node in a region.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the node model values being returned as a list
+)";
 
 static const char interface_model_doc[] =
-"    devsim.interface_model (device, interface, equation)\n"
-"\n"
-"    Create an interface model from an equation.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-"    equation : str\n"
-"       Equation used to describe the interface node model being created\n"
-;
+R"(    devsim.interface_model (device, interface, equation)
+
+    Create an interface model from an equation.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    interface : str
+       Interface on which to apply this command
+    equation : str
+       Equation used to describe the interface node model being created
+)";
 
 static const char interface_normal_model_doc[] =
-"    devsim.interface_normal_model (device, region, interface)\n"
-"\n"
-"    Creates edge models whose components are based on direction and distance to an interface\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    interface : str\n"
-"       Interface on which to apply this command\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    This model creates the following edge models:\n"
-"\n"
-"    - ``iname_distance``\n"
-"    - ``iname_normal_x`` (2D and 3D)\n"
-"    - ``iname_normal_y`` (2D and 3D)\n"
-"    - ``iname_normal_z`` (3D only)\n"
-"\n"
-"    where ``iname`` is the name of the interface.  The normals are of the closest node on the interface.  The sign is toward the interface.\n"
-;
+R"(    devsim.interface_normal_model (device, region, interface)
+
+    Creates edge models whose components are based on direction and distance to an interface
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    interface : str
+       Interface on which to apply this command
+
+    Notes
+    -----
+
+    This model creates the following edge models:
+
+    - ``iname_distance``
+    - ``iname_normal_x`` (2D and 3D)
+    - ``iname_normal_y`` (2D and 3D)
+    - ``iname_normal_z`` (3D only)
+
+    where ``iname`` is the name of the interface.  The normals are of the closest node on the interface.  The sign is toward the interface.
+)";
 
 static const char node_model_doc[] =
-"    devsim.node_model (device, region, name, equation, display_type)\n"
-"\n"
-"    Create a node model from an equation.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the node model being created\n"
-"    equation : str\n"
-"       Equation used to describe the node model being created\n"
-"    display_type : str, optional\n"
-"       Option for output display in graphical viewer (default 'scalar')\n"
-;
+R"(    devsim.node_model (device, region, name, equation, display_type)
+
+    Create a node model from an equation.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the node model being created
+    equation : str
+       Equation used to describe the node model being created
+    display_type : {'scalar', 'nodisplay'}
+       Option for output display in graphical viewer
+)";
 
 static const char node_solution_doc[] =
-"    devsim.node_solution (device, region, name)\n"
-"\n"
-"    Create node model whose values are set.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the solution being created\n"
-;
+R"(    devsim.node_solution (device, region, name)
+
+    Create node model whose values are set.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the solution being created
+)";
 
 static const char print_edge_values_doc[] =
-"    devsim.print_edge_values (device, region, name)\n"
-"\n"
-"    Print edge values for debugging.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the edge model values being printed to the screen\n"
-;
+R"(    devsim.print_edge_values (device, region, name)
+
+    Print edge values for debugging.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the edge model values being printed to the screen
+)";
 
 static const char print_element_values_doc[] =
-"    devsim.print_element_values (device, region, name)\n"
-"\n"
-"    Print element values for debugging.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the element edge model values being printed to the screen\n"
-;
+R"(    devsim.print_element_values (device, region, name)
+
+    Print element values for debugging.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the element edge model values being printed to the screen
+)";
 
 static const char print_node_values_doc[] =
-"    devsim.print_node_values (device, region, name)\n"
-"\n"
-"    Print node values for debugging.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the node model values being printed to the screen\n"
-;
+R"(    devsim.print_node_values (device, region, name)
+
+    Print node values for debugging.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the node model values being printed to the screen
+)";
 
 static const char register_function_doc[] =
-"    devsim.register_function (name, nargs, procedure)\n"
-"\n"
-"    This command is used to register a new Python procedure for evaluation by SYMDIFF.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    name : str\n"
-"       Name of the function\n"
-"    nargs : str\n"
-"       Number of arguments to the function\n"
-"    procedure : str\n"
-"       The procedure to be called\n"
-;
+R"(    devsim.register_function (name, nargs, procedure)
+
+    This command is used to register a new Python procedure for evaluation by SYMDIFF.
+
+    Parameters
+    ----------
+    name : str
+       Name of the function
+    nargs : str
+       Number of arguments to the function
+    procedure : str
+       The procedure to be called
+)";
 
 static const char set_edge_values_doc[] =
-"    devsim.set_edge_values (device, region, name, init_from, values)\n"
-"\n"
-"    Set edge model values from another edge model, or a list of values.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the edge model being initialized\n"
-"    init_from : str, optional\n"
-"       Node model we are using to initialize the edge solution\n"
-"    values : list, optional\n"
-"       List of values for each edge in the region.\n"
-;
+R"(    devsim.set_edge_values (device, region, name, init_from, values)
+
+    Set edge model values from another edge model, or a list of values.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the edge model being initialized
+    init_from : str, optional
+       Node model we are using to initialize the edge solution
+    values : list, optional
+       List of values for each edge in the region.
+)";
 
 static const char set_element_values_doc[] =
-"    devsim.set_element_values (device, region, name, init_from, values)\n"
-"\n"
-"    Set element model values from another element model, or a list of values.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the element model being initialized\n"
-"    init_from : str, optional\n"
-"       Node model we are using to initialize the element solution\n"
-"    values : list, optional\n"
-"       List of values for each element in the region.\n"
-;
+R"(    devsim.set_element_values (device, region, name, init_from, values)
+
+    Set element model values from another element model, or a list of values.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the element model being initialized
+    init_from : str, optional
+       Node model we are using to initialize the element solution
+    values : list, optional
+       List of values for each element in the region.
+)";
 
 static const char set_node_value_doc[] =
-"    devsim.set_node_value (device, region, name, index, value)\n"
-"\n"
-"    A uniform value is used if index is not specified.  Note that equation based node models will lose this value if their equation is recalculated.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the node model being whose value is being set\n"
-"    index : int\n"
-"       Index of node being set\n"
-"    value : Float\n"
-"       Value of node being set\n"
-;
+R"(    devsim.set_node_value (device, region, name, index, value)
+
+    A uniform value is used if index is not specified.  Note that equation based node models will lose this value if their equation is recalculated.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the node model being whose value is being set
+    index : int
+       Index of node being set
+    value : Float
+       Value of node being set
+)";
 
 static const char set_node_values_doc[] =
-"    devsim.set_node_values (device, region, name, init_from, values)\n"
-"\n"
-"    Set node model values from another node model, or a list of values.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    name : str\n"
-"       Name of the node model being initialized\n"
-"    init_from : str, optional\n"
-"       Node model we are using to initialize the node solution\n"
-"    values : list, optional\n"
-"       List of values for each node in the region.\n"
-;
+R"(    devsim.set_node_values (device, region, name, init_from, values)
+
+    Set node model values from another node model, or a list of values.
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    name : str
+       Name of the node model being initialized
+    init_from : str, optional
+       Node model we are using to initialize the node solution
+    values : list, optional
+       List of values for each node in the region.
+)";
 
 static const char symdiff_doc[] =
-"    devsim.symdiff (expr)\n"
-"\n"
-"    This command returns an expression.  All strings are treated as independent variables.  It is primarily used for defining new functions to the parser.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    expr : str\n"
-"       Expression to send to SYMDIFF\n"
-;
+R"(    devsim.symdiff (expr)
+
+    This command returns an expression.  All strings are treated as independent variables.  It is primarily used for defining new functions to the parser.
+
+    Parameters
+    ----------
+    expr : str
+       Expression to send to SYMDIFF
+)";
 
 static const char vector_element_model_doc[] =
-"    devsim.vector_element_model (device, region, element_model)\n"
-"\n"
-"    Create vector components from an element edge model\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    element_model : str\n"
-"       The element model for which we are calculating the vector compoenents\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    This command creates element edge models from an element model which represent the vector components on the element edge.  An element model, ``emodel``, would then have\n"
-"\n"
-"    - ``emodel_x``\n"
-"    - ``emodel_y``\n"
-"    - ``emodel_z`` (3D only)\n"
-"\n"
-"    The primary use of these components are for visualization.\n"
-;
+R"(    devsim.vector_element_model (device, region, element_model)
+
+    Create vector components from an element edge model
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    element_model : str
+       The element model for which we are calculating the vector compoenents
+
+    Notes
+    -----
+
+    This command creates element edge models from an element model which represent the vector components on the element edge.  An element model, ``emodel``, would then have
+
+    - ``emodel_x``
+    - ``emodel_y``
+    - ``emodel_z`` (3D only)
+
+    The primary use of these components are for visualization.
+)";
 
 static const char vector_gradient_doc[] =
-"    devsim.vector_gradient (device, region, node_model, calc_type)\n"
-"\n"
-"    Creates the vector gradient for noise analysis\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    region : str\n"
-"       The selected region\n"
-"    node_model : str\n"
-"       The node model from which we are creating the edge model\n"
-"    calc_type : str, optional\n"
-"       The node model from which we are creating the edge model (default 'default')\n"
-"\n"
-"    Notes\n"
-"    -----\n"
-"\n"
-"    Used for noise analysis.  The ``avoidzero`` option is important for noise analysis, since a node model value of zero is not physical for some contact and interface boundary conditions.  For a given node model, ``model``, a node model is created in each direction:\n"
-"\n"
-"    - ``model_gradx`` (1D)\n"
-"    - ``model_grady`` (2D and 3D)\n"
-"    - ``model_gradz`` (3D)\n"
-"\n"
-"    It is important not to use these models for simulation, since DEVSIM, does not have a way of evaluating the derivatives of these models.  The models can be used for integrating the impedance field, and other postprocessing.  The :meth:`devsim.element_from_edge_model` command can be used to create gradients for use in a simulation.\n"
-;
+R"(    devsim.vector_gradient (device, region, node_model, calc_type)
+
+    Creates the vector gradient for noise analysis
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    node_model : str
+       The node model from which we are creating the edge model
+    calc_type : {'default', 'avoidzero'}
+       The node model from which we are creating the edge model
+
+    Notes
+    -----
+
+    Used for noise analysis.  The ``avoidzero`` option is important for noise analysis, since a node model value of zero is not physical for some contact and interface boundary conditions.  For a given node model, ``model``, a node model is created in each direction:
+
+    - ``model_gradx`` (1D)
+    - ``model_grady`` (2D and 3D)
+    - ``model_gradz`` (3D)
+
+    It is important not to use these models for simulation, since DEVSIM, does not have a way of evaluating the derivatives of these models.  The models can be used for integrating the impedance field, and other postprocessing.  The :meth:`devsim.element_from_edge_model` command can be used to create gradients for use in a simulation.
+)";
 
 static const char get_contact_charge_doc[] =
-"    devsim.get_contact_charge (device, contact, equation)\n"
-"\n"
-"    Get charge at the contact\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    contact : str\n"
-"       Contact on which to apply this command\n"
-"    equation : str\n"
-"       Name of the contact equation from which we are retrieving the charge\n"
-;
+R"(    devsim.get_contact_charge (device, contact, equation)
+
+    Get charge at the contact
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    contact : str
+       Contact on which to apply this command
+    equation : str
+       Name of the contact equation from which we are retrieving the charge
+)";
 
 static const char get_contact_current_doc[] =
-"    devsim.get_contact_current (device, contact, equation)\n"
-"\n"
-"    Get current at the contact\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    device : str\n"
-"       The selected device\n"
-"    contact : str\n"
-"       Contact on which to apply this command\n"
-"    equation : str\n"
-"       Name of the contact equation from which we are retrieving the current\n"
-;
+R"(    devsim.get_contact_current (device, contact, equation)
+
+    Get current at the contact
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    contact : str
+       Contact on which to apply this command
+    equation : str
+       Name of the contact equation from which we are retrieving the current
+)";
 
 static const char solve_doc[] =
-"    devsim.solve (type, solver_type, absolute_error, relative_error, charge_error, gamma, tdelta, maximum_iterations, frequency, output_node, info)\n"
-"\n"
-"    Call the solver.  A small-signal AC source is set with the circuit voltage source.\n"
-"\n"
-"    Parameters\n"
-"    ----------\n"
-"    type : {'dc', 'ac', 'noise', 'transient_dc', 'transient_bdf1', 'transient_bdf2', 'transient_tr'} required\n"
-"       type of solve being performed\n"
-"    solver_type : {'direct', 'iterative'} required\n"
-"       Linear solver type\n"
-"    absolute_error : Float, optional\n"
-"       Required update norm in the solve (default 0.0)\n"
-"    relative_error : Float, optional\n"
-"       Required relative update in the solve (default 0.0)\n"
-"    charge_error : Float, optional\n"
-"       Relative error between projected and solved charge during transient simulation (default 0.0)\n"
-"    gamma : Float, optional\n"
-"       Scaling factor for transient time step (default 1.0)\n"
-"    tdelta : Float, optional\n"
-"       time step (default 0.0)\n"
-"    maximum_iterations : int, optional\n"
-"       Maximum number of iterations in the DC solve (default 20)\n"
-"    frequency : Float, optional\n"
-"       Frequency for small-signal AC simulation (default 0.0)\n"
-"    output_node : str, optional\n"
-"       Output circuit node for noise simulation\n"
-"    info : bool, optional\n"
-"       Solve command return convergence information (default False)\n"
-;
+R"(    devsim.solve (type, solver_type, absolute_error, relative_error, charge_error, gamma, tdelta, maximum_iterations, frequency, output_node, info)
+
+    Call the solver.  A small-signal AC source is set with the circuit voltage source.
+
+    Parameters
+    ----------
+    type : {'dc', 'ac', 'noise', 'transient_dc', 'transient_bdf1', 'transient_bdf2', 'transient_tr'} required
+       type of solve being performed
+    solver_type : {'direct', 'iterative'} required
+       Linear solver type
+    absolute_error : Float, optional
+       Required update norm in the solve (default 0.0)
+    relative_error : Float, optional
+       Required relative update in the solve (default 0.0)
+    charge_error : Float, optional
+       Relative error between projected and solved charge during transient simulation (default 0.0)
+    gamma : Float, optional
+       Scaling factor for transient time step (default 1.0)
+    tdelta : Float, optional
+       time step (default 0.0)
+    maximum_iterations : int, optional
+       Maximum number of iterations in the DC solve (default 20)
+    frequency : Float, optional
+       Frequency for small-signal AC simulation (default 0.0)
+    output_node : str, optional
+       Output circuit node for noise simulation
+    info : bool, optional
+       Solve command return convergence information (default False)
+)";

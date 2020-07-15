@@ -20,7 +20,7 @@
 # journal = {IBM J. Res. Dev.},
 # issue_date = {May 1985},
 # volume = {29},
-# number = {dim},
+# number = {3},
 # month = may,
 # year = {1985},
 # issn = {0018-8646},
@@ -64,36 +64,12 @@ dim = laux_common.dim
 
 number_test = -1
 
-RunTest(device, region, number_test)
+RunTest(device, region, number_test, "ElectricField", "Potential")
 
+import devsim
+devsim.set_parameter(name="V_t", value=0.0259)
+devsim.set_parameter(name="mu_n", value=400)
+devsim.set_parameter(name="ElectronCharge", value=1.6e-19)
+RunTest(device, region, number_test, "ElectronCurrent", "Potential")
 
-
-#row = 0
-#if True:
-##for row in range(10):
-#  col = 4
-#  sl1 = slice(nee*row,nee*(row+1))
-#  sl2 = slice(dim*col,dim*(col+1))
-#  print output[(sl1, sl2)]
-#  print output_compare[(sl1,sl2)]
-#  print output[(sl1, sl2)] - output_compare[(sl1,sl2)]
-#
-
-#print "VERIFY node_index@n0 == node_index@en0"
-## creates node_index@n0, node_index@n1
-#element_model(device=device, region=region, name="scalar_edge_index", equation="edge_index")
-#edge_from_node_model(node_model="node_index", device=device, region=region)
-#scalar_edge_index = get_element_model_values(device=device, region=region, name="scalar_edge_index")
-#scalar_edge_index = [int(x) for x in scalar_edge_index]
-#scalar_node_index0 = get_edge_model_values(device=device, region=region, name="node_index@n0")
-#scalar_node_index0 = [int(x) for x in scalar_node_index0]
-#scalar_node_index1 = get_edge_model_values(device=device, region=region, name="node_index@n1")
-#scalar_node_index1 = [int(x) for x in scalar_node_index1]
-#eedge = scalar_edge_index[sl1]
-#print eedge
-##print scalar_edge_index[sl1]
-#print [scalar_node_index0[x] for x in eedge]
-#print [scalar_node_index1[x] for x in eedge]
-#print node_indexes[0][sl1]
-#print node_indexes[1][sl1]
 

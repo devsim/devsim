@@ -57,10 +57,11 @@ void TetrahedronEdgeFromEdgeModel<DoubleType>::calcTetrahedronEdgeScalarValues()
   std::vector<DoubleType> evz(6*tl.size());
 
   const TetrahedronElementField<DoubleType> &efield = reg.GetTetrahedronElementField<DoubleType>();
+  typename TetrahedronElementField<DoubleType>::EdgeVectors_t v;
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Tetrahedron &tetrahedron = *tl[i];
-    const std::vector<Vector<DoubleType> > &v = efield.GetTetrahedronElementField(tetrahedron, *emp);
+    efield.GetTetrahedronElementField(tetrahedron, *emp, v);
     for (size_t j = 0; j < 6; ++j)
     {
       const Vector<DoubleType> &vec = v[j];

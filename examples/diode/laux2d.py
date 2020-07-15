@@ -20,7 +20,7 @@
 # journal = {IBM J. Res. Dev.},
 # issue_date = {May 1985},
 # volume = {29},
-# number = {dim},
+# number = {3},
 # month = may,
 # year = {1985},
 # issn = {0018-8646},
@@ -53,5 +53,11 @@ region = "Bulk"
 SetDimension(2)
 number_test = -1
 
-RunTest(device, region, number_test)
+RunTest(device, region, number_test, "ElectricField", "Potential")
+
+import devsim
+devsim.set_parameter(name="V_t", value=0.0259)
+devsim.set_parameter(name="mu_n", value=400)
+devsim.set_parameter(name="ElectronCharge", value=1.6e-19)
+RunTest(device, region, number_test, "ElectronCurrent", "Potential")
 

@@ -58,16 +58,29 @@ class TetrahedronElementField {
     ~TetrahedronElementField();
 
     //// Gets the weighted average for a given edge index (0, 1, 2)
-    std::vector<Vector<DoubleType> > GetTetrahedronElementField(const Tetrahedron &, const TetrahedronEdgeModel &) const;
-    std::vector<Vector<DoubleType> > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &) const;
-    std::vector<Vector<DoubleType> > GetTetrahedronElementField(const Tetrahedron &, const std::vector<DoubleType> &) const;
-    std::vector<std::vector<Vector<DoubleType> > > GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &, const EdgeModel &) const;
+    typedef std::array<Vector<DoubleType>, 6> EdgeVectors_t;
+    typedef std::array<EdgeVectors_t, 4> DerivativeEdgeVectors_t;
+    void GetTetrahedronElementField(const Tetrahedron &, const TetrahedronEdgeModel &, EdgeVectors_t &) const;
+    void GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &, EdgeVectors_t &) const;
+    void GetTetrahedronElementField(const Tetrahedron &, const EdgeModel &, const EdgeModel &, DerivativeEdgeVectors_t &) const;
+    void GetTetrahedronElementFieldPairs(const Tetrahedron &, const EdgeModel &, EdgeVectors_t &, EdgeVectors_t &) const;
+    void GetTetrahedronElementFieldPairs(const Tetrahedron &, const EdgeModel &, const EdgeModel &, DerivativeEdgeVectors_t &, DerivativeEdgeVectors_t &) const;
 
   private:
+    void GetTetrahedronElementField(const Tetrahedron &, const std::vector<DoubleType> &, EdgeVectors_t &) const;
     typedef std::array<Vector<DoubleType>, 4> NodeVectors_t;
     typedef std::array<std::array<Vector<DoubleType>, 4>, 4> DerivativeNodeVectors_t;
     const NodeVectors_t &GetNodeVectors(const Tetrahedron &, const std::vector<DoubleType> &) const;
     const DerivativeNodeVectors_t &GetDerivativeNodeVectors(const Tetrahedron &, const std::vector<DoubleType> &, const std::vector<DoubleType> &) const;
+
+    typedef std::array<Vector<DoubleType>, 2> VectorPair_t;
+    typedef std::array<VectorPair_t, 6> VectorPairs_t;
+    typedef std::array<VectorPairs_t, 4> DerivativeVectorPairs_t;
+
+    void GetFieldPairs(const Tetrahedron &, const std::vector<DoubleType> &, VectorPairs_t &) const;
+    void GetDerivativeFieldPairs(const Tetrahedron &, const EdgeModel &, const EdgeModel &, DerivativeVectorPairs_t &) const;
+
+    void PopulateEdgeData(const Tetrahedron &, const EdgeModel &, std::vector<DoubleType> &) const;
 
     TetrahedronElementField();
     TetrahedronElementField(const TetrahedronElementField &);

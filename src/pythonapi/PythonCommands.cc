@@ -219,6 +219,7 @@ MyNewPyPtr(edge_from_node_model,       dsCommand::createEdgeFromNodeModelCmd);
 MyNewPyPtr(edge_average_model,         dsCommand::createEdgeAverageModelCmd);
 MyNewPyPtr(edge_model,                 dsCommand::createNodeModelCmd);
 MyNewPyPtr(element_from_edge_model,    dsCommand::createTriangleFromEdgeModelCmd);
+MyNewPyPtr(element_pair_from_edge_model,    dsCommand::createTriangleFromEdgeModelCmd);
 MyNewPyPtr(element_from_node_model,    dsCommand::createEdgeFromNodeModelCmd);
 MyNewPyPtr(vector_element_model,       dsCommand::createVectorElementModelCmd);
 MyNewPyPtr(element_model,              dsCommand::createNodeModelCmd);
@@ -334,6 +335,7 @@ MYCOMMAND(edge_from_node_model,       dsCommand::createEdgeFromNodeModelCmd),
 MYCOMMAND(edge_average_model,         dsCommand::createEdgeAverageModelCmd),
 MYCOMMAND(edge_model,                 dsCommand::createNodeModelCmd),
 MYCOMMAND(element_from_edge_model,    dsCommand::createTriangleFromEdgeModelCmd),
+MYCOMMAND(element_pair_from_edge_model, dsCommand::createTriangleFromEdgeModelCmd),
 MYCOMMAND(element_from_node_model,    dsCommand::createEdgeFromNodeModelCmd),
 MYCOMMAND(vector_element_model,       dsCommand::createVectorElementModelCmd),
 MYCOMMAND(element_model,              dsCommand::createNodeModelCmd),

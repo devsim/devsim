@@ -51,10 +51,11 @@ void VectorTriangleEdgeModel<DoubleType>::calcTriangleEdgeScalarValues() const
   std::vector<DoubleType> evy(3*tl.size());
 
   const TriangleElementField<DoubleType> &efield = reg.GetTriangleElementField<DoubleType>();
+  typename TriangleElementField<DoubleType>::EdgeVectors_t v;
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Triangle &triangle = *tl[i];
-    const std::vector<Vector<DoubleType> > &v = efield.GetTriangleElementField(triangle, *eec, *emp);
+    efield.GetTriangleElementField(triangle, *eec, *emp, v);
     for (size_t j = 0; j < 3; ++j)
     {
       evx[3*i + j] = v[j].Getx();

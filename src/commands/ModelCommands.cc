@@ -39,9 +39,13 @@ limitations under the License.
 
 #include "TriangleEdgeFromEdgeModel.hh"
 #include "TriangleEdgeFromEdgeModelDerivative.hh"
+#include "TriangleEdgePairFromEdgeModel.hh"
+#include "TriangleEdgePairFromEdgeModelDerivative.hh"
 
 #include "TetrahedronEdgeFromEdgeModel.hh"
 #include "TetrahedronEdgeFromEdgeModelDerivative.hh"
+#include "TetrahedronEdgePairFromEdgeModel.hh"
+#include "TetrahedronEdgePairFromEdgeModelDerivative.hh"
 
 #include "TriangleEdgeFromNodeModel.hh"
 #include "TetrahedronEdgeFromNodeModel.hh"
@@ -1915,34 +1919,55 @@ createTriangleFromEdgeModelCmd(CommandHandler &data)
     }
     if (dimension == 2)
     {
-      if (derivative.empty())
+      if (commandName == "element_from_edge_model")
       {
-        /// Need to test that these edge models don't already exist
-        CreateTriangleEdgeFromEdgeModel(name, reg);
-        data.SetEmptyResult();
+        if (derivative.empty())
+        {
+          CreateTriangleEdgeFromEdgeModel(name, reg);
+        }
+        else
+        {
+          CreateTriangleEdgeFromEdgeModelDerivative(name, derivative, reg);
+        }
       }
-      else
+      else if (commandName == "element_pair_from_edge_model")
       {
-        /// Need to test that these edge models don't already exist
-        CreateTriangleEdgeFromEdgeModelDerivative(name, derivative, reg);
-        data.SetEmptyResult();
+        if (derivative.empty())
+        {
+          CreateTriangleEdgePairFromEdgeModel(name, reg);
+        }
+        else
+        {
+          CreateTriangleEdgePairFromEdgeModelDerivative(name, derivative, reg);
+        }
       }
+      data.SetEmptyResult();
     }
     else if (dimension == 3)
     {
-      std::string tmz = name + "_z";
-      if (derivative.empty())
+      if (commandName == "element_from_edge_model")
       {
-        /// Need to test that these edge models don't already exist
-        CreateTetrahedronEdgeFromEdgeModel(name, reg);
-        data.SetEmptyResult();
+        if (derivative.empty())
+        {
+          CreateTetrahedronEdgeFromEdgeModel(name, reg);
+        }
+        else
+        {
+          CreateTetrahedronEdgeFromEdgeModelDerivative(name, derivative, reg);
+        }
       }
-      else
+      else if (commandName == "element_pair_from_edge_model")
       {
-        /// Need to test that these edge models don't already exist
-        CreateTetrahedronEdgeFromEdgeModelDerivative(name, derivative, reg);
-        data.SetEmptyResult();
+        if (derivative.empty())
+        {
+          CreateTetrahedronEdgePairFromEdgeModel(name, reg);
+        }
+        else
+        {
+          CreateTetrahedronEdgePairFromEdgeModelDerivative(name, derivative, reg);
+        }
       }
+      data.SetEmptyResult();
     }
 }
 
@@ -2222,6 +2247,7 @@ Commands ModelCommands[] = {
     {"edge_average_model",   createEdgeAverageModelCmd},
     {"edge_model",           createNodeModelCmd},
     {"element_from_edge_model", createTriangleFromEdgeModelCmd},
+    {"element_pair_from_edge_model", createTriangleFromEdgeModelCmd},
     {"element_from_node_model", createEdgeFromNodeModelCmd},
     {"vector_element_model", createVectorElementModelCmd},
     {"element_model",    createNodeModelCmd},

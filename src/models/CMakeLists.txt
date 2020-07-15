@@ -13,12 +13,16 @@ SET (CXX_SRCS
     TriangleEdgeModel.cc
     TriangleEdgeSubModel.cc
     TriangleEdgeFromEdgeModel.cc
+    TriangleEdgePairFromEdgeModel.cc
     TriangleEdgeFromEdgeModelDerivative.cc
+    TriangleEdgePairFromEdgeModelDerivative.cc
     TetrahedronEdgeScalarData.cc
     TetrahedronEdgeModel.cc
     TetrahedronEdgeSubModel.cc
     TetrahedronEdgeFromEdgeModel.cc
     TetrahedronEdgeFromEdgeModelDerivative.cc
+    TetrahedronEdgePairFromEdgeModel.cc
+    TetrahedronEdgePairFromEdgeModelDerivative.cc
     TriangleEdgeFromNodeModel.cc
     TetrahedronEdgeFromNodeModel.cc
     VectorTriangleEdgeModel.cc

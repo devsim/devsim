@@ -106,10 +106,11 @@ void TriangleEdgeFromEdgeModelDerivative<DoubleType>::calcTriangleEdgeScalarValu
   const TriangleElementField<DoubleType> &efield = reg.GetTriangleElementField<DoubleType>();
 
   //// For each triangle
+  typename TriangleElementField<DoubleType>::DerivativeEdgeVectors_t v;
   for (size_t i = 0; i < tl.size(); ++i)
   {
     const Triangle &triangle = *tl[i];
-    const std::vector<std::vector<Vector<DoubleType> > > &v = efield.GetTriangleElementField(triangle, *eec, *emp[0], *emp[1]);
+    efield.GetTriangleElementField(triangle, *eec, *emp[0], *emp[1], v);
     for (size_t nindex = 0; nindex < 3; ++nindex)
     {
       for (size_t eindex = 0; eindex < 3; ++eindex)
