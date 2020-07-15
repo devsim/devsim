@@ -300,7 +300,7 @@ bool BlockPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
 
   CreateBlockMatrix(cm);
   block_matrix_->Finalize();
-  
+
 
   return block_preconditioner_->LUFactor(block_matrix_);
 }

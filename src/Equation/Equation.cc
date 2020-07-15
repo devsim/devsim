@@ -145,7 +145,7 @@ void Equation<DoubleType>::LogSolutionUpdate(const NodeScalarList<DoubleType> &o
       upds[i] = upd;
 
       nvals[i] = nval;
-      
+
   }
 }
 

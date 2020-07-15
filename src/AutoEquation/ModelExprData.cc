@@ -260,7 +260,7 @@ void ModelExprData<DoubleType>::convertToTriangleEdgeData()
     {
       const DoubleType val = edgeScalarData->GetUniformValue();
       size_t       len = 3 * reg->GetTriangleList().size();
-      
+
       type = datatype::TRIANGLEEDGEDATA;
       TriangleEdgeScalarData<DoubleType> *e = new TriangleEdgeScalarData<DoubleType>(val, len);
       triangleEdgeScalarData = triangleEdgeScalarData_ptr<DoubleType>(e);
@@ -291,7 +291,7 @@ void ModelExprData<DoubleType>::convertToTetrahedronEdgeData()
     {
       const DoubleType val = edgeScalarData->GetUniformValue();
       size_t       len = 6 * reg->GetTriangleList().size();
-      
+
       type = datatype::TETRAHEDRONEDGEDATA;
       TetrahedronEdgeScalarData<DoubleType> *e = new TetrahedronEdgeScalarData<DoubleType>(val, len);
       tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr<DoubleType>(e);

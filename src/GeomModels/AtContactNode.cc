@@ -53,7 +53,7 @@ void AtContactNode<DoubleType>::calcNodeScalarValues() const
         const ConstNodeList_t &cnodes = it->second->GetNodes();
         for (ConstNodeList_t::const_iterator jt = cnodes.begin(); jt != cnodes.end(); ++jt)
         {
-    
+
 #if 0
             std::ostringstream os; 
             os << region.GetName() << " Node  pointer " << *jt << "\n";

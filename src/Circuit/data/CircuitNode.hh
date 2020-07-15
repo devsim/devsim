@@ -44,7 +44,7 @@ class CircuitNode {
 
         inline CircuitUpdateType getUpdateType()
             {return updateType;}
-        
+
         inline CircuitNodeType getCircuitNodeType()
             {return nodeType_;}
 

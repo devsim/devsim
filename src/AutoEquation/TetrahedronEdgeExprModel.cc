@@ -139,7 +139,7 @@ void TetrahedronEdgeExprModel<DoubleType>::calcTetrahedronEdgeScalarValues() con
             << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *rp, os.str());
     }
-        
+
 }
 
 template <typename DoubleType>

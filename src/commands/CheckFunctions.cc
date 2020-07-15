@@ -37,7 +37,7 @@ bool mustBePositive(const std::string &optionName, std::string &errorString, con
         errorString += os.str();
         ret = false;
     }
-    
+
     return ret;
 }
 
@@ -54,7 +54,7 @@ bool stringCannotBeEmpty(const std::string &optionName, std::string &errorString
         errorString += os.str();
         ret = false;
     }
-    
+
     return ret;
 }
 

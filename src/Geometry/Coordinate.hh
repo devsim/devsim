@@ -34,7 +34,7 @@ class Coordinate {
       {
          return index;
       }
-      
+
       void setIndex(size_t i)
       {
          index = i;

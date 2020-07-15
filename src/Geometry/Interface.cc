@@ -223,7 +223,7 @@ void Interface::FindEdges() const
 
   edges0.clear();
   edges1.clear();
-  
+
   const ConstEdgeList &el0 = region0.GetEdgeList();
   const ConstEdgeList &el1 = region1.GetEdgeList();
 

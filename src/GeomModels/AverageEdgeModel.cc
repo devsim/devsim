@@ -200,7 +200,7 @@ void AverageEdgeModel<DoubleType>::calcEdgeScalarValues() const
         dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
       }
 
-      
+
       EdgeScalarList<DoubleType> esl0;
       EdgeScalarList<DoubleType> esl1;
 

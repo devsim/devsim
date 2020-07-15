@@ -73,7 +73,7 @@ class MeshRegion1d {
         const size_t &GetIndex1() const;
 
         void sortTags(const std::map<std::string, size_t> &);
-        
+
     private:
         MeshRegion1d();
         /// Rely on the default copy constructor and assignment operator

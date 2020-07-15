@@ -154,7 +154,7 @@ class Vector {
         {
           z = zn;
         }
-        
+
     private:
        DoubleType x;
        DoubleType y;

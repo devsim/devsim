@@ -84,7 +84,7 @@ class ObjectHolder {
 
   private:
     void *object_;
-    
+
 };
 #endif
 

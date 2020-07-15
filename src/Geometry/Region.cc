@@ -1548,7 +1548,7 @@ void Region::SetMaterial(const std::string &new_material)
   //// Our global parameter db has precedence
   GlobalData &gd = GlobalData::GetInstance();
   MaterialDB &md = MaterialDB::GetInstance();
-  
+
   const MaterialDB::ParameterDataMap_t &old_data = md.GetOpenEntries(materialName);
 
   //// We can no longer rely on anything based on our old material name

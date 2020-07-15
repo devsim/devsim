@@ -263,7 +263,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
             std::vector<size_t> &ctonode = CoordinateToNode[nm];
 
             size_t &mni = MaxNodeIndex[nm];
-        
+
             if (ctonode[i0] == size_t(-1))
             {
                 ctonode[i0] = mni;

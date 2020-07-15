@@ -661,7 +661,7 @@ EqObjPtr Product::Simplify()
                 if (e->isOne())
                 {
                     tmp.push_back(b);
-                    
+
                 }
                 else {
                     if (b->getType() == PRODUCT_OBJ)
@@ -961,7 +961,7 @@ EqObjPtr Product::expand()
             adds.push_back(values[i]->expand());
         else
             tmp.push_back(values[i]->expand());
-            
+
     }
     EqObjPtr scale;
     if (tmp.size() == 1)

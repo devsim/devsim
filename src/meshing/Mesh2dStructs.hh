@@ -162,7 +162,7 @@ class MeshRegion2d {
 #endif
         }
 
-        
+
         MeshRegion2d();
     private:
 

@@ -371,7 +371,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
       const ContactEquationPtrMap_t &contact_equations = cnt.GetEquationPtrList();
 
       WriteContactEquations(myfile, contact_equations);
-  
+
       myfile << "end_contact\n\n";
     }
 
@@ -429,9 +429,9 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
           myfile << "end_triangles\n\n";
         }
       }
-      
 
-      
+
+
       const Interface::NameToInterfaceNodeModelMap_t &imlist = iint.GetInterfaceNodeModelList();
 
 #if 0

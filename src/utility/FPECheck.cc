@@ -134,7 +134,7 @@ std::string FPECheck::getFPEString(const FPECheck::FPEFlag_t feFlags)
     {
       out += ", ";
     }
-    
+
     out += "Divide-by-zero";
   }
 

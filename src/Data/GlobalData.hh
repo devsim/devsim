@@ -90,7 +90,7 @@ class GlobalData
         typedef std::map<std::string, ObjectHolder> TclEquationList_t;
 
         const TclEquationList_t &GetTclEquationList();
-        
+
 
     private:
         void InitializeParameters();

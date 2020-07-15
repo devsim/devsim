@@ -165,7 +165,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
                 {
                     nodeModels.insert(nit->first);
                 }
-    
+
                 const Region::EdgeModelList_t emlist = reg.GetEdgeModelList();
                 for (Region::EdgeModelList_t::const_iterator eit = emlist.begin(); eit != emlist.end(); ++eit)
                 {

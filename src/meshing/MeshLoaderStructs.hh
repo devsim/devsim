@@ -149,7 +149,7 @@ class Solution {
         {
           reserve_size = rs;
         }
-    
+
     private:
         std::string name;
         std::string command_name;
@@ -188,7 +188,7 @@ class Equation {
         {
           command_args.push_back(std::make_pair(n, o));
         }
-    
+
     private:
         std::string name;
         std::string command_name;
@@ -428,7 +428,7 @@ class MeshCoordinate {
         {
             return Vector<double>(xpos, ypos, zpos);
         }
-        
+
 
     private:
         double xpos;

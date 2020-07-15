@@ -1681,7 +1681,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
               continue;
             }
 
-            
+
             DoubleType val;
             if (*cit == edge.GetHead())
             {

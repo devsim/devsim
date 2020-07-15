@@ -121,7 +121,7 @@ void InterfaceExprEquation<DoubleType>::Serialize(std::ostream &of) const
     << "\" -type \"" << InterfaceExprEquationEnum::EquationTypeString[equation_type_]
     << "\"";
 }
-    
+
 template <typename DoubleType>
 void InterfaceExprEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
 {

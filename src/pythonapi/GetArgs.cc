@@ -38,7 +38,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
   ObjectHolder hash(tdata.kwargs_);
   ObjectHolderMap_t hashmap;
   hash.GetHashMap(hashmap);
-  
+
 
   const std::string &commandName = handler.GetCommandName();
 

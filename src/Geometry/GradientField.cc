@@ -86,7 +86,7 @@ void GradientField<DoubleType>::CalcMatrices2d() const
     M.LUFactor();
 
     dense_mats_[triangleIndex] = dmp;
-    
+
   }
 }
 
@@ -142,7 +142,7 @@ void GradientField<DoubleType>::CalcMatrices3d() const
     M.LUFactor();
 
     dense_mats_[tetrahedronIndex] = dmp;
-    
+
   }
 }
 

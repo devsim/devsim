@@ -134,13 +134,13 @@ void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const {
     nzv = nz->GetScalarValues<DoubleType>();
   }
 
-  
+
 
   for (Interface::ConstNodeList_t::const_iterator it = cnl.begin(); it != cnl.end(); ++it)
   {
     const Node   &node   = **it;
     const Vector<DoubleType> &inp = ConvertVector<DoubleType>(node.GetCoordinate().Position());
-  
+
     const size_t node_index = node.GetIndex();
 
     Vector<DoubleType> normal(nxv[node_index], nyv[node_index], nzv[node_index]);

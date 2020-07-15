@@ -48,7 +48,7 @@ namespace {
    Each routine is precomputed within the routine.
 
    If a derivative of equation is zero, then it is not added to symbolic.
-   
+
    For DC assembly,
 
       only derivative models are calculated for resistive terms

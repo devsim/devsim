@@ -667,7 +667,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
   {
     InitializeTransientAssemble(timeinfo, numeqns, rhs_constant);
   }
-  
+
 
   LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::PERMUTATIONSONLY, dsMathEnum::TimeMode::DC, static_cast<DoubleType>(1.0));
 
@@ -1005,7 +1005,7 @@ bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<
   bool converged = true;
   /// need to make sure projection makes sense
   std::vector<DoubleType> projectQ(numeqns);
-  
+
   TimeData<DoubleType> &tinst = TimeData<DoubleType>::GetInstance();
 
   tinst.AssembleI(TimePoint_t::TM0, timeinfo.tdelta, projectQ);
@@ -1389,7 +1389,7 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
       {
         ok = rhs_objects.GetListOfObjects(objects);
         size_t len = objects.size();
-  
+
         if ((!ok) || ((len % 2) != 0))
         {
           std::ostringstream os; 

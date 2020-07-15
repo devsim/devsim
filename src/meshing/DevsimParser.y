@@ -592,7 +592,7 @@ interface : BEG_INTERFACE WORD WORD WORD  {
         interface interfacenodemodel |
         interface interfaceequation
         ;
-        
+
 
 nodesol : BEG_NODESOL WORD  {
             if (dsDevsimParse::Sol)

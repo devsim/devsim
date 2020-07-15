@@ -133,7 +133,7 @@ void EdgeExprModel<DoubleType>::calcEdgeScalarValues() const
             << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *rp, os.str());
     }
-        
+
 }
 
 template <typename DoubleType>

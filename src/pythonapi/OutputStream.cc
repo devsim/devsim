@@ -31,7 +31,7 @@ void OutputStream::SetInterpreter(void *interp)
 
 void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::string &msg)
 {
-  
+
 // TODO: "do we need a thread lock"
   //// just assume the program has terminated
   if (!Py_IsInitialized())

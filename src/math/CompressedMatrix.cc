@@ -157,7 +157,7 @@ void CompressedMatrix<DoubleType>::CreateMatrix()
     }
   }
   Ap_[this->size()] = r;
-  
+
   // Ye old swap trick
   IntVec_t(Ai_).swap(Ai_);
   // reserve room

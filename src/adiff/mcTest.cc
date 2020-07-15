@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
         udiv.clear();
         udiv.push_back(std::make_pair(arg1,Eqo::con(-1)*Sin));
         Eqo::SetUserFuncDiffs("cos", udiv);
-        
+
     }
 #endif
 
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
       exit(-1);
    }
 
-   
+
    std::string hFileName = ClassName + ".hh";
    std::string cFileName = ClassName + ".cc";
 
@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
       cerr << "Could not open implementation file: " << cFileName << "\n";
       exit(-1);
    }
-   
+
 
     CreateTotalNodeList();
     GenerateEquationDerivatives();

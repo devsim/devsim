@@ -1,4 +1,4 @@
- 
+
 template void TriangleEdgeModel::SetValues<DBLTYPE>(std::vector<DBLTYPE> const&);
 template void TriangleEdgeModel::SetValues<DBLTYPE>(DBLTYPE const&);
 template std::vector<DBLTYPE> const& TriangleEdgeModel::GetScalarValues<DBLTYPE>() const;

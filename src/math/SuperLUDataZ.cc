@@ -110,7 +110,7 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix<DoubleType> *cm, const 
    *   permc_spec = 2: minimum degree on structure of A'+A
    *   permc_spec = 3: approximate minimum degree for unsymmetric matrices
    */           
-  
+
   if (sstatus == SymbolicStatus_t::NEW_SYMBOLIC)
   {
     permc_spec = options.ColPerm;

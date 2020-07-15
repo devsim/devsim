@@ -279,7 +279,7 @@ add1dInterfaceCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    
+
     static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
@@ -327,7 +327,7 @@ add1dContactCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    
+
     static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
@@ -377,7 +377,7 @@ add2dInterfaceCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    
+
     static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
@@ -450,7 +450,7 @@ add2dContactCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    
+
     static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
@@ -926,7 +926,7 @@ addGmshInterfaceCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    
+
     static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
@@ -978,7 +978,7 @@ addGmshContactCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    
+
     static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
         {"name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
@@ -1030,7 +1030,7 @@ addGmshRegionCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    
+
     static dsGetArgs::Option option[] = {
         {"mesh",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustNotBeFinalized},
         {"region",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
@@ -1083,7 +1083,7 @@ createContactFromInterfaceCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-    
+
     static dsGetArgs::Option option[] = {
         {"name",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"material",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
@@ -1115,7 +1115,7 @@ createContactFromInterfaceCmd(CommandHandler &data)
     const std::string &regionName    = data.GetStringOption("region");
     const std::string &interfaceName = data.GetStringOption("interface");
 
-  
+
     errorString = ValidateDeviceAndContact(deviceName, contactName, device, contact);
     if (contact)
     {

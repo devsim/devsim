@@ -55,7 +55,7 @@ class TriangleElementField {
 
     typedef std::array<Vector<DoubleType>, 3> EdgeVectors_t;
     typedef std::array<EdgeVectors_t, 3> DerivativeEdgeVectors_t;
-    
+
     void GetTriangleElementField(const Triangle &, const TriangleEdgeModel &, const TriangleEdgeModel &, EdgeVectors_t &) const;
     void GetTriangleElementField(const Triangle &, const TriangleEdgeModel &, const EdgeModel &, EdgeVectors_t &) const;
     void GetTriangleElementField(const Triangle &, const TriangleEdgeModel &, const EdgeModel &, const EdgeModel &, DerivativeEdgeVectors_t &) const;

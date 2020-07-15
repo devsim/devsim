@@ -135,7 +135,7 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
             << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *ip, os.str());
     }
-        
+
 }
 
 template <typename DoubleType>

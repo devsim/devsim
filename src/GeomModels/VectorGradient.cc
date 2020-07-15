@@ -47,7 +47,7 @@ VectorGradient<DoubleType>::VectorGradient(RegionPtr rp, const std::string &name
     RegisterCallback("EdgeInverseLength");
     RegisterCallback("unitx");
     //// unitx calculates unity and unitz
-    
+
     const size_t dimension = GetRegion().GetDimension();
     if (dimension == 2)
     {
@@ -301,7 +301,7 @@ void VectorGradient<DoubleType>::setInitialValues()
 template <typename DoubleType>
 void VectorGradient<DoubleType>::Serialize(std::ostream &of) const
 {
-  
+
   of << "COMMAND vector_gradient -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -calc_type \"" << VectorGradientEnum::CalcTypeString[calctype_] << "\" -node_model \"" << parentname_ << "\"";
 }
 

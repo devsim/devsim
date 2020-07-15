@@ -86,7 +86,7 @@ int main()
     x.push_back(297.);
     x.push_back(-1e20);
     x.push_back(-1e3);
-    
+
     std::cout << std::scientific << std::setprecision(15);
 
     kahan a(0.0);

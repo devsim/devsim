@@ -74,7 +74,7 @@ std::string ValidateDeviceAndRegion(const std::string &deviceName,
     std::string errorString;
 
     errorString = ValidateDevice(deviceName, dev);
-    
+
     if (dev)
     {
         reg = dev->GetRegion(regionName);
@@ -101,7 +101,7 @@ std::string ValidateDeviceAndContact(const std::string &deviceName,
     std::string errorString;
 
     errorString = ValidateDevice(deviceName, dev);
-    
+
     if (dev)
     {
         con = dev->GetContact(contactName);
@@ -154,7 +154,7 @@ std::string ValidateDeviceAndInterface(const std::string &deviceName,
     std::string errorString;
 
     errorString = ValidateDevice(deviceName, dev);
-    
+
     if (dev)
     {
         interface = dev->GetInterface(interfaceName);
@@ -183,7 +183,7 @@ std::string ValidateDeviceRegionAndInterface(const std::string &deviceName,
     std::string errorString;
 
     errorString = ValidateDeviceAndRegion(deviceName, regionName, dev, region);
-    
+
     if (dev)
     {
         interface = dev->GetInterface(interfaceName);

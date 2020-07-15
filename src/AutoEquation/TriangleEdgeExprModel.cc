@@ -139,7 +139,7 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
             << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *rp, os.str());
     }
-        
+
 }
 
 template <typename DoubleType>

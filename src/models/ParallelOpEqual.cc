@@ -96,7 +96,7 @@ void OpEqualRun(U &task, size_t vlen)
       }
     }
 
-    
+
     // process the futures
     for (auto &p : futures)
     {

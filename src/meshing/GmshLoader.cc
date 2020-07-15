@@ -62,7 +62,7 @@ void processEdges(const MeshEdgeList_t &tl, const std::vector<Node *> &nlist, st
   MeshEdgeList_t::const_iterator tit = tl.begin();
   for (size_t ti = 0; tit != tl.end(); ++tit, ++ti)
   {
-  
+
       const size_t index0 = tit->Index0();
       const size_t index1 = tit->Index1();
 
@@ -83,7 +83,7 @@ void processTriangles(const MeshTriangleList_t &tl, const std::vector<Node *> &n
   MeshTriangleList_t::const_iterator tit = tl.begin();
   for (size_t ti = 0; tit != tl.end(); ++tit, ++ti)
   {
-  
+
       const size_t index0 = tit->Index0();
       const size_t index1 = tit->Index1();
       const size_t index2 = tit->Index2();
@@ -107,7 +107,7 @@ void processTetrahedra(const MeshTetrahedronList_t &tl, const std::vector<Node *
   MeshTetrahedronList_t::const_iterator tit = tl.begin();
   for (size_t ti = 0; tit != tl.end(); ++tit, ++ti)
   {
-  
+
       const size_t index0 = tit->Index0();
       const size_t index1 = tit->Index1();
       const size_t index2 = tit->Index2();
@@ -754,7 +754,7 @@ bool GmshLoader::Finalize_(std::string &errorString)
     gmshShapesMap[physicalName].AddShape(element_type, elem.node_indexes);
   }
 
-  
+
   for (ShapesMap_t::iterator it = gmshShapesMap.begin(); it != gmshShapesMap.end(); ++it)
   {
     Shapes &shapes = it->second;

@@ -627,7 +627,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
       }
       mytest.doit(argv);
     }
-  
+
     /// convert edgedata if one argument has tetrahedron edge data
     if (mytest.hasTetrahedronEdgeData)
     {

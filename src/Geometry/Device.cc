@@ -153,7 +153,7 @@ void Device::AddInterface(const InterfacePtr &ip)
 
    interfaceList[nm]=ip;
 
-    
+
    (const_cast<RegionPtr>(ip->GetRegion0()))->SignalCallbacks("@@@InterfaceChange");
    (const_cast<RegionPtr>(ip->GetRegion1()))->SignalCallbacks("@@@InterfaceChange");
 

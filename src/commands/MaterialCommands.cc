@@ -268,7 +268,7 @@ getParameterCmd(CommandHandler &data)
     }
     else if (commandName == "get_material")
     {
-    
+
       std::string material_name;
       if (reg)
       {

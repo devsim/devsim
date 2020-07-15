@@ -76,7 +76,7 @@ class UserFunc : public EquationObject {
 
         UserFunc(const UserFunc &);
         UserFunc operator=(const UserFunc &);
-        
+
         std::string              name;  // name of this function (must not be in any other variable table)
         std::vector<EqObjPtr>    args; // number of arguments if initialized this way
 };

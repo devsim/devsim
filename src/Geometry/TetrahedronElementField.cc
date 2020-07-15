@@ -434,7 +434,7 @@ void TetrahedronElementField<DoubleType>::GetDerivativeFieldPairs(const Tetrahed
         {
           dsAssert(false, "UNEXPECTED");
         }
-  
+
         node_based_derivatives[nd][eindex][nei] = val;
         //ret[nd][eindex][np] = val;
       }

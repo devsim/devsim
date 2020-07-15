@@ -216,7 +216,7 @@ class IMLPreconditioner {
       IMLVector<U> xv(x); 
       return xv;
     }
-    
+
   private:
     const dsMath::Preconditioner<double> &pre_;
 };
@@ -238,7 +238,7 @@ template <typename T>
 T norm(const IMLVector<T> &vec)
 {
   T ret = sqrt(dot(vec, vec));
-  
+
   return ret;
 }
 
@@ -268,14 +268,14 @@ int GMRES(const Operator &A, Vector &x, const Vector &b,
   Real resid;
   int i, j = 1, k;
   Vector s(m+1), cs(m+1), sn(m+1), w;
-  
+
   Real normb = norm(M.solve(b));
   Vector r = M.solve(b - A * x);
   Real beta = norm(r);
-  
+
   if (normb == 0.0)
     normb = 1;
-  
+
   if ((resid = norm(r) / normb) <= tol) {
     tol = resid;
     max_iter = 0;
@@ -288,7 +288,7 @@ int GMRES(const Operator &A, Vector &x, const Vector &b,
     v[0] = r * (1.0 / beta);    // ??? r / beta
     s = 0.0;
     s(0) = beta;
-    
+
     for (i = 0; i < m && j <= max_iter; i++, j++) {
       w = M.solve(A * v[i]);
       for (k = 0; k <= i; k++) {
@@ -300,11 +300,11 @@ int GMRES(const Operator &A, Vector &x, const Vector &b,
 
       for (k = 0; k < i; k++)
         ApplyPlaneRotation(H(k,i), H(k+1,i), cs(k), sn(k));
-      
+
       GeneratePlaneRotation(H(i,i), H(i+1,i), cs(i), sn(i));
       ApplyPlaneRotation(H(i,i), H(i+1,i), cs(i), sn(i));
       ApplyPlaneRotation(s(i), s(i+1), cs(i), sn(i));
-      
+
       if ((resid = abs<Real>(s(i+1)) / normb) < tol) {
         Update(x, i, H, s, v);
         tol = resid;
@@ -323,7 +323,7 @@ int GMRES(const Operator &A, Vector &x, const Vector &b,
       return 0;
     }
   }
-  
+
   tol = resid;
   delete [] v;
   return 1;

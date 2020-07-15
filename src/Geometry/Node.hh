@@ -44,7 +44,7 @@ class Node {
       {
          return index;
       }
-      
+
       void SetIndex(size_t i)
       {
          index = i;

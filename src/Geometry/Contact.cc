@@ -184,7 +184,7 @@ void Contact::FindEdges() const
   }
 
   contactedges.clear();
-  
+
   const ConstEdgeList &el = region.GetEdgeList();
 
   const Region::EdgeToConstTriangleList_t &ett = region.GetEdgeToTriangleList();
@@ -221,7 +221,7 @@ void Contact::FindTriangles() const
   contactedges.clear();
 
   const Region &region = *(GetRegion());
-  
+
   const ConstTriangleList &tl = region.GetTriangleList();
 
   const ConstEdgeList &el = region.GetEdgeList();

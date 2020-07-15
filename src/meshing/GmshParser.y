@@ -156,7 +156,7 @@ intlist :
           $$.push_back($2);
         }
         ;
-        
+
 
 number : FLOAT {
 	    $$ = $1;
@@ -249,7 +249,7 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
     Gmsherror(os.str().c_str());
     return false;
   }
-  
+
   size_t physical_number = size_t(-1);
 
   if (number_tags > 0)

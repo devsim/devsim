@@ -52,7 +52,7 @@ template <typename T> class DenseMatrix {
     int                 dim_;
     bool                factored_;
     int                 info_;
-    
+
 };
 }
 #endif

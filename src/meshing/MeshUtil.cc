@@ -136,7 +136,7 @@ std::vector<Vector<double>> GetUnitVector(const Region &reg)
         }
         unitvec[i] = Vector<double>(x, y, z);
       }
-      
+
     }
     return unitvec;
 }

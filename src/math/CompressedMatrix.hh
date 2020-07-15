@@ -89,7 +89,7 @@ class CompressedMatrix : public Matrix<DoubleType> {
 
         void SetCompressed(bool);
         bool GetCompressed();
-        
+
         void DecompressMatrix();
 
     private:

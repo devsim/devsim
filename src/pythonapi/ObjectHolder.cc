@@ -119,7 +119,7 @@ std::string GetStringFromStringObject(PyObject *obj)
   }
   return ret;
 }
-  
+
 }
 
 std::string ObjectHolder::GetString() const
@@ -511,7 +511,7 @@ ObjectHolder::ObjectHolder(ObjectHolderList_t &list)
     //// steals the reference
     PyTuple_SetItem(list_object, i, ns);
   }
-  
+
   object_ = list_object;
 }
 

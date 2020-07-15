@@ -110,7 +110,7 @@ void WritePoints(const Region &reg, std::ostream &myfile)
 
 void WritePointData(const Region &reg, std::ostream &myfile)
 {
-  
+
   const Region::NodeModelList_t            &node_models             = reg.GetNodeModelList();
   const Region::EdgeModelList_t            &edge_models             = reg.GetEdgeModelList();
 #if 0

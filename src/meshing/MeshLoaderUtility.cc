@@ -127,7 +127,7 @@ size_t Shapes::GetDimension() const
 
   return dimension;
 }
-  
+
 size_t Shapes::GetNumberOfTypes() const
 {
   size_t num_types = 0;
