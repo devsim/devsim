@@ -10,8 +10,7 @@ GCC Version:
 
 DEVSIM depends on having one of the following 64 bit applications installed on your system:
 
-* Python 3.6
-* Python 3.7
+* Python 3 (3.6 or higher)
 * Intel MKL
 
 All of these dependencies are available by installing:
