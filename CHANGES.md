@@ -5,6 +5,12 @@ The ``element_pair_from_edge_model`` is available to calculate element edge comp
 
 Fixed issue where command option names where not always shown in the documentation.
 
+The platform specific notes now clarify that any version of Python 3 (3.6 or higher) is supported.
+
+- ``linux.txt``
+- ``windows.txt``
+- ``macos.txt``
+
 ### Version 1.4.10
 
 Fixed crash when evaluating element edge model in 3D.
