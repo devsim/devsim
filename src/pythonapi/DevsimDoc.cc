@@ -915,14 +915,14 @@ R"(    devsim.create_gmsh_mesh (mesh, file, coordinates, elements, physical_name
 
     ``coordinates`` is a float list of positions in the mesh.  Each coordinate adds an x, y, and z position so that the coordinate list length is 3 times the number of coordinates.
 
-    ``physical_names`` is a list of contact, interface, and region names.  It is referenced by index by the ``elements`` list. 
+    ``physical_names`` is a list of contact, interface, and region names.  It is referenced by index by the ``elements`` list.
 
     ``elements`` is a list of elements.  Each element adds
 
     * Element Type (float)
 
       - 0 node
-      - 1 edge 
+      - 1 edge
       - 2 triangle
       - 3 tetrahedron
 
@@ -1309,7 +1309,7 @@ R"(    devsim.element_from_edge_model (device, region, edge_model, derivative)
     - ``emodel_x:variable@en2``
     - ``emodel_y:variable@en2``
 
-    in 2D for each node on a triangular element. and 
+    in 2D for each node on a triangular element. and
 
     - ``emodel_x:variable@en0``
     - ``emodel_y:variable@en0``
@@ -1329,8 +1329,6 @@ R"(    devsim.element_from_edge_model (device, region, edge_model, derivative)
     The suffix ``en0`` refers to the first node on the edge of the element and ``en1`` refers to the second node.  ``en2`` and ``en3`` specifies the derivatives with respect the variable at the nodes opposite the edges on the element being considered.
 )";
 
-static const char element_pair_from_edge_model_doc[] = "";
-
 static const char element_from_node_model_doc[] =
 R"(    devsim.element_from_node_model (device, region, node_model)
 
@@ -1348,7 +1346,7 @@ R"(    devsim.element_from_node_model (device, region, node_model)
     Notes
     -----
 
-    This command creates an element edge model from a node model so that each corner of the element is represented.  A node model, ``nmodel``, would be be accessible as 
+    This command creates an element edge model from a node model so that each corner of the element is represented.  A node model, ``nmodel``, would be be accessible as
 
     - ``nmodel@en0``
     - ``nmodel@en1``
@@ -1375,6 +1373,81 @@ R"(    devsim.element_model (device, region, name, equation, display_type)
        Equation used to describe the element edge model being created
     display_type : {'scalar', 'nodisplay'}
        Option for output display in graphical viewer
+)";
+
+static const char element_pair_from_edge_model_doc[] =
+R"(    devsim.element_pair_from_edge_model (device, region, edge_model, derivative)
+
+    Creates element edge models from an edge model
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    region : str
+       The selected region
+    edge_model : str
+       The edge model from which we are creating the element model
+    derivative : str, optional
+       The variable we are taking with respect to edge_model
+
+    Notes
+    -----
+
+    For an edge model ``emodel``, creates an element models referring to the directional components on each edge of the element:
+
+    - ``emodel_node0_x``
+    - ``emodel_node0_y``
+    - ``emodel_node1_x``
+    - ``emodel_node1_y``
+
+    If the ``derivative`` ``variable`` option is specified, the ``emodel@n0`` and ``emodel@n1`` are used to create:
+
+    - ``emodel_node0_x:variable@en0``
+    - ``emodel_node0_y:variable@en0``
+    - ``emodel_node0_x:variable@en1``
+    - ``emodel_node0_y:variable@en1``
+    - ``emodel_node0_x:variable@en2``
+    - ``emodel_node0_y:variable@en2``
+    - ``emodel_node1_x:variable@en0``
+    - ``emodel_node1_y:variable@en0``
+    - ``emodel_node1_x:variable@en1``
+    - ``emodel_node1_y:variable@en1``
+    - ``emodel_node1_x:variable@en2``
+    - ``emodel_node1_y:variable@en2``
+
+    in 2D for each node on a triangular element. and
+
+    - ``emodel_node0_x:variable@en0``
+    - ``emodel_node0_y:variable@en0``
+    - ``emodel_node0_z:variable@en0``
+    - ``emodel_node0_x:variable@en1``
+    - ``emodel_node0_y:variable@en1``
+    - ``emodel_node0_z:variable@en1``
+    - ``emodel_node0_x:variable@en2``
+    - ``emodel_node0_y:variable@en2``
+    - ``emodel_node0_z:variable@en2``
+    - ``emodel_node0_x:variable@en3``
+    - ``emodel_node0_y:variable@en3``
+    - ``emodel_node0_z:variable@en3``
+    - ``emodel_node1_x:variable@en0``
+    - ``emodel_node1_y:variable@en0``
+    - ``emodel_node1_z:variable@en0``
+    - ``emodel_node1_x:variable@en1``
+    - ``emodel_node1_y:variable@en1``
+    - ``emodel_node1_z:variable@en1``
+    - ``emodel_node1_x:variable@en2``
+    - ``emodel_node1_y:variable@en2``
+    - ``emodel_node1_z:variable@en2``
+    - ``emodel_node1_x:variable@en3``
+    - ``emodel_node1_y:variable@en3``
+    - ``emodel_node1_z:variable@en3``
+
+    in 3D for each node on a tetrahedral element.
+
+    The label ``node0`` and ``node1`` refer to the node on the edge for which the element field average was performed.  For example, ``node0`` signifies that all edges connected to ``node0`` where used to calculate the element field.
+
+    The suffix ``en0`` refers to the first node on the edge of the element and ``en1`` refers to the second node.  ``en2`` and ``en3`` specifies the derivatives with respect the variable at the nodes opposite the edges on the element being considered.
 )";
 
 static const char element_solution_doc[] =
