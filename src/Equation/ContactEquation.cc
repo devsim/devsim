@@ -2108,10 +2108,10 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col3, val3));
               }
-              m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
   //          os << "e1 " << crow << " " << col << " " << val << "\n";
             }
           }
+          m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
         }
       }
 
