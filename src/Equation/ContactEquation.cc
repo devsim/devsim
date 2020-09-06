@@ -1673,30 +1673,31 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
         for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
         {
           const Edge &edge = *edgeList[eindex];
-          if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
+          if ((edge.GetHead() != (*cit)) && (edge.GetTail() != (*cit)))
           {
-            if (bothNodesOnContact(cnodes, edge))
-            {
-              continue;
-            }
-
-
-            DoubleType val;
-            if (*cit == edge.GetHead())
-            {
-              val = n0_sign;
-            }
-            else
-            {
-              val = n1_sign;
-            }
-
-            val *= esd[3 * tindex + eindex];
-            rhsval += val;
-
-            v.push_back(std::make_pair(crow,  rhsval));
+            continue;
           }
+
+          if (bothNodesOnContact(cnodes, edge))
+          {
+            continue;
+          }
+
+          DoubleType val;
+          if (*cit == edge.GetHead())
+          {
+            val = n0_sign;
+          }
+          else
+          {
+            val = n1_sign;
+          }
+
+          val *= esd[3 * tindex + eindex];
+          rhsval += val;
         }
+
+        v.push_back(std::make_pair(crow,  rhsval));
       }
     }
   }
@@ -1947,29 +1948,31 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
         for (size_t eindex = 0; eindex < edgeDataList.size(); ++eindex)
         {
           const Edge &edge = *(edgeDataList[eindex]->edge);
-          if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
+          if ((edge.GetHead() != (*cit)) && (edge.GetTail() != (*cit)))
           {
-            if (bothNodesOnContact(cnodes, edge))
-            {
-              continue;
-            }
-
-            DoubleType val;
-            if (*cit == edge.GetHead())
-            {
-              val = n0_sign;
-            }
-            else
-            {
-              val = n1_sign;
-            }
-
-            val *= esd[6 * tindex + eindex];
-            rhsval += val;
-
-            v.push_back(std::make_pair(crow,  rhsval));
+            continue;
           }
+
+          if (bothNodesOnContact(cnodes, edge))
+          {
+            continue;
+          }
+
+          DoubleType val;
+          if (*cit == edge.GetHead())
+          {
+            val = n0_sign;
+          }
+          else
+          {
+            val = n1_sign;
+          }
+
+          val *= esd[6 * tindex + eindex];
+          rhsval += val;
         }
+
+        v.push_back(std::make_pair(crow,  rhsval));
       }
     }
   }

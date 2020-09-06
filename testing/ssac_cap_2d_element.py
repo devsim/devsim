@@ -144,3 +144,6 @@ print(devsim.get_contact_charge(device=device, contact="bot", equation="Potentia
 devsim.solve(type="ac", frequency=1e10)
 devsim.solve(type="ac", frequency=1e15)
 
+#for i in devsim.get_element_model_values(device=device, region=region, name="DField"):
+#  print(i)
+
