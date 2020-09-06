@@ -1636,7 +1636,6 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
     return;
   }
 
-
   ConstTriangleEdgeModelPtr ec = region.GetTriangleEdgeModel(edge_couple);
 //  dsAssert(ec != nullptr, "UNEXPECTED");
   if (!ec)
@@ -1700,177 +1699,177 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
         }
       }
     }
+  }
 
 
-    if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
+  if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
+  {
+    const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
+    const Region::NodeToConstTriangleList_t &nttlist = region.GetNodeToTriangleList();
+
+    for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
     {
-      const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
-      const Region::NodeToConstTriangleList_t &nttlist = region.GetNodeToTriangleList();
+      const VariableList_t &vlist = region.GetVariableList();
 
-      for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
+      for (VariableList_t::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
       {
-        const VariableList_t &vlist = region.GetVariableList();
+        const std::string var(*it);
+        std::string dermodel = emodel;
+        dermodel += ":";  // should use function to create name for derivative model
+        dermodel += var;
 
-        for (VariableList_t::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
+        std::string dermodel0 = dermodel + "@en0";
+        std::string dermodel1 = dermodel + "@en1";
+        std::string dermodel2 = dermodel + "@en2";
+
+        ConstTriangleEdgeModelPtr edm0 = region.GetTriangleEdgeModel(dermodel0);
+        ConstTriangleEdgeModelPtr edm1 = region.GetTriangleEdgeModel(dermodel1);
+        ConstTriangleEdgeModelPtr edm2 = region.GetTriangleEdgeModel(dermodel2);
+
+        if (!edm0)
         {
-          const std::string var(*it);
-          std::string dermodel = emodel;
-          dermodel += ":";  // should use function to create name for derivative model
-          dermodel += var;
-
-          std::string dermodel0 = dermodel + "@en0";
-          std::string dermodel1 = dermodel + "@en1";
-          std::string dermodel2 = dermodel + "@en2";
-
-          ConstTriangleEdgeModelPtr edm0 = region.GetTriangleEdgeModel(dermodel0);
-          ConstTriangleEdgeModelPtr edm1 = region.GetTriangleEdgeModel(dermodel1);
-          ConstTriangleEdgeModelPtr edm2 = region.GetTriangleEdgeModel(dermodel2);
-
-          if (!edm0)
-          {
-            dsErrors::MissingContactEquationModel(region, *this, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
-          }
-          else
-          {
+          dsErrors::MissingContactEquationModel(region, *this, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
+        }
+        else
+        {
 //              os << "Contact assemble: using model " << dermodel0 << "\n";
-            TriangleEdgeScalarData<DoubleType> edd0(*ec);
-            TriangleEdgeScalarData<DoubleType> edd1(*ec);
-            TriangleEdgeScalarData<DoubleType> edd2(*ec);
-            edd0.times_equal_model(*edm0);
-            edd1.times_equal_model(*edm1);
-            edd2.times_equal_model(*edm2);
+          TriangleEdgeScalarData<DoubleType> edd0(*ec);
+          TriangleEdgeScalarData<DoubleType> edd1(*ec);
+          TriangleEdgeScalarData<DoubleType> edd2(*ec);
+          edd0.times_equal_model(*edm0);
+          edd1.times_equal_model(*edm1);
+          edd2.times_equal_model(*edm2);
 
-            const size_t eqindex2 = region.GetEquationIndex(region.GetEquationNameFromVariable(var));
+          const size_t eqindex2 = region.GetEquationIndex(region.GetEquationNameFromVariable(var));
 //            dsAssert(eqindex2 != size_t(-1), "UNEXPECTED");
-            if (eqindex2 == size_t(-1))
+          if (eqindex2 == size_t(-1))
+          {
+            dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+          }
+
+          const size_t col = region.GetEquationNumber(eqindex2, (*cit));
+
+          DoubleType val = 0.0;
+
+          const ConstTriangleList &ntl = nttlist[(*cit)->GetIndex()];
+          for (ConstTriangleList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
+          {
+            const Triangle &triangle = **ti;
+            const size_t tindex = triangle.GetIndex();
+            const ConstEdgeList &edgeList = ttelist[tindex];
+            const ConstNodeList &tnl = triangle.GetNodeList();
+            for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
             {
-              dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
-            }
-
-            const size_t col = region.GetEquationNumber(eqindex2, (*cit));
-
-            DoubleType val = 0.0;
-
-            const ConstTriangleList &ntl = nttlist[(*cit)->GetIndex()];
-            for (ConstTriangleList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
-            {
-              const Triangle &triangle = **ti;
-              const size_t tindex = triangle.GetIndex();
-              const ConstEdgeList &edgeList = ttelist[tindex];
-              const ConstNodeList &tnl = triangle.GetNodeList();
-              for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
+              const Edge &edge = *edgeList[eindex];
+              if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
               {
-                const Edge &edge = *edgeList[eindex];
-                if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
+                if (bothNodesOnContact(cnodes, edge))
                 {
-                  if (bothNodesOnContact(cnodes, edge))
-                  {
-                    continue;
-                  }
-
-                  const size_t vindex = 3 * tindex + eindex;
-
-                  const Node *h = edge.GetHead();
-                  const Node *t = edge.GetTail();
-
-                  DoubleType val1 = 0.0;
-                  size_t col1 = 0;
-
-                  DoubleType val2 = 0.0;
-                  size_t col2 = 0;
-
-                  //// we are guaranteed that the node is across from the edge
-                  const Node *const o = tnl[eindex];
-
-                  //// If our contact node is on node 0 or node 1 of the edge
-                  //// We need to get the right sign and derivative
-                  //// for unsymmetric derivatives
-                  //// Maintain the sign from above
-                  if ((*cit) == h)
-                  {
-                    val += n0_sign * edd0[vindex];
-
-                    val1 = n0_sign * edd1[vindex];
-                    col1 = region.GetEquationNumber(eqindex2, t);
-
-                    val2 = n0_sign * edd2[vindex];
-                    col2 = region.GetEquationNumber(eqindex2, o);
-                  }
-                  else if ((*cit) == t)
-                  {
-                    val += n1_sign * edd1[vindex];
-
-                    val1 = n1_sign * edd0[vindex];
-                    col1 = region.GetEquationNumber(eqindex2, h);
-
-                    val2 = n1_sign * edd2[vindex];
-                    col2 = region.GetEquationNumber(eqindex2, o);
-                  }
-                  else
-                  {
-                    dsAssert(0, "UNEXPECTED");
-                  }
-                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col1, val1));
-                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
+                  continue;
                 }
-                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
-    //          os << "e1 " << crow << " " << col << " " << val << "\n";
+
+                const size_t vindex = 3 * tindex + eindex;
+
+                const Node *h = edge.GetHead();
+                const Node *t = edge.GetTail();
+
+                DoubleType val1 = 0.0;
+                size_t col1 = 0;
+
+                DoubleType val2 = 0.0;
+                size_t col2 = 0;
+
+                //// we are guaranteed that the node is across from the edge
+                const Node *const o = tnl[eindex];
+
+                //// If our contact node is on node 0 or node 1 of the edge
+                //// We need to get the right sign and derivative
+                //// for unsymmetric derivatives
+                //// Maintain the sign from above
+                if ((*cit) == h)
+                {
+                  val += n0_sign * edd0[vindex];
+
+                  val1 = n0_sign * edd1[vindex];
+                  col1 = region.GetEquationNumber(eqindex2, t);
+
+                  val2 = n0_sign * edd2[vindex];
+                  col2 = region.GetEquationNumber(eqindex2, o);
+                }
+                else if ((*cit) == t)
+                {
+                  val += n1_sign * edd1[vindex];
+
+                  val1 = n1_sign * edd0[vindex];
+                  col1 = region.GetEquationNumber(eqindex2, h);
+
+                  val2 = n1_sign * edd2[vindex];
+                  col2 = region.GetEquationNumber(eqindex2, o);
+                }
+                else
+                {
+                  dsAssert(0, "UNEXPECTED");
+                }
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col1, val1));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
               }
+              m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
+  //          os << "e1 " << crow << " " << col << " " << val << "\n";
             }
           }
         }
+      }
 
+      {
+        std::string dermodel = emodel;
+        dermodel += ":" + circuitnode;
+        ConstTriangleEdgeModelPtr edm = region.GetTriangleEdgeModel(dermodel);
+        if (!edm)
         {
-          std::string dermodel = emodel;
-          dermodel += ":" + circuitnode;
-          ConstTriangleEdgeModelPtr edm = region.GetTriangleEdgeModel(dermodel);
-          if (!edm)
-          {
-            dsErrors::MissingContactEquationModel(region, *this, dermodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
-          }
-          else
-          {
+          dsErrors::MissingContactEquationModel(region, *this, dermodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
+        }
+        else
+        {
 //                  os << "Contact assemble: using model " << dermodel << "\n";
-            TriangleEdgeScalarData<DoubleType> edd(*ec);
-            edd.times_equal_model(*edm);
+          TriangleEdgeScalarData<DoubleType> edd(*ec);
+          edd.times_equal_model(*edm);
 
-            const ConstTriangleList &ntl = nttlist[(*cit)->GetIndex()];
-            for (ConstTriangleList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
+          const ConstTriangleList &ntl = nttlist[(*cit)->GetIndex()];
+          for (ConstTriangleList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
+          {
+            const Triangle &triangle = **ti;
+            const size_t tindex = triangle.GetIndex();
+            const ConstEdgeList &edgeList = ttelist[tindex];
+            for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
             {
-              const Triangle &triangle = **ti;
-              const size_t tindex = triangle.GetIndex();
-              const ConstEdgeList &edgeList = ttelist[tindex];
-              for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
+              const Edge &edge = *edgeList[eindex];
+              if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
               {
-                const Edge &edge = *edgeList[eindex];
-                if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
+                if (bothNodesOnContact(cnodes, edge))
                 {
-                  if (bothNodesOnContact(cnodes, edge))
-                  {
-                    continue;
-                  }
+                  continue;
+                }
 
-                  const size_t vindex = 3 * tindex + eindex;
+                const size_t vindex = 3 * tindex + eindex;
 
-                  const Node *h = edge.GetHead();
-                  const Node *t = edge.GetTail();
+                const Node *h = edge.GetHead();
+                const Node *t = edge.GetTail();
 
-                  const DoubleType val = edd[vindex];
+                const DoubleType val = edd[vindex];
 
-                  if (h == (*cit))
-                  {
-                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
-  //                  os << "jjj " <<  crow << " " << crow << val << "\n";
-                  }
-                  else if (t == (*cit))
-                  {
-                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
-  //                  os << "jjj " <<  crow << " " << crow << -val << "\n";
-                  }
-                  else
-                  {
-                      dsAssert(0, "UNEXPECTED");
-                  }
+                if (h == (*cit))
+                {
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
+//                  os << "jjj " <<  crow << " " << crow << val << "\n";
+                }
+                else if (t == (*cit))
+                {
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
+//                  os << "jjj " <<  crow << " " << crow << -val << "\n";
+                }
+                else
+                {
+                    dsAssert(0, "UNEXPECTED");
                 }
               }
             }
@@ -1973,194 +1972,194 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
         }
       }
     }
+  }
 
 
-    if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
+  if ((w == dsMathEnum::WhatToLoad::MATRIXONLY) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
+  {
+    const Region::TetrahedronToConstEdgeDataList_t &ttelist = region.GetTetrahedronToEdgeDataList();
+    const Region::NodeToConstTetrahedronList_t &nttlist = region.GetNodeToTetrahedronList();
+
+    for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
     {
-      const Region::TetrahedronToConstEdgeDataList_t &ttelist = region.GetTetrahedronToEdgeDataList();
-      const Region::NodeToConstTetrahedronList_t &nttlist = region.GetNodeToTetrahedronList();
+      const VariableList_t &vlist = region.GetVariableList();
 
-      for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
+      for (VariableList_t::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
       {
-        const VariableList_t &vlist = region.GetVariableList();
+        const std::string var(*it);
+        std::string dermodel = emodel;
+        dermodel += ":";  // should use function to create name for derivative model
+        dermodel += var;
 
-        for (VariableList_t::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
+        std::string dermodel0 = dermodel + "@en0";
+        std::string dermodel1 = dermodel + "@en1";
+        std::string dermodel2 = dermodel + "@en2";
+        std::string dermodel3 = dermodel + "@en3";
+
+        ConstTetrahedronEdgeModelPtr edm0 = region.GetTetrahedronEdgeModel(dermodel0);
+        ConstTetrahedronEdgeModelPtr edm1 = region.GetTetrahedronEdgeModel(dermodel1);
+        ConstTetrahedronEdgeModelPtr edm2 = region.GetTetrahedronEdgeModel(dermodel2);
+        ConstTetrahedronEdgeModelPtr edm3 = region.GetTetrahedronEdgeModel(dermodel3);
+
+        if (!edm0)
         {
-          const std::string var(*it);
-          std::string dermodel = emodel;
-          dermodel += ":";  // should use function to create name for derivative model
-          dermodel += var;
-
-          std::string dermodel0 = dermodel + "@en0";
-          std::string dermodel1 = dermodel + "@en1";
-          std::string dermodel2 = dermodel + "@en2";
-          std::string dermodel3 = dermodel + "@en3";
-
-          ConstTetrahedronEdgeModelPtr edm0 = region.GetTetrahedronEdgeModel(dermodel0);
-          ConstTetrahedronEdgeModelPtr edm1 = region.GetTetrahedronEdgeModel(dermodel1);
-          ConstTetrahedronEdgeModelPtr edm2 = region.GetTetrahedronEdgeModel(dermodel2);
-          ConstTetrahedronEdgeModelPtr edm3 = region.GetTetrahedronEdgeModel(dermodel3);
-
-          if (!edm0)
-          {
-            dsErrors::MissingContactEquationModel(region, *this, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
-          }
-          else
-          {
+          dsErrors::MissingContactEquationModel(region, *this, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
+        }
+        else
+        {
 //              os << "Contact assemble: using model " << dermodel0 << "\n";
-            TetrahedronEdgeScalarData<DoubleType> edd0(*ec);
-            TetrahedronEdgeScalarData<DoubleType> edd1(*ec);
-            TetrahedronEdgeScalarData<DoubleType> edd2(*ec);
-            TetrahedronEdgeScalarData<DoubleType> edd3(*ec);
-            edd0.times_equal_model(*edm0);
-            edd1.times_equal_model(*edm1);
-            edd2.times_equal_model(*edm2);
-            edd3.times_equal_model(*edm3);
+          TetrahedronEdgeScalarData<DoubleType> edd0(*ec);
+          TetrahedronEdgeScalarData<DoubleType> edd1(*ec);
+          TetrahedronEdgeScalarData<DoubleType> edd2(*ec);
+          TetrahedronEdgeScalarData<DoubleType> edd3(*ec);
+          edd0.times_equal_model(*edm0);
+          edd1.times_equal_model(*edm1);
+          edd2.times_equal_model(*edm2);
+          edd3.times_equal_model(*edm3);
 
-            const size_t eqindex2 = region.GetEquationIndex(region.GetEquationNameFromVariable(var));
+          const size_t eqindex2 = region.GetEquationIndex(region.GetEquationNameFromVariable(var));
 //            dsAssert(eqindex2 != size_t(-1), "UNEXPECTED");
-            if (eqindex2 == size_t(-1))
+          if (eqindex2 == size_t(-1))
+          {
+            dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+          }
+
+          const size_t col = region.GetEquationNumber(eqindex2, (*cit));
+
+          DoubleType val = 0.0;
+
+          const ConstTetrahedronList &ntl = nttlist[(*cit)->GetIndex()];
+          for (ConstTetrahedronList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
+          {
+            const Tetrahedron &tetrahedron = **ti;
+            const size_t tindex = tetrahedron.GetIndex();
+            const ConstEdgeDataList &edgeDataList = ttelist[tindex];
+
+            for (size_t eindex = 0; eindex < edgeDataList.size(); ++eindex)
             {
-              dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
-            }
+              const EdgeData &edgeData = *edgeDataList[eindex];
+              const Edge &edge = *edgeData.edge;
 
-            const size_t col = region.GetEquationNumber(eqindex2, (*cit));
-
-            DoubleType val = 0.0;
-
-            const ConstTetrahedronList &ntl = nttlist[(*cit)->GetIndex()];
-            for (ConstTetrahedronList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
-            {
-              const Tetrahedron &tetrahedron = **ti;
-              const size_t tindex = tetrahedron.GetIndex();
-              const ConstEdgeDataList &edgeDataList = ttelist[tindex];
-
-              for (size_t eindex = 0; eindex < edgeDataList.size(); ++eindex)
+              if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
               {
-                const EdgeData &edgeData = *edgeDataList[eindex];
-                const Edge &edge = *edgeData.edge;
-
-                if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
+                if (bothNodesOnContact(cnodes, edge))
                 {
-                  if (bothNodesOnContact(cnodes, edge))
-                  {
-                    continue;
-                  }
-
-                  const size_t vindex = 6 * tindex + eindex;
-
-                  const Node *h = edge.GetHead();
-                  const Node *t = edge.GetTail();
-
-                  DoubleType val1 = 0.0;
-                  size_t col1 = 0;
-
-                  DoubleType val2 = 0.0;
-                  size_t col2 = 0;
-
-                  DoubleType val3 = 0.0;
-                  size_t col3 = 0;
-
-                  const Node * const ot2  = edgeData.nodeopp[0];
-                  const Node * const ot3  = edgeData.nodeopp[1];
-
-                  dsAssert(ot2 != 0, "UNEXPECTED");
-                  dsAssert(ot3 != 0, "UNEXPECTED");
-
-                  //// If our contact node is on node 0 or node 1 of the edge
-                  //// We need to get the right sign and derivative
-                  //// for unsymmetric derivatives
-                  //// Maintain the sign from above
-                  if ((*cit) == h)
-                  {
-                    val += n0_sign * edd0[vindex];
-
-                    val1 = n0_sign * edd1[vindex];
-                    col1 = region.GetEquationNumber(eqindex2, t);
-
-                    val2 = n0_sign * edd2[vindex];
-                    col2 = region.GetEquationNumber(eqindex2, ot2);
-
-                    val3 = n0_sign * edd3[vindex];
-                    col3 = region.GetEquationNumber(eqindex2, ot3);
-                  }
-                  else if ((*cit) == t)
-                  {
-                    val += n1_sign * edd1[vindex];
-
-                    val1 = n1_sign * edd0[vindex];
-                    col1 = region.GetEquationNumber(eqindex2, h);
-
-                    val2 = n1_sign * edd2[vindex];
-                    col2 = region.GetEquationNumber(eqindex2, ot2);
-
-                    val3 = n1_sign * edd3[vindex];
-                    col3 = region.GetEquationNumber(eqindex2, ot3);
-                  }
-                  else
-                  {
-                    dsAssert(0, "UNEXPECTED");
-                  }
-                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col1, val1));
-                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
-                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col3, val3));
+                  continue;
                 }
-                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
-    //          os << "e1 " << crow << " " << col << " " << val << "\n";
+
+                const size_t vindex = 6 * tindex + eindex;
+
+                const Node *h = edge.GetHead();
+                const Node *t = edge.GetTail();
+
+                DoubleType val1 = 0.0;
+                size_t col1 = 0;
+
+                DoubleType val2 = 0.0;
+                size_t col2 = 0;
+
+                DoubleType val3 = 0.0;
+                size_t col3 = 0;
+
+                const Node * const ot2  = edgeData.nodeopp[0];
+                const Node * const ot3  = edgeData.nodeopp[1];
+
+                dsAssert(ot2 != 0, "UNEXPECTED");
+                dsAssert(ot3 != 0, "UNEXPECTED");
+
+                //// If our contact node is on node 0 or node 1 of the edge
+                //// We need to get the right sign and derivative
+                //// for unsymmetric derivatives
+                //// Maintain the sign from above
+                if ((*cit) == h)
+                {
+                  val += n0_sign * edd0[vindex];
+
+                  val1 = n0_sign * edd1[vindex];
+                  col1 = region.GetEquationNumber(eqindex2, t);
+
+                  val2 = n0_sign * edd2[vindex];
+                  col2 = region.GetEquationNumber(eqindex2, ot2);
+
+                  val3 = n0_sign * edd3[vindex];
+                  col3 = region.GetEquationNumber(eqindex2, ot3);
+                }
+                else if ((*cit) == t)
+                {
+                  val += n1_sign * edd1[vindex];
+
+                  val1 = n1_sign * edd0[vindex];
+                  col1 = region.GetEquationNumber(eqindex2, h);
+
+                  val2 = n1_sign * edd2[vindex];
+                  col2 = region.GetEquationNumber(eqindex2, ot2);
+
+                  val3 = n1_sign * edd3[vindex];
+                  col3 = region.GetEquationNumber(eqindex2, ot3);
+                }
+                else
+                {
+                  dsAssert(0, "UNEXPECTED");
+                }
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col1, val1));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col3, val3));
               }
+              m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
+  //          os << "e1 " << crow << " " << col << " " << val << "\n";
             }
           }
         }
+      }
 
+      {
+        std::string dermodel = emodel;
+        dermodel += ":" + circuitnode;
+        ConstTetrahedronEdgeModelPtr edm = region.GetTetrahedronEdgeModel(dermodel);
+        if (!edm)
         {
-          std::string dermodel = emodel;
-          dermodel += ":" + circuitnode;
-          ConstTetrahedronEdgeModelPtr edm = region.GetTetrahedronEdgeModel(dermodel);
-          if (!edm)
-          {
-            dsErrors::MissingContactEquationModel(region, *this, dermodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
-          }
-          else
-          {
+          dsErrors::MissingContactEquationModel(region, *this, dermodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
+        }
+        else
+        {
 //                  os << "Contact assemble: using model " << dermodel << "\n";
-            TetrahedronEdgeScalarData<DoubleType> edd(*ec);
-            edd.times_equal_model(*edm);
+          TetrahedronEdgeScalarData<DoubleType> edd(*ec);
+          edd.times_equal_model(*edm);
 
-            const ConstTetrahedronList &ntl = nttlist[(*cit)->GetIndex()];
-            for (ConstTetrahedronList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
+          const ConstTetrahedronList &ntl = nttlist[(*cit)->GetIndex()];
+          for (ConstTetrahedronList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
+          {
+            const Tetrahedron &tetrahedron = **ti;
+            const size_t tindex = tetrahedron.GetIndex();
+            const ConstEdgeDataList &edgeDataList = ttelist[tindex];
+            for (size_t eindex = 0; eindex < edgeDataList.size(); ++eindex)
             {
-              const Tetrahedron &tetrahedron = **ti;
-              const size_t tindex = tetrahedron.GetIndex();
-              const ConstEdgeDataList &edgeDataList = ttelist[tindex];
-              for (size_t eindex = 0; eindex < edgeDataList.size(); ++eindex)
+              const Edge &edge = *(edgeDataList[eindex]->edge);
+              if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
               {
-                const Edge &edge = *(edgeDataList[eindex]->edge);
-                if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
+                if (bothNodesOnContact(cnodes, edge))
                 {
-                  if (bothNodesOnContact(cnodes, edge))
-                  {
-                    continue;
-                  }
+                  continue;
+                }
 
-                  const size_t vindex = 6 * tindex + eindex;
+                const size_t vindex = 6 * tindex + eindex;
 
-                  const Node *h = edge.GetHead();
-                  const Node *t = edge.GetTail();
+                const Node *h = edge.GetHead();
+                const Node *t = edge.GetTail();
 
-                  const DoubleType val = edd[vindex];
+                const DoubleType val = edd[vindex];
 
-                  if (h == (*cit))
-                  {
-                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
-                  }
-                  else if (t == (*cit))
-                  {
-                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
-                  }
-                  else
-                  {
-                      dsAssert(0, "UNEXPECTED");
-                  }
+                if (h == (*cit))
+                {
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
+                }
+                else if (t == (*cit))
+                {
+                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
+                }
+                else
+                {
+                    dsAssert(0, "UNEXPECTED");
                 }
               }
             }

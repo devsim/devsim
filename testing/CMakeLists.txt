@@ -35,7 +35,7 @@ SET (NEWPY3TESTS
   info
   cap2
   ssac_cap
-  ssac_cap_2d
+  ssac_cap_2d_edge
   ssac_cap_2d_element
   equation1
   ptest1
