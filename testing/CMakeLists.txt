@@ -33,7 +33,12 @@ ENABLE_TESTING()
 
 SET (NEWPY3TESTS
   info
-  cap2 ssac_cap
+  cap2
+  ssac_cap
+  ssac_cap_2d_edge
+  ssac_cap_2d_element
+  ssac_cap_3d_edge
+  ssac_cap_3d_element
   equation1
   ptest1
   ptest2

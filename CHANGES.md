@@ -1,4 +1,15 @@
 
+### Version 1.4.12
+
+Element assembly for calculation of current and charges from the device into the circuit equation are fixed.  These tests are added:
+
+- ``testing/cap_2d_edge.py``
+- ``testing/cap_2d_element.py``
+- ``testing/cap_3d_edge.py``
+- ``testing/cap_3d_element.py``
+
+The ``edge`` variant is using standard edge based assembly, and the ``element`` variant is using element-based assembly.
+
 ### Version 1.4.11
 
 The ``element_pair_from_edge_model`` is available to calculate element edge components averaged onto each node of the element edge.  This makes it possible to create an edge weighting scheme different from those used in ``element_from_edge_model``.
