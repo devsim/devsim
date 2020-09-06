@@ -1814,9 +1814,9 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col1, val1));
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
               }
-              m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
   //          os << "e1 " << crow << " " << col << " " << val << "\n";
             }
+            m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
           }
         }
       }

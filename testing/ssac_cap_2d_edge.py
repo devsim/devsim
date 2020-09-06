@@ -138,9 +138,11 @@ devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterat
 print(devsim.get_contact_charge(device=device, contact="top", equation="PotentialEquation"))
 print(devsim.get_contact_charge(device=device, contact="bot", equation="PotentialEquation"))
 #
+devsim.solve(type="ac", frequency=1e-3)
 devsim.solve(type="ac", frequency=1e10)
 devsim.solve(type="ac", frequency=1e15)
 
 #devsim.element_model(device=device, region=region, name="EDField", equation="DField")
 #for i in devsim.get_element_model_values(device=device, region=region, name="EDField"):
 #  print(i)
+

@@ -141,9 +141,21 @@ devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterat
 print(devsim.get_contact_charge(device=device, contact="top", equation="PotentialEquation"))
 print(devsim.get_contact_charge(device=device, contact="bot", equation="PotentialEquation"))
 #
+devsim.solve(type="ac", frequency=1e-3)
 devsim.solve(type="ac", frequency=1e10)
 devsim.solve(type="ac", frequency=1e15)
 
 #for i in devsim.get_element_model_values(device=device, region=region, name="DField"):
 #  print(i)
-
+#
+#ec = devsim.get_edge_model_values(device=device, region=region, name="EdgeCouple")
+#devsim.element_model(device=device, region=region, name="eindex", equation="edge_index")
+#ei = [int(x) for x in devsim.get_element_model_values(device=device, region=region, name="eindex")]
+#eec = devsim.get_element_model_values(device=device, region=region, name="ElementEdgeCouple")
+#ec_compare=[0.0]*len(ec)
+#for q, v in zip(ei, eec):
+#  #print(q,v)
+#  ec_compare[q] += v
+#
+#for q,v in zip(ec, ec_compare):
+#  print(q,v)
