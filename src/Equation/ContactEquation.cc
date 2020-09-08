@@ -44,6 +44,7 @@ limitations under the License.
 
 namespace {
 //// TODO: inefficient since linear search of same list over and over again
+#if 0
 bool bothNodesOnContact(const ConstNodeList_t &cnodes, const Edge &edge)
 {
   bool ret = false;
@@ -55,6 +56,12 @@ bool bothNodesOnContact(const ConstNodeList_t &cnodes, const Edge &edge)
   {
     ret = true;
   }
+  return ret;
+}
+#endif
+bool bothNodesOnContact(const std::set<ConstNodePtr> &cnode_set, const Edge &edge)
+{
+  bool ret = (cnode_set.count(edge.GetHead()) != 0) &&  (cnode_set.count(edge.GetTail()) != 0);
   return ret;
 }
 }
@@ -237,6 +244,7 @@ DoubleType ContactEquation<DoubleType>::integrateEdgeModelOverNodes(const std::s
   DoubleType ch = 0.0;
 
   const ConstNodeList_t &cnodes = GetActiveNodes();
+  const std::set<ConstNodePtr> cnode_set(cnodes.begin(), cnodes.end());
 
   const Region &region = GetRegion();
 
@@ -264,13 +272,12 @@ DoubleType ContactEquation<DoubleType>::integrateEdgeModelOverNodes(const std::s
 
     for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
     {
-      //// TODO: should we ignore edges along the contact?
       const ConstEdgeList &el = ntelist[(*cit)->GetIndex()];
       ConstEdgeList::const_iterator it = el.begin();
       const ConstEdgeList::const_iterator itend = el.end();
       for ( ; it != itend; ++it)
       {
-        if (bothNodesOnContact(cnodes, **it))
+        if (bothNodesOnContact(cnode_set, **it))
         {
           continue;
         }
@@ -291,6 +298,7 @@ DoubleType ContactEquation<DoubleType>::integrateTriangleEdgeModelOverNodes(cons
   DoubleType ch = 0.0;
 
   const ConstNodeList_t &cnodes = GetActiveNodes();
+  const std::set<ConstNodePtr> cnode_set(cnodes.begin(), cnodes.end());
 
   const Region &region = GetRegion();
 
@@ -329,7 +337,7 @@ DoubleType ContactEquation<DoubleType>::integrateTriangleEdgeModelOverNodes(cons
           const Edge &edge = *edgeList[eindex];
           if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
           {
-            if (bothNodesOnContact(cnodes, edge))
+            if (bothNodesOnContact(cnode_set, edge))
             {
               continue;
             }
@@ -358,8 +366,8 @@ template <typename DoubleType>
 DoubleType ContactEquation<DoubleType>::integrateTetrahedronEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
   DoubleType ch = 0.0;
-
   const ConstNodeList_t &cnodes = GetActiveNodes();
+  const std::set<ConstNodePtr> cnode_set(cnodes.begin(), cnodes.end());
 
   const Region &region = GetRegion();
 
@@ -398,7 +406,7 @@ DoubleType ContactEquation<DoubleType>::integrateTetrahedronEdgeModelOverNodes(c
           const Edge &edge = *(edgeDataList[eindex]->edge);
           if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
           {
-            if (bothNodesOnContact(cnodes, edge))
+            if (bothNodesOnContact(cnode_set, edge))
             {
               continue;
             }
@@ -1399,6 +1407,8 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
   dsAssert(!circuitnode.empty(), "UNEXPECTED");
 
   const ConstNodeList_t &cnodes = GetActiveNodes();
+  const std::set<ConstNodePtr> cnode_set(cnodes.begin(), cnodes.end());
+
   const Region &region = GetRegion();
 
   size_t crow = size_t(-1);
@@ -1448,7 +1458,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
       const ConstEdgeList &el = ntelist[(*cit)->GetIndex()];
       for (ConstEdgeList::const_iterator it = el.begin() ; it != el.end(); ++it)
       {
-        if (bothNodesOnContact(cnodes, **it))
+        if (bothNodesOnContact(cnode_set, **it))
         {
           continue;
         }
@@ -1509,7 +1519,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
           DoubleType val = 0.0;
           for (ConstEdgeList::const_iterator it = el.begin() ; it != el.end(); ++it)
           {
-            if (bothNodesOnContact(cnodes, **it))
+            if (bothNodesOnContact(cnode_set, **it))
             {
               continue;
             }
@@ -1577,7 +1587,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
 
             for (ConstEdgeList::const_iterator it = el.begin() ; it != el.end(); ++it)
             {
-              if (bothNodesOnContact(cnodes, **it))
+              if (bothNodesOnContact(cnode_set, **it))
               {
                 continue;
               }
@@ -1611,9 +1621,10 @@ template <typename DoubleType>
 void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
   dsAssert(!emodel.empty(), "UNEXPECTED");
-  dsAssert(!circuitnode.empty(), "UNEXPECTED");
 
   const ConstNodeList_t &cnodes = GetActiveNodes();
+  const std::set<ConstNodePtr> cnode_set(cnodes.begin(), cnodes.end());
+
   const Region &region = GetRegion();
 
   size_t crow = size_t(-1);
@@ -1677,7 +1688,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
             continue;
           }
 
-          if (bothNodesOnContact(cnodes, edge))
+          if (bothNodesOnContact(cnode_set, edge))
           {
             continue;
           }
@@ -1762,7 +1773,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
               const Edge &edge = *edgeList[eindex];
               if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
               {
-                if (bothNodesOnContact(cnodes, edge))
+                if (bothNodesOnContact(cnode_set, edge))
                 {
                   continue;
                 }
@@ -1846,7 +1857,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
                 const Edge &edge = *edgeList[eindex];
                 if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
                 {
-                  if (bothNodesOnContact(cnodes, edge))
+                  if (bothNodesOnContact(cnode_set, edge))
                   {
                     continue;
                   }
@@ -1890,6 +1901,8 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
   dsAssert(!circuitnode.empty(), "UNEXPECTED");
 
   const ConstNodeList_t &cnodes = GetActiveNodes();
+  const std::set<ConstNodePtr> cnode_set(cnodes.begin(), cnodes.end());
+
   const Region &region = GetRegion();
 
   size_t crow = size_t(-1);
@@ -1953,7 +1966,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
             continue;
           }
 
-          if (bothNodesOnContact(cnodes, edge))
+          if (bothNodesOnContact(cnode_set, edge))
           {
             continue;
           }
@@ -2045,7 +2058,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
 
               if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
               {
-                if (bothNodesOnContact(cnodes, edge))
+                if (bothNodesOnContact(cnode_set, edge))
                 {
                   continue;
                 }
@@ -2143,7 +2156,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
               const Edge &edge = *(edgeDataList[eindex]->edge);
               if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
               {
-                if (bothNodesOnContact(cnodes, edge))
+                if (bothNodesOnContact(cnode_set, edge))
                 {
                   continue;
                 }
