@@ -1131,7 +1131,6 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
   }
 }
 
-// TODO:"REVIEW CODE"
 template <typename DoubleType>
 void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
@@ -1708,46 +1707,45 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
     const Region::TriangleToConstEdgeList_t &ttelist = region.GetTriangleToEdgeList();
     const Region::NodeToConstTriangleList_t &nttlist = region.GetNodeToTriangleList();
 
-    for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
+    const VariableList_t &vlist = region.GetVariableList();
+    for (VariableList_t::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
     {
-      const VariableList_t &vlist = region.GetVariableList();
+      const std::string var(*it);
+      std::string dermodel = emodel;
+      dermodel += ":";  // should use function to create name for derivative model
+      dermodel += var;
 
-      for (VariableList_t::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
+      std::string dermodel0 = dermodel + "@en0";
+      std::string dermodel1 = dermodel + "@en1";
+      std::string dermodel2 = dermodel + "@en2";
+
+      ConstTriangleEdgeModelPtr edm0 = region.GetTriangleEdgeModel(dermodel0);
+      ConstTriangleEdgeModelPtr edm1 = region.GetTriangleEdgeModel(dermodel1);
+      ConstTriangleEdgeModelPtr edm2 = region.GetTriangleEdgeModel(dermodel2);
+
+      if (!edm0)
       {
-        const std::string var(*it);
-        std::string dermodel = emodel;
-        dermodel += ":";  // should use function to create name for derivative model
-        dermodel += var;
-
-        std::string dermodel0 = dermodel + "@en0";
-        std::string dermodel1 = dermodel + "@en1";
-        std::string dermodel2 = dermodel + "@en2";
-
-        ConstTriangleEdgeModelPtr edm0 = region.GetTriangleEdgeModel(dermodel0);
-        ConstTriangleEdgeModelPtr edm1 = region.GetTriangleEdgeModel(dermodel1);
-        ConstTriangleEdgeModelPtr edm2 = region.GetTriangleEdgeModel(dermodel2);
-
-        if (!edm0)
-        {
-          dsErrors::MissingContactEquationModel(region, *this, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
-        }
-        else
-        {
+        dsErrors::MissingContactEquationModel(region, *this, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
+      }
+      else
+      {
 //              os << "Contact assemble: using model " << dermodel0 << "\n";
-          TriangleEdgeScalarData<DoubleType> edd0(*ec);
-          TriangleEdgeScalarData<DoubleType> edd1(*ec);
-          TriangleEdgeScalarData<DoubleType> edd2(*ec);
-          edd0.times_equal_model(*edm0);
-          edd1.times_equal_model(*edm1);
-          edd2.times_equal_model(*edm2);
+        TriangleEdgeScalarData<DoubleType> edd0(*ec);
+        TriangleEdgeScalarData<DoubleType> edd1(*ec);
+        TriangleEdgeScalarData<DoubleType> edd2(*ec);
+        edd0.times_equal_model(*edm0);
+        edd1.times_equal_model(*edm1);
+        edd2.times_equal_model(*edm2);
 
-          const size_t eqindex2 = region.GetEquationIndex(region.GetEquationNameFromVariable(var));
+        const size_t eqindex2 = region.GetEquationIndex(region.GetEquationNameFromVariable(var));
 //            dsAssert(eqindex2 != size_t(-1), "UNEXPECTED");
-          if (eqindex2 == size_t(-1))
-          {
-            dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
-          }
+        if (eqindex2 == size_t(-1))
+        {
+          dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+        }
 
+        for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
+        {
           const size_t col = region.GetEquationNumber(eqindex2, (*cit));
 
           DoubleType val = 0.0;
@@ -1835,42 +1833,45 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
           TriangleEdgeScalarData<DoubleType> edd(*ec);
           edd.times_equal_model(*edm);
 
-          const ConstTriangleList &ntl = nttlist[(*cit)->GetIndex()];
-          for (ConstTriangleList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
+          for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
           {
-            const Triangle &triangle = **ti;
-            const size_t tindex = triangle.GetIndex();
-            const ConstEdgeList &edgeList = ttelist[tindex];
-            for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
+            const ConstTriangleList &ntl = nttlist[(*cit)->GetIndex()];
+            for (ConstTriangleList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
             {
-              const Edge &edge = *edgeList[eindex];
-              if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
+              const Triangle &triangle = **ti;
+              const size_t tindex = triangle.GetIndex();
+              const ConstEdgeList &edgeList = ttelist[tindex];
+              for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
               {
-                if (bothNodesOnContact(cnodes, edge))
+                const Edge &edge = *edgeList[eindex];
+                if ((edge.GetHead() == (*cit)) || (edge.GetTail() == (*cit)))
                 {
-                  continue;
-                }
+                  if (bothNodesOnContact(cnodes, edge))
+                  {
+                    continue;
+                  }
 
-                const size_t vindex = 3 * tindex + eindex;
+                  const size_t vindex = 3 * tindex + eindex;
 
-                const Node *h = edge.GetHead();
-                const Node *t = edge.GetTail();
+                  const Node *h = edge.GetHead();
+                  const Node *t = edge.GetTail();
 
-                const DoubleType val = edd[vindex];
+                  const DoubleType val = edd[vindex];
 
-                if (h == (*cit))
-                {
-                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
-//                  os << "jjj " <<  crow << " " << crow << val << "\n";
-                }
-                else if (t == (*cit))
-                {
-                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
-//                  os << "jjj " <<  crow << " " << crow << -val << "\n";
-                }
-                else
-                {
-                    dsAssert(0, "UNEXPECTED");
+                  if (h == (*cit))
+                  {
+                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
+  //                  os << "jjj " <<  crow << " " << crow << val << "\n";
+                  }
+                  else if (t == (*cit))
+                  {
+                    m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
+  //                  os << "jjj " <<  crow << " " << crow << -val << "\n";
+                  }
+                  else
+                  {
+                      dsAssert(0, "UNEXPECTED");
+                  }
                 }
               }
             }
@@ -1881,7 +1882,6 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
   }
 }
 
-// TODO:"REVIEW CODE"
 template <typename DoubleType>
 void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const std::string &emodel, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
@@ -1983,50 +1983,50 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
     const Region::TetrahedronToConstEdgeDataList_t &ttelist = region.GetTetrahedronToEdgeDataList();
     const Region::NodeToConstTetrahedronList_t &nttlist = region.GetNodeToTetrahedronList();
 
-    for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
+    const VariableList_t &vlist = region.GetVariableList();
+
+    for (VariableList_t::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
     {
-      const VariableList_t &vlist = region.GetVariableList();
+      const std::string var(*it);
+      std::string dermodel = emodel;
+      dermodel += ":";  // should use function to create name for derivative model
+      dermodel += var;
 
-      for (VariableList_t::const_iterator it = vlist.begin(); it != vlist.end(); ++it)
+      std::string dermodel0 = dermodel + "@en0";
+      std::string dermodel1 = dermodel + "@en1";
+      std::string dermodel2 = dermodel + "@en2";
+      std::string dermodel3 = dermodel + "@en3";
+
+      ConstTetrahedronEdgeModelPtr edm0 = region.GetTetrahedronEdgeModel(dermodel0);
+      ConstTetrahedronEdgeModelPtr edm1 = region.GetTetrahedronEdgeModel(dermodel1);
+      ConstTetrahedronEdgeModelPtr edm2 = region.GetTetrahedronEdgeModel(dermodel2);
+      ConstTetrahedronEdgeModelPtr edm3 = region.GetTetrahedronEdgeModel(dermodel3);
+
+      if (!edm0)
       {
-        const std::string var(*it);
-        std::string dermodel = emodel;
-        dermodel += ":";  // should use function to create name for derivative model
-        dermodel += var;
-
-        std::string dermodel0 = dermodel + "@en0";
-        std::string dermodel1 = dermodel + "@en1";
-        std::string dermodel2 = dermodel + "@en2";
-        std::string dermodel3 = dermodel + "@en3";
-
-        ConstTetrahedronEdgeModelPtr edm0 = region.GetTetrahedronEdgeModel(dermodel0);
-        ConstTetrahedronEdgeModelPtr edm1 = region.GetTetrahedronEdgeModel(dermodel1);
-        ConstTetrahedronEdgeModelPtr edm2 = region.GetTetrahedronEdgeModel(dermodel2);
-        ConstTetrahedronEdgeModelPtr edm3 = region.GetTetrahedronEdgeModel(dermodel3);
-
-        if (!edm0)
-        {
-          dsErrors::MissingContactEquationModel(region, *this, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
-        }
-        else
-        {
+        dsErrors::MissingContactEquationModel(region, *this, dermodel0, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
+      }
+      else
+      {
 //              os << "Contact assemble: using model " << dermodel0 << "\n";
-          TetrahedronEdgeScalarData<DoubleType> edd0(*ec);
-          TetrahedronEdgeScalarData<DoubleType> edd1(*ec);
-          TetrahedronEdgeScalarData<DoubleType> edd2(*ec);
-          TetrahedronEdgeScalarData<DoubleType> edd3(*ec);
-          edd0.times_equal_model(*edm0);
-          edd1.times_equal_model(*edm1);
-          edd2.times_equal_model(*edm2);
-          edd3.times_equal_model(*edm3);
+        TetrahedronEdgeScalarData<DoubleType> edd0(*ec);
+        TetrahedronEdgeScalarData<DoubleType> edd1(*ec);
+        TetrahedronEdgeScalarData<DoubleType> edd2(*ec);
+        TetrahedronEdgeScalarData<DoubleType> edd3(*ec);
+        edd0.times_equal_model(*edm0);
+        edd1.times_equal_model(*edm1);
+        edd2.times_equal_model(*edm2);
+        edd3.times_equal_model(*edm3);
 
-          const size_t eqindex2 = region.GetEquationIndex(region.GetEquationNameFromVariable(var));
+        const size_t eqindex2 = region.GetEquationIndex(region.GetEquationNameFromVariable(var));
 //            dsAssert(eqindex2 != size_t(-1), "UNEXPECTED");
-          if (eqindex2 == size_t(-1))
-          {
-            dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
-          }
+        if (eqindex2 == size_t(-1))
+        {
+          dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+        }
 
+        for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
+        {
           const size_t col = region.GetEquationNumber(eqindex2, (*cit));
 
           DoubleType val = 0.0;
@@ -2114,21 +2114,24 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
           m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
         }
       }
+    }
 
+    {
+      std::string dermodel = emodel;
+      dermodel += ":" + circuitnode;
+      ConstTetrahedronEdgeModelPtr edm = region.GetTetrahedronEdgeModel(dermodel);
+      if (!edm)
       {
-        std::string dermodel = emodel;
-        dermodel += ":" + circuitnode;
-        ConstTetrahedronEdgeModelPtr edm = region.GetTetrahedronEdgeModel(dermodel);
-        if (!edm)
-        {
-          dsErrors::MissingContactEquationModel(region, *this, dermodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
-        }
-        else
-        {
+        dsErrors::MissingContactEquationModel(region, *this, dermodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::VERBOSE1);
+      }
+      else
+      {
 //                  os << "Contact assemble: using model " << dermodel << "\n";
-          TetrahedronEdgeScalarData<DoubleType> edd(*ec);
-          edd.times_equal_model(*edm);
+        TetrahedronEdgeScalarData<DoubleType> edd(*ec);
+        edd.times_equal_model(*edm);
 
+        for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
+        {
           const ConstTetrahedronList &ntl = nttlist[(*cit)->GetIndex()];
           for (ConstTetrahedronList::const_iterator ti = ntl.begin(); ti != ntl.end(); ++ti)
           {
