@@ -48,6 +48,21 @@ bool bothNodesOnContact(const std::set<ConstNodePtr> &cnode_set, const Edge &edg
   bool ret = (cnode_set.count(edge.GetHead()) != 0) &&  (cnode_set.count(edge.GetTail()) != 0);
   return ret;
 }
+
+template <typename T>
+T GetHeadOrTail(const Edge &edge, ConstNodePtr np, T n0_sign, T n1_sign, T none_sign)
+{
+  T ret = none_sign;
+  if (edge.GetHead() == np)
+  {
+    ret = n0_sign;
+  }
+  else if (edge.GetTail() == np)
+  {
+    ret = n1_sign;
+  }
+  return ret;
+}
 }
 
 template <typename DoubleType>
@@ -318,21 +333,15 @@ DoubleType ContactEquation<DoubleType>::integrateTriangleEdgeModelOverNodes(cons
         for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
         {
           const Edge &edge = *edgeList[eindex];
-          if (((edge.GetHead() != (*cit)) && (edge.GetTail() != (*cit))) || bothNodesOnContact(cnode_set, edge))
+
+          auto val = GetHeadOrTail(edge, *cit, n0_sign, n1_sign, DoubleType(0.0));
+
+          if ( (val == DoubleType(0.0)) || bothNodesOnContact(cnode_set, edge))
           {
             continue;
           }
 
-          DoubleType val = esd[3 * tindex + eindex];
-
-          if (*cit == edge.GetHead())
-          {
-            val *= n0_sign;
-          }
-          else
-          {
-            val *= n1_sign;
-          }
+          val *= esd[3 * tindex + eindex];
 
           ch += val;
         }
@@ -385,21 +394,14 @@ DoubleType ContactEquation<DoubleType>::integrateTetrahedronEdgeModelOverNodes(c
         {
           const Edge &edge = *(edgeDataList[eindex]->edge);
 
-          if (((edge.GetHead() != (*cit)) && (edge.GetTail() != (*cit))) || bothNodesOnContact(cnode_set, edge))
+          auto val = GetHeadOrTail(edge, *cit, n0_sign, n1_sign, DoubleType(0.0));
+
+          if ( (val == DoubleType(0.0)) || bothNodesOnContact(cnode_set, edge))
           {
             continue;
           }
 
-          DoubleType val = esd[6 * tindex + eindex];
-
-          if (*cit == edge.GetHead())
-          {
-            val *= n0_sign;
-          }
-          else
-          {
-            val *= n1_sign;
-          }
+          val *= esd[6 * tindex + eindex];
 
           ch += val;
         }
@@ -1649,20 +1651,14 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
         {
           const Edge &edge = *edgeList[eindex];
 
-          if (((edge.GetHead() != (*cit)) && (edge.GetTail() != (*cit))) || bothNodesOnContact(cnode_set, edge))
+          auto val = GetHeadOrTail(edge, *cit, n0_sign, n1_sign, DoubleType(0.0));
+
+          if ( (val == DoubleType(0.0)) || bothNodesOnContact(cnode_set, edge))
           {
             continue;
           }
 
-          DoubleType val = esd[3 * tindex + eindex];
-          if (*cit == edge.GetHead())
-          {
-            val *= n0_sign;
-          }
-          else
-          {
-            val *= n1_sign;
-          }
+          val *= esd[3 * tindex + eindex];
 
           rhsval += val;
         }
@@ -1811,30 +1807,18 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
               {
                 const Edge &edge = *edgeList[eindex];
 
-                if (((edge.GetHead() != (*cit)) && (edge.GetTail() != (*cit))) || bothNodesOnContact(cnode_set, edge))
+                auto val = GetHeadOrTail(edge, *cit, n0_sign, n1_sign, DoubleType(0.0));
+
+                if ( (val == DoubleType(0.0)) || bothNodesOnContact(cnode_set, edge))
                 {
                   continue;
                 }
 
                 const size_t vindex = 3 * tindex + eindex;
 
-                const Node *h = edge.GetHead();
-                const Node *t = edge.GetTail();
+                val *= edd[vindex];
 
-                const DoubleType val = edd[vindex];
-
-                if (h == (*cit))
-                {
-                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
-                }
-                else if (t == (*cit))
-                {
-                  m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
-                }
-                else
-                {
-                    dsAssert(0, "UNEXPECTED");
-                }
+                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, val));
               }
             }
           }
@@ -1913,21 +1897,14 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
         {
           const Edge &edge = *(edgeDataList[eindex]->edge);
 
-          if (((edge.GetHead() != (*cit)) && (edge.GetTail() != (*cit))) || bothNodesOnContact(cnode_set, edge))
+          auto val = GetHeadOrTail(edge, *cit, n0_sign, n1_sign, DoubleType(0.0));
+
+          if ( (val == DoubleType(0.0)) || bothNodesOnContact(cnode_set, edge))
           {
             continue;
           }
 
-          DoubleType val = esd[6 * tindex + eindex];
-
-          if (*cit == edge.GetHead())
-          {
-            val *= n0_sign;
-          }
-          else
-          {
-            val *= n1_sign;
-          }
+          val *= esd[6 * tindex + eindex];
 
           rhsval += val;
         }
@@ -2096,30 +2073,17 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
             {
               const Edge &edge = *(edgeDataList[eindex]->edge);
 
-              if (((edge.GetHead() != (*cit)) && (edge.GetTail() != (*cit))) || bothNodesOnContact(cnode_set, edge))
+              auto val = GetHeadOrTail(edge, *cit, n0_sign, n1_sign, DoubleType(0.0));
+              if ( (val == DoubleType(0.0)) || bothNodesOnContact(cnode_set, edge))
               {
                 continue;
               }
 
               const size_t vindex = 6 * tindex + eindex;
 
-              const Node *h = edge.GetHead();
-              const Node *t = edge.GetTail();
+              val *= edd[vindex];
 
-              const DoubleType val = edd[vindex];
-
-              if (h == (*cit))
-              {
-                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
-              }
-              else if (t == (*cit))
-              {
-                m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
-              }
-              else
-              {
-                  dsAssert(0, "UNEXPECTED");
-              }
+              m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, val));
             }
           }
         }
