@@ -447,7 +447,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel
 {
   dsAssert(!nmodel.empty(), "UNEXPECTED");
 
-  const ConstNodeList_t cnodes = GetActiveNodes();
+  const ConstNodeList_t &cnodes = GetActiveNodes();
 
   const Region &region = GetRegion();
 
@@ -588,7 +588,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(const std::strin
   dsAssert(!nmodel.empty(), "UNEXPECTED");
   dsAssert(!circuitnode.empty(), "UNEXPECTED");
 
-  const ConstNodeList_t cnodes = GetActiveNodes();
+  const ConstNodeList_t &cnodes = GetActiveNodes();
   const Region &region = GetRegion();
 
   size_t crow = size_t(-1);
@@ -704,7 +704,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
 {
   typedef std::vector<std::string> VariableList_t;
 
-  const ConstNodeList_t cnodes = GetActiveNodes();
+  const ConstNodeList_t &cnodes = GetActiveNodes();
   const Region &region = GetRegion();
 
   const size_t eqindex = region.GetEquationIndex(GetName());
@@ -898,7 +898,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
 {
   typedef std::vector<std::string> VariableList_t;
 
-  const ConstNodeList_t cnodes = GetActiveNodes();
+  const ConstNodeList_t &cnodes = GetActiveNodes();
   const Region &region = GetRegion();
 
   const size_t eqindex = region.GetEquationIndex(GetName());
@@ -1136,7 +1136,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
 {
   typedef std::vector<std::string> VariableList_t;
 
-  const ConstNodeList_t cnodes = GetActiveNodes();
+  const ConstNodeList_t &cnodes = GetActiveNodes();
   const Region &region = GetRegion();
 
   const size_t eqindex = region.GetEquationIndex(GetName());
@@ -1398,7 +1398,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
   dsAssert(!emodel.empty(), "UNEXPECTED");
   dsAssert(!circuitnode.empty(), "UNEXPECTED");
 
-  const ConstNodeList_t cnodes = GetActiveNodes();
+  const ConstNodeList_t &cnodes = GetActiveNodes();
   const Region &region = GetRegion();
 
   size_t crow = size_t(-1);
@@ -1613,7 +1613,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
   dsAssert(!emodel.empty(), "UNEXPECTED");
   dsAssert(!circuitnode.empty(), "UNEXPECTED");
 
-  const ConstNodeList_t cnodes = GetActiveNodes();
+  const ConstNodeList_t &cnodes = GetActiveNodes();
   const Region &region = GetRegion();
 
   size_t crow = size_t(-1);
@@ -1889,7 +1889,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
 
   dsAssert(!circuitnode.empty(), "UNEXPECTED");
 
-  const ConstNodeList_t cnodes = GetActiveNodes();
+  const ConstNodeList_t &cnodes = GetActiveNodes();
   const Region &region = GetRegion();
 
   size_t crow = size_t(-1);
