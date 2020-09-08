@@ -43,22 +43,6 @@ limitations under the License.
 #include <string>
 
 namespace {
-//// TODO: inefficient since linear search of same list over and over again
-#if 0
-bool bothNodesOnContact(const ConstNodeList_t &cnodes, const Edge &edge)
-{
-  bool ret = false;
-  if (
-    (std::find(cnodes.begin(), cnodes.end(), edge.GetHead()) != cnodes.end())
-      &&
-    (std::find(cnodes.begin(), cnodes.end(), edge.GetTail()) != cnodes.end())
-  )
-  {
-    ret = true;
-  }
-  return ret;
-}
-#endif
 bool bothNodesOnContact(const std::set<ConstNodePtr> &cnode_set, const Edge &edge)
 {
   bool ret = (cnode_set.count(edge.GetHead()) != 0) &&  (cnode_set.count(edge.GetTail()) != 0);
@@ -291,7 +275,6 @@ DoubleType ContactEquation<DoubleType>::integrateEdgeModelOverNodes(const std::s
   return ch;
 }
 
-//// TODO: worry about CylindricalNodeVolume being assymetric later on
 template <typename DoubleType>
 DoubleType ContactEquation<DoubleType>::integrateTriangleEdgeModelOverNodes(const std::string &emodel, const std::string &edge_couple, const DoubleType n0_sign, const DoubleType n1_sign)
 {
@@ -625,7 +608,6 @@ void ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(const std::strin
     dsErrors::MissingContactEquationModel(region, *this, node_volume, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
   }
 
-//    os << "DEBC5: circuit node " << nmodel << " " << GetContact().GetName() << " " << GetName() << " " << circuitnode << "\n";
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
   {
     ConstNodeModelPtr nm = region.GetNodeModel(nmodel);
@@ -736,7 +718,6 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
   size_t ccol = size_t(-1);
   if (!circuitnode.empty())
   {
-//      os << "DEBC2: circuit node " << emodel << " " << GetContact().GetName() << " " << GetName() << " " << circuitnode << "\n";
     NodeKeeper &nk = NodeKeeper::instance();
     if (nk.IsCircuitNode(circuitnode))
     {
@@ -856,7 +837,6 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
 
     if (ccol != size_t(-1))
     {
-  //os << "ccol" <<  __LINE__ << "\n";
       std::string dermodel = emodel;
       dermodel += ":";  // should use function to create name for derivative model
       dermodel += circuitnode;
@@ -929,7 +909,6 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
 
   if (!circuitnode.empty())
   {
-//      os << "DEBC2: circuit node " << emodel << " " << GetContact().GetName() << " " << GetName() << " " << circuitnode << "\n";
     NodeKeeper &nk = NodeKeeper::instance();
     if (nk.IsCircuitNode(circuitnode))
     {
@@ -1086,7 +1065,6 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
 
     if (ccol != size_t(-1))
     {
-//os << "ccol" <<  __LINE__ << "\n";
       std::string dermodel = emodel;
       dermodel += ":";  // should use function to create name for derivative model
       dermodel += circuitnode;
@@ -1167,7 +1145,6 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
 
   if (!circuitnode.empty())
   {
-//      os << "DEBC2: circuit node " << emodel << " " << GetContact().GetName() << " " << GetName() << " " << circuitnode << "\n";
     NodeKeeper &nk = NodeKeeper::instance();
     if (nk.IsCircuitNode(circuitnode))
     {
@@ -1333,7 +1310,6 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
 
     if (ccol != size_t(-1))
     {
-//os << "ccol" <<  __LINE__ << "\n";
       std::string dermodel = emodel;
       dermodel += ":";  // should use function to create name for derivative model
       dermodel += circuitnode;
@@ -1495,7 +1471,6 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
       }
       else
       {
-//          os << "Contact assemble: using model " << dermodel0 << "\n";
         EdgeScalarData<DoubleType> edd0(*ec);
         EdgeScalarData<DoubleType> edd1(*ec);
         edd0.times_equal_model(*edm0);
@@ -1557,11 +1532,9 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
             }
 
             m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
-//              os << "e2 " << crow << " " << col2 << " " << val2 << "\n";
           }
 
           m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
-//          os << "e1 " << crow << " " << col << " " << val << "\n";
         }
       }
 
@@ -1575,7 +1548,6 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
         }
         else
         {
-//              os << "Contact assemble: using model " << dermodel << "\n";
           EdgeScalarData<DoubleType> edd(*ec);
           edd.times_equal_model(*edm);
 
@@ -1598,12 +1570,10 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
               if ((*it)->GetHead() == (*cit))
               {
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, val));
-//                  os << "jjj " <<  crow << " " << crow << val << "\n";
               }
               else if ((*it)->GetTail() == (*cit))
               {
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow,-val));
-//                  os << "jjj " <<  crow << " " << crow << -val << "\n";
               }
               else
               {
@@ -1740,7 +1710,6 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
       }
       else
       {
-//              os << "Contact assemble: using model " << dermodel0 << "\n";
         TriangleEdgeScalarData<DoubleType> edd0(*ec);
         TriangleEdgeScalarData<DoubleType> edd1(*ec);
         TriangleEdgeScalarData<DoubleType> edd2(*ec);
@@ -1823,7 +1792,6 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col1, val1));
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
               }
-  //          os << "e1 " << crow << " " << col << " " << val << "\n";
             }
           }
           m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
@@ -1840,7 +1808,6 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
         }
         else
         {
-//                  os << "Contact assemble: using model " << dermodel << "\n";
           TriangleEdgeScalarData<DoubleType> edd(*ec);
           edd.times_equal_model(*edm);
 
@@ -1872,12 +1839,10 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
                   if (h == (*cit))
                   {
                     m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n0_sign * val));
-  //                  os << "jjj " <<  crow << " " << crow << val << "\n";
                   }
                   else if (t == (*cit))
                   {
                     m.push_back(dsMath::RealRowColVal<DoubleType>(crow, crow, n1_sign * val));
-  //                  os << "jjj " <<  crow << " " << crow << -val << "\n";
                   }
                   else
                   {
@@ -2021,7 +1986,6 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
       }
       else
       {
-//              os << "Contact assemble: using model " << dermodel0 << "\n";
         TetrahedronEdgeScalarData<DoubleType> edd0(*ec);
         TetrahedronEdgeScalarData<DoubleType> edd1(*ec);
         TetrahedronEdgeScalarData<DoubleType> edd2(*ec);
@@ -2121,7 +2085,6 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col2, val2));
                 m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col3, val3));
               }
-  //          os << "e1 " << crow << " " << col << " " << val << "\n";
             }
           }
           m.push_back(dsMath::RealRowColVal<DoubleType>(crow, col, val));
@@ -2139,7 +2102,6 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
       }
       else
       {
-//                  os << "Contact assemble: using model " << dermodel << "\n";
         TetrahedronEdgeScalarData<DoubleType> edd(*ec);
         edd.times_equal_model(*edm);
 
