@@ -3,7 +3,7 @@
 [![DOI](https://zenodo.org/badge/8838727.svg)](https://zenodo.org/badge/latestdoi/8838727)
 [![Gitter](https://badges.gitter.im/devsim/devsim.svg)](https://gitter.im/devsim/devsim)
 
-### Introduction:
+### INTRODUCTION:
 **DEVSIM** - TCAD Device Simulator
 
 **DEVSIM** is a tool for TCAD Device Simulation, using finite volume methods.  The source code is provided by Devsim LLC.
