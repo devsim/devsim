@@ -95,7 +95,7 @@ std::string EquationHolder::GetName() const
     ret = (*double_).GetName();
   }
 #ifdef DEVSIM_EXTENDED_PRECISION
-  if (float128_)
+  else if (float128_)
   {
     ret = (*float128_).GetName();
   }
@@ -111,7 +111,7 @@ std::string EquationHolder::GetVariable() const
     ret = (*double_).GetVariable();
   }
 #ifdef DEVSIM_EXTENDED_PRECISION
-  if (float128_)
+  else if (float128_)
   {
     ret = (*float128_).GetVariable();
   }
@@ -128,7 +128,7 @@ DoubleType EquationHolder::GetRelError() const
     ret = (*double_).GetRelError();
   }
 #ifdef DEVSIM_EXTENDED_PRECISION
-  if (float128_)
+  else if (float128_)
   {
     ret = static_cast<DoubleType>((*float128_).GetRelError());
   }
@@ -145,9 +145,41 @@ DoubleType EquationHolder::GetAbsError() const
     ret = (*double_).GetAbsError();
   }
 #ifdef DEVSIM_EXTENDED_PRECISION
-  if (float128_)
+  else if (float128_)
   {
     ret = static_cast<DoubleType>((*float128_).GetAbsError());
+  }
+#endif
+  return ret;
+}
+
+size_t EquationHolder::GetAbsErrorNodeIndex() const
+{
+  size_t ret{};
+  if (double_)
+  {
+    ret = (*double_).GetAbsErrorNodeIndex();
+  }
+#ifdef DEVSIM_EXTENDED_PRECISION
+  else if (float128_)
+  {
+    ret = (*float128_).GetAbsErrorNodeIndex();
+  }
+#endif
+  return ret;
+}
+
+size_t EquationHolder::GetRelErrorNodeIndex() const
+{
+  size_t ret{};
+  if (double_)
+  {
+    ret = (*double_).GetRelErrorNodeIndex();
+  }
+#ifdef DEVSIM_EXTENDED_PRECISION
+  else if (float128_)
+  {
+    ret = (*float128_).GetRelErrorNodeIndex();
   }
 #endif
   return ret;

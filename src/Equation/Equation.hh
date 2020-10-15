@@ -117,6 +117,8 @@ class Equation {
 
         DoubleType GetAbsError() const;
         DoubleType GetRelError() const;
+        size_t GetAbsErrorNodeIndex() const;
+        size_t GetRelErrorNodeIndex() const;
         void setMinError(DoubleType);
         DoubleType GetMinError() const;
 
@@ -140,6 +142,8 @@ class Equation {
 
         void setAbsError(DoubleType);
         void setRelError(DoubleType);
+        void setAbsErrorNodeIndex(size_t);
+        void setRelErrorNodeIndex(size_t);
 
         /// Stuff like potential is symmetric.  It's derivative with respect to a node on either side is of opposite sign.
         /// Stuff should already be integrated w.r.t. EdgeCouple
@@ -190,6 +194,8 @@ class Equation {
         const std::string variable;
         DoubleType absError;
         DoubleType relError;
+        size_t absErrorNodeIndex;
+        size_t relErrorNodeIndex;
         DoubleType minError;
         static const DoubleType defminError;
         EquationEnum::UpdateType updateType;

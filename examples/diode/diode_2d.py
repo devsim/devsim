@@ -55,3 +55,17 @@ while v < 0.51:
     PrintCurrents(device, "bot")
     v += 0.1
 
+val = 10
+for i in range(2):
+    set_parameter(device=device, name=GetContactBiasName("top"), value=val)
+    data = solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30, info=True)
+    print(data['converged'])
+    if not data['converged']:
+      val = 0.6
+
+print(data)
+for i in data['iterations']:
+    for d in i['devices']:
+        for r in d['regions']:
+            for e in r['equations']:
+                print(e)

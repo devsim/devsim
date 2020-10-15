@@ -844,6 +844,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
   if (ohm)
   {
     (*ohm)["iterations"] = ObjectHolder(iteration_list);
+    (*ohm)["converged"] = ObjectHolder(converged);
   }
 
   return converged;
@@ -912,6 +913,9 @@ void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap
                "\tRelError: " << devrerr <<
                "\tAbsError: " << devaerr << "\n";
 
+  GlobalData &gdata = GlobalData::GetInstance();
+
+  bool show_error_node = false;
 
   const Device::RegionList_t regions = device.GetRegionList();
   for (Device::RegionList_t::const_iterator rit = regions.begin(); rit != regions.end(); ++rit)
@@ -937,6 +941,17 @@ void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap
                    "\tRelError: " << equation.GetRelError<DoubleType>() <<
                    "\tAbsError: " << equation.GetAbsError<DoubleType>() << "\n";
 
+      auto dbent = gdata.GetDBEntryOnRegion(name, region.GetName(), "debug_level");
+      if (dbent.first)
+      {
+        // show for all levels except basic one
+        show_error_node = (OutputStream::GetVerbosity(dbent.second.GetString()) != OutputStream::Verbosity_t::V0);
+      }
+      if (show_error_node)
+      {
+        os << "\tRelErrorNode: " << equation.GetRelErrorNodeIndex() <<
+              "\tAbsErrorNode: " << equation.GetAbsErrorNodeIndex() << "\n";
+      }
     }
   }
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
@@ -965,7 +980,9 @@ void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap
         ObjectHolderMap_t emap;
         emap["name"] = ObjectHolder(equation.GetName());
         emap["relative_error"] = ObjectHolder(equation.GetRelError<double>());
+        emap["relative_error_node"] = ObjectHolder(static_cast<int>(equation.GetRelErrorNodeIndex()));
         emap["absolute_error"] = ObjectHolder(equation.GetAbsError<double>());
+        emap["absolute_error_node"] = ObjectHolder(static_cast<int>(equation.GetAbsErrorNodeIndex()));
         elist.push_back(ObjectHolder(emap));
       }
       rmap["equations"] = ObjectHolder(elist);
