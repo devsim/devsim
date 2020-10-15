@@ -1,3 +1,23 @@
+### Version 1.4.13
+
+The node indexes with the maximum error for each equation will be printed when ``debug_level`` is ``verbose``.
+
+```
+devsim.set_parameter(name="debug_level", value="verbose")
+```
+
+These are printed as ``RelErrorNode`` and ``AbsErrorNode``:
+
+```
+    Region: "gate"	RelError: 5.21531e-14	AbsError: 4.91520e+04
+      Equation: "ElectronContinuityEquation"	RelError: 4.91520e-16	AbsError: 4.91520e+04
+	RelErrorNode: 129	AbsErrorNode: 129
+```
+
+This information is also returned when using the ``info=True`` option on the ``solve`` command for each equation on each region of a device.
+
+If the ``info`` flag is set to ``True`` on the ``solve`` command, the iteration information will be returned, and an exception for convergence will no longer be thrown.  It is the responsibility of the caller to test the result of the ``solve`` command to see if the simulation converged.  Other types of exceptions, such as floating point errors, will still result in a Python exception that needs to be caught.
+
 
 ### Version 1.4.12
 
