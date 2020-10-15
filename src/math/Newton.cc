@@ -29,7 +29,6 @@ limitations under the License.
 #include "EquationHolder.hh"
 #include "OutputStream.hh"
 #include "dsAssert.hh"
-#include "GetGlobalParameter.hh"
 
 #include "BlockPreconditioner.hh"
 #include "IterativeLinearSolver.hh"
@@ -914,7 +913,9 @@ void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap
                "\tRelError: " << devrerr <<
                "\tAbsError: " << devaerr << "\n";
 
-  bool show_error_node = (OutputStream::GetVerbosity(GetGlobalParameterStringOptional("debug_level")) != OutputStream::Verbosity_t::V0);
+  GlobalData &gdata = GlobalData::GetInstance();
+
+  bool show_error_node = false;
 
   const Device::RegionList_t regions = device.GetRegionList();
   for (Device::RegionList_t::const_iterator rit = regions.begin(); rit != regions.end(); ++rit)
@@ -940,12 +941,17 @@ void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap
                    "\tRelError: " << equation.GetRelError<DoubleType>() <<
                    "\tAbsError: " << equation.GetAbsError<DoubleType>() << "\n";
 
-
-        if (show_error_node)
-        {
-          os << "\tRelErrorNode: " << equation.GetRelErrorNodeIndex() <<
-                "\tAbsErrorNode: " << equation.GetAbsErrorNodeIndex() << "\n";
-        }
+      auto dbent = gdata.GetDBEntryOnRegion(name, region.GetName(), "debug_level");
+      if (dbent.first)
+      {
+        // show for all levels except basic one
+        show_error_node = (OutputStream::GetVerbosity(dbent.second.GetString()) != OutputStream::Verbosity_t::V0);
+      }
+      if (show_error_node)
+      {
+        os << "\tRelErrorNode: " << equation.GetRelErrorNodeIndex() <<
+              "\tAbsErrorNode: " << equation.GetAbsErrorNodeIndex() << "\n";
+      }
     }
   }
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
