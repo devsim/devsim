@@ -844,6 +844,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
   if (ohm)
   {
     (*ohm)["iterations"] = ObjectHolder(iteration_list);
+    (*ohm)["converged"] = ObjectHolder(converged);
   }
 
   return converged;

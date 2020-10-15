@@ -52,9 +52,17 @@ solveCmdImpl(CommandHandler &data)
   const bool convergence_info = data.GetBooleanOption("info");
   ObjectHolderMap_t ohm;
   ObjectHolderMap_t *p_ohm = nullptr;
+
   if (convergence_info)
   {
-    p_ohm = &ohm;
+    if (type == "ac" || type == "noise")
+    {
+      errorString += "\"info\" option not supported for \"" + type + "\" analysis\n";
+    }
+    else
+    {
+      p_ohm = &ohm;
+    }
   }
 
 
@@ -167,15 +175,15 @@ solveCmdImpl(CommandHandler &data)
     res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF2<DoubleType>(tdelta, gamma), p_ohm);
   }
 
-  if (!res)
+  if (p_ohm)
+  {
+    data.SetObjectResult(ObjectHolder(ohm));
+  }
+  else if (!res)
   {
     std::ostringstream os;
     os << "Convergence failure!\n";
     errorString = os.str();
-  }
-  else if (p_ohm)
-  {
-    data.SetObjectResult(ObjectHolder(ohm));
   }
   else
   {
