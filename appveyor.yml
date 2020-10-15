@@ -112,9 +112,9 @@ install:
 #---------------------------------#
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
+#  - x86
 platform:
   - x64
-  - x86
   - msys
 
 # to add several platforms to build matrix:
