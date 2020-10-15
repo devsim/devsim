@@ -29,6 +29,7 @@ limitations under the License.
 #include "EquationHolder.hh"
 #include "OutputStream.hh"
 #include "dsAssert.hh"
+#include "GetGlobalParameter.hh"
 
 #include "BlockPreconditioner.hh"
 #include "IterativeLinearSolver.hh"
@@ -913,6 +914,7 @@ void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap
                "\tRelError: " << devrerr <<
                "\tAbsError: " << devaerr << "\n";
 
+  bool show_error_node = (OutputStream::GetVerbosity(GetGlobalParameterStringOptional("debug_level")) != OutputStream::Verbosity_t::V0);
 
   const Device::RegionList_t regions = device.GetRegionList();
   for (Device::RegionList_t::const_iterator rit = regions.begin(); rit != regions.end(); ++rit)
@@ -938,6 +940,12 @@ void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap
                    "\tRelError: " << equation.GetRelError<DoubleType>() <<
                    "\tAbsError: " << equation.GetAbsError<DoubleType>() << "\n";
 
+
+        if (show_error_node)
+        {
+          os << "\tRelErrorNode: " << equation.GetRelErrorNodeIndex() <<
+                "\tAbsErrorNode: " << equation.GetAbsErrorNodeIndex() << "\n";
+        }
     }
   }
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
@@ -966,7 +974,9 @@ void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap
         ObjectHolderMap_t emap;
         emap["name"] = ObjectHolder(equation.GetName());
         emap["relative_error"] = ObjectHolder(equation.GetRelError<double>());
+        emap["relative_error_node"] = ObjectHolder(static_cast<int>(equation.GetRelErrorNodeIndex()));
         emap["absolute_error"] = ObjectHolder(equation.GetAbsError<double>());
+        emap["absolute_error_node"] = ObjectHolder(static_cast<int>(equation.GetAbsErrorNodeIndex()));
         elist.push_back(ObjectHolder(emap));
       }
       rmap["equations"] = ObjectHolder(elist);

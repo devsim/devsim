@@ -73,6 +73,10 @@ class EquationHolder {
     template <typename DoubleType>
     DoubleType GetAbsError() const;
 
+    size_t GetRelErrorNodeIndex() const;
+
+    size_t GetAbsErrorNodeIndex() const;
+
     template <typename DoubleType>
     void Update(NodeModel &, const std::vector<DoubleType> &) const;
 

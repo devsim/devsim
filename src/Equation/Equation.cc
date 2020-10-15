@@ -74,6 +74,18 @@ void Equation<DoubleType>::setRelError(DoubleType r)
 }
 
 template <typename DoubleType>
+void Equation<DoubleType>::setAbsErrorNodeIndex(size_t a)
+{
+    absErrorNodeIndex = a;
+}
+
+template <typename DoubleType>
+void Equation<DoubleType>::setRelErrorNodeIndex(size_t r)
+{
+    relErrorNodeIndex = r;
+}
+
+template <typename DoubleType>
 DoubleType Equation<DoubleType>::GetAbsError() const
 {
     return absError;
@@ -86,8 +98,20 @@ DoubleType Equation<DoubleType>::GetRelError() const
 }
 
 template <typename DoubleType>
+size_t Equation<DoubleType>::GetAbsErrorNodeIndex() const
+{
+    return absErrorNodeIndex;
+}
+
+template <typename DoubleType>
+size_t Equation<DoubleType>::GetRelErrorNodeIndex() const
+{
+    return relErrorNodeIndex;
+}
+
+template <typename DoubleType>
 Equation<DoubleType>::Equation(const std::string &nm, RegionPtr rp, const std::string &var, EquationEnum::UpdateType ut)
-    : myname(nm), myregion(rp), variable(var), absError(0.0), relError(0.0), minError(defminError), updateType(ut)
+    : myname(nm), myregion(rp), variable(var), absError(0.0), relError(0.0), absErrorNodeIndex(0), relErrorNodeIndex(0), minError(defminError), updateType(ut)
 {
     EquationHolder ptr(this);
     rp->AddEquation(ptr);
@@ -262,6 +286,8 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
 
     DoubleType aerr = 0.0;
     DoubleType rerr = 0.0;
+    size_t     aerr_node = 0;
+    size_t     rerr_node = 0;
 
     for (size_t i = 0; i < upds.size(); ++i)
     {
@@ -270,6 +296,7 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
         if (n1 > aerr)
         {
           aerr = n1;
+          aerr_node = i;
         }
 //      aerr += n1;
 
@@ -280,12 +307,15 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
         if (nrerror > rerr)
         {
             rerr = nrerror;
+            rerr_node = i;
         }
 
     }
 
     setAbsError(aerr);
     setRelError(rerr);
+    setAbsErrorNodeIndex(aerr_node);
+    setRelErrorNodeIndex(aerr_node);
 //    dsErrors::EquationMathErrorInfo(*this, rerr, aerr, OutputStream::OutputType::INFO);
 }
 
