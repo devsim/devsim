@@ -32,7 +32,7 @@ export F77="/usr/bin/gfortran"
 (cd external/getrf && bash setup_centos6.sh && cd build && make -j2)
 
 
-bash scripts/setup_centos_6.sh
+bash scripts/setup_ubuntu_18.04.sh
 (cd linux_x86_64_release && make -j2)
 (cd dist && bash package_linux.sh ${1})
 

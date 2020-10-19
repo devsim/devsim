@@ -1,4 +1,4 @@
-DEVSIM_CONFIG="ubuntu_16.04"
+DEVSIM_CONFIG="ubuntu_18.04"
 CC=/usr/bin/gcc
 CXX=/usr/bin/g++
 CMAKE_CXX_FLAGS=""
