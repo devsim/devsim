@@ -3,7 +3,7 @@
 TCL_BIN="/usr/bin/tclsh8.5"
 
 PYTHON3_ARCHIVE="/usr/lib/x86_64-linux-gnu/libpython3.8m.so"
-PYTHON3_INCLUDE="/usr/include/python3.8m"
+PYTHON3_INCLUDE="/usr/include/python3.8"
 PYTHON3_BIN="/usr/bin/python3"
 for TYPE in debug release; do
 ARCH=`uname -m`
