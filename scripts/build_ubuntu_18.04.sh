@@ -20,7 +20,7 @@ export F77="/usr/bin/gfortran"
 (cd external && tar xzf superlu_4.3.tar.gz)
 
 # SYMDIFF build
-(cd external/symdiff && bash ../symdiff_centos.sh && cd linux_x86_64_release && make -j2);
+(cd external/symdiff && bash ../symdiff_ubuntu_18.04.sh && cd linux_x86_64_release && make -j2);
 
 # CGNSLIB build
 ####(cd external && curl -L -O https://github.com/CGNS/CGNS/archive/v3.1.4.tar.gz && tar xzf v3.1.4.tar.gz)
