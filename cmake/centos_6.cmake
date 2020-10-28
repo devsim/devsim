@@ -9,8 +9,11 @@ SET (BOOST_INCLUDE "$ENV{CONDA_PREFIX}/include")
 
 SET (QUADMATH_ARCHIVE "-lquadmath")
 
+# to prevent linking against bad libstdc++
+SET (TMPLIBPATH ${CMAKE_BINARY_DIR}/linklibs)
+
 SET (MKL_PARDISO_INCLUDE $ENV{CONDA_PREFIX}/include)
-SET (MKL_LIB_DIR         $ENV{CONDA_PREFIX}/lib)
+SET (MKL_LIB_DIR         ${TMPLIBPATH})
 #http://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
 #requires duplicate library for 1-pass linker
 SET (BLAS_ARCHIVE
@@ -24,16 +27,16 @@ SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
 SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/lib/libsuperlu_4.3.a)
 
 SET (SQLITE3_INCLUDE $ENV{CONDA_PREFIX}/include)
-SET (SQLITE3_ARCHIVE $ENV{CONDA_PREFIX}/lib/libsqlite3.a)
+SET (SQLITE3_ARCHIVE ${TMPLIBPATH}/libsqlite3.a)
 
 SET (ZLIB_INCLUDE $ENV{CONDA_PREFIX}/include)
-SET (ZLIB_ARCHIVE $ENV{CONDA_PREFIX}/lib/libz.a)
+SET (ZLIB_ARCHIVE ${TMPLIBPATH}/libz.a)
 
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)
 
 SET (PYTHON3_INCLUDE   $ENV{CONDA_PREFIX}/include/python3.8)
-SET (PYTHON3_ARCHIVE -L$ENV{CONDA_PREFIX}/lib   -lpython3.8m)
+#SET (PYTHON3_ARCHIVE -L$ENV{CONDA_PREFIX}/lib   -lpython3.8m)
 
 # important flag for dynamic linking of static archives on linux
 SET (CMAKE_POSITION_INDEPENDENT_CODE ON)
