@@ -7,9 +7,9 @@ PYTHON_BASE="${HOME}/anaconda/envs/python27_devsim_build"
 PYTHON_ARCHIVE="${PYTHON_BASE}/lib/libpython2.7.dylib"
 PYTHON_INCLUDE="${PYTHON_BASE}/include/python2.7"
 PYTHON_BIN="${PYTHON_BASE}/bin/python"
-PYTHON3_BASE="${HOME}/anaconda/envs/python37_devsim_build"
-PYTHON3_ARCHIVE="${PYTHON3_BASE}/lib/libpython3.7m.dylib"
-PYTHON3_INCLUDE="${PYTHON3_BASE}/include/python3.7m"
+PYTHON3_BASE="${HOME}/anaconda/envs/python3_devsim_build"
+PYTHON3_ARCHIVE="${PYTHON3_BASE}/lib/libpython3.8m.dylib"
+PYTHON3_INCLUDE="${PYTHON3_BASE}/include/python3.8"
 PYTHON3_BIN="${PYTHON3_BASE}/bin/python"
 for TYPE in debug release; do
     NAME=osx_${TYPE}

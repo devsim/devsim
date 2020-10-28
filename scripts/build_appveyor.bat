@@ -8,7 +8,7 @@ SET TAG=%3
 
 c:\msys64\usr\bin\pacman -Su --noconfirm rsync zip
 
-call %CONDA_BIN% create -y -n devsim_build python=3.7
+call %CONDA_BIN% create -y -n devsim_build python=3
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 call %CONDA_BIN% install -y -n devsim_build cmake mkl mkl-devel mkl-include sqlite zlib

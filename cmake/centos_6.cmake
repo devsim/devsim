@@ -32,8 +32,8 @@ SET (ZLIB_ARCHIVE $ENV{CONDA_PREFIX}/lib/libz.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)
 
-SET (PYTHON37_INCLUDE   $ENV{CONDA_PREFIX}/include/python3.7m)
-SET (PYTHON37_ARCHIVE -L$ENV{CONDA_PREFIX}/lib   -lpython3.7m)
+SET (PYTHON3_INCLUDE   $ENV{CONDA_PREFIX}/include/python3.8)
+SET (PYTHON3_ARCHIVE -L$ENV{CONDA_PREFIX}/lib   -lpython3.8m)
 
 # important flag for dynamic linking of static archives on linux
 SET (CMAKE_POSITION_INDEPENDENT_CODE ON)
