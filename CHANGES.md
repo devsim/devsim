@@ -1,3 +1,10 @@
+### Version 1.4.14
+#### Platforms
+
+Windows 32 bit is no longer supported.  Binary releases of the ``Visual Studio 2019`` ``MSYS2/Mingw-w64`` 64-bit builds are still available online.
+
+On Linux, the releases are now on Centos 7, as Centos 6 has reached its end of life on November 30, 2020.
+
 ### Version 1.4.13
 
 The node indexes with the maximum error for each equation will be printed when ``debug_level`` is ``verbose``.
