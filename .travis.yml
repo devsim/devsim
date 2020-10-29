@@ -27,9 +27,9 @@ addons:
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    docker run -it -d --name centos6 centos:6 &&
-    (cd .. && tar czf devsim.tgz devsim && docker cp devsim.tgz centos6:/root/) &&
-    docker exec centos6 bash -c "cd /root && tar xzf devsim.tgz";
+    docker run -it -d --name centos7 centos:7 &&
+    (cd .. && tar czf devsim.tgz devsim && docker cp devsim.tgz centos7:/root/) &&
+    docker exec centos7 bash -c "cd /root && tar xzf devsim.tgz";
     fi
 
 #install:
@@ -37,7 +37,7 @@ before_install:
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    docker exec centos6 bash -c "cd /root/devsim && bash scripts/build_centos_6.sh devsim_linux_${TRAVIS_TAG}";
+    docker exec centos7 bash -c "cd /root/devsim && bash scripts/build_centos_6.sh devsim_linux_${TRAVIS_TAG}";
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     if [ "$COMPILER" == "gcc" ]; then
