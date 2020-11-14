@@ -73,6 +73,7 @@ limitations under the License.
 #include <sstream>
 #include <iomanip>
 #include <utility>
+#include <functional>
 
 using namespace dsValidate;
 
