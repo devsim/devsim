@@ -11,8 +11,8 @@ It is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/
 
 ### Supported Platforms:
 * macOS 10.13 (High Sierra)
-* Microsoft Windows (32, 64 bit)
-* Red Hat 6 (Centos Compatible)
+* Microsoft Windows (64 bit)
+* Red Hat 7 (Centos Compatible)
 
 Binary releases are currently available from [GitHub](https://github.com/devsim/devsim/releases).
 
