@@ -49,7 +49,7 @@ script:
 
 before_deploy:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    (cd dist && docker cp centos6:/root/devsim/dist/devsim_linux_${TRAVIS_TAG}.tgz .);
+    (cd dist && docker cp centos7:/root/devsim/dist/devsim_linux_${TRAVIS_TAG}.tgz .);
     fi
 
 deploy:
