@@ -37,7 +37,7 @@ namespace dsMath {
 template <typename T>
 /// Sort first by increasing row
 /// Then by decreasing value for each row
-struct SpecialSort : public std::binary_function<RowColVal<T>, RowColVal<T>, bool>
+struct SpecialSort
 {
    bool operator()(const RowColVal<T> &x, const RowColVal<T> &y) {
       bool ret = false;

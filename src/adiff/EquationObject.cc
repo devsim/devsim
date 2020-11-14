@@ -133,7 +133,7 @@ EqObjPtr printHelp() {
 
 namespace {
 //// order by CONST_OBJ, the VARIABLE_OBJ, then everything else see enum
-struct EqVecCompare : public std::binary_function<EqObjPtr, EqObjPtr, bool>
+struct EqVecCompare
 {
   bool operator()(EqObjPtr x, EqObjPtr y)
   {

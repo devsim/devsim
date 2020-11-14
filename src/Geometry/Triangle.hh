@@ -21,7 +21,6 @@ limitations under the License.
 #include "Vector.hh"
 
 #include <cstddef>
-#include <functional>
 #include <vector>
 
 class Node;
@@ -66,7 +65,7 @@ class Triangle {
       std::vector<ConstNodePtr> nodes; 
 };
 
-struct TriangleCompIndex : public std::binary_function<ConstTrianglePtr, ConstTrianglePtr, bool>
+struct TriangleCompIndex
 {
    bool operator()(ConstTrianglePtr x, ConstTrianglePtr y) { return x->GetIndex() < y->GetIndex(); }
 };

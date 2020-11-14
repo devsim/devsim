@@ -119,10 +119,9 @@ void Mesh1d::SetLocationsAndTags()
 }
 
 
-#include <functional>
 namespace {
 //// This functor is to sort regions by their lowest index
-struct RegionSort : public std::binary_function<MeshRegion1d, MeshRegion1d, bool>
+struct RegionSort
 {
     bool operator()(const MeshRegion1d &r0, const MeshRegion1d &r1) const
     {

@@ -18,7 +18,6 @@ limitations under the License.
 #ifndef DS_MATRIXENTRIES_HH
 #define DS_MATRIXENTRIES_HH
 #include<vector>
-#include<functional>
 #include<complex>
 
 namespace dsMath {

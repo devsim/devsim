@@ -21,7 +21,6 @@ limitations under the License.
 #include "Vector.hh"
 
 #include <cstddef>
-#include <functional>
 #include <vector>
 
 class Node;
@@ -64,7 +63,7 @@ class Tetrahedron {
       std::vector<ConstNodePtr> nodes; 
 };
 
-struct TetrahedronCompIndex : public std::binary_function<ConstTetrahedronPtr, ConstTetrahedronPtr, bool>
+struct TetrahedronCompIndex
 {
    bool operator()(ConstTetrahedronPtr x, ConstTetrahedronPtr y) { return x->GetIndex() < y->GetIndex(); }
 };

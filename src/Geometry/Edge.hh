@@ -19,7 +19,6 @@ limitations under the License.
 #define EDGE_HH
 
 #include <cstddef>
-#include <functional>
 #include <vector>
 
 class Node;
@@ -76,7 +75,7 @@ class Edge {
       std::vector<ConstNodePtr> nodes;
 };
 
-struct EdgeCompIndex : public std::binary_function<ConstEdgePtr, ConstEdgePtr, bool>
+struct EdgeCompIndex
 {
    bool operator()(ConstEdgePtr x, ConstEdgePtr y) { return x->GetIndex() < y->GetIndex(); }
 };

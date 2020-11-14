@@ -20,7 +20,6 @@ limitations under the License.
 
 #include "Coordinate.hh"
 #include <cstddef>
-#include <functional>
 
 class Node;
 typedef Node *NodePtr;
@@ -70,7 +69,7 @@ class Node {
       ConstCoordinatePtr coord;
 };
 
-struct NodeCompIndex : public std::binary_function<ConstNodePtr, ConstNodePtr, bool>
+struct NodeCompIndex
 {
    bool operator()(ConstNodePtr x, ConstNodePtr y) { return x->GetIndex() < y->GetIndex(); }
 };
