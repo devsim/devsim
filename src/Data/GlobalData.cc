@@ -111,7 +111,7 @@ GlobalData::DBEntry_t GlobalData::GetDBEntryOnDevice(const std::string &device, 
 {
   DBEntry_t ret = std::make_pair(false, ObjectHolder());
 
-  DeviceDataMap_t::const_iterator dit = deviceData.find(device); 
+  DeviceDataMap_t::const_iterator dit = deviceData.find(device);
   if (dit != deviceData.end())
   {
     const GlobalDataMap_t &gdm = (*dit).second;
@@ -139,7 +139,7 @@ GlobalData::DBEntry_t GlobalData::GetDBEntryOnRegion(const std::string &device, 
   if (rit != regionData.end())
   {
     const DeviceDataMap_t &ddm = (*rit).second;
-    const DeviceDataMap_t::const_iterator dit = ddm.find(region); 
+    const DeviceDataMap_t::const_iterator dit = ddm.find(region);
     if (dit != ddm.end())
     {
       const GlobalDataMap_t &gdm = (*dit).second;
@@ -198,8 +198,8 @@ GlobalData::DoubleDBEntry_t GlobalData::GetDoubleDBEntryOnRegion(const Region *r
     {
       const std::string &region = rp->GetName();
       const std::string &device = rp->GetDevice()->GetName();
-      std::ostringstream os; 
-      os << "Device \"" << device << 
+      std::ostringstream os;
+      os << "Device \"" << device <<
          "\" Region \"" << region
          << "\" database entry \"" << name
          << "\" resolves to a string \"" << dbent.second.GetString() <<  "\" when a number was expected\n";
@@ -267,7 +267,7 @@ void GlobalData::SignalCallbacksOnGlobal(const std::string &name)
         {
             if (deviceData[device].count(name))
             {
-                std::ostringstream os; 
+                std::ostringstream os;
                 os << "Device \"" << device << " shadows global parameter update " << name << "\n";
                 OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
             }
@@ -301,8 +301,8 @@ void GlobalData::SignalCallbacksOnDevice(const std::string &device, const std::s
                 {
                     if (regionData[device][region].count(name))
                     {
-                        std::ostringstream os; 
-                        os << "Device \"" << device << 
+                        std::ostringstream os;
+                        os << "Device \"" << device <<
                                      "\" Region \"" << region
                                      << "\" shadows global parameter update " << name << "\n";
                         OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
@@ -385,8 +385,8 @@ void GlobalData::SignalCallbacksOnMaterialChange(const std::string &material_nam
       {
         const std::string &region = rp->GetName();
         const std::string &device = rp->GetDevice()->GetName();
-        std::ostringstream os; 
-        os << "Device \"" << device << 
+        std::ostringstream os;
+        os << "Device \"" << device <<
            "\" Region \"" << region <<
            "\" Material \"" << material_name
            << "\" material db entry \"" << parameter_name
@@ -402,11 +402,14 @@ bool GlobalData::AddTclEquation(const std::string &name, ObjectHolder procedure,
   bool ret = false;
   if (tclEquationList.count(name))
   {
-    error += std::string("Tcl equation \"") + name + "\" already exists";
+        std::ostringstream os;
+        os << "Custom equation \"" + name + "\" replaced";
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
-  else if (!procedure.IsCallable())
+
+  if (!procedure.IsCallable())
   {
-    error += std::string("Tcl equation \"") + name + "\" does not provide a callable procedure";
+    error += std::string("Custom equation \"") + name + "\" does not provide a callable procedure";
   }
   else
   {

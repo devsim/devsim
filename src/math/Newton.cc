@@ -107,7 +107,7 @@ size_t Newton<DoubleType>::NumberEquationsAndSetDimension()
     GlobalData::DeviceList_t::const_iterator dend = dlist.end();
     for ( ; dit != dend; ++dit)
     {
-      std::ostringstream os; 
+      std::ostringstream os;
 
       std::string name = (dit->first);
       Device &dev =     *(dit->second);
@@ -139,7 +139,7 @@ size_t Newton<DoubleType>::NumberEquationsAndSetDimension()
       nk.SetNodeNumbers(eqnnum);
       size_t maxnum = nk.GetMaxEquationNumber();
 #if 1
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Circuit " << " has equations " << eqnnum << ":" << maxnum << "\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 #endif
@@ -336,6 +336,10 @@ void Newton<DoubleType>::LoadMatrixAndRHS(Matrix<DoubleType> &matrix, std::vecto
   RHSEntryVec<DoubleType>    v;
   RealRowColValueVec<DoubleType> m;
 
+  // Permutated variant
+  RHSEntryVec<DoubleType>    pv;
+  RealRowColValueVec<DoubleType> pm;
+
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t dlist = gdata.GetDeviceList();
 
@@ -354,11 +358,12 @@ void Newton<DoubleType>::LoadMatrixAndRHS(Matrix<DoubleType> &matrix, std::vecto
       LoadIntoMatrix(m, matrix, scl);
       LoadIntoRHS(v, rhs, scl);
 
-      m.clear();
-      v.clear();
-      AssembleBulk(m, v, dev, w, t);
-      LoadIntoMatrixPermutated(m, matrix, permvec, scl);
-      LoadIntoRHSPermutated(v, rhs, permvec, scl);
+      pm.clear();
+      pv.clear();
+
+      AssembleBulk(pm, pv, dev, w, t);
+      LoadIntoMatrixPermutated(pm, matrix, permvec, scl);
+      LoadIntoRHSPermutated(pv, rhs, permvec, scl);
     }
   }
 
@@ -375,11 +380,15 @@ void Newton<DoubleType>::LoadMatrixAndRHS(Matrix<DoubleType> &matrix, std::vecto
       LoadIntoRHS(v, rhs, scl, offset);
     }
 
+    pm.clear();
+    pv.clear();
     m.clear();
     v.clear();
-    AssembleTclEquations(m, v, w, t);
-    LoadIntoMatrixPermutated(m, matrix, permvec, scl);
-    LoadIntoRHSPermutated(v, rhs, permvec, scl);
+    AssembleTclEquations(pm, pv, m, v, w, t);
+    LoadIntoMatrixPermutated(pm, matrix, permvec, scl);
+    LoadIntoRHSPermutated(pv, rhs, permvec, scl);
+    LoadIntoMatrix(m, matrix, scl);
+    LoadIntoRHS(v, rhs, scl);
   }
 }
 
@@ -392,7 +401,7 @@ void Newton<DoubleType>::LoadCircuitRHSAC(std::vector<std::complex<DoubleType>> 
 
   ComplexRHSEntryVec_t cv;
 
-  std::ostringstream os; 
+  std::ostringstream os;
   NodeKeeper &nk = NodeKeeper::instance();
   if (nk.HaveNodes())
   {
@@ -442,7 +451,7 @@ void Newton<DoubleType>::RestoreSolutions()
     GlobalData::DeviceList_t::const_iterator dend = dlist.end();
     for ( ; dit != dend; ++dit)
     {
-      std::ostringstream os; 
+      std::ostringstream os;
 
       std::string name = (dit->first);
       Device &dev =     *(dit->second);
@@ -471,7 +480,7 @@ void Newton<DoubleType>::BackupSolutions()
     GlobalData::DeviceList_t::const_iterator dend = dlist.end();
     for ( ; dit != dend; ++dit)
     {
-      std::ostringstream os; 
+      std::ostringstream os;
 
       std::string name = (dit->first);
       Device &dev =     *(dit->second);
@@ -698,7 +707,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
     {
       LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, dsMathEnum::TimeMode::DC, static_cast<DoubleType>(1.0));
 
-      /// This assembles the time derivative current 
+      /// This assembles the time derivative current
       if (timeinfo.a0 != 0.0)
       {
         LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, dsMathEnum::TimeMode::TIME, timeinfo.a0);
@@ -853,7 +862,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 template <typename DoubleType>
 void Newton<DoubleType>::PrintNumberEquations(size_t numeqns, ObjectHolderMap_t *ohm)
 {
-  std::ostringstream os; 
+  std::ostringstream os;
   os << "number of equations " << numeqns << "\n";
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   if (ohm)
@@ -865,7 +874,7 @@ void Newton<DoubleType>::PrintNumberEquations(size_t numeqns, ObjectHolderMap_t 
 template <typename DoubleType>
 void Newton<DoubleType>::PrintIteration(size_t iter, ObjectHolderMap_t *ohm)
 {
-  std::ostringstream os; 
+  std::ostringstream os;
   os << "Iteration: " << iter << "\n";
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   if (ohm)
@@ -1334,8 +1343,6 @@ bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver
     {
       std::string name = (dit->first);
       Device *dev =      (dit->second);
-      //// TODO: need to use permutation vec to ensure that permutated out equations are neglected
-      // the need to write updaters for interface and contact equations!!!
       dev->NoiseUpdate(output_name, permvec, result);
     }
 
@@ -1346,19 +1353,96 @@ bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver
       std::ostringstream os;
       os << "Noise Iteration:\n";
       os << "number of equations " << numeqns << "\n";
-      //// TODO: more meaningful reporting
 
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
   } while (0);
 
-  //// TODO: have some kind of accuracy check for iterative solvers
   return converged;
 }
 
 template <typename DoubleType>
-void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &mat, RHSEntryVec<DoubleType> &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Newton<DoubleType>::AssembleTclEquation(const std::string &name, ObjectHolder &matrix_objects, ObjectHolder &rhs_objects, RealRowColValueVec<DoubleType> &mat, RHSEntryVec<DoubleType> &rhs, dsMathEnum::WhatToLoad w)
 {
+  std::vector<ObjectHolder> objects;
+
+  //// Read in the entries here
+  if (w != dsMathEnum::WhatToLoad::MATRIXONLY)
+  {
+    bool ok = rhs_objects.GetListOfObjects(objects);
+    size_t len = objects.size();
+
+    if ((!ok) || ((len % 2) != 0))
+    {
+      std::ostringstream os;
+      os << "Error when evaluating custom_equation \"" << name << "\" rhs entry list of length \"" << len << "\" is not divisible by 2\n";
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
+    }
+    else
+    {
+      for (size_t i = 0; i < len; i += 2)
+      {
+        ObjectHolder::IntegerEntry_t row = objects[i].GetInteger();
+        ObjectHolder::DoubleEntry_t val = objects[i + 1].GetDouble();
+
+        if (row.first && val.first)
+        {
+          rhs.push_back(std::make_pair(row.second, val.second));
+        }
+        else
+        {
+          std::ostringstream os;
+          os << "Error when evaluating custom_equation \"" << name << "\" rhs val entry " << objects[i].GetString() << " " << objects[i+1].GetString() << "\n";
+          OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
+        }
+
+      }
+    }
+  }
+
+  if (w != dsMathEnum::WhatToLoad::RHS)
+  {
+    bool ok = matrix_objects.GetListOfObjects(objects);
+    size_t len = objects.size();
+
+    if ((!ok) || ((len % 3) != 0))
+    {
+      std::ostringstream os;
+      os << "Error when evaluating custom_equation \"" << name << "\" matrix entry list of length \"" << len << "\" is not divisible by 3\n";
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
+    }
+    else
+    {
+
+      for (size_t i = 0; i < len; i += 3)
+      {
+        ObjectHolder::IntegerEntry_t row = objects[i].GetInteger();
+        ObjectHolder::IntegerEntry_t col = objects[i + 1].GetInteger();
+        ObjectHolder::DoubleEntry_t  val = objects[i + 2].GetDouble();
+
+        if (row.first && col.first && val.first)
+        {
+          mat.push_back(RealRowColVal<DoubleType>(row.second, col.second, val.second));
+        }
+        else
+        {
+          std::ostringstream os;
+          os << "Error when evaluating custom_equation \"" << name << "\" matrix entry " <<
+            objects[i].GetString() << " " << objects[i+1].GetString() << " " << objects[i+2].GetString() << "\n";
+          OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
+        }
+      }
+    }
+  }
+}
+
+template <typename DoubleType>
+void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &pmat, RHSEntryVec<DoubleType> &prhs, RealRowColValueVec<DoubleType> &mat, RHSEntryVec<DoubleType> &rhs, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+{
+  /*
+    pmat, prhs will be row permutated before loading into matrix
+    mat, rhs are loaded with the recorded equation numbers
+  */
   GlobalData &gdata = GlobalData::GetInstance();
 
   const GlobalData::TclEquationList_t &tlist = gdata.GetTclEquationList();
@@ -1369,7 +1453,7 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
   };
 
   Interpreter MyInterp;
-  std::string     result;
+  std::string result;
   for (GlobalData::TclEquationList_t::const_iterator it = tlist.begin(); it != tlist.end(); ++it)
   {
     const std::string &name = it->first;
@@ -1377,98 +1461,43 @@ void Newton<DoubleType>::AssembleTclEquations(RealRowColValueVec<DoubleType> &ma
 
     bool ok = MyInterp.RunCommand(proc, arguments);
 
-
     if (!ok)
     {
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Error when evaluating custom_equation \"" << name << "\" with result \"" << MyInterp.GetErrorString() << "\"\n";
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
     }
+
+    std::vector<ObjectHolder> objects;
+    ObjectHolder result = MyInterp.GetResult();
+    ok = result.GetListOfObjects(objects);
+
+    if ((!ok) || (objects.size() != 3))
+    {
+      std::ostringstream os;
+      os << "Error when evaluating custom_equation \"" << name << "\" cannot extract list of length 3 containing matrix, rhs entries, and boolean denoting permutation\n";
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
+    }
+
+    ObjectHolder rhs_objects = objects[1];
+    ObjectHolder matrix_objects = objects[0];
+
+    auto is_bulk = objects[2].GetBoolean();
+
+    if (!is_bulk.first)
+    {
+      std::ostringstream os;
+      os << "Error when evaluating custom_equation \"" << name << "\" cannot extract 3rd argument for boolean denoting permutation\n";
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
+    }
+
+    if (is_bulk.second)
+    {
+      AssembleTclEquation(name, matrix_objects, rhs_objects, pmat, prhs, w);
+    }
     else
     {
-      std::vector<ObjectHolder> objects;
-      ObjectHolder result = MyInterp.GetResult();
-      ok = result.GetListOfObjects(objects);
-
-
-      if ((!ok) || (objects.size() != 2))
-      {
-        std::ostringstream os; 
-        os << "Error when evaluating custom_equation \"" << name << "\" cannot extract list of length 2 containing matrix and rhs entries\n";
-        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
-      }
-
-      ObjectHolder rhs_objects = objects[1];
-      ObjectHolder matrix_objects = objects[0];
-
-      //// Read in the entries here
-      if (w != dsMathEnum::WhatToLoad::MATRIXONLY)
-      {
-        ok = rhs_objects.GetListOfObjects(objects);
-        size_t len = objects.size();
-
-        if ((!ok) || ((len % 2) != 0))
-        {
-          std::ostringstream os; 
-          os << "Error when evaluating custom_equation \"" << name << "\" rhs entry list of length \"" << len << "\" is not divisible by 2\n";
-          OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
-        }
-        else
-        {
-          for (size_t i = 0; i < len; i += 2)
-          {
-            ObjectHolder::IntegerEntry_t row = objects[i].GetInteger();
-            ObjectHolder::DoubleEntry_t val = objects[i + 1].GetDouble();
-
-            if (row.first && val.first)
-            {
-              rhs.push_back(std::make_pair(row.second, val.second));
-            }
-            else
-            {
-              std::ostringstream os; 
-              os << "Error when evaluating custom_equation \"" << name << "\" rhs val entry " << objects[i].GetString() << " " << objects[i+1].GetString() << "\n";
-              OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
-            }
-
-          }
-        }
-      }
-
-      if (w != dsMathEnum::WhatToLoad::RHS)
-      {
-        ok = matrix_objects.GetListOfObjects(objects);
-        size_t len = objects.size();
-
-        if ((!ok) || ((len % 3) != 0))
-        {
-          std::ostringstream os; 
-          os << "Error when evaluating custom_equation \"" << name << "\" matrix entry list of length \"" << len << "\" is not divisible by 3\n";
-          OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
-        }
-        else
-        {
-
-          for (size_t i = 0; i < len; i += 3)
-          {
-            ObjectHolder::IntegerEntry_t row = objects[i].GetInteger();
-            ObjectHolder::IntegerEntry_t col = objects[i + 1].GetInteger();
-            ObjectHolder::DoubleEntry_t  val = objects[i + 2].GetDouble();
-
-            if (row.first && col.first && val.first)
-            {
-              mat.push_back(RealRowColVal<DoubleType>(row.second, col.second, val.second));
-            }
-            else
-            {
-              std::ostringstream os; 
-              os << "Error when evaluating custom_equation \"" << name << "\" matrix entry " <<
-                objects[i].GetString() << " " << objects[i+1].GetString() << " " << objects[i+2].GetString() << "\n";
-              OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
-            }
-          }
-        }
-      }
+      AssembleTclEquation(name, matrix_objects, rhs_objects, mat, rhs, w);
     }
   }
 }

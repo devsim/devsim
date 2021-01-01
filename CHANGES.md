@@ -1,3 +1,11 @@
+### Version 1.4.15
+
+The ``custom_equation`` command has been modified to require a third return value.  This boolean value denotes whether the matrix entries should be row permutated or not.  For the bulk equations this value should be ``True``.  For interface and contact boundary conditions, this value should be ``False``.
+
+It is now possible to replace an existing ``custom_equation``.
+
+The file ``examples/diode/diode_1d_custom.py`` demonstrates custom matrix assembly and can be directly compared to ``examples/diode/diode_1d.py``.
+
 ### Version 1.4.14
 #### Platforms
 

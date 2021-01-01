@@ -212,17 +212,18 @@ class Newton {
         template <typename T>
         void LoadMatrixAndRHS(Matrix<DoubleType> &, std::vector<T> &, permvec_t &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode, T);
 
-        //// TODO: may be more efficient to reuse matrix and scale imaginary elements
         void LoadMatrixAndRHSAC(Matrix<DoubleType> &, std::vector<std::complex<DoubleType>> &, permvec_t &, DoubleType);
         void LoadCircuitRHSAC(std::vector<std::complex<DoubleType>> &);
 
         void LoadMatrixAndRHSOnCircuit(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &rhs, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         void AssembleContactsAndInterfaces(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, permvec_t &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
-        //// This one can't permutate anything
+
         void AssembleBulk(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, Device &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        void AssembleTclEquations(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
+        void AssembleTclEquation(const std::string &name, ObjectHolder &, ObjectHolder &, RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &,  dsMathEnum::WhatToLoad);
+
+        void AssembleTclEquations(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         static const size_t DefaultMaxIter;
         static const DoubleType DefaultAbsError;

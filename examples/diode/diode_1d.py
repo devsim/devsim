@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from devsim import *
-from devsim.python_packages.simple_physics import *
+import devsim.python_packages.simple_physics as simple_physics
 import diode_common
 #####
 # dio1
@@ -54,10 +54,10 @@ solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=3
 ####
 v = 0.0
 while v < 0.51:
-    set_parameter(device=device, name=GetContactBiasName("top"), value=v)
+    set_parameter(device=device, name=simple_physics.GetContactBiasName("top"), value=v)
     solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
-    PrintCurrents(device, "top")
-    PrintCurrents(device, "bot")
+    simple_physics.PrintCurrents(device, "top")
+    simple_physics.PrintCurrents(device, "bot")
     v += 0.1
 
 write_devices(file="diode_1d.dat", type="tecplot")
