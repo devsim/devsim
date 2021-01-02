@@ -33,7 +33,9 @@ ExprContactEquation<DoubleType>::ExprContactEquation(
             RegionPtr  r,
             const std::string &nmi,// nodemodel
             const std::string &emi, // edgemodel
+            const std::string &evmi, // edgevolumemodel
             const std::string &eemi, // elementedgemodel
+            const std::string &eevmi, // volumemodel
             const std::string &nmc,// nodemodel
             const std::string &emc, // edgemodel
             const std::string &eemc, // elementedgemodel
@@ -43,7 +45,9 @@ ExprContactEquation<DoubleType>::ExprContactEquation(
             ) :  ContactEquation<DoubleType>(eq, c, r),
                  nodemodel_int(nmi),
                  edgemodel_int(emi),
+                 edgevolumemodel_int(evmi),
                  elementedgemodel_int(eemi),
+                 volumemodel_int(eevmi),
                  nodemodel_current(nmc),
                  edgemodel_current(emc),
                  elementedgemodel_current(eemc),
@@ -84,13 +88,49 @@ void ExprContactEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec
         if (!edgemodel_int.empty())
         {
             model_cache->clear();
-            ContactEquation<DoubleType>::AssembleEdgeEquation(edgemodel_int, m, v, w, EdgeCoupleModel);
+            ContactEquation<DoubleType>::AssembleEdgeEquation(edgemodel_int, m, v, w, EdgeCoupleModel, 1.0, -1.0);
+        }
+
+        if (!edgevolumemodel_int.empty())
+        {
+            model_cache->clear();
+
+            const std::string &node0model = ContactEquation<DoubleType>::GetRegion().GetEdgeNode0VolumeModel();
+            const std::string &node1model = ContactEquation<DoubleType>::GetRegion().GetEdgeNode1VolumeModel();
+
+            if (node0model == node1model)
+            {
+                ContactEquation<DoubleType>::AssembleEdgeEquation(edgevolumemodel_int, m, v, w, node0model, 1.0, 1.0);
+            }
+            else
+            {
+                ContactEquation<DoubleType>::AssembleEdgeEquation(edgevolumemodel_int, m, v, w, node0model, 1.0, 0.0);
+                ContactEquation<DoubleType>::AssembleEdgeEquation(edgevolumemodel_int, m, v, w, node1model, 0.0, 1.0);
+            }
         }
 
         if (!elementedgemodel_int.empty())
         {
             model_cache->clear();
             ContactEquation<DoubleType>::AssembleElementEdgeEquation(elementedgemodel_int, m, v, w, ElementEdgeCoupleModel, 1.0, -1.0);
+        }
+
+        if (!volumemodel_int.empty())
+        {
+            model_cache->clear();
+
+            const std::string &node0model = ContactEquation<DoubleType>::GetRegion().GetElementNode0VolumeModel();
+            const std::string &node1model = ContactEquation<DoubleType>::GetRegion().GetElementNode1VolumeModel();
+
+            if (node0model == node1model)
+            {
+              ContactEquation<DoubleType>::AssembleElementEdgeEquation(volumemodel_int, m, v, w, node0model, 1.0, 1.0);
+            }
+            else
+            {
+              ContactEquation<DoubleType>::AssembleElementEdgeEquation(volumemodel_int, m, v, w, node0model, 1.0, 0.0);
+              ContactEquation<DoubleType>::AssembleElementEdgeEquation(volumemodel_int, m, v, w, node1model, 0.0, 1.0);
+            }
         }
 
         const std::string &circuitnode = ContactEquation<DoubleType>::GetCircuitNode();
@@ -104,7 +144,7 @@ void ExprContactEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec
             if (!edgemodel_current.empty())
             {
                 model_cache->clear();
-                ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(edgemodel_current, m, v, w, EdgeCoupleModel);
+                ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(edgemodel_current, m, v, w, EdgeCoupleModel, 1.0, -1.0);
             }
             if (!elementedgemodel_current.empty())
             {
@@ -141,7 +181,7 @@ void ExprContactEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec
             if (!edgemodel_charge.empty())
             {
                 model_cache->clear();
-                ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(edgemodel_charge, m, v, w, EdgeCoupleModel);
+                ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(edgemodel_charge, m, v, w, EdgeCoupleModel, 1.0, -1.0);
             }
             if (!elementedgemodel_charge.empty())
             {
@@ -157,7 +197,7 @@ void ExprContactEquation<DoubleType>::calcCurrent()
 {
     /// handle cylindrical
     DoubleType ch = ContactEquation<DoubleType>::integrateNodeModelOverNodes(nodemodel_current, ContactEquation<DoubleType>::GetRegion().GetNodeVolumeModel());
-    ch += ContactEquation<DoubleType>::integrateEdgeModelOverNodes(edgemodel_current, ContactEquation<DoubleType>::GetRegion().GetEdgeCoupleModel());
+    ch += ContactEquation<DoubleType>::integrateEdgeModelOverNodes(edgemodel_current, ContactEquation<DoubleType>::GetRegion().GetEdgeCoupleModel(), 1.0, -1.0);
     ch += ContactEquation<DoubleType>::integrateElementEdgeModelOverNodes(elementedgemodel_current, ContactEquation<DoubleType>::GetRegion().GetElementEdgeCoupleModel(), 1.0, -1.0);
     ContactEquation<DoubleType>::SetCurrent(ch);
 }
@@ -168,7 +208,7 @@ template <typename DoubleType>
 void ExprContactEquation<DoubleType>::calcCharge()
 {
     DoubleType ch = ContactEquation<DoubleType>::integrateNodeModelOverNodes(nodemodel_charge, ContactEquation<DoubleType>::GetRegion().GetNodeVolumeModel());
-    ch += ContactEquation<DoubleType>::integrateEdgeModelOverNodes(edgemodel_charge, ContactEquation<DoubleType>::GetRegion().GetEdgeCoupleModel());
+    ch += ContactEquation<DoubleType>::integrateEdgeModelOverNodes(edgemodel_charge, ContactEquation<DoubleType>::GetRegion().GetEdgeCoupleModel(), 1.0, -1.0);
     ch += ContactEquation<DoubleType>::integrateElementEdgeModelOverNodes(elementedgemodel_charge, ContactEquation<DoubleType>::GetRegion().GetElementEdgeCoupleModel(), 1.0, -1.0);
     ContactEquation<DoubleType>::SetCharge(ch);
 }
@@ -183,9 +223,11 @@ void ExprContactEquation<DoubleType>::Serialize(std::ostream &of) const
         << "\" -edge_charge_model \"" << edgemodel_charge
         << "\" -edge_current_model \"" << edgemodel_current
         << "\" -edge_model \"" << edgemodel_int
+        << "\" -edge_volume_model \"" << edgevolumemodel_int
         << "\" -element_charge_model \"" << elementedgemodel_charge
         << "\" -element_current_model \"" << elementedgemodel_current
         << "\" -element_model \"" << elementedgemodel_int
+        << "\" -volume_model \"" << volumemodel_int
         << "\" -node_charge_model \"" << nodemodel_charge
         << "\" -node_current_model \"" << nodemodel_current
         << "\" -node_model \"" << nodemodel_int
@@ -202,9 +244,11 @@ void ExprContactEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::strin
   omap["edge_charge_model"] = ObjectHolder(edgemodel_charge);
   omap["edge_current_model"] = ObjectHolder(edgemodel_current);
   omap["edge_model"] = ObjectHolder(edgemodel_int);
+  omap["edge_volume_model"] = ObjectHolder(edgevolumemodel_int);
   omap["element_charge_model"] = ObjectHolder(elementedgemodel_charge);
   omap["element_current_model"] = ObjectHolder(elementedgemodel_current);
   omap["element_model"] = ObjectHolder(elementedgemodel_int);
+  omap["volume_model"] = ObjectHolder(volumemodel_int);
   omap["node_charge_model"] = ObjectHolder(nodemodel_charge);
   omap["node_current_model"] = ObjectHolder(nodemodel_current);
   omap["node_model"] = ObjectHolder(nodemodel_int);

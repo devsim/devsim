@@ -31,7 +31,9 @@ class ExprContactEquation : public ContactEquation<DoubleType>
             RegionPtr,
             const std::string &,// nodemodel
             const std::string &,// edgemodel
+            const std::string &,// edgevolumemodel
             const std::string &,// elementedgemodel
+            const std::string &,// volumemodel
             const std::string &,// nodemodel_current
             const std::string &,// edgemodel_current
             const std::string &,// elementedgemodel_current
@@ -59,7 +61,9 @@ class ExprContactEquation : public ContactEquation<DoubleType>
         /// ones.  Note these models have been calculated over the whole bulk.
         const std::string nodemodel_int; /// model replacing nodal integration
         const std::string edgemodel_int; /// model replacing flux integration
+        const std::string edgevolumemodel_int;
         const std::string elementedgemodel_int; /// model replacing flux integration
+        const std::string volumemodel_int;
         //// For the time being assume that we don't have an internal time displacement term
         //// This may be important for different boundary conditions.
         const std::string nodemodel_current; /// model being used for external net flux

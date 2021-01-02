@@ -494,7 +494,9 @@ createContactEquationCmd(CommandHandler &data)
         {"name",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"node_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"edge_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"edge_volume_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"element_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+        {"volume_model",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"node_current_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"edge_current_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"element_current_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
@@ -527,7 +529,9 @@ createContactEquationCmd(CommandHandler &data)
     const std::string &variable_name        = data.GetStringOption("variable_name");
     const std::string &node_model           = data.GetStringOption("node_model");
     const std::string &edge_model           = data.GetStringOption("edge_model");
+    const std::string &edge_volume_model           = data.GetStringOption("edge_volume_model");
     const std::string &element_model   = data.GetStringOption("element_model");
+    const std::string &volume_model   = data.GetStringOption("volume_model");
     const std::string &node_charge_model    = data.GetStringOption("node_charge_model");
     const std::string &edge_charge_model    = data.GetStringOption("edge_charge_model");
     const std::string &element_charge_model    = data.GetStringOption("element_charge_model");
@@ -568,7 +572,7 @@ createContactEquationCmd(CommandHandler &data)
     if (region->UseExtendedPrecisionEquations())
     {
       ContactEquation<extended_type> *ce = new ExprContactEquation<extended_type>(name, contact, region,
-          node_model, edge_model, element_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
+          node_model, edge_model, edge_volume_model, element_model, volume_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
       if (!circuit_node.empty())
       {
           ce->SetCircuitNode(circuit_node);
@@ -577,7 +581,7 @@ createContactEquationCmd(CommandHandler &data)
     else
     {
       ContactEquation<double> *ce = new ExprContactEquation<double>(name, contact, region,
-          node_model, edge_model, element_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
+          node_model, edge_model, edge_volume_model, element_model, volume_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
       if (!circuit_node.empty())
       {
           ce->SetCircuitNode(circuit_node);
