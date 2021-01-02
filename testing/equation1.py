@@ -55,7 +55,7 @@ def myassemble(what, timemode):
 
     print(rcv)
     print(rv)
-    return [rcv, rv]
+    return rcv, rv, False
 
 custom_equation(name="test1", procedure=myassemble)
 solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3)
