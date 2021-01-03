@@ -32,6 +32,6 @@ SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
 
 SET (PYTHON3_INCLUDE   $ENV{CONDA_PREFIX}/include/python3.8)
-SET (PYTHON3_ARCHIVE -L$ENV{CONDA_PREFIX}/lib   -lpython3.8m)
+SET (PYTHON3_ARCHIVE -L$ENV{CONDA_PREFIX}/lib   -lpython3.8)
 
 

@@ -429,6 +429,8 @@ void GlobalData::InitializeParameters()
   globalData["node_volume_model"] = ObjectHolder(std::string("NodeVolume"));
   globalData["edge_couple_model"] = ObjectHolder(std::string("EdgeCouple"));
   globalData["element_edge_couple_model"] = ObjectHolder(std::string("ElementEdgeCouple"));
+  globalData["edge_node0_volume_model"] = ObjectHolder(std::string("EdgeNodeVolume"));
+  globalData["edge_node1_volume_model"] = ObjectHolder(std::string("EdgeNodeVolume"));
   globalData["element_node0_volume_model"] = ObjectHolder(std::string("ElementNodeVolume"));
   globalData["element_node1_volume_model"] = ObjectHolder(std::string("ElementNodeVolume"));
   globalData["surface_area_model"] = ObjectHolder(std::string("SurfaceArea"));

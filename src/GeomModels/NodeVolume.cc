@@ -21,8 +21,6 @@ limitations under the License.
 #include "EdgeModel.hh"
 #include "EdgeScalarData.hh"
 #include "dsAssert.hh"
-#include "TriangleEdgeModel.hh"
-#include "TetrahedronEdgeModel.hh"
 
 template <typename DoubleType>
 NodeVolume<DoubleType>::NodeVolume(RegionPtr rp)
@@ -30,15 +28,7 @@ NodeVolume<DoubleType>::NodeVolume(RegionPtr rp)
 {
     const size_t dimension = rp->GetDimension();
 
-    if (dimension == 1)
-    {
-      RegisterCallback("EdgeLength");
-      RegisterCallback("EdgeCouple");
-    }
-    else if ((dimension == 2) || (dimension == 3))
-    {
-      RegisterCallback("ElementNodeVolume");
-    }
+    RegisterCallback("EdgeNodeVolume");
 }
 
 template <typename DoubleType>
@@ -49,51 +39,25 @@ void NodeVolume<DoubleType>::calcNodeScalarValues() const
 
   std::vector<DoubleType> nv(r.GetNumberNodes());
 
-  if (dimension == 1)
+  ConstEdgeModelPtr env = r.GetEdgeModel("EdgeNodeVolume");
+  dsAssert(env.get(), "UNEXPECTED");
+
+  EdgeScalarData<DoubleType> evol = EdgeScalarData<DoubleType>(*env);
+
+  for (size_t i = 0; i < nv.size(); ++i)
   {
-    ConstEdgeModelPtr ec = r.GetEdgeModel("EdgeCouple");
-    dsAssert(ec.get(), "UNEXPECTED");
-    ConstEdgeModelPtr elen = r.GetEdgeModel("EdgeLength");
-    dsAssert(elen.get(), "UNEXPECTED");
+    DoubleType volume = 0.0;
 
-    EdgeScalarData<DoubleType> evol = EdgeScalarData<DoubleType>(*ec);
-    evol.times_equal_model(*elen);
+    const ConstEdgeList &el = r.GetNodeToEdgeList()[i];
 
-    //// valid only for dimension == 1
-    evol.times_equal_scalar(0.5);
-
-    for (size_t i = 0; i < nv.size(); ++i)
+    ConstEdgeList::const_iterator it = el.begin();
+    const ConstEdgeList::const_iterator itend = el.end();
+    for ( ; it != itend; ++it)
     {
-      DoubleType volume = 0.0;
-
-      const ConstEdgeList &el = r.GetNodeToEdgeList()[i];
-
-      ConstEdgeList::const_iterator it = el.begin();
-      const ConstEdgeList::const_iterator itend = el.end();
-      for ( ; it != itend; ++it)
-      {
-        volume += evol[(*it)->GetIndex()]; 
-      }
-
-      nv[i] = volume;
+      volume += evol[(*it)->GetIndex()];
     }
-  }
-  else if (dimension == 2)
-  {
-    ConstTriangleEdgeModelPtr eec = GetRegion().GetTriangleEdgeModel("ElementNodeVolume");
-    dsAssert(eec.get(), "ElementNodeVolume missing");
 
-    eec->GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType::SUM, nv);
-  }
-  else if (dimension == 3)
-  {
-    ConstTetrahedronEdgeModelPtr eec = GetRegion().GetTetrahedronEdgeModel("ElementNodeVolume");
-    dsAssert(eec.get(), "UNEXPECTED");
-    eec->GetScalarValuesOnNodes(TetrahedronEdgeModel::InterpolationType::SUM, nv);
-  }
-  else
-  {
-    dsAssert(false, "UNEXPECTED");
+    nv[i] = volume;
   }
 
   SetValues(nv);

@@ -17,6 +17,7 @@ limitations under the License.
 
 #include "ModelCreate.hh"
 #include "NodeVolume.hh"
+#include "EdgeNodeVolume.hh"
 #include "EdgeCouple.hh"
 #include "EdgeLength.hh"
 #include "EdgeIndex.hh"
@@ -47,6 +48,7 @@ void CreateDefaultModelsImpl(RegionPtr rp)
   new EdgeCouple<DoubleType>(rp);
   new EdgeLength<DoubleType>(rp);
   new EdgeIndex<DoubleType>(rp);
+  new EdgeNodeVolume<DoubleType>(rp);
   new NodeVolume<DoubleType>(rp);
   new EdgeInverseLength<DoubleType>(rp);
   new NodePosition<DoubleType>(rp);
