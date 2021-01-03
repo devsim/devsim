@@ -6,12 +6,16 @@ It is now possible to replace an existing ``custom_equation``.
 
 The file ``examples/diode/diode_1d_custom.py`` demonstrates custom matrix assembly and can be directly compared to ``examples/diode/diode_1d.py``.
 
+The ``EdgeNodeVolume`` model is now available for the volume contained by an edge.
+
 The ``contact_equation`` command now accepts two additional arguments.
 
 - ``edge_volume_model``
 - ``volume_model``
 
 These options provide the ability to do volume integration on contact nodes.
+
+More details are in the manual.
 
 ### Version 1.4.14
 #### Platforms
