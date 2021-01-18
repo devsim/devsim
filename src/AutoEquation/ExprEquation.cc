@@ -40,10 +40,11 @@ ExprEquation<DoubleType>::ExprEquation(
     const std::string &emodel,
     const std::string &evmodel,
     const std::string &eemodel,
-    const std::string &eevmodel,
+    const std::string &eev0model,
+    const std::string &eev1model,
     const std::string &tdnmodel,
     EquationEnum::UpdateType ut
-    ) : Equation<DoubleType>(eqname, rp, var, ut), node_model_(nmodel), edge_model_(emodel), edge_volume_model_(evmodel), element_model_(eemodel), volume_model_(eevmodel), time_node_model_(tdnmodel)
+    ) : Equation<DoubleType>(eqname, rp, var, ut), node_model_(nmodel), edge_model_(emodel), edge_volume_model_(evmodel), element_model_(eemodel), volume_node0_model_(eev0model), volume_node1_model_(eev1model), time_node_model_(tdnmodel)
 {
 }
 
@@ -78,10 +79,10 @@ void ExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<Double
             Equation<DoubleType>::ElementEdgeCoupleAssemble(element_model_, m, v, w);
         }
 
-        if (!volume_model_.empty())
+        if (!volume_node0_model_.empty() || !volume_node1_model_.empty())
         {
             model_cache->clear();
-            Equation<DoubleType>::ElementNodeVolumeAssemble(volume_model_, m, v, w);
+            Equation<DoubleType>::ElementNodeVolumeAssemble(volume_node0_model_, volume_node1_model_, m, v, w);
         }
 
     }
@@ -125,7 +126,8 @@ void ExprEquation<DoubleType>::Serialize(std::ostream &of) const
     << "\" -edge_model \"" << edge_model_
     << "\" -edge_volume_model \"" << edge_volume_model_
     << "\" -element_model \"" << element_model_
-    << "\" -volume_model \"" << volume_model_
+    << "\" -volume_node0_model \"" << volume_node0_model_
+    << "\" -volume_node1_model \"" << volume_node1_model_
     << "\" -time_node_model \"" << time_node_model_ << "\"";
 }
 
@@ -140,7 +142,8 @@ void ExprEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::string, Obje
   omap["edge_model"] = ObjectHolder(edge_model_);
   omap["edge_volume_model"] = ObjectHolder(edge_volume_model_);
   omap["element_model"] = ObjectHolder(element_model_);
-  omap["volume_model"] = ObjectHolder(volume_model_);
+  omap["volume_node0_model"] = ObjectHolder(volume_node0_model_);
+  omap["volume_node1_model"] = ObjectHolder(volume_node1_model_);
   omap["time_node_model"] = ObjectHolder(time_node_model_);
 }
 

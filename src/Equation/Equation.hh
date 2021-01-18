@@ -168,7 +168,7 @@ class Equation {
         void EdgeNodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad);
         void EdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &/*edge_couple*/, const DoubleType n0_sign, const DoubleType n1_sign);
         void ElementEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad);
-        void ElementNodeVolumeAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad);
+        void ElementNodeVolumeAssemble(const std::string &, const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad);
         void TriangleEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType, const DoubleType);
         void TetrahedronEdgeCoupleAssemble(const std::string &, dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, const std::string &, const DoubleType, const DoubleType);
 

@@ -1233,7 +1233,7 @@ void Equation<DoubleType>::ElementEdgeCoupleAssemble(const std::string &model, d
 }
 
 template <typename DoubleType>
-void Equation<DoubleType>::ElementNodeVolumeAssemble(const std::string &model, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w)
+void Equation<DoubleType>::ElementNodeVolumeAssemble(const std::string &volume_node0_model, const std::string &volume_node1_model, dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w)
 {
   const size_t dimension = GetRegion().GetDimension();
 
@@ -1242,27 +1242,27 @@ void Equation<DoubleType>::ElementNodeVolumeAssemble(const std::string &model, d
 
   if (dimension == 2)
   {
-    if (node0model == node1model)
+    if ((node0model == node1model) && (volume_node0_model == volume_node1_model))
     {
-      TriangleEdgeCoupleAssemble(model, m, v, w, node0model, 1.0, 1.0);
+      TriangleEdgeCoupleAssemble(volume_node0_model, m, v, w, node0model, 1.0, 1.0);
     }
     else
     {
       /// necessary for cylindrical coordinate system in 2d
-      TriangleEdgeCoupleAssemble(model, m, v, w, node0model, 1.0, 0.0);
-      TriangleEdgeCoupleAssemble(model, m, v, w, node1model, 0.0, 1.0);
+      TriangleEdgeCoupleAssemble(volume_node0_model, m, v, w, node0model, 1.0, 0.0);
+      TriangleEdgeCoupleAssemble(volume_node1_model, m, v, w, node1model, 0.0, 1.0);
     }
   }
   else if (dimension == 3)
   {
-    if (node0model == node1model)
+    if ((node0model == node1model) && (volume_node0_model == volume_node1_model))
     {
-      TetrahedronEdgeCoupleAssemble(model, m, v, w, node0model, 1.0, 1.0);
+      TetrahedronEdgeCoupleAssemble(volume_node0_model, m, v, w, node0model, 1.0, 1.0);
     }
     else
     {
-      TetrahedronEdgeCoupleAssemble(model, m, v, w, node0model, 1.0, 0.0);
-      TetrahedronEdgeCoupleAssemble(model, m, v, w, node1model, 0.0, 1.0);
+      TetrahedronEdgeCoupleAssemble(volume_node0_model, m, v, w, node0model, 1.0, 0.0);
+      TetrahedronEdgeCoupleAssemble(volume_node1_model, m, v, w, node1model, 0.0, 1.0);
     }
   }
 }

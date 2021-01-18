@@ -45,7 +45,8 @@ class ExprEquation : public Equation<DoubleType>
                      const std::string &, /*EdgeModel Name for integrating flux*/
                      const std::string &, /*EdgeModel for volumes integration over edge */
                      const std::string &, /*ElementEdgeModel Name for integrating flux*/
-                     const std::string &, /*ElementVolumeModel Name for integrating source*/
+                     const std::string &, /*ElementVolumeModel Name for integrating source (node 0)*/
+                     const std::string &, /*ElementVolumeModel Name for integrating source (node 1)*/
                      const std::string &, /*Time-dependent NodeModel Name for integrating source/sink*/
                         //// Some day we may have edge time dependent model
                      typename EquationEnum::UpdateType/* = Equation::DEFAULT*/
@@ -72,7 +73,8 @@ class ExprEquation : public Equation<DoubleType>
         std::string edge_model_;
         std::string edge_volume_model_;
         std::string element_model_;
-        std::string volume_model_;
+        std::string volume_node0_model_;
+        std::string volume_node1_model_;
         std::string time_node_model_;
 };
 #endif

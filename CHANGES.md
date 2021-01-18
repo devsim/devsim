@@ -15,6 +15,13 @@ The ``contact_equation`` command now accepts two additional arguments.
 
 These options provide the ability to do volume integration on contact nodes.
 
+The ``equation`` command has replace the ``volume_model`` option with:
+
+- ``volume_node0_model``
+- ``volume_node1_model``
+
+so that nodal quantities can be more localized.
+
 More details are in the manual.
 
 ### Version 1.4.14

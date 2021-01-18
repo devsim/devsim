@@ -62,7 +62,8 @@ createEquationCmd(CommandHandler &data)
         {"edge_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"edge_volume_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"element_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
-        {"volume_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"volume_node0_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"volume_node1_model",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"time_node_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"variable_update", "default", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
@@ -88,7 +89,8 @@ createEquationCmd(CommandHandler &data)
     const std::string &edge_model      = data.GetStringOption("edge_model");
     const std::string &edge_volume_model      = data.GetStringOption("edge_volume_model");
     const std::string &elementedge_model = data.GetStringOption("element_model");
-    const std::string &volume_model = data.GetStringOption("volume_model");
+    const std::string &volume_node0_model = data.GetStringOption("volume_node0_model");
+    const std::string &volume_node1_model = data.GetStringOption("volume_node1_model");
     /// This should be using switch list ultimately
     /// Maybe this should be a property of a NodeSolution instead of an equation
     const std::string &variable_update = data.GetStringOption("variable_update");
@@ -140,11 +142,11 @@ createEquationCmd(CommandHandler &data)
 
     if (reg->UseExtendedPrecisionEquations())
     {
-      new ExprEquation<extended_type>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_model, time_node_model, updateType);
+      new ExprEquation<extended_type>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_node0_model, volume_node1_model, time_node_model, updateType);
     }
     else
     {
-      new ExprEquation<double>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_model, time_node_model, updateType);
+      new ExprEquation<double>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_node0_model, volume_node1_model, time_node_model, updateType);
     }
     data.SetEmptyResult();
 }
