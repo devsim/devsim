@@ -34,6 +34,7 @@ class ExprContactEquation : public ContactEquation<DoubleType>
             const std::string &,// edgevolumemodel
             const std::string &,// elementedgemodel
             const std::string &,// volumemodel
+            const std::string &,// volumemodel
             const std::string &,// nodemodel_current
             const std::string &,// edgemodel_current
             const std::string &,// elementedgemodel_current
@@ -63,7 +64,8 @@ class ExprContactEquation : public ContactEquation<DoubleType>
         const std::string edgemodel_int; /// model replacing flux integration
         const std::string edgevolumemodel_int;
         const std::string elementedgemodel_int; /// model replacing flux integration
-        const std::string volumemodel_int;
+        const std::string volume_node0_model_int_;
+        const std::string volume_node1_model_int_;
         //// For the time being assume that we don't have an internal time displacement term
         //// This may be important for different boundary conditions.
         const std::string nodemodel_current; /// model being used for external net flux

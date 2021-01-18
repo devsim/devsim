@@ -8,14 +8,15 @@ The file ``examples/diode/diode_1d_custom.py`` demonstrates custom matrix assemb
 
 The ``EdgeNodeVolume`` model is now available for the volume contained by an edge.
 
-The ``contact_equation`` command now accepts two additional arguments.
+The ``contact_equation`` command now accepts 3 additional arguments.
 
 - ``edge_volume_model``
-- ``volume_model``
+- ``volume_node0_model``
+- ``volume_node1_model``
 
 These options provide the ability to do volume integration on contact nodes.
 
-The ``equation`` command has replace the ``volume_model`` option with:
+The ``equation`` command has replaced the ``volume_model`` option with:
 
 - ``volume_node0_model``
 - ``volume_node1_model``
