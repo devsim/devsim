@@ -47,6 +47,7 @@ limitations under the License.
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 #endif
+#include "BoostConstants.hh"
 
 #include <sstream>
 #include <iomanip>
@@ -426,10 +427,14 @@ void Newton<DoubleType>::LoadCircuitRHSAC(std::vector<std::complex<DoubleType>> 
 template <typename DoubleType>
 void Newton<DoubleType>::LoadMatrixAndRHSAC(Matrix<DoubleType> &matrix, std::vector<std::complex<DoubleType>> &rhs, permvec_t &permvec, DoubleType frequency)
 {
+#if 1
+  static const DoubleType two_pi = boost::math::constants::two_pi<DoubleType>();
+#else
 #ifdef DEVSIM_EXTENDED_PRECISION
   static const DoubleType two_pi = boost::math::constants::two_pi<DoubleType>();
 #else
   static const DoubleType two_pi = 2.0*M_PI;
+#endif
 #endif
   const std::complex<DoubleType> jOmega  = two_pi * std::complex<DoubleType>(0,1.0) * frequency;
 

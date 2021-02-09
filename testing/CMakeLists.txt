@@ -54,7 +54,7 @@ SET (NEWPY3TESTS
   fpetest2
   res1 res2 res3 ssac_res noise_res
   symdiff1
-  erf1
+  erf1 erf2
   mesh1 mesh2 mesh3 mesh4
   mesh2d
   transient_circ

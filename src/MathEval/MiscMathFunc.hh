@@ -24,6 +24,12 @@ template <typename DoubleType>
 DoubleType derfcdx(DoubleType);
 
 template <typename DoubleType>
+DoubleType derf_invdx(DoubleType);
+
+template <typename DoubleType>
+DoubleType derfc_invdx(DoubleType);
+
+template <typename DoubleType>
 DoubleType vec_sum(DoubleType);
 
 template <typename DoubleType>

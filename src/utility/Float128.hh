@@ -5,7 +5,6 @@
 #error "File included when DEVSIM_EXTENDED_PRECISION not enabled"
 #endif
 #include <boost/multiprecision/float128.hpp>
-#include <boost/math/constants/constants.hpp>
 using namespace boost::multiprecision;
 #endif
 

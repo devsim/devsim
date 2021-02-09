@@ -11,7 +11,7 @@ c:\msys64\usr\bin\pacman -Su --noconfirm rsync zip
 call %CONDA_BIN% create -y -n devsim_build python=3
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-call %CONDA_BIN% install -y -n devsim_build cmake mkl mkl-devel mkl-include sqlite zlib
+call %CONDA_BIN% install -y -n devsim_build cmake mkl mkl-devel mkl-include sqlite zlib boost
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 call %CONDA_BIN% activate devsim_build
@@ -21,7 +21,6 @@ IF "%1"=="msys" (
   SET BUILDDIR=msys
   SET PACKAGE_NAME="devsim_msys_%TAG%"
   SET USE_MSYS=true
-  call %CONDA_BIN% install -y -n devsim_build boost
   SET BASH_SCRIPT=%BASEDIR%\scripts\build_msys.sh
 )
 

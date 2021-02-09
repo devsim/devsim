@@ -1,3 +1,11 @@
+### Version 1.5.1
+
+The following inverse functions and their derivatives are now available in the model interpreter.
+- ``erf_inv``
+- ``erfc_inv``
+- ``derf_invdx``
+- ``derfc_invdx``
+
 ### Version 1.5.0
 
 The ``custom_equation`` command has been modified to require a third return value.  This boolean value denotes whether the matrix entries should be row permutated or not.  For the bulk equations this value should be ``True``.  For interface and contact boundary conditions, this value should be ``False``.

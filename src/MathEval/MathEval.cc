@@ -35,6 +35,8 @@ limitations under the License.
 using std::abs;
 #include <sstream>
 #include <map>
+#include "BoostSpecialFunctions.hh"
+using my_policy::use_errno;
 
 template <> MathEval<double> *MathEval<double>::instance_ = nullptr;
 #ifdef DEVSIM_EXTENDED_PRECISION
@@ -98,6 +100,34 @@ double exp(double x)
 using std::log;
 using std::exp;
 #endif
+
+double erf(double x)
+{
+  return boost::math::erf(x, use_errno());
+}
+
+double erfc(double x)
+{
+  return boost::math::erfc(x, use_errno());
+}
+
+
+using ::derfdx;
+using ::derfcdx;
+
+double erf_inv(double x)
+{
+  return boost::math::erf_inv(x, use_errno());
+}
+
+double erfc_inv(double x)
+{
+  return boost::math::erfc_inv(x, use_errno());
+}
+
+using ::derf_invdx;
+using ::derfc_invdx;
+
 }
 
   UnaryTblEntry<double> UnaryTable_double[] = {
@@ -114,10 +144,14 @@ using std::exp;
   {"cosh",      cosh,         "cosh(obj)   -- hyperbolic sine function"},
   {"sinh",      sinh,         "sinh(obj)   -- hyperbolic cosine function"},
   {"tanh",      tanh,         "tanh(obj)   -- hyperbolic tangent function"},
-  {"erf",       erf,          "erf(obj)   -- error function"},
-  {"erfc",      erfc,         "erfc(obj)  -- complementary error function"},
-  {"derfdx",    derfdx,       "derfdx(obj)   -- derivative error function"},
-  {"derfcdx",   derfcdx,      "derfcdx(obj)  -- derivative of complementary error function"},
+  {"erf",       eval64::erf,          "erf(obj)   -- error function"},
+  {"erfc",      eval64::erfc,         "erfc(obj)  -- complementary error function"},
+  {"erf_inv",       eval64::erf_inv,          "erf(obj)   -- inverse error function"},
+  {"erfc_inv",      eval64::erfc_inv,         "erfc(obj)  -- inverse complementary error function"},
+  {"derfdx",    eval64::derfdx,       "derfdx(obj)   -- derivative of error function"},
+  {"derfcdx",   eval64::derfcdx,      "derfcdx(obj)  -- derivative of complementary error function"},
+  {"derf_invdx",    eval64::derf_invdx,       "derf_invdx(obj)   -- derivative of inverse error function"},
+  {"derfc_invdx",   eval64::derfc_invdx,      "derfc_invdx(obj)  -- derivative of inverse complementary error function"},
   {"Fermi",     Fermi,        "Fermi(obj)  -- Fermi Integral"},
   {"dFermidx",  dFermidx,     "dFermidx(obj)  -- derivative of Fermi Integral"},
   {"InvFermi",     InvFermi,        "InvFermi(obj)  -- inverse of the Fermi Integral"},
@@ -226,12 +260,24 @@ float128 erf(float128 x)
 
 float128 erfc(float128 x)
 {
-  return boost::multiprecision::erfc(x);
+  return boost::math::erfc(x);
+}
+
+float128 erf_inv(float128 x)
+{
+  return boost::math::erf_inv(x, use_errno());
+}
+
+float128 erfc_inv(float128 x)
+{
+  return boost::math::erfc_inv(x, use_errno());
 }
 
 
 using ::derfdx;
 using ::derfcdx;
+using ::derf_invdx;
+using ::derfc_invdx;
 }
 
 
@@ -252,8 +298,12 @@ using ::derfcdx;
   {"tanh",     eval128::tanh,         "tanh(obj)   -- hyperbolic tangent function"},
   {"erf",      eval128::erf,          "erf(obj)   -- error function"},
   {"erfc",     eval128::erfc,         "erfc(obj)  -- complementary error function"},
-  {"derfdx",   eval128::derfdx,       "derfdx(obj)   -- derivative error function"},
+  {"erf_inv",      eval128::erf_inv,  "erf_inv(obj)   -- error function"},
+  {"erfc_inv",     eval128::erfc_inv,         "erfc_inv(obj)  -- complementary error function"},
+  {"derfdx",   eval128::derfdx,       "derfdx(obj)   -- derivative of error function"},
   {"derfcdx",  eval128::derfcdx,      "derfcdx(obj)  -- derivative of complementary error function"},
+  {"derf_invdx",   eval128::derf_invdx,       "derfdx(obj)   -- derivative of inverse error function"},
+  {"derfc_invdx",  eval128::derfc_invdx,      "derfcdx(obj)  -- derivative of inverse complementary error function"},
   {"Fermi",    eval128::Fermi,        "Fermi(obj)  -- Fermi Integral"},
   {"dFermidx", eval128::dFermidx,     "dFermidx(obj)  -- derivative of Fermi Integral"},
   {"InvFermi",     eval128::InvFermi,        "InvFermi(obj)  -- inverse of the Fermi Integral"},

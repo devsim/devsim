@@ -7,6 +7,7 @@
 #SET (CMAKE_CXX_WARNING_LEVEL 4)
 SET (FLEX  "C:/msys64/usr/bin/flex.exe")
 SET (BISON "C:/msys64/usr/bin/bison.exe")
+SET (BOOST_INCLUDE "${ANACONDA_PATH}/Library/include")
 
 ADD_DEFINITIONS(-DSTATIC_BUILD -D_USE_MATH_DEFINES)
 #Math stuff
