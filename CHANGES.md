@@ -21,7 +21,7 @@ To use the script, use the following command inside of the ``devsim`` directory.
     python install.py
 ```
 
-The install script will write a file names ``lib/setup.py``, which can be used to complete the installation using ``pip``.  The script provides instructions for the installation and deinstallation of ``devsim``.
+The install script will write a file named ``lib/setup.py``, which can be used to complete the installation using ``pip``.  The script provides instructions for the installation and deinstallation of ``devsim``.
 
 ```
     INFO: Writing setup.py
