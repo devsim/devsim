@@ -61,7 +61,7 @@ WARNING: conda install numpy mkl''')
     def find_vcruntime(self):
         vcruntime_found = False
         try:
-            mydll = cdll.LoadLibrary('vcruntime140_clr0400.dll')
+            mydll = cdll.LoadLibrary('MSVCP140.DLL')
             vcruntime_found = True
             print('''
 INFO: Visual Studio 2019 C++ Redistributable loaded successfully
@@ -145,8 +145,8 @@ INFO: pip uninstall devsim
         self.osname = platform.system()
         self.devsim = self.check_devsim()
         self.vcruntime = None
-        if self.devsim['build_type'] == 'win64':
-            self.vcruntime = self.find_vcruntime()
+#        if self.devsim['build_type'] == 'win64':
+#            self.vcruntime = self.find_vcruntime()
         self.python= self.check_python()
         self.conda = self.check_conda()
         self.mkl = self.find_mkl()
