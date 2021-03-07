@@ -25,7 +25,7 @@ class DevsimCheck:
         DLL_NAMES = {
             'Darwin' : {'mkl' : 'libmkl_rt.dylib'},
             'Linux' : {'mkl' : 'libmkl_rt.so'},
-            'Windows' : {'mkl' : 'mkl_rt.lib'},
+            'Windows' : {'mkl' : 'mkl_rt.dll'},
         }
         mkl_found['mkl_loaded'] = False 
         try:
@@ -38,19 +38,20 @@ INFO: Intel MKL %s loaded successfully
             print('''
 WARNING: Intel MKL could not be dynamically loaded.
 WARNING: If you are using Anaconda/Miniconda, please issue this command:
-WARNING: conda install numpy mkl ''')
+WARNING: conda install numpy mkl''')
 
 
         mkl_found['has_conda_mkl'] = False
         if self.conda['is_conda']:
             if self.osname == 'Windows':
-                raise RuntimeError('FIX PATH')
+                cpath = os.path.join(self.conda['CONDA_PREFIX'], 'Library', 'bin', DLL_NAMES[self.osname]['mkl'])
             else:
                 cpath = os.path.join(self.conda['CONDA_PREFIX'], 'lib', DLL_NAMES[self.osname]['mkl'])
             if not os.path.exists(cpath):
-                print('''WARNING: %s not found in CONDA_PREFIX
-WARNING: This could mean that the Intel MKL may be loaded from somewhere else on your system.
-''' % DLL_NAMES[self.osname]['mkl'])
+                print('''WARNING: %s not found in CONDA_PREFIX''' % DLL_NAMES[self.osname]['mkl'])
+                if mkl_found['mkl_loaded']:
+                    print('''WARNING: This could mean that the Intel MKL may be loaded from somewhere else on your system.
+''')
                 mkl_found['has_conda_mkl'] = False
             else:
                 mkl_found['has_conda_mkl'] = True
@@ -58,10 +59,13 @@ WARNING: This could mean that the Intel MKL may be loaded from somewhere else on
 
 
     def find_vcruntime(self):
-        self.vcruntime_found = False
+        vcruntime_found = False
         try:
-            mydll = cdll.LoadLibrary('vcruntime140.dll')
-            self.vcruntime_found = True
+            mydll = cdll.LoadLibrary('vcruntime140_clr0400.dll')
+            vcruntime_found = True
+            print('''
+INFO: Visual Studio 2019 C++ Redistributable loaded successfully
+''' % DLL_NAMES[self.osname]['mkl'])
         except:
             print('''
 WARNING: Visual Studio 2019 C++ redistributable could not be loaded. 
