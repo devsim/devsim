@@ -11,13 +11,27 @@ The following inverse functions and their derivatives are now available in the m
 #### Installation Script
 
 A new installation script is in the base directory of the package.
-It notifies the user of missing components to finish the installation.
+It provides instructions of completing the installation to the ``python`` environment without having to set the ``PYTHONPATH`` environment variable.
+It notifies the user of missing components to finish the installation within an ``Anaconda`` or ``Miniconda`` environment.
+
+
 To use the script, use the following command inside of the ``devsim`` directory.
 
 ```
     python install.py
 ```
 
+The install script will write a file names ``lib/setup.py``, which can be used to complete the installation using ``pip``.  The script provides instructions for the installation and deinstallation of ``devsim``.
+
+```
+    INFO: Writing setup.py
+    INFO:
+    INFO: Please type the following command to install devsim:
+    INFO: pip install -e lib
+    INFO:
+    INFO: To remove the file, type:
+    INFO: pip uninstall devsim
+```
 
 ### Version 1.5.0
 

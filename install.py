@@ -118,17 +118,19 @@ setup(name='devsim',
 )
 ''' % self.devsim['version']
         ofile = os.path.join(self.devsim['dir_path'], 'lib', 'setup.py')
-        print("INFO: Writing %s" % ofile)
+        print('''
+INFO: Writing %s
+INFO:''' % ofile)
         with open(ofile, 'w') as of:
           of.write(setup_py)
         
 
-        print('''
-INFO:  Please type the following command to install devsim:
-INFO:  pip install -e lib
+        print('''\
+INFO: Please type the following command to install devsim:
+INFO: pip install -e lib
 INFO: 
-INFO:  To remove the file, type this in the future:
-INFO:  pip uninstall devsim
+INFO: To remove the file, type:
+INFO: pip uninstall devsim
 ''')
 
     def __init__(self):

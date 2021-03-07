@@ -66,16 +66,16 @@ done
 ###
 ### fix issue on High Sierra (and possibly Mojave)
 ###
-chmod u+w ${DIST_LIB}/gcc/*.dylib
-for i in ${DIST_LIB}/gcc/*.dylib
+for i in ${DIST_PYDLL}/*.dylib ${DIST_LIB}/symdiff/*.dylib
 do
 echo $i
+chmod u+w $i
 # get otool dependencies from the gcc compiler
 for j in `otool -L $i | egrep '/usr/local/' | sed -e 's/(.*//'`
 do
 #cp -vf $j ${DIST_LIB}/gcc
-echo install_name_tool -change $j "@loader_path/../gcc/`basename $j`" $i
-install_name_tool -change $j "@loader_path/../gcc/`basename $j`" $i
+echo install_name_tool -change $j "@loader_path/`basename $j`" $i
+install_name_tool -change $j "@loader_path/`basename $j`" $i
 done
 done
 
