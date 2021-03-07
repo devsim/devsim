@@ -74,7 +74,7 @@ EOF
 mkdir -p ${DIST_LIB}/msys
 for i in $(objdump -p ${DIST_PYDLL}/devsim_py3.pyd | grep "DLL Name" | sed -e 's/^.*: //'); do
     if [ -f /mingw64/bin/${i} ]; then
-        cp /mingw64/bin/${i} ${DIST_LIB}/msys/
+        cp /mingw64/bin/${i} ${DIST_PYDLL}/
     fi
 done
 for i in $(objdump -p ${DIST_LIB}/symdiff/symdiff_py3.pyd | grep "DLL Name" | sed -e 's/^.*: //'); do
@@ -82,6 +82,8 @@ for i in $(objdump -p ${DIST_LIB}/symdiff/symdiff_py3.pyd | grep "DLL Name" | se
         cp /mingw64/bin/${i} ${DIST_LIB}/symdiff/
     fi
 done
+# objdump is not recursive
+cp /mingw64/bin/libwinpthread-1.dll ${DIST_LIB}/symdiff/
 
 cp -v __init__.py ${DIST_PYDLL}
 
