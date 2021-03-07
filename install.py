@@ -31,6 +31,9 @@ class DevsimCheck:
         try:
             mydll = cdll.LoadLibrary(DLL_NAMES[self.osname]['mkl'])
             mkl_found['mkl_loaded'] = True 
+            print('''
+INFO: Intel MKL %s loaded successfully
+''' % DLL_NAMES[self.osname]['mkl'])
         except:
             print('''
 WARNING: Intel MKL could not be dynamically loaded.
@@ -46,6 +49,7 @@ WARNING: conda install numpy mkl ''')
                 cpath = os.path.join(self.conda['CONDA_PREFIX'], 'lib', DLL_NAMES[self.osname]['mkl'])
             if not os.path.exists(cpath):
                 print('''WARNING: %s not found in CONDA_PREFIX
+WARNING: This could mean that the Intel MKL may be loaded from somewhere else on your system.
 ''' % DLL_NAMES[self.osname]['mkl'])
                 mkl_found['has_conda_mkl'] = False
             else:
