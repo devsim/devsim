@@ -48,9 +48,6 @@ fi
 # INSTALL NAME CHANGE
 if [ "$1" = "gcc" ]
 then
-mkdir -p ${DIST_LIB}/gcc
-
-
 ###
 ### python libs
 ###
@@ -60,9 +57,10 @@ echo $i
 # get otool dependencies from the gcc compiler
 for j in `otool -L $i | egrep '/usr/local/' | sed -e 's/(.*//'`
 do
-cp -vf $j ${DIST_LIB}/gcc
-echo install_name_tool -change $j "@loader_path/../gcc/`basename $j`" $i
-install_name_tool -change $j "@loader_path/../gcc/`basename $j`" $i
+OUTDIR=$(dirname $i)
+cp -vf $j ${OUTDIR}
+echo install_name_tool -change $j "@loader_path/`basename $j`" $i
+install_name_tool -change $j "@loader_path/`basename $j`" $i
 done
 done
 ###
@@ -106,7 +104,7 @@ mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
 cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
 
-for i in INSTALL NOTICE LICENSE RELEASE macos.txt README README.md CHANGES.md; do
+for i in INSTALL NOTICE LICENSE RELEASE macos.txt README README.md CHANGES.md install.py; do
 cp ../$i ${DIST_DIR}
 done
 

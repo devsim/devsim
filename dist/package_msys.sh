@@ -43,7 +43,7 @@ mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
 cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
 
-for i in INSTALL NOTICE LICENSE RELEASE windows.txt README README.md CHANGES.md; do
+for i in INSTALL NOTICE LICENSE RELEASE windows.txt README README.md CHANGES.md install.py; do
 cp ../$i ${DIST_DIR}
 done
 
@@ -77,9 +77,13 @@ for i in $(objdump -p ${DIST_PYDLL}/devsim_py3.pyd | grep "DLL Name" | sed -e 's
         cp /mingw64/bin/${i} ${DIST_LIB}/msys/
     fi
 done
+for i in $(objdump -p ${DIST_LIB}/symdiff/symdiff_py3.pyd | grep "DLL Name" | sed -e 's/^.*: //'); do
+    if [ -f /mingw64/bin/${i} ]; then
+        cp /mingw64/bin/${i} ${DIST_LIB}/symdiff/
+    fi
+done
 
-cp -v msys_devsim__init__.py ${DIST_PYDLL}/__init__.py
-cp -v msys_symdiff__init__.py ${DIST_LIB}/symdiff/__init__.py
+cp -v __init__.py ${DIST_PYDLL}
 
 zip -r ${DIST_VER}.zip ${DIST_DIR}
 

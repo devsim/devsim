@@ -1,10 +1,23 @@
 ### Version 1.5.1
 
+#### Math Functions
+
 The following inverse functions and their derivatives are now available in the model interpreter.
 - ``erf_inv``
 - ``erfc_inv``
 - ``derf_invdx``
 - ``derfc_invdx``
+
+#### Installation Script
+
+A new installation script is in the base directory of the package.
+It notifies the user of missing components to finish the installation.
+To use the script, use the following command inside of the ``devsim`` directory.
+
+```
+    python install.py
+```
+
 
 ### Version 1.5.0
 
