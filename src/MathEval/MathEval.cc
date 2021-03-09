@@ -30,6 +30,7 @@ limitations under the License.
 #include "MathPacket.hh"
 
 #include "MathWrapper.hh"
+#include "GaussFermi.hh"
 
 #include <cmath>
 using std::abs;
@@ -115,16 +116,6 @@ double erfc(double x)
 using ::derfdx;
 using ::derfcdx;
 
-double erf_inv(double x)
-{
-  return boost::math::erf_inv(x, use_errno());
-}
-
-double erfc_inv(double x)
-{
-  return boost::math::erfc_inv(x, use_errno());
-}
-
 using ::derf_invdx;
 using ::derfc_invdx;
 
@@ -146,8 +137,8 @@ using ::derfc_invdx;
   {"tanh",      tanh,         "tanh(obj)   -- hyperbolic tangent function"},
   {"erf",       eval64::erf,          "erf(obj)   -- error function"},
   {"erfc",      eval64::erfc,         "erfc(obj)  -- complementary error function"},
-  {"erf_inv",       eval64::erf_inv,          "erf(obj)   -- inverse error function"},
-  {"erfc_inv",      eval64::erfc_inv,         "erfc(obj)  -- inverse complementary error function"},
+  {"erf_inv",       erf_inv,          "erf(obj)   -- inverse error function"},
+  {"erfc_inv",      erfc_inv,         "erfc(obj)  -- inverse complementary error function"},
   {"derfdx",    eval64::derfdx,       "derfdx(obj)   -- derivative of error function"},
   {"derfcdx",   eval64::derfcdx,      "derfcdx(obj)  -- derivative of complementary error function"},
   {"derf_invdx",    eval64::derf_invdx,       "derf_invdx(obj)   -- derivative of inverse error function"},
@@ -164,7 +155,11 @@ using ::derfc_invdx;
   };
 
   BinaryTblEntry<double> BinaryTable_double[] = {
-  {"min",  min,  "min(obj1, obj2)       -- minimum of obj1 and obj2"},
+  {"gfi", gfi,             "gfi(obj1, obj2)       -- Gauss Fermi Integral"},
+  {"dgfidx", dgfidx,         "dgfidx(obj1, obj2)     -- Gauss Fermi Integral Derivative"},
+  {"igfi", igfi,           "igfi(obj1, obj2)      -- Inverse Gauss Fermi Integral"},
+  {"digfidx", digfidx,     "digfidx(obj1, obj2)   -- Inverse Gauss Fermi Integral Derivative"},
+  {"min",  min,            "min(obj1, obj2)       -- minimum of obj1 and obj2"},
   {"max",  max,  "max(obj1, obj2)       -- maximum of obj1 and obj2"},
   {"&&",  logical_and,  "obj1 && obj2       -- logical and"},
   {"||",  logical_or,  "obj1 || obj2       -- logical or"},
@@ -203,6 +198,7 @@ float128 log(float128 x)
   return boost::multiprecision::log(x);
 }
 
+#if 0
 float128 Fermi(float128 x)
 {
   return ::Fermi(static_cast<double>(x));
@@ -222,6 +218,7 @@ float128 dInvFermidx(float128 x)
 {
   return ::dInvFermidx(static_cast<double>(x));
 }
+#endif
 
 float128 acosh(float128 x)
 {
@@ -263,17 +260,6 @@ float128 erfc(float128 x)
   return boost::math::erfc(x);
 }
 
-float128 erf_inv(float128 x)
-{
-  return boost::math::erf_inv(x, use_errno());
-}
-
-float128 erfc_inv(float128 x)
-{
-  return boost::math::erfc_inv(x, use_errno());
-}
-
-
 using ::derfdx;
 using ::derfcdx;
 using ::derf_invdx;
@@ -298,16 +284,16 @@ using ::derfc_invdx;
   {"tanh",     eval128::tanh,         "tanh(obj)   -- hyperbolic tangent function"},
   {"erf",      eval128::erf,          "erf(obj)   -- error function"},
   {"erfc",     eval128::erfc,         "erfc(obj)  -- complementary error function"},
-  {"erf_inv",      eval128::erf_inv,  "erf_inv(obj)   -- error function"},
-  {"erfc_inv",     eval128::erfc_inv,         "erfc_inv(obj)  -- complementary error function"},
+  {"erf_inv",      erf_inv,  "erf_inv(obj)   -- error function"},
+  {"erfc_inv",     erfc_inv,         "erfc_inv(obj)  -- complementary error function"},
   {"derfdx",   eval128::derfdx,       "derfdx(obj)   -- derivative of error function"},
   {"derfcdx",  eval128::derfcdx,      "derfcdx(obj)  -- derivative of complementary error function"},
   {"derf_invdx",   eval128::derf_invdx,       "derfdx(obj)   -- derivative of inverse error function"},
   {"derfc_invdx",  eval128::derfc_invdx,      "derfcdx(obj)  -- derivative of inverse complementary error function"},
-  {"Fermi",    eval128::Fermi,        "Fermi(obj)  -- Fermi Integral"},
-  {"dFermidx", eval128::dFermidx,     "dFermidx(obj)  -- derivative of Fermi Integral"},
-  {"InvFermi",     eval128::InvFermi,        "InvFermi(obj)  -- inverse of the Fermi Integral"},
-  {"dInvFermidx",  eval128::dInvFermidx,     "dInvFermidx(obj)  -- derivative of InvFermi Integral"},
+  {"Fermi",    Fermi,        "Fermi(obj)  -- Fermi Integral"},
+  {"dFermidx", dFermidx,     "dFermidx(obj)  -- derivative of Fermi Integral"},
+  {"InvFermi",     InvFermi,        "InvFermi(obj)  -- inverse of the Fermi Integral"},
+  {"dInvFermidx",  dInvFermidx,     "dInvFermidx(obj)  -- derivative of InvFermi Integral"},
   {"!",  logical_not,     "!obj  -- Logical Not"},
   {"vec_sum",   vec_sum, "Vector Summation"},
   {"vec_max",   vec_max, "Vector Maximum"},
@@ -316,7 +302,11 @@ using ::derfc_invdx;
   };
 
   BinaryTblEntry<float128> BinaryTable_float128[] = {
-  {"min",  min,  "min(obj1, obj2)       -- minimum of obj1 and obj2"},
+  {"gfi", gfi,             "gfi(obj1, obj2)       -- Gauss Fermi Integral"},
+  {"dgfidx", dgfidx,         "dgfidx(obj1, obj2)     -- Gauss Fermi Integral Derivative"},
+  {"igfi", igfi,           "igfi(obj1, obj2)      -- Inverse Gauss Fermi Integral"},
+  {"digfidx", digfidx,     "digfidx(obj1, obj2)   -- Inverse Gauss Fermi Integral Derivative"},
+  {"min",  min,            "min(obj1, obj2)       -- minimum of obj1 and obj2"},
   {"max",  max,  "max(obj1, obj2)       -- maximum of obj1 and obj2"},
   {"&&",  logical_and,  "obj1 && obj2       -- logical and"},
   {"||",  logical_or,  "obj1 || obj2       -- logical or"},

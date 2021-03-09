@@ -3,10 +3,34 @@
 #### Math Functions
 
 The following inverse functions and their derivatives are now available in the model interpreter.
-- ``erf_inv``
-- ``erfc_inv``
-- ``derf_invdx``
-- ``derfc_invdx``
+- ``erf_inv`` Inverse Error Function
+- ``erfc_inv`` Inverse Complimentary Error Function
+- ``derf_invdx`` Derivative of Inverse Error Function
+- ``derfc_invdx`` Derivative of Complimentary Inverse Error Function
+
+The Gauss-Fermi Integral, using Paasch's equations are now implemented.
+- ``gfi`` Gauss-Fermi Integral
+- ``dgfidx`` Derivative of Gauss-Fermi Integral
+- ``igfi`` Inverse Gauss-Fermi Integral
+- ``digfidx`` Derivative of Inverse Gauss-Fermi Integral
+
+Each of these functions take two arguments, ``zeta`` and ``s``.  The derivatives with respect to the first argument are provided.  Please see ``testing/GaussFermi.py`` for an example.
+
+In extended precision mode, the following functions are now evaluated with full extended precision.
+- ``Fermi``
+- ``dFermidx``
+- ``InvFermi``
+- ``dInvFermidx``
+
+The following double precision tests:
+
+- ``testing/Fermi1.py`` Fermi Integral Test
+- ``testing/GaussFermi.py`` Gauss Fermi Integral Test
+
+Have extended precision variants:
+
+- ``testing/Fermi1_float128.py``
+- ``testing/GaussFermi_float128.py``
 
 #### Installation Script
 

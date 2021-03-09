@@ -6,6 +6,7 @@ SET (CXX_SRCS
     MathWrapper.cc
     MathPacket.cc
     kahan.cc
+    GaussFermi.cc
 )
 
 INCLUDE_DIRECTORIES (
@@ -17,4 +18,11 @@ INCLUDE_DIRECTORIES (
 
 
 ADD_LIBRARY (MathEval ${CXX_SRCS})
+ADD_EXECUTABLE (test_fermi Fermi.cc)
+TARGET_COMPILE_DEFINITIONS(test_fermi PRIVATE DEVSIM_UNIT_TEST)
+TARGET_LINK_LIBRARIES(test_fermi ${QUADMATH_ARCHIVE})
+
+ADD_EXECUTABLE (test_gaussfermi GaussFermi.cc MiscMathFunc.cc)
+TARGET_COMPILE_DEFINITIONS(test_gaussfermi PRIVATE DEVSIM_UNIT_TEST)
+TARGET_LINK_LIBRARIES(test_gaussfermi ${QUADMATH_ARCHIVE})
 

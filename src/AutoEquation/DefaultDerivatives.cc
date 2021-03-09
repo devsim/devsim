@@ -65,6 +65,10 @@ Eqo::EqObjPtr CreateDefaultDerivatives()
         "define(cosh(x), sinh(x));"
         "declare(tanh(x));"
         "define(tanh(x), 1 - pow(tanh(x), 2));"
+        "declare(dgfidx(x,y));"
+        "define(gfi(x,y), dgfidx(x,y), 0);"
+        "declare(digfidx(x,y));"
+        "define(igfi(x,y), digfidx(x,y), 0);"
         );
 
     Eqo::EqObjPtr testeq = EvalExpr::evaluateExpression(expr, terrors);

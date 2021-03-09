@@ -49,6 +49,9 @@ SET (NEWPY3TESTS
   laux1
   pythonmesh1d
   Fermi1
+  Fermi1_float128
+  GaussFermi
+  GaussFermi_float128
   kahan
   fpetest1
   fpetest2

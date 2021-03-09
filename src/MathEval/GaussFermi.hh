@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2021 Devsim LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,15 +14,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ***/
+#ifndef GAUSS_FERMI_HH
+#define GAUSS_FERMI_HH
+template <typename T>
+T gfi(T zeta, T s);
 
-#ifndef FERMI_HH
-#define FERMI_HH
 template <typename T>
-T InvFermi(T /*r*/);
+T dgfidx(T zeta, T s);
+
 template <typename T>
-T dInvFermidx(T /*r*/);
+T igfi(T g, T s);
+
 template <typename T>
-T Fermi(T /*n*/);
-template <typename T>
-T dFermidx(T /*n*/);
+T digfidx(T g, T s);
 #endif

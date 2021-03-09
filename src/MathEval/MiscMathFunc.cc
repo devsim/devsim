@@ -93,6 +93,20 @@ DoubleType dot2dfunc(DoubleType ax, DoubleType ay, DoubleType bx, DoubleType by)
   return (ax*bx + ay*by);
 }
 
+template <typename DoubleType>
+DoubleType erf_inv(DoubleType x)
+{
+  return boost::math::erf_inv(x, use_errno());
+}
+
+template <typename DoubleType>
+DoubleType erfc_inv(DoubleType x)
+{
+  return boost::math::erfc_inv(x, use_errno());
+}
+
+template double erf_inv(double x);
+template double erfc_inv(double x);
 template double derfdx(double x);
 template double derfcdx(double x);
 template double derf_invdx(double x);
@@ -104,6 +118,8 @@ template double dot2dfunc(double ax, double ay, double bx, double by);
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
+template float128 erf_inv(float128 x);
+template float128 erfc_inv(float128 x);
 template float128 derfdx(float128 x);
 template float128 derfcdx(float128 x);
 template float128 derf_invdx(float128 x);
