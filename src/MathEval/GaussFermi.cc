@@ -92,11 +92,13 @@ double good_relerror()
   return 1e-12;
 }
 
+#ifdef DEVSIM_EXTENDED_PRECISION
 template <>
 float128 good_relerror()
 {
   return 1e-31;
 }
+#endif
 }
 
 template <typename T>
