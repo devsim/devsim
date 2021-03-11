@@ -28,20 +28,63 @@ using std::abs;
 #include <iomanip>
 #endif
 
+/*
+Implementation of:
+https://doi.org/10.1063/1.3374475
+@article{doi:10.1063/1.3374475,
+author = {Paasch,Gernot  and Scheinert,Susanne },
+title = {Charge carrier density of organics with Gaussian density of states: Analytical approximation for the Gauss–Fermi integral},
+journal = {Journal of Applied Physics},
+volume = {107},
+number = {10},
+pages = {104501},
+year = {2010},
+doi = {10.1063/1.3374475},
+URL = { https://doi.org/10.1063/1.3374475 },
+eprint = { https://doi.org/10.1063/1.3374475 }
+}
+*/
+
+namespace {
+template <typename T>
+struct MC {
+    static constexpr T sqrt2 = boost::math::constants::root_two<T>();
+    static constexpr T sqrt2_pi = boost::math::constants::root_two<T>() * boost::math::constants::one_div_root_pi<T>();
+    static constexpr T one_div_root_two_pi = boost::math::constants::one_div_root_two_pi<T>();
+};
+
+template <typename T>
+inline T calcH(const T &s, const T &S)
+{
+    const T &sqrt2 = MC<T>::sqrt2;
+
+    T H = sqrt2 / s * erfc_inv(exp(-0.5 * S));
+    return H;
+}
+
+template <typename T>
+inline T calcK(const T &s, const T &S, const T &H)
+{
+  const T &sqrt2_pi = MC<T>::sqrt2_pi;
+
+  T K = 2 * (1. - H / s * sqrt2_pi * exp(0.5 * S * (1. - H * H)));
+  return K;
+}
+
+}
+
 template <typename T>
 T gfi(T zeta, T s)
 {
+    const T &sqrt2 = MC<T>::sqrt2;
     const T S = s * s;
-    // S is 
-    static const T sqrt2 = boost::math::constants::root_two<T>();
-    static const T sqrt2_pi = sqrt2 * boost::math::constants::one_div_root_pi<T>();
 
-    T H = sqrt2 / s * erfc_inv(exp(-0.5 * S));
+    T H = calcH(s, S);
 
     T value;
     if (zeta < -S)
     {
-        const T K = 2 * (1. - H / s * sqrt2_pi * exp(0.5 * S * (1. - H * H)));
+        const T K = calcK(s, S, H);
         value = exp(0.5 * S + zeta) / (exp(K*(zeta+S)) + 1);
     }
     else
@@ -55,23 +98,23 @@ T gfi(T zeta, T s)
 template <typename T>
 T dgfidx(T zeta, T s)
 {
-    const T S = s * s;
-    // S is 
-    static const T sqrt2 = boost::math::constants::root_two<T>();
-    static const T sqrt2_pi = sqrt2 * boost::math::constants::one_div_root_pi<T>();
+    const T &sqrt2 = MC<T>::sqrt2;
+    const T &sqrt2_pi = MC<T>::sqrt2_pi;
 
-    T H = sqrt2 / s * erfc_inv(exp(-0.5 * S));
+    const T S = s * s;
+
+    T H = calcH(s, S);
 
     T dvalue;
     if (zeta < -S)
     {
-        const T K = 2 * (1. - H / s * sqrt2_pi * exp(0.5 * S * (1. - H * H)));
+        const T K = calcK(s, S, H);
         const T den_inv = 1. / (exp(K * (S + zeta)) + 1.);
         dvalue = exp(0.5 * S + zeta) * den_inv * (1. - K*exp(K * (S+zeta)) * den_inv);
     }
     else
     {
-        static const T one_div_root_two_pi = boost::math::constants::one_div_root_two_pi<T>();
+        const T &one_div_root_two_pi = MC<T>::one_div_root_two_pi;
         dvalue = one_div_root_two_pi * H / s * exp(-0.5 * pow(H*zeta,2)/S);
     }
 
@@ -82,9 +125,7 @@ T dgfidx(T zeta, T s)
 
 namespace {
 template <typename T>
-T good_relerror()
-{
-}
+T good_relerror();
 
 template <>
 double good_relerror()
@@ -109,13 +150,10 @@ T igfi(T g, T s)
     // perhaps the degenerate approximation
     // or provided from the last call
     // improves speed
-    static const T sqrt2 = boost::math::constants::root_two<T>();
     T x = 0.0;
-    // This is a good initial guess, but can blow up  
-    // x = s * sqrt2 * erf_inv(g*2-1);
     T rerr = 0.0;
     size_t i = 0;
-    
+
     T f;
     T fp;
     T upd;
@@ -123,6 +161,26 @@ T igfi(T g, T s)
 #ifdef DEVSIM_UNIT_TEST
     std::cout << std::setprecision(std::numeric_limits<T>::max_digits10);
 #endif
+    T arg = 1. - 2. * g;
+
+    static constexpr T bound = 1.0 - std::numeric_limits<T>::epsilon();
+
+    // prevent infinite results
+    if (arg <= -1.0)
+    {
+      arg = -bound;
+    }
+    else if (arg >= 1.0)
+    {
+      arg = bound;
+    }
+
+    const T &sqrt2 = MC<T>::sqrt2;
+    // using the degenerate approximation
+    const T H = calcH(s, s*s);
+    x = -s * sqrt2 * erf_inv(arg) / H;
+
+
     do
     {
         f = gfi(x, s) - g;
