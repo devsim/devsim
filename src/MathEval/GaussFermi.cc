@@ -60,6 +60,10 @@ inline T calcH_Impl(const T &s, const T &S)
     const T &sqrt2 = MC<T>::sqrt2;
 
     T H = sqrt2 / s * erfc_inv(exp(-0.5 * S));
+#ifdef DEVSIM_UNIT_TEST
+    std::cout << std::setprecision(std::numeric_limits<T>::max_digits10);
+    std::cout << "DEBUG NEW H " << s << " " << H << "\n";
+#endif
     return H;
 }
 
@@ -73,6 +77,12 @@ inline T calcH(const T &s, const T &S)
     {
       p = std::make_pair(s, calcH_Impl(s, S));
     }
+#if 0
+    else
+    {
+      std::cout << "DEBUG REUSE H\n";
+    }
+#endif
 
     return p.second;
 }
@@ -242,6 +252,25 @@ template float128 digfidx<float128>(float128, float128);
 template <typename DoubleType>
 void unit()
 {
+  for (size_t j = 2; j <= 8; j += 2)
+  {
+    DoubleType s = static_cast<DoubleType>(j);
+    for (size_t i = 0; i <= 10; ++i)
+    {
+      DoubleType zeta = 7 * i - 70.;
+      DoubleType g= gfi(zeta,s);
+      DoubleType dg= dgfidx(zeta,s);
+      DoubleType ginv= igfi(g,s);
+      DoubleType dginv= digfidx(g,s);
+      std::cout
+                << zeta << " "
+                << g << " "
+                << dg << " "
+                << ginv << " "
+                << dginv << " " << 1.0/dginv << "\n";
+    }
+  }
+#if 0
   DoubleType k_B = 1.380649e-23;
   DoubleType e = 1.602176634e-19;
   DoubleType T = 300;
@@ -266,7 +295,7 @@ void unit()
             << " dgfidx\t" << dg << "\n"
             << " igfi\t" << ginv << "\n"
             << " digfidx\t" << dginv << " " << 1.0/dginv << "\n";
-
+#endif
 }
 
 int main()
