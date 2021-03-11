@@ -20,6 +20,7 @@ limitations under the License.
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 #endif
+#include <utility>
 #include <cmath>
 using std::abs;
 
@@ -54,12 +55,26 @@ struct MC {
 };
 
 template <typename T>
-inline T calcH(const T &s, const T &S)
+inline T calcH_Impl(const T &s, const T &S)
 {
     const T &sqrt2 = MC<T>::sqrt2;
 
     T H = sqrt2 / s * erfc_inv(exp(-0.5 * S));
     return H;
+}
+
+template <typename T>
+inline T calcH(const T &s, const T &S)
+{
+    thread_local auto p = std::make_pair(s, calcH_Impl(s, S));
+
+    // Assume that s is constant across the same call in the same region
+    if (p.first != s)
+    {
+      p = std::make_pair(s, calcH_Impl(s, S));
+    }
+
+    return p.second;
 }
 
 template <typename T>
@@ -151,12 +166,6 @@ T igfi(T g, T s)
     // or provided from the last call
     // improves speed
     T x = 0.0;
-    T rerr = 0.0;
-    size_t i = 0;
-
-    T f;
-    T fp;
-    T upd;
     //printf("%d %1.15e %1.15e\n", -1, x, rerr);
 #ifdef DEVSIM_UNIT_TEST
     std::cout << std::setprecision(std::numeric_limits<T>::max_digits10);
@@ -177,9 +186,23 @@ T igfi(T g, T s)
 
     const T &sqrt2 = MC<T>::sqrt2;
     // using the degenerate approximation
-    const T H = calcH(s, s*s);
+    const T S = s*s;
+    const T H = calcH(s, S);
     x = -s * sqrt2 * erf_inv(arg) / H;
 
+#if 0
+    // slightly less accuracy, best to use iteration
+    if ((x >= -S) && (abs(arg) != bound))
+    {
+        return x;
+    }
+#endif
+
+    T rerr = 0.0;
+    size_t i = 0;
+    T f;
+    T fp;
+    T upd;
 
     do
     {
