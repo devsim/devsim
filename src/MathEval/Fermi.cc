@@ -15,6 +15,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***/
 
+/*
+@article{doi:10.1063/1.89697,
+author = {Joyce,W. B.  and Dixon,R. W. },
+title = {Analytic approximations for the Fermi energy of an ideal Fermi gas},
+journal = {Applied Physics Letters},
+volume = {31},
+number = {5},
+pages = {354-356},
+year = {1977},
+doi = {10.1063/1.89697},
+URL = { https://doi.org/10.1063/1.89697 },
+eprint = { https://doi.org/10.1063/1.89697 }
+}
+
+*/
+
 #include "Fermi.hh"
 #include "BoostConstants.hh"
 #ifdef DEVSIM_EXTENDED_PRECISION
