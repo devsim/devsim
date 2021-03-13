@@ -15,6 +15,7 @@
 #Purpose: Fermi integral and inverse
 
 import devsim
+import sys
 
 if not devsim.get_parameter(name='info')['extended_precision']:
     print("Extended precision support is not available with this version")
