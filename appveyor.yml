@@ -28,6 +28,7 @@ branches:
 
 # Do not build on tags (GitHub only)
 #skip_tags: true
+skip_non_tags: true
 
 # Skipping commits with particular message or from user
 #skip_commits:

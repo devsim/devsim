@@ -19,6 +19,9 @@ addons:
     - gcc@9
     update: false
 
+#https://github.com/travis-ci/travis-ci/issues/6893
+if: tag IS present
+
 # prevent duplicate builds on tagged versions on master
 # development to be done on other branches
 #branches:
