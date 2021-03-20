@@ -23,7 +23,7 @@ Please see [CITATION.md](CITATION.md).  *Please do not cite this Github Reposito
 
 ### Documentation:
 
-Documentation available [online](https://devsim.org/introduction.html#documentation).  Windows specific information is available in [windows.txt](windows.txt).
+An online version of the documentation is available at [https://devsim.net](https://devsim.net).  A list of documentation resources is available [online](https://devsim.org/introduction.html#documentation).
 
 ### Supported Platforms:
 * macOS 10.13 (High Sierra)
