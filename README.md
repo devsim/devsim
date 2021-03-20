@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/devsim/devsim.svg?branch=master)](https://travis-ci.org/devsim/devsim)
 [![Build status](https://ci.appveyor.com/api/projects/status/github/devsim/devsim?branch=master&svg=true)](https://ci.appveyor.com/project/devsim/devsim)
-[![DOI](https://zenodo.org/badge/8838727.svg)](https://zenodo.org/badge/latestdoi/8838727)
-[![Gitter](https://badges.gitter.im/devsim/devsim.svg)](https://gitter.im/devsim/devsim)
 
 ### Introduction:
 **DEVSIM** - TCAD Device Simulator
@@ -14,10 +12,9 @@ It is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/
 * Microsoft Windows (64 bit)
 * Red Hat 7 (Centos Compatible)
 
-Binary releases are currently available from [GitHub](https://github.com/devsim/devsim/releases).
+Binary releases are available at [Zenodo](https://doi.org/10.5281/zenodo.1186952).
 
 ### Software Features:
-* [Documentation](https://www.devsim.org/manual/)
 * Python scripting 
 * DC, small-signal AC, impedance field method, transient
 * User specified partial differential equations (PDE).
@@ -31,19 +28,16 @@ Please see INSTALL file for installation instructions from source.  Please see
 NOTICE and LICENSE files for copyright and license information.
 
 ### Documentation:
-Documentation available in doc/devsim.pdf and [online](https://www.devsim.org/manual/).  Windows specific information is available in windows.txt.
+Documentation available [online](https://www.devsim.org/manual/).  Windows specific information is available in windows.txt.
 
 ### Website:
 The official website is here:
-https://www.devsim.org
+[https://devsim.org](https://devsim.org)
 
 ### Support:
 
 For support and general discussion, please join our forum:
-https://groups.google.com/d/forum/devsim
-
-Or chat on gitter:
-https://gitter.im/devsim
+[https://groups.google.com/d/forum/devsim](https://groups.google.com/d/forum/devsim)
 
 ### Contributing:
 
