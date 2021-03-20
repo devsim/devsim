@@ -19,12 +19,11 @@ Binary releases are available at [Zenodo](https://doi.org/10.5281/zenodo.1186952
 
 ### Citing This Work
 
-Please see:
-[CITATION](CITATION.md)
+Please see [CITATION.md](CITATION.md).  *Please do not cite this Github Repository as it will be moving in the future.*
 
 ### Documentation:
 
-Documentation available [online](https://www.devsim.org/manual/).  Windows specific information is available in [windows.txt](windows.txt).
+Documentation available [online](https://devsim.org/introduction.html#documentation).  Windows specific information is available in [windows.txt](windows.txt).
 
 ### Supported Platforms:
 * macOS 10.13 (High Sierra)
