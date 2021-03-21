@@ -76,7 +76,7 @@ namespace Eqomfp {
 
 
 namespace eval64 {
-#if defined(__MINGW32__) || (__MINGW64__)
+#if defined(__MINGW32__) || defined(__MINGW64__)
 #include "FPECheck.hh"
 double log(double x)
 {

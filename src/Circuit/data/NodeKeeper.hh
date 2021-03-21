@@ -98,7 +98,7 @@ class NodeKeeper {
         //// 0 based on min equation number
         size_t GetEquationNumber(const std::string &);
 
-        void   SetNodeNumbers(size_t /*start*/);
+        void   SetNodeNumbers(size_t /*start*/, bool /*verbose*/);
         size_t GetMaxEquationNumber();
         size_t GetMinEquationNumber();
 

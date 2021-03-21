@@ -107,7 +107,7 @@ class Device
 
       void SetBaseEquationNumber(size_t);
       size_t GetBaseEquationNumber();
-      size_t CalcMaxEquationNumber();
+      size_t CalcMaxEquationNumber(bool);
 
     template <typename DoubleType>
     void ContactAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);

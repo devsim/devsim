@@ -67,6 +67,10 @@ class CompressedMatrix : public Matrix<DoubleType> {
                                   }
 
         /// This is compressed column format
+        const IntVec_t                            &GetAp() const {return Ap_;}
+        const IntVec_t                            &GetAi() const {return Ai_;}
+        const DoubleVec_t<DoubleType>             &GetAx() const {return Ax_;}
+        const DoubleVec_t<DoubleType>             &GetAz() const {return Az_;}
         const IntVec_t                            &GetCols() const;
         const IntVec_t                            &GetRows() const;
         const DoubleVec_t<DoubleType>             &GetReal() const;

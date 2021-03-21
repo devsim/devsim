@@ -1124,7 +1124,9 @@ setNodeValuesCmd(CommandHandler &data)
 #endif
     else
     {
-      dsAssert(0, "UNEXPECTED");
+      std::ostringstream os;
+      os << "wrong number of elements\n";
+      errorString += os.str();
     }
 
     if (!errorString.empty())
@@ -1229,7 +1231,7 @@ void SetListAsResult(CommandHandler &data, const std::string &type, const std::s
   }
   else
   {
-    data.SetDoubleListResult(vals);
+    data.SetObjectResult(CreateDoublePODArray(vals));
   }
 }
 }

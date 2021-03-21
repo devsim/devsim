@@ -31,6 +31,7 @@ limitations under the License.
 #include "CheckFunctions.hh"
 #include "dsAssert.hh"
 #include "GlobalData.hh"
+#include "CompressedMatrix.hh"
 #include <sstream>
 
 using namespace dsValidate;
@@ -257,6 +258,86 @@ solveCmd(CommandHandler &data)
   }
 }
 
+template <typename DoubleType>
+void
+getMatrixAndRHSCmdImpl(CommandHandler &data)
+{
+  std::string errorString;
+  const std::string &format = data.GetStringOption("format");
+
+
+  dsMath::CompressionType ct = dsMath::CompressionType::CCM;
+
+  if (format == "csc")
+  {
+    dsMath::CompressionType ct = dsMath::CompressionType::CCM;
+  }
+  else if (format == "csr")
+  {
+    dsMath::CompressionType ct = dsMath::CompressionType::CRM;
+  }
+  else if (!format.empty())
+  {
+    errorString =+ "Expected \"csc\" or \"csr\" for \"format\" option";
+  }
+
+  if (!errorString.empty())
+  {
+    data.SetErrorResult(errorString);
+    return;
+  }
+
+
+  dsMath::Newton<DoubleType> solver;
+
+  ObjectHolderMap_t ohm;
+  solver.GetMatrixAndRHSForExternalUse(ct, ohm);
+  data.SetObjectResult(ObjectHolder(ohm));
+}
+
+void
+getMatrixAndRHSCmd(CommandHandler &data)
+{
+  std::string errorString;
+
+  const std::string commandName = data.GetCommandName();
+
+  static dsGetArgs::Option option[] =
+  {
+    {"format",             "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+  };
+
+  dsGetArgs::switchList switches = nullptr;
+
+
+  bool error = data.processOptions(option, switches, errorString);
+
+  if (error)
+  {
+      data.SetErrorResult(errorString);
+      return;
+  }
+
+  bool extended_solver = false;
+  GlobalData &gdata = GlobalData::GetInstance();
+  auto dbent = gdata.GetDBEntryOnGlobal("extended_solver");
+  if (dbent.first)
+  {
+    auto oh = dbent.second.GetBoolean();
+    extended_solver = (oh.first && oh.second);
+  }
+
+  if (extended_solver)
+  {
+    getMatrixAndRHSCmdImpl<extended_type>(data);
+  }
+  else
+  {
+    getMatrixAndRHSCmdImpl<double>(data);
+  }
+}
+
 void
 getContactCurrentCmd(CommandHandler &data)
 {
@@ -354,6 +435,7 @@ Commands MathCommands[] = {
     {"get_contact_current",  getContactCurrentCmd},
     {"get_contact_charge",   getContactCurrentCmd},
     {"solve",                solveCmd},
+    {"get_matrix_and_rhs",   getMatrixAndRHSCmd},
     {nullptr, nullptr}
 };
 

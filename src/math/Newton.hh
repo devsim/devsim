@@ -33,6 +33,8 @@ typedef std::map<std::string, ObjectHolder> ObjectHolderMap_t;
 class Device;
 /// This is the outer nonlinear solver
 namespace dsMath {
+enum class CompressionType;
+
 template <typename DoubleType>
 class Matrix;
 
@@ -163,6 +165,8 @@ class Newton {
 
         //// INTEGRATE_DC means that we are just gonna Assemble I, Q when done
 
+        void GetMatrixAndRHSForExternalUse(CompressionType /*ct*/, ObjectHolderMap_t & /*ohm*/);
+
         bool Solve(LinearSolver<DoubleType> &, const TimeMethods::TimeParams<DoubleType> &, ObjectHolderMap_t *ohm);
 
         bool ACSolve(LinearSolver<DoubleType> &, DoubleType);
@@ -204,7 +208,7 @@ class Newton {
         void PrintNumberEquations(size_t, ObjectHolderMap_t *);
         void PrintIteration(size_t, ObjectHolderMap_t *);
 
-        size_t NumberEquationsAndSetDimension();
+        size_t NumberEquationsAndSetDimension(bool);
 
         void BackupSolutions();
         void RestoreSolutions();

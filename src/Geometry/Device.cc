@@ -256,7 +256,7 @@ void Device::SetBaseEquationNumber(size_t x)
 
 /// TODO: handle case where there are no nodes on the device
 /// TODO: ERROR out when adding equations to regions with no nodes
-size_t Device::CalcMaxEquationNumber()
+size_t Device::CalcMaxEquationNumber(bool verbose)
 {
     bool hasEquations = false;
     std::ostringstream os; 
@@ -268,21 +268,30 @@ size_t Device::CalcMaxEquationNumber()
         const std::string &rname = rit->first;
         Region &region = *(rit->second);
 
-        os << "Region \"" << rname  << "\" on device \"" << deviceName << "\"";
+        if (verbose)
+        {
+          os << "Region \"" << rname  << "\" on device \"" << deviceName << "\"";
+        }
         if (region.GetNumberEquations() != 0)
         {
-            region.SetBaseEquationNumber(x);
-            const size_t maxnum = region.GetMaxEquationNumber();
+          region.SetBaseEquationNumber(x);
+          const size_t maxnum = region.GetMaxEquationNumber();
 
+          if (verbose)
+          {
             os << " has equations " << x << ":" << maxnum << "\n";
+          }
 
-            hasEquations = true;
+          hasEquations = true;
 
-            x = maxnum + 1;
+          x = maxnum + 1;
         }
         else
         {
+          if (verbose)
+          {
             os << " has no equations.\n";
+          }
         }
     }
     GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());

@@ -153,13 +153,16 @@ void NodeKeeper::DeleteNode(const std::string & name)
  * Note we may want to experiment with ordering schemes
  * later.
  */
-void NodeKeeper::SetNodeNumbers(size_t start) {
+void NodeKeeper::SetNodeNumbers(size_t start, bool verbose) {
     NodeTable_t::iterator iter;
     NodeTable_t::iterator end = NodeTable_.end();
 
     minEquationNumber = start;
 
     bool hasGround = false;
+
+    std::ostringstream os;
+
     size_t i = 0; // Assume c-style indexing
     for (iter = NodeTable_.begin(); 
             iter != end;
@@ -175,9 +178,14 @@ void NodeKeeper::SetNodeNumbers(size_t start) {
             iter->second->SetNumber(i);
             ++i;
         }
-        std::ostringstream os;
-        os << iter->first << "\t" << iter->second->GetNumber() << "\t" << iter->second->getCircuitNodeTypeStr() << "\n";
-        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+        if (verbose)
+        {
+          os << iter->first << "\t" << iter->second->GetNumber() << "\t" << iter->second->getCircuitNodeTypeStr() << "\n";
+        }
+    }
+    if (verbose)
+    {
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
 
     // Need to find out which node is ground later on

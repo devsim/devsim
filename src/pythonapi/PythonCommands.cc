@@ -254,6 +254,7 @@ MyNewPyPtr(cylindrical_surface_area,   dsCommand::createCylindricalCmd);
 MyNewPyPtr(get_contact_current,        dsCommand::getContactCurrentCmd);
 MyNewPyPtr(get_contact_charge,         dsCommand::getContactCurrentCmd);
 MyNewPyPtr(solve,                      dsCommand::solveCmd);
+MyNewPyPtr(get_matrix_and_rhs,         dsCommand::getMatrixAndRHSCmd);
 // Equation Commands
 MyNewPyPtr(equation,                       dsCommand::createEquationCmd);
 MyNewPyPtr(interface_equation,             dsCommand::createInterfaceEquationCmd);
@@ -370,6 +371,7 @@ MYCOMMAND(cylindrical_surface_area,   dsCommand::createCylindricalCmd),
 MYCOMMAND(get_contact_current,        dsCommand::getContactCurrentCmd),
 MYCOMMAND(get_contact_charge,         dsCommand::getContactCurrentCmd),
 MYCOMMAND(solve,                      dsCommand::solveCmd),
+MYCOMMAND(get_matrix_and_rhs,         dsCommand::getMatrixAndRHSCmd),
 // Equation Commands
 MYCOMMAND(equation,                       dsCommand::createEquationCmd),
 MYCOMMAND(interface_equation,             dsCommand::createInterfaceEquationCmd),
