@@ -47,36 +47,18 @@ void CommandHandler::SetMapResult(ObjectHolderMap_t &map)
   SetObjectResult(obj);
 }
 
-namespace {
-template <typename T>
-ObjectHolder CreateListResult(const std::vector<T> &list)
-{
-  ObjectHolder result;
-  const size_t length = list.size();
-  ObjectHolderList_t objects(length);
-
-  for (size_t i = 0; i < length; ++i)
-  {
-    objects[i] = ObjectHolder(list[i]);
-  }
-
-  return ObjectHolder(objects);
-}
-}
-
-
 void CommandHandler::SetStringListResult(const std::vector<std::string> &list)
 {
-  SetObjectResult(CreateListResult(list));
+  SetObjectResult(CreateObjectHolderList(list));
 }
 
 void CommandHandler::SetDoubleListResult(const std::vector<double> &list)
 {
-  SetObjectResult(CreateListResult(list));
+  SetObjectResult(CreateObjectHolderList(list));
 }
 
 void CommandHandler::SetIntListResult(const std::vector<int> &list)
 {
-  SetObjectResult(CreateListResult(list));
+  SetObjectResult(CreateObjectHolderList(list));
 }
 

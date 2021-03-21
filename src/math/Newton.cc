@@ -95,7 +95,7 @@ template <typename DoubleType>
 Newton<DoubleType>::~Newton() {};
 
 template <typename DoubleType>
-size_t Newton<DoubleType>::NumberEquationsAndSetDimension()
+size_t Newton<DoubleType>::NumberEquationsAndSetDimension(bool verbose)
 {
   GlobalData &gdata = GlobalData::GetInstance();
   size_t eqnnum = 0;
@@ -110,21 +110,31 @@ size_t Newton<DoubleType>::NumberEquationsAndSetDimension()
     {
       std::ostringstream os;
 
-      std::string name = (dit->first);
+      const std::string &name = (dit->first);
+
       Device &dev =     *(dit->second);
       dev.SetBaseEquationNumber(eqnnum);
-      const size_t maxnum = dev.CalcMaxEquationNumber();
+      const size_t maxnum = dev.CalcMaxEquationNumber(verbose);
 
       if (maxnum != size_t(-1))
       {
+        if (verbose)
+        {
           os << "Device \"" << name << "\" has equations " << eqnnum << ":" << maxnum << "\n";
-          eqnnum = maxnum + 1;
+        }
+        eqnnum = maxnum + 1;
       }
       else
       {
+        if (verbose)
+        {
           os << "Device \"" << name << "\" has no equations.\n";
+        }
       }
-      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+      if (verbose)
+      {
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+      }
 
       if (dev.GetDimension() > dimension)
       {
@@ -137,12 +147,15 @@ size_t Newton<DoubleType>::NumberEquationsAndSetDimension()
     NodeKeeper &nk = NodeKeeper::instance();
     if (nk.HaveNodes())
     {
-      nk.SetNodeNumbers(eqnnum);
+      nk.SetNodeNumbers(eqnnum, verbose);
       size_t maxnum = nk.GetMaxEquationNumber();
 #if 1
-      std::ostringstream os;
-      os << "Circuit " << " has equations " << eqnnum << ":" << maxnum << "\n";
-      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+      if (verbose)
+      {
+        std::ostringstream os;
+        os << "Circuit " << " has equations " << eqnnum << ":" << maxnum << "\n";
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+      }
 #endif
       eqnnum = maxnum + 1;
     }
@@ -634,6 +647,102 @@ void CallACUpdateSolution(NodeKeeper &nk, const std::string &rname, const std::s
 
 }
 
+template <typename DoubleType>
+void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, ObjectHolderMap_t &ohm)
+{
+  NodeKeeper &nk = NodeKeeper::instance();
+  GlobalData &gdata = GlobalData::GetInstance();
+  const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
+
+  const size_t numeqns = NumberEquationsAndSetDimension(false);
+
+  if (nk.HaveNodes())
+  {
+    nk.InitializeSolution("dcop");
+  }
+
+  const auto matrix_type = MatrixType::REAL;
+
+  auto matrix = std::unique_ptr<CompressedMatrix<DoubleType>>(new CompressedMatrix<DoubleType>(numeqns, matrix_type, ct));
+  std::vector<DoubleType> rhs(numeqns);
+
+  permvec_t permvec(numeqns);
+  for (size_t i = 0; i < permvec.size(); ++i)
+  {
+    permvec[i] = PermutationEntry(i, false);
+  }
+
+  // Add permutation matrix
+  LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::PERMUTATIONSONLY, dsMathEnum::TimeMode::DC, static_cast<DoubleType>(1.0));
+
+  static const std::pair<const char *, dsMathEnum::TimeMode> loads[] = {
+    {"static",  dsMathEnum::TimeMode::DC},
+    {"dynamic", dsMathEnum::TimeMode::TIME}
+  };
+
+  for (const auto &p : loads)
+  {
+    rhs.clear();
+    rhs.resize(numeqns);
+
+    if (!matrix)
+    {
+      matrix = std::unique_ptr<CompressedMatrix<DoubleType>>(new CompressedMatrix<DoubleType>(numeqns, matrix_type, ct));
+    }
+
+    LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, p.second, static_cast<DoubleType>(1.0));
+    matrix->Finalize();
+
+    ObjectHolderMap_t lmap;
+    lmap["ai"] = CreatePODArray<int>(matrix->GetAi());
+    lmap["ap"] = CreatePODArray<int>(matrix->GetAp());
+    lmap["av"] = CreateDoublePODArray<DoubleType>(matrix->GetReal());
+    lmap["rhs"]  = CreateDoublePODArray<DoubleType>(rhs);
+    ohm[p.first] = ObjectHolder(lmap);
+
+    matrix.reset();
+  }
+
+  {
+    ObjectHolderMap_t lmap;
+    std::vector<int> rp(numeqns);
+    std::vector<int> rb(numeqns);
+    for (size_t i = 0; i < numeqns; ++i)
+    {
+      const auto &p = permvec[i];
+  
+      const size_t &row = p.GetRow();
+      if (row != size_t(-1))
+      {
+        rp[i] = static_cast<int>(row);
+      }
+      else
+      {
+        rp[i] = -1;
+      }
+
+      if (p.KeepCopy())
+      {
+        rb[i] = 1;
+      }
+    }
+    lmap["row"]  = CreatePODArray<int>(rp);
+    lmap["copy"] = CreatePODArray<int>(rb);
+    ohm["permutation"] = ObjectHolder(lmap);
+  }
+
+
+// now permvecs
+
+  if (ct == CompressionType::CCM)
+  {
+    ohm["format"] = ObjectHolder("csc");
+  }
+  else if (ct == CompressionType::CRM)
+  {
+    ohm["format"] = ObjectHolder("csr");
+  }
+}
 
 template <typename DoubleType>
 bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeMethods::TimeParams<DoubleType> &timeinfo, ObjectHolderMap_t *ohm)
@@ -642,7 +751,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
 
-  const size_t numeqns = NumberEquationsAndSetDimension();
+  const size_t numeqns = NumberEquationsAndSetDimension(true);
 
   if (nk.HaveNodes())
   {
@@ -691,7 +800,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 
   ObjectHolderList_t iteration_list;
 
-  for (size_t iter = 0; (iter < maxiter) && (!converged) && (divergence_count < 5); ++iter)
+  for (size_t iter = 0; (iter < maxiter) && (!converged) && (divergence_count < 20); ++iter)
   {
     ObjectHolderMap_t iteration_map;
     ObjectHolderMap_t *p_iteration_map = nullptr;
@@ -1152,7 +1261,7 @@ bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleTyp
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
 
-  const size_t numeqns = NumberEquationsAndSetDimension();
+  const size_t numeqns = NumberEquationsAndSetDimension(true);
 
   if (nk.HaveNodes())
   {
@@ -1262,7 +1371,7 @@ bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver
 {
 
   NodeKeeper &nk = NodeKeeper::instance();
-  const size_t numeqns = NumberEquationsAndSetDimension();
+  const size_t numeqns = NumberEquationsAndSetDimension(true);
 
   size_t outputeqnnum = size_t(-1);
 

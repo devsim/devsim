@@ -24,6 +24,7 @@ extern Commands MathCommands[];
 void getContactCurrentCmd(CommandHandler &);
 void getContactCurrentCmd(CommandHandler &);
 void solveCmd(CommandHandler &);
+void getMatrixAndRHSCmd(CommandHandler &);
 }
 
 #endif

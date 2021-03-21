@@ -40,6 +40,7 @@ class ObjectHolder {
 
     explicit ObjectHolder(const std::string &);
     explicit ObjectHolder(const char *);
+    explicit ObjectHolder(const void *, size_t);
 
     explicit ObjectHolder(bool);
     explicit ObjectHolder(double);
@@ -86,5 +87,52 @@ class ObjectHolder {
     void *object_;
 
 };
+
+template <typename T>
+inline ObjectHolder CreateObjectHolderList(const std::vector<T> &list)
+{
+  ObjectHolder result;
+  const size_t length = list.size();
+  ObjectHolderList_t objects(length);
+
+  for (size_t i = 0; i < length; ++i)
+  {
+    objects[i] = ObjectHolder(list[i]);
+  }
+
+  return ObjectHolder(objects);
+}
+
+template <typename T>
+inline ObjectHolder CreateDoubleObjectHolderList(const std::vector<T> &list)
+{
+  ObjectHolder result;
+  const size_t length = list.size();
+  ObjectHolderList_t objects(length);
+
+  for (size_t i = 0; i < length; ++i)
+  {
+    objects[i] = ObjectHolder(static_cast<double>(list[i]));
+  }
+
+  return ObjectHolder(objects);
+}
+
+ObjectHolder CreateArrayObject(const char *s, const ObjectHolder &data_object);
+
+template <typename T>
+ObjectHolder CreatePODArray(const std::vector<T> &list);
+
+template <typename T>
+ObjectHolder CreateDoublePODArray(const std::vector<T> &list);
+
+template <>
+ObjectHolder CreateDoublePODArray(const std::vector<double> &list);
+#if 0
+{
+  return CreatePODArray<double>(list);
+}
+#endif
+
 #endif
 

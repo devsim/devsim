@@ -1923,3 +1923,15 @@ R"(    devsim.solve (type, solver_type, absolute_error, relative_error, charge_e
     info : bool, optional
        Solve command return convergence information (default False)
 )";
+
+static const char get_matrix_and_rhs_doc[] =
+R"(    devsim.get_matrix_and_rhs (format)
+
+    Get matrices and rhs vectors.
+
+    Parameters
+    ----------
+    format : {'ccm', 'crm'} optional
+       format of matrix being returned
+)";
+

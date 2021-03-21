@@ -1,4 +1,20 @@
-### Version 1.5.1
+### Version 1.6.0
+
+#### Array Type Input and Output
+
+In most circumstances, the software now returns numerical data using the Python ``array`` class.  This is more efficient than using standard lists, as it encapsulates a contiguous block of memory.  More information about this class can be found at [https://docs.python.org/3/library/array.html](https://docs.python.org/3/library/array.html).  The representation can be easily converted to lists and ``numpy`` arrays for efficient manipulation.
+
+When accepting user input involving lists of homogenous data, such as ``set_node_values`` the user may enter data using either a list, string of bytes, or the ``array`` class.  It may also be used to input ``numpy`` arrays or any other class with a ``tobytes`` method.
+
+#### Get Matrix and RHS for External Use
+
+The ``get_matrix_and_rhs`` command has been added to assemble the static and dynamic matrices, as well as their right hand sides, based on the current state of the device being simulated.  The ``format`` option is used to specify the sparse matrix format, which may be either in the compressed column or compressed row formats, ``csc`` or ``csr``.
+
+#### Max Divergence Count
+
+If the Newton iteration errors keep increasing for 20 iterations in a row, then the simulator stops.  This limit was previously 5.
+
+### Version 1.5.2
 
 #### Math Functions
 
