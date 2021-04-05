@@ -47,7 +47,7 @@ NOTICE and LICENSE files for copyright and license information.
 ### Support:
 
 For support and general discussion, please join our forum:
-[https://groups.google.com/d/forum/devsim](https://groups.google.com/d/forum/devsim)
+[https://forum.devsim.org](https://forum.devsim.org)
 
 ### Contributing:
 
