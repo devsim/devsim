@@ -14,12 +14,12 @@ export CXX="/usr/bin/g++"
 export F77="/usr/bin/gfortran"
 
 #minimal conda environments to prevent linking against the wrong libraries
-cd ${HOME}
+#cd ${HOME}
 if [ ! -f Miniconda3-latest-Linux-x86_64.sh ]
 then
 curl -L -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh;
 bash Miniconda3-latest-Linux-x86_64.sh -b -p ${HOME}/anaconda;
-${HOME}/anaconda/bin/conda create  -y --name python3_devsim_build python=3
+${HOME}/anaconda/bin/conda create  -y --name python3_devsim_build python=3.8
 ${HOME}/anaconda/bin/conda install -y --name python3_devsim_build mkl mkl-devel mkl-include boost cmake
 fi
 source ${HOME}/anaconda/bin/activate python3_devsim_build
@@ -30,7 +30,7 @@ source ${HOME}/anaconda/bin/activate python3_devsim_build
 
 
 # this script assumes git clone and submodule initialization has been done
-cd devsim
+#cd devsim
 
 # SuperLU
 #(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
@@ -48,8 +48,14 @@ cd devsim
 # quad precision getrf
 (cd external/getrf && bash setup_centos6.sh && cd build && make -j2)
 
+# start devsim build
 
 bash scripts/setup_centos_6.sh
+
+# overcome bad libstdc++ in anaconda directory
+mkdir -p linux_x86_64_release/linklibs
+for i in libmkl_rt.so libz.a libsqlite3*; do cp -f ${CONDA_PREFIX}/lib/$i linux_x86_64_release/linklibs/; done
+
 (cd linux_x86_64_release && make -j2)
 (cd dist && bash package_linux.sh ${1})
 
