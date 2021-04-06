@@ -226,6 +226,7 @@ print(x)
 x[0] = 1
 print(x)
 set_node_values(device=device, region="MySiRegion", name="testing", values=x)
+set_node_values(device=device, region="MySiRegion", name="testing", values=list(x))
 x = get_node_model_values(device=device, region="MySiRegion", name="testing")
 x[1]=2
 print(x)
