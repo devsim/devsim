@@ -52,6 +52,7 @@ class Tetrahedron {
         return nodes;
       }
 
+      const std::vector<ConstNodePtr> &GetFENodeList() const;
 
    private:
 
@@ -59,8 +60,9 @@ class Tetrahedron {
       Tetrahedron (const Tetrahedron &);
       Tetrahedron &operator= (const Tetrahedron &);
 
-      size_t index;
       std::vector<ConstNodePtr> nodes; 
+      mutable std::vector<ConstNodePtr> fe_nodes; 
+      size_t index;
 };
 
 struct TetrahedronCompIndex

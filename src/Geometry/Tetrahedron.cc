@@ -21,6 +21,7 @@ limitations under the License.
 #include "DenseMatrix.hh"
 #include "OutputStream.hh"
 #include <cmath>
+#include <array>
 //const double Tetrahedron::EPSILON=1.0e-20;
 Tetrahedron::Tetrahedron(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2, ConstNodePtr n3) : nodes(4)
 {
@@ -30,6 +31,41 @@ Tetrahedron::Tetrahedron(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNode
     nodes[2]=n2;
     nodes[3]=n3;
 }
+
+const std::vector<ConstNodePtr> &Tetrahedron::GetFENodeList() const
+{
+  if (!fe_nodes.empty())
+  {
+    return fe_nodes;
+  }
+  fe_nodes.resize(4);
+  for (size_t i = 0; i < 4; ++i)
+  {
+    fe_nodes[i] = nodes[i];
+  }
+
+  std::array<Vector<double>, 4> positions;
+  for (size_t i = 0; i < 4; ++i)
+  {
+    positions[i] = ConvertPosition<double>(nodes[i]->Position());
+  }
+
+  std::array<Vector<double>, 3> vecs;
+  for (size_t i = 0; i < 3; ++i)
+  {
+    vecs[i] = positions[i+1] - positions[i];
+  }
+  const auto &cp = vecs[1].cross_prod(vecs[2]);
+  const auto &dp = vecs[0].dot_prod(cp);
+  // is this sign correct for output normal
+  if (dp > 0.0)
+  {
+    std::swap(fe_nodes[2], fe_nodes[3]);
+  }
+
+  return fe_nodes;
+}
+
 
 template <typename DoubleType>
 Vector<DoubleType> GetCenter(const std::vector<ConstNodePtr> &nodes)

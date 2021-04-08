@@ -20,6 +20,8 @@ limitations under the License.
 #include "dsAssert.hh"
 
 #include <cmath>
+#include <array>
+
 using std::abs;
 
 const double Triangle::EPSILON=1.0e-20;
@@ -30,6 +32,60 @@ Triangle::Triangle(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2
     nodes[1]=n1;
     nodes[2]=n2;
 
+}
+
+const std::vector<ConstNodePtr> &Triangle::GetFENodeList() const
+{
+  if (!fe_nodes.empty())
+  {
+    return fe_nodes;
+  }
+
+  // principle directions
+  static const Vector<double> pdirs[] =
+  {
+    Vector<double>(0.0, 0.0, 1.0),
+    Vector<double>(0.0, 1.0, 0.0),
+    Vector<double>(1.0, 0.0, 0.0)
+  };
+
+  fe_nodes.resize(3);
+  for (size_t i = 0; i < 3; ++i)
+  {
+    fe_nodes[i] = nodes[i];
+  }
+
+  std::array<Vector<double>, 3> positions;
+  for (size_t i = 0; i < 3; ++i)
+  {
+    positions[i] = ConvertPosition<double>(nodes[i]->Position());
+  }
+
+  std::array<Vector<double>, 2> vecs;
+  for (size_t i = 0; i < 2; ++i)
+  {
+    vecs[i] = positions[i+1] - positions[i];
+  }
+  const auto &cp = vecs[0].cross_prod(vecs[1]);
+
+  double dir = 0.0;
+  // is this sign correct for output normal?
+  // only really works well in plane
+  for (auto &v : pdirs)
+  {
+    dir = cp.dot_prod(v);
+    if (dir != 0.0)
+    {
+      break;
+    }
+  }
+
+  if (dir < 0.0)
+  {
+    std::swap(fe_nodes[1], fe_nodes[2]);
+  }
+
+  return fe_nodes;
 }
 
 template <typename DoubleType>

@@ -52,6 +52,11 @@ class Edge {
           return nodes;
       }
 
+      const std::vector<ConstNodePtr> &GetFENodeList() const
+      {
+          return nodes;
+      }
+
       ConstNodePtr GetHead() const
       {
           return nodes[0];

@@ -192,16 +192,26 @@ getRegionListCmd(CommandHandler &data)
 
 namespace {
 template <typename T>
-void convertToObjectHolder(const T &eList, ObjectHolderList_t &olist)
+void convertToObjectHolder(const T &eList, ObjectHolderList_t &olist, bool reorder)
 {
   olist.reserve(eList.size());
   for (auto i : eList)
   {
     std::vector<ObjectHolder> x;
-
-    for (auto j : i->GetNodeList())
+    x.reserve(i->GetNodeList().size());
+    if (reorder)
     {
-      x.push_back(ObjectHolder(static_cast<int>(j->GetIndex())));
+      for (auto j : i->GetFENodeList())
+      {
+        x.push_back(ObjectHolder(static_cast<int>(j->GetIndex())));
+      }
+    }
+    else
+    {
+      for (auto j : i->GetNodeList())
+      {
+        x.push_back(ObjectHolder(static_cast<int>(j->GetIndex())));
+      }
     }
     olist.push_back(ObjectHolder(x));
   }
@@ -220,8 +230,10 @@ getElementNodeListCmd(CommandHandler &data)
       {"region", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
       {"contact", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
       {"interface", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+      {"reorder", "", dsGetArgs::optionType::BOOLEAN, dsGetArgs::requiredType::OPTIONAL, nullptr},
       {nullptr, nullptr,   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
       };
+
 
 
     dsGetArgs::switchList switches = nullptr;
@@ -236,6 +248,7 @@ getElementNodeListCmd(CommandHandler &data)
     }
 
     const std::string &deviceName = data.GetStringOption("device");
+    const bool reorder = data.GetBooleanOption("reorder");
 
 
     Device    *device = nullptr;
@@ -363,15 +376,15 @@ getElementNodeListCmd(CommandHandler &data)
     ObjectHolderList_t olist;
     if (!tetrahedronList.empty())
     {
-      convertToObjectHolder(tetrahedronList, olist);
+      convertToObjectHolder(tetrahedronList, olist, reorder);
     }
     else if (!triangleList.empty())
     {
-      convertToObjectHolder(triangleList, olist);
+      convertToObjectHolder(triangleList, olist, reorder);
     }
     else if (!edgeList.empty())
     {
-      convertToObjectHolder(edgeList, olist);
+      convertToObjectHolder(edgeList, olist, reorder);
     }
     else if (!nodeList.empty())
     {
