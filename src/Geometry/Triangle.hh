@@ -54,6 +54,8 @@ class Triangle {
         return nodes;
       }
 
+      const std::vector<ConstNodePtr> &GetFENodeList() const;
+
 
    private:
 
@@ -63,6 +65,7 @@ class Triangle {
 
       size_t index;
       std::vector<ConstNodePtr> nodes; 
+      mutable std::vector<ConstNodePtr> fe_nodes; 
 };
 
 struct TriangleCompIndex
