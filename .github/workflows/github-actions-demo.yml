@@ -8,7 +8,8 @@ jobs:
     steps:  
     - name: Checkout Project
       uses: actions/checkout@v1
-      submodule: true
+      with:
+        submodules: recursive
     - name: What OS is running
       run: uname -a
 
