@@ -3,13 +3,13 @@ language: cpp
 
 matrix:
   include:
-  - os: linux
-    sudo: required
-    dist: trusty
-    services: docker
   - os: osx
     env: COMPILER=gcc
     osx_image: xcode10.1
+#  - os: linux
+#    sudo: required
+#    dist: trusty
+#    services: docker
 #  - os: osx
 #    env: COMPILER=clang
 

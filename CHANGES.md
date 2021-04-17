@@ -10,11 +10,11 @@ When accepting user input involving lists of homogenous data, such as ``set_node
 
 The ``get_matrix_and_rhs`` command has been added to assemble the static and dynamic matrices, as well as their right hand sides, based on the current state of the device being simulated.  The ``format`` option is used to specify the sparse matrix format, which may be either in the compressed column or compressed row formats, ``csc`` or ``csr``.
 
-#### Max Divergence Count
+#### Maximum Divergence Count
 
 If the Newton iteration errors keep increasing for 20 iterations in a row, then the simulator stops.  This limit was previously 5.
 
-#### Mesh Visualization Element Orientation Fix
+#### Mesh Visualization Element Orientation
 
 Elements written to the ``tecplot`` format in 2d and 3d have node orderings compatible with the element connectivity in visualization formats.  Specifying the ``reorder=True`` option in ``get_element_node_list`` will result in node ordering compatible with meshing and visualization software.
 
