@@ -18,7 +18,7 @@ If the Newton iteration errors keep increasing for 20 iterations in a row, then 
 
 Elements written to the ``tecplot`` format in 2d and 3d have node orderings compatible with the element connectivity in visualization formats.  Specifying the ``reorder=True`` option in ``get_element_node_list`` will result in node ordering compatible with meshing and visualization software.
 
-### Version 1.5.2
+### Version 1.5.1
 
 #### Math Functions
 
