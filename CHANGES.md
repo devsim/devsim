@@ -1,3 +1,13 @@
+### Version 1.6.1
+
+#### Versioned MKL DLL in release build
+
+The Intel Math Kernel Library now uses versioned library names.  Binary releases are now updated to against the latest versioned dll names from MKL available in the Anaconda Python distribution.
+
+#### Fixed issue in ramp function.
+
+The ``rampbias`` function in the ``devsim.python_packages.ramp`` module has been fixed to properly reduce the bias when there is a convergence failure.
+
 ### Version 1.6.0
 
 #### Array Type Input and Output
