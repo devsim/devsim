@@ -105,11 +105,11 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix<DoubleType> *cm, const 
 
   /*
    * Get column permutation vector perm_c[], according to permc_spec:
-   *   permc_spec = 0: natural ordering 
+   *   permc_spec = 0: natural ordering
    *   permc_spec = 1: minimum degree on structure of A'*A
    *   permc_spec = 2: minimum degree on structure of A'+A
    *   permc_spec = 3: approximate minimum degree for unsymmetric matrices
-   */           
+   */
 
   if (sstatus == SymbolicStatus_t::NEW_SYMBOLIC)
   {
@@ -138,15 +138,30 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix<DoubleType> *cm, const 
   panel_size = sp_ienv(1);
   relax = sp_ienv(2);
 
+
+#if SUPERLU_MAJOR_VERSION == 5
+  GlobalLU_t Glu;
+#endif
+
   if (lutype_ == PEnum::LUType_t::FULL)
   {
-    zgstrf(&options, &AC, relax, panel_size, 
+  #if SUPERLU_MAJOR_VERSION == 5
+    zgstrf(&options, &AC, relax, panel_size,
+           etree, nullptr, 0, perm_c, perm_r, L, U, &Glu, &stat, &info_);
+  #else
+    zgstrf(&options, &AC, relax, panel_size,
            etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
+  #endif
   }
   else if (lutype_ ==  PEnum::LUType_t::INCOMPLETE)
   {
+  #if SUPERLU_MAJOR_VERSION == 5
+    zgsitrf(&options, &AC, relax, panel_size,
+           etree, nullptr, 0, perm_c, perm_r, L, U, &Glu, &stat, &info_);
+  #else
     zgsitrf(&options, &AC, relax, panel_size,
            etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
+  #endif
   }
 
 //  dsAssert(info == 0, "MATRIX FACTORIZATION FAILED");
