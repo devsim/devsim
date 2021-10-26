@@ -27,8 +27,6 @@ limitations under the License.
 #include "Float128.hh"
 #endif
 
-#include "stdio.h"
-
 namespace dsMath {
 
 #if 0
