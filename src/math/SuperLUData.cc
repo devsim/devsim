@@ -27,6 +27,8 @@ limitations under the License.
 #include "Float128.hh"
 #endif
 
+#include "stdio.h"
+
 namespace dsMath {
 
 #if 0
@@ -219,7 +221,7 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
   if (lutype_ == PEnum::LUType_t::FULL)
   {
     dgstrf(&options, &AC, relax, panel_size, 
-           etree, nullptr, 0, perm_c, perm_r, L, U, Glu, &stat, &info_);
+           etree, nullptr, 0, perm_c, perm_r, L, U, &Glu, &stat, &info_);
   }
   else if (lutype_ == PEnum::LUType_t::INCOMPLETE)
   {
