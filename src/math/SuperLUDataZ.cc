@@ -138,15 +138,17 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix<DoubleType> *cm, const 
   panel_size = sp_ienv(1);
   relax = sp_ienv(2);
 
+  GlobalLU_t *Glu = (GlobalLU_t *) SUPERLU_MALLOC( sizeof(GlobalLU_t) );
+
   if (lutype_ == PEnum::LUType_t::FULL)
   {
     zgstrf(&options, &AC, relax, panel_size, 
-           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
+           etree, nullptr, 0, perm_c, perm_r, L, U, Glu, &stat, &info_);
   }
   else if (lutype_ ==  PEnum::LUType_t::INCOMPLETE)
   {
     zgsitrf(&options, &AC, relax, panel_size,
-           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
+           etree, nullptr, 0, perm_c, perm_r, L, U, Glu, &stat, &info_);
   }
 
 //  dsAssert(info == 0, "MATRIX FACTORIZATION FAILED");
