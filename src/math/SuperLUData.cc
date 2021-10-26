@@ -182,11 +182,11 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
 
   /*
    * Get column permutation vector perm_c[], according to permc_spec:
-   *   permc_spec = 0: natural ordering 
+   *   permc_spec = 0: natural ordering
    *   permc_spec = 1: minimum degree on structure of A'*A
    *   permc_spec = 2: minimum degree on structure of A'+A
    *   permc_spec = 3: approximate minimum degree for unsymmetric matrices
-   */           
+   */
   if (sstatus == SymbolicStatus_t::NEW_SYMBOLIC)
   {
     permc_spec = options.ColPerm;
@@ -214,16 +214,31 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
   panel_size = sp_ienv(1);
   relax = sp_ienv(2);
 
+#if SUPERLU_MAJOR_VERSION == 5
+  GlobalLU_t Glu;
+#endif
+
   if (lutype_ == PEnum::LUType_t::FULL)
   {
-    dgstrf(&options, &AC, relax, panel_size, 
+  #if SUPERLU_MAJOR_VERSION == 5
+    dgstrf(&options, &AC, relax, panel_size,
+           etree, nullptr, 0, perm_c, perm_r, L, U, &Glu, &stat, &info_);
+  #else
+    dgstrf(&options, &AC, relax, panel_size,
            etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
+  #endif
   }
   else if (lutype_ == PEnum::LUType_t::INCOMPLETE)
   {
+  #if SUPERLU_MAJOR_VERSION == 5
+    dgsitrf(&options, &AC, relax, panel_size,
+           etree, nullptr, 0, perm_c, perm_r, L, U, &Glu, &stat, &info_);
+  #else
     dgsitrf(&options, &AC, relax, panel_size,
            etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
+  #endif
   }
+
 
 //  dsAssert(info == 0, "MATRIX FACTORIZATION FAILED");
 
