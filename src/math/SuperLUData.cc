@@ -218,14 +218,25 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
 
   if (lutype_ == PEnum::LUType_t::FULL)
   {
+  #if SUPERLU_MAJOR_VERSION == 5
     dgstrf(&options, &AC, relax, panel_size, 
            etree, nullptr, 0, perm_c, perm_r, L, U, &Glu, &stat, &info_);
+  #else
+    dgstrf(&options, &AC, relax, panel_size, 
+           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
+  #endif       
   }
   else if (lutype_ == PEnum::LUType_t::INCOMPLETE)
   {
-    dgsitrf(&options, &AC, relax, panel_size,
+  #if SUPERLU_MAJOR_VERSION == 5
+    dgsitrf(&options, &AC, relax, panel_size, 
            etree, nullptr, 0, perm_c, perm_r, L, U, &Glu, &stat, &info_);
+  #else
+    dgsitrf(&options, &AC, relax, panel_size, 
+           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
+  #endif
   }
+
 
 //  dsAssert(info == 0, "MATRIX FACTORIZATION FAILED");
 
