@@ -138,7 +138,10 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix<DoubleType> *cm, const 
   panel_size = sp_ienv(1);
   relax = sp_ienv(2);
 
+
+#if SUPERLU_MAJOR_VERSION == 5
   GlobalLU_t Glu;
+#endif
 
   if (lutype_ == PEnum::LUType_t::FULL)
   {
