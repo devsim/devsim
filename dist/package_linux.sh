@@ -50,7 +50,7 @@ done
 
 #MKL library
 # $ORIGIN rpath set in src/main/CMakeLists.txt
-cp "${CONDA_PREFIX}/lib/libmkl_rt.so.1" ${DIST_PYDLL}
+#cp "${CONDA_PREFIX}/lib/libmkl_rt.so.1" ${DIST_PYDLL}
 
 
 #### Python files and the examples
