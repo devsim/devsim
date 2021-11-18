@@ -48,6 +48,10 @@ for i in INSTALL NOTICE LICENSE RELEASE linux.txt README README.md CHANGES.md in
 cp ../$i ${DIST_DIR}
 done
 
+#MKL library
+# $ORIGIN rpath set in src/main/CMakeLists.txt
+#cp "${CONDA_PREFIX}/lib/libmkl_rt.so.1" ${DIST_PYDLL}
+
 
 #### Python files and the examples
 for i in examples testing

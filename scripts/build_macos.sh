@@ -39,12 +39,16 @@ else
   exit 1;
 fi
 
+export PYTHON3_BIN=python
+export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_ARCHIVE=""
+
 #minimal conda environments to prevent linking against the wrong libraries
 if [ "${1}" = "gcc" ] && [ ! -f Miniconda3-latest-MacOSX-x86_64.sh ]
 then
 curl -L -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh;
 bash Miniconda3-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
-${HOME}/anaconda/bin/conda create  -y --name python3_devsim_build python=3.8
+${HOME}/anaconda/bin/conda create  -y --name python3_devsim_build python=3
 ${HOME}/anaconda/bin/conda install -y --name python3_devsim_build mkl mkl-devel mkl-include boost cmake
 fi
 source ${HOME}/anaconda/bin/activate python3_devsim_build
