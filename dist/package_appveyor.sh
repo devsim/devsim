@@ -36,6 +36,9 @@ cp -v ${SRC_DIR}/devsim_py3.pyd ${DIST_PYDLL}
 #cp -v ${SRC_DIR}/devsim_tcl.exe ${DIST_BIN}
 cp -v __init__.py ${DIST_PYDLL}
 
+# Intel MKL
+cp -v ${CONDA_PREFIX}/Library/bin/mkl_rt.1.dll ${DIST_PYDLL}
+
 # goes to lib/symdiff
 cp -R ${SYMDIFF_LIBRARY_DIR} ${DIST_LIB}
 
