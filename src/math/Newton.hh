@@ -201,7 +201,7 @@ class Newton {
     private:
         void InitializeTransientAssemble(const TimeMethods::TimeParams<DoubleType> &, size_t, std::vector<DoubleType> &);
         bool CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &, const std::vector<DoubleType> &, ObjectHolderMap_t *ohm);
-        void UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &, size_t, const std::vector<DoubleType> &, std::vector<DoubleType> &);
+        void UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &, size_t, const std::vector<DoubleType> &, const std::vector<DoubleType> &);
 
         void PrintDeviceErrors(const Device &device, ObjectHolderMap_t *);
         void PrintCircuitErrors(ObjectHolderMap_t *);

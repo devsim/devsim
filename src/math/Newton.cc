@@ -819,7 +819,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
     }
     else
     {
-      LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, dsMathEnum::TimeMode::DC, static_cast<DoubleType>(1.0));
+      LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, dsMathEnum::TimeMode::DC, timeinfo.b0);
 
       /// This assembles the time derivative current
       if (timeinfo.a0 != 0.0)
@@ -922,6 +922,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
     }
   }
 
+  std::vector<DoubleType> newI;
   std::vector<DoubleType> newQ;
   if (timeinfo.IsTransient())
   {
@@ -959,7 +960,9 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 
     if (timeinfo.IsTransient())
     {
-      UpdateTransientCurrent(timeinfo, numeqns, newQ, rhs);
+      newI.resize(numeqns);
+      LoadMatrixAndRHS(*matrix, newI, permvec, dsMathEnum::WhatToLoad::RHS, dsMathEnum::TimeMode::DC, static_cast<DoubleType>(1.0));
+      UpdateTransientCurrent(timeinfo, numeqns, newI, newQ);
     }
 
   }
@@ -1182,10 +1185,8 @@ bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<
 }
 
 template <typename DoubleType>
-void Newton<DoubleType>::UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &timeinfo, size_t numeqns, const std::vector<DoubleType> &newQ, std::vector<DoubleType> &newI)
+void Newton<DoubleType>::UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &timeinfo, size_t numeqns, const std::vector<DoubleType> &newI, const std::vector<DoubleType> &newQ)
 {
-  newI.clear();
-  newI.resize(numeqns);
   TimeData<DoubleType> &tinst = TimeData<DoubleType>::GetInstance();
   if (timeinfo.IsDCMethod())
   {
@@ -1224,6 +1225,9 @@ void Newton<DoubleType>::UpdateTransientCurrent(const TimeMethods::TimeParams<Do
       tinst.CopyI(TimePoint_t::TM0, TimePoint_t::TM1);
     }
 
+    tinst.SetI(TimePoint_t::TM0, newI);
+
+#if 0
     ////// Update Current
     newI.clear();
     newI.resize(numeqns);
@@ -1251,6 +1255,7 @@ void Newton<DoubleType>::UpdateTransientCurrent(const TimeMethods::TimeParams<Do
     }
 
     tinst.SetI(TimePoint_t::TM0, newI);
+#endif
   }
 }
 
