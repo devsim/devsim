@@ -1,16 +1,5 @@
 # Any copyright is dedicated to the Public Domain.
 # http://creativecommons.org/publicdomain/zero/1.0/
-TCL_ARCHIVE="/usr/lib/libtclstub8.5.a"
-TCL_INCLUDE="/usr/bin/include"
-TCL_BIN="/usr/bin/tclsh8.5"
-PYTHON_BASE="${HOME}/anaconda/envs/python27_devsim_build"
-PYTHON_ARCHIVE="${PYTHON_BASE}/lib/libpython2.7.dylib"
-PYTHON_INCLUDE="${PYTHON_BASE}/include/python2.7"
-PYTHON_BIN="${PYTHON_BASE}/bin/python"
-PYTHON3_BASE="${HOME}/anaconda/envs/python3_devsim_build"
-PYTHON3_ARCHIVE="${PYTHON3_BASE}/lib/libpython3.8m.dylib"
-PYTHON3_INCLUDE="${PYTHON3_BASE}/include/python3.8"
-PYTHON3_BIN="${PYTHON3_BASE}/bin/python"
 for TYPE in debug release; do
     NAME=osx_${TYPE}
     mkdir ${NAME}
@@ -18,9 +7,6 @@ for TYPE in debug release; do
         -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
         -DCMAKE_BUILD_TYPE=${TYPE} \
         -DCMAKE_CXX_COMPILER=${CXX} \
-        -DPYTHON_INCLUDE=${PYTHON_INCLUDE} \
-        -DPYTHON_ARCHIVE=${PYTHON_ARCHIVE} \
-        -DPYTHON_BIN=${PYTHON_BIN} \
         -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
         -DPYTHON3_ARCHIVE=${PYTHON3_ARCHIVE} \
         -DPYTHON3_BIN=${PYTHON3_BIN} \
@@ -50,13 +36,13 @@ ${PYTHON3_BIN} \$*
 EOF
 chmod +x bin/symdiff_py3
 
-cat << EOF > bin/symdiff_tcl
-#!/bin/bash
-set -e
-progname="\$0"
-curdir=\`dirname "\$progname"\`
-export TCLLIBPATH=\${curdir}/../lib
-${TCL_BIN} \$*
-EOF
-chmod +x bin/symdiff_tcl
+#cat << EOF > bin/symdiff_tcl
+##!/bin/bash
+#set -e
+#progname="\$0"
+#curdir=\`dirname "\$progname"\`
+#export TCLLIBPATH=\${curdir}/../lib
+#${TCL_BIN} \$*
+#EOF
+#chmod +x bin/symdiff_tcl
 
