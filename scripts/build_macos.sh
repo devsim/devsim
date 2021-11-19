@@ -39,10 +39,6 @@ else
   exit 1;
 fi
 
-export PYTHON3_BIN=python
-export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
-export PYTHON3_ARCHIVE=""
-
 #minimal conda environments to prevent linking against the wrong libraries
 if [ "${1}" = "gcc" ] && [ ! -f Miniconda3-latest-MacOSX-x86_64.sh ]
 then
@@ -53,6 +49,9 @@ ${HOME}/anaconda/bin/conda install -y --name python3_devsim_build mkl mkl-devel 
 fi
 source ${HOME}/anaconda/bin/activate python3_devsim_build
 
+export PYTHON3_BIN=python
+export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_ARCHIVE=""
 
 #For macOS, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
 #https://developer.apple.com/technologies/tools
