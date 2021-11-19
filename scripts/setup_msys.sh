@@ -4,8 +4,6 @@
 # Note: run this file using bash
 
 DEVSIM_CONFIG="msys"
-ANACONDA_PATH=${CONDA_PREFIX}
-CMAKE=$(cygpath -w ${ANACONDA_PATH}/Library/bin/cmake.exe)
 CMAKE_CXX_FLAGS=""
 GENERATOR="MSYS Makefiles"
 CXX=g++
@@ -14,17 +12,19 @@ for TYPE in debug release; do
 ARCH=`uname -m`
     NAME=msys_${ARCH}_${TYPE}
     mkdir ${NAME}
-    (cd $NAME; ${CMAKE} \
-	-G "${GENERATOR}" \
-	-DCMAKE_BUILD_TYPE=${TYPE} \
-	-DCMAKE_CXX_COMPILER=${CXX} \
+    (cd $NAME; cmake \
+      -G "${GENERATOR}" \
+      -DCMAKE_BUILD_TYPE=${TYPE} \
+      -DCMAKE_CXX_COMPILER=${CXX} \
       -DCMAKE_C_COMPILER=${CC} \
       -DDEVSIM_CONFIG=${DEVSIM_CONFIG} \
       -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
       -DDEVSIM_EXTENDED_PRECISION=ON \
       -DMKL_PARDISO=ON \
       -DPYTHON3=ON \
-      -DANACONDA_PATH=${ANACONDA_PATH} \
+      -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
+      -DPYTHON3_ARCHIVE=${PYTHON3_ARCHIVE} \
+      -DCONDA_PREFIX=${CONDA_PREFIX} \
       ..)
 #  done
 done

@@ -7,7 +7,7 @@
 #SET (CMAKE_CXX_WARNING_LEVEL 4)
 SET (FLEX  "C:/msys64/usr/bin/flex.exe")
 SET (BISON "C:/msys64/usr/bin/bison.exe")
-SET (BOOST_INCLUDE "${ANACONDA_PATH}/Library/include")
+SET (BOOST_INCLUDE "${CONDA_PREFIX}/Library/include")
 
 ADD_DEFINITIONS(-DSTATIC_BUILD -D_USE_MATH_DEFINES)
 #Math stuff
@@ -36,16 +36,14 @@ SET (SUPERLULOCATE   ${CMAKE_SOURCE_DIR}/external/SuperLU_4.3)
 SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/${BUILDDIR}/Release/superlu.lib)
 SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
 
-SET (BLAS_ARCHIVE     ${ANACONDA_PATH}/Library/lib/mkl_rt.lib)
-SET (MKL_PARDISO_INCLUDE ${ANACONDA_PATH}/Library/include)
-SET (PYTHON3_ARCHIVE ${ANACONDA_PATH}/libs/python3.lib)
-SET (PYTHON3_INCLUDE ${ANACONDA_PATH}/include)
+SET (BLAS_ARCHIVE     ${CONDA_PREFIX}/Library/lib/mkl_rt.lib)
+SET (MKL_PARDISO_INCLUDE ${CONDA_PREFIX}/Library/include)
 
-SET (SQLITE3_INCLUDE  ${ANACONDA_PATH}/Library/include)
-SET (SQLITE3_ARCHIVE  ${ANACONDA_PATH}/Library/lib/sqlite3.lib)
+SET (SQLITE3_INCLUDE  ${CONDA_PREFIX}/Library/include)
+SET (SQLITE3_ARCHIVE  ${CONDA_PREFIX}/Library/lib/sqlite3.lib)
 
-SET (ZLIB_INCLUDE ${ANACONDA_PATH}/Library/include)
-SET (ZLIB_ARCHIVE ${ANACONDA_PATH}/Library/lib/zlib.lib)
+SET (ZLIB_INCLUDE ${CONDA_PREFIX}/Library/include)
+SET (ZLIB_ARCHIVE ${CONDA_PREFIX}/Library/lib/zlib.lib)
 
 SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/${BUILDDIR}/src/engine/Release/symdiff_static.lib)
