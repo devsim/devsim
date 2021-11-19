@@ -14,7 +14,7 @@ export CXX="/usr/bin/g++"
 export F77="/usr/bin/gfortran"
 
 #minimal conda environments to prevent linking against the wrong libraries
-#cd ${HOME}
+cd ${HOME}
 if [ ! -f Miniconda3-latest-Linux-x86_64.sh ]
 then
 curl -L -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh;
@@ -24,13 +24,17 @@ ${HOME}/anaconda/bin/conda install -y --name python3_devsim_build mkl mkl-devel 
 fi
 source ${HOME}/anaconda/bin/activate python3_devsim_build
 
+export PYTHON3_BIN=python
+export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_ARCHIVE=""
+
 #download boost library
 #(cd ${HOME}/devsim/external && curl -O -L https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz)
 #(cd ${HOME}/devsim/external && tar xzf boost_1_66_0.tar.gz)
 
 
 # this script assumes git clone and submodule initialization has been done
-#cd devsim
+cd devsim
 
 # SuperLU
 #(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)

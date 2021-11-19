@@ -24,6 +24,10 @@ ${HOME}/anaconda/bin/conda install -y --name python3_devsim_build mkl mkl-devel 
 fi
 source ${HOME}/anaconda/bin/activate python3_devsim_build
 
+export PYTHON3_BIN=python
+export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_ARCHIVE=""
+
 #download boost library
 #(cd ${HOME}/devsim/external && curl -O -L https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz)
 #(cd ${HOME}/devsim/external && tar xzf boost_1_66_0.tar.gz)
