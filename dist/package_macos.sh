@@ -77,6 +77,7 @@ do
 echo install_name_tool -change $j "@loader_path/`basename $j`" $i
 install_name_tool -change $j "@loader_path/`basename $j`" $i
 done
+done
 
 # MKL is now versioned
 #for i in ${DIST_PYDLL}/devsim_py*.so
@@ -84,7 +85,6 @@ done
 #cp -vf "${CONDA_PREFIX}/lib/libmkl_rt.1.dylib" ${DIST_PYDLL}
 #echo install_name_tool -change "@rpath/libmkl_rt.1.dylib" "@loader_path/libmkl_rt.1.dylib" ${DIST_PYDLL}/
 #install_name_tool -change "@rpath/libmkl_rt.1.dylib" "@loader_path/libmkl_rt.1.dylib" ${DIST_PYDLL}/
-#done
 #done
 
 
@@ -96,7 +96,6 @@ done
 #cp -vf $j ${DIST_LIB}/gcc
 #echo install_name_tool -change $j "@executable_path/../lib/gcc/`basename $j`" $i
 #install_name_tool -change $j "@executable_path/../lib/gcc/`basename $j`" $i
-#done
 #done
 
 fi
