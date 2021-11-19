@@ -13,6 +13,8 @@ for TYPE in debug release; do
       -DDEVSIM_EXTENDED_PRECISION=ON \
       -DMKL_PARDISO=ON \
       -DPYTHON3=ON \
+      -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
+      -DCONDA_PREFIX=${CONDA_PREFIX} \
       ..)
   done
 done
