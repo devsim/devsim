@@ -1,10 +1,5 @@
 # Any copyright is dedicated to the Public Domain.
 # http://creativecommons.org/publicdomain/zero/1.0/
-TCL_BIN="/usr/bin/tclsh8.5"
-
-PYTHON3_ARCHIVE="/usr/lib/x86_64-linux-gnu/libpython3.6m.so"
-PYTHON3_INCLUDE="/usr/include/python3.6m"
-PYTHON3_BIN="/usr/bin/python3"
 for TYPE in debug release; do
 ARCH=`uname -m`
 #  for ARCH in i386 x86_64; do

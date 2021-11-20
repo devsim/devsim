@@ -6,6 +6,9 @@ export CMAKE_CXX_FLAGS=""
 export CC="/usr/bin/gcc"
 export CXX="/usr/bin/g++"
 export F77="/usr/bin/gfortran"
+export PYTHON3_BIN=python
+export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_ARCHIVE=""
 
 #download boost library
 #(cd ${HOME}/devsim/external && curl -O -L https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz)

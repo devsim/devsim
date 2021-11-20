@@ -10,9 +10,13 @@ The ``rampbias`` function in the ``devsim.python_packages.ramp`` module has been
 
 #### Transient Simulation
 
-Fixed bug with ``transient_tr`` (trapezoidal) time integration method.
+Fixed bug with ``transient_tr`` (trapezoidal) time integration method where the wrong sign was used to integrate previous time steps.
 
 Added ``testing/transient_rc.py`` test which compares simulation with analytic result for RC circuit.
+
+#### Verbosity
+
+During the ``solve``, circuit node and circuit solution information is no longer printed to the screen for the default verbosity level.  In addition, the number of equations per device and region is no longer displayed at the start of the first iteration.
 
 ### Version 1.6.0
 
