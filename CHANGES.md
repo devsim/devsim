@@ -8,6 +8,12 @@ The Intel Math Kernel Library now uses versioned library names.  Binary releases
 
 The ``rampbias`` function in the ``devsim.python_packages.ramp`` module has been fixed to properly reduce the bias when there is a convergence failure.
 
+#### Transient Simulation
+
+Fixed bug with ``transient_tr`` (trapezoidal) time integration method.
+
+Added ``testing/transient_rc.py`` test which compares simulation with analytic result for RC circuit.
+
 ### Version 1.6.0
 
 #### Array Type Input and Output
