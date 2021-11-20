@@ -14,6 +14,7 @@
 
 import devsim
 import math
+from collections import defaultdict
 
 class RCCircuit:
     def __init__(self):
@@ -46,13 +47,17 @@ class RCCircuit:
 def bdf1(tstep):
     devsim.solve(type="transient_bdf1", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=tstep, charge_error=1e-2)
 
+def bdf1twice(tstep):
+    bdf1(0.5*tstep)
+    bdf1(0.5*tstep)
+
 def tr(tstep):
     devsim.solve(type="transient_tr", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=tstep, charge_error=1e-2)
 
 def trbdf(tstep):
     gamma = 2 - math.sqrt(2.0)
-    devsim.solve(type="transient_tr",   absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=1e-3, gamma=gamma, charge_error=1e-2)
-    devsim.solve(type="transient_bdf2", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=1e-3, gamma=gamma, charge_error=1e-2)
+    devsim.solve(type="transient_tr",   absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=tstep, gamma=gamma, charge_error=1e-2)
+    devsim.solve(type="transient_bdf2", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=tstep, gamma=gamma, charge_error=1e-2)
 
 def run_simulation(circuit, tstep, tsolve1, tsolve2):
     circuit.set_circuit_voltage(1.0)
@@ -63,7 +68,6 @@ def run_simulation(circuit, tstep, tsolve1, tsolve2):
 
     vals = []
 
-    tstep = 0.01
     for i in range(10):
         if (i == 0):
             tsolve1(tstep)
@@ -76,7 +80,6 @@ def run_simulation(circuit, tstep, tsolve1, tsolve2):
         vprev = vnew
     return vals
 
-results = {}
 circuit = RCCircuit()
 circuit.V=1.0
 circuit.R=5
@@ -84,19 +87,22 @@ circuit.C=5
 
 circuit.create_circuit()
 
+results = defaultdict(list)
+for tstep in (0.1, 0.01, 0.001, 0.0001):
+    print("BDF1 Method")
+    results['bdf1'].append((tstep, run_simulation(circuit=circuit, tstep=tstep, tsolve1=bdf1twice, tsolve2=bdf1)))
 
-print("BDF1 Method")
-results['bdf1'] = run_simulation(circuit=circuit, tstep=0.001, tsolve1=bdf1, tsolve2=bdf1)
+    print("TR Method")
+    # the initial timestep should be bdf1 because of the large step in the bias voltage
+    results['tr'].append((tstep, run_simulation(circuit=circuit, tstep=tstep, tsolve1=bdf1twice, tsolve2=tr)))
 
-print("TR Method")
-results['tr'] = run_simulation(circuit=circuit, tstep=0.001, tsolve1=bdf1, tsolve2=tr)
+    print("TRBDF Method")
+    results['trbdf'].append((tstep, run_simulation(circuit=circuit, tstep=tstep, tsolve1=bdf1twice, tsolve2=trbdf)))
 
-print("TRBDF Method")
-results['trbdf'] = run_simulation(circuit=circuit, tstep=0.001, tsolve1=bdf1, tsolve2=trbdf)
-
-for k, vals in results.items():
-    print(k)
-    for i in vals:
-        print("%1.5g %1.5g %1.5g %1.5g %1.5g %1.5g" % i)
-    print()
+for k, datasets in results.items():
+    for tstep, vals in datasets:
+        print("method: %s, tstep: %1.5e" % (k, tstep))
+        for i in vals:
+            print("%1.5e %1.5e %1.5e %1.5e %1.5e %1.5e" % i)
+        print()
 
