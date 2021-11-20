@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from devsim import *
+import test_common
 # basic linear circuit solved by itself
 add_circuit_node(name="n1", variable_update="default")
 add_circuit_node(name="n2", variable_update="default")
@@ -59,8 +60,10 @@ def myassemble(what, timemode):
 
 custom_equation(name="test1", procedure=myassemble)
 solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3)
+test_common.print_circuit_solution()
 
 circuit_alter(name="V1", value=2.0)
 solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3)
+test_common.print_circuit_solution()
 
 

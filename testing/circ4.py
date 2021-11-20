@@ -69,6 +69,7 @@ test_common.SetupCarrierResistorContact(device="MyDevice2", contact="bot", use_c
 for v in (0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10):
     devsim.circuit_alter(name="V1", value=v)
     devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-9, maximum_iterations=30)
+    test_common.print_circuit_solution()
     for device in devices:
         test_common.printResistorCurrent(device=device, contact="top")
         test_common.printResistorCurrent(device=device, contact="bot")

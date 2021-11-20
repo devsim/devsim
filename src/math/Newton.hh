@@ -208,7 +208,7 @@ class Newton {
         void PrintNumberEquations(size_t, ObjectHolderMap_t *);
         void PrintIteration(size_t, ObjectHolderMap_t *);
 
-        size_t NumberEquationsAndSetDimension(bool);
+        size_t NumberEquationsAndSetDimension();
 
         void BackupSolutions();
         void RestoreSolutions();

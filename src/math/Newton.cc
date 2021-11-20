@@ -95,9 +95,17 @@ template <typename DoubleType>
 Newton<DoubleType>::~Newton() {};
 
 template <typename DoubleType>
-size_t Newton<DoubleType>::NumberEquationsAndSetDimension(bool verbose)
+size_t Newton<DoubleType>::NumberEquationsAndSetDimension()
 {
   GlobalData &gdata = GlobalData::GetInstance();
+
+  bool verbose = false;
+  {
+    auto dbent = gdata.GetDBEntryOnGlobal("debug_level");
+    verbose = OutputStream::GetVerbosity(dbent.second.GetString()) != OutputStream::Verbosity_t::V0;
+  }
+
+
   size_t eqnnum = 0;
 
   dimension = 0;
@@ -153,7 +161,7 @@ size_t Newton<DoubleType>::NumberEquationsAndSetDimension(bool verbose)
       if (verbose)
       {
         std::ostringstream os;
-        os << "Circuit " << " has equations " << eqnnum << ":" << maxnum << "\n";
+        os << "Circuit has equations " << eqnnum << ":" << maxnum << "\n";
         OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       }
 #endif
@@ -654,7 +662,7 @@ void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, Objec
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
 
-  const size_t numeqns = NumberEquationsAndSetDimension(false);
+  const size_t numeqns = NumberEquationsAndSetDimension();
 
   if (nk.HaveNodes())
   {
@@ -751,7 +759,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
 
-  const size_t numeqns = NumberEquationsAndSetDimension(true);
+  const size_t numeqns = NumberEquationsAndSetDimension();
 
   if (nk.HaveNodes())
   {
@@ -955,7 +963,11 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 
     if (nk.HaveNodes())
     {
-      nk.PrintSolution("dcop");
+      auto dbent = gdata.GetDBEntryOnGlobal("debug_level");
+      if (OutputStream::GetVerbosity(dbent.second.GetString()) != OutputStream::Verbosity_t::V0)
+      {
+        nk.PrintSolution("dcop");
+      }
     }
 
     if (timeinfo.IsTransient())
@@ -1266,7 +1278,7 @@ bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleTyp
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
 
-  const size_t numeqns = NumberEquationsAndSetDimension(true);
+  const size_t numeqns = NumberEquationsAndSetDimension();
 
   if (nk.HaveNodes())
   {
@@ -1330,41 +1342,16 @@ bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleTyp
       std::ostringstream os;
       os << "AC Iteration:\n";
       os << "number of equations " << numeqns << "\n";
-      //// TODO: more meaningful reporting
-#if 0
-        GlobalData::DeviceList_t::const_iterator dit  = dlist.begin();
-        GlobalData::DeviceList_t::const_iterator dend = dlist.end();
-        for ( ; dit != dend; ++dit)
-        {
-            std::string name = (dit->first);
-            Device *dev =      (dit->second);
-            const DoubleType devrerr = dev->GetRelError();
-            const DoubleType devaerr = dev->GetAbsError();
-            os << "\tDevice: \"" << name << "\""
-                << std::scientific << std::setprecision(5) <<
-                         "\tRelError: " << devrerr <<
-                         "\tAbsError: " << devaerr << "\n";
-
-        }
-
-        if (nk.HaveNodes())
-        {
-            const DoubleType cirrerr = nk.GetRelError("ssac_real");
-            const DoubleType ciraerr = nk.GetAbsError("ssac_real");
-            os << "  Circuit: "
-                << std::scientific << std::setprecision(5) <<
-                         "\tRelError: " << cirrerr <<
-                         "\tAbsError: " << ciraerr << "\n";
-        }
-#endif
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
 
-
-    //// ultimately we need to make this a getter
     if (nk.HaveNodes())
     {
-      nk.ACPrintSolution("ssac_real", "ssac_imag");
+      auto dbent = gdata.GetDBEntryOnGlobal("debug_level");
+      if (OutputStream::GetVerbosity(dbent.second.GetString()) != OutputStream::Verbosity_t::V0)
+      {
+        nk.ACPrintSolution("ssac_real", "ssac_imag");
+      }
     }
   } while (0);
 
@@ -1376,7 +1363,7 @@ bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver
 {
 
   NodeKeeper &nk = NodeKeeper::instance();
-  const size_t numeqns = NumberEquationsAndSetDimension(true);
+  const size_t numeqns = NumberEquationsAndSetDimension();
 
   size_t outputeqnnum = size_t(-1);
 

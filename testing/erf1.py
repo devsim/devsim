@@ -23,9 +23,11 @@ devsim.circuit_element(name="R1", n1=1,        n2="cnode1", value=5.0)
 devsim.circuit_element(name="R2", n1="cnode1", n2=0,        value=5.0)
 
 devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3)
+test_common.print_circuit_solution()
 
 devsim.circuit_alter(name="V1", value=2.0)
 devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=30)
+test_common.print_circuit_solution()
 
 test_common.CreateSimpleMesh(device, region)
 

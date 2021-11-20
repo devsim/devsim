@@ -347,11 +347,6 @@ void NodeKeeper::UpdateSolution(const std::string &key, const Solution &rhs)
         }
         else if (ut == CircuitUpdateType::POSITIVE)
         {
-#if 0
-            std::ostringstream os;
-            os << upd << "\t" << oval << std::endl;
-            OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
-#endif
             while ((upd + oval) <=  0.0)
             {
                 upd /= 2.0;
@@ -363,13 +358,6 @@ void NodeKeeper::UpdateSolution(const std::string &key, const Solution &rhs)
         }
 
         const double nval = upd + oval;
-#if 0
-        const std::string &nodename = it->first;
-        std::ostringstream os;
-        os << "Setting " << nodename << " = " << nval << std::endl;
-        os << " old " << oval << " upd " << upd << " new " << nval << std::endl;
-        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
-#endif
         sol->operator[](cind) = nval;
 
         const double n1 = std::abs(upd);
@@ -411,20 +399,12 @@ void NodeKeeper::ACUpdateSolution(const std::string &rkey, const std::string &ik
         const size_t       cind     = cn.GetNumber();
         const size_t       eqrow    = cind + minEquationNumber;
 
-        /// Assume the equations are numbered in order
-        //const double roval = rsol->operator[](cind);
-        //const double ioval = isol->operator[](cind);
-
-        //std::complex<double> oval = std::complex<double>(roval, ioval);
-
         std::complex<double> upd = rhs[eqrow];
 
-#if 1
         const std::string &nodename = it->first;
         std::ostringstream os;
         os << "Setting " << nodename << " = " << upd << std::endl;
-        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
-#endif
+        OutputStream::WriteOut(OutputStream::OutputType::VERBOSE1, os.str());
 
         rsol->operator[](cind) = upd.real();
         isol->operator[](cind) = upd.imag();
@@ -451,7 +431,6 @@ void NodeKeeper::CopySolution(const std::string &from, const std::string &to)
 
 void NodeKeeper::PrintSolution(const std::string &sn)
 {
-    //// TODO: Need to make this better
     Solution *sol = Sol_[sn];
     dsAssert(sol != NULL, "CIRCUIT_UNEXPECTED");
 

@@ -14,6 +14,22 @@
 
 import devsim
 
+def print_ac_circuit_solution():
+    print('Circuit AC Solution')
+    nodes = devsim.get_circuit_node_list()
+    for node in devsim.get_circuit_node_list():
+        r = devsim.get_circuit_node_value(solution='ssac_real', node=node)
+        i = devsim.get_circuit_node_value(solution='ssac_imag', node=node)
+        print("%s\t%1.15e\t%1.15e" % (node, r , i))
+
+def print_circuit_solution():
+    print('Circuit Solution')
+    nodes = devsim.get_circuit_node_list()
+    for node in devsim.get_circuit_node_list():
+        r = devsim.get_circuit_node_value(solution='dcop', node=node)
+        print("%s\t%1.15e" % (node, r))
+
+
 def printResistorCurrent(device, contact):
     ecurr=devsim.get_contact_current(device=device, contact=contact, equation="ElectronContinuityEquation")
     hcurr=0.0

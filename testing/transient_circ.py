@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import devsim
+import test_common
 
 # ssac circuit only
 devsim.circuit_element(name="V1", n1=1, n2=0, value=1.0, acreal=1.0)
@@ -22,12 +23,19 @@ devsim.circuit_element(name="C1", n1=2, n2=0, value=5)
 
 print("transient_dc")
 devsim.solve(type="transient_dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3)
+test_common.print_circuit_solution()
+
 devsim.circuit_alter(name="V1", value=0.0)
 
 print("transient_bdf1")
 devsim.solve(type="transient_bdf1", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=1e-3, charge_error=1e-2)
+test_common.print_circuit_solution()
 devsim.solve(type="transient_bdf1", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=1e-3, charge_error=1e-2)
+test_common.print_circuit_solution()
 devsim.solve(type="transient_bdf1", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=1e-3, charge_error=1e-2)
+test_common.print_circuit_solution()
 devsim.solve(type="transient_bdf1", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=1e-3, charge_error=1e-2)
+test_common.print_circuit_solution()
 devsim.solve(type="transient_bdf1", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=1e-3, charge_error=1e-2)
+test_common.print_circuit_solution()
 
