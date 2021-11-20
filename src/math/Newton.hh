@@ -142,7 +142,7 @@ struct TR : public TimeParams<DoubleType>
     a0 = tf;
     a1 = -tf;
     b0 = 1.0;
-    b1 = -1.0;
+    b1 = 1.0;
   }
   using TimeParams<DoubleType>::tdelta;
   using TimeParams<DoubleType>::a0;
