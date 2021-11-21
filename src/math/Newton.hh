@@ -189,6 +189,14 @@ class Newton {
         {
             maxiter = x;
         }
+        void SetMaxDiv(size_t x)
+        {
+            maxDivergenceCount = x;
+        }
+        void SetMaxAbsError(DoubleType x)
+        {
+            maxLimit = x;
+        }
     protected:
         template <typename T>
         void LoadIntoMatrix(const RealRowColValueVec<DoubleType> &rcv, Matrix<DoubleType> &matrix, T scl = 1.0, size_t offset = 0);
@@ -229,22 +237,25 @@ class Newton {
 
         void AssembleTclEquations(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        static const size_t DefaultMaxIter;
-        static const DoubleType DefaultAbsError;
-        static const DoubleType DefaultRelError;
-        static const DoubleType DefaultQRelError;
+        static constexpr DoubleType rhssign = static_cast<DoubleType>(-1.0);
+        static constexpr size_t DefaultMaxIter = 0;
+        static constexpr DoubleType DefaultAbsError = 0.0;
+        static constexpr DoubleType DefaultRelError = 0.0;
+        static constexpr DoubleType DefaultMaxAbsError = 0.0;
+        static constexpr DoubleType DefaultQRelError = 0.0;
 
         Newton(const Newton &);
 
         size_t maxiter; /// The maximum number of iterations
+        size_t maxDivergenceCount;
         DoubleType absLimit;  /// The calculated abs error (maybe come on per device or per region basis)
         DoubleType relLimit;  /// The calculated rel error
+        DoubleType maxLimit; // The maximum absolute error before solver failure
         DoubleType qrelLimit;
 
 
         size_t dimension;
 
-        static const DoubleType rhssign;
 };
 }
 #endif

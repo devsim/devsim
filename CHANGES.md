@@ -14,9 +14,16 @@ Fixed bug with ``transient_tr`` (trapezoidal) time integration method where the 
 
 Added ``testing/transient_rc.py`` test which compares simulation with analytic result for RC circuit.
 
-#### Verbosity
+#### Solver
+
+##### Convergence Tests
+
+The ``maximum_error`` and ``maximum_divergence`` options where added to the ``solve`` command.  If the absolute error of any iteration goes above ``maximum_error``, the simulation stops with a convergence failure.  The ``maximum_divergence`` is the maximum number of iterations that the simulator error may increase before stopping.
+
+##### Verbosity
 
 During the ``solve``, circuit node and circuit solution information is no longer printed to the screen for the default verbosity level.  In addition, the number of equations per device and region is no longer displayed at the start of the first iteration.
+
 
 ### Version 1.6.0
 

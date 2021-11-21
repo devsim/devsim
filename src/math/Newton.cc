@@ -56,40 +56,8 @@ using std::abs;
 
 namespace dsMath {
 
-template <>
-const double Newton<double>::rhssign = -1.0;
-
-template <>
-const size_t Newton<double>::DefaultMaxIter = 20;
-
-template <>
-const double Newton<double>::DefaultAbsError  = 0.0;
-
-template <>
-const double Newton<double>::DefaultRelError  = 0.0;
-
-template <>
-const double Newton<double>::DefaultQRelError = 0.0;
-
-#ifdef DEVSIM_EXTENDED_PRECISION
-template <>
-const float128 Newton<float128>::rhssign = -1.0;
-
-template <>
-const size_t Newton<float128>::DefaultMaxIter = 20;
-
-template <>
-const float128 Newton<float128>::DefaultAbsError  = 0.0;
-
-template <>
-const float128 Newton<float128>::DefaultRelError  = 0.0;
-
-template <>
-const float128 Newton<float128>::DefaultQRelError = 0.0;
-#endif
-
 template <typename DoubleType>
-Newton<DoubleType>::Newton() : maxiter(DefaultMaxIter), absLimit(DefaultAbsError), relLimit(DefaultRelError), qrelLimit(DefaultQRelError), dimension(0) {}
+Newton<DoubleType>::Newton() : maxiter(DefaultMaxIter), absLimit(DefaultAbsError), relLimit(DefaultRelError), maxLimit(DefaultMaxAbsError), qrelLimit(DefaultQRelError), dimension(0) {}
 
 template <typename DoubleType>
 Newton<DoubleType>::~Newton() {};
@@ -803,13 +771,19 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
   LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::PERMUTATIONSONLY, dsMathEnum::TimeMode::DC, static_cast<DoubleType>(1.0));
 
   size_t divergence_count = 0;
+  bool   max_error_hit = false;
   DoubleType last_rel_err = 0.0;
   DoubleType last_abs_err = 0.0;
 
   ObjectHolderList_t iteration_list;
 
-  for (size_t iter = 0; (iter < maxiter) && (!converged) && (divergence_count < 20); ++iter)
+  for (size_t iter = 0; (iter < maxiter) && (!converged) && (divergence_count < maxDivergenceCount); ++iter)
   {
+    if (max_error_hit)
+    {
+      break;
+    }
+
     ObjectHolderMap_t iteration_map;
     ObjectHolderMap_t *p_iteration_map = nullptr;
     if (ohm)
@@ -908,6 +882,8 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
         last_abs_err = devaerr;
 
         converged = converged && (devrerr < relLimit) && (devaerr < absLimit);
+
+        max_error_hit = max_error_hit || (devaerr > maxLimit);
       }
       if (p_iteration_map)
       {
@@ -920,6 +896,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
         const DoubleType ciraerr = nk.GetAbsError("dcop");
         PrintCircuitErrors(p_iteration_map);
         converged = converged && (cirrerr < relLimit) && (ciraerr < absLimit);
+        max_error_hit = max_error_hit || (ciraerr > maxLimit);
       }
     }
 
