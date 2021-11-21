@@ -24,6 +24,15 @@ The ``maximum_error`` and ``maximum_divergence`` options where added to the ``so
 
 During the ``solve``, circuit node and circuit solution information is no longer printed to the screen for the default verbosity level.  In addition, the number of equations per device and region is no longer displayed at the start of the first iteration.
 
+##### SuperLU
+
+The code now supports newer versions of ``SuperLU``.  The release version is still using SuperLU 4.3 for the iterative solution method, and the Intel MKL Pardiso for the direct solve method.
+
+#### Build Scripts
+
+The build scripts have been updated on all platforms to be less dependent on specific Python 3 versions.
+
+An updated fedora build script has been added.  It uses the system installed ``SuperLU`` as the direct solver.
 
 ### Version 1.6.0
 
