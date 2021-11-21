@@ -1140,14 +1140,14 @@ bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<
 
   TimeData<DoubleType> &tinst = TimeData<DoubleType>::GetInstance();
 
-  tinst.AssembleI(TimePoint_t::TM0, timeinfo.tdelta, projectQ);
+  tinst.AssembleI(TimePoint_t::TM0, - timeinfo.tdelta, projectQ);
   tinst.AssembleQ(TimePoint_t::TM0, 1.0,    projectQ);
 
   DoubleType qrel = 0.0;
   for (size_t i = 0; i < numeqns; ++i)
   {
-    const DoubleType qproj = projectQ[i];
-    const DoubleType qnew  = newQ[i];
+    const DoubleType &qproj = projectQ[i];
+    const DoubleType &qnew  = newQ[i];
     if (qnew != 0.0)
     {
       const DoubleType qr = abs(qnew - qproj)/(1.0e-20 + abs(qnew) + abs(qproj));

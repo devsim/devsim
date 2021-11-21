@@ -12,6 +12,8 @@ The ``rampbias`` function in the ``devsim.python_packages.ramp`` module has been
 
 Fixed bug with ``transient_tr`` (trapezoidal) time integration method where the wrong sign was used to integrate previous time steps.
 
+Fixed bug in the charge error calculation, which calculates the simulation result with that a forward difference projection.
+
 Added ``testing/transient_rc.py`` test which compares simulation with analytic result for RC circuit.
 
 #### Solver
