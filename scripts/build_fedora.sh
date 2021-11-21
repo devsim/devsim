@@ -12,9 +12,17 @@ if [[ ${EUID} -ne 0 ]]; then
 fi
 ${SUDO} dnf install -y git bison flex tcl tcl-devel cmake3 gcc gcc-c++ libquadmath-devel \
      gcc-gfortran bzip2 boost boost-devel cgnslib cgnslib-devel \
-     sqlite-devel python2-devel python3-devel blas-devel lapack-devel SuperLU SuperLU-devel\
-     make
+     sqlite-devel python3-devel blas-devel lapack-devel SuperLU SuperLU-devel \
+     make rsync
 
+export CMAKE="cmake"
+export CMAKE_CXX_FLAGS=""
+export CC=gcc
+export CXX=g++
+export F77=gfortran
+export PYTHON3_BIN=python3
+export PYTHON3_INCLUDE=$(python3 -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_ARCHIVE=""
 
 git submodule init &&
 git submodule update
