@@ -4,7 +4,7 @@
 
 ### Versioned MKL DLL in release build
 
-The Intel Math Kernel Library now uses versioned library names.  Binary releases are now updated to against the latest versioned dll names from MKL available in the Anaconda Python distribution.
+The Intel Math Kernel Library now uses versioned library names.  Binary releases are now updated against the latest versioned dll names from MKL available in the Anaconda Python distribution.
 
 ### Fixed issue in ramp function.
 
