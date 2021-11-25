@@ -29,6 +29,6 @@ A unique feature of the software is its scripting model interface.  It symbolica
 
 While `DEVSIM` has limited capabilities for the creation of 1-D and 2-D meshes, the Python interface allows the import of mesh structures from any format using a triangular representation (in 2-D) or a tetrahedral representation (in 3-D).  This makes it possible for the user to utilize high quality open source meshing solutions [@Gmsh:2009; @tetgen].
 
-This software framework has been utilized to investigate device behavior in ferroelectric transistors [@chen:pssa].  The open source nature of `DEVSIM` has made it possible for researchers to incorporate its functionality into their own solution frameworks [@hulbert:thesis; @hulbert:software].
+This software framework has been utilized to investigate device behavior in ferroelectric transistors [@chen:pssa].  The open source nature of `DEVSIM` has made it possible for researchers to incorporate its functionality into their own solution frameworks [@hulbert:thesis; @hulbert:software].  In addition, the simulator has been successful in simulating deep level transient spectra, beyond the measurement detection limit [@Lauwaert_2021].
 
 # References

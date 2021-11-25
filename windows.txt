@@ -21,7 +21,6 @@ conda install mkl numpy
 Microsoft Visual C++ Redistributable for Visual Studio 2019
 https://www.visualstudio.com/downloads
 
-x86 (32 bit): https://aka.ms/vs/16/release/VC_redist.x86.exe
 x64 (64 bit): https://aka.ms/vs/16/release/VC_redist.x64.exe
 
 Setting paths:
@@ -32,5 +31,5 @@ The module can then be run by importing the devsim module from your python scrip
 
 Issues:
 If you have problems running the software, please report an issue at:
-https://groups.google.com/forum/#!forum/devsim
+https://forum.devsim.org
 

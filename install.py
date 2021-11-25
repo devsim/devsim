@@ -23,9 +23,9 @@ class DevsimCheck:
     def find_mkl(self):
         mkl_found = {}
         DLL_NAMES = {
-            'Darwin' : {'mkl' : 'libmkl_rt.dylib'},
-            'Linux' : {'mkl' : 'libmkl_rt.so'},
-            'Windows' : {'mkl' : 'mkl_rt.dll'},
+            'Darwin' : {'mkl' : 'libmkl_rt.1.dylib'},
+            'Linux' : {'mkl' : 'libmkl_rt.so.1'},
+            'Windows' : {'mkl' : 'mkl_rt.1.dll'},
         }
         mkl_found['mkl_loaded'] = False 
         try:
@@ -36,9 +36,13 @@ INFO: Intel MKL %s loaded successfully
 ''' % DLL_NAMES[self.osname]['mkl'])
         except:
             print('''
-WARNING: Intel MKL could not be dynamically loaded.
-WARNING: If you are using Anaconda/Miniconda, please issue this command:
-WARNING: conda install numpy mkl''')
+ERROR: Intel MKL %s could not be dynamically loaded.
+ERROR: If you are using Anaconda/Miniconda, please issue this command:
+ERROR: conda install numpy mkl
+ERROR:
+ERROR: Please note that the MKL shared library is now versioned, so please ensure
+ERROR: The exact file name is available in your installation.
+''' % (DLL_NAMES[self.osname]['mkl'],))
 
 
         mkl_found['has_conda_mkl'] = False
@@ -48,9 +52,9 @@ WARNING: conda install numpy mkl''')
             else:
                 cpath = os.path.join(self.conda['CONDA_PREFIX'], 'lib', DLL_NAMES[self.osname]['mkl'])
             if not os.path.exists(cpath):
-                print('''WARNING: %s not found in CONDA_PREFIX''' % DLL_NAMES[self.osname]['mkl'])
+                print('''ERROR: %s not found in CONDA_PREFIX''' % DLL_NAMES[self.osname]['mkl'])
                 if mkl_found['mkl_loaded']:
-                    print('''WARNING: This could mean that the Intel MKL may be loaded from somewhere else on your system.
+                    print('''ERROR: This could mean that the Intel MKL may be loaded from somewhere else on your system.
 ''')
                 mkl_found['has_conda_mkl'] = False
             else:
@@ -68,10 +72,10 @@ INFO: Visual Studio 2019 C++ Redistributable loaded successfully
 ''' % DLL_NAMES[self.osname]['mkl'])
         except:
             print('''
-WARNING: Visual Studio 2019 C++ redistributable could not be loaded. 
-WARNING: Please download and install from here:
-WARNING: https://visualstudio.microsoft.com/downloads/
-WARNING: https://aka.ms/vs/16/release/VC_redist.x64.exe
+ERROR: Visual Studio 2019 C++ redistributable could not be loaded. 
+ERROR: Please download and install from here:
+ERROR: https://visualstudio.microsoft.com/downloads/
+ERROR: https://aka.ms/vs/16/release/VC_redist.x64.exe
 ''')
         return vcruntime_found
 
@@ -158,6 +162,8 @@ if __name__ == "__main__":
     dc = DevsimCheck()
     if not dc.conda['is_conda']:
         raise RuntimeError("Currently installation from a conda environment is the only one supported")
+    if not dc.mkl['has_conda_mkl']:
+        raise RuntimeError("ERROR MKL NOT FOUND")
     dc.install_link()
 
 

@@ -35,5 +35,5 @@ The module can then be run by importing the devsim module from your python scrip
 
 Issues:
 If you have problems running the software, please report an issue at:
-https://groups.google.com/forum/#!forum/devsim
+https://forum.devsim.org
 

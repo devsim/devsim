@@ -18,8 +18,6 @@ It is necessary to install these packages into your conda environment:
 conda install mkl numpy
 
 Setting paths:
-csh:
-  setenv PYTHONPATH /path/to/devsim/lib
 
 bash:
   export PYTHONPATH=/path/to/devsim/lib
@@ -29,5 +27,5 @@ The module can then be run by importing the devsim module from your python scrip
 
 Issues:
 If you have problems running the software, please report an issue at:
-https://groups.google.com/forum/#!forum/devsim
+https://forum.devsim.org
 
