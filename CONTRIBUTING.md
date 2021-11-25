@@ -16,7 +16,7 @@ TCAD simulation is a broad topic utilizing skills in:
 * Testing
 
 If you would like to participate in this project, please join our email forum:
-https://groups.google.com/d/forum/devsim
+https://forum.devsim.org
 and let us know how you would like to help.
 
 

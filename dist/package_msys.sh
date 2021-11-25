@@ -43,7 +43,7 @@ mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
 cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
 
-for i in INSTALL NOTICE LICENSE RELEASE windows.txt README README.md CHANGES.md install.py; do
+for i in INSTALL.md NOTICE LICENSE windows.txt README.md CHANGES.md install.py; do
 cp ../$i ${DIST_DIR}
 done
 
