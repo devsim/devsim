@@ -1,3 +1,4 @@
+ADD_COMPILE_OPTIONS(-Wall)
 SET (FLEX flex)
 SET (BISON bison)
 

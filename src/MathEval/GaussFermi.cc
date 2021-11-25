@@ -134,9 +134,6 @@ T gfi(T zeta, T s)
 template <typename T>
 T dgfidx(T zeta, T s)
 {
-    const T &sqrt2 = MC<T>::sqrt2;
-    const T &sqrt2_pi = MC<T>::sqrt2_pi;
-
     const T S = s * s;
 
     T H = calcH(s, S);

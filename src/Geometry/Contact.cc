@@ -44,7 +44,7 @@ template <typename T> void deleteMapPointers(std::map<std::string, T *> &x)
 }
 
 Contact::Contact(const std::string &nm, RegionPtr r, const ConstNodeList_t &cnv, const std::string &mname)
-    : name(nm), region(r), contactnodes(cnv), materialName(mname)
+    : name(nm), materialName(mname), region(r), contactnodes(cnv)
 {
 }
 

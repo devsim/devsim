@@ -253,6 +253,7 @@ void TetrahedronElementField<DoubleType>::GetFieldPairs(const Tetrahedron &tetra
       }
       else
       {
+        nei = 0;
         dsAssert(false, "UNEXPECTED");
       }
 

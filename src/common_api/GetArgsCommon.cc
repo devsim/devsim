@@ -121,21 +121,6 @@ void alreadySpecified(const std::string &command, const std::string &arg, const 
   os << " with value " << val.GetString() << " as an option" << "\n";
   error = os.str();
 }
-#if 0
-void alreadySpecified(const std::string &command, const std::string &arg, const double val, std::string &error)
-{
-  std::ostringstream os;
-  os << command << " already passed option " << arg << " with value " << val << " as an option" << "\n";
-  error = os.str();
-}
-#endif
-
-void notSpecified(const std::string &command, const std::string &arg, std::string &error)
-{
-  std::ostringstream os;
-  os << command << " does not specify a value for option " << arg << "\n";
-  error = os.str();
-}
 
 void notConvertibleToType(const std::string &command, const std::string &arg, optionType ot, const ObjectHolder &val, std::string &error)
 {

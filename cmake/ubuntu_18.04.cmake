@@ -1,5 +1,5 @@
-# Ubuntu 12.04 32/64 bit
-ADD_DEFINITIONS(-pthread -fvisibility=hidden)
+ADD_DEFINITIONS(-fvisibility=hidden)
+ADD_COMPILE_OPTIONS(-Wall)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
@@ -15,7 +15,6 @@ SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
 SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/lib/libsuperlu_4.3.a)
 SET (BOOST_INCLUDE "/usr/include")
 SET (QUADMATH_ARCHIVE "-lquadmath")
-SET (PTHREAD_LIB -lpthread)
 SET (DLOPEN_LIB -ldl)
 SET (SQLITE3_INCLUDE /usr/include)
 

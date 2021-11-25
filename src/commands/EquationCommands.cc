@@ -670,7 +670,6 @@ deleteContactEquationCmd(CommandHandler &data)
     const std::string &contactName          = data.GetStringOption("contact");
 
     Device    *dev = nullptr;
-    Region    *region = nullptr;
     Contact   *contact = nullptr;
     ContactEquationHolder ceqn;
 

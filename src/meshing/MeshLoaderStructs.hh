@@ -817,8 +817,8 @@ class MeshContact {
 
     private:
         std::string               name;
-        std::string               material;
         MeshRegion                region;
+        std::string               material;
         MeshEquationList_t        equationList;
 };
 

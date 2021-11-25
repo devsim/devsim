@@ -386,7 +386,7 @@ void GetArrayInfo(const ObjectHolder &input, std::string &typecode, long &itemsi
 
     ObjectHolder bytecall;
 
-    if (PyObject_HasAttrString(obj, "tobytes"));
+    if (PyObject_HasAttrString(obj, "tobytes"))
     {
       bytecall = ObjectHolder(PyObject_GetAttrString(obj, "tobytes"));
 

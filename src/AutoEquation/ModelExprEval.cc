@@ -384,8 +384,6 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateFunctionType(Eqo::E
 {
   ModelExprData<DoubleType> out;
 
-  const EngineAPI::EqObjType etype = EngineAPI::getEnumeratedType(arg);
-  //
   /// Implement for UserFuncs
   const std::string &nm = EngineAPI::getName(arg);
 

@@ -125,10 +125,6 @@ void InterfaceExprEquation<DoubleType>::Serialize(std::ostream &of) const
 template <typename DoubleType>
 void InterfaceExprEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &omap) const
 {
-  const auto &nm  = InterfaceEquation<DoubleType>::GetName();
-  const auto &nm0 = InterfaceEquation<DoubleType>::GetName0();
-  const auto &nm1 = InterfaceEquation<DoubleType>::GetName1();
-
   omap["device"] = ObjectHolder(InterfaceEquation<DoubleType>::GetInterface().GetDeviceName());
   omap["interface"] = ObjectHolder(InterfaceEquation<DoubleType>::GetInterface().GetName());
   omap["name"]  = ObjectHolder(InterfaceEquation<DoubleType>::GetName());

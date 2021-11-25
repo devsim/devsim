@@ -287,7 +287,6 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
     DoubleType aerr = 0.0;
     DoubleType rerr = 0.0;
     size_t     aerr_node = 0;
-    size_t     rerr_node = 0;
 
     for (size_t i = 0; i < upds.size(); ++i)
     {
@@ -298,7 +297,6 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
           aerr = n1;
           aerr_node = i;
         }
-//      aerr += n1;
 
         const DoubleType n2 = abs(nvals[i]);
 
@@ -307,7 +305,6 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
         if (nrerror > rerr)
         {
             rerr = nrerror;
-            rerr_node = i;
         }
 
     }

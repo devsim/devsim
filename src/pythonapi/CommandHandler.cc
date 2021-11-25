@@ -49,7 +49,6 @@ void CommandHandler::SetEmptyResult()
 
 void CommandHandler::SetErrorResult(const std::string &errorString)
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   return_code_ = 0;
   return_object_.clear();
   error_string_ = errorString;

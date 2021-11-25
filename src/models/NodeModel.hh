@@ -193,12 +193,12 @@ class NodeModel {
         WeakNodeModelPtr myself;
         RegionPtr   myregion;
         ContactPtr  mycontact;
-        mutable ModelDataHolder model_data;
         mutable bool uptodate;
         mutable bool inprocess;
+        DisplayType displayType;
+        mutable ModelDataHolder model_data;
 
         mutable std::vector<size_t> atcontact;
-        DisplayType displayType;
         static const char *DisplayTypeString[];
 };
 

@@ -38,8 +38,6 @@ void DeletePointers()
 
 bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &coordinates, const std::vector<std::string> &physical_names, const std::vector<size_t> &elements, std::string &errorString)
 {
-  bool ret = true;
-
   dsMesh::GmshLoaderPtr gmshLoaderp = new dsMesh::GmshLoader(meshName);
   dsMesh::MeshKeeper &mk = dsMesh::MeshKeeper::GetInstance();
   mk.AddMesh(gmshLoaderp);

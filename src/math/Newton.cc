@@ -627,8 +627,6 @@ template <typename DoubleType>
 void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, ObjectHolderMap_t &ohm)
 {
   NodeKeeper &nk = NodeKeeper::instance();
-  GlobalData &gdata = GlobalData::GetInstance();
-  const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
 
   const size_t numeqns = NumberEquationsAndSetDimension();
 
@@ -850,7 +848,6 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
       ObjectHolderList_t dobjlist;
       for ( ; dit != dend; ++dit)
       {
-        const std::string &name = dit->first;
         const Device &device = *(dit->second);
         const DoubleType devrerr = device.GetRelError<DoubleType>();
         const DoubleType devaerr = device.GetAbsError<DoubleType>();

@@ -276,11 +276,11 @@ getMatrixAndRHSCmdImpl(CommandHandler &data)
 
   if (format == "csc")
   {
-    dsMath::CompressionType ct = dsMath::CompressionType::CCM;
+    ct = dsMath::CompressionType::CCM;
   }
   else if (format == "csr")
   {
-    dsMath::CompressionType ct = dsMath::CompressionType::CRM;
+    ct = dsMath::CompressionType::CRM;
   }
   else if (!format.empty())
   {

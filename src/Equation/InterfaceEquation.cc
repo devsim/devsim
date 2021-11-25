@@ -272,9 +272,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
     const Interface &in = GetInterface();
     const Region &r0 = *in.GetRegion0();
     const Region &r1 = *in.GetRegion1();
-    // get variable list
-    // This typedef should go in region class
-    typedef std::vector<std::string> VariableList_t;
+
     std::vector<std::string> vlist0 = r0.GetVariableList();
     std::vector<std::string> vlist1 = r1.GetVariableList();
 
@@ -478,13 +476,13 @@ void InterfaceEquation<DoubleType>::NodeVolumeType2Assemble(const std::string &i
     const Interface &in = GetInterface();
     const Region &r0 = *in.GetRegion0();
     const Region &r1 = *in.GetRegion1();
-    // get variable list
-    // This typedef should go in region class
-    typedef std::vector<std::string> VariableList_t;
+
     std::vector<std::string> vlist0 = r0.GetVariableList();
     std::vector<std::string> vlist1 = r1.GetVariableList();
 
+#if 0
     const auto &myname  = this->GetName();
+#endif
     const auto &myname0 = this->GetName0();
     const auto &myname1 = this->GetName1();
 
@@ -656,13 +654,10 @@ void InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(const std::string &i
     const Interface &in = GetInterface();
     const Region &r0 = *in.GetRegion0();
     const Region &r1 = *in.GetRegion1();
-    // get variable list
-    // This typedef should go in region class
-    typedef std::vector<std::string> VariableList_t;
+
     std::vector<std::string> vlist0 = r0.GetVariableList();
     std::vector<std::string> vlist1 = r1.GetVariableList();
 
-    const auto &myname  = this->GetName();
     const auto &myname0 = this->GetName0();
     const auto &myname1 = this->GetName1();
 
@@ -797,7 +792,9 @@ void InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(const std::string &i
             const NodeScalarList<DoubleType> &vals = idm->GetScalarValues<DoubleType>();
             dsAssert(vals.size() == nlist.size(), "UNEXPECTED");
 
+#if 0
             const NodeScalarList<DoubleType> &sa0vals = sa0->GetScalarValues<DoubleType>();
+#endif
             const NodeScalarList<DoubleType> &sa1vals = sa1->GetScalarValues<DoubleType>();
 
             for (size_t i = 0; i < nlist.size(); ++i)
@@ -807,14 +804,18 @@ void InterfaceEquation<DoubleType>::NodeVolumeType3Assemble(const std::string &i
                   continue;
                 }
 
+#if 0
                 const Node *node0 = nodes0[i];
+#endif
                 const Node *node1 = nodes1[i];
 
                 const size_t col = reg.GetEquationNumber(eqindex, nlist[i]);
                 dsAssert(col != size_t(-1), "UNEXPECTED");
 
                 // as stated previously, we are assembling into the second region
+#if 0
                 const size_t row0 = r0.GetEquationNumber(eqindex0, node0);
+#endif
                 const size_t row1 = r1.GetEquationNumber(eqindex1, node1);
 
                 const DoubleType rval = vals[i];
