@@ -32,6 +32,10 @@ During the ``solve``, circuit node and circuit solution information is no longer
 
 The code now supports newer versions of ``SuperLU``.  The release version is still using SuperLU 4.3 for the iterative solution method, and the Intel MKL Pardiso for the direct solve method.
 
+#### Simulation Matrix
+
+The ``get_matrix_and_rhs`` command was not properly accepting the ``format`` parameter, and was always returning the same type.
+
 ### Build Scripts
 
 The build scripts have been updated on all platforms to be less dependent on specific Python 3 versions.
