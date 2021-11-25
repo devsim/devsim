@@ -12,6 +12,17 @@ Supported Platforms:
 
 ## Installing the Binary Package
 
+### Prerequisites
+
+#### Windows
+
+This runtime may be necessary to run the software.
+
+*  Microsoft Visual C++ Redistributable for Visual Studio 2019
+   - [https://www.visualstudio.com/downloads](https://www.visualstudio.com/downloads)
+   - [https://aka.ms/vs/16/release/VC_redist.x64.exe](https://aka.ms/vs/16/release/VC_redist.x64.exe)
+
+
 ### Install Anaconda Python
 
 *Please note that most Python 3 environments should work.  The Anaconda distributions are recommended since they provide ready access to the Intel Math Kernel Library (MKL).  If you do not wish to use the Intel MKL, you can build a version of the source code without these dependencies.*
