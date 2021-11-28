@@ -103,62 +103,6 @@ void WriteTetrahedra(std::ostream &myfile, const ConstTetrahedronList &tlist)
     }
 }
 
-#if 0
-void WriteNodeModelHeader(std::ostream &myfile, const Region::NodeModelList_t &nmlist)
-{
-  myfile << "begin_node_models\n";
-  for (Region::NodeModelList_t::const_iterator nit = nmlist.begin(); nit != nmlist.end(); ++nit)
-  {
-    const std::string &name = nit->first;
-    myfile << "\"" << name << "\"\n";
-  }
-  myfile << "end_node_models\n\n";
-}
-
-void WriteEdgeModelHeader(std::ostream &myfile, const Region::EdgeModelList_t &nmlist)
-{
-  myfile << "begin_edge_models\n";
-  for (Region::EdgeModelList_t::const_iterator nit = nmlist.begin(); nit != nmlist.end(); ++nit)
-  {
-    const std::string &name = nit->first;
-    myfile << "\"" << name << "\"\n";
-  }
-  myfile << "end_edge_models\n\n";
-}
-
-void WriteTriangleEdgeModelHeader(std::ostream &myfile, const Region::TriangleEdgeModelList_t &nmlist)
-{
-  if (nmlist.empty())
-  {
-    return;
-  }
-
-  myfile << "begin_triangle_edge_models\n";
-  for (Region::TriangleEdgeModelList_t::const_iterator nit = nmlist.begin(); nit != nmlist.end(); ++nit)
-  {
-    const std::string &name = nit->first;
-    myfile << "\"" << name << "\"\n";
-  }
-  myfile << "end_triangle_edge_models\n\n";
-}
-
-void WriteTetrahedronEdgeModelHeader(std::ostream &myfile, const Region::TetrahedronEdgeModelList_t &nmlist)
-{
-  if (nmlist.empty())
-  {
-    return;
-  }
-
-  myfile << "begin_tetrahedron_edge_models\n";
-  for (Region::TetrahedronEdgeModelList_t::const_iterator nit = nmlist.begin(); nit != nmlist.end(); ++nit)
-  {
-    const std::string &name = nit->first;
-    myfile << "\"" << name << "\"\n";
-  }
-  myfile << "end_tetrahedron_edge_models\n\n";
-}
-#endif
-
 void WriteEquations(std::ostream &myfile, const EquationPtrMap_t &eqlist)
 {
   for (EquationPtrMap_t::const_iterator eit = eqlist.begin(); eit != eqlist.end(); ++eit)
@@ -386,7 +330,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
       const ConstNodeList_t &itnodes1 = iint.GetNodes1();
       dsAssert(itnodes0.size() == itnodes1.size(), "UNEXPECTED");
 
-      if (dimension == 1)
+      if (dimension == 1 || (!iint.ElementsProvided()))
       {
         myfile << "begin_nodes\n";
         for (size_t i = 0; i < itnodes0.size(); ++i)
