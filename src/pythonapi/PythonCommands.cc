@@ -290,6 +290,7 @@ MyNewPyPtr(add_gmsh_contact,              dsCommand::addGmshContactCmd);
 MyNewPyPtr(add_gmsh_interface,            dsCommand::addGmshInterfaceCmd);
 MyNewPyPtr(add_gmsh_region,               dsCommand::addGmshRegionCmd);
 MyNewPyPtr(create_contact_from_interface, dsCommand::createContactFromInterfaceCmd);
+MyNewPyPtr(create_interface_from_nodes,   dsCommand::createInterfaceFromNodesCmd);
 // Circuit Commands
 MyNewPyPtr(add_circuit_node,            dsCommand::addCircuitNodeCmd);
 MyNewPyPtr(circuit_element,             dsCommand::circuitElementCmd);
@@ -407,6 +408,7 @@ MYCOMMAND(add_gmsh_contact,              dsCommand::addGmshContactCmd),
 MYCOMMAND(add_gmsh_interface,            dsCommand::addGmshInterfaceCmd),
 MYCOMMAND(add_gmsh_region,               dsCommand::addGmshRegionCmd),
 MYCOMMAND(create_contact_from_interface, dsCommand::createContactFromInterfaceCmd),
+MYCOMMAND(create_interface_from_nodes,   dsCommand::createInterfaceFromNodesCmd),
 // Circuit Commands
 MYCOMMAND(add_circuit_node,            dsCommand::addCircuitNodeCmd),
 MYCOMMAND(circuit_element,             dsCommand::circuitElementCmd),

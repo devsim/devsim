@@ -888,6 +888,10 @@ R"(    devsim.create_contact_from_interface (device, region, interface, material
        name of the contact begin created
 )";
 
+static const char create_interface_from_nodes_doc[] =
+R"(
+)";
+
 static const char create_device_doc[] =
 R"(    devsim.create_device (mesh, device)
 

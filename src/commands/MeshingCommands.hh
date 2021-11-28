@@ -34,6 +34,7 @@ void addGmshInterfaceCmd(CommandHandler &);
 void addGmshRegionCmd(CommandHandler &);
 void create1dMeshCmd(CommandHandler &);
 void createContactFromInterfaceCmd(CommandHandler &);
+void createInterfaceFromNodesCmd(CommandHandler &);
 void createDeviceCmd(CommandHandler &);
 void createGmshMeshCmd(CommandHandler &);
 void finalizeMeshCmd(CommandHandler &);
