@@ -1,5 +1,4 @@
-ADD_DEFINITIONS(-fvisibility=hidden)
-ADD_COMPILE_OPTIONS(-Wall)
+ADD_COMPILE_OPTIONS(-Wall -fvisibility=hidden)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
 SET (PYTHON27_ARCHIVE "-lpython2.7")

@@ -1,5 +1,4 @@
-ADD_DEFINITIONS(-fvisibility=hidden)
-ADD_COMPILE_OPTIONS(-Wall)
+ADD_COMPILE_OPTIONS(-Wall -fvisibility=hidden)
 
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 
