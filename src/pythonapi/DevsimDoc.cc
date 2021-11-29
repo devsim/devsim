@@ -1910,6 +1910,11 @@ R"(    devsim.get_matrix_and_rhs (format)
        Option for returned matrix format.
 )";
 
+static const char set_initial_condition_doc[] =
+R"(
+)";
+
+
 static const char solve_doc[] =
 R"(    devsim.solve (type, solver_type, absolute_error, relative_error, maximum_error, charge_error, gamma, tdelta, maximum_iterations, maximum_divergence, frequency, output_node, info)
 

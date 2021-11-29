@@ -32,7 +32,10 @@ limitations under the License.
 #include "dsAssert.hh"
 #include "GlobalData.hh"
 #include "CompressedMatrix.hh"
+#include "TimeData.hh"
 #include <sstream>
+#include <array>
+#include <type_traits>
 
 using namespace dsValidate;
 
@@ -437,14 +440,107 @@ getContactCurrentCmd(CommandHandler &data)
     return;
 }
 
+void
+setInitialConditionCmd(CommandHandler &data)
+{
+  std::string errorString;
+
+  const std::string commandName = data.GetCommandName();
+
+  static dsGetArgs::Option option[] =
+  {
+    {"static_rhs",    "", dsGetArgs::optionType::LIST,   dsGetArgs::requiredType::REQUIRED, nullptr},
+    {"dynamic_rhs",    "", dsGetArgs::optionType::LIST,   dsGetArgs::requiredType::REQUIRED, nullptr},
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+  };
+
+  dsGetArgs::switchList switches = nullptr;
+
+
+  bool error = data.processOptions(option, switches, errorString);
+
+  if (error)
+  {
+      data.SetErrorResult(errorString);
+      return;
+  }
+
+  static const std::array<const char *, 2> rhs_names = {"static_rhs", "dynamic_rhs"};
+  std::array<std::vector<double>, 2> rhs_vectors;
+  for (size_t i = 0; i < rhs_names.size(); ++i)
+  {
+    ObjectHolder vdata = data.GetObjectHolder(rhs_names[i]);
+    if (vdata.IsList())
+    {
+      bool ok = vdata.GetDoubleList(rhs_vectors[i]);
+      if (!ok)
+      {
+        std::ostringstream os;
+        os << "Option \"" << rhs_names[i] << "\" could not be converted to a list of double values\n";
+        errorString += os.str();
+      }
+    }
+  }
+  if ((rhs_vectors[0].empty() || rhs_vectors[1].empty()) || (rhs_vectors[0].size() != rhs_vectors[1].size()))
+  {
+    std::ostringstream os;
+    os << "Node lists \"" << rhs_names[0] << "\", \"" << rhs_names[1] << "\" are empty or not the same size " << rhs_vectors[0].size() << " " << rhs_vectors[1].size() <<"\n";
+    errorString = os.str();
+    data.SetErrorResult(errorString);
+    return;
+  }
+
+  bool extended_solver = false;
+  GlobalData &gdata = GlobalData::GetInstance();
+  auto dbent = gdata.GetDBEntryOnGlobal("extended_solver");
+  if (dbent.first)
+  {
+    auto oh = dbent.second.GetBoolean();
+    extended_solver = (oh.first && oh.second) && (!std::is_same<extended_type, double>::value);
+  }
+
+  if (extended_solver)
+  {
+    auto &tdata = TimeData<extended_type>::GetInstance();
+    std::array<std::vector<extended_type>, 2> erhs;
+    for (size_t i = 0; i < erhs.size(); ++i)
+    {
+      auto &nrhs = erhs[i];
+      const auto &orhs = rhs_vectors[i];
+      nrhs.resize(orhs.size());
+      for (size_t j = 0; j < nrhs.size(); ++j)
+      {
+        nrhs[j] = static_cast<extended_type>(orhs[j]);
+      }
+    }
+    tdata.CopyI(TimePoint_t::TM1, TimePoint_t::TM2);
+    tdata.CopyI(TimePoint_t::TM0, TimePoint_t::TM1);
+    tdata.SetI(TimePoint_t::TM0, erhs[0]);
+    tdata.CopyQ(TimePoint_t::TM1, TimePoint_t::TM2);
+    tdata.CopyQ(TimePoint_t::TM0, TimePoint_t::TM1);
+    tdata.SetQ(TimePoint_t::TM0, erhs[1]);
+  }
+  else
+  {
+    auto &tdata = TimeData<double>::GetInstance();
+    tdata.CopyI(TimePoint_t::TM1, TimePoint_t::TM2);
+    tdata.CopyI(TimePoint_t::TM0, TimePoint_t::TM1);
+    tdata.SetI(TimePoint_t::TM0, rhs_vectors[0]);
+    tdata.CopyQ(TimePoint_t::TM1, TimePoint_t::TM2);
+    tdata.CopyQ(TimePoint_t::TM0, TimePoint_t::TM1);
+    tdata.SetQ(TimePoint_t::TM0, rhs_vectors[1]);
+  }
+  data.SetEmptyResult();
+}
+
 Commands MathCommands[] = {
     {"get_contact_current",  getContactCurrentCmd},
     {"get_contact_charge",   getContactCurrentCmd},
     {"solve",                solveCmd},
     {"get_matrix_and_rhs",   getMatrixAndRHSCmd},
+    {"set_initial_condition", setInitialConditionCmd},
     {nullptr, nullptr}
 };
 
 }
 
-//TODO:  "noise solve (with output node)"

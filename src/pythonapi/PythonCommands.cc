@@ -255,6 +255,7 @@ MyNewPyPtr(get_contact_current,        dsCommand::getContactCurrentCmd);
 MyNewPyPtr(get_contact_charge,         dsCommand::getContactCurrentCmd);
 MyNewPyPtr(solve,                      dsCommand::solveCmd);
 MyNewPyPtr(get_matrix_and_rhs,         dsCommand::getMatrixAndRHSCmd);
+MyNewPyPtr(set_initial_condition,      dsCommand::setInitialConditionCmd);
 // Equation Commands
 MyNewPyPtr(equation,                       dsCommand::createEquationCmd);
 MyNewPyPtr(interface_equation,             dsCommand::createInterfaceEquationCmd);
@@ -373,6 +374,7 @@ MYCOMMAND(get_contact_current,        dsCommand::getContactCurrentCmd),
 MYCOMMAND(get_contact_charge,         dsCommand::getContactCurrentCmd),
 MYCOMMAND(solve,                      dsCommand::solveCmd),
 MYCOMMAND(get_matrix_and_rhs,         dsCommand::getMatrixAndRHSCmd),
+MYCOMMAND(set_initial_condition,      dsCommand::setInitialConditionCmd),
 // Equation Commands
 MYCOMMAND(equation,                       dsCommand::createEquationCmd),
 MYCOMMAND(interface_equation,             dsCommand::createInterfaceEquationCmd),
