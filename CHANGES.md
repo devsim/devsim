@@ -1,6 +1,6 @@
 # CHANGES
 
-## Version 1.6.1
+## Version 1.7.0
 
 ### Versioned MKL DLL in release build
 
@@ -17,6 +17,12 @@ Fixed bug with ``transient_tr`` (trapezoidal) time integration method where the 
 Fixed bug in the charge error calculation, which calculates the simulation result with that a forward difference projection.
 
 Added ``testing/transient_rc.py`` test which compares simulation with analytic result for RC circuit.
+
+Added ``set_initial_condition`` command to provide initial transient conditions based on current solution.
+
+### Create interface from node pairs
+
+Added ``create_interface_from_nodes`` to make it possible to add interface from non-coincident pairs of nodes.
 
 ### Solver
 
