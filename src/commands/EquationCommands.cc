@@ -42,7 +42,6 @@ limitations under the License.
 
 using namespace dsValidate;
 
-
 namespace dsCommand {
 void
 createEquationCmd(CommandHandler &data)
@@ -69,10 +68,7 @@ createEquationCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -91,7 +87,6 @@ createEquationCmd(CommandHandler &data)
     const std::string &elementedge_model = data.GetStringOption("element_model");
     const std::string &volume_node0_model = data.GetStringOption("volume_node0_model");
     const std::string &volume_node1_model = data.GetStringOption("volume_node1_model");
-    /// This should be using switch list ultimately
     /// Maybe this should be a property of a NodeSolution instead of an equation
     const std::string &variable_update = data.GetStringOption("variable_update");
 
@@ -166,10 +161,7 @@ getEquationListCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -220,10 +212,7 @@ deleteEquationCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -284,7 +273,7 @@ createInterfaceEquationCmd(CommandHandler &data)
         {"device",          "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
         {"interface",       "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidInterface},
         {"name",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"variable_name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+//        {"variable_name",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"type",            "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
         {"interface_model", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"name0",           "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
@@ -292,10 +281,7 @@ createInterfaceEquationCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -306,7 +292,7 @@ createInterfaceEquationCmd(CommandHandler &data)
     const std::string &name                 = data.GetStringOption("name");
     const std::string &name0                = data.GetStringOption("name0");
     const std::string &name1                = data.GetStringOption("name1");
-    const std::string &variable_name        = data.GetStringOption("variable_name");
+    //const std::string &variable_name        = data.GetStringOption("variable_name");
     const std::string &deviceName           = data.GetStringOption("device");
     const std::string &interfaceName        = data.GetStringOption("interface");
     const std::string &interface_model = data.GetStringOption("interface_model");
@@ -344,7 +330,6 @@ createInterfaceEquationCmd(CommandHandler &data)
         os << "-type must be specified as \"continuous\", \"fluxterm\", or \"hybrid\"\n";
         errorString += os.str();
     }
-
 
     if (!errorString.empty())
     {
@@ -387,9 +372,7 @@ getInterfaceEquationListCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -430,9 +413,7 @@ deleteInterfaceEquationCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -507,18 +488,11 @@ createContactEquationCmd(CommandHandler &data)
         {"edge_charge_model",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"element_charge_model",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {"circuit_node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
-        {"variable_name", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+//        {"variable_name", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-// TODO:"Test element_model"
-// TODO:"Test element_current_model"
-// TODO:"Test element_charge_model"
-
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -529,7 +503,7 @@ createContactEquationCmd(CommandHandler &data)
     const std::string &name                 = data.GetStringOption("name");
     const std::string &deviceName           = data.GetStringOption("device");
     const std::string &contactName          = data.GetStringOption("contact");
-    const std::string &variable_name        = data.GetStringOption("variable_name");
+    //const std::string &variable_name        = data.GetStringOption("variable_name");
     const std::string &node_model           = data.GetStringOption("node_model");
     const std::string &edge_model           = data.GetStringOption("edge_model");
     const std::string &edge_volume_model           = data.GetStringOption("edge_volume_model");
@@ -610,9 +584,7 @@ getContactEquationListCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -655,9 +627,7 @@ deleteContactEquationCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -674,7 +644,6 @@ deleteContactEquationCmd(CommandHandler &data)
     ContactEquationHolder ceqn;
 
     errorString = ValidateDeviceAndContact(deviceName, contactName, dev, contact);
-
 
     if (contact && (!(contact->GetEquationPtrList().count(name))))
     {
@@ -723,10 +692,7 @@ createCustomEquationCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -762,10 +728,7 @@ getEquationNumbersCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {

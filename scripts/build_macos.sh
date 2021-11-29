@@ -39,15 +39,19 @@ else
   exit 1;
 fi
 
+
 #minimal conda environments to prevent linking against the wrong libraries
-if [ "${1}" = "gcc" ] && [ ! -f Miniconda3-latest-MacOSX-x86_64.sh ]
+if [ "${1}" = "gcc" ]
 then
-curl -L -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh;
-bash Miniconda3-latest-MacOSX-x86_64.sh -b -p ${HOME}/anaconda;
-${HOME}/anaconda/bin/conda create  -y --name python3_devsim_build python=3
-${HOME}/anaconda/bin/conda install -y --name python3_devsim_build mkl mkl-devel mkl-include boost cmake
+conda create  -y --name python3_devsim_build python=3 mkl mkl-devel mkl-include boost cmake
 fi
-source ${HOME}/anaconda/bin/activate python3_devsim_build
+
+#This version does not use pardiso
+if [ "${1}" = "clang" ]
+then
+conda create  -y --name python3_devsim_build python=3 boost cmake
+fi
+source activate python3_devsim_build
 
 export PYTHON3_BIN=python
 export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
@@ -56,9 +60,6 @@ export PYTHON3_ARCHIVE=""
 #For macOS, the Xcode command line developer tools should be installed, these contain all the necessary libraries.  The math libraries are from the Apple Accelerate Framework.  Note that a FORTRAN compiler is not required.
 #https://developer.apple.com/technologies/tools
 #https://developer.apple.com/performance/accelerateframework.html
-
-# this script assumes git clone and submodule initialization has been done
-#cd devsim
 
 # SuperLU
 #(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
@@ -70,7 +71,7 @@ then
 (cd external/symdiff && bash ../symdiff_macos.sh && cd osx_release && make -j4)
 elif [ "${1}" = "clang" ]
 then
-(cd external/symdiff && bash scripts/setup_osx_10.10.sh && cd osx_release && make -j4)
+(cd external/symdiff && bash  ../symdiff_macos.sh && cd osx_release && make -j4)
 fi
 
 # CGNSLIB build

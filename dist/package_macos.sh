@@ -40,10 +40,7 @@ cp -v __init__.py ${DIST_PYDLL}
 rsync -aqP --delete ${SYMDIFF_LIBRARY_DIR} ${DIST_LIB}
 
 # because the non gcc build uses the system python interpreter and python 3 is not available
-if [ "$1" = "gcc" ]
-  then
 cp -v ${DEVSIM_SRC_DIR}/devsim_py3.so ${DIST_PYDLL}
-fi
 
 # INSTALL NAME CHANGE
 if [ "$1" = "gcc" ]

@@ -69,7 +69,6 @@ solveCmdImpl(CommandHandler &data)
     }
   }
 
-
   if (type == "dc")
   {
   }
@@ -212,7 +211,6 @@ solveCmd(CommandHandler &data)
 
   const std::string commandName = data.GetCommandName();
 
-
   /// Will need someway of setting circuit node
   /// (This would be on the contact and not the contact equation??)
   static dsGetArgs::Option option[] =
@@ -235,10 +233,7 @@ solveCmd(CommandHandler &data)
   };
 //      {"callback",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -274,7 +269,6 @@ getMatrixAndRHSCmdImpl(CommandHandler &data)
   std::string errorString;
   const std::string &format = data.GetStringOption("format");
 
-
   dsMath::CompressionType ct = dsMath::CompressionType::CCM;
 
   if (format == "csc")
@@ -296,7 +290,6 @@ getMatrixAndRHSCmdImpl(CommandHandler &data)
     return;
   }
 
-
   dsMath::Newton<DoubleType> solver;
 
   ObjectHolderMap_t ohm;
@@ -317,10 +310,7 @@ getMatrixAndRHSCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -361,10 +351,7 @@ getContactCurrentCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -435,7 +422,6 @@ getContactCurrentCmd(CommandHandler &data)
         dsAssert(false, "UNEXPECTED");
     }
 
-
     data.SetDoubleResult(val);
     return;
 }
@@ -454,10 +440,7 @@ setInitialConditionCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {

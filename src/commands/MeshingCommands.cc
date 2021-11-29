@@ -59,10 +59,7 @@ create1dMeshCmd(CommandHandler &data)
         {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -104,10 +101,7 @@ finalizeMeshCmd(CommandHandler &data)
         {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -149,10 +143,7 @@ add1dMeshLineCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -214,10 +205,7 @@ add2dMeshLineCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -287,10 +275,7 @@ add1dInterfaceCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -336,10 +321,7 @@ add1dContactCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -391,10 +373,7 @@ add2dInterfaceCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -464,10 +443,7 @@ add2dContactCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -522,10 +498,7 @@ add1dRegionCmd(CommandHandler &data)
         {nullptr,  nullptr,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -576,10 +549,7 @@ add2dRegionCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -630,10 +600,7 @@ createDeviceCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -675,10 +642,7 @@ loadDevicesCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -715,10 +679,7 @@ writeDevicesCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -765,7 +726,6 @@ writeDevicesCmd(CommandHandler &data)
         return;
     }
 
-
     bool ret = true;
     if (device.empty())
     {
@@ -805,10 +765,7 @@ createGmshMeshCmd(CommandHandler &data)
         {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -936,10 +893,7 @@ addGmshInterfaceCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -988,10 +942,7 @@ addGmshContactCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1039,10 +990,7 @@ addGmshRegionCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1093,10 +1041,7 @@ createContactFromInterfaceCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1114,7 +1059,6 @@ createContactFromInterfaceCmd(CommandHandler &data)
     const std::string &deviceName    = data.GetStringOption("device");
     const std::string &regionName    = data.GetStringOption("region");
     const std::string &interfaceName = data.GetStringOption("interface");
-
 
     errorString = ValidateDeviceAndContact(deviceName, contactName, device, contact);
     if (contact)
@@ -1171,10 +1115,7 @@ void createInterfaceFromNodesCmd(CommandHandler &data)
       {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -1202,7 +1143,6 @@ void createInterfaceFromNodesCmd(CommandHandler &data)
       data.SetErrorResult(errorString);
       return;
   }
-
 
   std::vector<size_t> nodes[2];
   for (size_t i = 0; i < 2; ++i)
@@ -1268,9 +1208,6 @@ void createInterfaceFromNodesCmd(CommandHandler &data)
   dev->AddInterface(interface);
   data.SetEmptyResult();
 }
-
-
-
 
 Commands MeshingCommands[] = {
     {"create_1d_mesh",    create1dMeshCmd},

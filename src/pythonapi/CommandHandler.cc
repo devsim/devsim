@@ -62,11 +62,11 @@ void CommandHandler::SetObjectResult(ObjectHolder obj)
 }
 
 
-bool CommandHandler::processOptions(dsGetArgs::optionList opts, dsGetArgs::switchList sl, std::string & errors) const
+bool CommandHandler::processOptions(dsGetArgs::optionList opts, std::string & errors) const
 {
   dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   dsAssert(!info.get_args_, "UNEXPECTED");
-  info.get_args_ = new dsGetArgs::GetArgs(opts, sl);
+  info.get_args_ = new dsGetArgs::GetArgs(opts);
   return info.get_args_->processOptions(info, errors);
 }
 

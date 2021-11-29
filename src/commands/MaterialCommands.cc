@@ -117,10 +117,9 @@ getParameterCmd(CommandHandler &data)
         option = nullptr;
     }
 
-    dsGetArgs::switchList switches = nullptr;
 
 
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -332,10 +331,7 @@ openDBCmd(CommandHandler &data)
       option = nullptr;
   }
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -441,11 +437,7 @@ addDBEntryCmd(CommandHandler &data)
 
   option = openoption;
 
-
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -485,10 +477,7 @@ getDBEntryCmd(CommandHandler &data)
 
   option = openoption;
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {

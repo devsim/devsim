@@ -27,23 +27,6 @@ class ObjectHolder;
 class CommandHandler;
 namespace dsGetArgs
 {
-/// Rules,
-/**
- * A switch can be for any type.  Specify mutual exclusion of boolean or string options
- */
-
-/// The convention of a default existing means that non-specification is not an error
-/**
- * Rules:
- * Switches without default require the user to make a selection
- *
- * StringOptions
- */
-/// **switchList : the value for this switch
-/// *switchList  : a switch list
-/// switchList   : a list of list of switches
-//typedef const char * switchDefault;
-
 enum class optionType {BOOLEAN = 0, STRING, INTEGER, FLOAT, LIST};
 enum class requiredType {OPTIONAL, REQUIRED};
 namespace optionTypeString {
@@ -62,7 +45,6 @@ struct Option {
     checkFunction func;
 };
 
-typedef const char *** switchList;
 typedef Option       * optionList;
 
 }
@@ -110,7 +92,7 @@ class CommandHandler
       return return_object_;
     }
 
-    bool        processOptions(dsGetArgs::optionList opts, dsGetArgs::switchList sl, std::string &) const;
+    bool        processOptions(dsGetArgs::optionList opts, std::string &) const;
     std::string GetStringOption(const std::string &) const;
     double      GetDoubleOption(const std::string &) const;
     int         GetIntegerOption(const std::string &) const;
@@ -119,7 +101,6 @@ class CommandHandler
 
 
   private:
-
 
     void        *command_info_;
     std::string  command_name;

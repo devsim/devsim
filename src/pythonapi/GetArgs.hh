@@ -48,11 +48,7 @@ struct CommandInfo
 
 class GetArgs {
     public:
-    /// Could only add one options
-    GetArgs(optionList opts, switchList sl);
-
-    /// False throws an exception with our error message
-//    int processOptions(TclCommandHandler &, std::string &error);
+    GetArgs(optionList opts);
 
     bool processOptions(CommandInfo &, std::string &);
 
@@ -68,7 +64,6 @@ class GetArgs {
     private:
         OptionMap_t       optionMap;
         optionList        options;
-        switchList        switches;
         ObjectHolderMap_t selections;
 };
 }

@@ -19,7 +19,7 @@ limitations under the License.
 namespace dsGetArgs {
 const char * optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT", "LIST"};
 
-GetArgs::GetArgs(optionList opts, switchList sl) : options(opts), switches(sl)
+GetArgs::GetArgs(optionList opts) : options(opts)
 {
   Option *it = options;
   while ((*it).name != nullptr)

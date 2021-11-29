@@ -8,13 +8,10 @@ SET TAG=%3
 
 c:\msys64\usr\bin\pacman -Su --noconfirm rsync zip bison flex git
 
-call %CONDA_BIN% create -y -n devsim_build python=3
+call %CONDA_BIN% create -y -n python3_devsim_build python=3 cmake mkl mkl-devel mkl-include sqlite zlib boost
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-call %CONDA_BIN% install -y -n devsim_build cmake mkl mkl-devel mkl-include sqlite zlib boost
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-call %CONDA_BIN% activate devsim_build
+call %CONDA_BIN% activate python3_devsim_build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 IF "%1"=="msys" (

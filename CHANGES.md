@@ -52,6 +52,10 @@ An updated fedora build script has been added.  It uses the system installed ``S
 
 Some out of date files (e.g. RELEASE, INSTALL, . . .) have been removed.  The [README.md](README.md) has been updated and the [INSTALL.md](INSTALL.md) have been updated.
 
+### Command Options
+
+The ``variable_name`` option is no longer recognized for the ``devsim.contact_equation`` and ``devsim.interface_equation` as it was not being used.
+
 ## Version 1.6.0
 
 ### Array Type Input and Output
