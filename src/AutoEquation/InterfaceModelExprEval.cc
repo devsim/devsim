@@ -377,8 +377,6 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateI
 template <typename DoubleType>
 InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateFunctionType(Eqo::EqObjPtr arg)
 {
-  const EngineAPI::EqObjType etype = EngineAPI::getEnumeratedType(arg);
-
   InterfaceModelExprData<DoubleType> out;
   /// Implement for UserFuncs
   std::string nm = EngineAPI::getName(arg);

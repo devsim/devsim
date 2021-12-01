@@ -26,8 +26,6 @@ template <typename DoubleType>
 NodeVolume<DoubleType>::NodeVolume(RegionPtr rp)
     : NodeModel("NodeVolume", rp, NodeModel::DisplayType::SCALAR)
 {
-    const size_t dimension = rp->GetDimension();
-
     RegisterCallback("EdgeNodeVolume");
 }
 
@@ -35,7 +33,6 @@ template <typename DoubleType>
 void NodeVolume<DoubleType>::calcNodeScalarValues() const
 {
   const Region &r = GetRegion();
-  const size_t dimension = r.GetDimension();
 
   std::vector<DoubleType> nv(r.GetNumberNodes());
 

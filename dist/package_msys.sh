@@ -43,7 +43,7 @@ mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
 cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
 
-for i in INSTALL.md NOTICE LICENSE windows.txt README.md CHANGES.md install.py; do
+for i in INSTALL.md NOTICE LICENSE README.md CHANGES.md install.py; do
 cp ../$i ${DIST_DIR}
 done
 
@@ -71,7 +71,6 @@ http://www.github.com/devsim/devsim
 commit ${COMMIT}
 EOF
 
-mkdir -p ${DIST_LIB}/msys
 for i in $(objdump -p ${DIST_PYDLL}/devsim_py3.pyd | grep "DLL Name" | sed -e 's/^.*: //'); do
     if [ -f /mingw64/bin/${i} ]; then
         cp /mingw64/bin/${i} ${DIST_PYDLL}/
@@ -86,6 +85,9 @@ done
 cp /mingw64/bin/libwinpthread-1.dll ${DIST_LIB}/symdiff/
 
 cp -v __init__.py ${DIST_PYDLL}
+
+# Intel MKL
+#cp -v ${CONDA_PREFIX}/Library/bin/mkl_rt.1.dll ${DIST_PYDLL}
 
 zip -r ${DIST_VER}.zip ${DIST_DIR}
 

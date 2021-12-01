@@ -27,9 +27,18 @@ This runtime may be necessary to run the software.
 
 *Please note that most Python 3 environments should work.  The Anaconda distributions are recommended since they provide ready access to the Intel Math Kernel Library (MKL).  If you do not wish to use the Intel MKL, you can build a version of the source code without these dependencies.*
 
-Install [Anaconda](https://www.anaconda.com/products/individual) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) environment.
+Install [Anaconda](https://www.anaconda.com/products/individual) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) environment.  The following install scripts are available in the ``devsim/scripts`` directory to install the latest version of Miniconda into ``${HOME}/anaconda``. 
 
-From a system command prompt, with an active Python environment, install the Intel Math Kernel Library.
+* ``scripts/install_miniconda_macos.sh``
+* ``scripts/install_miniconda_linux.sh``
+
+The Python environment can be loaded in a terminal using:
+
+```
+source ${HOME}/anaconda/bin/activate
+```
+
+From a system command prompt, with an active Python environment, install the MKL.
 
     conda install mkl numpy
 
@@ -53,26 +62,39 @@ If you have any issues with this process.  Please contact us through the DEVSIM 
 
 The Intel Math Kernel Library (MKL) is now versioning its symbols, meaning that the MKL must be available with the exact file name that DEVSIM was built against.  Please install a version of the MKL matching the one searched for by the ``install.py`` script.
 
+At this time, the macOS version only targets Intel-based systems.  There has been a report that users may have to grant permission for code from "unknown" developers.
+
 ## Building from Source
 
+***For the builds in this section, an Anaconda (or Miniconda) installation is required.  Please install using the instructions above.  Ensure that you are running the scripts below from a shell with an activated Python environment, having the ``conda`` command in your path.  Please note that the build scripts will create a conda environment named ``devsim_python3_build``.***
 
-### Building Centos 7 Linux
+#### Building Centos 7 Linux
 
-***Please note that the Centos 7 build script will download and install Miniconda into ``${HOME}/anaconda``.  It will also create new Anaconda environments under this directory.  Please comment this section out of scripts/build_centos_7.sh if you do not wish for this behavior.  In addition, the script will also install many system packages.  It is highly recommended to run these scripts in a docker container.***
+***The scripts will install many system packages.  It is highly recommended to run these scripts in a docker container.***
 
-The Centos 7 version is used for binary Linux releases, as it is forward compatible with most Linux distributions and used the Intel MKL.  It will install all required dependencies, including Anaconda Python.  It is recommended to run this in a docker image.
+The Centos 7 version is used for binary Linux releases, as it is forward compatible with most Linux distributions and used the Intel MKL.  It will install all required dependencies, including Anaconda Python.  It is recommended to run this in a docker image.  ***There is no need to run ``install_miniconda_linux.sh`` if it is already installed***.
 
-    git clone https://github.com/devsim/devsim.git
-    cd devsim
-    git submodule init
-    git submodule update
-    bash scripts/build_centos_7.sh devsim_linux_version
+```
+git clone https://github.com/devsim/devsim.git
+cd devsim
+git submodule init
+git submodule update
+bash scripts/build_centos_7.sh devsim_linux_version
+```
 
 where ``version`` is replaced with the desired version.  The compressed file is then ``devsim/dist/devsim_linux_version.tgz``
 
+#### Building Other Linux Systems
+
+***Please note that these scripts may attempt to install packages using the system installer on your system.  Please evaluate the scripts carefully to ensure you agree with these changes to your system.  It is highly recommended to run these scripts in a docker container.  Anaconda Python is not required for these builds.***
+
+Additional build scripts are available for ``Ubuntu`` and ``Fedora`` in the ``scripts`` directory.  These version do not use the Intel MKL and replace the use of the Intel MKL Pardiso Solver with SuperLU.
+
 ### Building macOS
 
-***Please note that the macOS build script will download and install Miniconda into ``${HOME}/anaconda``.  It will also create new Anaconda environments under this directory.  Please comment this section out of scripts/build_macos.sh if you do not wish for this behavior.  In addition, the script will make changes to the Homebrew installation.***
+#### Release Version
+
+***The builds scripts will make changes to an existing Homebrew installation.***
 
 The macOS release version is built using a Travis build server (see ``.travis.yml``), but it can be built locally with the following prerequisites:
 
@@ -80,16 +102,32 @@ The macOS release version is built using a Travis build server (see ``.travis.ym
 * Homebrew [https://brew.sh/](https://brew.sh/)
 * GCC Compiler (Brew package gcc@9)
 
-The rest of the components, including Anaconda Python and various build components are downloaded and installed in the build script.
+The rest of the components, including Anaconda Python and various build components are downloaded and installed in the scripts below.  ***There is no need to run ``install_miniconda_macos.sh`` if Anaconda Python is already installed.***.
 
-    git clone https://github.com/devsim/devsim.git
-    cd devsim
-    git submodule init
-    git submodule update
-    bash scripts/build_macos.sh version
+```
+git clone https://github.com/devsim/devsim.git
+cd devsim
+git submodule init
+git submodule update
+source scripts/install_miniconda_macos.sh
+bash scripts/build_macos.sh gcc version
+```
 
 where ``version`` is replaced with the desired version.  The compressed file is then ``devsim/dist/devsim_macos_version.tgz``
-Note that the resulting package file does not have any dependencies on Homebrew.
+Note that the resulting package file does not have any dependencies on Homebrew on the target system.
+
+#### Using macOS system compiler
+
+Please note that you will need to install the Xcode developer tools, including the C++ compiler for your system.  This version does not have 128-bit floating point precision support and is not provided as part of the regular release.  By default it uses SuperLU 4.3 as the direct solver, but the build scripts can be modified to support Intel MKL Pardiso.  The rest of the components, including Anaconda Python and various build components are downloaded and installed in the scripts below.  ***There is no need to run ``install_miniconda_macos.sh`` if Anaconda Python is already installed.***
+
+```
+git clone https://github.com/devsim/devsim.git
+cd devsim
+git submodule init
+git submodule update
+source scripts/install_miniconda_macos.sh
+bash scripts/build_macos.sh gcc version
+```
 
 ### Building on Windows
 
@@ -129,18 +167,9 @@ From a Anaconda environment command prompt:
 
 where ``version`` is replaced with the desired version.  The compressed file is then ``devsim/dist/devsim_win64_version.zip``
 
-### Building Other Linux Systems
-
-***Please note that these scripts may attempt to install packages using the system installer on your system.  Please evaluate the scripts carefully to ensure you agree with these changes to your system.  It is highly recommended to run these scripts in a docker container.***
-
-Additional build scripts are available for ``Ubuntu`` and ``Fedora`` in the ``scripts`` directory.  These version do not use the Intel MKL and replace the use of the Intel MKL Pardiso Solver with SuperLU.
-
-
 ## Getting the Tests
 
 If you wish to see simulation results, or run the regression tests yourself.  They are available from:
-
-These are the existing regression tests:
 
 * [https://github.com/devsim/devsim_tests_msys](https://github.com/devsim/devsim_tests_msys)
 * [https://github.com/devsim/devsim_tests_win64](https://github.com/devsim/devsim_tests_win64)

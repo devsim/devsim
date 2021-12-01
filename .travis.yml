@@ -40,14 +40,15 @@ before_install:
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    docker exec centos7 bash -c "cd /root/devsim && bash scripts/build_centos_7.sh devsim_linux_${TRAVIS_TAG}";
+    docker exec centos7 bash -c "cd /root/devsim && source scripts/install_miniconda_linux.sh && bash scripts/build_centos_7.sh devsim_linux_${TRAVIS_TAG}";
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    if [ "$COMPILER" == "gcc" ]; then
-      ./scripts/build_macos.sh $COMPILER "${TRAVIS_TAG}";
-    elif [ "$COMPILER" == "clang" ]; then
-      ./scripts/build_macos.sh $COMPILER "clang_${TRAVIS_TAG}";
-    fi
+      source  ./scripts/install_miniconda_macos.sh;
+      if [ "$COMPILER" == "gcc" ]; then
+        ./scripts/build_macos.sh $COMPILER "${TRAVIS_TAG}";
+      elif [ "$COMPILER" == "clang" ]; then
+        ./scripts/build_macos.sh $COMPILER "clang_${TRAVIS_TAG}";
+      fi
     fi
 
 before_deploy:

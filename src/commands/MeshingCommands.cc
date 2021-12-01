@@ -59,10 +59,7 @@ create1dMeshCmd(CommandHandler &data)
         {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -104,10 +101,7 @@ finalizeMeshCmd(CommandHandler &data)
         {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -149,10 +143,7 @@ add1dMeshLineCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -214,10 +205,7 @@ add2dMeshLineCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -287,10 +275,7 @@ add1dInterfaceCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -336,10 +321,7 @@ add1dContactCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -391,10 +373,7 @@ add2dInterfaceCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -464,10 +443,7 @@ add2dContactCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -522,10 +498,7 @@ add1dRegionCmd(CommandHandler &data)
         {nullptr,  nullptr,    dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -576,10 +549,7 @@ add2dRegionCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -630,10 +600,7 @@ createDeviceCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -675,10 +642,7 @@ loadDevicesCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -715,10 +679,7 @@ writeDevicesCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -765,7 +726,6 @@ writeDevicesCmd(CommandHandler &data)
         return;
     }
 
-
     bool ret = true;
     if (device.empty())
     {
@@ -805,10 +765,7 @@ createGmshMeshCmd(CommandHandler &data)
         {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -936,10 +893,7 @@ addGmshInterfaceCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -988,10 +942,7 @@ addGmshContactCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1039,10 +990,7 @@ addGmshRegionCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1093,10 +1041,7 @@ createContactFromInterfaceCmd(CommandHandler &data)
         {nullptr,  nullptr,  dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL,  nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1114,7 +1059,6 @@ createContactFromInterfaceCmd(CommandHandler &data)
     const std::string &deviceName    = data.GetStringOption("device");
     const std::string &regionName    = data.GetStringOption("region");
     const std::string &interfaceName = data.GetStringOption("interface");
-
 
     errorString = ValidateDeviceAndContact(deviceName, contactName, device, contact);
     if (contact)
@@ -1153,6 +1097,118 @@ createContactFromInterfaceCmd(CommandHandler &data)
     data.SetEmptyResult();
 }
 
+void createInterfaceFromNodesCmd(CommandHandler &data)
+{
+  std::string errorString;
+
+  const std::string commandName = data.GetCommandName();
+
+  using namespace dsGetArgs;
+  static dsGetArgs::Option option[] =
+  {
+      {"device",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+      {"name",    "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+      {"region0", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+      {"region1", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidRegion},
+      {"nodes0",  "", dsGetArgs::optionType::LIST,   dsGetArgs::requiredType::REQUIRED, nullptr},
+      {"nodes1",  "", dsGetArgs::optionType::LIST,   dsGetArgs::requiredType::REQUIRED, nullptr},
+      {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+  };
+
+  bool error = data.processOptions(option, errorString);
+
+  if (error)
+  {
+      data.SetErrorResult(errorString);
+      return;
+  }
+
+  const std::string &deviceName = data.GetStringOption("device");
+  const std::string &name       = data.GetStringOption("name");
+
+  std::string regionNames[2];
+  regionNames[0] = data.GetStringOption("region0");
+  regionNames[1] = data.GetStringOption("region1");
+
+  Device *dev = nullptr;
+  Region *reg[2] = {};
+
+  for (size_t i = 0; i < 2; ++i)
+  {
+    errorString += ValidateDeviceAndRegion(deviceName, regionNames[i], dev, reg[i]);
+  }
+
+  if (!errorString.empty())
+  {
+      data.SetErrorResult(errorString);
+      return;
+  }
+
+  std::vector<size_t> nodes[2];
+  for (size_t i = 0; i < 2; ++i)
+  {
+    std::string oname("nodes");
+    oname += std::to_string(i);
+    ObjectHolder vdata = data.GetObjectHolder(oname);
+    if (vdata.IsList())
+    {
+      bool ok = vdata.GetUnsignedLongList(nodes[i]);
+      if (!ok)
+      {
+        std::ostringstream os;
+        os << "Option \"" << oname << "\" could not be converted to a list of unsigned integers\n";
+        errorString += os.str();
+      }
+    }
+  }
+
+  if (!errorString.empty())
+  {
+      data.SetErrorResult(errorString);
+      return;
+  }
+
+  if ((nodes[0].empty() || nodes[1].empty()) || (nodes[0].size() != nodes[1].size()))
+  {
+    std::ostringstream os;
+    os << "Node lists \"nodes0\", \"nodes1\" are empty or not the same size " << nodes[0].size() << " " << nodes[1].size() <<"\n";
+    errorString = os.str();
+    data.SetErrorResult(errorString);
+    return;
+  }
+
+  size_t error_count = 0;
+  std::vector<ConstNodePtr> inodes[2];
+  for (size_t i = 0; i < 2; ++i)
+  {
+    inodes[i].resize(nodes[i].size(), nullptr);
+    auto &nlist = reg[i]->GetNodeList();
+    for (size_t j = 0; j < nodes[i].size(); ++j)
+    {
+      if (nodes[i][j] < nlist.size())
+      {
+        inodes[i][j] = nlist[nodes[i][j]];
+      }
+      else
+      {
+        ++error_count;
+      }
+    }
+  }
+  if (error_count > 0)
+  {
+    std::ostringstream os;
+    os << "Node lists have invalid entries\n";
+    errorString = os.str();
+    data.SetErrorResult(errorString);
+    return;
+  }
+
+  auto interface = new Interface(name, reg[0], reg[1], inodes[0], inodes[1]);
+  dev->AddInterface(interface);
+  data.SetEmptyResult();
+}
+
 Commands MeshingCommands[] = {
     {"create_1d_mesh",    create1dMeshCmd},
     {"finalize_mesh",     finalizeMeshCmd},
@@ -1173,10 +1229,8 @@ Commands MeshingCommands[] = {
     {"add_gmsh_interface", addGmshInterfaceCmd},
     {"add_gmsh_region", addGmshRegionCmd},
     {"create_contact_from_interface", createContactFromInterfaceCmd},
+    {"create_interface_from_nodes", createInterfaceFromNodesCmd},
     {nullptr, nullptr}
 };
 }
-
-// TODO:  "get_mesh_list"
-// TODO:  "Remove mesh after loaded by default.  Provide option for copying or rename device on read."
 

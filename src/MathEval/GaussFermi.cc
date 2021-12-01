@@ -47,12 +47,23 @@ eprint = { https://doi.org/10.1063/1.3374475 }
 */
 
 namespace {
+
+//// Fix multiprecision constexpr issue
+#if BOOST_VERSION / 100 >= 1072
 template <typename T>
 struct MC {
     static constexpr T sqrt2 = boost::math::constants::root_two<T>();
     static constexpr T sqrt2_pi = boost::math::constants::root_two<T>() * boost::math::constants::one_div_root_pi<T>();
     static constexpr T one_div_root_two_pi = boost::math::constants::one_div_root_two_pi<T>();
 };
+#else
+template <typename T>
+struct MC {
+    const static inline T sqrt2 = boost::math::constants::root_two<T>();
+    const static inline T sqrt2_pi = boost::math::constants::root_two<T>() * boost::math::constants::one_div_root_pi<T>();
+    const static inline T one_div_root_two_pi = boost::math::constants::one_div_root_two_pi<T>();
+};
+#endif
 
 template <typename T>
 inline T calcH_Impl(const T &s, const T &S)
@@ -123,9 +134,6 @@ T gfi(T zeta, T s)
 template <typename T>
 T dgfidx(T zeta, T s)
 {
-    const T &sqrt2 = MC<T>::sqrt2;
-    const T &sqrt2_pi = MC<T>::sqrt2_pi;
-
     const T S = s * s;
 
     T H = calcH(s, S);
@@ -182,7 +190,7 @@ T igfi(T g, T s)
 #endif
     T arg = 1. - 2. * g;
 
-    static constexpr T bound = 1.0 - std::numeric_limits<T>::epsilon();
+    static const T bound = 1.0 - std::numeric_limits<T>::epsilon();
 
     // prevent infinite results
     if (arg <= -1.0)

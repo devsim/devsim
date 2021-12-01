@@ -1,10 +1,5 @@
 # Any copyright is dedicated to the Public Domain.
 # http://creativecommons.org/publicdomain/zero/1.0/
-TCL_BIN="/usr/bin/tclsh8.5"
-PYTHON3_BASE="${HOME}/anaconda/envs/python3_devsim_build"
-PYTHON3_ARCHIVE="${PYTHON3_BASE}/lib/libpython3.8m.so"
-PYTHON3_INCLUDE="${PYTHON3_BASE}/include/python3.8"
-PYTHON3_BIN="${PYTHON3_BASE}/bin/python"
 for TYPE in debug release; do
 ARCH=`uname -m`
 #  for ARCH in i386 x86_64; do
@@ -43,13 +38,13 @@ ${PYTHON3_BIN} \$*
 EOF
 chmod +x bin/symdiff_py3
 
-cat << EOF > bin/symdiff_tcl
-#!/bin/bash
-set -e
-progname="\$0"
-curdir=\`dirname "\$progname"\`
-export TCLLIBPATH=\${curdir}/../lib
-${TCL_BIN} \$*
-EOF
-chmod +x bin/symdiff_tcl
+#cat << EOF > bin/symdiff_tcl
+##!/bin/bash
+#set -e
+#progname="\$0"
+#curdir=\`dirname "\$progname"\`
+#export TCLLIBPATH=\${curdir}/../lib
+#${TCL_BIN} \$*
+#EOF
+#chmod +x bin/symdiff_tcl
 

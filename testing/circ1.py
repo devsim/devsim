@@ -65,6 +65,7 @@ for v in (0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10):
     print("topbias %f" % v)
     devsim.set_parameter(device="MyDevice1", name="topbias", value=v)
     devsim.solve(type="dc", absolute_error=1, relative_error=1e-9, maximum_iterations=30)
+    test_common.print_circuit_solution()
     for device in devices:
         test_common.printResistorCurrent(device=device, contact="top")
         test_common.printResistorCurrent(device=device, contact="bot")

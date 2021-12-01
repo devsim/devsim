@@ -198,11 +198,11 @@ class EdgeModel {
         RegionPtr   myregion;
         WeakEdgeModelPtr myself;
         ContactPtr  mycontact;
-        mutable ModelDataHolder model_data;
         mutable bool uptodate;
         mutable bool inprocess;
         mutable std::vector<size_t> atcontact;
         DisplayType displayType;
+        mutable ModelDataHolder model_data;
         static const char *DisplayTypeString[];
 };
 

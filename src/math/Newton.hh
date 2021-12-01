@@ -142,7 +142,7 @@ struct TR : public TimeParams<DoubleType>
     a0 = tf;
     a1 = -tf;
     b0 = 1.0;
-    b1 = -1.0;
+    b1 = 1.0;
   }
   using TimeParams<DoubleType>::tdelta;
   using TimeParams<DoubleType>::a0;
@@ -189,6 +189,14 @@ class Newton {
         {
             maxiter = x;
         }
+        void SetMaxDiv(size_t x)
+        {
+            maxDivergenceCount = x;
+        }
+        void SetMaxAbsError(DoubleType x)
+        {
+            maxLimit = x;
+        }
     protected:
         template <typename T>
         void LoadIntoMatrix(const RealRowColValueVec<DoubleType> &rcv, Matrix<DoubleType> &matrix, T scl = 1.0, size_t offset = 0);
@@ -201,14 +209,14 @@ class Newton {
     private:
         void InitializeTransientAssemble(const TimeMethods::TimeParams<DoubleType> &, size_t, std::vector<DoubleType> &);
         bool CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &, const std::vector<DoubleType> &, ObjectHolderMap_t *ohm);
-        void UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &, size_t, const std::vector<DoubleType> &, std::vector<DoubleType> &);
+        void UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &, size_t, const std::vector<DoubleType> &, const std::vector<DoubleType> &);
 
         void PrintDeviceErrors(const Device &device, ObjectHolderMap_t *);
         void PrintCircuitErrors(ObjectHolderMap_t *);
         void PrintNumberEquations(size_t, ObjectHolderMap_t *);
         void PrintIteration(size_t, ObjectHolderMap_t *);
 
-        size_t NumberEquationsAndSetDimension(bool);
+        size_t NumberEquationsAndSetDimension();
 
         void BackupSolutions();
         void RestoreSolutions();
@@ -229,22 +237,25 @@ class Newton {
 
         void AssembleTclEquations(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        static const size_t DefaultMaxIter;
-        static const DoubleType DefaultAbsError;
-        static const DoubleType DefaultRelError;
-        static const DoubleType DefaultQRelError;
+        static constexpr DoubleType rhssign = static_cast<DoubleType>(-1.0);
+        static constexpr size_t DefaultMaxIter = 0;
+        static constexpr DoubleType DefaultAbsError = 0.0;
+        static constexpr DoubleType DefaultRelError = 0.0;
+        static constexpr DoubleType DefaultMaxAbsError = 0.0;
+        static constexpr DoubleType DefaultQRelError = 0.0;
 
         Newton(const Newton &);
 
         size_t maxiter; /// The maximum number of iterations
+        size_t maxDivergenceCount;
         DoubleType absLimit;  /// The calculated abs error (maybe come on per device or per region basis)
         DoubleType relLimit;  /// The calculated rel error
+        DoubleType maxLimit; // The maximum absolute error before solver failure
         DoubleType qrelLimit;
 
 
         size_t dimension;
 
-        static const DoubleType rhssign;
 };
 }
 #endif

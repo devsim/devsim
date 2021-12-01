@@ -40,10 +40,7 @@ cp -v __init__.py ${DIST_PYDLL}
 rsync -aqP --delete ${SYMDIFF_LIBRARY_DIR} ${DIST_LIB}
 
 # because the non gcc build uses the system python interpreter and python 3 is not available
-if [ "$1" = "gcc" ]
-  then
 cp -v ${DEVSIM_SRC_DIR}/devsim_py3.so ${DIST_PYDLL}
-fi
 
 # INSTALL NAME CHANGE
 if [ "$1" = "gcc" ]
@@ -79,6 +76,14 @@ install_name_tool -change $j "@loader_path/`basename $j`" $i
 done
 done
 
+# MKL is now versioned
+#for i in ${DIST_PYDLL}/devsim_py*.so
+#do
+#cp -vf "${CONDA_PREFIX}/lib/libmkl_rt.1.dylib" ${DIST_PYDLL}
+#echo install_name_tool -change "@rpath/libmkl_rt.1.dylib" "@loader_path/libmkl_rt.1.dylib" ${DIST_PYDLL}/
+#install_name_tool -change "@rpath/libmkl_rt.1.dylib" "@loader_path/libmkl_rt.1.dylib" ${DIST_PYDLL}/
+#done
+
 
 #for i in ${DIST_BIN}/devsim_tcl
 #do
@@ -88,7 +93,6 @@ done
 #cp -vf $j ${DIST_LIB}/gcc
 #echo install_name_tool -change $j "@executable_path/../lib/gcc/`basename $j`" $i
 #install_name_tool -change $j "@executable_path/../lib/gcc/`basename $j`" $i
-#done
 #done
 
 fi

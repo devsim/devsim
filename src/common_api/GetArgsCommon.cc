@@ -19,7 +19,7 @@ limitations under the License.
 namespace dsGetArgs {
 const char * optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT", "LIST"};
 
-GetArgs::GetArgs(optionList opts, switchList sl) : options(opts), switches(sl)
+GetArgs::GetArgs(optionList opts) : options(opts)
 {
   Option *it = options;
   while ((*it).name != nullptr)
@@ -119,21 +119,6 @@ void alreadySpecified(const std::string &command, const std::string &arg, const 
   std::ostringstream os;
   os << command << " already passed option " << arg;
   os << " with value " << val.GetString() << " as an option" << "\n";
-  error = os.str();
-}
-#if 0
-void alreadySpecified(const std::string &command, const std::string &arg, const double val, std::string &error)
-{
-  std::ostringstream os;
-  os << command << " already passed option " << arg << " with value " << val << " as an option" << "\n";
-  error = os.str();
-}
-#endif
-
-void notSpecified(const std::string &command, const std::string &arg, std::string &error)
-{
-  std::ostringstream os;
-  os << command << " does not specify a value for option " << arg << "\n";
   error = os.str();
 }
 

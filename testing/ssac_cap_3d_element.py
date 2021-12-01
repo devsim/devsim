@@ -14,6 +14,7 @@
 
 # cap device to test displacement current at contact
 import devsim
+import test_common
 
 device="test"
 region="bulk"
@@ -85,10 +86,10 @@ for name, equation in (
     devsim.node_model(device=device, region=region, name=name, equation=equation)
 
 # attached to circuit node
-devsim.contact_equation(device=device, contact="top", name="PotentialEquation", variable_name="Potential",
+devsim.contact_equation(device=device, contact="top", name="PotentialEquation",
                         node_model="topnode_model", element_charge_model="DField", circuit_node="topbias")
 # attached to ground
-devsim.contact_equation(device=device, contact="bot", name="PotentialEquation", variable_name="Potential",
+devsim.contact_equation(device=device, contact="bot", name="PotentialEquation",
                         node_model="botnode_model", element_charge_model="DField")
 
 #
@@ -104,8 +105,11 @@ print(devsim.get_contact_charge(device=device, contact="top", equation="Potentia
 print(devsim.get_contact_charge(device=device, contact="bot", equation="PotentialEquation"))
 #
 devsim.solve(type="ac", frequency=1e-3)
+test_common.print_ac_circuit_solution()
 devsim.solve(type="ac", frequency=1e10)
+test_common.print_ac_circuit_solution()
 devsim.solve(type="ac", frequency=1e15)
+test_common.print_ac_circuit_solution()
 
 #for i in devsim.get_element_model_values(device=device, region=region, name="DField"):
 #  print(i)

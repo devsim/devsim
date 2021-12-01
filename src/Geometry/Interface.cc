@@ -30,7 +30,7 @@ limitations under the License.
 #include <sstream>
 
 Interface::Interface(const std::string &nm, Region *r0, Region *r1, const ConstNodeList_t &n0, const ConstNodeList_t &n1)
-    : name(nm), rp0(r0), rp1(r1), nodes0(n0), nodes1(n1)
+    : name(nm), rp0(r0), rp1(r1), nodes0(n0), nodes1(n1), elements_provided_(false)
 {
 }
 
@@ -208,9 +208,14 @@ void Interface::FindEdges() const
   const Region &region0 = *(GetRegion0());
   const Region &region1 = *(GetRegion1());
 
+  dsAssert(region0.GetDimension() == region1.GetDimension(), "Interface region dimension mismatch");
   const size_t dimension = region0.GetDimension();
 
-  if (dimension == 1)
+  if (dimension == 2)
+  {
+    elements_provided_ = false;
+  }
+  else if (dimension == 1)
   {
     return;
   }
@@ -287,6 +292,10 @@ void Interface::FindTriangles() const
 
   const Region &region0 = *(GetRegion0());
   const Region &region1 = *(GetRegion1());
+
+  dsAssert(region0.GetDimension() == region1.GetDimension(), "Interface region dimension mismatch");
+
+  elements_provided_ = false;
 
   const ConstTriangleList &tl0 = region0.GetTriangleList();
   const ConstTriangleList &tl1 = region1.GetTriangleList();
@@ -464,6 +473,10 @@ void Interface::AddEdges(const ConstEdgeList &elist0, const ConstEdgeList &elist
   edges1 = elist1;
   rp0->SignalCallbacks("@@@InterfaceChange");
   rp1->SignalCallbacks("@@@InterfaceChange");
+  if (rp0->GetDimension() == 2)
+  {
+    elements_provided_ = true;
+  }
 }
 
 void Interface::AddTriangles(const ConstTriangleList &tlist0, const ConstTriangleList &tlist1)
@@ -472,6 +485,7 @@ void Interface::AddTriangles(const ConstTriangleList &tlist0, const ConstTriangl
   triangles1 = tlist1;
   rp0->SignalCallbacks("@@@InterfaceChange");
   rp1->SignalCallbacks("@@@InterfaceChange");
+  elements_provided_ = true;
 }
 
 bool Interface::UseExtendedPrecisionType(const std::string &t) const

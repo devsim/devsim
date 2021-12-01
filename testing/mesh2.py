@@ -55,20 +55,20 @@ devsim.node_model( device=device, region="MySiRegion", name="topnode_model:Poten
 devsim.node_model( device=device, region="MyOxRegion", name="botnode_model"          , equation="Potential - botbias")
 devsim.node_model( device=device, region="MyOxRegion", name="botnode_model:Potential", equation="1")
 
-devsim.contact_equation( device=device, contact="top", name="PotentialEquation", variable_name="Potential",
+devsim.contact_equation( device=device, contact="top", name="PotentialEquation",
                          node_model="topnode_model", edge_charge_model="PotentialEdgeFlux")
 
-devsim.contact_equation( device=device, contact="top", name="PotentialEquation", variable_name="Potential",
+devsim.contact_equation( device=device, contact="top", name="PotentialEquation",
                          node_model="topnode_model", edge_charge_model="PotentialEdgeFlux")
 
-devsim.contact_equation( device=device, contact="bot", name="PotentialEquation", variable_name="Potential",
+devsim.contact_equation( device=device, contact="bot", name="PotentialEquation",
                          node_model="botnode_model", edge_charge_model="PotentialEdgeFlux")
 
 # type continuous means that regular equations in both regions are swapped into the primary region
 devsim.interface_model( device=device, interface=interface, name="continuousPotential", equation="Potential@r0-Potential@r1")
 devsim.interface_model( device=device, interface=interface, name="continuousPotential:Potential@r0", equation= "1")
 devsim.interface_model( device=device, interface=interface, name="continuousPotential:Potential@r1", equation="-1")
-devsim.interface_equation( device=device, interface=interface, name="PotentialEquation", variable_name="Potential", interface_model="continuousPotential", type="continuous")
+devsim.interface_equation( device=device, interface=interface, name="PotentialEquation", interface_model="continuousPotential", type="continuous")
 
 
 

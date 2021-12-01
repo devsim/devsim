@@ -30,6 +30,7 @@ for v in (0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10):
 
 for f in (0, 1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12):
     devsim.solve(type="ac", frequency=f)
+    test_common.print_ac_circuit_solution()
 
 for x in devsim.get_circuit_node_list():
     for y in devsim.get_circuit_solution_list():

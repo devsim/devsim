@@ -141,9 +141,9 @@ class InterfaceNodeModel {
         std::string name;
         WeakInterfaceNodeModelPtr myself;
         InterfacePtr   myinterface;
-        mutable ModelDataHolder model_data;
         mutable bool uptodate;
         mutable bool inprocess;
+        mutable ModelDataHolder model_data;
         size_t length;
 };
 

@@ -14,6 +14,22 @@
 
 import devsim
 
+def print_ac_circuit_solution():
+    print('Circuit AC Solution')
+    nodes = devsim.get_circuit_node_list()
+    for node in devsim.get_circuit_node_list():
+        r = devsim.get_circuit_node_value(solution='ssac_real', node=node)
+        i = devsim.get_circuit_node_value(solution='ssac_imag', node=node)
+        print("%s\t%1.15e\t%1.15e" % (node, r , i))
+
+def print_circuit_solution():
+    print('Circuit Solution')
+    nodes = devsim.get_circuit_node_list()
+    for node in devsim.get_circuit_node_list():
+        r = devsim.get_circuit_node_value(solution='dcop', node=node)
+        print("%s\t%1.15e" % (node, r))
+
+
 def printResistorCurrent(device, contact):
     ecurr=devsim.get_contact_current(device=device, contact=contact, equation="ElectronContinuityEquation")
     hcurr=0.0
@@ -204,10 +220,10 @@ def SetupInitialResistorContact(device, contact, use_circuit_bias=False, circuit
         devsim.contact_node_model(device=device, contact=contact, name="%s:%s" % (bias_node_model, bias_name), equation="-1")
     #edge_model -device $device -region $region -name "contactcharge_edge_top"  -equation $conteq
     if use_circuit_bias:
-        devsim.contact_equation(device=device, contact=contact, name="PotentialEquation", variable_name="Potential",
+        devsim.contact_equation(device=device, contact=contact, name="PotentialEquation",
                                 node_model=bias_node_model, circuit_node=bias_name)
     else:
-        devsim.contact_equation(device=device, contact=contact, name="PotentialEquation", variable_name="Potential",
+        devsim.contact_equation(device=device, contact=contact, name="PotentialEquation",
                                 node_model=bias_node_model)
 
 def SetupCarrierResistorContact(device, contact, use_circuit_bias=False, circuit_node=""):
@@ -229,10 +245,10 @@ def SetupCarrierResistorContact(device, contact, use_circuit_bias=False, circuit
         devsim.contact_node_model(device=device, contact=contact, name=name, equation=equation)
 
     if use_circuit_bias:
-        devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation", variable_name="Electrons",
+        devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation",
                                 node_model="%snodeelectrons" % contact, edge_current_model="ElectronCurrent", circuit_node=bias_name)
     else:
-        devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation", variable_name="Electrons",
+        devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation",
                                 node_model="%snodeelectrons" % contact, edge_current_model="ElectronCurrent")
 
 def SetupContinuousPotentialAtInterface(device, interface):
@@ -240,14 +256,14 @@ def SetupContinuousPotentialAtInterface(device, interface):
     devsim.interface_model(device=device, interface=interface, name="continuousPotential", equation="Potential@r0-Potential@r1")
     devsim.interface_model(device=device, interface=interface, name="continuousPotential:Potential@r0", equation= "1")
     devsim.interface_model(device=device, interface=interface, name="continuousPotential:Potential@r1", equation="-1")
-    devsim.interface_equation(device=device, interface=interface, name="PotentialEquation", variable_name="Potential", interface_model="continuousPotential", type="continuous")
+    devsim.interface_equation(device=device, interface=interface, name="PotentialEquation", interface_model="continuousPotential", type="continuous")
 
 def SetupContinuousElectronsAtInterface(device, interface):
     # type continuous means that regular equations in both regions are swapped into the primary region
     devsim.interface_model(device=device, interface=interface, name="continuousElectrons", equation="Electrons@r0-Electrons@r1")
     devsim.interface_model(device=device, interface=interface, name="continuousElectrons:Electrons@r0", equation= "1")
     devsim.interface_model(device=device, interface=interface, name="continuousElectrons:Electrons@r1", equation="-1")
-    devsim.interface_equation(device=device, interface=interface, name="ElectronContinuityEquation", variable_name="Electrons", interface_model="continuousElectrons", type="continuous")
+    devsim.interface_equation(device=device, interface=interface, name="ElectronContinuityEquation", interface_model="continuousElectrons", type="continuous")
 
 def SetupElectronSRVAtInterface(device, interface):
     '''
@@ -265,6 +281,6 @@ def SetupElectronSRVAtInterface(device, interface):
     ):
         devsim.interface_model(device=device, interface=interface, name=name, equation=equation)
 
-    devsim.interface_equation(device=device, interface=interface, name="ElectronContinuityEquation", variable_name="Electrons", interface_model="srvElectrons2", type="fluxterm")
+    devsim.interface_equation(device=device, interface=interface, name="ElectronContinuityEquation", interface_model="srvElectrons2", type="fluxterm")
 
 

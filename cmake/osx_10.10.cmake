@@ -1,8 +1,11 @@
-ADD_DEFINITIONS(-fvisibility=hidden)
+ADD_COMPILE_OPTIONS(-Wall -fvisibility=hidden)
+
+SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
+
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
-SET (PYTHON27_ARCHIVE "-lpython2.7")
-SET (PYTHON27_INCLUDE "/usr/include/python2.7")
+
+SET (BOOST_INCLUDE "${CONDA_PREFIX}/include")
 
 SET (BLAS_ARCHIVE  -weak-lblas -weak-llapack)
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)

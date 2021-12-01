@@ -115,7 +115,7 @@ R"(    devsim.set_circuit_node_value (solution, node, value)
 )";
 
 static const char contact_equation_doc[] =
-R"(    devsim.contact_equation (device, contact, name, variable_name, circuit_node, edge_charge_model, edge_current_model, edge_model, edge_volume_model, element_charge_model, element_current_model, element_model, volume_node0_model, volume_node1_model, node_charge_model, node_current_model, node_model)
+R"(    devsim.contact_equation (device, contact, name, circuit_node, edge_charge_model, edge_current_model, edge_model, edge_volume_model, element_charge_model, element_current_model, element_model, volume_node0_model, volume_node1_model, node_charge_model, node_current_model, node_model)
 
     Create a contact equation on a device
 
@@ -127,8 +127,6 @@ R"(    devsim.contact_equation (device, contact, name, variable_name, circuit_no
        Contact on which to apply this command
     name : str
        Name of the contact equation being created
-    variable_name : str, optional
-       The variable name is used to determine the bulk equation we are replacing at this contact (deprecated)
     circuit_node : str, optional
        Name of the circuit we integrate the flux into
     edge_charge_model : str, optional
@@ -364,7 +362,7 @@ R"(    devsim.get_interface_equation_list (device, interface)
 )";
 
 static const char interface_equation_doc[] =
-R"(    devsim.interface_equation (device, interface, name, name0, name1, variable_name, interface_model, type)
+R"(    devsim.interface_equation (device, interface, name, name0, name1, interface_model, type)
 
     Command to specify an equation at an interface
 
@@ -380,8 +378,6 @@ R"(    devsim.interface_equation (device, interface, name, name0, name1, variabl
        Name of the equation coupling in region 0 being created (default 'name')
     name1 : str, optional
        Name of the equation coupling in region 1 being created (default 'name')
-    variable_name : str, optional
-       The variable name is used to determine the bulk equation we are coupling this interface to (deprecated)
     interface_model : str
        When specified, the bulk equations on both sides of the interface are integrated together.  This model is then used to specify how nodal quantities on both sides of the interface are balanced
     type : {'continuous', 'fluxterm', 'hybrid'} required
@@ -945,6 +941,27 @@ R"(    devsim.create_gmsh_mesh (mesh, file, coordinates, elements, physical_name
 
       - Each node of the element indexes into the coordinates list.
 
+)";
+
+static const char create_interface_from_nodes_doc[] =
+R"(    devsim.create_interface_from_nodes (device, name, region0, region1, nodes0, nodes1)
+
+    Creates an interface from lists of nodes
+
+    Parameters
+    ----------
+    device : str
+       The selected device
+    name : str
+       name of the interface begin created
+    region0 : str
+       first region that the interface is attached to
+    region1 : str
+       second region that the interface is attached to
+    nodes0 : str
+       list of nodes for the interface in the first region
+    nodes1 : str
+       list of nodes for the interface in the second region
 )";
 
 static const char finalize_mesh_doc[] =
@@ -1823,7 +1840,7 @@ R"(    devsim.vector_element_model (device, region, element_model)
     region : str
        The selected region
     element_model : str
-       The element model for which we are calculating the vector compoenents
+       The element model for which we are calculating the vector components
 
     Notes
     -----
@@ -1906,8 +1923,21 @@ R"(    devsim.get_matrix_and_rhs (format)
        Option for returned matrix format.
 )";
 
+static const char set_initial_condition_doc[] =
+R"(    devsim.set_initial_condition (static_rhs, dynamic_rhs)
+
+    Sets the initial condition for subsequent transient solver steps.
+
+    Parameters
+    ----------
+    static_rhs : list, optional
+       List of double values for non time-displacement terms in right hand side.
+    dynamic_rhs : list, optional
+       List of double values for time-displacement terms in right hand side.
+)";
+
 static const char solve_doc[] =
-R"(    devsim.solve (type, solver_type, absolute_error, relative_error, charge_error, gamma, tdelta, maximum_iterations, frequency, output_node, info)
+R"(    devsim.solve (type, solver_type, absolute_error, relative_error, maximum_error, charge_error, gamma, tdelta, maximum_iterations, maximum_divergence, frequency, output_node, info)
 
     Call the solver.  A small-signal AC source is set with the circuit voltage source.
 
@@ -1921,6 +1951,8 @@ R"(    devsim.solve (type, solver_type, absolute_error, relative_error, charge_e
        Required update norm in the solve (default 0.0)
     relative_error : Float, optional
        Required relative update in the solve (default 0.0)
+    maximum_error : Float, optional
+       Maximum absolute error before solve stops (default MAXDOUBLE)
     charge_error : Float, optional
        Relative error between projected and solved charge during transient simulation (default 0.0)
     gamma : Float, optional
@@ -1929,6 +1961,8 @@ R"(    devsim.solve (type, solver_type, absolute_error, relative_error, charge_e
        time step (default 0.0)
     maximum_iterations : int, optional
        Maximum number of iterations in the DC solve (default 20)
+    maximum_divergence : int, optional
+       Maximum number of diverging iterations during solve (default 20)
     frequency : Float, optional
        Frequency for small-signal AC simulation (default 0.0)
     output_node : str, optional

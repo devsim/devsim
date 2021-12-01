@@ -1,26 +1,84 @@
-### Version 1.6.0
+# CHANGES
 
-#### Array Type Input and Output
+## Version 1.7.0
+
+### Versioned MKL DLL in release build
+
+The Intel Math Kernel Library now uses versioned library names.  Binary releases are now updated against the latest versioned dll names from MKL available in the Anaconda Python distribution.
+
+### Fixed issue in ramp function.
+
+The ``rampbias`` function in the ``devsim.python_packages.ramp`` module has been fixed to properly reduce the bias when there is a convergence failure.
+
+### Transient Simulation
+
+Fixed bug with ``transient_tr`` (trapezoidal) time integration method where the wrong sign was used to integrate previous time steps.
+
+Fixed bug in the charge error calculation, which calculates the simulation result with that a forward difference projection.
+
+Added ``testing/transient_rc.py`` test which compares simulation with analytic result for RC circuit.
+
+Added ``set_initial_condition`` command to provide initial transient conditions based on current solution.
+
+### Create interface from node pairs
+
+Added ``create_interface_from_nodes`` to make it possible to add interface from non-coincident pairs of nodes.
+
+### Solver
+
+#### Convergence Tests
+
+The ``maximum_error`` and ``maximum_divergence`` options where added to the ``solve`` command.  If the absolute error of any iteration goes above ``maximum_error``, the simulation stops with a convergence failure.  The ``maximum_divergence`` is the maximum number of iterations that the simulator error may increase before stopping.
+
+#### Verbosity
+
+During the ``solve``, circuit node and circuit solution information is no longer printed to the screen for the default verbosity level.  In addition, the number of equations per device and region is no longer displayed at the start of the first iteration.
+
+#### SuperLU
+
+The code now supports newer versions of ``SuperLU``.  The release version is still using SuperLU 4.3 for the iterative solution method, and the Intel MKL Pardiso for the direct solve method.
+
+#### Simulation Matrix
+
+The ``get_matrix_and_rhs`` command was not properly accepting the ``format`` parameter, and was always returning the same type.
+
+### Build Scripts
+
+The build scripts have been updated on all platforms to be less dependent on specific Python 3 versions.
+
+An updated fedora build script has been added.  It uses the system installed ``SuperLU`` as the direct solver.
+
+### Documentation Files
+
+Some out of date files (e.g. RELEASE, INSTALL, . . .) have been removed.  The [README.md](README.md) has been updated and the [INSTALL.md](INSTALL.md) have been updated.
+
+### Command Options
+
+The ``variable_name`` option is no longer recognized for the ``devsim.contact_equation`` and ``devsim.interface_equation` as it was not being used.
+
+## Version 1.6.0
+
+### Array Type Input and Output
 
 In most circumstances, the software now returns numerical data using the Python ``array`` class.  This is more efficient than using standard lists, as it encapsulates a contiguous block of memory.  More information about this class can be found at [https://docs.python.org/3/library/array.html](https://docs.python.org/3/library/array.html).  The representation can be easily converted to lists and ``numpy`` arrays for efficient manipulation.
 
 When accepting user input involving lists of homogenous data, such as ``set_node_values`` the user may enter data using either a list, string of bytes, or the ``array`` class.  It may also be used to input ``numpy`` arrays or any other class with a ``tobytes`` method.
 
-#### Get Matrix and RHS for External Use
+### Get Matrix and RHS for External Use
 
 The ``get_matrix_and_rhs`` command has been added to assemble the static and dynamic matrices, as well as their right hand sides, based on the current state of the device being simulated.  The ``format`` option is used to specify the sparse matrix format, which may be either in the compressed column or compressed row formats, ``csc`` or ``csr``.
 
-#### Maximum Divergence Count
+### Maximum Divergence Count
 
 If the Newton iteration errors keep increasing for 20 iterations in a row, then the simulator stops.  This limit was previously 5.
 
-#### Mesh Visualization Element Orientation
+### Mesh Visualization Element Orientation
 
 Elements written to the ``tecplot`` format in 2d and 3d have node orderings compatible with the element connectivity in visualization formats.  Specifying the ``reorder=True`` option in ``get_element_node_list`` will result in node ordering compatible with meshing and visualization software.
 
-### Version 1.5.2
+## Version 1.5.1
 
-#### Math Functions
+### Math Functions
 
 The following inverse functions and their derivatives are now available in the model interpreter.
 - ``erf_inv`` Inverse Error Function
@@ -52,7 +110,7 @@ Have extended precision variants:
 - ``testing/Fermi1_float128.py``
 - ``testing/GaussFermi_float128.py``
 
-#### Installation Script
+### Installation Script
 
 A new installation script is in the base directory of the package.
 It provides instructions of completing the installation to the ``python`` environment without having to set the ``PYTHONPATH`` environment variable.
@@ -77,7 +135,7 @@ The install script will write a file named ``lib/setup.py``, which can be used t
     INFO: pip uninstall devsim
 ```
 
-### Version 1.5.0
+## Version 1.5.0
 
 The ``custom_equation`` command has been modified to require a third return value.  This boolean value denotes whether the matrix entries should be row permutated or not.  For the bulk equations this value should be ``True``.  For interface and contact boundary conditions, this value should be ``False``.
 
@@ -104,18 +162,18 @@ so that nodal quantities can be more localized.
 
 More details are in the manual.
 
-### Version 1.4.14
-#### Platforms
+## Version 1.4.14
+### Platforms
 
 Windows 32 bit is no longer supported.  Binary releases of the ``Visual Studio 2019`` ``MSYS2/Mingw-w64`` 64-bit builds are still available online.
 
 On Linux, the releases are now on Centos 7, as Centos 6 has reached its end of life on November 30, 2020.
 
-#### C++ Standard
+### C++ Standard
 
 The C++ standard has been raised to C++17.
 
-### Version 1.4.13
+## Version 1.4.13
 
 The node indexes with the maximum error for each equation will be printed when ``debug_level`` is ``verbose``.
 
@@ -136,7 +194,7 @@ This information is also returned when using the ``info=True`` option on the ``s
 If the ``info`` flag is set to ``True`` on the ``solve`` command, the iteration information will be returned, and an exception for convergence will no longer be thrown.  It is the responsibility of the caller to test the result of the ``solve`` command to see if the simulation converged.  Other types of exceptions, such as floating point errors, will still result in a Python exception that needs to be caught.
 
 
-### Version 1.4.12
+## Version 1.4.12
 
 Element assembly for calculation of current and charges from the device into the circuit equation are fixed.  These tests are added:
 
@@ -147,7 +205,7 @@ Element assembly for calculation of current and charges from the device into the
 
 The ``edge`` variant is using standard edge based assembly, and the ``element`` variant is using element-based assembly.
 
-### Version 1.4.11
+## Version 1.4.11
 
 The ``element_pair_from_edge_model`` is available to calculate element edge components averaged onto each node of the element edge.  This makes it possible to create an edge weighting scheme different from those used in ``element_from_edge_model``.
 
@@ -159,35 +217,35 @@ The platform specific notes now clarify that any version of Python 3 (3.6 or hig
 - ``windows.txt``
 - ``macos.txt``
 
-### Version 1.4.10
+## Version 1.4.10
 
 Fixed crash when evaluating element edge model in 3D.
 
 Fixed potential error using ``delete_node_model`` and similar deletion commands.
 
-### Version 1.4.9
+## Version 1.4.9
 
 Support for loading mesh files containing element edge data.
 
-### Version 1.4.8
+## Version 1.4.8
 
 In transient mode, the convergence test was flawed so that the ``charge_error`` was the only convergence check required for convergence.  The software now ensures all convergence criteria are met.
 
-### Version 1.4.7
+## Version 1.4.7
 
-#### Models
+### Models
 
 In the simple physics models, the sign for time-derivative terms was wrong for the electron and hole continuity equations.  This affects small-signal and noise simulations.  The example at ``examples/diode/ssac_diode.py`` was updated to reflect the change.
 
-#### Platforms
+### Platforms
 
 Fix build script issue for macOS on Travis CI, updated the compiler to ``g++-9``.
 
 Update Centos 6 build from ``devtoolset-6`` to ``devtoolset-8``.
 
-### Version 1.4.6
+## Version 1.4.6
 
-#### Version Information
+### Version Information
 
 Parameter ``info`` can be queried for getting version information.  The file ``testing/info.py`` contains an example.
 
@@ -196,31 +254,31 @@ Parameter ``info`` can be queried for getting version information.  The file ``t
   {'copyright': 'Copyright © 2009-2020 DEVSIM LLC', 'direct_solver': 'mkl_pardiso', 'extended_precision': True, 'license': 'Apache License, Version 2.0', 'version': '1.4.6', 'website': 'https://devsim.org'}
 ```
 
-#### Extended Precision
+### Extended Precision
 
 The example ``examples/diode/gmsh_diode3d_float128.py`` provides an example where extended precision is enabled.
 
-#### Python Formatting
+### Python Formatting
 
 The Python scripts in the ``examples`` and ``testing`` directories have been reformatted to be more consistent with language standards.
 
-#### Platforms
+### Platforms
 
 Microsoft Windows 10 is supported and is now compiled using Microsoft Visual Studio 2019.
 
 Microsoft Windows 7 is no longer supported, as Microsoft has dropped support as of January 14, 2020.
 
-#### External Meshing
+### External Meshing
 
 Support for reading meshes from Genius Device Simulator has been completely removed from DEVSIM.
 
 
-### Version 1.4.5
+## Version 1.4.5
 
 * Platform Support:
   * An MSYS2/Mingw-w64 build is available for 64-bit Windows.  This build, labeled ``devsim_msys_v1.4.5``, enables the use of the 128-bit floating point precision already available on the macOS and Linux platforms.
 
-### Version 1.4.4
+## Version 1.4.4
 
 * Bug Fixes:
   * Intermittent crash on Windows 10 at the end of the program

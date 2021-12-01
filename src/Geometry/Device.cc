@@ -159,31 +159,47 @@ void Device::AddInterface(const InterfacePtr &ip)
 
   //// Make sure the reverse operation is done if we ever remove a contact
   const ConstNodeList_t &inodes0 = ip->GetNodes0();
-// Tacitly assume that inodes0 coordinate index always matches those on inodes1
-//  const ConstNodeList_t &inodes1 = ip->GetNodes1();
+  const ConstNodeList_t &inodes1 = ip->GetNodes1();
+  dsAssert(inodes0.size() == inodes1.size(), "Inteface node mismatch");
+
   std::map<std::string, size_t> warning_list;
-  for (ConstNodeList_t::const_iterator it = inodes0.begin(); it != inodes0.end(); ++it)
+
+  std::vector<size_t> iindexes;
+  iindexes.reserve(2);
+
+  for (size_t it = 0; it < inodes0.size(); ++it)
   {
-    const size_t ii = (*it)->GetCoordinate().GetIndex();
+    iindexes.clear();
 
-    if (coordinateIndexToInterface.count(ii) &&  coordinateIndexToInterface[ii].begin() != coordinateIndexToInterface[ii].end())
+    const size_t t0 = inodes0[it]->GetCoordinate().GetIndex();
+    iindexes.push_back(t0);
+    const size_t t1 = inodes1[it]->GetCoordinate().GetIndex();
+    if (t0 != t1)
     {
-      std::ostringstream os;
-      os << "Warning, interface \"" << (*coordinateIndexToInterface[ii].begin())->GetName() << "\" shares a node with interface \"" << nm << "\"";
-      warning_list[os.str()] += 1;
+      iindexes.push_back(t1);
     }
 
-    if (coordinateIndexToContact.count(ii) &&  coordinateIndexToContact[ii].begin() != coordinateIndexToContact[ii].end())
+    for (size_t ii : iindexes)
     {
-      std::ostringstream os;
-      os << "Warning, contact \"" << (*coordinateIndexToContact[ii].begin())->GetName() << "\" shares a node with interface \"" << nm << "\"";
-      warning_list[os.str()] += 1;
-    }
+      if (coordinateIndexToInterface.count(ii) &&  coordinateIndexToInterface[ii].begin() != coordinateIndexToInterface[ii].end())
+      {
+        std::ostringstream os;
+        os << "Warning, interface \"" << (*coordinateIndexToInterface[ii].begin())->GetName() << "\" shares a node with interface \"" << nm << "\"";
+        warning_list[os.str()] += 1;
+      }
 
-    //// Guarantee that vector is sorted based on pointer address
-    std::vector<InterfacePtr> &iplist = coordinateIndexToInterface[ii];
-    iplist.push_back(ip);
-    std::sort(iplist.begin(), iplist.end());
+      if (coordinateIndexToContact.count(ii) &&  coordinateIndexToContact[ii].begin() != coordinateIndexToContact[ii].end())
+      {
+        std::ostringstream os;
+        os << "Warning, contact \"" << (*coordinateIndexToContact[ii].begin())->GetName() << "\" shares a node with interface \"" << nm << "\"";
+        warning_list[os.str()] += 1;
+      }
+
+      //// Guarantee that vector is sorted based on pointer address
+      std::vector<InterfacePtr> &iplist = coordinateIndexToInterface[ii];
+      iplist.push_back(ip);
+      std::sort(iplist.begin(), iplist.end());
+    }
   }
   if (!warning_list.empty())
   {

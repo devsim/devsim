@@ -181,14 +181,13 @@ class TetrahedronEdgeModel {
         WeakTetrahedronEdgeModelPtr myself;
         // need to know my region to get database data and appropriate node and edge lists
         RegionPtr   myregion;
-        mutable ModelDataHolder model_data;
         mutable bool uptodate;
         mutable bool inprocess;
         DisplayType displayType;
+        mutable ModelDataHolder model_data;
         static const char *DisplayTypeString[];
 };
 
-//TODO: "forward???"
 template <typename T1, typename T2, typename ... Args>
 TetrahedronEdgeModelPtr create_tetrahedron_edge_model(bool use_extended, Args &&...args)
 {

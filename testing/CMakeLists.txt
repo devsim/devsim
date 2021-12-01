@@ -63,6 +63,7 @@ SET (NEWPY3TESTS
   transient_circ
   transient_circ2
   transient_circ3
+  transient_rc
 circ1
 circ2
 circ3

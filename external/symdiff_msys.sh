@@ -7,10 +7,6 @@ ANACONDA_PATH=${CONDA_PREFIX}
 CMAKE=$(cygpath -w ${ANACONDA_PATH}/Library/bin/cmake.exe)
 
 GENERATOR="MSYS Makefiles"
-CXX=g++
-PYTHON3_ARCHIVE=$(cygpath -w "${ANACONDA_PATH}/libs/python3.lib")
-PYTHON3_INCLUDE=$(cygpath -w "${ANACONDA_PATH}/include")
-PYTHON3_BIN=$(cygpath -w "${PYTHON3_BASE}/bin/python")
 libpath=`/usr/bin/cygpath -w $PWD/lib`
 for TYPE in debug release; do
 ARCH=`uname -m`

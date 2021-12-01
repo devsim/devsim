@@ -166,6 +166,11 @@ class Interface {
         bool UseExtendedPrecisionModels() const;
         bool UseExtendedPrecisionEquations() const;
 
+        bool ElementsProvided() const
+        {
+          return elements_provided_;
+        }
+
     private:
         void FindEdges() const;
         void FindTriangles() const;
@@ -195,6 +200,8 @@ class Interface {
 #ifdef DEVSIM_EXTENDED_PRECISION
         WeakInterfaceModelExprDataCachePtr<float128> interfaceModelExprDataCache_float128;
 #endif
+        // Are the mesh elemenents provided, or do we start with the nodes
+        mutable bool elements_provided_;
 };
 #endif
 

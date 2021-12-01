@@ -101,10 +101,7 @@ createNodeSolutionCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -188,10 +185,7 @@ createNodeModelCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -254,7 +248,6 @@ createNodeModelCmd(CommandHandler &data)
         data.SetErrorResult(errorString);
         return;
     }
-
 
     ConstNodeModelPtr existingNodeModel = reg->GetNodeModel(name);
     ConstEdgeModelPtr existingEdgeModel = reg->GetEdgeModel(name);
@@ -423,10 +416,7 @@ createContactNodeModelCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -552,10 +542,7 @@ createCylindricalCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -634,10 +621,7 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -756,10 +740,7 @@ createEdgeAverageModelCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -850,17 +831,13 @@ createInterfaceNodeModelCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
         data.SetErrorResult(errorString);
         return;
     }
-
 
 //    const std::string commandName = data.GetCommandName();
 
@@ -918,10 +895,7 @@ setNodeValuesCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -973,7 +947,6 @@ setNodeValuesCmd(CommandHandler &data)
     std::function<void(const std::vector<float128> &)> extended_setter;
     std::vector<float128> extended_values;
 #endif
-
 
     bool model_exists = false;
     bool initializer_exists = false;
@@ -1155,10 +1128,7 @@ setNodeValueCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1206,7 +1176,6 @@ setNodeValueCmd(CommandHandler &data)
       std::const_pointer_cast<NodeModel, const NodeModel>(nm_name)->SetNodeValue(index, value);
     }
 
-
     if (!errorString.empty())
     {
         data.SetErrorResult(errorString);
@@ -1252,10 +1221,7 @@ printNodeValuesCmd(CommandHandler &data)
       {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -1341,10 +1307,7 @@ printEdgeValuesCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -1429,10 +1392,7 @@ printElementEdgeValuesCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -1564,10 +1524,7 @@ getInterfaceValuesCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -1590,7 +1547,6 @@ getInterfaceValuesCmd(CommandHandler &data)
     data.SetErrorResult(errorString);
     return;
   }
-
 
   ConstInterfaceNodeModelPtr imp = interface->GetInterfaceNodeModel(name);
 
@@ -1640,10 +1596,7 @@ getNodeModelListCmd(CommandHandler &data)
       {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -1708,10 +1661,7 @@ getInterfaceModelListCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1733,7 +1683,6 @@ getInterfaceModelListCmd(CommandHandler &data)
         data.SetErrorResult(errorString);
         return;
     }
-
 
     const Interface::NameToInterfaceNodeModelMap_t &nml = interface->GetInterfaceNodeModelList();
     data.SetStringListResult(GetKeys(nml));
@@ -1757,10 +1706,7 @@ createVectorElementModelCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1847,10 +1793,7 @@ createTriangleFromEdgeModelCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -1990,11 +1933,7 @@ debugTriangleCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -2077,10 +2016,7 @@ createInterfaceNormalModelCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
-
-
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -2115,7 +2051,6 @@ createInterfaceNormalModelCmd(CommandHandler &data)
         return;
     }
 
-
     if (commandName == "interface_normal_model")
     {
       std::string idist(interfaceName +  "_distance"); 
@@ -2145,10 +2080,7 @@ symdiffCmd(CommandHandler &data)
     {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -2200,10 +2132,7 @@ registerFunctionCmd(CommandHandler &data)
     {nullptr,     nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
   };
 
-  dsGetArgs::switchList switches = nullptr;
-
-
-  bool error = data.processOptions(option, switches, errorString);
+  bool error = data.processOptions(option, errorString);
 
   if (error)
   {
@@ -2289,9 +2218,4 @@ Commands ModelCommands[] = {
 };
 
 }
-
-//TODO:  "get dependency list of models"
-//TODO:  "Evaluate expression"
-
-//TODO: set_interface_value
 

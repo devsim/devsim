@@ -255,6 +255,7 @@ MyNewPyPtr(get_contact_current,        dsCommand::getContactCurrentCmd);
 MyNewPyPtr(get_contact_charge,         dsCommand::getContactCurrentCmd);
 MyNewPyPtr(solve,                      dsCommand::solveCmd);
 MyNewPyPtr(get_matrix_and_rhs,         dsCommand::getMatrixAndRHSCmd);
+MyNewPyPtr(set_initial_condition,      dsCommand::setInitialConditionCmd);
 // Equation Commands
 MyNewPyPtr(equation,                       dsCommand::createEquationCmd);
 MyNewPyPtr(interface_equation,             dsCommand::createInterfaceEquationCmd);
@@ -290,6 +291,7 @@ MyNewPyPtr(add_gmsh_contact,              dsCommand::addGmshContactCmd);
 MyNewPyPtr(add_gmsh_interface,            dsCommand::addGmshInterfaceCmd);
 MyNewPyPtr(add_gmsh_region,               dsCommand::addGmshRegionCmd);
 MyNewPyPtr(create_contact_from_interface, dsCommand::createContactFromInterfaceCmd);
+MyNewPyPtr(create_interface_from_nodes,   dsCommand::createInterfaceFromNodesCmd);
 // Circuit Commands
 MyNewPyPtr(add_circuit_node,            dsCommand::addCircuitNodeCmd);
 MyNewPyPtr(circuit_element,             dsCommand::circuitElementCmd);
@@ -372,6 +374,7 @@ MYCOMMAND(get_contact_current,        dsCommand::getContactCurrentCmd),
 MYCOMMAND(get_contact_charge,         dsCommand::getContactCurrentCmd),
 MYCOMMAND(solve,                      dsCommand::solveCmd),
 MYCOMMAND(get_matrix_and_rhs,         dsCommand::getMatrixAndRHSCmd),
+MYCOMMAND(set_initial_condition,      dsCommand::setInitialConditionCmd),
 // Equation Commands
 MYCOMMAND(equation,                       dsCommand::createEquationCmd),
 MYCOMMAND(interface_equation,             dsCommand::createInterfaceEquationCmd),
@@ -407,6 +410,7 @@ MYCOMMAND(add_gmsh_contact,              dsCommand::addGmshContactCmd),
 MYCOMMAND(add_gmsh_interface,            dsCommand::addGmshInterfaceCmd),
 MYCOMMAND(add_gmsh_region,               dsCommand::addGmshRegionCmd),
 MYCOMMAND(create_contact_from_interface, dsCommand::createContactFromInterfaceCmd),
+MYCOMMAND(create_interface_from_nodes,   dsCommand::createInterfaceFromNodesCmd),
 // Circuit Commands
 MYCOMMAND(add_circuit_node,            dsCommand::addCircuitNodeCmd),
 MYCOMMAND(circuit_element,             dsCommand::circuitElementCmd),

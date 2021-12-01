@@ -29,7 +29,7 @@ def CreateElementContactElectronContinuityEquation(device, contact, current_mode
       Uses element current model for equation
     '''
     contact_electrons_name = "{0}nodeelectrons".format(contact)
-    contact_equation(device=device, contact=contact, name="ElectronContinuityEquation", variable_name="Electrons",
+    contact_equation(device=device, contact=contact, name="ElectronContinuityEquation",
                      node_model=contact_electrons_name,
                      element_current_model=current_model)
 

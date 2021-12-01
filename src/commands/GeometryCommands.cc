@@ -51,10 +51,9 @@ void getDeviceListCmd(CommandHandler &data)
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
 
-    dsGetArgs::switchList switches = nullptr;
 
 
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -106,10 +105,9 @@ getRegionListCmd(CommandHandler &data)
 
 
 
-    dsGetArgs::switchList switches = nullptr;
 
 
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {
@@ -236,10 +234,9 @@ getElementNodeListCmd(CommandHandler &data)
 
 
 
-    dsGetArgs::switchList switches = nullptr;
 
 
-    bool error = data.processOptions(option, switches, errorString);
+    bool error = data.processOptions(option, errorString);
 
     if (error)
     {

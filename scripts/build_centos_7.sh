@@ -14,23 +14,16 @@ export CXX="/opt/rh/devtoolset-9/root/usr/bin/g++"
 export F77="/opt/rh/devtoolset-9/root/usr/bin/gfortran"
 
 #minimal conda environments to prevent linking against the wrong libraries
-cd ${HOME}
-if [ ! -f Miniconda3-latest-Linux-x86_64.sh ]
-then
-curl -L -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh;
-bash Miniconda3-latest-Linux-x86_64.sh -b -p ${HOME}/anaconda;
-${HOME}/anaconda/bin/conda create  -y --name python3_devsim_build python=3.8
-${HOME}/anaconda/bin/conda install -y --name python3_devsim_build mkl mkl-devel mkl-include boost cmake
-fi
-source ${HOME}/anaconda/bin/activate python3_devsim_build
+conda create  -y --name python3_devsim_build python=3 mkl mkl-devel mkl-include boost cmake
+source activate python3_devsim_build
+
+export PYTHON3_BIN=python
+export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_ARCHIVE=""
 
 #download boost library
 #(cd ${HOME}/devsim/external && curl -O -L https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz)
 #(cd ${HOME}/devsim/external && tar xzf boost_1_66_0.tar.gz)
-
-
-# this script assumes git clone and submodule initialization has been done
-cd devsim
 
 # SuperLU
 #(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)

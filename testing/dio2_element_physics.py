@@ -104,7 +104,7 @@ def createPotentialOnlyContact(device, region, contact):
         devsim.contact_node_model(device=device, contact=contact, name=name_sub, equation=equation_sub)
 
 
-    devsim.contact_equation(device=device, contact=contact, name="PotentialEquation", variable_name="Potential",
+    devsim.contact_equation(device=device, contact=contact, name="PotentialEquation",
                             node_model="%snodemodel" % contact)
 
 def createDriftDiffusion(device, region):
@@ -216,11 +216,11 @@ def createDriftDiffusionAtContact(device, region, contact):
         equation_sub = equation % format_dict
         devsim.contact_node_model(device=device, contact=contact, name=name_sub, equation=equation_sub)
 
-        devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation", variable_name="Electrons",
+        devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation",
                                 node_model="%snodeelectrons" % contact,
                                 edge_current_model="ElectronCurrent")
 
-        devsim.contact_equation(device=device, contact=contact, name="HoleContinuityEquation", variable_name="Holes",
+        devsim.contact_equation(device=device, contact=contact, name="HoleContinuityEquation",
                                 node_model="%snodeholes" % contact,
                                 edge_current_model="HoleCurrent")
 
