@@ -31,6 +31,8 @@ Please see [LICENSE](LICENSE) and [NOTICE](NOTICE) for license terms.
 
 The PDF documentation is located in ``doc/devsim.pdf``.  An online version of the documentation is available at [https://devsim.net](https://devsim.net).  A list of documentation resources is available [online](https://devsim.org/introduction.html#documentation).
 
+The repository for the documentation is at [https://github.com/devsim/devsim_documentation](https://github.com/devsim/devsim_documentation).
+
 ## Supported Platforms:
 * macOS 10.13 (High Sierra)
 * Microsoft Windows (64 bit)
