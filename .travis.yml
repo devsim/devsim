@@ -43,7 +43,7 @@ script:
     docker exec centos7 bash -c "cd /root/devsim && source scripts/install_miniconda_linux.sh && bash scripts/build_centos_7.sh devsim_linux_${TRAVIS_TAG}";
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-      source  ./scripts/install_miniconda_macos.sh
+      source  ./scripts/install_miniconda_macos.sh;
       if [ "$COMPILER" == "gcc" ]; then
         ./scripts/build_macos.sh $COMPILER "${TRAVIS_TAG}";
       elif [ "$COMPILER" == "clang" ]; then
