@@ -86,7 +86,6 @@ for c in ("contact1", "contact2"):
                        equation="1")
 
     contact_equation(device=device, contact=c, name="PotentialEquation",
-                     variable_name="Potential",
                      node_model="%s_bc" % c, edge_charge_model="DField")
 
 ###

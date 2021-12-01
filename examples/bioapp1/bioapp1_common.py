@@ -132,16 +132,16 @@ for contact in ("top", "bot"):
     node_model(device="disk", region="solution", name="{0}_potential".format(contact), equation="Potential - {0}_bias".format(contact))
     node_model(device="disk", region="solution", name="{0}_potential:Potential".format(contact), equation="1")
 
-    contact_equation(device="disk", contact=contact, name="PotentialEquation", variable_name="Potential",
+    contact_equation(device="disk", contact=contact, name="PotentialEquation",
                      node_model="{0}_potential".format(contact), edge_charge_model="DField")
 
     contact_node_model(device="disk", contact=contact, name="{0}_anion".format(contact), equation="anions - n_bound")
     contact_node_model(device="disk", contact=contact, name="{0}_anion:anions".format(contact), equation="1")
-    contact_equation(device="disk", contact=contact, name="AnionContinuityEquation", variable_name="anions", node_model="{0}_anion".format(contact))
+    contact_equation(device="disk", contact=contact, name="AnionContinuityEquation", node_model="{0}_anion".format(contact))
 
     contact_node_model(device="disk", contact=contact, name="{0}_cation".format(contact), equation="cations - n_bound")
     contact_node_model(device="disk", contact=contact, name="{0}_cation:cations".format(contact), equation="1")
-    contact_equation(device="disk", contact=contact, name="CationContinuityEquation", variable_name="cations", node_model="{0}_cation".format(contact))
+    contact_equation(device="disk", contact=contact, name="CationContinuityEquation", node_model="{0}_cation".format(contact))
 
 
 #create potential continuity at interfaces
@@ -149,7 +149,7 @@ for interface in ("dna_solution", "dielectric_solution"):
     interface_model(device="disk", interface=interface, name="continuousPotential", equation="Potential@r0-Potential@r1")
     interface_model(device="disk", interface=interface, name="continuousPotential:Potential@r0", equation="1")
     interface_model(device="disk", interface=interface, name="continuousPotential:Potential@r1", equation="-1")
-    interface_equation(device="disk", interface=interface, name="PotentialEquation", variable_name="Potential", interface_model="continuousPotential", type="continuous")
+    interface_equation(device="disk", interface=interface, name="PotentialEquation", interface_model="continuousPotential", type="continuous")
 
 # For visualization
 for region in ("dna", "dielectric", "solution"):

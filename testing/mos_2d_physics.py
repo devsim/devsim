@@ -94,7 +94,7 @@ def createSiliconPotentialOnlyContact(device, region, contact):
         equation_sub = equation % format_dict
         devsim.contact_node_model(device=device, contact=contact, name=name_sub, equation=equation_sub)
 
-    devsim.contact_equation(device=device, contact=contact, name="PotentialEquation", variable_name="Potential",
+    devsim.contact_equation(device=device, contact=contact, name="PotentialEquation",
                             node_model="%snodemodel" % contact)
 
 def createSiliconDriftDiffusion(device, region):
@@ -156,10 +156,10 @@ def createSiliconDriftDiffusionAtContact(device, region, contact):
         equation_sub = equation % format_dict
         devsim.contact_node_model(device=device, contact=contact, name=name_sub, equation=equation_sub)
 
-    devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation", variable_name="Electrons",
+    devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation",
                             node_model="%snodeelectrons" % contact, edge_current_model="ElectronCurrent")
 
-    devsim.contact_equation(device=device, contact=contact, name="HoleContinuityEquation", variable_name="Holes",
+    devsim.contact_equation(device=device, contact=contact, name="HoleContinuityEquation",
                             node_model="%snodeholes" % contact, edge_current_model="HoleCurrent")
 
 
@@ -185,7 +185,7 @@ def createSiliconOxideInterface(device, interface):
     ):
         devsim.interface_model(device=device, interface=interface, name=name, equation=equation)
 
-    devsim.interface_equation(device=device, interface=interface, name="PotentialEquation", variable_name="Potential", interface_model="continuousPotential", type="continuous")
+    devsim.interface_equation(device=device, interface=interface, name="PotentialEquation", interface_model="continuousPotential", type="continuous")
 
 def createSiliconSiliconInterface(device, interface):
     for variable in ("Potential", "Electrons", "Holes"):
@@ -200,7 +200,7 @@ def createSiliconSiliconInterface(device, interface):
             devsim.interface_model(device=device, interface=interface, name=name_sub, equation=equation_sub)
         eqname = "%sEquation" % variable
         ieqname = "continuous%s" % variable
-        devsim.interface_equation(device=device, interface=interface, name=eqname, variable_name=variable,
+        devsim.interface_equation(device=device, interface=interface, name=eqname,
                                   interface_model=ieqname, type="continuous")
 
 def createBernoulli(device, region):

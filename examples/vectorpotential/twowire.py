@@ -65,13 +65,13 @@ for interface in ("air_left", "air_right"):
     interface_model( device=device, interface=interface, name="continuousAz:Az@r1", equation="-1.0")
 
     interface_equation(device=device, interface=interface,  name="Az_Equation",
-                       variable_name="Az", interface_model="continuousAz", type="continuous")
+                       interface_model="continuousAz", type="continuous")
 
 
 #### contact
 contact_node_model(device=device, contact="bottom", name="Az_zero",    equation="Az - 0")
 contact_node_model(device=device, contact="bottom", name="Az_zero:Az", equation="1.0")
-contact_equation(device=device, contact="bottom", name="Az_Equation", variable_name="Az",
+contact_equation(device=device, contact="bottom", name="Az_Equation",
                  node_model="Az_zero")
 
 #write_devices(file="debug.msh")

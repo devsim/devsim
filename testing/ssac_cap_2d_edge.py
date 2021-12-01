@@ -120,10 +120,10 @@ for name, equation in (
     devsim.node_model(device=device, region=region, name=name, equation=equation)
 
 # attached to circuit node
-devsim.contact_equation(device=device, contact="top", name="PotentialEquation", variable_name="Potential",
+devsim.contact_equation(device=device, contact="top", name="PotentialEquation",
                         node_model="topnode_model", edge_charge_model="DField", circuit_node="topbias")
 # attached to ground
-devsim.contact_equation(device=device, contact="bot", name="PotentialEquation", variable_name="Potential",
+devsim.contact_equation(device=device, contact="bot", name="PotentialEquation",
                         node_model="botnode_model", edge_charge_model="DField")
 
 #

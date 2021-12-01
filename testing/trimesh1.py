@@ -46,8 +46,8 @@ devsim.node_model(device=device, region=region, name="topnode_model:Potential", 
 devsim.node_model(device=device, region=region, name="botnode_model"          , equation="Potential - botbias")
 devsim.node_model(device=device, region=region, name="botnode_model:Potential", equation="1")
 
-devsim.contact_equation(device=device, contact="top", name="PotentialEquation", variable_name="Potential", node_model="topnode_model", edge_charge_model="PotentialEdgeFlux")
-devsim.contact_equation(device=device, contact="bot", name="PotentialEquation", variable_name="Potential", node_model="botnode_model", edge_charge_model="PotentialEdgeFlux")
+devsim.contact_equation(device=device, contact="top", name="PotentialEquation", node_model="topnode_model", edge_charge_model="PotentialEdgeFlux")
+devsim.contact_equation(device=device, contact="bot", name="PotentialEquation", node_model="botnode_model", edge_charge_model="PotentialEdgeFlux")
 
 devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 

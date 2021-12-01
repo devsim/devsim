@@ -74,12 +74,12 @@ node_model(device=device, region="MyOxRegion", name="botnode_model",           e
 node_model(device=device, region="MyOxRegion", name="botnode_model:Potential", equation="1")
 edge_model(device=device, region="MyOxRegion", name="contactcharge_edge_bottom",  equation=conteq)
 
-contact_equation(device=device, contact="top", name="PotentialEquation", variable_name="Potential",
+contact_equation(device=device, contact="top", name="PotentialEquation",
                  node_model="topnode_model", edge_model="",
                  node_charge_model="", edge_charge_model="contactcharge_edge_top",
                  node_current_model="",   edge_current_model="")
 
-contact_equation(device=device, contact="bot", name="PotentialEquation", variable_name="Potential",
+contact_equation(device=device, contact="bot", name="PotentialEquation",
                  node_model="botnode_model", edge_model="",
                  node_charge_model="", edge_charge_model="contactcharge_edge_bottom",
                  node_current_model="", edge_current_model="")
@@ -88,7 +88,7 @@ contact_equation(device=device, contact="bot", name="PotentialEquation", variabl
 interface_model(device=device, interface=interface, name="continuousPotential", equation="Potential@r0-Potential@r1")
 interface_model(device=device, interface=interface, name="continuousPotential:Potential@r0", equation= "1")
 interface_model(device=device, interface=interface, name="continuousPotential:Potential@r1", equation="-1")
-interface_equation(device=device, interface=interface, name="PotentialEquation", variable_name="Potential", interface_model="continuousPotential", type="continuous")
+interface_equation(device=device, interface=interface, name="PotentialEquation", interface_model="continuousPotential", type="continuous")
 
 
 
