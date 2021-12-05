@@ -1,6 +1,10 @@
 # CHANGES
 
-## Version 1.7.0
+## Introduction
+
+Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
+
+## Version 2.0.0
 
 ### Versioned MKL DLL in release build
 
