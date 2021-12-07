@@ -58,7 +58,7 @@ Some out of date files (e.g. RELEASE, INSTALL, . . .) have been removed.  The [R
 
 ### Command Options
 
-The ``variable_name`` option is no longer recognized for the ``devsim.contact_equation`` and ``devsim.interface_equation` as it was not being used.
+The ``variable_name`` option is no longer recognized for the ``devsim.contact_equation`` and ``devsim.interface_equation`` as it was not being used.
 
 ## Version 1.6.0
 
