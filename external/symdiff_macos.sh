@@ -8,8 +8,6 @@ for TYPE in debug release; do
         -DCMAKE_BUILD_TYPE=${TYPE} \
         -DCMAKE_CXX_COMPILER=${CXX} \
         -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
-        -DPYTHON3_ARCHIVE=${PYTHON3_ARCHIVE} \
-        -DPYTHON3_BIN=${PYTHON3_BIN} \
         -DPYTHON3=ON \
         -DTCLMAIN=OFF \
         ..)
