@@ -167,12 +167,4 @@ From a Anaconda environment command prompt:
 
 where ``version`` is replaced with the desired version.  The compressed file is then ``devsim/dist/devsim_win64_version.zip``
 
-## Getting the Tests
-
-If you wish to see simulation results, or run the regression tests yourself.  They are available from:
-
-* [https://github.com/devsim/devsim_tests_msys](https://github.com/devsim/devsim_tests_msys)
-* [https://github.com/devsim/devsim_tests_win64](https://github.com/devsim/devsim_tests_win64)
-* [https://github.com/devsim/devsim_tests_macos_gcc_x86_64](https://github.com/devsim/devsim_tests_macos_gcc_x86_64)
-* [https://github.com/devsim/devsim_tests_linux_x86_64](https://github.com/devsim/devsim_tests_linux_x86_64)
 
