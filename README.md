@@ -59,9 +59,7 @@ For support and general discussion, please join our forum:
 Please see:
 [Contribution guidelines for this project](CONTRIBUTING.md)
 
-## Related Projects
-
-### Testing
+## Testing
 
 If you wish to see simulation results, or run the regression tests yourself.  They are available from:
 
@@ -73,6 +71,8 @@ If you wish to see simulation results, or run the regression tests yourself.  Th
 | [devsim_tests_linux_x86_64](https://github.com/devsim/devsim_tests_linux_x86_64) | Linux |
 
 *The results are platform dependent due to differences in the compiler, operating system, and math libraries used on each platform.*
+
+## Related Projects
 
 ### Used directly by the simulator
 | Name | Description |
