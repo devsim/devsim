@@ -6,8 +6,8 @@ export CMAKE_CXX_FLAGS=""
 export CC="/usr/bin/gcc"
 export CXX="/usr/bin/g++"
 export F77="/usr/bin/gfortran"
-export PYTHON3_BIN=python
-export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_BIN=python3
+export PYTHON3_INCLUDE=$(python3 -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
 
 #download boost library
