@@ -16,7 +16,7 @@ The official website is here:
 
 ## Installation:
 
-Binary releases are available at [Zenodo](https://doi.org/10.5281/zenodo.1186952).  Please see [INSTALL.md](INSTALL.md) for installation instructions.
+Binary releases are available at [Zenodo](https://doi.org/10.5281/zenodo.1186952).  Please see [INSTALL.md](INSTALL.md) for installation instructions from binary or source.
 
 ## Citing This Work:
 
@@ -48,9 +48,6 @@ The repository for the documentation is at [https://github.com/devsim/devsim_doc
 * Import 3D meshes.
 * 2D cylindrical coordinate simulation
 * ASCII file format with PDE embedded.
-
-Please see INSTALL file for installation instructions from source.  Please see 
-NOTICE and LICENSE files for copyright and license information.
 
 ## Support:
 
