@@ -59,6 +59,30 @@ For support and general discussion, please join our forum:
 Please see:
 [Contribution guidelines for this project](CONTRIBUTING.md)
 
-## Testing:
+## Related Projects
 
-Please [INSTALL.md](INSTALL.md) for links to the test repositories for each platform.
+### Testing
+
+If you wish to see simulation results, or run the regression tests yourself.  They are available from:
+
+| Name | Description |
+| --- | --- |
+| [devsim_tests_msys](https://github.com/devsim/devsim_tests_msys) | Windows MSYS Build |
+| [devsim_tests_win64](https://github.com/devsim/devsim_tests_win64) | Windows Visual Studio 2019 Build |
+| [devsim_tests_macos_gcc_x86_64](https://github.com/devsim/devsim_tests_macos_gcc_x86_64) | macOS Build |
+| [devsim_tests_linux_x86_64](https://github.com/devsim/devsim_tests_linux_x86_64) | Linux |
+
+*The results are platform dependent due to differences in the compiler, operating system, and math libraries used on each platform.*
+
+### Used directly by the simulator
+| Name | Description |
+| --- | --- |
+| [symdiff](https://github.com/devsim/symdiff) | Symbolic differentiation engine for the simulator |
+| [devsim_documentation](https://github.com/devsim/devsim_documentation) | Documentation for the simulator |
+
+### Extended examples
+| Name | Description |
+| --- | --- |
+| [devsim_bjt_example](https://github.com/devsim/devsim_bjt_example) | Bipolar Junction Transistor example |
+| [devsim_density_gradient](https://github.com/devsim/devsim_density_gradient) | Quantum Corrections to Drift Diffusion simulation |
+

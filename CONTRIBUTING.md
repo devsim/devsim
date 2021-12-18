@@ -1,5 +1,5 @@
 
-### Contributing
+# Contributing
 
 Thank you for your interest in this project.
 
