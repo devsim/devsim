@@ -23,9 +23,21 @@ bibliography: paper.bib
 
 # Statement of need
 
-`DEVSIM` is TCAD device simulation package written in C++, with a Python front end.  It is capable of simulating 1-D, 2-D and 3-D structures with models describing advanced physical effects [@devsim:home].  Software with TCAD simulation capabilities have existed in commercial and academic research tools for quite some time.  The number of open source offerings, meeting the OSI definition, has been growing (cf. [@cogenda; @charon; @solcore]).  Due to the expanse of TCAD simulation algorithms and models, each simulator would need to be evaluated for its desired application.
+`DEVSIM` is TCAD device simulation package written in C++, with a Python front end.  It is capable of simulating 1-D, 2-D and 3-D structures with models describing advanced physical effects [@devsim:home].  Software with TCAD simulation capabilities have existed in commercial and academic research tools for quite some time.  The number of open source offerings, meeting the Open Source OSI definition [@OSI:2007], has been growing [@cogenda; @charon; @solcore].
 
-A unique feature of the software is its scripting model interface.  It symbolically evaluates expressions and their derivatives.  These expressions are evaluated on the mesh structure by the C++ engine.  This symbolic engine is tailored toward modeling advanced TCAD simulation models, and is directly compatible with the finite volume methods employed in the equation discretization [@sanchez:ieee].  Researchers are able to implement their models using a Python scripting interface, avoiding the need to recompile the software, enabling rapid development of new physical models.
+Due to the expanse of TCAD simulation algorithms and models, it is important to note that this software fits into the class of continuum PDE based solvers for drift-diffusion semiconductor simulation [@Selberherr].  `DEVSIM` is intended to compare directly with the commercial TCAD offerings, such as Sentaurus Device from Synopsys, or the Victory Device Simulator from Silvaco.  The identifying factors for this class of software are:
+
+* Sharfetter-Gummel discretization of the electron and hole continuity equations
+* DC, transient, small-signal AC, and noise solution algorithms
+* Solution of 1D, 2D, and 3D unstructured meshes
+* Advanced models for mobility and semiclassical approaches for quantum effects
+
+While `DEVSIM` is not as complete as the commercial offerings, the project strives to fulfill the gaps by developing an open source community. To our knowledge, the only other OSI defined simulator actively being developed, with similar features, is the Genius Semiconductor Device Simulator [@cogenda].  There are other simulators which provide their source code under restrictive academic research licenses.
+
+A unique feature of the software is its scripting model interface.  It symbolically evaluates expressions and their derivatives.  The core engine is maintained as a separate project, `SYMDIFF` [@symdiff]. It is then tailored toward modeling advanced TCAD simulation models. 
+
+These expressions are evaluated on the mesh structure by the C++ engine.
+It is directly compatible with the finite volume methods employed in the equation discretization [@sanchez:ieee].  Researchers are able to implement their models using a Python scripting interface, avoiding the need to recompile the software, enabling rapid development of new physical models.
 
 While `DEVSIM` has limited capabilities for the creation of 1-D and 2-D meshes, the Python interface allows the import of mesh structures from any format using a triangular representation (in 2-D) or a tetrahedral representation (in 3-D).  This makes it possible for the user to utilize high quality open source meshing solutions [@Gmsh:2009; @tetgen].
 
