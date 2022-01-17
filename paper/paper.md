@@ -19,7 +19,7 @@ bibliography: paper.bib
 
 # Summary
 
-`DEVSIM` is technology computer-aided design (TCAD) software for semiconductor device simulation.  By solving the equations for electric fields and current flow, it simulates the electrical behavior of semiconductor devices, such as transistors.  It can be used to model existing, fabricated devices for calibration purposes.  It is also possible to explore novel device structures and exotic materials, reducing the number of costly and time consuming manufacturing iterations.
+`DEVSIM` is a technology computer-aided design (TCAD) software for semiconductor device simulation.  By solving the equations for electric fields and current flow, it simulates the electrical behavior of semiconductor devices, such as transistors.  It can be used to model existing, fabricated devices for calibration purposes.  It is also possible to explore novel device structures and exotic materials, reducing the number of costly and time consuming manufacturing iterations.
 
 # Statement of need
 
