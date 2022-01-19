@@ -19,11 +19,11 @@ bibliography: paper.bib
 
 # Summary
 
-`DEVSIM` is a technology computer-aided design (TCAD) software for semiconductor device simulation.  By solving the equations for electric fields and current flow, it simulates the electrical behavior of semiconductor devices, such as transistors.  It can be used to model existing, fabricated devices for calibration purposes.  It is also possible to explore novel device structures and exotic materials, reducing the number of costly and time consuming manufacturing iterations.
+`DEVSIM` is technology computer-aided design (TCAD) software for semiconductor device simulation.  By solving the equations for electric fields and current flow, it simulates the electrical behavior of semiconductor devices, such as transistors.  It can be used to model existing, fabricated devices for calibration purposes.  It is also possible to explore novel device structures and exotic materials, reducing the number of costly and time consuming manufacturing iterations.
 
 # Statement of need
 
-`DEVSIM` is TCAD device simulation package written in C++, with a Python front end.  It is capable of simulating 1-D, 2-D and 3-D structures with models describing advanced physical effects [@devsim:home].  Software tools with TCAD simulation capabilities have existed in commercial and academic research tools for quite some time.  The number of open source offerings meeting the open source definition (OSD), as defined by the Open Source Initiative [@OSI:2007], has been growing [@cogenda; @charon; @solcore].
+`DEVSIM` is a TCAD device simulation package written in C++, with a Python front end.  It is capable of simulating 1-D, 2-D and 3-D structures with models describing advanced physical effects [@devsim:home].  Software tools with TCAD simulation capabilities have existed in commercial and academic research tools for quite some time.  The number of open source offerings meeting the open source definition (OSD), as defined by the Open Source Initiative [@OSI:2007], has been growing [@cogenda; @charon; @solcore].
 
 Due to the expanse of TCAD simulation algorithms and models, it is important to note that this software fits into the class of continuum PDE based solvers for drift-diffusion semiconductor simulation [@Selberherr].  `DEVSIM` is intended to compare directly with the commercial TCAD offerings, such as Sentaurus Device from Synopsys, or the Victory Device Simulator from Silvaco.  The identifying factors for this class of software are:
 
