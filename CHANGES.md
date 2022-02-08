@@ -13,6 +13,10 @@ The following files were updated in the text documentation distributed with the 
 - ``INSTALL.md``
 - ``README.md``
 
+### Update MKL Version
+
+The release version of this software is build against version 2 of the Intel MKL, which corresponds to the latest version of Anaconda Python.  If you have issues running ``DEVSIM`` with this new version, please contact us at [https://forum.devsim.org](https://forum.devsim.org) for assistance.
+
 ### Update SYMDIFF reference
 
 The submodule reference to ``SYMDIFF`` was updated due some changes to its build files.  Some ``SYMDIFF`` build scripts in the ``DEVSIM`` repository were also updated.
