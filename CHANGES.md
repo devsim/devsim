@@ -4,6 +4,19 @@
 
 Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
 
+## Version 2.0.1
+
+### Update documentation files
+
+The following files were updated in the text documentation distributed with the software.
+- ``CONTRIBUTING.md``
+- ``INSTALL.md``
+- ``README.md``
+
+### Update SYMDIFF reference
+
+The submodule reference to ``SYMDIFF`` was updated due some changes to its build files.  Some ``SYMDIFF`` build scripts in the ``DEVSIM`` repository were also updated.
+
 ## Version 2.0.0
 
 ### Versioned MKL DLL in release build
