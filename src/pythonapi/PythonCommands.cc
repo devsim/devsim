@@ -481,7 +481,15 @@ DEVSIM_MODULE_INIT(void)
     //https://www.python.org/dev/peps/pep-0396/
     PyDict_SetItemString(PyModule_GetDict(module), "__version__", PyUnicode_FromString(DEVSIM_VERSION_STRING));
 
-    devsim_initialization();
+    try {
+      devsim_initialization();
+    }
+    catch (...)
+    {
+        PyErr_SetString(PyExc_RuntimeError, "Issues initializing DEVSIM.");
+        Py_DECREF(module);
+        INITERROR;
+    }
 
   return module;
 }

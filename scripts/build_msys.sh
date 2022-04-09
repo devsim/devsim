@@ -3,7 +3,7 @@ set -e
 export PATH=/mingw64/bin:/usr/bin:${PATH}
 # msys Specific
 #pacman -Su --noconfirm rsync zip
-pacman -Su --noconfirm make
+pacman -Su --noconfirm make mingw-w64-x86_64-gcc mingw-w64-x86_64-gcc-fortran
 
 # handle miniconda in appveyor.yml
 export CXX=g++

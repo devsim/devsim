@@ -18,9 +18,8 @@ SET (SUPERLULOCATE   ${CMAKE_SOURCE_DIR}/external/SuperLU_4.3)
 SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/msys/libsuperlu.a)
 SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
 
-SET (BLAS_ARCHIVE     ${CONDA_PREFIX}/Library/lib/mkl_rt.lib
- ${CMAKE_SOURCE_DIR}/external/getrf/build/libgetrf.a
-)
+SET (BLAS_ARCHIVE          ${CONDA_PREFIX}/Library/lib/mkl_rt.lib)
+SET (EXTENDED_BLAS_ARCHIVE ${CMAKE_SOURCE_DIR}/external/getrf/build/libgetrf.a)
 SET (MKL_PARDISO_INCLUDE ${CONDA_PREFIX}/Library/include)
 
 SET (SQLITE3_INCLUDE  ${CONDA_PREFIX}/Library/include)

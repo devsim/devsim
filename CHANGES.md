@@ -4,6 +4,49 @@
 
 Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
 
+## Version 2.1.0
+
+### Explicit math library loading
+
+#### Introduction
+
+Since the Intel Math Kernel Library started versioning the names of their dynamic link libraries, it has been difficult to maintain a proper Anaconda Python environment when the version has been updated.
+
+Module load will fail, explain to use following methods.
+See default solver at start.
+
+Program may crash for bad configuration.
+
+#### Intel MKL
+
+No longer required when other math libraries are available.
+Check math version string.  From Version 2.1.0 onward, a specific version is not required, but may result in crash if the interface was changed.
+
+Note ``LD_LIBRARY_PATH`` or ``$CONDA_PREFIX/lib`` for search on ``Linux``.  On ``macOS`` search path is extended with ``@rpath/lib`` and used ``DYLD_LIBRARY_PATH``.
+
+Version string in info.  Error out when PARDISO is not available.
+
+#### Loading other math libraries
+
+It is possible to load alternative implementations of the BLAS/LAPACK used by the software.  The ``DEVSIM_MATH_LIBS`` environment variable may be used to set a ``:`` separated list of libraries.  These names may be based on relative or absolute paths.  The program will load the libraries in order, and stop when all of the necessary math symbols are supplied.
+
+#### New CMAKE build option
+For those building the software, the ``EXPLICIT_MATH_LOAD`` CMAKE option has been added to control the new explicit math loading feature.  An important benefit of this option is that it is possible to build a release version of the software, even if the Intel MKL has not been installed on the build computer.
+
+### Direct Solver Selection
+
+``mkl_pardiso`` or ``superlu``.
+The ``direct_solver`` parameter is set as appropriate based on the available math libraries.
+Default will switch to SuperLU when Pardiso is not available.
+
+### Kahan summation in extended precision mode
+
+The ``kahan3`` and ``kahan4`` functions are now using the Kahan summation algorithm for extended precision model evaluation.  Previously, this algorithm was replaced with 128-bit floating point addition and subtraction in releases that support extended precision mode.  With this change, better than 128-bit floating precision is available.
+
+#### Visual Studio 2022
+
+The Microsoft Windows``win64`` release version is now built using the Visual Studio 2022 compiler.  For users needing extended precision on the Windows platform, the ``msys`` build is recommended.
+
 ## Version 2.0.1
 
 ### Update documentation files
@@ -12,6 +55,10 @@ The following files were updated in the text documentation distributed with the 
 - ``CONTRIBUTING.md``
 - ``INSTALL.md``
 - ``README.md``
+
+This was done to create a version to coincide with this paper in the Journal of Open Source Software.
+
+Sanchez, J. E., (2022). DEVSIM: A TCAD Semiconductor Device Simulator. Journal of Open Source Software, 7(70), 3898, [https://doi.org/10.21105/joss.03898](https://doi.org/10.21105/joss.03898)
 
 ### Update MKL Version
 

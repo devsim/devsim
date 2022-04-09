@@ -20,12 +20,12 @@ This runtime may be necessary to run the software.
 
 *  Microsoft Visual C++ Redistributable for Visual Studio 2019
    - [https://www.visualstudio.com/downloads](https://www.visualstudio.com/downloads)
-   - [https://aka.ms/vs/16/release/VC_redist.x64.exe](https://aka.ms/vs/16/release/VC_redist.x64.exe)
+   - [https://aka.ms/vs/16/release/VC_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe)
 
 
 ### Install Anaconda Python
 
-*Please note that most Python 3 environments should work.  The Anaconda distributions are recommended since they provide ready access to the Intel Math Kernel Library (MKL).  If you do not wish to use the Intel MKL, you can build a version of the source code without these dependencies.*
+*Please note that most Python 3 environments should work.  The Anaconda distributions are recommended since they provide ready access to the Intel Math Kernel Library (MKL).  As of DEVSIM version 2.1.0, you can configure the software to load alternative libraries implementing the math library functions.*
 
 Install [Anaconda](https://www.anaconda.com/products/individual) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) environment.  The following install scripts are available in the ``devsim/scripts`` directory to install the latest version of Miniconda into ``${HOME}/anaconda``. 
 
@@ -59,8 +59,6 @@ You should then be able to run an example in the ``testing`` directory.
 ### Troubleshooting
 
 If you have any issues with this process.  Please contact us through the DEVSIM forum at [https://forum.devsim.org](https://forum.devsim.org).
-
-The Intel Math Kernel Library (MKL) is now versioning its symbols, meaning that the MKL must be available with the exact file name that DEVSIM was built against.  Please install a version of the MKL matching the one searched for by the ``install.py`` script.
 
 At this time, the macOS version only targets Intel-based systems.  There has been a report that users may have to grant permission for code from "unknown" developers.
 

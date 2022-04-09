@@ -7,11 +7,8 @@ SET (BISON /usr/bin/bison)
 
 SET (QUADMATH_ARCHIVE "-lquadmath")
 
-# to prevent linking against bad libstdc++
-
-SET (BLAS_ARCHIVE
- ${EXTERNAL_LIB}/getrf/build/libgetrf.a -Wl,--no-as-needed -lpthread -lblas -lm -ldl
-)
+SET (BLAS_ARCHIVE -Wl,--no-as-needed -lpthread -lblas -lm -ldl)
+SET (EXTENDED_BLAS_ARCHIVE ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
 
 SET (SUPERLU_INCLUDE /usr/include/SuperLU)
 SET (SUPERLU_ARCHIVE  -lsuperlu)

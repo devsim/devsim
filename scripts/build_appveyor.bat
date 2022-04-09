@@ -8,7 +8,8 @@ SET TAG=%3
 
 c:\msys64\usr\bin\pacman -Su --noconfirm rsync zip bison flex git
 
-call %CONDA_BIN% create -y -n python3_devsim_build python=3 cmake mkl mkl-devel mkl-include sqlite zlib boost
+:: now opt for explicit dll load of mkl
+call %CONDA_BIN% create -y -n python3_devsim_build python=3 cmake sqlite zlib boost
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 call %CONDA_BIN% activate python3_devsim_build
@@ -22,7 +23,7 @@ IF "%1"=="msys" (
 )
 
 IF "%1"=="x64" (
-  SET GENERATOR="Visual Studio 16 2019"
+  SET GENERATOR="Visual Studio 17 2022"
   SET AOPTION="x64"
   SET BUILDDIR=win64
   SET USE_VISUAL_STUDIO=true

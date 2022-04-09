@@ -14,6 +14,7 @@ SET (CXX_SRCS
     BlockPreconditioner.cc
     gmres.cc
     MathEnum.cc
+    BlasHeaders.cc
 )
 
 IF (MKL_PARDISO)

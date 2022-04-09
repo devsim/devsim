@@ -51,14 +51,37 @@ class kahan {
 #include "Float128.hh"
 #endif
 
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+template <typename DoubleType>
+struct KahanType;
+template <> struct KahanType<double>
+{
+#ifdef DEVSIM_EXTENDED_PRECISION
+  using type = float128;
+#else
+  using type = kahan<double>;
+#endif
+};
+
+template <> struct KahanType<float128>
+{
+  using type = kahan<float128>;
+};
+#else
+template <typename DoubleType>
+struct KahanType
+{
+  using type = kahan<DoubleType>;
+};
+#endif
+
+
+
 template <typename DoubleType>
 DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c)
 {
-#ifdef DEVSIM_EXTENDED_PRECISION
-  float128 k(a);
-#else
-  kahan<DoubleType> k(a);
-#endif
+  typename KahanType<DoubleType>::type k(a);
   k += b;
   k += c;
   return static_cast<DoubleType>(k);
@@ -67,11 +90,7 @@ DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c)
 template <typename DoubleType>
 DoubleType kahan4(DoubleType a, DoubleType b, DoubleType c, DoubleType d)
 {
-#ifdef DEVSIM_EXTENDED_PRECISION
-  float128 k(a);
-#else
-  kahan<DoubleType> k(a);
-#endif
+  typename KahanType<DoubleType>::type k(a);
   k += b;
   k += c;
   k += d;

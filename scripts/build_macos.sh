@@ -43,7 +43,9 @@ fi
 #minimal conda environments to prevent linking against the wrong libraries
 if [ "${1}" = "gcc" ]
 then
-conda create  -y --name python3_devsim_build python=3 mkl mkl-devel mkl-include boost cmake
+#conda create  -y --name python3_devsim_build python=3 mkl mkl-devel mkl-include boost cmake
+# now opt for explicit dll load of mkl
+conda create  -y --name python3_devsim_build python=3 boost cmake
 fi
 
 #This version does not use pardiso

@@ -14,7 +14,9 @@ export CXX="/opt/rh/devtoolset-9/root/usr/bin/g++"
 export F77="/opt/rh/devtoolset-9/root/usr/bin/gfortran"
 
 #minimal conda environments to prevent linking against the wrong libraries
-conda create  -y --name python3_devsim_build python=3 mkl mkl-devel mkl-include boost cmake
+# now opt for explicit dll load of mkl
+#conda create  -y --name python3_devsim_build python=3 mkl mkl-devel mkl-include boost cmake
+conda create  -y --name python3_devsim_build python=3 boost cmake
 source activate python3_devsim_build
 
 export PYTHON3_BIN=python

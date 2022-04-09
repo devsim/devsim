@@ -37,6 +37,7 @@ limitations under the License.
 #include "ObjectHolder.hh"
 #include "Interpreter.hh"
 #include "dsTimer.hh"
+#include "BlasHeaders.hh"
 
 //#undef USE_MKL_PARDISO
 
@@ -494,6 +495,63 @@ void Newton<DoubleType>::BackupSolutions()
 }
 
 namespace {
+enum class DirectSolver {
+  UNKNOWN,
+
+  MKLPARDISO,
+  SUPERLU
+};
+
+DirectSolver GetDirectSolver()
+{
+  DirectSolver ret = DirectSolver::UNKNOWN;
+  GlobalData &gdata = GlobalData::GetInstance();
+  auto dbent = gdata.GetDBEntryOnGlobal("direct_solver");
+  if (dbent.first)
+  {
+    const auto &val = dbent.second.GetString();
+    if (val == "superlu")
+    {
+      ret = DirectSolver::SUPERLU;
+    }
+    else if (val == "mkl_pardiso")
+    {
+#ifdef USE_MKL_PARDISO
+      ret = DirectSolver::MKLPARDISO;
+#else
+      std::ostringstream os;
+      os << "Solver \"mkl_pardiso\" not supported in this build.  Switching to \"superlu\".\n";
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+#endif
+    }
+    else
+    {
+      std::ostringstream os;
+      os << "Unrecognized \"direct_solver\" parameter value \"" << val << "\". Valid options are \"mkl_pardiso\" or \"superlu\".\n";
+      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+    }
+  }
+  if (ret != DirectSolver::UNKNOWN)
+  {
+    return ret;
+  }
+
+  std::ostringstream os;
+  os << "Parameter \"direct_solver\" parameter not set. Valid options are \"mkl_pardiso\" or \"superlu\".\n";
+  if (MathLoader::IsMKLLoaded())
+  {
+    os << "Using \"mkl_pardiso\" direct solver.\n";
+    ret = DirectSolver::MKLPARDISO;
+  }
+  else
+  {
+    os << "Using \"superlu\" direct solver.\n";
+    ret = DirectSolver::SUPERLU;
+  }
+  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+  return ret;
+}
+
 Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, size_t numeqns)
 {
   Preconditioner<double> *preconditioner;
@@ -503,11 +561,20 @@ Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, s
   }
   else
   {
+    if (auto s = GetDirectSolver(); s == DirectSolver::SUPERLU)
+    {
+      preconditioner = new SuperLUPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+    }
 #ifdef USE_MKL_PARDISO
-    preconditioner = new MKLPardisoPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS);
-#else
-    preconditioner = new SuperLUPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+    else if (s == DirectSolver::MKLPARDISO)
+    {
+      preconditioner = new MKLPardisoPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS);
+    }
 #endif
+    else
+    {
+      dsAssert(false, "Unexpected Solver Type");
+    }
   }
   return preconditioner;
 }
@@ -522,11 +589,20 @@ Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermetho
   }
   else
   {
+    if (auto s = GetDirectSolver(); s == DirectSolver::SUPERLU)
+    {
+      preconditioner = new SuperLUPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+    }
 #ifdef USE_MKL_PARDISO
-    preconditioner = new MKLPardisoPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS);
-#else
-    preconditioner = new SuperLUPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+    else if (s == DirectSolver::MKLPARDISO)
+    {
+      preconditioner = new MKLPardisoPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS);
+    }
 #endif
+    else
+    {
+      dsAssert(false, "Unexpected Solver Type");
+    }
   }
   return preconditioner;
 }
@@ -535,11 +611,22 @@ Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermetho
 template <typename DoubleType>
 Preconditioner<DoubleType> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns)
 {
+    Preconditioner<DoubleType> *preconditioner = nullptr;
+    if (auto s = GetDirectSolver();  s == DirectSolver::SUPERLU)
+    {
+      preconditioner = new SuperLUPreconditioner<DoubleType>(numeqns, trans_type, PEnum::LUType_t::FULL);
+    }
 #ifdef USE_MKL_PARDISO
-  return new MKLPardisoPreconditioner<DoubleType>(numeqns, trans_type);
-#else
-  return new SuperLUPreconditioner<DoubleType>(numeqns, trans_type, PEnum::LUType_t::FULL);
+    else if (s == DirectSolver::MKLPARDISO)
+    {
+      preconditioner = new MKLPardisoPreconditioner<DoubleType>(numeqns, trans_type);
+    }
 #endif
+    else
+    {
+      dsAssert(false, "Unexpected Solver Type");
+    }
+    return preconditioner;
 }
 
 template <typename DoubleType>
@@ -684,7 +771,7 @@ void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, Objec
     for (size_t i = 0; i < numeqns; ++i)
     {
       const auto &p = permvec[i];
-  
+
       const size_t &row = p.GetRow();
       if (row != size_t(-1))
       {
