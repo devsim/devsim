@@ -10,38 +10,42 @@ Please see the release notes in doc/devsim.pdf or at https://devsim.net for more
 
 #### Introduction
 
-Since the Intel Math Kernel Library started versioning the names of their dynamic link libraries, it has been difficult to maintain a proper Anaconda Python environment when the version has been updated.
-
-Module load will fail, explain to use following methods.
-See default solver at start.
-
-Program may crash for bad configuration.
+Since the Intel Math Kernel Library started versioning the names of their dynamic link libraries, it has been difficult to maintain a proper Anaconda Python environment when the version has been updated.  With this release, it is possible to use any recent version of the Intel MKL.  In addition, the user is able to load alternative BLAS/LAPACK math libraries.
 
 #### Intel MKL
 
-No longer required when other math libraries are available.
-Check math version string.  From Version 2.1.0 onward, a specific version is not required, but may result in crash if the interface was changed.
+From DEVSIM Version 2.1.0 onward, a specific version is not required when loading the Intel MKL.  If the Intel MKL is not found, the import of the ``devsim`` module will fail, and an error message will be printed.  This method is the default, and should work when using an Anaconda Python environment with the ``mkl`` package installed.
 
-Note ``LD_LIBRARY_PATH`` or ``$CONDA_PREFIX/lib`` for search on ``Linux``.  On ``macOS`` search path is extended with ``@rpath/lib`` and used ``DYLD_LIBRARY_PATH``.
-
-Version string in info.  Error out when PARDISO is not available.
+When using a different Python distribution, or having an installation in a different place, it is possible to specify the location by modifying the ``LD_LIBRARY_PATH`` environment variable on Linux, or using ``DYLD_LIBRARY_PATH`` on macOS.  The explicit path may be set to the MKL math libraries may be set using the method in the next section.
 
 #### Loading other math libraries
 
-It is possible to load alternative implementations of the BLAS/LAPACK used by the software.  The ``DEVSIM_MATH_LIBS`` environment variable may be used to set a ``:`` separated list of libraries.  These names may be based on relative or absolute paths.  The program will load the libraries in order, and stop when all of the necessary math symbols are supplied.
+It is possible to load alternative implementations of the BLAS/LAPACK used by the software.  The ``DEVSIM_MATH_LIBS`` environment variable may be used to set a ``:`` separated list of libraries.  These names may be based on relative or absolute paths.  The program will load the libraries in order, and stop when all of the necessary math symbols are supplied.  If symbols for the Intel MKL are detected, then the Pardiso direct solver will be enabled.
 
 #### New CMAKE build option
 For those building the software, the ``EXPLICIT_MATH_LOAD`` CMAKE option has been added to control the new explicit math loading feature.  An important benefit of this option is that it is possible to build a release version of the software, even if the Intel MKL has not been installed on the build computer.
 
 ### Direct Solver Selection
 
-``mkl_pardiso`` or ``superlu``.
-The ``direct_solver`` parameter is set as appropriate based on the available math libraries.
-Default will switch to SuperLU when Pardiso is not available.
+The direct solver may be selected by using the ``direct_solver`` parameter.
+```
+devsim.set_parameter(name='direct_solver', value='mkl_pardiso')
+```
+
+The following options are available:
+- ``mkl_pardiso`` Intel MKL Pardiso
+- ``superlu`` SuperLU 4.3
+
+The default is `mkl_pardiso`` when the Intel MKL is loaded.  Otherwise, the default will switch to ``superlu``.
 
 ### Kahan summation in extended precision mode
 
-The ``kahan3`` and ``kahan4`` functions are now using the Kahan summation algorithm for extended precision model evaluation.  Previously, this algorithm was replaced with 128-bit floating point addition and subtraction in releases that support extended precision mode.  With this change, better than 128-bit floating precision is available.
+The ``kahan3`` and ``kahan4`` functions are now using the Kahan summation algorithm for extended precision model evaluation.  Previously, this algorithm was replaced with 128-bit floating point addition and subtraction in releases that support extended precision mode.  With this change, better than 128-bit floating precision is available when extended precision is enabled.
+```
+devsim.set_parameter(name = "extended_model", value=True)
+```
+
+The ``testing/kahan_float128.py`` test has been added.
 
 #### Visual Studio 2022
 
