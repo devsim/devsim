@@ -54,7 +54,7 @@ bash scripts/setup_centos_6.sh
 
 # overcome bad libstdc++ in anaconda directory
 mkdir -p linux_x86_64_release/linklibs
-for i in libmkl_rt.so libz.a libsqlite3*; do cp -f ${CONDA_PREFIX}/lib/$i linux_x86_64_release/linklibs/; done
+for i in libz.a libsqlite3*; do cp -f ${CONDA_PREFIX}/lib/$i linux_x86_64_release/linklibs/; done
 
 (cd linux_x86_64_release && make -j2)
 (cd dist && bash package_linux.sh ${1})
