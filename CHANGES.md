@@ -36,7 +36,7 @@ The following options are available:
 - ``mkl_pardiso`` Intel MKL Pardiso
 - ``superlu`` SuperLU 4.3
 
-The default is `mkl_pardiso`` when the Intel MKL is loaded.  Otherwise, the default will switch to ``superlu``.
+The default is ``mkl_pardiso`` when the Intel MKL is loaded.  Otherwise, the default will switch to ``superlu``.
 
 ### Kahan summation in extended precision mode
 
