@@ -532,7 +532,7 @@ LoaderMessages_t LoadFromEnvironment(std::string &errors)
     }
     else if (status == LoaderMessages_t::MKL_LOADED)
     {
-      os << "INTEL MKL with PARDISO LOADED";
+      os << "Intel MKL with PARDISO LOADED";
       done = true;
     }
     else if (status == LoaderMessages_t::MISSING_DLL)

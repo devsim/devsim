@@ -65,7 +65,7 @@ void devsim_initialization()
     else
     {
       std::ostringstream os;
-      os << "Error loading math libraries.  Please install a suitable BLAS/LAPACK library and set DEVSIM_MATH_LIBS.  Alternatively, install the INTEL MKL.\n";
+      os << "Error loading math libraries.  Please install a suitable BLAS/LAPACK library and set DEVSIM_MATH_LIBS.  Alternatively, install the Intel MKL.\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, errors);
     }
