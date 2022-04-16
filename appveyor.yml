@@ -40,7 +40,7 @@ skip_non_tags: true
 #---------------------------------#
 
 # Operating system (build VM template)
-image: Visual Studio 2019
+image: Visual Studio 2022
 
 # scripts that are called at very beginning, before repo cloning
 init:
