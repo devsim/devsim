@@ -17,7 +17,7 @@ cd ${HOME}
 #minimal conda environments to prevent linking against the wrong libraries
 # now opt for explicit dll load of mkl
 #conda create  -y --name python3_devsim_build python=3 mkl mkl-devel mkl-include boost cmake
-conda create  -y --name python3_devsim_build python=3 boost cmake
+conda create  -y --name python3_devsim_build python=3 boost cmake nomkl
 source activate python3_devsim_build
 
 export PYTHON3_BIN=python
