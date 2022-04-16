@@ -23,7 +23,7 @@ limitations under the License.
 #include <string>
 namespace MathLoader {
 // MKL_LOADED implies MKL Functions Loaded
-enum class LoaderMessages_t {MISSING_DLL, MISSING_SYMBOLS, MATH_LOADED, MKL_LOADED};
+enum class LoaderMessages_t {NO_ENVIRONMENT, MISSING_DLL, MISSING_SYMBOLS, MATH_LOADED, MKL_LOADED};
 LoaderMessages_t LoadMathLibraries(std::string &errors);
 LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool replace);
 void ClearBlasFunctions();

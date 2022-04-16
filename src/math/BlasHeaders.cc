@@ -487,6 +487,10 @@ LoaderMessages_t LoadFromEnvironment(std::string &errors)
     os << "Searching DEVSIM_MATH_LIBS=\"" << search_path << "\"\n";
     OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
+  else
+  {
+    return LoaderMessages_t::NO_ENVIRONMENT;
+  }
 
   std::string_view sv = search_path;
   std::vector<std::string> dll_names;
@@ -670,7 +674,7 @@ bool IsMKLLoaded()
 
 LoaderMessages_t GetMathStatus()
 {
-  auto ret = LoaderMessages_t::MISSING_DLL;
+  auto ret = LoaderMessages_t::MISSING_SYMBOLS;
   if (IsMathLoaded())
   {
     if (blas_table::PARDISO && blas_table::mkl_get_version_string)
@@ -713,11 +717,20 @@ std::string GetMKLVersion()
 LoaderMessages_t LoadMathLibraries(std::string &errors)
 {
   LoaderMessages_t ret = LoadFromEnvironment(errors);
+#if 0
   if ((ret == LoaderMessages_t::MKL_LOADED) || (ret == LoaderMessages_t::MATH_LOADED))
   {
       return ret;
   }
-  ret = LoadIntelMKL(errors);
+#endif
+  if (ret == LoaderMessages_t::NO_ENVIRONMENT)
+  {
+    ret = LoadIntelMKL(errors);
+  }
+  else
+  {
+    errors += "Not attempting to load Intel MKL since DEVSIM_MATH_LIBS is specified.\n";
+  }
   return ret;
 }
 
