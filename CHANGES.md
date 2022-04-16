@@ -25,7 +25,7 @@ It is possible to load alternative implementations of the BLAS/LAPACK used by th
 #### New CMAKE build option
 For those building the software, the ``EXPLICIT_MATH_LOAD`` CMAKE option has been added to control the new explicit math loading feature.  An important benefit of this option is that it is possible to build a release version of the software, even if the Intel MKL has not been installed on the build computer.
 
-### Direct Solver Selection
+### Direct solver selection
 
 The direct solver may be selected by using the ``direct_solver`` parameter.
 ```
@@ -47,7 +47,7 @@ devsim.set_parameter(name = "extended_model", value=True)
 
 The ``testing/kahan_float128.py`` test has been added.
 
-#### Visual Studio 2022
+### Visual Studio 2022
 
 The Microsoft Windows``win64`` release version is now built using the Visual Studio 2022 compiler.  For users needing extended precision on the Windows platform, the ``msys`` build is recommended.
 
