@@ -53,6 +53,7 @@ SET (NEWPY3TESTS
   GaussFermi
   GaussFermi_float128
   kahan
+  kahan_float128
   fpetest1
   fpetest2
   res1 res2 res3 ssac_res noise_res
