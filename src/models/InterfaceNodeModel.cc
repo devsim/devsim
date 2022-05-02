@@ -48,8 +48,6 @@ bool InterfaceNodeModel::IsOne() const
 InterfaceNodeModel::InterfaceNodeModel(const std::string &nm, const InterfacePtr ip)
     : name(nm),
       myinterface(ip),
-      uptodate(false),
-      inprocess(false),
       model_data(ip->GetNodes0().size())
 { 
   ip->AddInterfaceNodeModel(this);

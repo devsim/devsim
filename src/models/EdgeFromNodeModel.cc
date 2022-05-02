@@ -74,6 +74,7 @@ void EdgeFromNodeModel<DoubleType>::calcEdgeScalarValues() const
     {
       dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(),      dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
       dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
     const ConstEdgeModelPtr em1 = rp->GetEdgeModel(edgeModel1Name);
@@ -86,6 +87,7 @@ void EdgeFromNodeModel<DoubleType>::calcEdgeScalarValues() const
     {
       dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(),      dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
       dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
 

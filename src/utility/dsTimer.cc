@@ -34,8 +34,14 @@ dsTimer::~dsTimer()
 
   auto timediff = std::chrono::duration_cast<seconds>(toc - tic_).count();
 
-  std::ostringstream os;
-  os << "\nEND " << msg_ << " (" << timediff << " sec)\n";
-  OutputStream::WriteOut(output_type_, os.str());
+  try
+  {
+    std::ostringstream os;
+    os << "\nEND " << msg_ << " (" << timediff << " sec)\n";
+    OutputStream::WriteOut(output_type_, os.str());
+  }
+  catch(...)
+  {
+  }
 }
 

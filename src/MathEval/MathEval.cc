@@ -476,7 +476,11 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
 {
   tclMathFuncMap_t::const_iterator it = tclMathFuncMap_.find(func);
 
-  dsAssert(it != tclMathFuncMap_.end(), "UNEXPECTED");
+  if (it == tclMathFuncMap_.end())
+  {
+    dsAssert(it != tclMathFuncMap_.end(), "UNEXPECTED");
+    return;
+  }
 
   const size_t tclcount = (it->second).second;
 

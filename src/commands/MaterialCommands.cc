@@ -185,13 +185,16 @@ getParameterCmd(CommandHandler &data)
         const std::string &paramName = data.GetStringOption("name");
 
         GlobalData::DBEntry_t mdbentry;
-        if (!regionName.empty())
+        if (!deviceName.empty())
         {
-            mdbentry = gdata.GetDBEntryOnRegion(reg, paramName);
-        }
-        else if (!deviceName.empty())
-        {
+          if (!regionName.empty())
+          {
+              mdbentry = gdata.GetDBEntryOnRegion(deviceName, regionName, paramName);
+          }
+          else
+          {
             mdbentry = gdata.GetDBEntryOnDevice(deviceName, paramName);
+          }
         }
         else
         {
@@ -237,13 +240,16 @@ getParameterCmd(CommandHandler &data)
 
         /// Write now support only the float value for the material db
         const ObjectHolder value = data.GetObjectHolder("value");
-        if (!regionName.empty())
+        if (!deviceName.empty())
         {
-            gdata.AddDBEntryOnRegion(reg, paramName, value);
-        }
-        else if (!deviceName.empty())
-        {
-            gdata.AddDBEntryOnDevice(deviceName, paramName, value);
+          if (!regionName.empty())
+          {
+              gdata.AddDBEntryOnRegion(deviceName, regionName, paramName, value);
+          }
+          else
+          {
+              gdata.AddDBEntryOnDevice(deviceName, paramName, value);
+          }
         }
         else
         {

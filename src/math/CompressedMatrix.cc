@@ -65,27 +65,30 @@ void CompressedMatrix<DoubleType>::DebugMatrix(std::ostream &os) const
   os << "],\n";
 
   os << "'a' : [\n";
-  os << std::setprecision(15);
+
+  std::ostringstream fos;
+  fos << std::setprecision(15);
   if (matType_ == MatrixType::REAL)
   {
     for (size_t i = 0; i < Ax_.size(); ++i)
     {
-      os << Ax_[i] << ",\n";
+      fos << Ax_[i] << ",\n";
     }
   }
   else
   {
     for (size_t i = 0; i < Ax_.size(); ++i)
     {
-      os << "complex(" << Ax_[i]  << "," << Az_[i] << "),\n";
+      fos << "complex(" << Ax_[i]  << "," << Az_[i] << "),\n";
     }
   }
+  os << fos.str();
   os << "],\n";
   os << "}\n";
 }
 
 template <typename DoubleType>
-CompressedMatrix<DoubleType>::CompressedMatrix(size_t sz, MatrixType mt, CompressionType ct) : Matrix<DoubleType>(sz), matType_(mt), compressionType_(ct), compressed(false)
+CompressedMatrix<DoubleType>::CompressedMatrix(size_t sz, MatrixType mt, CompressionType ct) : Matrix<DoubleType>(sz), matType_(mt), compressionType_(ct), compressed(false), symbolicstatus_(SymbolicStatus_t::NEW_SYMBOLIC)
 {
   Symbolic_.resize(this->size());
   OutOfBandEntries_Real.resize(this->size());

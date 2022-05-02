@@ -99,7 +99,7 @@ end_devicecmd : END_DEVICE {
     //// should we finalize and instantiate by default ????
     //// or should this be the last step for the user
     ret = dsDevsimParse::DevsimLoader->Instantiate(dsDevsimParse::DevsimLoader->GetName(), errorString);
-    dsDevsimParse::DevsimLoader = NULL;
+    dsDevsimParse::DevsimLoader = nullptr;
   }
 
   if (!ret)
@@ -162,7 +162,7 @@ region : BEG_REGION WORD WORD  {
             else
             {
                 dsDevsimParse::DevsimLoader->AddRegion(dsDevsimParse::MeshRegion);
-                dsDevsimParse::MeshRegion = NULL;
+                dsDevsimParse::MeshRegion = nullptr;
             }
         } |
         region nodes |
@@ -543,7 +543,7 @@ contact : BEG_CONTACT WORD WORD WORD  {
             else
             {
                 dsDevsimParse::DevsimLoader->AddContact(dsDevsimParse::MeshContact);
-                dsDevsimParse::MeshContact = NULL;
+                dsDevsimParse::MeshContact = nullptr;
             }
         } |
         contact contact_nodes |
@@ -583,7 +583,7 @@ interface : BEG_INTERFACE WORD WORD WORD  {
             else
             {
                 dsDevsimParse::DevsimLoader->AddInterface(dsDevsimParse::MeshInterface);
-                dsDevsimParse::MeshInterface = NULL;
+                dsDevsimParse::MeshInterface = nullptr;
             }
         } |
         interface interface_nodes |
@@ -622,7 +622,7 @@ nodesol : BEG_NODESOL WORD  {
         } |
         nodesol END_NODESOL  {
             dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = NULL;
+            dsDevsimParse::Sol = nullptr;
         }
         ;
 
@@ -649,7 +649,7 @@ regionequation : BEG_REGIONEQUATION WORD  {
         regionequation equation_command |
         regionequation END_REGIONEQUATION  {
             dsDevsimParse::MeshRegion->AddEquation(dsDevsimParse::Equation);
-            dsDevsimParse::Equation = NULL;
+            dsDevsimParse::Equation = nullptr;
         }
         ;
 
@@ -676,7 +676,7 @@ contactequation : BEG_CONTACTEQUATION WORD  {
         contactequation equation_command |
         contactequation END_CONTACTEQUATION  {
             dsDevsimParse::MeshContact->AddEquation(dsDevsimParse::Equation);
-            dsDevsimParse::Equation = NULL;
+            dsDevsimParse::Equation = nullptr;
         }
         ;
 
@@ -703,7 +703,7 @@ interfaceequation : BEG_INTERFACEEQUATION WORD  {
         interfaceequation equation_command |
         interfaceequation END_INTERFACEEQUATION  {
             dsDevsimParse::MeshInterface->AddEquation(dsDevsimParse::Equation);
-            dsDevsimParse::Equation = NULL;
+            dsDevsimParse::Equation = nullptr;
         }
         ;
 
@@ -736,7 +736,7 @@ nodemodel : BEG_NODEMODEL WORD  {
         nodemodel command |
         nodemodel END_NODEMODEL  {
             dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = NULL;
+            dsDevsimParse::Sol = nullptr;
         }
         ;
 
@@ -769,7 +769,7 @@ edgemodel : BEG_EDGEMODEL WORD  {
         edgemodel command |
         edgemodel END_EDGEMODEL  {
             dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = NULL;
+            dsDevsimParse::Sol = nullptr;
         }
         ;
 
@@ -802,7 +802,7 @@ triangleedgemodel : BEG_TRIANGLEEDGEMODEL WORD  {
         triangleedgemodel command |
         triangleedgemodel END_TRIANGLEEDGEMODEL  {
             dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = NULL;
+            dsDevsimParse::Sol = nullptr;
         }
         ;
 
@@ -835,7 +835,7 @@ tetrahedronedgemodel : BEG_TETRAHEDRONEDGEMODEL WORD  {
         tetrahedronedgemodel command |
         tetrahedronedgemodel END_TETRAHEDRONEDGEMODEL  {
             dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = NULL;
+            dsDevsimParse::Sol = nullptr;
         }
         ;
 
@@ -858,13 +858,12 @@ interfacenodemodel : BEG_INTERFACENODEMODEL WORD  {
             {
                 dsDevsimParse::Sol = new dsMesh::Solution($2);
                 dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::INTERFACENODE);
-//                dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshInterface->GetNodesPairs().size());
             }
         } |
         interfacenodemodel command |
         interfacenodemodel END_INTERFACENODEMODEL  {
             dsDevsimParse::MeshInterface->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = NULL;
+            dsDevsimParse::Sol = nullptr;
         }
         ;
 
@@ -958,7 +957,7 @@ edgesol : BEG_EDGESOL WORD  {
         } |
         edgesol END_EDGESOL  {
             dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = NULL;
+            dsDevsimParse::Sol = nullptr;
         }
         ;
 

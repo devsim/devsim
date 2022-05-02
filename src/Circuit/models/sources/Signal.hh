@@ -33,7 +33,7 @@ class Signal {
       void   setVoltage(double v) {_volt = v;}
    protected:
       Signal (SignalType);
-      double _volt;
+      double _volt = 0.0;
    private:
       Signal();
       Signal(const Signal &);

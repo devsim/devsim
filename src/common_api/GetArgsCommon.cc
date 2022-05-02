@@ -40,9 +40,15 @@ ObjectHolder GetArgs::GetObjectHolder(const std::string &s) const
   else
   {
     OptionMap_t::const_iterator vit = optionMap.find(s);
-    dsAssert(vit != optionMap.end(), "UNEXPECTED");
-    const std::string &sval = (vit->second)->defaultValue;
-    val = ObjectHolder(sval);
+    if (vit == optionMap.end())
+    {
+      dsAssert(vit != optionMap.end(), "UNEXPECTED");
+    }
+    else
+    {
+      const std::string &sval = (vit->second)->defaultValue;
+      val = ObjectHolder(sval);
+    }
   }
   return val;
 }

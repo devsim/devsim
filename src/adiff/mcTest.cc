@@ -570,13 +570,17 @@ out <<
 out << "\n"
 "       //Parameter List\n";
    typedef std::map<std::string, std::pair<std::string, double> >::iterator Plistit;
-   for (Plistit it = ParameterList.begin(); it != ParameterList.end(); ++it)
    {
-      out <<
+     std::ostringstream os;
+     for (Plistit it = ParameterList.begin(); it != ParameterList.end(); ++it)
+     {
+        os <<
 "       double " << std::setw(15) << std::left << parameterListName(it->first) +
-            ";" <<  "//" << std::setw(20) << it->second.first << " " << std::scientific << it->second.second << "\n";
+              ";" <<  "//" << std::setw(20) << it->second.first << " " << std::scientific << it->second.second << "\n";
 
-   }
+     }
+     out << os.str();
+    }
 
    /*
       End of Class Declaration
@@ -632,12 +636,15 @@ ClassName << "::" << ClassName << "( NodeKeeper *nk, const char *name,\n";
    out << "\n"
 "       //Parameter List\n";
    typedef std::map<std::string, std::pair<std::string, double> >::iterator Plistit;
-   for (Plistit it = ParameterList.begin(); it != ParameterList.end(); ++it)
    {
-      out <<
+      std::ostringstream os;
+      for (Plistit it = ParameterList.begin(); it != ParameterList.end(); ++it)
+      {
+         os <<
 "       " << std::setw(15) << std::left << parameterListName(it->first) << 
             " = " << std::scientific << it->second.second << ";\n";
-
+      }
+      out << os.str();
    }
 out << "}\n";
 

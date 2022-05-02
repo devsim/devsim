@@ -126,11 +126,11 @@ class NodeKeeper {
         NodeTable_t       NodeTable_;
         NodeAliasTable_t  NodeAliasTable_;
         SolutionMap_t     Sol_;
-        size_t          numberOfNodes_;
-        bool            SolutionLocked_;
-        bool            NodesNumbered_;
-        size_t          minEquationNumber;
-        size_t          maxEquationNumber;
+        size_t          numberOfNodes_ = 0;
+        bool            SolutionLocked_ = false;
+        bool            NodesNumbered_ = false;
+        size_t          minEquationNumber = 0;
+        size_t          maxEquationNumber = 0;
         NormMap_t       absError;
         NormMap_t       relError;
 };

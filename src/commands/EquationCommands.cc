@@ -249,7 +249,10 @@ deleteEquationCmd(CommandHandler &data)
 
     if (commandName == "delete_equation")
     {
-      reg->DeleteEquation(eqn);
+      if (reg)
+      {
+        reg->DeleteEquation(eqn);
+      }
       data.SetEmptyResult();
     }
     else if (commandName == "get_equation_command")
@@ -450,7 +453,10 @@ deleteInterfaceEquationCmd(CommandHandler &data)
 
     if (commandName == "delete_interface_equation")
     {
-      interface->DeleteInterfaceEquation(ieqn);
+      if (interface)
+      {
+        interface->DeleteInterfaceEquation(ieqn);
+      }
       data.SetEmptyResult();
     }
     else if (commandName == "get_interface_equation_command")
@@ -664,7 +670,10 @@ deleteContactEquationCmd(CommandHandler &data)
 
     if (commandName == "delete_contact_equation")
     {
-      contact->DeleteEquation(ceqn);
+      if (contact)
+      {
+        contact->DeleteEquation(ceqn);
+      }
       data.SetEmptyResult();
     }
     else if (commandName == "get_contact_equation_command")

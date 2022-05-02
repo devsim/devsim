@@ -108,8 +108,6 @@ class GlobalData
         GlobalDataMap_t   globalData;
 
         TclEquationList_t tclEquationList;
-
-        void             *tclInterp;
 };
 #endif
 

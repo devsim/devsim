@@ -342,16 +342,6 @@ void GlobalData::SignalCallbacksOnRegion(const std::string &device, const std::s
     }
 }
 
-void GlobalData::SetInterpreter(void *t)
-{
-  tclInterp = t;
-}
-
-void *GlobalData::GetInterpreter()
-{
-  return tclInterp;
-}
-
 ///// We need to mask when stuff is specified on a device or global basis
 void GlobalData::SignalCallbacksOnMaterialChange(const std::string &material_name, const std::string &parameter_name)
 {

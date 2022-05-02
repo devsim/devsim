@@ -282,7 +282,11 @@ template <typename DoubleType>
 bool BlockPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
 {
   CompressedMatrix<DoubleType> *cm = dynamic_cast<CompressedMatrix<DoubleType> *>(m);
-  dsAssert(cm != nullptr, "UNEXPECTED");
+  if (!cm)
+  {
+    dsAssert(cm != nullptr, "UNEXPECTED");
+    return false;
+  }
   dsAssert(cm->GetCompressionType() == CompressionType::CCM, "UNEXPECTED");
 
   if (!block_matrix_)

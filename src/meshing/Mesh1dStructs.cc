@@ -30,7 +30,7 @@ MeshLine1d::MeshLine1d(double p, double ps, double ns, const std::string &t) :
 }
 
 MeshRegion1d::MeshRegion1d(const std::string &r, const std::string &m, const std::string &t1, const std::string &t2)
-: name(r), material(m), tag0(t1), tag1(t2), tagssorted(false)
+: name(r), material(m), tag0(t1), tag1(t2), index0(0), index1(0), tagssorted(false)
 {
 }
 const std::string &MeshRegion1d::GetName() const

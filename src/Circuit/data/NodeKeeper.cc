@@ -42,7 +42,7 @@ void NodeKeeper::delete_instance()
     delete instance_;
 }
 
-NodeKeeper::NodeKeeper() : numberOfNodes_(0), SolutionLocked_(false), NodesNumbered_(false)
+NodeKeeper::NodeKeeper()
 {
 }
 
@@ -100,6 +100,7 @@ CircuitNodePtr NodeKeeper::AddNodeAlias(const std::string &alias, const std::str
         std::ostringstream os;
         os << "CircuitNode " << name << " must exist to create alias " << alias << ".\n";
         OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
+        return nullptr;
     }
 
     if (nalias != NodeTable_.end())
@@ -107,6 +108,7 @@ CircuitNodePtr NodeKeeper::AddNodeAlias(const std::string &alias, const std::str
         std::ostringstream os;
         os << "CircuitNode " << alias << " cannot be an alias since it is already a real node.\n";
         OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
+        return nullptr;
     }
 
     NodeAliasTable_[alias] = name;
@@ -250,7 +252,7 @@ size_t NodeKeeper::GetEquationNumber(const std::string &name)
 const NodeKeeper::Solution &NodeKeeper::GetSolutionVector(const std::string &key)
 {
     dsAssert(Sol_.count(key) == 1, "CIRCUIT_UNEXPECTED");
-    dsAssert(Sol_[key] != NULL, "CIRCUIT_UNEXPECTED");
+    dsAssert(Sol_[key] != nullptr, "CIRCUIT_UNEXPECTED");
     return *Sol_[key];
 }
 
@@ -269,7 +271,7 @@ void NodeKeeper::CreateSolution(const std::string &key)
     dsAssert(Sol_.count(key) == 0, "CIRCUIT_UNEXPECTED");
 
     // entry has now been created
-    dsAssert(Sol_[key] == NULL, "CIRCUIT_UNEXPECTED");
+    dsAssert(Sol_[key] == nullptr, "CIRCUIT_UNEXPECTED");
     dsAssert(numberOfNodes_ != 0, "CIRCUIT_UNEXPECTED");
 
     // technically this needs to be deleted in the destructor
@@ -309,7 +311,7 @@ void NodeKeeper::UpdateSolution(const std::string &key, const Solution &rhs)
 
     Solution *sol = Sol_[key];
 
-    dsAssert(sol != NULL, "CIRCUIT_UNEXPECTED");
+    dsAssert(sol != nullptr, "CIRCUIT_UNEXPECTED");
 
 
     //// TODO: get rid of this hack
@@ -382,8 +384,8 @@ void NodeKeeper::ACUpdateSolution(const std::string &rkey, const std::string &ik
     Solution *rsol = Sol_[rkey];
     Solution *isol = Sol_[ikey];
 
-    dsAssert(rsol != NULL, "CIRCUIT_UNEXPECTED");
-    dsAssert(isol != NULL, "CIRCUIT_UNEXPECTED");
+    dsAssert(rsol != nullptr, "CIRCUIT_UNEXPECTED");
+    dsAssert(isol != nullptr, "CIRCUIT_UNEXPECTED");
 
     double aerr = 0.0;
     double rerr = 0.0;
@@ -432,7 +434,7 @@ void NodeKeeper::CopySolution(const std::string &from, const std::string &to)
 void NodeKeeper::PrintSolution(const std::string &sn)
 {
     Solution *sol = Sol_[sn];
-    dsAssert(sol != NULL, "CIRCUIT_UNEXPECTED");
+    dsAssert(sol != nullptr, "CIRCUIT_UNEXPECTED");
 
     {
         std::ostringstream os;
@@ -460,8 +462,8 @@ void NodeKeeper::ACPrintSolution(const std::string &rk, const std::string &ik)
 {
     Solution *rsol = Sol_[rk];
     Solution *isol = Sol_[ik];
-    dsAssert(rsol != NULL, "CIRCUIT_UNEXPECTED");
-    dsAssert(isol != NULL, "CIRCUIT_UNEXPECTED");
+    dsAssert(rsol != nullptr, "CIRCUIT_UNEXPECTED");
+    dsAssert(isol != nullptr, "CIRCUIT_UNEXPECTED");
 
     std::ostringstream os;
     os << "Circuit AC Solution:\n";
@@ -542,7 +544,7 @@ double NodeKeeper::GetNodeValue(const std::string &solutionname, const std::stri
 
 NodeKeeper::Solution *NodeKeeper::GetSolution(const std::string &key)
 {
-    Solution *ret = NULL;
+    Solution *ret = nullptr;
     if (Sol_.count(key))
     {
         ret = Sol_[key];

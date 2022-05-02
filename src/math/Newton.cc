@@ -58,7 +58,7 @@ using std::abs;
 namespace dsMath {
 
 template <typename DoubleType>
-Newton<DoubleType>::Newton() : maxiter(DefaultMaxIter), absLimit(DefaultAbsError), relLimit(DefaultRelError), maxLimit(DefaultMaxAbsError), qrelLimit(DefaultQRelError), dimension(0) {}
+Newton<DoubleType>::Newton() {}
 
 template <typename DoubleType>
 Newton<DoubleType>::~Newton() {};
@@ -554,7 +554,7 @@ DirectSolver GetDirectSolver()
 
 Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, size_t numeqns)
 {
-  Preconditioner<double> *preconditioner;
+  Preconditioner<double> *preconditioner = nullptr;
   if (dynamic_cast<IterativeLinearSolver<double> *>(&itermethod))
   {
     preconditioner = new BlockPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS);
@@ -582,7 +582,7 @@ Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, s
 #ifdef DEVSIM_EXTENDED_PRECISION
 Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermethod, size_t numeqns)
 {
-  Preconditioner<float128> *preconditioner;
+  Preconditioner<float128> *preconditioner = nullptr;
   if (dynamic_cast<IterativeLinearSolver<float128> *>(&itermethod))
   {
     preconditioner = new BlockPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS);
@@ -745,11 +745,6 @@ void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, Objec
   {
     rhs.clear();
     rhs.resize(numeqns);
-
-    if (!matrix)
-    {
-      matrix = std::unique_ptr<CompressedMatrix<DoubleType>>(new CompressedMatrix<DoubleType>(numeqns, matrix_type, ct));
-    }
 
     LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, p.second, static_cast<DoubleType>(1.0));
     matrix->Finalize();

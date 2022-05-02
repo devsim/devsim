@@ -418,7 +418,7 @@ void GetArrayInfo(const ObjectHolder &input, std::string &typecode, long &itemsi
 
     if (bytecall.IsCallable())
     {
-      bytes = ObjectHolder(PyObject_CallObject(reinterpret_cast<PyObject *>(bytecall.GetObject()), NULL));
+      bytes = ObjectHolder(PyObject_CallObject(reinterpret_cast<PyObject *>(bytecall.GetObject()), nullptr));
       PyErr_Clear();
     }
   }

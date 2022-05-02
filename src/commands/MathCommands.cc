@@ -143,6 +143,8 @@ solveCmdImpl(CommandHandler &data)
     std::ostringstream os;
     os << "\"direct\" and \"iterative\" are the only valid simulation types\n";
     errorString = os.str();
+    data.SetErrorResult(errorString);
+    return;
   }
 
   if (!errorString.empty())

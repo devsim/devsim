@@ -48,7 +48,7 @@ class InstanceModel
 
         // Transient stamp is only the AC part
         // scl is the scaling factor to multiply by the time-dependent elements
-        // If the matrix is a NULL pointer, only the rhs is calculated
+        // If the matrix is a nullptr pointer, only the rhs is calculated
         // This is so that it can be used for the charge contributions of
         // previous time steps
         void assembleTran(const double scl, const std::vector<double> &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs);

@@ -139,6 +139,9 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
     bool ret = true;
     std::ostringstream os;
 
+    std::ios oldState(nullptr);
+    oldState.copyfmt(myfile);
+
     myfile << std::setprecision(15) << std::scientific;
     GlobalData   &gdata = GlobalData::GetInstance();
 
@@ -232,6 +235,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
         myfile << "end_device\n";
 
     }
+    myfile.copyfmt(oldState);
 
     errorString += os.str();
     return ret;

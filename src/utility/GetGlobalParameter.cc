@@ -30,13 +30,3 @@ std::string GetGlobalParameterStringOptional(const std::string &name)
   return ret;
 }
 
-void *GetMainInterpreter()
-{
-  return GlobalData::GetInstance().GetInterpreter();
-}
-
-void SetMainInterpreter(void *interp)
-{
-  GlobalData::GetInstance().SetInterpreter(interp);
-}
-
