@@ -59,6 +59,18 @@ ObjectHolder &ObjectHolder::operator=(const ObjectHolder &t)
   return *this;
 }
 
+ObjectHolder::ObjectHolder(ObjectHolder &&t) : object_(t.object_)
+{
+  // stealing reference
+  t.object_ = nullptr;
+}
+
+ObjectHolder &ObjectHolder::operator=(ObjectHolder &&t)
+{
+  std::swap(object_, t.object_);
+  return *this;
+}
+
 ObjectHolder::~ObjectHolder()
 {
   if (object_)

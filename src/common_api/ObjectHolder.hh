@@ -34,6 +34,8 @@ class ObjectHolder {
     ObjectHolder();
     ObjectHolder(const ObjectHolder &);
     ObjectHolder &operator=(const ObjectHolder &);
+    ObjectHolder(ObjectHolder &&);
+    ObjectHolder &operator=(ObjectHolder &&);
     ~ObjectHolder();
 
     explicit ObjectHolder(void *);
