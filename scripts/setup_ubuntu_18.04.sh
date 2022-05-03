@@ -13,6 +13,8 @@ ARCH=`uname -m`
       -DDEVSIM_EXTENDED_PRECISION=ON \
       -DPYTHON3=ON \
       -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
+      -DEXPLICIT_MATH_LOAD=ON \
+      -DMKL_PARDISO=ON \
       ..)
 #  done
 done
