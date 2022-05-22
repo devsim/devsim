@@ -519,6 +519,7 @@ DirectSolver GetDirectSolver()
 #ifdef USE_MKL_PARDISO
       ret = DirectSolver::MKLPARDISO;
 #else
+      ret = DirectSolver::SUPERLU;
       std::ostringstream os;
       os << "Solver \"mkl_pardiso\" not supported in this build.  Switching to \"superlu\".\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
@@ -538,6 +539,7 @@ DirectSolver GetDirectSolver()
 
   std::ostringstream os;
   os << "Parameter \"direct_solver\" parameter not set. Valid options are \"mkl_pardiso\" or \"superlu\".\n";
+#if defined(USE_EXPLICIT_MATH_LOAD)
   if (MathLoader::IsMKLLoaded())
   {
     os << "Using \"mkl_pardiso\" direct solver.\n";
@@ -548,6 +550,13 @@ DirectSolver GetDirectSolver()
     os << "Using \"superlu\" direct solver.\n";
     ret = DirectSolver::SUPERLU;
   }
+#elif defined(USE_MKL_PARDISO)
+  os << "Using \"mkl_pardiso\" direct solver.\n";
+  ret = DirectSolver::MKLPARDISO;
+#else
+  os << "Using \"superlu\" direct solver.\n";
+  ret = DirectSolver::SUPERLU;
+#endif
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   return ret;
 }

@@ -68,7 +68,21 @@ typedef std::complex<double> doublecomplex;
 #define external_zrotg  ZROTG
 #endif
 
-#ifdef USE_EXPLICIT_MATH_LOAD
+extern "C"
+{
+// forward declaration required when !defined(USE_EXPLICIT_MATH_LOAD)
+void external_dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
+#ifdef _WIN32
+void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info, int trans_len);
+//void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info, int trans_len);
+#else
+void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info);
+//void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info);
+#endif
+void external_drotg(double *a, double *b, double *c, double *d);
+void external_zrotg(std::complex<double> *a, std::complex<double> *b, std::complex<double> *c, std::complex<double> *d);
+}
+#if defined(USE_EXPLICIT_MATH_LOAD)
 extern "C"
 {
 using PARDISO_signature = void ( void *,    const int *, const int *, const int *,
