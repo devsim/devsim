@@ -1,3 +1,6 @@
 [submodule "external/symdiff"]
 	path = external/symdiff
 	url = ../symdiff.git
+[submodule "external/superlu"]
+	path = external/superlu
+	url = https://github.com/xiaoyeli/superlu.git

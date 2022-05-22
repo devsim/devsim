@@ -14,8 +14,8 @@ SET (BOOST_INCLUDE "${CONDA_PREFIX}/Library/include")
 
 # windows build
 
-SET (SUPERLULOCATE   ${CMAKE_SOURCE_DIR}/external/SuperLU_4.3)
-SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/msys/libsuperlu.a)
+SET (SUPERLULOCATE   ${CMAKE_SOURCE_DIR}/external/superlu)
+SET (SUPERLU_ARCHIVE ${SUPERLULOCATE}/msys/SRC/libsuperlu.a)
 SET (SUPERLU_INCLUDE ${SUPERLULOCATE}/SRC)
 
 SET (BLAS_ARCHIVE          ${CONDA_PREFIX}/Library/lib/mkl_rt.lib)

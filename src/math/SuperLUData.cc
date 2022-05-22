@@ -401,5 +401,10 @@ template bool dsMath::SuperLUData::LUFactorMatrix(CompressedMatrix<float128> *cm
 #endif
 #endif
 
+#ifdef SUPERLU_MAJOR_VERSION
+extern "C" {
+extern const char * const devsim_superluversion = TOSTRING(SUPERLU_MAJOR_VERSION) "." TOSTRING(SUPERLU_MINOR_VERSION) "."  TOSTRING(SUPERLU_PATCH_VERSION);
+}
+#endif
 
 

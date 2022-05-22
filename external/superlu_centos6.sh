@@ -1,3 +1,6 @@
 #!/bin/sh
-make CC=${CC} SuperLUroot=`pwd` SUPERLULIB=`pwd`/lib/libsuperlu_4.3.a NOOPTS="-fPIC" CFLAGS="-g -DPRNTlevel=0 -fPIC" CDEFS="-Dadd_" superlulib
-\rm SRC/*.o
+set -e
+mkdir -p build
+cd build
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_C_COMPILER=${CC} -Denable_complex=OFF -Denable_single=OFF -Denable_doc=OFF -Denable_tests=OFF -DXSDK_ENABLE_Fortran=OFF -DBLAS_FOUND=ON -DCMAKE_C_FLAGS="-fpic" ..
+make -j2

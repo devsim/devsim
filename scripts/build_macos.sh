@@ -65,7 +65,7 @@ export PYTHON3_ARCHIVE=""
 
 # SuperLU
 #(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
-(cd external && tar xzf superlu_4.3.tar.gz)
+#(cd external && tar xzf superlu_4.3.tar.gz)
 
 # SYMDIFF build
 if [ "${1}" = "gcc" ]
@@ -84,7 +84,7 @@ fi
 ####(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake -DCMAKE_C_COMPILER=${CC} -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j4 && make install)
 
 # SUPERLU build
-(cd external/SuperLU_4.3 && sh ../superlu_macos.sh)
+(cd external/superlu && bash ../superlu_macos.sh)
 
 # quad precision getrf
 if [ "${1}" = "gcc" ]
@@ -100,6 +100,7 @@ elif [ "${1}" = "clang" ]
 then
 bash ./scripts/setup_osx_10.10.sh
 fi
+
 (cd osx_x86_64_release && make -j4)
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});
 

@@ -5,13 +5,12 @@ CMAKE=$(cygpath -w ${ANACONDA_PATH}/Library/bin/cmake.exe)
 MAKE=make
 
 GENERATOR="MSYS Makefiles"
-BUILDDIR="SuperLU_4.3/msys"
+BUILDDIR="superlu/msys"
 
 (\
-bsdtar xzf superlu_4.3.tar.gz && \
 mkdir -p ${BUILDDIR} && \
 cd ${BUILDDIR} && \
-"${CMAKE}" -G "${GENERATOR}" -DCMAKE_BUILD_TYPE=RELEASE .. && \
+"${CMAKE}" -G "${GENERATOR}" -DCMAKE_BUILD_TYPE=RELEASE -Denable_complex=OFF -Denable_single=OFF -Denable_doc=OFF -Denable_tests=OFF -DXSDK_ENABLE_Fortran=OFF -DBLAS_FOUND=ON .. && \
 "${MAKE}" -j2 \
 )
 
