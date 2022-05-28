@@ -3,6 +3,7 @@ ADD_COMPILE_OPTIONS(-Wall -fvisibility=hidden)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
+SET (EIGEN_INCLUDE ${EXTERNAL_LIB}/eigen)
 SET (ZLIB_INCLUDE /usr/include)
 
 SET (BLAS_ARCHIVE /usr/lib/x86_64-linux-gnu/liblapack.so.3 /usr/lib/x86_64-linux-gnu/libblas.so.3)

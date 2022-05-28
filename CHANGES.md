@@ -6,6 +6,8 @@ Please see the release notes in doc/devsim.pdf or at https://devsim.net for more
 
 ## Version 2.2.0
 
+Extended precision is now available on Windows builds using the Visual Studio Compiler.
+
 Upgraded to SuperLU 5.3 from SuperLU 4.3.
 
 Fixed defects found in Coverity scanning.

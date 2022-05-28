@@ -52,15 +52,16 @@ class kahan {
 #endif
 
 
-#ifdef DEVSIM_EXTENDED_PRECISION
+#if defined(DEVSIM_EXTENDED_PRECISION)
 template <typename DoubleType>
 struct KahanType;
 template <> struct KahanType<double>
 {
-#ifdef DEVSIM_EXTENDED_PRECISION
-  using type = float128;
-#else
+// better numerical consistency for builds adopting this option
+#if defined(USE_CPP_BIN_FLOAT)
   using type = kahan<double>;
+#else
+  using type = float128;
 #endif
 };
 

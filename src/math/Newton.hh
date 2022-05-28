@@ -237,7 +237,7 @@ class Newton {
 
         void AssembleTclEquations(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        static constexpr DoubleType rhssign = static_cast<DoubleType>(-1.0);
+        const DoubleType rhssign = -1.0;
 
         Newton(const Newton &);
 

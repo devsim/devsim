@@ -368,8 +368,8 @@ void CompressedMatrix<DoubleType>::AddImagEntry(int r, int c, DoubleType v)
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::AddEntry(int r, int c, ComplexDouble_t<DoubleType> v)
 {
-  const double rv = v.real();
-  const double iv = v.imag();
+  const double rv = static_cast<double>(v.real());
+  const double iv = static_cast<double>(v.imag());
 
   if (rv != 0.0)
   {
@@ -412,7 +412,7 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
     {
       for (size_t j = beg; j < end; ++ j)
       {
-        const double z = Az_[j];
+        const double z = static_cast<double>(Az_[j]);
         if (z != 0.0)
         {
           AddImagEntryImpl(Ai_[j], i, z);
