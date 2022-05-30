@@ -27,6 +27,7 @@ limitations under the License.
 #include <vector>
 
 namespace dsMath {
+template <typename T> struct matrix_data;
 
 // blas/lapack implementation
 template <typename T>
@@ -122,22 +123,6 @@ struct matrix_data_eigen {
 };
 #endif
 
-
-template <typename T> struct matrix_data;
-
-template <> struct matrix_data <double> : public matrix_data_lapack<double> {using matrix_data_lapack<double>::matrix_data_lapack;};
-
-// right now, this is for float 128 only
-#if defined(DEVSIM_EXTENDED_PRECISION)
-#if defined(USE_EIGEN)
-template <> struct matrix_data <float128> : public matrix_data_eigen<float128> {using matrix_data_eigen<float128>::matrix_data_eigen;};
-#else
-template <> struct matrix_data <float128> : public matrix_data_lapack<float128> {using matrix_data_lapack<float128>::matrix_data_lapack;};
-#endif
-#endif
-
-
-
 template <typename T>
 DenseMatrix<T>::DenseMatrix(size_t d)
 {
@@ -170,19 +155,20 @@ bool DenseMatrix<DoubleType>::Solve(DoubleType *B)
 {
   return matrixdata_->Solve(B);
 }
-
 }
 
 //// Manual Template Instantiation
+template <> struct dsMath::matrix_data <double> : public matrix_data_lapack<double> {using matrix_data_lapack<double>::matrix_data_lapack;};
 template class dsMath::DenseMatrix<double>;
-#if 0
-template class dsMath::DenseMatrix<std::complex<double> >;
-#endif
+
+// right now, eigen is for float 128 only
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
-template class dsMath::DenseMatrix<float128>;
-#if 0
-template class dsMath::DenseMatrix<std::complex<float128> >;
+#if defined(USE_EIGEN)
+template <> struct dsMath::matrix_data <float128> : public matrix_data_eigen<float128> {using matrix_data_eigen<float128>::matrix_data_eigen;};
+#else
+template <> struct dsMath::matrix_data <float128> : public matrix_data_lapack<float128> {using matrix_data_lapack<float128>::matrix_data_lapack;};
 #endif
+template class dsMath::DenseMatrix<float128>;
 #endif
 
