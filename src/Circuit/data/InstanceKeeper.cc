@@ -47,6 +47,7 @@ InstanceKeeper &InstanceKeeper::instance()
 void InstanceKeeper::delete_instance()
 {
     delete instance_;
+    instance_ = nullptr;
 }
 
 InstanceKeeper::InstanceKeeper() {}

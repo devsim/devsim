@@ -114,11 +114,8 @@ MaterialDB &MaterialDB::GetInstance()
 
 void MaterialDB::DestroyInstance()
 {
-  if (instance)
-  {
-    delete instance;
-  }
-  instance = 0;
+  delete instance;
+  instance = nullptr;
 }
 
 MaterialDB::~MaterialDB()

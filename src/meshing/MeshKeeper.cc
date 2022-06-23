@@ -39,11 +39,8 @@ MeshKeeper &MeshKeeper::GetInstance()
 
 void MeshKeeper::DestroyInstance()
 {
-    if (instance)
-    {
-        delete instance;
-    }
-    instance = 0;
+    delete instance;
+    instance = nullptr;
 }
 
 
@@ -54,6 +51,7 @@ MeshKeeper::~MeshKeeper()
     {
         delete mit->second;
     }
+    meshList.clear();
 }
 
 void MeshKeeper::AddMesh(MeshPtr mp)

@@ -45,11 +45,8 @@ GlobalData &GlobalData::GetInstance()
 
 void GlobalData::DestroyInstance()
 {
-    if (instance)
-    {
-        delete instance;
-    }
-    instance = 0;
+    delete instance;
+    instance = nullptr;
 }
 
 GlobalData::~GlobalData()
@@ -59,6 +56,7 @@ GlobalData::~GlobalData()
   {
       delete dit->second;
   }
+  deviceList.clear();
 }
 
 void GlobalData::AddDevice(DevicePtr dp)

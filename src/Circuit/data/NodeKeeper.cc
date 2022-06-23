@@ -40,6 +40,7 @@ NodeKeeper &NodeKeeper::instance()
 void NodeKeeper::delete_instance()
 {
     delete instance_;
+    instance_ = nullptr;
 }
 
 NodeKeeper::NodeKeeper()

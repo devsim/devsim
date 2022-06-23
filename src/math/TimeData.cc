@@ -50,11 +50,8 @@ TimeData<DoubleType>::~TimeData()
 template <typename DoubleType>
 void TimeData<DoubleType>::DestroyInstance()
 {
-    if (instance)
-    {
-        delete instance;
-    }
-    instance = 0;
+    delete instance;
+    instance = nullptr;
 }
 
 template <typename DoubleType>
