@@ -49,7 +49,9 @@ eprint = { https://doi.org/10.1063/1.3374475 }
 namespace {
 
 //// Fix multiprecision constexpr issue
-#if BOOST_VERSION / 100 >= 1072
+//#if BOOST_VERSION / 100 >= 1072
+//recurrent issue with constexpr
+#if 0
 template <typename T>
 struct MC {
     static constexpr T sqrt2 = boost::math::constants::root_two<T>();
