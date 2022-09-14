@@ -6,7 +6,9 @@ Please see the release notes in doc/devsim.pdf or at https://devsim.net for more
 
 ## Version 2.2.0
 
-Extended precision is now available on Windows builds using the Visual Studio Compiler.
+It is possible to delete devices using the ``delete_device`` command.  Meshes used to instantiate devices may be deleted using the ``delete_mesh`` command.  Parameters set on a device and its regions are also cleared from the parameter database.
+
+Extended precision is now available on Windows builds using the Visual Studio Compiler.  Note that this precision is not as accurate as the float128 type used on other systems.
 
 Upgraded to SuperLU 5.3 from SuperLU 4.3.
 

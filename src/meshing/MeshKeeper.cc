@@ -71,5 +71,18 @@ MeshPtr MeshKeeper::GetMesh(const std::string &nm)
     }
     return mp;
 }
+
+bool MeshKeeper::DeleteMesh(const std::string &nm)
+{
+    bool ret = false;
+    if (auto it = meshList.find(nm); it != meshList.end())
+    {
+        auto mp = it->second;
+        meshList.erase(it);
+        delete mp;
+        ret = true;
+    }
+    return ret;
+}
 }
 

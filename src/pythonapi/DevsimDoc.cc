@@ -1,4 +1,7 @@
 
+static const char delete_device_doc[] = "";
+static const char delete_mesh_doc[] = "";
+
 static const char add_circuit_node_doc[] =
 R"(    devsim.add_circuit_node (name, value, variable_update)
 

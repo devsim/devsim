@@ -77,6 +77,30 @@ DevicePtr GlobalData::GetDevice(const std::string &nm)
     return dp;
 }
 
+bool GlobalData::DeleteDevice(const std::string &nm)
+{
+    bool ret = false;
+    if (auto it = deviceList.find(nm); it != deviceList.end())
+    {
+        auto dp = it->second;
+        deviceList.erase(it);
+        delete dp;
+        ret = true;
+    }
+
+    if (auto it = deviceData.find(nm); it != deviceData.end())
+    {
+      deviceData.erase(it);
+    }
+
+    if (auto it = regionData.find(nm); it != regionData.end())
+    {
+      regionData.erase(it);
+    }
+
+    return ret;
+}
+
 //// Need callback system when material parameters change
 void GlobalData::AddDBEntryOnDevice(const std::string &device, const std::string &name, ObjectHolder value)
 {

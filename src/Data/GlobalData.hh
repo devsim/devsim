@@ -53,6 +53,7 @@ class GlobalData
         }
 
         DevicePtr GetDevice(const std::string &);
+        bool      DeleteDevice(const std::string &);
 
         //// Need callback system when material parameters change
         void AddDBEntryOnDevice(const std::string &/*device*/, const std::string &/*name*/, ObjectHolder /*value*/);

@@ -41,6 +41,7 @@ class MeshKeeper
         }
 
         MeshPtr GetMesh(const std::string &);
+        bool DeleteMesh(const std::string &);
 
     private:
         MeshKeeper();

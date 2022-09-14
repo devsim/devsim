@@ -37,6 +37,8 @@ void createContactFromInterfaceCmd(CommandHandler &);
 void createInterfaceFromNodesCmd(CommandHandler &);
 void createDeviceCmd(CommandHandler &);
 void createGmshMeshCmd(CommandHandler &);
+void deleteDeviceCmd(CommandHandler &);
+void deleteMeshCmd(CommandHandler &);
 void finalizeMeshCmd(CommandHandler &);
 void loadDevicesCmd(CommandHandler &);
 void writeDevicesCmd(CommandHandler &);
