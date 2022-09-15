@@ -34,26 +34,18 @@ def myassemble(what, timemode):
     if timemode != "DC":
         return [rcv, rv]
 
-    if  what != "MATRIXONLY":
+    if what != "MATRIXONLY":
         v1 = get_circuit_node_value(node="n1", solution="dcop")
         v2 = get_circuit_node_value(node="n2", solution="dcop")
 
         I1 = G1 * (v1 - v2)
         I2 = G2 * v2
-        rv.extend([n1, I1])
-        rv.extend([n2, I2])
-        rv.extend([n2, -I1])
-
-    if what !="RHS" :
+        rv.extend([n1, I1, n2, I2, n2, -I1])
+    if what !="RHS":
         mG1 = -G1
         mG2 = -G2
 
-        rcv.extend([n1, n1, G1])
-        rcv.extend([n2, n2, G1])
-        rcv.extend([n1, n2, mG1])
-        rcv.extend([n2, n1, mG2])
-        rcv.extend([n2, n2, G2])
-
+        rcv.extend([n1, n1, G1, n2, n2, G1, n1, n2, mG1, n2, n1, mG2, n2, n2, G2])
     print(rcv)
     print(rv)
     return rcv, rv, False

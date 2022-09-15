@@ -3,14 +3,14 @@ from devsim import *
 
 print("coordinates")
 coordinates=[]
-for i in range(0,11):
+for i in range(11):
     coordinates.extend([float(i), 0.0, 0.0])
 print(coordinates)
 print()
 
 print("elements")
 elements=[]
-for i in range(0,5):
+for i in range(5):
     # line type, physical region 0
     x=[1, 0, i, i+1]
     print(x)

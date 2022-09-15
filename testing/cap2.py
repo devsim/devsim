@@ -129,33 +129,33 @@ print((get_contact_charge(device=device, contact="bot", equation="PotentialEquat
 def get_rlist():
     rlist = []
     for r in get_region_list(device=device):
-        print("Region: " + r)
+        print(f"Region: {r}")
         for e in get_equation_list(device=device, region=r):
-            print("Equation: " + e)
+            print(f"Equation: {e}")
             cmd = get_equation_command(device=device, region=r, name=e)
-            print("Options: " + str(cmd))
+            print(f"Options: {str(cmd)}")
             rlist.append(get_equation_command(device=device, region=r, name=e))
     return rlist
 
 def get_clist():
     clist = []
     for c in get_contact_list(device=device):
-        print("Contact: " + c)
+        print(f"Contact: {c}")
         for e in get_contact_equation_list(device=device, contact=c):
-            print("Contact Equation: " + e)
+            print(f"Contact Equation: {e}")
             cmd = get_contact_equation_command(device=device, contact=c, name=e)
-            print("Options: " + str(cmd))
+            print(f"Options: {str(cmd)}")
             clist.append(cmd)
     return clist
 
 def get_ilist():
     ilist = []
     for i in get_interface_list(device=device):
-        print("Interface: " + i)
+        print(f"Interface: {i}")
         for e in get_interface_equation_list(device=device, interface=i):
-            print("Interface Equation: " + e)
+            print(f"Interface Equation: {e}")
             cmd = get_interface_equation_command(device=device, interface=i, name=e)
-            print("Options: " + str(cmd))
+            print(f"Options: {str(cmd)}")
             ilist.append(cmd)
     return ilist
 

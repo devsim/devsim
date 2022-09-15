@@ -21,21 +21,14 @@ def rampbias(device, contact, end_bias, step_size, min_step, max_iter, rel_error
       Ramps bias with assignable callback function
     '''
     start_bias = ds.get_parameter(device=device, name=GetContactBiasName(contact))
-    if (start_bias < end_bias):
-        step_sign=1
-    else:
-        step_sign=-1
+    step_sign = 1 if (start_bias < end_bias) else -1
     step_size=abs(step_size)
 
     last_bias=start_bias
-    while(abs(last_bias - end_bias) > min_step):
+    while (abs(last_bias - end_bias) > min_step):
         print(("%s last end %e %e") % (contact, last_bias, end_bias))
         next_bias=last_bias + step_sign * step_size
-        if next_bias < end_bias:
-            next_step_sign=1
-        else:
-            next_step_sign=-1
-
+        next_step_sign = 1 if next_bias < end_bias else -1
         if next_step_sign != step_sign:
             next_bias=end_bias
             print("setting to last bias %e" % (end_bias))

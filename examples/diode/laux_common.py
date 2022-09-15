@@ -69,27 +69,21 @@ def SetDimension(dimension):
 # the element corresponds to 1 of n tetrahedron
 # node indexes are the element edge quantities
 def GetElementData(element_index, node_indexes):
-    element_data = {}
     nodes = []
 
     # get nodes for each element edge 0, 1, 2, 3
     edge_node_list = []
     for j in range(nee):
         index = nee*element_index + j
-        enodes = []
-        for i in node_indexes:
-            enodes.append(i[index])
+        enodes = [i[index] for i in node_indexes]
         edge_node_list.append(enodes)
-    element_data['edge_node_list'] = edge_node_list
-
+    element_data = {'edge_node_list': edge_node_list}
     # get the all of the node indexes on the element
     # also available using get_element_node_list
     nodes = sorted(edge_node_list[0])
     element_data['node_indexes'] = nodes
 
-    vmap = {}
-    for i in range(nen):
-        vmap[nodes[i]] = i
+    vmap = {nodes[i]: i for i in range(nen)}
     element_data['node_index_positions'] = vmap
 
     # n0 and n1 indexes for each element edge head and tail
@@ -183,7 +177,7 @@ def CalculateFinalValuesPairs(element_data, vector_efields, output0, output1):
     for edge_index in range(nee):
         enodes = edge_node_list[edge_index]
         output_edge_index = nee * ei + edge_index
-        for i, ii in enumerate(enodes[0:2]):
+        for i, ii in enumerate(enodes[:2]):
             # make sure node indexes are in proper range
             val = numpy.transpose(vector_efields[node_index_positions[ii]][:,0])
             outputs[i][output_edge_index, 0:dim] = val
@@ -199,7 +193,7 @@ def CalculateFinalDerivativesPairs(element_data, vector_efield_derivatives, outp
     for edge_index in range(nee): # for each element edge
         enodes = edge_node_list[edge_index]
         output_edge_index = nee * ei + edge_index
-        for i, ii in enumerate(enodes[0:2]):
+        for i, ii in enumerate(enodes[:2]):
             for k, kk in enumerate(enodes): # for the derivative nodes
                 val = numpy.transpose(vector_efield_derivatives[node_index_positions[ii]][:,node_index_positions[kk]])
                 row_stride = slice(dim*(k+1),dim*(k+2))
@@ -350,28 +344,34 @@ def GetNodeIndexes(device, region):
 def GetUnitVectors(device, region):
     ret = []
     for i in range(dim):
-        mname = "s%s" % directions[i]
-        element_model(device=device, region=region, name=mname, equation="unit%s" % directions[i])
+        mname = f"s{directions[i]}"
+        element_model(
+            device=device,
+            region=region,
+            name=mname,
+            equation=f"unit{directions[i]}",
+        )
+
         ret.append(get_element_model_values(device=device, region=region, name=mname))
     return ret
 
 def SetupOutputCompare(device, region, model, variable, output):
     k = 0
     for i in range(dim):
-        mname = model + "_" + directions[i]
+        mname = f"{model}_{directions[i]}"
         output[:,k] = numpy.array(get_element_model_values(device=device, region=region, name=mname))
         print("%d %s" % (k, mname))
         k += 1
     for j in range(nen):
         for i in range(dim):
-            mname = model + "_" + directions[i]
-            dname = mname + ":" + variable + "@en%d" % j
+            mname = f"{model}_{directions[i]}"
+            dname = f"{mname}:{variable}" + "@en%d" % j
             output[:,k] = numpy.array(get_element_model_values(device=device, region=region, name=dname))
             print("%d %s" % (k, dname))
             k += 1
 
 def DoCompare(output, output_compare, number_test):
-    test2 = output[0:nee*number_test] - output_compare[0:nee*number_test]
+    test2 = output[:nee*number_test] - output_compare[:nee*number_test]
     print(numpy.linalg.norm(test2, ord=numpy.inf ))
     for row in range(number_test):
         for col in range(nen+1):
@@ -381,16 +381,14 @@ def DoCompare(output, output_compare, number_test):
             if norm > 1e-4:
                 print("%d %d %g" % (row, col, norm))
 
-    # use for debugging
-    if True:
-        #for row in range(10):
-        row = 0
-        col = 0
-        sl1 = slice(nee*row,nee*(row+1))
-        sl2 = slice(dim*col,dim*(col+1))
-        print(output[(sl1, sl2)])
-        print(output_compare[(sl1,sl2)])
-        print(output[(sl1, sl2)] - output_compare[(sl1,sl2)])
+    #for row in range(10):
+    row = 0
+    col = 0
+    sl1 = slice(nee*row,nee*(row+1))
+    sl2 = slice(dim*col,dim*(col+1))
+    print(output[(sl1, sl2)])
+    print(output_compare[(sl1,sl2)])
+    print(output[(sl1, sl2)] - output_compare[(sl1,sl2)])
 
 def RunTest(device, region, number_test, scalar_field, derivative_variable):
     scalar_efield = GetScalarField(device, region, "scalar_efield", scalar_field)

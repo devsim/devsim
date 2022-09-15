@@ -1,13 +1,13 @@
 from devsim import *
 
 def parse_gmsh_file(file):
-    sections=set(['$MeshFormat', '$PhysicalNames', '$Nodes', '$Elements'])
+    sections = {'$MeshFormat', '$PhysicalNames', '$Nodes', '$Elements'}
     lineno = 0
     section_count = 0
     section_expected = 0
     dimension = 0
     with open(file, 'r') as ih:
-        state = 'begin' 
+        state = 'begin'
         for line in ih:
             line = line.rstrip()
             lineno += 1
@@ -45,10 +45,10 @@ def parse_gmsh_file(file):
                     elements = [None]*section_expected
                 else:
                     elements[section_count] = [int(x) for x in line.split()]
-                    section_count += 1 
+                    section_count += 1
             else:
-                raise RuntimeError("Unknown %s" % line)
-    dimension = max([x[1] for x in physical_names])
+                raise RuntimeError(f"Unknown {line}")
+    dimension = max(x[1] for x in physical_names)
     return {
         'dimension'   : dimension,
       'physical_names'       : physical_names,
@@ -76,7 +76,7 @@ def read_gmsh_file(filename):
     for i in data['coordinates']:
         coordinates.extend(i[1:])
 
-    all_physical_numbers = sorted(set([x[3] for x in data['elements']]))
+    all_physical_numbers = sorted({x[3] for x in data['elements']})
     sorted_physical_names = sorted(data['physical_names'],key = lambda x : x[0])
     physical_number_map = {
         1 : {},
@@ -95,21 +95,21 @@ def read_gmsh_file(filename):
     elements = []
     for i in data['elements']:
         t = i[1]
-        if (t == 4):
-            #tetrahedron
-            etype = 3
-            dimension = 3
-        elif (t == 2):
-            #triangle
-            etype = 2
-            dimension = 2
-        elif (t == 1):
+        if t == 1:
             #edge
             etype = 1
             dimension = 1
-        elif (t == 15):
+        elif t == 15:
             #point
             etype = 0
+        elif t == 2:
+            #triangle
+            etype = 2
+            dimension = 2
+        elif t == 4:
+            #tetrahedron
+            etype = 3
+            dimension = 3
         else:
             raise RuntimeError("Cannot handle element type " % i)
 

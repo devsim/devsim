@@ -16,7 +16,7 @@ import devsim
 
 def callSymdiff(arg):
     x  = devsim.symdiff(expr=arg)
-    dx = devsim.symdiff(expr="diff(%s,x)" % arg)
+    dx = devsim.symdiff(expr=f"diff({arg},x)")
     print ('"%s"\n"%s"\n"%s"\n' % (arg, x, dx))
 
 

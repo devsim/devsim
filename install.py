@@ -12,13 +12,12 @@ class DevsimCheck:
         pieces = dir_name.split('_')
         if len(pieces) != 3 or pieces[0] != 'devsim':
             raise RuntimeError("This script needs to be run from a devsim directory")
-        ret = {
-            'dir_path' : dir_path,
-            'dir_name' : dir_name,
-            'build_type' : pieces[1],
-            'version' : pieces[2]
+        return {
+            'dir_path': dir_path,
+            'dir_name': dir_name,
+            'build_type': pieces[1],
+            'version': pieces[2],
         }
-        return ret
 
 #    def find_mkl(self):
 #        mkl_found = {}
@@ -102,13 +101,11 @@ class DevsimCheck:
         for s in ('USER_BASE', 'USER_SITE', 'ENABLE_USER_SITE'):
             ret[s] = site.__dict__[s]
 
-        ret['site-packages'] = None
-        for s in sys.path:
-            if os.path.split(s)[-1] == 'site-packages':
-                ret['site-packages'] = s
-                break
+        ret['site-packages'] = next(
+            (s for s in sys.path if os.path.split(s)[-1] == 'site-packages'), None
+        )
 
-        print("Python Version " + ".".join([str(x) for x in sys.version_info[0:3]]))
+        print("Python Version " + ".".join([str(x) for x in sys.version_info[:3]]))
 
         if sys.version_info[0] != 3 or sys.version_info[1] < 6:
             raise RuntimeError("A Python version of 3.6 or higher is required")

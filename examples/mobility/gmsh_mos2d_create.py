@@ -32,8 +32,8 @@ y_diffusion_decay  =1e-10
 bulk_doping        =1e15
 body_doping        =1e19
 #n doping
-drain_doping       =1e19 
-source_doping      =1e19 
+drain_doping       =1e19
+source_doping      =1e19
 gate_doping        =1e20
 
 y_channel_spacing     =1e-8
@@ -82,18 +82,19 @@ finalize_mesh(mesh="mos2d")
 create_device(mesh="mos2d", device="mos2d")
 
 #### all variable substitutions are immediate, since they are locked into the mesh
-mydict = {}
-mydict["drain_doping"] = drain_doping
-mydict["body_doping"] = body_doping
-mydict["gate_doping"] = gate_doping
-mydict["source_doping"] = source_doping
-mydict["bulk_doping"] = bulk_doping
-mydict["x_gate_left"] = x_gate_left
-mydict["x_gate_right"] = x_gate_right
-mydict["x_diffusion_decay"] = x_diffusion_decay
-mydict["y_diffusion"] = y_diffusion
-mydict["y_bulk_bottom"] = y_bulk_bottom
-mydict["y_diffusion_decay"] = y_diffusion_decay
+mydict = {
+    "drain_doping": drain_doping,
+    "body_doping": body_doping,
+    "gate_doping": gate_doping,
+    "source_doping": source_doping,
+    "bulk_doping": bulk_doping,
+    "x_gate_left": x_gate_left,
+    "x_gate_right": x_gate_right,
+    "x_diffusion_decay": x_diffusion_decay,
+    "y_diffusion": y_diffusion,
+    "y_bulk_bottom": y_bulk_bottom,
+    "y_diffusion_decay": y_diffusion_decay,
+}
 
 node_model(name="Donors",    device=device, region="gate", equation="%(gate_doping)1.15e + 1" % (mydict))
 node_model(name="Acceptors", device=device, region="gate", equation="1")
