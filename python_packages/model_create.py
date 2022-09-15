@@ -149,7 +149,7 @@ def CreateElementModel2d(device, region, model, expression):
 
 
 def CreateElementModelDerivative2d(device, region, model_name, expression, *args):
-    if len(args) == 0:
+    if not args:
         raise ValueError("Must specify a list of variable names")
     for i in args:
         for j in ("@en0", "@en1", "@en2"):
@@ -160,7 +160,7 @@ def CreateGeometricMean(device, region, nmodel, emodel):
     edge_average_model(device=device, region=region, edge_model=emodel, node_model=nmodel, average_type="geometric")
 
 def CreateGeometricMeanDerivative(device, region, nmodel, emodel, *args):
-    if len(args) == 0:
+    if not args:
         raise ValueError("Must specify a list of variable names")
     for i in args:
         edge_average_model(device=device, region=region, edge_model=emodel, node_model=nmodel,

@@ -18,7 +18,7 @@ devsim.load_devices( file="mesh2.msh")
 
 for x in devsim.get_device_list():
     for y in devsim.get_region_list(device=x):
-        print("%s %s" % (x, y))
+        print(f"{x} {y}")
 
 device="MyDevice"
 interface="MySiOx"

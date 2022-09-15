@@ -63,7 +63,7 @@ for v in (0.0, 1e-3):
     test_common.printResistorCurrent(device=device, contact="top")
     test_common.printResistorCurrent(device=device, contact="bot")
 
-for i in range(4):
+for _ in range(4):
     devsim.solve(type='dc', absolute_error=1.0e10, relative_error=1e-7, maximum_iterations=30)
 
 devsim.solve(type="noise", frequency=1e5, output_node="V1.I")

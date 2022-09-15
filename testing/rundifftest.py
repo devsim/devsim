@@ -23,7 +23,7 @@ output_file = os.path.abspath(os.path.join(args.working, args.output))
 compare_file = os.path.abspath(os.path.join(args.goldendir, args.output))
 
 if (args.working):
-    os.chdir(args.working) 
+    os.chdir(args.working)
 if args.testexe:
     arguments = [args.testexe,]
     if args.args:
@@ -42,11 +42,11 @@ f2stat = os.stat(compare_file)
 
 with open(output_file) as f1:
     with open(compare_file) as f2:
-        while (True):
+        while True:
             a1 = next(f1, "SENTINELlkj")
             a2 = next(f2, "SENTINELlkj")
             if a1 != a2:
-                raise RuntimeError("%s differs from %s" % (output_file, compare_file))
+                raise RuntimeError(f"{output_file} differs from {compare_file}")
             elif a1 == "SENTINELlkj":
                 break
 

@@ -71,16 +71,7 @@ def createPotentialOnly(device, region):
     devsim.element_from_edge_model(edge_model="EField", derivative="Potential", device=device, region=region)
 
     foo="dot2d(EField_x, EField_y, unitx, unity)"
-    for name, equation in (
-        ("ElectricField", foo),
-      ("ElectricField:Potential@en0", "diff(%s, Potential@en0)" % foo),
-      ("ElectricField:Potential@en1", "diff(%s, Potential@en1)" % foo),
-      ("ElectricField:Potential@en2", "diff(%s, Potential@en2)" % foo),
-      ("PotentialEdgeFlux", "Permittivity*ElectricField"),
-      ("PotentialEdgeFlux:Potential@en0", "diff(Permittivity*ElectricField,Potential@en0)"),
-      ("PotentialEdgeFlux:Potential@en1", "diff(Permittivity*ElectricField,Potential@en1)"),
-      ("PotentialEdgeFlux:Potential@en2", "diff(Permittivity*ElectricField,Potential@en2)"),
-    ):
+    for name, equation in (("ElectricField", foo), ("ElectricField:Potential@en0", f"diff({foo}, Potential@en0)"), ("ElectricField:Potential@en1", f"diff({foo}, Potential@en1)"), ("ElectricField:Potential@en2", f"diff({foo}, Potential@en2)"), ("PotentialEdgeFlux", "Permittivity*ElectricField"), ("PotentialEdgeFlux:Potential@en0", "diff(Permittivity*ElectricField,Potential@en0)"), ("PotentialEdgeFlux:Potential@en1", "diff(Permittivity*ElectricField,Potential@en1)"), ("PotentialEdgeFlux:Potential@en2", "diff(Permittivity*ElectricField,Potential@en2)")):
         devsim.element_model(device=device, region=region, name=name, equation=equation)
 
     devsim.equation(device=device, region=region, name="PotentialEquation", variable_name="Potential",
@@ -88,7 +79,7 @@ def createPotentialOnly(device, region):
 
 def createPotentialOnlyContact(device, region, contact):
     format_dict = {"contact" : contact}
-    biasname = contact + "bias"
+    biasname = f"{contact}bias"
     devsim.set_parameter(device=device, region=region, name=biasname, value=0.0)
 
     for name, equation in (
@@ -104,8 +95,12 @@ def createPotentialOnlyContact(device, region, contact):
         devsim.contact_node_model(device=device, contact=contact, name=name_sub, equation=equation_sub)
 
 
-    devsim.contact_equation(device=device, contact=contact, name="PotentialEquation",
-                            node_model="%snodemodel" % contact)
+    devsim.contact_equation(
+        device=device,
+        contact=contact,
+        name="PotentialEquation",
+        node_model=f"{contact}nodemodel",
+    )
 
 def createDriftDiffusion(device, region):
     for name, equation in (
@@ -132,10 +127,10 @@ def createDriftDiffusion(device, region):
         devsim.edge_model(device=device, region=region, name=name, equation=equation)
 
     Jn      ="ElectronCharge*mu_n*EdgeInverseLength*V_t*(Electrons@n1*Bern10 - Electrons@n0*Bern01)"
-    dJndn0  ="simplify(diff( %s, Electrons@n0))" % Jn
-    dJndn1  ="simplify(diff( %s, Electrons@n1))" % Jn
-    dJndpot0="simplify(diff( %s, Potential@n0))" % Jn
-    dJndpot1="simplify(diff( %s, Potential@n1))" % Jn
+    dJndn0 = f"simplify(diff( {Jn}, Electrons@n0))"
+    dJndn1 = f"simplify(diff( {Jn}, Electrons@n1))"
+    dJndpot0 = f"simplify(diff( {Jn}, Potential@n0))"
+    dJndpot1 = f"simplify(diff( {Jn}, Potential@n1))"
     for name, equation in (
         ("ElectronCurrent"             , Jn),
       ("ElectronCurrent:Electrons@n0", dJndn0),
@@ -146,10 +141,10 @@ def createDriftDiffusion(device, region):
         devsim.edge_model(device=device, region=region, name=name, equation=equation)
 
     Jp      ="-ElectronCharge*mu_p*EdgeInverseLength*V_t*(Holes@n1*Bern01 - Holes@n0*Bern10)"
-    dJpdp0  ="simplify(diff(%s, Holes@n0))" % Jp
-    dJpdp1  ="simplify(diff(%s, Holes@n1))" % Jp
-    dJpdpot0="simplify(diff(%s, Potential@n0))" % Jp
-    dJpdpot1="simplify(diff(%s, Potential@n1))" % Jp
+    dJpdp0 = f"simplify(diff({Jp}, Holes@n0))"
+    dJpdp1 = f"simplify(diff({Jp}, Holes@n1))"
+    dJpdpot0 = f"simplify(diff({Jp}, Potential@n0))"
+    dJpdpot1 = f"simplify(diff({Jp}, Potential@n1))"
 
     for name, equation in (
         ("HoleCurrent"             , Jp),
@@ -216,11 +211,20 @@ def createDriftDiffusionAtContact(device, region, contact):
         equation_sub = equation % format_dict
         devsim.contact_node_model(device=device, contact=contact, name=name_sub, equation=equation_sub)
 
-        devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation",
-                                node_model="%snodeelectrons" % contact,
-                                edge_current_model="ElectronCurrent")
+        devsim.contact_equation(
+            device=device,
+            contact=contact,
+            name="ElectronContinuityEquation",
+            node_model=f"{contact}nodeelectrons",
+            edge_current_model="ElectronCurrent",
+        )
 
-        devsim.contact_equation(device=device, contact=contact, name="HoleContinuityEquation",
-                                node_model="%snodeholes" % contact,
-                                edge_current_model="HoleCurrent")
+
+        devsim.contact_equation(
+            device=device,
+            contact=contact,
+            name="HoleContinuityEquation",
+            node_model=f"{contact}nodeholes",
+            edge_current_model="HoleCurrent",
+        )
 

@@ -182,13 +182,7 @@ def SetupCarrierResistorSystem(device, region):
     #### Electron Current
     ####
     current_equation="ElectronCharge*mu_n*EdgeInverseLength*ThermalVoltage*(Electrons@n1*Bern10 - Electrons@n0*Bern01)"
-    for name, equation in (
-        ("ElectronCurrent", current_equation),
-      ("ElectronCurrent:Electrons@n0", "simplify(diff(%s, Electrons@n0))" % current_equation),
-      ("ElectronCurrent:Electrons@n1", "simplify(diff(%s, Electrons@n1))" % current_equation),
-      ("ElectronCurrent:Potential@n0", "simplify(diff(%s, Potential@n0))" % current_equation),
-      ("ElectronCurrent:Potential@n1", "simplify(diff(%s, Potential@n1))" % current_equation),
-    ):
+    for name, equation in (("ElectronCurrent", current_equation), ("ElectronCurrent:Electrons@n0", f"simplify(diff({current_equation}, Electrons@n0))"), ("ElectronCurrent:Electrons@n1", f"simplify(diff({current_equation}, Electrons@n1))"), ("ElectronCurrent:Potential@n0", f"simplify(diff({current_equation}, Potential@n0))"), ("ElectronCurrent:Potential@n1", f"simplify(diff({current_equation}, Potential@n1))")):
         devsim.edge_model(device=device, region=region, name=name, equation=equation)
 
     ####
@@ -208,16 +202,31 @@ def SetupCarrierResistorSystem(device, region):
 
 
 def SetupInitialResistorContact(device, contact, use_circuit_bias=False, circuit_node=""):
-    if circuit_node:
-        bias_name = circuit_node
-    else:
-        bias_name = contact + "bias"
-    bias_node_model  = contact + "node_model"
+    bias_name = circuit_node or f"{contact}bias"
+    bias_node_model = f"{contact}node_model"
 
-    devsim.contact_node_model(device=device, contact=contact, name=bias_node_model, equation="Potential - %s" % bias_name)
-    devsim.contact_node_model(device=device, contact=contact, name="%s:Potential" % bias_node_model, equation="1")
+    devsim.contact_node_model(
+        device=device,
+        contact=contact,
+        name=bias_node_model,
+        equation=f"Potential - {bias_name}",
+    )
+
+    devsim.contact_node_model(
+        device=device,
+        contact=contact,
+        name=f"{bias_node_model}:Potential",
+        equation="1",
+    )
+
     if use_circuit_bias:
-        devsim.contact_node_model(device=device, contact=contact, name="%s:%s" % (bias_node_model, bias_name), equation="-1")
+        devsim.contact_node_model(
+            device=device,
+            contact=contact,
+            name=f"{bias_node_model}:{bias_name}",
+            equation="-1",
+        )
+
     #edge_model -device $device -region $region -name "contactcharge_edge_top"  -equation $conteq
     if use_circuit_bias:
         devsim.contact_equation(device=device, contact=contact, name="PotentialEquation",
@@ -230,26 +239,32 @@ def SetupCarrierResistorContact(device, contact, use_circuit_bias=False, circuit
     '''
       Electron continuity equation at contact
     '''
-    if circuit_node:
-        bias_name=circuit_node
-    else:
-        bias_name = contact + "bias"
+    bias_name = circuit_node or f"{contact}bias"
     region=devsim.get_region_list(device=device, contact=contact)[0]
     if 'celec' not in devsim.get_node_model_list(device=device, region=region):
         devsim.node_model(device=device, region=region, name="celec", equation="0.5*(NetDoping+(NetDoping^2 + 4 * IntrinsicDensity^2)^(0.5))")
 
-    for name, equation in (
-        ("%snodeelectrons" % contact,           "Electrons - celec"),
-      ("%snodeelectrons:Electrons" % contact, "1."),
-    ):
+    for name, equation in ((f"{contact}nodeelectrons", "Electrons - celec"), (f"{contact}nodeelectrons:Electrons", "1.")):
         devsim.contact_node_model(device=device, contact=contact, name=name, equation=equation)
 
     if use_circuit_bias:
-        devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation",
-                                node_model="%snodeelectrons" % contact, edge_current_model="ElectronCurrent", circuit_node=bias_name)
+        devsim.contact_equation(
+            device=device,
+            contact=contact,
+            name="ElectronContinuityEquation",
+            node_model=f"{contact}nodeelectrons",
+            edge_current_model="ElectronCurrent",
+            circuit_node=bias_name,
+        )
+
     else:
-        devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation",
-                                node_model="%snodeelectrons" % contact, edge_current_model="ElectronCurrent")
+        devsim.contact_equation(
+            device=device,
+            contact=contact,
+            name="ElectronContinuityEquation",
+            node_model=f"{contact}nodeelectrons",
+            edge_current_model="ElectronCurrent",
+        )
 
 def SetupContinuousPotentialAtInterface(device, interface):
     # type continuous means that regular equations in both regions are swapped into the primary region
@@ -271,14 +286,7 @@ def SetupElectronSRVAtInterface(device, interface):
     '''
     devsim.set_parameter(device=device, name="alpha_n", value=1e-7)
     iexp="(alpha_n@r0)*(Electrons@r0-Electrons@r1)"
-    for name, equation in (
-        ("srvElectrons", iexp),
-      ("srvElectrons2", "srvElectrons"),
-      ("srvElectrons:Electrons@r0", "diff(%s,Electrons@r0)" % iexp),
-      ("srvElectrons:Electrons@r1", "diff(%s,Electrons@r1)" % iexp),
-      ("srvElectrons2:Electrons@r0", "srvElectrons:Electrons@r0"),
-      ("srvElectrons2:Electrons@r1", "srvElectrons:Electrons@r1"),
-    ):
+    for name, equation in (("srvElectrons", iexp), ("srvElectrons2", "srvElectrons"), ("srvElectrons:Electrons@r0", f"diff({iexp},Electrons@r0)"), ("srvElectrons:Electrons@r1", f"diff({iexp},Electrons@r1)"), ("srvElectrons2:Electrons@r0", "srvElectrons:Electrons@r0"), ("srvElectrons2:Electrons@r1", "srvElectrons:Electrons@r1")):
         devsim.interface_model(device=device, interface=interface, name=name, equation=equation)
 
     devsim.interface_equation(device=device, interface=interface, name="ElectronContinuityEquation", interface_model="srvElectrons2", type="fluxterm")

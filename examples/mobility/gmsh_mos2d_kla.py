@@ -44,7 +44,7 @@ contacts = get_contact_list(device=device)
 for i in contacts:
     tmp = get_region_list(device=device, contact=i)
     r = tmp[0]
-    print("%s %s" % (r, i))
+    print(f"{r} {i}")
     CreateSiliconPotentialOnlyContact(device, r, i)
     set_parameter(device=device, name=GetContactBiasName(i), value=0.0)
 

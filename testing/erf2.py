@@ -25,16 +25,7 @@ myexp1 = "0.999*(x-0.5)"
 myexp2 = "1.999*x+0.0001"
 
 
-for i, j in (
-      ("erf_inv", "erf_inv(x)"),
-      ("d_erf_inv_dx", "diff(erf_inv(x),x)"),
-      ("erfc_inv", "erfc_inv(x)"),
-      ("d_erfc_inv_dx", "diff(erfc_inv(x),x)"),
-      ("erf_inv", "erf_inv(%s)" % myexp1),
-      ("d_erf_inv_dx", "diff(erf_inv(%s),x)" % myexp1),
-      ("erfc_inv", "erfc_inv(%s)" % myexp2),
-      ("d_erfc_inv_dx", "diff(erfc_inv(%s),x)" % myexp2),
-    ):
+for i, j in (("erf_inv", "erf_inv(x)"), ("d_erf_inv_dx", "diff(erf_inv(x),x)"), ("erfc_inv", "erfc_inv(x)"), ("d_erfc_inv_dx", "diff(erfc_inv(x),x)"), ("erf_inv", f"erf_inv({myexp1})"), ("d_erf_inv_dx", f"diff(erf_inv({myexp1}),x)"), ("erfc_inv", f"erfc_inv({myexp2})"), ("d_erfc_inv_dx", f"diff(erfc_inv({myexp2}),x)")):
     devsim.node_model(device=device, region=region, name=i, equation=j)
     print()
     try:

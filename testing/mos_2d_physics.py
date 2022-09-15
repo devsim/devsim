@@ -53,7 +53,13 @@ def createSolution(device, region, name):
 
 def createSiliconPotentialOnly(device, region):
     ie = devsim.node_model(device=device, region=region, name="IntrinsicElectrons", equation="n_i*exp(Potential/V_t)")
-    res = devsim.node_model(device=device, region=region, name="IntrinsicElectrons:Potential", equation="diff(%s, Potential)" % ie)
+    res = devsim.node_model(
+        device=device,
+        region=region,
+        name="IntrinsicElectrons:Potential",
+        equation=f"diff({ie}, Potential)",
+    )
+
     for name, equation in (
         ("IntrinsicHoles",                         "n_i^2/IntrinsicElectrons"),
       ("IntrinsicHoles:Potential",               "diff(n_i^2/IntrinsicElectrons, Potential)"),
@@ -78,7 +84,7 @@ def createSiliconPotentialOnly(device, region):
                     node_model="PotentialIntrinsicNodeCharge", edge_model="PotentialEdgeFlux", variable_update="log_damp")
 
 def createSiliconPotentialOnlyContact(device, region, contact):
-    bias_name="%sbias" % contact
+    bias_name = f"{contact}bias"
     format_dict = { "contact" : contact}
     devsim.set_parameter(device=device, region=region, name=bias_name, value=0.0)
     for name, equation in (
@@ -94,8 +100,12 @@ def createSiliconPotentialOnlyContact(device, region, contact):
         equation_sub = equation % format_dict
         devsim.contact_node_model(device=device, contact=contact, name=name_sub, equation=equation_sub)
 
-    devsim.contact_equation(device=device, contact=contact, name="PotentialEquation",
-                            node_model="%snodemodel" % contact)
+    devsim.contact_equation(
+        device=device,
+        contact=contact,
+        name="PotentialEquation",
+        node_model=f"{contact}nodemodel",
+    )
 
 def createSiliconDriftDiffusion(device, region):
     for name, equation in (
@@ -129,8 +139,8 @@ def createSiliconDriftDiffusion(device, region):
     devsim.set_parameter(device=device, region=region, name="taup", value=1e-5)
 
     USRH="-ElectronCharge*(Electrons*Holes - n_i^2)/(taup*(Electrons + n1) + taun*(Holes + p1))"
-    dUSRHdn="simplify(diff(%s, Electrons))" % USRH
-    dUSRHdp="simplify(diff(%s, Holes))" % USRH
+    dUSRHdn = f"simplify(diff({USRH}, Electrons))"
+    dUSRHdp = f"simplify(diff({USRH}, Holes))"
     devsim.node_model(device=device, region=region , name="USRH", equation=USRH)
     devsim.node_model(device=device, region=region , name="USRH:Electrons", equation=dUSRHdn)
     devsim.node_model(device=device, region=region , name="USRH:Holes", equation=dUSRHdp)
@@ -156,11 +166,22 @@ def createSiliconDriftDiffusionAtContact(device, region, contact):
         equation_sub = equation % format_dict
         devsim.contact_node_model(device=device, contact=contact, name=name_sub, equation=equation_sub)
 
-    devsim.contact_equation(device=device, contact=contact, name="ElectronContinuityEquation",
-                            node_model="%snodeelectrons" % contact, edge_current_model="ElectronCurrent")
+    devsim.contact_equation(
+        device=device,
+        contact=contact,
+        name="ElectronContinuityEquation",
+        node_model=f"{contact}nodeelectrons",
+        edge_current_model="ElectronCurrent",
+    )
 
-    devsim.contact_equation(device=device, contact=contact, name="HoleContinuityEquation",
-                            node_model="%snodeholes" % contact, edge_current_model="HoleCurrent")
+
+    devsim.contact_equation(
+        device=device,
+        contact=contact,
+        name="HoleContinuityEquation",
+        node_model=f"{contact}nodeholes",
+        edge_current_model="HoleCurrent",
+    )
 
 
 def createOxidePotentialOnly(device, region):
@@ -198,8 +219,8 @@ def createSiliconSiliconInterface(device, interface):
             name_sub = name % format_dict
             equation_sub = equation % format_dict
             devsim.interface_model(device=device, interface=interface, name=name_sub, equation=equation_sub)
-        eqname = "%sEquation" % variable
-        ieqname = "continuous%s" % variable
+        eqname = f"{variable}Equation"
+        ieqname = f"continuous{variable}"
         devsim.interface_equation(device=device, interface=interface, name=eqname,
                                   interface_model=ieqname, type="continuous")
 
@@ -223,13 +244,13 @@ def createElectronCurrent(device, region):
     Jn="ElectronCharge*mu_n*EdgeInverseLength*V_t*(Electrons@n1*Bern10 - Electrons@n0*Bern01)"
     devsim.edge_model(device=device, region=region, name="ElectronCurrent", equation=Jn)
     for variable in ("Electrons", "Potential"):
-        der = "simplify(diff(%s, %s))" % (Jn, variable)
+        der = f"simplify(diff({Jn}, {variable}))"
         devsim.edge_model(device=device, region=region, name="ElectronCurrent", equation=der)
 
-def createHoleCurrent (device, region):
+def createHoleCurrent(device, region):
     Jp="-ElectronCharge*mu_p*EdgeInverseLength*V_t*(Holes@n1*Bern01 - Holes@n0*Bern10)"
     devsim.edge_model(device=device, region=region, name="HoleCurrent", equation=Jp)
     for variable in ("Holes", "Potential"):
-        der = "simplify(diff(%s, %s))" % (Jp, variable)
+        der = f"simplify(diff({Jp}, {variable}))"
         devsim.edge_model(device=device, region=region, name="HoleCurrent", equation=der)
 
