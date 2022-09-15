@@ -21,7 +21,7 @@ export PYTHON3_ARCHIVE=$(cygpath -w ${CONDA_PREFIX}/libs/python3.lib)
 
 
 # quad precision getrf
-(cd external/getrf && bash setup_msys.sh && cd build && make -j2)
+(cd external/getrf && bash setup_msys.sh && cd msys && make -j2)
 
 
 bash scripts/setup_msys.sh
