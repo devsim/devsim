@@ -87,4 +87,3 @@ print("ElementNodeVolume {0:e}".format(sum(get_element_model_values(device=devic
 print("NodeVolume {0:e}".format(sum(get_node_model_values(device=device, region="left", name="NodeVolume"))))
 print("ElementNodeVolume {0:e}".format(sum(get_element_model_values(device=device, region="right", name="ElementNodeVolume"))))
 print("NodeVolume {0:e}".format(sum(get_node_model_values(device=device, region="right", name="NodeVolume"))))
-

@@ -21,15 +21,15 @@ limitations under the License.
 #include <string>
 #include <utility>
 
-#include "NodeModel.hh"
 #include "EdgeModel.hh"
-#include "TriangleEdgeModel.hh"
+#include "NodeModel.hh"
 #include "TetrahedronEdgeModel.hh"
+#include "TriangleEdgeModel.hh"
 
 namespace Eqo {
 class EquationObject;
 typedef std::shared_ptr<EquationObject> EqObjPtr;
-}
+} // namespace Eqo
 
 class Region;
 typedef Region *RegionPtr;
@@ -42,17 +42,33 @@ typedef Interface *InterfacePtr;
 
 namespace dsHelper {
 typedef std::pair<bool, std::string> ret_pair;
-ret_pair CreateNodeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, NodeModel::DisplayType /*dtype*/, ContactPtr cp = nullptr);
-ret_pair CreateEdgeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, EdgeModel::DisplayType /*dtype*/, ContactPtr cp = nullptr);
-ret_pair CreateTriangleEdgeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, TriangleEdgeModel::DisplayType /*dtype*/);
-ret_pair CreateTetrahedronEdgeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, RegionPtr /*rp*/, TetrahedronEdgeModel::DisplayType /*dtype*/);
-ret_pair CreateInterfaceNodeExprModel(const std::string &/*nm*/, const std::string &/*expr*/, InterfacePtr /*ip*/);
+ret_pair CreateNodeExprModel(const std::string & /*nm*/,
+                             const std::string & /*expr*/, RegionPtr /*rp*/,
+                             NodeModel::DisplayType /*dtype*/,
+                             ContactPtr cp = nullptr);
+ret_pair CreateEdgeExprModel(const std::string & /*nm*/,
+                             const std::string & /*expr*/, RegionPtr /*rp*/,
+                             EdgeModel::DisplayType /*dtype*/,
+                             ContactPtr cp = nullptr);
+ret_pair CreateTriangleEdgeExprModel(const std::string & /*nm*/,
+                                     const std::string & /*expr*/,
+                                     RegionPtr /*rp*/,
+                                     TriangleEdgeModel::DisplayType /*dtype*/);
+ret_pair
+CreateTetrahedronEdgeExprModel(const std::string & /*nm*/,
+                               const std::string & /*expr*/, RegionPtr /*rp*/,
+                               TetrahedronEdgeModel::DisplayType /*dtype*/);
+ret_pair CreateInterfaceNodeExprModel(const std::string & /*nm*/,
+                                      const std::string & /*expr*/,
+                                      InterfacePtr /*ip*/);
 ret_pair SymdiffEval(const std::string &);
 
 NodeModel::DisplayType getNodeModelDisplayType(const std::string &dt);
 EdgeModel::DisplayType getEdgeModelDisplayType(const std::string &dt);
-TriangleEdgeModel::DisplayType getTriangleEdgeModelDisplayType(const std::string &dt);
-TetrahedronEdgeModel::DisplayType getTetrahedronEdgeModelDisplayType(const std::string &dt);
-}
+TriangleEdgeModel::DisplayType
+getTriangleEdgeModelDisplayType(const std::string &dt);
+TetrahedronEdgeModel::DisplayType
+getTetrahedronEdgeModelDisplayType(const std::string &dt);
+} // namespace dsHelper
 
 #endif

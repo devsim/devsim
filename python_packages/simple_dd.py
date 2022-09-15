@@ -66,4 +66,3 @@ def CreateHoleCurrent(device, region, mu_p):
     CreateEdgeModel(device, region, "HoleCurrent", Jp)
     for i in ("Holes", "Potential", "Electrons"):
         CreateEdgeModelDerivatives(device, region, "HoleCurrent", Jp, i)
-

@@ -27,4 +27,3 @@ SET PYTHONPATH=$libpath
 python %*
 EOF
 /usr/bin/chmod +x bin/symdiff_py3.bat
-

@@ -32,4 +32,3 @@ SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/msys_x86_64_release/src/engine/libsymdiff_static.a)
 
 SET (QUADMATH_ARCHIVE "-lquadmath")
-

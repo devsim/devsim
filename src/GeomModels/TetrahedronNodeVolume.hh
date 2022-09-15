@@ -28,17 +28,15 @@ typedef Tetrahedron *TetrahedronPtr;
 typedef const Tetrahedron *ConstTetrahedronPtr;
 
 template <typename DoubleType>
-class TetrahedronNodeVolume : public TetrahedronEdgeModel
-{
-    public:
-        TetrahedronNodeVolume(RegionPtr);
+class TetrahedronNodeVolume : public TetrahedronEdgeModel {
+public:
+  TetrahedronNodeVolume(RegionPtr);
 
-        void Serialize(std::ostream &) const;
+  void Serialize(std::ostream &) const;
 
-    private:
-        void   calcTetrahedronEdgeScalarValues() const;
-        void   setInitialValues();
+private:
+  void calcTetrahedronEdgeScalarValues() const;
+  void setInitialValues();
 };
 
 #endif
-

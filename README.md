@@ -40,7 +40,7 @@ The repository for the documentation is at [https://github.com/devsim/devsim_doc
 
 
 ## Software Features:
-* Python scripting 
+* Python scripting
 * DC, small-signal AC, impedance field method, transient
 * User specified partial differential equations (PDE).
 * 1D, 2D, and 3D simulation
@@ -85,4 +85,3 @@ If you wish to see simulation results, or run the regression tests yourself.  Th
 | --- | --- |
 | [devsim_bjt_example](https://github.com/devsim/devsim_bjt_example) | Bipolar Junction Transistor example |
 | [devsim_density_gradient](https://github.com/devsim/devsim_density_gradient) | Quantum Corrections to Drift Diffusion simulation |
-

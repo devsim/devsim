@@ -40,7 +40,6 @@ void createGmshMeshCmd(CommandHandler &);
 void finalizeMeshCmd(CommandHandler &);
 void loadDevicesCmd(CommandHandler &);
 void writeDevicesCmd(CommandHandler &);
-}
+} // namespace dsCommand
 
 #endif
-

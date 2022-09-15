@@ -29,39 +29,32 @@ typedef Triangle *TrianglePtr;
 typedef const Triangle *ConstTrianglePtr;
 #endif
 
-namespace VectorGradientEnum
-{
-  enum CalcType {DEFAULT=0, AVOIDZERO};
-  extern const char *CalcTypeString[];
-}
+namespace VectorGradientEnum {
+enum CalcType { DEFAULT = 0, AVOIDZERO };
+extern const char *CalcTypeString[];
+} // namespace VectorGradientEnum
 
-NodeModelPtr CreateVectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
+NodeModelPtr CreateVectorGradient(RegionPtr, const std::string &,
+                                  VectorGradientEnum::CalcType);
 
-template <typename DoubleType>
-class VectorGradient : public NodeModel
-{
-    public:
+template <typename DoubleType> class VectorGradient : public NodeModel {
+public:
+  void Serialize(std::ostream &) const;
 
-      void Serialize(std::ostream &) const;
+  VectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
 
-      VectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
+private:
+  DoubleType calcVectorGradient(ConstNodePtr) const;
+  void calcNodeScalarValues() const;
+  void calc1d() const;
+  void calc2d() const;
+  void calc3d() const;
+  void setInitialValues();
 
-    private:
-
-
-      DoubleType calcVectorGradient(ConstNodePtr) const;
-      void   calcNodeScalarValues() const;
-      void   calc1d() const;
-      void   calc2d() const;
-      void   calc3d() const;
-      void   setInitialValues();
-
-      std::string   parentname_;
-      VectorGradientEnum::CalcType      calctype_;
-      WeakNodeModelPtr yfield_;
-      WeakNodeModelPtr zfield_;
-
+  std::string parentname_;
+  VectorGradientEnum::CalcType calctype_;
+  WeakNodeModelPtr yfield_;
+  WeakNodeModelPtr zfield_;
 };
 
 #endif
-

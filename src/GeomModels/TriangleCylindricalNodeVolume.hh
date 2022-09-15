@@ -28,25 +28,25 @@ typedef const Triangle *ConstTrianglePtr;
 TriangleEdgeModelPtr CreateTriangleCylindricalNodeVolume(RegionPtr);
 
 template <typename DoubleType>
-class TriangleCylindricalNodeVolume : public TriangleEdgeModel
-{
-    public:
+class TriangleCylindricalNodeVolume : public TriangleEdgeModel {
+public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  TriangleCylindricalNodeVolume(RegionPtr);
 
-        TriangleCylindricalNodeVolume(RegionPtr);
+private:
+  TriangleCylindricalNodeVolume();
+  TriangleCylindricalNodeVolume(const TriangleCylindricalNodeVolume &);
+  TriangleCylindricalNodeVolume &
+  operator=(const TriangleCylindricalNodeVolume &);
+  std::vector<DoubleType>
+  calcTriangleCylindricalNodeVolume(ConstTrianglePtr,
+                                    const std::string & /*RAxisVariable*/,
+                                    DoubleType /*RAxis0*/) const;
+  void calcTriangleEdgeScalarValues() const;
+  void setInitialValues();
 
-    private:
-
-        TriangleCylindricalNodeVolume();
-        TriangleCylindricalNodeVolume(const TriangleCylindricalNodeVolume &);
-        TriangleCylindricalNodeVolume &operator=(const TriangleCylindricalNodeVolume &);
-        std::vector<DoubleType> calcTriangleCylindricalNodeVolume(ConstTrianglePtr, const std::string &/*RAxisVariable*/, DoubleType /*RAxis0*/) const;
-        void   calcTriangleEdgeScalarValues() const;
-        void   setInitialValues();
-
-        /// this is on the element since node volumes are no longer symmetric
-        WeakTriangleEdgeModelPtr node1Volume_;
+  /// this is on the element since node volumes are no longer symmetric
+  WeakTriangleEdgeModelPtr node1Volume_;
 };
 #endif
-

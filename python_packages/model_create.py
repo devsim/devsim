@@ -165,4 +165,3 @@ def CreateGeometricMeanDerivative(device, region, nmodel, emodel, *args):
     for i in args:
         edge_average_model(device=device, region=region, edge_model=emodel, node_model=nmodel,
                            derivative=i, average_type="geometric")
-

@@ -38,6 +38,3 @@ file2=file2.replace('mos2db', 'mos2da')
 
 if (file1 != file2):
     raise RuntimeError('mos2da.msh and mos2db.msh do not match')
-
-
-

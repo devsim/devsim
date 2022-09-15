@@ -73,7 +73,7 @@ namespace {
 %token <str> STRING LINK_CMD
 %token <str> TITLE
 %token <str> LT GT EQ NEQ LTE GTE NOT AND OR
-%type  <eqptr> number expression modelptr intnodeptr extnodeptr paramptr; 
+%type  <eqptr> number expression modelptr intnodeptr extnodeptr paramptr;
 %type  <eqptr> userfunc;
 %type <str> modelcmd equationcmd commands equationname nodename;
 %type <str> extnodecmd intnodecmd;
@@ -103,7 +103,7 @@ titlecmd : TITLE VAR ';'
 		$$ = $2;
 		if (ClassName.empty())
 		{
-		  ClassName = $$;	
+		  ClassName = $$;
 		}
 		else {
 			mcerror("Cannot change title");
@@ -294,7 +294,7 @@ userfunccmd :
 		}
 		else
 		{
-		// Just like, except for create		    
+		// Just like, except for create
 //		Eqo::CreateUserFunc($3, nargs);
 		    Eqo::UserDiffInfoVec udiv;
 		    std::vector<Eqo::EqObjPtr> f;
@@ -395,7 +395,7 @@ equationname :   EQUATIONNAME { $$ = $1;};
 %%
 
 int mcerror(const char *msg) {
-    std::cerr << msg << "\n";    
+    std::cerr << msg << "\n";
     return 0;
 }
 

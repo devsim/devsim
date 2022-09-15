@@ -18,36 +18,33 @@ limitations under the License.
 #ifndef INTERFACENODEEXPRMODEL_HH
 #define INTERFACENODEEXPRMODEL_HH
 #include "InterfaceNodeModel.hh"
-#include <string>
 #include <memory>
+#include <string>
 namespace Eqo {
-    class EquationObject;
-    typedef std::shared_ptr<EquationObject> EqObjPtr;
+class EquationObject;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 
-}
+} // namespace Eqo
 
-InterfaceNodeModelPtr CreateInterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
+InterfaceNodeModelPtr CreateInterfaceNodeExprModel(const std::string &,
+                                                   Eqo::EqObjPtr, InterfacePtr);
 
 // need to set general node properties, such as positive only
 template <typename DoubleType>
-class InterfaceNodeExprModel : public InterfaceNodeModel
-{
-    public:
+class InterfaceNodeExprModel : public InterfaceNodeModel {
+public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  InterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
 
-        InterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
+private:
+  void calcNodeScalarValues() const;
+  void RegisterModels();
 
-    private:
+  InterfaceNodeExprModel();
+  InterfaceNodeExprModel(const InterfaceNodeExprModel &);
 
-        void calcNodeScalarValues() const;
-        void RegisterModels();
-
-        InterfaceNodeExprModel();
-        InterfaceNodeExprModel(const InterfaceNodeExprModel &);
-
-        const Eqo::EqObjPtr      equation;
+  const Eqo::EqObjPtr equation;
 };
 
 #endif
-

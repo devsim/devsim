@@ -18,26 +18,23 @@ limitations under the License.
 #ifndef TETRAHEDRON_EDGE_PAIR_FROM_EDGE_MODEL_HH
 #define TETRAHEDRON_EDGE_PAIR_FROM_EDGE_MODEL_HH
 #include "TetrahedronEdgeModel.hh"
-#include <string>
 #include <array>
+#include <string>
 
-TetrahedronEdgeModelPtr CreateTetrahedronEdgePairFromEdgeModel(const std::string &, RegionPtr);
+TetrahedronEdgeModelPtr
+CreateTetrahedronEdgePairFromEdgeModel(const std::string &, RegionPtr);
 
 template <typename DoubleType>
 class TetrahedronEdgePairFromEdgeModel : public TetrahedronEdgeModel {
-    public:
+public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  TetrahedronEdgePairFromEdgeModel(const std::string &, RegionPtr);
 
-        TetrahedronEdgePairFromEdgeModel(const std::string &, RegionPtr);
+private:
+  void calcTetrahedronEdgeScalarValues() const;
 
-
-    private:
-
-        void calcTetrahedronEdgeScalarValues() const;
-
-        const std::string edgeModelName;
-        std::array<std::array<std::string, 3>, 2> model_names;
+  const std::string edgeModelName;
+  std::array<std::array<std::string, 3>, 2> model_names;
 };
 #endif
-

@@ -93,6 +93,3 @@ while v < 0.99:
     PrintCurrents(device, "top")
     PrintCurrents(device, "bot")
     v += 0.1
-
-
-

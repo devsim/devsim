@@ -22,13 +22,7 @@ limitations under the License.
 
 using namespace std;
 
-Coordinate::Coordinate(double x, double y, double z) : position(x, y, z), index(0)
-{
-}
+Coordinate::Coordinate(double x, double y, double z)
+    : position(x, y, z), index(0) {}
 
-const Vector<double> &Coordinate::Position() const
-{
-   return position;
-}
-
-
+const Vector<double> &Coordinate::Position() const { return position; }

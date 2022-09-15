@@ -33,6 +33,3 @@ file2=file2.replace('gmsh_diode3db', 'gmsh_diode3da')
 
 if (file1 != file2):
     raise RuntimeError('gmsh_diode3da.msh and gmsh_diode3db.msh do not match')
-
-
-

@@ -20,9 +20,8 @@ limitations under the License.
 //// Used for knowing the two Triangles on each Tetrahedron edge
 //// as well as the nodes opposite of those triangles
 class EdgeData {
-  public:
-  EdgeData() : edge(nullptr)
-  {
+public:
+  EdgeData() : edge(nullptr) {
     triangle[0] = nullptr;
     triangle[1] = nullptr;
     /// The index is local to TetrahedronToTriangleList
@@ -31,10 +30,10 @@ class EdgeData {
     nodeopp[0] = nullptr;
     nodeopp[1] = nullptr;
   }
-  ConstEdgePtr     edge;
+  ConstEdgePtr edge;
   ConstTrianglePtr triangle[2];
-  size_t           triangle_index[2];
+  size_t triangle_index[2];
   //// These are the nodes opposite of the edge on the triangle
-  ConstNodePtr     nodeopp[2];
+  ConstNodePtr nodeopp[2];
 };
 #endif

@@ -7,7 +7,7 @@ def parse_gmsh_file(file):
     section_expected = 0
     dimension = 0
     with open(file, 'r') as ih:
-        state = 'begin' 
+        state = 'begin'
         for line in ih:
             line = line.rstrip()
             lineno += 1
@@ -45,7 +45,7 @@ def parse_gmsh_file(file):
                     elements = [None]*section_expected
                 else:
                     elements[section_count] = [int(x) for x in line.split()]
-                    section_count += 1 
+                    section_count += 1
             else:
                 raise RuntimeError("Unknown %s" % line)
     dimension = max([x[1] for x in physical_names])
@@ -54,7 +54,7 @@ def parse_gmsh_file(file):
       'physical_names'       : physical_names,
       'coordinates' : nodes,
       'elements'    : elements
-    }           
+    }
 
 def read_gmsh_file(filename):
     '''reads gmsh file and converts to python representation'''
@@ -70,7 +70,7 @@ def read_gmsh_file(filename):
     max_coordinate_index = max(coordinate_indexes)
     coordinate_to_index = [-1] * (max_coordinate_index+1)
     for i,j in enumerate(coordinate_indexes):
-        coordinate_to_index[j] = i 
+        coordinate_to_index[j] = i
 
     coordinates=[]
     for i in data['coordinates']:
@@ -129,4 +129,3 @@ def read_gmsh_file(filename):
       'coordinates'    : coordinates,
       'elements'       : elements,
     }
-

@@ -3,7 +3,7 @@
 $!VarSet |LFDSFN1| = '"diode_1d.dat"'
 $!VarSet |LFDSVL1| = '"x" "Acceptors" "AtContactNode" "Donors" "ElectronGeneration" "ElectronGeneration:Electrons" "ElectronGeneration:Holes" "Electrons" "Electrons_prev" "HoleGeneration" "HoleGeneration:Electrons" "HoleGeneration:Holes" "Holes" "Holes_prev" "IntrinsicCharge" "IntrinsicCharge:Potential" "IntrinsicElectrons" "IntrinsicElectrons:Potential" "IntrinsicHoles" "IntrinsicHoles:Potential" "NCharge" "NCharge:Electrons" "NetDoping" "NodeVolume" "PCharge" "PCharge:Holes" "Potential" "PotentialIntrinsicCharge" "PotentialIntrinsicCharge:Potential" "PotentialNodeCharge" "PotentialNodeCharge:Electrons" "PotentialNodeCharge:Holes" "Potential_prev" "SurfaceArea" "USRH" "USRH:Electrons" "USRH:Holes" "botnodeelectrons" "botnodeelectrons:Electrons" "botnodeholes" "botnodeholes:Holes" "botnodemodel" "botnodemodel:Potential" "contactcharge_node" "topnodeelectrons" "topnodeelectrons:Electrons" "topnodeholes" "topnodeholes:Holes" "topnodemodel" "topnodemodel:Potential" "Bern01" "Bern01:Potential@n0" "Bern01:Potential@n1" "EdgeCouple" "EdgeInverseLength" "EdgeLength" "ElectricField" "ElectricField:Potential@n0" "ElectricField:Potential@n1" "ElectronCurrent" "ElectronCurrent:Electrons@n0" "ElectronCurrent:Electrons@n1" "ElectronCurrent:Holes@n0" "ElectronCurrent:Holes@n1" "ElectronCurrent:Potential@n0" "ElectronCurrent:Potential@n1" "Electrons@n0" "Electrons@n1" "HoleCurrent" "HoleCurrent:Electrons@n0" "HoleCurrent:Electrons@n1" "HoleCurrent:Holes@n0" "HoleCurrent:Holes@n1" "HoleCurrent:Potential@n0" "HoleCurrent:Potential@n1" "Holes@n0" "Holes@n1" "Potential@n0" "Potential@n1" "PotentialEdgeFlux" "PotentialEdgeFlux:Potential@n0" "PotentialEdgeFlux:Potential@n1" "contactcharge_edge" "contactcharge_edge:Potential@n0" "contactcharge_edge:Potential@n1" "unitx" "vdiff" "vdiff:Potential@n0" "vdiff:Potential@n1"'
 $!SETSTYLEBASE FACTORY
-$!GLOBALLINKING 
+$!GLOBALLINKING
   LINKCOLORMAPS = YES
 $!GLOBALCOLORMAP  1
   CONTOURCOLORMAP = SMRAINBOW
@@ -845,9 +845,9 @@ $!GLOBALCOLORMAP  8
         }
       }
     }
-$!PLOTOPTIONS 
+$!PLOTOPTIONS
   SUBDIVIDEALLCELLS = NO
-$!GLOBALPAPER 
+$!GLOBALPAPER
   PAPERSIZEINFO
     {
     LETTER
@@ -860,7 +860,7 @@ $!GLOBALPAPER
       BOTTOMHARDCLIPOFFSET = 0.125
       }
     }
-$!PAGE 
+$!PAGE
   NAME = ''
   PAPERATTRIBUTES
     {
@@ -891,7 +891,7 @@ $!READDATASET  '|LFDSFN1|'
   VARNAMELIST = '|LFDSVL1|'
 $!REMOVEVAR |LFDSVL1|
 $!REMOVEVAR |LFDSFN1|
-$!FRAMELAYOUT 
+$!FRAMELAYOUT
   HEADERCOLOR = RED
   XYPOS
     {
@@ -900,14 +900,14 @@ $!FRAMELAYOUT
     }
   WIDTH = 9
   HEIGHT = 8
-$!THREEDAXIS 
+$!THREEDAXIS
   ASPECTRATIOLIMIT = 25
   BOXASPECTRATIOLIMIT = 25
 $!PLOTTYPE  = XYLINE
 $!FRAMENAME  = 'Frame 001'
-$!DELETELINEMAPS 
+$!DELETELINEMAPS
 $!ACTIVELINEMAPS  =  [34,59,68]
-$!GLOBALLINEPLOT 
+$!GLOBALLINEPLOT
   DATALABELS
     {
     DISTANCESKIP = 5
@@ -3213,16 +3213,16 @@ $!LINEMAP  [88]
     {
     COLOR = CYAN
     }
-$!XYLINEAXIS 
+$!XYLINEAXIS
   DEPXTOYRATIO = 1
-$!XYLINEAXIS 
+$!XYLINEAXIS
   XDETAIL 1
     {
     RANGEMIN = 0
     RANGEMAX = 1.0000999747353490224E-05
     GRSPACING = 2E-06
     }
-$!XYLINEAXIS 
+$!XYLINEAXIS
   YDETAIL 1
     {
     RANGEMIN = 0.0049999999999999862263
@@ -3242,7 +3242,7 @@ $!XYLINEAXIS
       SHOWONAXISLINE = NO
       }
     }
-$!XYLINEAXIS 
+$!XYLINEAXIS
   YDETAIL 2
     {
     RANGEMIN = 0

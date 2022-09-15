@@ -19,4 +19,3 @@ SET (ZLIB_ARCHIVE "-lz")
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (ADD_LINKER_FLAGS " -flat_namespace")
-

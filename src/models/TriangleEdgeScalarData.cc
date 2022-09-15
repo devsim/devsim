@@ -16,18 +16,17 @@ limitations under the License.
 ***/
 
 #include "TriangleEdgeScalarData.hh"
-#include "TriangleEdgeModel.hh"
 #include "ScalarData.cc"
+#include "TriangleEdgeModel.hh"
 
 #define SCCLASSNAME TriangleEdgeScalarData
 #define SCMODELTYPE TriangleEdgeModel
-#define SCDBLTYPE   double
+#define SCDBLTYPE double
 #include "ScalarDataInstantiate.cc"
 
 #ifdef DEVSIM_EXTENDED_PRECISION
-#undef  SCDBLTYPE
+#undef SCDBLTYPE
 #define SCDBLTYPE float128
 #include "Float128.hh"
 #include "ScalarDataInstantiate.cc"
 #endif
-

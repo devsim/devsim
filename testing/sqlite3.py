@@ -45,4 +45,3 @@ print_node_values (device=device, region=region, name="test")
 set_material(device=device, region=region, material="Ox")
 add_db_entry(material="Ox", parameter="one", value=4, unit="", description="")
 print_node_values (device=device, region=region, name="test")
-

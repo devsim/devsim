@@ -32,4 +32,3 @@ cmake --build . --config Release -- //m //nologo //verbosity:minimal
 
 cd "${BASEDIR}/dist"
 bash package_appveyor.sh ${PACKAGE_NAME}
-

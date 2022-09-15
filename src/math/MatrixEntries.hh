@@ -17,21 +17,19 @@ limitations under the License.
 
 #ifndef DS_MATRIXENTRIES_HH
 #define DS_MATRIXENTRIES_HH
-#include<vector>
-#include<complex>
+#include <complex>
+#include <vector>
 
 namespace dsMath {
 
 template <typename T> class RowColVal;
 
-template <typename DoubleType>
-using RealRowColVal = RowColVal<DoubleType>;
+template <typename DoubleType> using RealRowColVal = RowColVal<DoubleType>;
 
 template <typename DoubleType>
 using RealRowColValueVec = std::vector<RealRowColVal<DoubleType>>;
 
-template <typename DoubleType>
-using RHSEntry = std::pair<int, DoubleType>;
+template <typename DoubleType> using RHSEntry = std::pair<int, DoubleType>;
 
 template <typename DoubleType>
 using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
@@ -42,17 +40,13 @@ using ComplexRowColVal = RowColVal<std::complex<DoubleType>>;
 template <typename DoubleType>
 using ComplexRowColValueVec = std::vector<ComplexRowColVal<DoubleType>>;
 
-template <typename T>
-class RowColVal
-{
-   public:
-      RowColVal(int r, int c, T v) : row(r), col(c), val(v) {}
-      int row;
-      int col;
-      T   val;
+template <typename T> class RowColVal {
+public:
+  RowColVal(int r, int c, T v) : row(r), col(c), val(v) {}
+  int row;
+  int col;
+  T val;
 };
 
-
-}
+} // namespace dsMath
 #endif
-

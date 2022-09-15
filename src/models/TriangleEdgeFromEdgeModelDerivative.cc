@@ -16,24 +16,20 @@ limitations under the License.
 ***/
 
 #include "TriangleEdgeFromEdgeModelDerivative.hh"
-#include "TriangleEdgeSubModel.hh"
 #include "Region.hh"
+#include "TriangleEdgeSubModel.hh"
 #include "TriangleElementField.hh"
-#include "dsAssert.hh"
 #include "Vector.hh"
-
-
+#include "dsAssert.hh"
 
 template <typename DoubleType>
-TriangleEdgeFromEdgeModelDerivative<DoubleType>::TriangleEdgeFromEdgeModelDerivative(
-        const std::string &edgemodel,
-        const std::string &derivative,
-        RegionPtr rp
-    )
-    : TriangleEdgeModel(edgemodel + "_x:" + derivative + "@en0", rp, TriangleEdgeModel::DisplayType::NODISPLAY),
-      edgeModelName(edgemodel),
-      nodeModelName(derivative)
-{
+TriangleEdgeFromEdgeModelDerivative<DoubleType>::
+    TriangleEdgeFromEdgeModelDerivative(const std::string &edgemodel,
+                                        const std::string &derivative,
+                                        RegionPtr rp)
+    : TriangleEdgeModel(edgemodel + "_x:" + derivative + "@en0", rp,
+                        TriangleEdgeModel::DisplayType::NODISPLAY),
+      edgeModelName(edgemodel), nodeModelName(derivative) {
   const std::string tmx = edgeModelName + "_x";
   const std::string tmy = edgeModelName + "_y";
 
@@ -49,27 +45,36 @@ TriangleEdgeFromEdgeModelDerivative<DoubleType>::TriangleEdgeFromEdgeModelDeriva
 
   RegisterCallback(edgeModelName0);
   RegisterCallback(edgeModelName1);
-  new TriangleEdgeSubModel<DoubleType>(x_ModelName1, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
-  new TriangleEdgeSubModel<DoubleType>(x_ModelName2, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName0, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName1, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName2, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+  new TriangleEdgeSubModel<DoubleType>(
+      x_ModelName1, rp, TriangleEdgeModel::DisplayType::NODISPLAY,
+      this->GetSelfPtr());
+  new TriangleEdgeSubModel<DoubleType>(
+      x_ModelName2, rp, TriangleEdgeModel::DisplayType::NODISPLAY,
+      this->GetSelfPtr());
+  new TriangleEdgeSubModel<DoubleType>(
+      y_ModelName0, rp, TriangleEdgeModel::DisplayType::NODISPLAY,
+      this->GetSelfPtr());
+  new TriangleEdgeSubModel<DoubleType>(
+      y_ModelName1, rp, TriangleEdgeModel::DisplayType::NODISPLAY,
+      this->GetSelfPtr());
+  new TriangleEdgeSubModel<DoubleType>(
+      y_ModelName2, rp, TriangleEdgeModel::DisplayType::NODISPLAY,
+      this->GetSelfPtr());
 }
 
 //// Need to figure out the deleter situation from sub models
 //// Perhaps a Delete SubModels method??????
 
 template <typename DoubleType>
-void TriangleEdgeFromEdgeModelDerivative<DoubleType>::calcTriangleEdgeScalarValues() const
-{
+void TriangleEdgeFromEdgeModelDerivative<
+    DoubleType>::calcTriangleEdgeScalarValues() const {
   const Region &reg = GetRegion();
 
   ConstEdgeModelPtr emp[2];
   emp[0] = reg.GetEdgeModel(edgeModelName0);
   emp[1] = reg.GetEdgeModel(edgeModelName1);
 
-  for (size_t i = 0; i < 2; ++i)
-  {
+  for (size_t i = 0; i < 2; ++i) {
     dsAssert(emp[i].get(), "UNEXPECTED");
   }
 
@@ -83,56 +88,57 @@ void TriangleEdgeFromEdgeModelDerivative<DoubleType>::calcTriangleEdgeScalarValu
   tempy[1] = reg.GetTriangleEdgeModel(y_ModelName1);
   tempy[2] = reg.GetTriangleEdgeModel(y_ModelName2);
 
-  for (size_t i = 0; i < 3; ++i)
-  {
+  for (size_t i = 0; i < 3; ++i) {
     dsAssert(tempx[i].get(), "UNEXPECTED");
     dsAssert(tempy[i].get(), "UNEXPECTED");
   }
 
-
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
 
-  std::vector<std::vector<DoubleType> > evx(3);
-  std::vector<std::vector<DoubleType> > evy(3);
-  for (size_t i = 0; i < 3; ++i)
-  {
-    evx[i].resize(3*tl.size());
-    evy[i].resize(3*tl.size());
+  std::vector<std::vector<DoubleType>> evx(3);
+  std::vector<std::vector<DoubleType>> evy(3);
+  for (size_t i = 0; i < 3; ++i) {
+    evx[i].resize(3 * tl.size());
+    evy[i].resize(3 * tl.size());
   }
 
-  const ConstTriangleEdgeModelPtr eec = reg.GetTriangleEdgeModel("ElementEdgeCouple");
+  const ConstTriangleEdgeModelPtr eec =
+      reg.GetTriangleEdgeModel("ElementEdgeCouple");
   dsAssert(eec.get(), "UNEXPECTED");
 
-  const TriangleElementField<DoubleType> &efield = reg.GetTriangleElementField<DoubleType>();
+  const TriangleElementField<DoubleType> &efield =
+      reg.GetTriangleElementField<DoubleType>();
 
   //// For each triangle
   typename TriangleElementField<DoubleType>::DerivativeEdgeVectors_t v;
-  for (size_t i = 0; i < tl.size(); ++i)
-  {
+  for (size_t i = 0; i < tl.size(); ++i) {
     const Triangle &triangle = *tl[i];
     efield.GetTriangleElementField(triangle, *eec, *emp[0], *emp[1], v);
-    for (size_t nindex = 0; nindex < 3; ++nindex)
-    {
-      for (size_t eindex = 0; eindex < 3; ++eindex)
-      {
-        const size_t oindex = 3*i + eindex;
+    for (size_t nindex = 0; nindex < 3; ++nindex) {
+      for (size_t eindex = 0; eindex < 3; ++eindex) {
+        const size_t oindex = 3 * i + eindex;
         const Vector<DoubleType> &vec = v[nindex][eindex];
         evx[nindex][oindex] = vec.Getx();
         evy[nindex][oindex] = vec.Gety();
       }
     }
   }
-  for (size_t i = 0; i < 3; ++i)
-  {
-    std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempx[i])->SetValues(evx[i]);
-    std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(tempy[i])->SetValues(evy[i]);
+  for (size_t i = 0; i < 3; ++i) {
+    std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(
+        tempx[i])
+        ->SetValues(evx[i]);
+    std::const_pointer_cast<TriangleEdgeModel, const TriangleEdgeModel>(
+        tempy[i])
+        ->SetValues(evy[i]);
   }
 }
 
 template <typename DoubleType>
-void TriangleEdgeFromEdgeModelDerivative<DoubleType>::Serialize(std::ostream &of) const
-{
-  of << "COMMAND element_from_edge_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -edge_model \"" << edgeModelName << "\" -derivative \"" << nodeModelName << "\"";
+void TriangleEdgeFromEdgeModelDerivative<DoubleType>::Serialize(
+    std::ostream &of) const {
+  of << "COMMAND element_from_edge_model -device \"" << GetDeviceName()
+     << "\" -region \"" << GetRegionName() << "\" -edge_model \""
+     << edgeModelName << "\" -derivative \"" << nodeModelName << "\"";
 }
 
 template class TriangleEdgeFromEdgeModelDerivative<double>;
@@ -142,13 +148,10 @@ template class TriangleEdgeFromEdgeModelDerivative<float128>;
 #endif
 
 TriangleEdgeModelPtr CreateTriangleEdgeFromEdgeModelDerivative(
-        const std::string &edgemodel,
-        const std::string &derivative,
-        RegionPtr rp
-    )
-{
+    const std::string &edgemodel, const std::string &derivative, RegionPtr rp) {
   const bool use_extended = rp->UseExtendedPrecisionModels();
-  return create_triangle_edge_model<TriangleEdgeFromEdgeModelDerivative<double>, TriangleEdgeFromEdgeModelDerivative<extended_type>>(use_extended, edgemodel, derivative, rp);
+  return create_triangle_edge_model<
+      TriangleEdgeFromEdgeModelDerivative<double>,
+      TriangleEdgeFromEdgeModelDerivative<extended_type>>(
+      use_extended, edgemodel, derivative, rp);
 }
-
-

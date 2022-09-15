@@ -360,4 +360,3 @@ Support for reading meshes from Genius Device Simulator has been completely remo
   * Refactor threading code using C++11 functions
   * Refactor timing functions for verbose mode using C++11 functions.
   * Refactor FPE detection code to C++11 standard.
-

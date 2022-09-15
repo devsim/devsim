@@ -18,10 +18,10 @@ repos:
   #       files: "python/.*"
   #       args: ["--profile", "black", "--filter-files"]
 
-  - repo: https://github.com/psf/black
-    rev: "4f1772e2aed8356e57b923eacf45f813ec3324a0"
-    hooks:
-      - id: black
+  # - repo: https://github.com/psf/black
+  #   rev: "4f1772e2aed8356e57b923eacf45f813ec3324a0"
+  #   hooks:
+  #     - id: black
 
   # - repo: https://gitlab.com/pycqa/flake8
   #   rev: "21d3c70d676007470908d39b73f0521d39b3b997"
@@ -34,11 +34,11 @@ repos:
   #     - id: nbstripout
   #       files: ".ipynb"
 
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v2.37.3
-    hooks:
-      - id: pyupgrade
-        args: [--py37-plus, --keep-runtime-typing]
+  # - repo: https://github.com/asottile/pyupgrade
+  #   rev: v2.37.3
+  #   hooks:
+  #     - id: pyupgrade
+  #       args: [--py37-plus, --keep-runtime-typing]
 
   # - repo: https://github.com/codespell-project/codespell
   #   rev: 4d782511b3999c243feb3858cd7062270eb13291
@@ -51,18 +51,18 @@ repos:
   #   hooks:
   #     - id: shellcheck
 
-  - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: dc89c436469616a7c48293ec60c8e21e9d95be08 # Use the ref you want to point at
-    hooks:
-      - id: python-use-type-annotations
+  # - repo: https://github.com/pre-commit/pygrep-hooks
+  #   rev: dc89c436469616a7c48293ec60c8e21e9d95be08 # Use the ref you want to point at
+  #   hooks:
+  #     - id: python-use-type-annotations
 
-  - repo: https://github.com/PyCQA/bandit
-    rev: 97501817e621db9975dfa6a2a1d36370942d1812
-    hooks:
-      - id: bandit
-        args: [--exit-zero]
-        # ignore all tests, not just tests data
-        exclude: ^tests/
+  # - repo: https://github.com/PyCQA/bandit
+  #   rev: 97501817e621db9975dfa6a2a1d36370942d1812
+  #   hooks:
+  #     - id: bandit
+  #       args: [--exit-zero]
+  #       # ignore all tests, not just tests data
+  #       exclude: ^tests/
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: 'v14.0.6'  # Use the sha / tag you want to point at
     hooks:

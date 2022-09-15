@@ -38,5 +38,3 @@ export PYTHON3_ARCHIVE=""
 bash scripts/setup_ubuntu_18.04.sh
 (cd linux_x86_64_release && make -j2)
 (cd dist && bash package_linux.sh ${1})
-
-

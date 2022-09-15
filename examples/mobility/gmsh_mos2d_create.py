@@ -32,8 +32,8 @@ y_diffusion_decay  =1e-10
 bulk_doping        =1e15
 body_doping        =1e19
 #n doping
-drain_doping       =1e19 
-source_doping      =1e19 
+drain_doping       =1e19
+source_doping      =1e19
 gate_doping        =1e20
 
 y_channel_spacing     =1e-8
@@ -107,4 +107,3 @@ node_model(name="Acceptors",    device=device, region="bulk", equation="%(bulk_d
 node_model(name="NetDoping",    device=device, region="bulk", equation="Donors - Acceptors")
 
 write_devices(file="gmsh_mos2d_out.msh")
-

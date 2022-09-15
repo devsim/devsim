@@ -81,4 +81,3 @@ write_devices(file="gmsh_diode3d_dd.msh", type="devsim")
 #en3 = map(lambda x : int(x), get_element_model_values(name="node_index@en3", device=device, region=region))
 #for i in range(len(en0)):
 #  print "%d %d %d %d" % (en0[i], en1[i], en2[i], en3[i])
-

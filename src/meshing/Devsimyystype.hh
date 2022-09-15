@@ -19,10 +19,9 @@ limitations under the License.
 #define DEVSIM_YYSTYPE_HH
 #include <string>
 typedef struct {
-    std::string str;
-    double      dval;
-    int         ival;
+  std::string str;
+  double dval;
+  int ival;
 } devsimyystype;
 #define YYSTYPE devsimyystype
 #endif
-

@@ -12,4 +12,3 @@ cd ${BUILDDIR} && \
 cmake -G "${GENERATOR}" -A "${AOPTION}" .. && \
 cmake --build . --config Release -- //m //nologo //verbosity:minimal \
 )
-

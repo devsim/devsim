@@ -33,61 +33,43 @@ typedef const Node *ConstNodePtr;
 */
 typedef const Coordinate *ConstCoordinatePtr;
 class Node {
-   public:
+public:
+  // does a node really need to know if it is at an interface
+  // add accessors later
+  Node(size_t, ConstCoordinatePtr);
 
-      // does a node really need to know if it is at an interface
-      // add accessors later
-      Node(size_t, ConstCoordinatePtr);
+  size_t GetIndex() const { return index; }
 
-      size_t GetIndex() const
-      {
-         return index;
-      }
+  void SetIndex(size_t i) { index = i; }
 
-      void SetIndex(size_t i)
-      {
-         index = i;
-      }
+  const Vector<double> &Position() const { return coord->Position(); }
 
-      const Vector<double> &Position() const
-      {
-         return coord->Position();
-      }
+  const Coordinate &GetCoordinate() const { return *coord; }
 
-      const Coordinate& GetCoordinate() const
-      {
-        return *coord;
-      }
+private:
+  Node();
+  Node(const Node &);
+  Node &operator=(const Node &);
 
-   private:
-
-      Node();
-      Node (const Node &);
-      Node &operator= (const Node &);
-
-      size_t             index;
-      ConstCoordinatePtr coord;
+  size_t index;
+  ConstCoordinatePtr coord;
 };
 
-struct NodeCompIndex
-{
-   bool operator()(ConstNodePtr x, ConstNodePtr y) { return x->GetIndex() < y->GetIndex(); }
+struct NodeCompIndex {
+  bool operator()(ConstNodePtr x, ConstNodePtr y) {
+    return x->GetIndex() < y->GetIndex();
+  }
 };
 
 template <typename DoubleType>
-inline Vector<DoubleType> ConvertPosition(const Vector<double> &v)
-{
-  return Vector<DoubleType>(
-    static_cast<DoubleType>(v.Getx()),
-    static_cast<DoubleType>(v.Gety()),
-    static_cast<DoubleType>(v.Getz()));
+inline Vector<DoubleType> ConvertPosition(const Vector<double> &v) {
+  return Vector<DoubleType>(static_cast<DoubleType>(v.Getx()),
+                            static_cast<DoubleType>(v.Gety()),
+                            static_cast<DoubleType>(v.Getz()));
 }
 
-template <>
-inline Vector<double> ConvertPosition(const Vector<double> &v)
-{
+template <> inline Vector<double> ConvertPosition(const Vector<double> &v) {
   return v;
 }
 
 #endif
-

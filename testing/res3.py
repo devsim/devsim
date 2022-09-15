@@ -63,4 +63,3 @@ for region in regions:
     devsim.print_node_values(device=device, region=region, name="Potential")
     devsim.print_edge_values(device=device, region=region, name="ElectricField")
     devsim.print_edge_values(device=device, region=region, name="ElectronCurrent")
-

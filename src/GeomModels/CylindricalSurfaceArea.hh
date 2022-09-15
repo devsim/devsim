@@ -24,19 +24,18 @@ class Interface;
 
 NodeModelPtr CreateCylindricalSurfaceArea(RegionPtr /*rp*/);
 
-template <typename DoubleType>
-class CylindricalSurfaceArea : public NodeModel {
-    public:
-        void Serialize(std::ostream &) const;
+template <typename DoubleType> class CylindricalSurfaceArea : public NodeModel {
+public:
+  void Serialize(std::ostream &) const;
 
-        CylindricalSurfaceArea(RegionPtr /*rp*/);
+  CylindricalSurfaceArea(RegionPtr /*rp*/);
 
-    private:
-        CylindricalSurfaceArea();
-        CylindricalSurfaceArea(const CylindricalSurfaceArea &);
-        CylindricalSurfaceArea &operator=(const CylindricalSurfaceArea &);
-        void calcCylindricalSurfaceArea2d() const;
-        void calcNodeScalarValues() const;
-        void setInitialValues();
+private:
+  CylindricalSurfaceArea();
+  CylindricalSurfaceArea(const CylindricalSurfaceArea &);
+  CylindricalSurfaceArea &operator=(const CylindricalSurfaceArea &);
+  void calcCylindricalSurfaceArea2d() const;
+  void calcNodeScalarValues() const;
+  void setInitialValues();
 };
 #endif

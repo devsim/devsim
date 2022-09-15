@@ -48,5 +48,3 @@ solve(type="dc", absolute_error=1.0, relative_error=1e-12, maximum_iterations=30
 #element_from_edge_model(edge_model="ElectricField",   device=device, region=region, derivative="Potential")
 
 write_devices(file="gmsh_diode3d_equil.msh", type="devsim")
-
-

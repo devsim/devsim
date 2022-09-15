@@ -22,46 +22,39 @@ limitations under the License.
 
 namespace dsMath {
 template <typename T>
-DenseMatrix<T>::DenseMatrix(size_t d) : dim_(d), factored_(false), info_(0)
-{
-  A_.resize(dim_*dim_);
+DenseMatrix<T>::DenseMatrix(size_t d) : dim_(d), factored_(false), info_(0) {
+  A_.resize(dim_ * dim_);
   ipiv_.resize(dim_);
 }
 
-template <typename T>
-T &DenseMatrix<T>::operator()(size_t r, size_t c)
-{
+template <typename T> T &DenseMatrix<T>::operator()(size_t r, size_t c) {
   return A_[r + c * dim_];
 }
 
-template <typename T>
-T DenseMatrix<T>::operator()(size_t r, size_t c) const
-{
+template <typename T> T DenseMatrix<T>::operator()(size_t r, size_t c) const {
   return A_[r + c * dim_];
 }
 
-template <typename DoubleType>
-bool DenseMatrix<DoubleType>::LUFactor()
-{
-  getrf(&dim_, &dim_, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0], &info_);
+template <typename DoubleType> bool DenseMatrix<DoubleType>::LUFactor() {
+  getrf(&dim_, &dim_, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0],
+        &info_);
   factored_ = true;
   return (info_ == 0);
 }
 
 template <typename DoubleType>
-bool DenseMatrix<DoubleType>::Solve(DoubleType *B)
-{
+bool DenseMatrix<DoubleType>::Solve(DoubleType *B) {
   static char trans = 'N';
-  static int  nrhs   = 1;
+  static int nrhs = 1;
 
-  if (info_ == 0)
-  {
-    getrs(&trans, &dim_, &nrhs, reinterpret_cast<DoubleType *>(&A_[0]), &dim_, &ipiv_[0], B, &dim_, &info_);
+  if (info_ == 0) {
+    getrs(&trans, &dim_, &nrhs, reinterpret_cast<DoubleType *>(&A_[0]), &dim_,
+          &ipiv_[0], B, &dim_, &info_);
   }
   return (info_ == 0);
 }
 
-}
+} // namespace dsMath
 
 //// Manual Template Instantiation
 template class dsMath::DenseMatrix<double>;
@@ -75,4 +68,3 @@ template class dsMath::DenseMatrix<float128>;
 template class dsMath::DenseMatrix<std::complex<float128> >;
 #endif
 #endif
-

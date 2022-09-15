@@ -36,4 +36,3 @@ for x in devsim.get_circuit_node_list():
     for y in devsim.get_circuit_solution_list():
         z=devsim.get_circuit_node_value(node=x, solution=y)
         print("%s %s %1.15e" % (x,y,z))
-

@@ -51,4 +51,3 @@ ADD_CUSTOM_COMMAND(
     # these must be read from parser.y
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/mcParser.y EquationObject.hh UserFunc.hh test.hh mcModelCompiler.hh mcModel.hh
 )
-

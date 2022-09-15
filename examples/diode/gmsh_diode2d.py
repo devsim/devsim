@@ -58,4 +58,3 @@ while v < 0.51:
 
 write_devices(file="gmsh_diode2d.dat", type="tecplot")
 write_devices(file="gmsh_diode2d_dd.msh", type="devsim")
-

@@ -28,24 +28,24 @@ class Edge;
 typedef Edge *EdgePtr;
 typedef const Edge *ConstEdgePtr;
 
-EdgeModelPtr CreateInterfaceNormal(const std::string &, const std::string &, const std::string &, const std::string &, const std::string &,  RegionPtr);
+EdgeModelPtr CreateInterfaceNormal(const std::string &, const std::string &,
+                                   const std::string &, const std::string &,
+                                   const std::string &, RegionPtr);
 
-template <typename DoubleType>
-class InterfaceNormal : public EdgeModel
-{
-    public:
+template <typename DoubleType> class InterfaceNormal : public EdgeModel {
+public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  InterfaceNormal(const std::string &, const std::string &, const std::string &,
+                  const std::string &, const std::string &, RegionPtr);
 
-        InterfaceNormal(const std::string &, const std::string &, const std::string &, const std::string &, const std::string &,  RegionPtr);
+private:
+  void calcEdgeScalarValues() const;
 
-    private:
-        void calcEdgeScalarValues() const;
-
-        std::string interface_name;
-        WeakEdgeModelPtr normal_x;
-        WeakEdgeModelPtr normal_y;
-        WeakEdgeModelPtr normal_z;
+  std::string interface_name;
+  WeakEdgeModelPtr normal_x;
+  WeakEdgeModelPtr normal_y;
+  WeakEdgeModelPtr normal_z;
 };
 
 #endif

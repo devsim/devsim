@@ -20,7 +20,7 @@ jsanchez-laptop
 # Wed Feb  3 22:13:38 CST 2010
 # previous timing improvements due to matrix compression and thread wake up strategy
 enable pow(double, int)
-1 thread 
+1 thread
 475.505u 9.220s 8:05.24 99.8%   0+0k 872+50568io 0pf+0w
 2 thread
 506.747u 22.417s 8:27.87 104.1% 0+0k 0+50504io 0pf+0w
@@ -31,4 +31,3 @@ enable pow(double, int)
 456.644u 8.988s 7:46.02 99.9%   0+0k 0+50536io 0pf+0w
 2 thread
 488.554u 21.917s 8:08.50 104.4% 0+0k 0+50576io 0pf+0w
-

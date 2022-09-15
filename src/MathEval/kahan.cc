@@ -19,44 +19,35 @@ limitations under the License.
 #include <cmath>
 using std::abs;
 
-
 #include <vector>
 
-template <typename DoubleType>
-class kahan {
-    public:
-        explicit kahan(DoubleType v) : value_(v), correction_(0.0) {}
-        kahan(const kahan & v) : value_(v.value_), correction_(v.correction_) {}
+template <typename DoubleType> class kahan {
+public:
+  explicit kahan(DoubleType v) : value_(v), correction_(0.0) {}
+  kahan(const kahan &v) : value_(v.value_), correction_(v.correction_) {}
 
+  kahan &operator+=(DoubleType v);
+  kahan &operator-=(DoubleType v);
 
-        kahan &operator+=(DoubleType v);
-        kahan &operator-=(DoubleType v);
+  ~kahan(){};
 
-        ~kahan() {};
+  operator DoubleType() { return value_ + correction_; }
 
-        operator DoubleType()
-        {
-            return value_ + correction_;
-        }
+  DoubleType value_;
+  DoubleType correction_;
 
-        DoubleType value_;
-        DoubleType correction_;
-
-    private:
-        kahan();
-        kahan &operator=(const kahan &);
+private:
+  kahan();
+  kahan &operator=(const kahan &);
 };
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 #endif
 
-
 #ifdef DEVSIM_EXTENDED_PRECISION
-template <typename DoubleType>
-struct KahanType;
-template <> struct KahanType<double>
-{
+template <typename DoubleType> struct KahanType;
+template <> struct KahanType<double> {
 #ifdef DEVSIM_EXTENDED_PRECISION
   using type = float128;
 #else
@@ -64,23 +55,15 @@ template <> struct KahanType<double>
 #endif
 };
 
-template <> struct KahanType<float128>
-{
-  using type = kahan<float128>;
-};
+template <> struct KahanType<float128> { using type = kahan<float128>; };
 #else
-template <typename DoubleType>
-struct KahanType
-{
+template <typename DoubleType> struct KahanType {
   using type = kahan<DoubleType>;
 };
 #endif
 
-
-
 template <typename DoubleType>
-DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c)
-{
+DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c) {
   typename KahanType<DoubleType>::type k(a);
   k += b;
   k += c;
@@ -88,8 +71,7 @@ DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c)
 }
 
 template <typename DoubleType>
-DoubleType kahan4(DoubleType a, DoubleType b, DoubleType c, DoubleType d)
-{
+DoubleType kahan4(DoubleType a, DoubleType b, DoubleType c, DoubleType d) {
   typename KahanType<DoubleType>::type k(a);
   k += b;
   k += c;
@@ -119,42 +101,36 @@ int main()
     }
 
 
-//    std::cout << 
+//    std::cout <<
 }
 #endif
 
 template <typename DoubleType>
-kahan<DoubleType> &kahan<DoubleType>::operator+=(DoubleType v)
-{
-    if (abs(value_) < abs(correction_))
-    {
-      const DoubleType t = value_;
-      value_ = correction_;
-      correction_ = t;
-    }
+kahan<DoubleType> &kahan<DoubleType>::operator+=(DoubleType v) {
+  if (abs(value_) < abs(correction_)) {
+    const DoubleType t = value_;
+    value_ = correction_;
+    correction_ = t;
+  }
 
-    const DoubleType x = value_ + v;
-    DoubleType c = x;
-    if (abs(value_) < abs(v))
-    {
-      c -= v;
-      c -= value_;
-    }
-    else
-    {
-      c -= value_;
-      c -= v;
-    }
-    value_      = x;
-    correction_ -= c;
-    return *this;
+  const DoubleType x = value_ + v;
+  DoubleType c = x;
+  if (abs(value_) < abs(v)) {
+    c -= v;
+    c -= value_;
+  } else {
+    c -= value_;
+    c -= v;
+  }
+  value_ = x;
+  correction_ -= c;
+  return *this;
 }
 
 template <typename DoubleType>
-kahan<DoubleType> &kahan<DoubleType>::operator-=(DoubleType v)
-{
-    (*this) += (-v);
-    return *this;
+kahan<DoubleType> &kahan<DoubleType>::operator-=(DoubleType v) {
+  (*this) += (-v);
+  return *this;
 }
 
 template class kahan<double>;
@@ -166,5 +142,3 @@ template class kahan<float128>;
 template float128 kahan3(float128, float128, float128);
 template float128 kahan4(float128, float128, float128, float128);
 #endif
-
-

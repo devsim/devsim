@@ -58,7 +58,7 @@ for region in regions:
     edge_model(device=device, region=region, name="PotentialEdgeFlux:Potential@n1", equation="-PotentialEdgeFlux:Potential@n0")
 
     equation(device=device, region=region, name="PotentialEquation", variable_name="Potential", node_model="",
-             edge_model="PotentialEdgeFlux", time_node_model="", variable_update="default") 
+             edge_model="PotentialEdgeFlux", time_node_model="", variable_update="default")
 
 set_parameter(device=device, region="MySiRegion", name="topbias"   , value=1.0)
 set_parameter(device=device, region="MyOxRegion", name="botbias", value=0.0)
@@ -256,4 +256,3 @@ print(x)
 set_node_values(device=device, region="MySiRegion", name="testing", values=x.tobytes())
 x = get_node_model_values(device=device, region="MySiRegion", name="testing")
 print(x)
-

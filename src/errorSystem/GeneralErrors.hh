@@ -19,16 +19,10 @@ limitations under the License.
 #define DS_GENERAL_ERRORS_HH
 namespace dsErrors {
 namespace ModelInfo {
-enum ModelType {
-  NODE = 0,
-  EDGE,
-  ELEMENTEDGE,
-  INTERFACE
-};
+enum ModelType { NODE = 0, EDGE, ELEMENTEDGE, INTERFACE };
 
-extern const char *ModelTypeStrings[]; 
-}
+extern const char *ModelTypeStrings[];
+} // namespace ModelInfo
 
-}
+} // namespace dsErrors
 #endif
-

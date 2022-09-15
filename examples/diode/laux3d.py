@@ -31,7 +31,7 @@
 # acmid = {1012099},
 # publisher = {IBM Corp.},
 # address = {Riverton, NJ, USA},
-#} 
+#}
 
 import sys
 try:
@@ -71,5 +71,3 @@ devsim.set_parameter(name="V_t", value=0.0259)
 devsim.set_parameter(name="mu_n", value=400)
 devsim.set_parameter(name="ElectronCharge", value=1.6e-19)
 RunTest(device, region, number_test, "ElectronCurrent", "Potential")
-
-

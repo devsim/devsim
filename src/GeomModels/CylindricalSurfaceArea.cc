@@ -16,27 +16,26 @@ limitations under the License.
 ***/
 
 #include "CylindricalSurfaceArea.hh"
-#include "Region.hh"
-#include "Device.hh"
-#include "dsAssert.hh"
-#include "GeometryStream.hh"
 #include "Contact.hh"
-#include "Interface.hh"
-#include "GlobalData.hh"
-#include "Node.hh"
+#include "Device.hh"
 #include "Edge.hh"
+#include "GeometryStream.hh"
+#include "GlobalData.hh"
+#include "Interface.hh"
+#include "Node.hh"
 #include "ObjectHolder.hh"
-#include <sstream>
+#include "Region.hh"
+#include "dsAssert.hh"
 #include <cmath>
+#include <sstream>
 using std::abs;
 
-
 template <typename DoubleType>
-CylindricalSurfaceArea<DoubleType>::CylindricalSurfaceArea(RegionPtr rp) :
-NodeModel("CylindricalSurfaceArea", rp, NodeModel::DisplayType::SCALAR)
-{
+CylindricalSurfaceArea<DoubleType>::CylindricalSurfaceArea(RegionPtr rp)
+    : NodeModel("CylindricalSurfaceArea", rp, NodeModel::DisplayType::SCALAR) {
   //// This needs to be enforced in the Tcl API
-  //// need to validate this is an actual interface or contact name in the Tcl API
+  //// need to validate this is an actual interface or contact name in the Tcl
+  /// API
 
   const Region &region = this->GetRegion();
   const size_t dimension = region.GetDimension();
@@ -48,26 +47,17 @@ NodeModel("CylindricalSurfaceArea", rp, NodeModel::DisplayType::SCALAR)
   RegisterCallback("raxis_variable");
 }
 
-
 template <typename DoubleType>
-void CylindricalSurfaceArea<DoubleType>::calcNodeScalarValues() const
-{
-  const size_t dimension=GetRegion().GetDimension();
+void CylindricalSurfaceArea<DoubleType>::calcNodeScalarValues() const {
+  const size_t dimension = GetRegion().GetDimension();
 
-  if (dimension == 1)
-  {
+  if (dimension == 1) {
     dsAssert(false, "CylindricalSurfaceArea not supported in 1d");
-  }
-  else if (dimension == 2)
-  {
+  } else if (dimension == 2) {
     calcCylindricalSurfaceArea2d();
-  }
-  else if (dimension == 3)
-  {
+  } else if (dimension == 3) {
     dsAssert(false, "CylindricalSurfaceArea not supported in 3d");
-  }
-  else
-  {
+  } else {
     dsAssert(false, "UNEXPECTED");
   }
 }
@@ -75,8 +65,8 @@ void CylindricalSurfaceArea<DoubleType>::calcNodeScalarValues() const
 namespace {
 //// refactor to just rely on edge length formula
 template <typename DoubleType>
-void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, const std::string &RAxisVariable, DoubleType RAxis0)
-{
+void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out,
+                      const std::string &RAxisVariable, DoubleType RAxis0) {
 
   std::set<size_t> visited;
 
@@ -84,18 +74,15 @@ void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, 
   DoubleType r1 = 0.0;
   DoubleType rm = 0.0;
 
-  for (ConstEdgeList::const_iterator it = edges.begin(); it != edges.end(); ++it)
-  {
+  for (ConstEdgeList::const_iterator it = edges.begin(); it != edges.end();
+       ++it) {
     const Edge &edge = *(*it);
 
     const size_t edge_index = edge.GetIndex();
 
-    if (!visited.count(edge_index))
-    {
+    if (!visited.count(edge_index)) {
       visited.insert(edge_index);
-    }
-    else
-    {
+    } else {
       continue;
     }
 
@@ -107,18 +94,15 @@ void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, 
 
     /// This is the midpoint between the edges
     Vector<DoubleType> vm = p1;
-    vm       -= p0;
-    vm       *= 0.5;
+    vm -= p0;
+    vm *= 0.5;
 
     const DoubleType vmag = vm.magnitude();
 
-    if (RAxisVariable == "x")
-    {
+    if (RAxisVariable == "x") {
       r0 = p0.Getx() - RAxis0;
       r1 = p1.Getx() - RAxis0;
-    }
-    else if (RAxisVariable == "y")
-    {
+    } else if (RAxisVariable == "y") {
       r0 = p0.Gety() - RAxis0;
       r1 = p1.Gety() - RAxis0;
     }
@@ -130,14 +114,12 @@ void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, 
     out[ni0] += M_PI * abs(rm + r0) * vmag;
     const size_t ni1 = node1.GetIndex();
     out[ni1] += M_PI * abs(r1 + rm) * vmag;
-
   }
 }
-}
+} // namespace
 
 template <typename DoubleType>
-void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
-{
+void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const {
   const Region &region = GetRegion();
   const Device &device = *(GetRegion().GetDevice());
 
@@ -147,76 +129,70 @@ void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
   std::string RAxisVariable;
 
   {
-    //// TODO: Make this common to all cylindrical code, right now this is a copy and paste
+    //// TODO: Make this common to all cylindrical code, right now this is a
+    /// copy and paste
     GlobalData &ginst = GlobalData::GetInstance();
 
     std::ostringstream os;
 
-    GlobalData::DoubleDBEntry_t raxisdbentry = ginst.GetDoubleDBEntryOnRegion(&region, "raxis_zero");
-    if (raxisdbentry.first)
-    {
+    GlobalData::DoubleDBEntry_t raxisdbentry =
+        ginst.GetDoubleDBEntryOnRegion(&region, "raxis_zero");
+    if (raxisdbentry.first) {
       RAxis0 = raxisdbentry.second;
-    }
-    else
-    {
-      os << "raxis_zero on Device " << region.GetDeviceName() << " on Region " << region.GetName() << " must be a valid number parameter\n";
+    } else {
+      os << "raxis_zero on Device " << region.GetDeviceName() << " on Region "
+         << region.GetName() << " must be a valid number parameter\n";
     }
 
-    GlobalData::DBEntry_t zvardbentry = ginst.GetDBEntryOnRegion(&region, "raxis_variable");
-    if (!zvardbentry.first)
-    {
-      os << "raxis_variable on Device " << region.GetDeviceName() << " on Region " << region.GetName() << " must be a valid parameter\n";
-    }
-    else
-    {
+    GlobalData::DBEntry_t zvardbentry =
+        ginst.GetDBEntryOnRegion(&region, "raxis_variable");
+    if (!zvardbentry.first) {
+      os << "raxis_variable on Device " << region.GetDeviceName()
+         << " on Region " << region.GetName() << " must be a valid parameter\n";
+    } else {
       RAxisVariable = zvardbentry.second.GetString();
-      if ((RAxisVariable != "x") && (RAxisVariable != "y"))
-      {
-        os << "raxis_variable on Device " << region.GetDeviceName() << " on Region " << region.GetName() << " must be \"x\" or \"y\"\n";
+      if ((RAxisVariable != "x") && (RAxisVariable != "y")) {
+        os << "raxis_variable on Device " << region.GetDeviceName()
+           << " on Region " << region.GetName() << " must be \"x\" or \"y\"\n";
       }
     }
 
-    if (!os.str().empty())
-    {
-      GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str());
+    if (!os.str().empty()) {
+      GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(),
+                               os.str());
     }
   }
 
-  const Device::ContactList_t   &contact_list   = device.GetContactList();
+  const Device::ContactList_t &contact_list = device.GetContactList();
   const Device::InterfaceList_t &interface_list = device.GetInterfaceList();
 
   ConstEdgeList edge_list;
 
-  for (Device::ContactList_t::const_iterator cit = contact_list.begin(); cit != contact_list.end(); ++cit)
-  {
+  for (Device::ContactList_t::const_iterator cit = contact_list.begin();
+       cit != contact_list.end(); ++cit) {
     const ConstContactPtr &cp = cit->second;
-    if (cp && (cp->GetRegion() == &region))
-    {
+    if (cp && (cp->GetRegion() == &region)) {
       const ConstEdgeList_t &temp_edge_list = cp->GetEdges();
-      for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
-      {
+      for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin();
+           tit != temp_edge_list.end(); ++tit) {
         edge_list.push_back(*tit);
       }
     }
   }
-  for (Device::InterfaceList_t::const_iterator iit = interface_list.begin(); iit != interface_list.end(); ++iit)
-  {
+  for (Device::InterfaceList_t::const_iterator iit = interface_list.begin();
+       iit != interface_list.end(); ++iit) {
     const ConstInterfacePtr &ip = iit->second;
-    if (ip)
-    {
-      if (ip->GetRegion0() == &region)
-      {
+    if (ip) {
+      if (ip->GetRegion0() == &region) {
         const ConstEdgeList_t &temp_edge_list = ip->GetEdges0();
-        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
-        {
+        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin();
+             tit != temp_edge_list.end(); ++tit) {
           edge_list.push_back(*tit);
         }
-      }
-      else if (ip->GetRegion1() == &region)
-      {
+      } else if (ip->GetRegion1() == &region) {
         const ConstEdgeList_t &temp_edge_list = ip->GetEdges1();
-        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
-        {
+        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin();
+             tit != temp_edge_list.end(); ++tit) {
           edge_list.push_back(*tit);
         }
       }
@@ -228,18 +204,16 @@ void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
   SetValues(nv);
 }
 
-
 template <typename DoubleType>
-void CylindricalSurfaceArea<DoubleType>::Serialize(std::ostream &of) const
-{
-  of << "COMMAND cylindrical_surface_area -device \"" << GetRegion().GetDeviceName() << "\""
+void CylindricalSurfaceArea<DoubleType>::Serialize(std::ostream &of) const {
+  of << "COMMAND cylindrical_surface_area -device \""
+     << GetRegion().GetDeviceName() << "\""
      << " -region \"" << GetRegionName() << "\"";
 }
 
 template <typename DoubleType>
-void CylindricalSurfaceArea<DoubleType>::setInitialValues()
-{
-    DefaultInitializeValues();
+void CylindricalSurfaceArea<DoubleType>::setInitialValues() {
+  DefaultInitializeValues();
 }
 
 template class CylindricalSurfaceArea<double>;
@@ -248,9 +222,9 @@ template class CylindricalSurfaceArea<double>;
 template class CylindricalSurfaceArea<float128>;
 #endif
 
-NodeModelPtr CreateCylindricalSurfaceArea(RegionPtr rp)
-{
+NodeModelPtr CreateCylindricalSurfaceArea(RegionPtr rp) {
   const bool use_extended = rp->UseExtendedPrecisionModels();
-  return create_node_model<CylindricalSurfaceArea<double>, CylindricalSurfaceArea<extended_type>>(use_extended, rp);
+  return create_node_model<CylindricalSurfaceArea<double>,
+                           CylindricalSurfaceArea<extended_type>>(use_extended,
+                                                                  rp);
 }
-

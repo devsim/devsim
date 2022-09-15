@@ -1,33 +1,37 @@
-#include "InstanceModel.hh"
 #include "CircuitNode.hh"
-#include "NodeKeeper.hh"
+#include "InstanceModel.hh"
 #include "MatrixEntries.hh"
+#include "NodeKeeper.hh"
 #include <cmath>
 
 class IdealCapacitor;
-extern "C" InstanceModel *IdealCapacitor_create (NodeKeeper *, const std::string &name, const std::vector<std::string> &nodelist);
+extern "C" InstanceModel *
+IdealCapacitor_create(NodeKeeper *, const std::string &name,
+                      const std::vector<std::string> &nodelist);
 class IdealCapacitor : public InstanceModel {
-   public:
-        IdealCapacitor(
-          NodeKeeper *nk,
-          const char *name,
-          const char *n1,
-          const char *n2);
+public:
+  IdealCapacitor(NodeKeeper *nk, const char *name, const char *n1,
+                 const char *n2);
 
-       void assembleDC_impl(const NodeKeeper::Solution &, dsMath::RealRowColValueVec<double> &, std::vector<std::pair<int, double> > &);
-       void assembleTran_impl(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs);
-       bool addParam(const std::string &, double);
-    private:
-       IdealCapacitor();
-       IdealCapacitor(const IdealCapacitor &);
-       IdealCapacitor operator=(const IdealCapacitor &);
+  void assembleDC_impl(const NodeKeeper::Solution &,
+                       dsMath::RealRowColValueVec<double> &,
+                       std::vector<std::pair<int, double>> &);
+  void assembleTran_impl(const double scl, const NodeKeeper::Solution &sol,
+                         dsMath::RealRowColValueVec<double> *mat,
+                         std::vector<std::pair<int, double>> &rhs);
+  bool addParam(const std::string &, double);
 
-       //External Nodes
-       CircuitNodePtr node_ptr_vtop;
-       CircuitNodePtr node_ptr_vbot;
+private:
+  IdealCapacitor();
+  IdealCapacitor(const IdealCapacitor &);
+  IdealCapacitor operator=(const IdealCapacitor &);
 
-       //Internal Nodes
+  // External Nodes
+  CircuitNodePtr node_ptr_vtop;
+  CircuitNodePtr node_ptr_vbot;
 
-       //Parameter List
-       double C;             //"Capacitance"        1.000000e+00
+  // Internal Nodes
+
+  // Parameter List
+  double C; //"Capacitance"        1.000000e+00
 };

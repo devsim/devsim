@@ -24,4 +24,3 @@ SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 
 # important flag for dynamic linking of static archives on linux
 SET (CMAKE_POSITION_INDEPENDENT_CODE ON)
-

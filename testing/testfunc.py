@@ -58,5 +58,3 @@ node_model(device=device, region=region, name="bar", equation="diff(sin(x),x)")
 print_node_values(device=device, region=region, name="gee")
 print_node_values(device=device, region=region, name="foo")
 print_node_values(device=device, region=region, name="bar")
-
-

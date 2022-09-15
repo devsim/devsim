@@ -17,43 +17,38 @@ limitations under the License.
 
 #ifndef DENSE_MATRIX_HH
 #define DENSE_MATRIX_HH
-#include <vector>
 #include <complex>
+#include <vector>
 namespace dsMath {
 template <typename T> class DenseMatrix;
 
-template <typename T>
-using RealDenseMatrix = DenseMatrix<T>;
+template <typename T> using RealDenseMatrix = DenseMatrix<T>;
 
-template <typename T>
-using ComplexDenseMatrix = DenseMatrix<std::complex<T> >;
+template <typename T> using ComplexDenseMatrix = DenseMatrix<std::complex<T>>;
 
 template <typename T> class DenseMatrix {
-  public:
+public:
+  //// Assume square for now
+  explicit DenseMatrix(size_t);
 
-    //// Assume square for now
-    explicit DenseMatrix(size_t);
+  T &operator()(size_t, size_t);
+  T operator()(size_t, size_t) const;
 
-    T &operator()(size_t, size_t);
-    T operator()(size_t, size_t) const;
+  bool LUFactor();
 
-    bool LUFactor();
+  //// Done inplace
+  bool Solve(T *);
 
-    //// Done inplace
-    bool Solve(T *);
+private:
+  DenseMatrix &operator=(const DenseMatrix &);
+  DenseMatrix(const DenseMatrix &);
+  DenseMatrix();
 
-  private:
-    DenseMatrix &operator=(const DenseMatrix &);
-    DenseMatrix(const DenseMatrix &);
-    DenseMatrix();
-
-    std::vector<T> A_;
-    std::vector<int>    ipiv_;
-    int                 dim_;
-    bool                factored_;
-    int                 info_;
-
+  std::vector<T> A_;
+  std::vector<int> ipiv_;
+  int dim_;
+  bool factored_;
+  int info_;
 };
-}
+} // namespace dsMath
 #endif
-

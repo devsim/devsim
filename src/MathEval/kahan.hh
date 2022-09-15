@@ -22,4 +22,3 @@ DoubleType kahan3(DoubleType, DoubleType, DoubleType);
 template <typename DoubleType>
 DoubleType kahan4(DoubleType, DoubleType, DoubleType, DoubleType);
 #endif
-

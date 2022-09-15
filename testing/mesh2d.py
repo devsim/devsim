@@ -37,7 +37,7 @@ devsim.add_2d_mesh_line(mesh="dog", dir="y", pos=+1.001, ps=0.001)
 # error if region doesn't have any triangles
 # last add_region has highest precedence
 # allow use of names or tags
-# check my parser to verify that adding is possible (via dynamic_cast) 
+# check my parser to verify that adding is possible (via dynamic_cast)
 # note this region won't have equation numbers
 devsim.add_2d_region( mesh="dog", material="gas", region="gas1", yl=-.001, yh=0.0)
 devsim.add_2d_region( mesh="dog", material="gas", region="gas2", yl=1.0, yh=1.001)
@@ -77,4 +77,3 @@ for region in ("r0", "r1", "r2"):
 devsim.write_devices(file="mesh2d.flps", type="floops")
 devsim.write_devices(file="mesh2d.msh",  type="devsim")
 devsim.write_devices(file="mesh2d.dat",  type="tecplot")
-

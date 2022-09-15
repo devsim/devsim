@@ -18,35 +18,32 @@ limitations under the License.
 #ifndef NODEEXPRMODEL_HH
 #define NODEEXPRMODEL_HH
 #include "NodeModel.hh"
-#include <string>
 #include <memory>
+#include <string>
 namespace Eqo {
-    class EquationObject;
-    typedef std::shared_ptr<EquationObject> EqObjPtr;
+class EquationObject;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 
-}
+} // namespace Eqo
 
-NodeModelPtr CreateNodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, NodeModel::DisplayType, ContactPtr cp);
+NodeModelPtr CreateNodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr,
+                                 NodeModel::DisplayType, ContactPtr cp);
 
-template <typename DoubleType>
-class NodeExprModel : public NodeModel
-{
-    public:
+template <typename DoubleType> class NodeExprModel : public NodeModel {
+public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  NodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr,
+                NodeModel::DisplayType, ContactPtr cp = nullptr);
 
-        NodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, NodeModel::DisplayType, ContactPtr cp = nullptr);
+private:
+  void RegisterModels();
+  NodeExprModel();
+  NodeExprModel(const NodeExprModel &);
 
-    private:
-
-        void RegisterModels();
-        NodeExprModel();
-        NodeExprModel(const NodeExprModel &);
-
-        void calcNodeScalarValues() const;
-        void setInitialValues();
-        const Eqo::EqObjPtr      equation;
+  void calcNodeScalarValues() const;
+  void setInitialValues();
+  const Eqo::EqObjPtr equation;
 };
 
 #endif
-

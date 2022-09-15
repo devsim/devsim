@@ -27,4 +27,3 @@ export PYTHON3_ARCHIVE=$(cygpath -w ${CONDA_PREFIX}/libs/python3.lib)
 bash scripts/setup_msys.sh
 (cd msys_x86_64_release && make -j2)
 (cd dist && bash package_msys.sh ${1})
-

@@ -282,5 +282,3 @@ def SetupElectronSRVAtInterface(device, interface):
         devsim.interface_model(device=device, interface=interface, name=name, equation=equation)
 
     devsim.interface_equation(device=device, interface=interface, name="ElectronContinuityEquation", interface_model="srvElectrons2", type="fluxterm")
-
-

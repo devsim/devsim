@@ -53,4 +53,3 @@ devsim.node_model(device=device, region=region, name="cdeptest", equation="cnode
 devsim.print_node_values(device=device, region=region, name="cdeptest")
 devsim.set_circuit_node_value(node="cnode1", value=-1.0)
 devsim.print_node_values(device=device, region=region, name="cdeptest")
-

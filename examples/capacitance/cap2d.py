@@ -121,7 +121,7 @@ for c in ("top", "bot"):
                      node_model="%s_bc" % c, edge_charge_model="DField")
 
 ###
-### Set the contact 
+### Set the contact
 ###
 set_parameter(device=device, name="top_bias", value=1.0e-0)
 set_parameter(device=device, name="bot_bias", value=0.0)
@@ -144,4 +144,3 @@ print(get_contact_charge(device=device, contact="bot", equation="PotentialEquati
 write_devices(file="cap2d.msh", type="devsim")
 write_devices(file="cap2d.dat", type="tecplot")
 write_devices(file="cap2d", type="vtk")
-

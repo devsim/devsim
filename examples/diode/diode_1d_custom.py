@@ -129,4 +129,3 @@ while v < 0.51:
     v += 0.1
 
 write_devices(file="diode_1d_custom.dat", type="tecplot")
-

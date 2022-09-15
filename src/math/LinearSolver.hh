@@ -31,32 +31,40 @@ limitations under the License.
 // 3. return x = inv(P) y
 
 namespace dsMath {
-template <typename DoubleType>
-class Matrix;
-template <typename DoubleType>
-class Preconditioner;
+template <typename DoubleType> class Matrix;
+template <typename DoubleType> class Preconditioner;
 /// This is the linear solver (inside the newton loop)
-template <typename DoubleType>
-class LinearSolver {
-    public:
-       virtual ~LinearSolver() = 0;
+template <typename DoubleType> class LinearSolver {
+public:
+  virtual ~LinearSolver() = 0;
 
-       bool Solve(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<DoubleType> &, std::vector<DoubleType> & );
-       bool ACSolve(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<std::complex<DoubleType>> &, std::vector<std::complex<DoubleType>> & );
-       bool NoiseSolve(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<std::complex<DoubleType>> &, std::vector<std::complex<DoubleType>> & );
+  bool Solve(Matrix<DoubleType> &, Preconditioner<DoubleType> &,
+             std::vector<DoubleType> &, std::vector<DoubleType> &);
+  bool ACSolve(Matrix<DoubleType> &, Preconditioner<DoubleType> &,
+               std::vector<std::complex<DoubleType>> &,
+               std::vector<std::complex<DoubleType>> &);
+  bool NoiseSolve(Matrix<DoubleType> &, Preconditioner<DoubleType> &,
+                  std::vector<std::complex<DoubleType>> &,
+                  std::vector<std::complex<DoubleType>> &);
 
-    protected:
-        LinearSolver();
-    private:
-       virtual bool SolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<DoubleType> &, std::vector<DoubleType> & )=0;
-       virtual bool ACSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<std::complex<DoubleType>> &, std::vector<std::complex<DoubleType>> & )=0;
-       virtual bool NoiseSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<std::complex<DoubleType>> &, std::vector<std::complex<DoubleType>> & )=0;
+protected:
+  LinearSolver();
 
-        LinearSolver(const LinearSolver &);
-        LinearSolver &operator=(const LinearSolver &);
+private:
+  virtual bool SolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &,
+                         std::vector<DoubleType> &,
+                         std::vector<DoubleType> &) = 0;
+  virtual bool ACSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &,
+                           std::vector<std::complex<DoubleType>> &,
+                           std::vector<std::complex<DoubleType>> &) = 0;
+  virtual bool NoiseSolveImpl(Matrix<DoubleType> &,
+                              Preconditioner<DoubleType> &,
+                              std::vector<std::complex<DoubleType>> &,
+                              std::vector<std::complex<DoubleType>> &) = 0;
 
+  LinearSolver(const LinearSolver &);
+  LinearSolver &operator=(const LinearSolver &);
 };
-}
+} // namespace dsMath
 
 #endif
-

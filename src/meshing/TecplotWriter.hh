@@ -21,10 +21,14 @@ limitations under the License.
 #include <string>
 /// Start out by writing the all out to one file
 class TecplotWriter : public MeshWriter {
-    public:
-        ~TecplotWriter();
-    private:
-        bool WriteMeshes_(const std::string &/*filename*/, std::string &/*errorString*/);
-        bool WriteMesh_(const std::string &/*deviceName*/, const std::string &/*filename*/, std::string &/*errorString*/);
+public:
+  ~TecplotWriter();
+
+private:
+  bool WriteMeshes_(const std::string & /*filename*/,
+                    std::string & /*errorString*/);
+  bool WriteMesh_(const std::string & /*deviceName*/,
+                  const std::string & /*filename*/,
+                  std::string & /*errorString*/);
 };
 #endif

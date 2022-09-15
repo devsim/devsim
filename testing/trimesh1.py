@@ -55,4 +55,3 @@ print(devsim.get_contact_charge(device=device, contact="top", equation="Potentia
 print(devsim.get_contact_charge(device=device, contact="bot", equation="PotentialEquation"))
 
 devsim.write_devices(file="trimesh2.msh", type="devsim_data")
-

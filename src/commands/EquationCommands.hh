@@ -35,6 +35,6 @@ void deleteContactEquationCmd(CommandHandler &);
 void deleteEquationCmd(CommandHandler &);
 void deleteContactEquationCmd(CommandHandler &);
 void deleteInterfaceEquationCmd(CommandHandler &);
-}
+} // namespace dsCommand
 
 #endif

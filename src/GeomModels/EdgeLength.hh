@@ -19,19 +19,17 @@ limitations under the License.
 #define EDGELENGTH_HH
 #include "EdgeModel.hh"
 // Coupling length
-template <typename DoubleType>
-class EdgeLength : public EdgeModel {
-    public:
-        EdgeLength(RegionPtr);
+template <typename DoubleType> class EdgeLength : public EdgeModel {
+public:
+  EdgeLength(RegionPtr);
 
-        void Serialize(std::ostream &) const;
+  void Serialize(std::ostream &) const;
 
-    private:
-        EdgeLength();
-        EdgeLength(const EdgeLength &);
-        EdgeLength &operator=(const EdgeLength &);
-        DoubleType calcEdgeLength(ConstEdgePtr) const;
-        void calcEdgeScalarValues() const;
+private:
+  EdgeLength();
+  EdgeLength(const EdgeLength &);
+  EdgeLength &operator=(const EdgeLength &);
+  DoubleType calcEdgeLength(ConstEdgePtr) const;
+  void calcEdgeScalarValues() const;
 };
 #endif
-

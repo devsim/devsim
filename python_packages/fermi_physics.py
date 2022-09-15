@@ -37,5 +37,3 @@ Eta_V = "(EV - EF)/(k * T)"
 #### EG MODEL from Wikipedia
 EG(T) = EG(0) - (EG_ALPHA * T^2)/(T + EG_BETA)
 ni(T) = (NC * NV)^0.5 * exp(-EG/(2 * k * T))
-
-

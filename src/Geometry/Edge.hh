@@ -35,54 +35,35 @@ typedef const Edge *ConstEdgePtr;
    will be made available to index data wrt an edge belonging to an element
 */
 class Edge {
-   public:
-      Edge(size_t ind, ConstNodePtr, ConstNodePtr);
-      size_t GetIndex() const
-      {
-         return index;
-      }
+public:
+  Edge(size_t ind, ConstNodePtr, ConstNodePtr);
+  size_t GetIndex() const { return index; }
 
-      void SetIndex(size_t i)
-      {
-         index = i;
-      }
+  void SetIndex(size_t i) { index = i; }
 
-      const std::vector<ConstNodePtr> &GetNodeList() const
-      {
-          return nodes;
-      }
+  const std::vector<ConstNodePtr> &GetNodeList() const { return nodes; }
 
-      const std::vector<ConstNodePtr> &GetFENodeList() const
-      {
-          return nodes;
-      }
+  const std::vector<ConstNodePtr> &GetFENodeList() const { return nodes; }
 
-      ConstNodePtr GetHead() const
-      {
-          return nodes[0];
-      }
+  ConstNodePtr GetHead() const { return nodes[0]; }
 
-      ConstNodePtr GetTail() const
-      {
-          return nodes[1];
-      }
+  ConstNodePtr GetTail() const { return nodes[1]; }
 
-      double GetNodeSign(ConstNodePtr) const;
+  double GetNodeSign(ConstNodePtr) const;
 
+private:
+  Edge();
+  Edge(const Edge &);
+  Edge &operator=(const Edge &);
 
-   private:
-
-      Edge();
-      Edge (const Edge &);
-      Edge &operator= (const Edge &);
-
-      size_t index;
-      std::vector<ConstNodePtr> nodes;
+  size_t index;
+  std::vector<ConstNodePtr> nodes;
 };
 
-struct EdgeCompIndex
-{
-   bool operator()(ConstEdgePtr x, ConstEdgePtr y) { return x->GetIndex() < y->GetIndex(); }
+struct EdgeCompIndex {
+  bool operator()(ConstEdgePtr x, ConstEdgePtr y) {
+    return x->GetIndex() < y->GetIndex();
+  }
 };
 
 #endif

@@ -119,4 +119,3 @@ rampbias(device, "drain", 0.5, 0.1, 0.001, 100, 1e-8, 1e30, printAllCurrents)
 
 write_devices(file="gmsh_mos2d_dd_kla.dat", type="tecplot")
 write_devices(file="gmsh_mos2d_dd_kla", type="vtk")
-

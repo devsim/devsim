@@ -20,26 +20,22 @@ limitations under the License.
 #ifdef __linux__
 #include <fpu_control.h>
 #endif
+#include <cassert>
 #include <cfenv>
 #include <cmath>
-#include <cassert>
 
 FPECheck::FPEFlag_t FPECheck::fpe_raised_ = 0;
 
 #ifndef _WIN32
-void fpehandle(int)
-{
-  assert(0);
-}
+void fpehandle(int) { assert(0); }
 #endif
 
-void FPECheck::InitializeFPE()
-{
-    /// Prevent the signal handler from trapping the exception and aborting
-    /// This has no effect unless there is an feenableexcept
+void FPECheck::InitializeFPE() {
+  /// Prevent the signal handler from trapping the exception and aborting
+  /// This has no effect unless there is an feenableexcept
 #ifndef _WIN32
-    signal(SIGFPE, fpehandle);
-    ////// THIS IS TO CAUSE THE FPE TO TRIGGER A SIGNAL
+  signal(SIGFPE, fpehandle);
+  ////// THIS IS TO CAUSE THE FPE TO TRIGGER A SIGNAL
 #if 0
     int x=fegetexcept();
     feenableexcept(x| FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
@@ -56,110 +52,87 @@ void FPECheck::InitializeFPE()
     mode.
 */
 #if 1
-    fpu_control_t cw;
-    _FPU_GETCW(cw);
-    cw &= ~_FPU_EXTENDED;
-    cw |= _FPU_DOUBLE;
-    _FPU_SETCW(cw);
+  fpu_control_t cw;
+  _FPU_GETCW(cw);
+  cw &= ~_FPU_EXTENDED;
+  cw |= _FPU_DOUBLE;
+  _FPU_SETCW(cw);
 #endif
 #endif
 
-    /// Set the flags we want to catch
-    ClearFPE();
+  /// Set the flags we want to catch
+  ClearFPE();
 }
 
-
-void FPECheck::ClearFPE()
-{
-    feclearexcept(FE_ALL_EXCEPT);
-    fpe_raised_ = FPECheck::getClearedFlag();
+void FPECheck::ClearFPE() {
+  feclearexcept(FE_ALL_EXCEPT);
+  fpe_raised_ = FPECheck::getClearedFlag();
 }
 
-FPECheck::FPEFlag_t FPECheck::getFPEMask()
-{
+FPECheck::FPEFlag_t FPECheck::getFPEMask() {
   return (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
 }
 
-FPECheck::FPEFlag_t FPECheck::getFPEFlags()
-{
+FPECheck::FPEFlag_t FPECheck::getFPEFlags() {
   return fetestexcept(getFPEMask()) | fpe_raised_;
 }
 
-bool FPECheck::CheckFPE()
-{
-  return getFPEFlags() != 0;
-}
+bool FPECheck::CheckFPE() { return getFPEFlags() != 0; }
 
-bool FPECheck::CheckFPE(FPECheck::FPEFlag_t x)
-{
+bool FPECheck::CheckFPE(FPECheck::FPEFlag_t x) {
   return (x & getFPEMask()) != 0;
 }
 
-bool FPECheck::IsInvalid(FPECheck::FPEFlag_t x)
-{
+bool FPECheck::IsInvalid(FPECheck::FPEFlag_t x) {
   return (x & FE_INVALID) != 0;
 }
 
-bool FPECheck::IsDivByZero(FPECheck::FPEFlag_t x)
-{
+bool FPECheck::IsDivByZero(FPECheck::FPEFlag_t x) {
   return (x & FE_DIVBYZERO) != 0;
 }
 
-bool FPECheck::IsInexact(FPECheck::FPEFlag_t x)
-{
+bool FPECheck::IsInexact(FPECheck::FPEFlag_t x) {
   return (x & FE_INEXACT) != 0;
 }
 
-bool FPECheck::IsOverflow(FPECheck::FPEFlag_t x)
-{
+bool FPECheck::IsOverflow(FPECheck::FPEFlag_t x) {
   return (x & FE_OVERFLOW) != 0;
 }
 
-bool FPECheck::IsUnderflow(FPECheck::FPEFlag_t x)
-{
+bool FPECheck::IsUnderflow(FPECheck::FPEFlag_t x) {
   return (x & FE_UNDERFLOW) != 0;
 }
 
-std::string FPECheck::getFPEString(const FPECheck::FPEFlag_t feFlags)
-{
+std::string FPECheck::getFPEString(const FPECheck::FPEFlag_t feFlags) {
   std::string out;
-  if (IsInvalid(feFlags))
-  {
+  if (IsInvalid(feFlags)) {
     out += "Invalid";
   }
 
-  if (IsDivByZero(feFlags))
-  {
-    if (!out.empty())
-    {
+  if (IsDivByZero(feFlags)) {
+    if (!out.empty()) {
       out += ", ";
     }
 
     out += "Divide-by-zero";
   }
 
-  if (IsInexact(feFlags))
-  {
-    if (!out.empty())
-    {
+  if (IsInexact(feFlags)) {
+    if (!out.empty()) {
       out += ", ";
     }
     out += "Inexact";
   }
 
-  if (IsOverflow(feFlags))
-  {
-    if (!out.empty())
-    {
+  if (IsOverflow(feFlags)) {
+    if (!out.empty()) {
       out += ", ";
     }
     out += "Overflow";
   }
 
-  if (IsUnderflow(feFlags))
-  {
-    if (!out.empty())
-    {
+  if (IsUnderflow(feFlags)) {
+    if (!out.empty()) {
       out += ", ";
     }
     out += "Underflow";
@@ -168,36 +141,27 @@ std::string FPECheck::getFPEString(const FPECheck::FPEFlag_t feFlags)
   return out;
 }
 
-std::string FPECheck::getFPEString()
-{
+std::string FPECheck::getFPEString() {
   const FPECheck::FPEFlag_t feFlags = getFPEFlags();
   return getFPEString(feFlags);
 }
 
-FPECheck::FPEFlag_t FPECheck::getClearedFlag()
-{
-  return 0;
-}
+FPECheck::FPEFlag_t FPECheck::getClearedFlag() { return 0; }
 
-FPECheck::FPEFlag_t FPECheck::combineFPEFlags(FPECheck::FPEFlag_t x, FPECheck::FPEFlag_t y)
-{
+FPECheck::FPEFlag_t FPECheck::combineFPEFlags(FPECheck::FPEFlag_t x,
+                                              FPECheck::FPEFlag_t y) {
   return x | y;
 }
 
-void FPECheck::raiseFPE(FPECheck::FPEFlag_t x)
-{
+void FPECheck::raiseFPE(FPECheck::FPEFlag_t x) {
   feraiseexcept(x);
   fpe_raised_ |= x;
 }
 
-double FPECheck::ManualCheckAndRaiseFPE(const double &x)
-{
-  if (std::isinf(x))
-  {
+double FPECheck::ManualCheckAndRaiseFPE(const double &x) {
+  if (std::isinf(x)) {
     FPECheck::raiseFPE(FE_OVERFLOW);
-  }
-  else if (std::isnan(x))
-  {
+  } else if (std::isnan(x)) {
     FPECheck::raiseFPE(FE_INVALID);
   }
   return x;
@@ -205,8 +169,7 @@ double FPECheck::ManualCheckAndRaiseFPE(const double &x)
 
 #ifdef TEST_FPE_CODE
 #include <iostream>
-int main()
-{
+int main() {
   FPECheck::InitializeFPE();
 
   double a = 1e308;
@@ -216,27 +179,23 @@ int main()
   double x = a;
   x /= b;
   std::cerr << x << std::endl;
-  if (FPECheck::CheckFPE())
-  {
+  if (FPECheck::CheckFPE()) {
     std::cerr << "There was an FPE" << std::endl;
     std::cerr << FPECheck::getFPEString() << "\n";
   }
 
   FPECheck::ClearFPE();
-  double y = 3.0*4;
-  if (FPECheck::CheckFPE())
-  {
+  double y = 3.0 * 4;
+  if (FPECheck::CheckFPE()) {
     std::cerr << "There was an FPE" << std::endl;
     std::cerr << FPECheck::getFPEString() << "\n";
   }
 
   FPECheck::ClearFPE();
   double z = log(-1);
-  if (FPECheck::CheckFPE())
-  {
+  if (FPECheck::CheckFPE()) {
     std::cerr << "There was an FPE" << std::endl;
     std::cerr << FPECheck::getFPEString() << "\n";
   }
 }
 #endif /*TEST_FPE_CODE*/
-

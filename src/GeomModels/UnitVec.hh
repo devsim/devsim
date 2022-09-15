@@ -18,25 +18,23 @@ limitations under the License.
 #ifndef UNITVEC_HH
 #define UNITVEC_HH
 #include "EdgeModel.hh"
-template <typename T>
-class Vector;
+template <typename T> class Vector;
 // Coupling length
-template <typename DoubleType>
-class UnitVec : public EdgeModel {
-    public:
-        UnitVec(RegionPtr);
-        ~UnitVec();
+template <typename DoubleType> class UnitVec : public EdgeModel {
+public:
+  UnitVec(RegionPtr);
+  ~UnitVec();
 
-        void Serialize(std::ostream &) const;
+  void Serialize(std::ostream &) const;
 
-    private:
-        UnitVec();
-        UnitVec(const UnitVec &);
-        UnitVec &operator=(const UnitVec &);
-        Vector<DoubleType> calcUnitVec(ConstEdgePtr) const;
-        void calcEdgeScalarValues() const;
+private:
+  UnitVec();
+  UnitVec(const UnitVec &);
+  UnitVec &operator=(const UnitVec &);
+  Vector<DoubleType> calcUnitVec(ConstEdgePtr) const;
+  void calcEdgeScalarValues() const;
 
-        WeakEdgeModelPtr unity;
-        WeakEdgeModelPtr unitz;
+  WeakEdgeModelPtr unity;
+  WeakEdgeModelPtr unitz;
 };
 #endif

@@ -30,4 +30,3 @@ SET (ZLIB_ARCHIVE ${CONDA_PREFIX}/lib/libz.a)
 
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
-

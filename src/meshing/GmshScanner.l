@@ -32,7 +32,7 @@ limitations under the License.
 %option nounput
 %option stack
 
-integer [-]?[0-9]+ 
+integer [-]?[0-9]+
 float1 [+-]?[0-9]*\.[0-9]+
 float2 [+-]?[0-9]+\.[0-9]*
 float3 [+-]?[0-9]+\.?[0-9]*[eE][+-]?[0-9]+
@@ -169,4 +169,3 @@ bool LoadMeshesFromFile(const std::string &fname, const std::string &meshName, s
     return ret;
 }
 }
-

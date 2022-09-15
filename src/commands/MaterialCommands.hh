@@ -25,6 +25,6 @@ void addDBEntryCmd(CommandHandler &);
 void getDBEntryCmd(CommandHandler &);
 void getParameterCmd(CommandHandler &);
 void openDBCmd(CommandHandler &);
-}
+} // namespace dsCommand
 
 #endif

@@ -10,5 +10,3 @@ The documentation has been issued a DOI which is citable in publications.  Pleas
 ### Other References
 
 Please visit this projects [Official Website](https://devsim.org/introduction.html#documentation) for additional references concerning this work.
-
-

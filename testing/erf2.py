@@ -41,6 +41,3 @@ for i, j in (
         devsim.print_node_values(device=device, region=region, name=i)
     except:
         pass
-
-
-

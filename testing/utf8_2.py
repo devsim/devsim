@@ -95,4 +95,3 @@ print((get_contact_charge(device=device , contact="top", equation="ψEquation"))
 print((get_contact_charge(device=device , contact="bot", equation="ψEquation")))
 
 #write_devices(file='cap1.msh', type='devsim')
-

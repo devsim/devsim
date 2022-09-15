@@ -18,32 +18,32 @@ limitations under the License.
 #ifndef EDGEEXPRMODEL_HH
 #define EDGEEXPRMODEL_HH
 #include "EdgeModel.hh"
-#include <string>
 #include <memory>
+#include <string>
 namespace Eqo {
-    class EquationObject;
-    typedef std::shared_ptr<EquationObject> EqObjPtr;
+class EquationObject;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 
-}
+} // namespace Eqo
 
-EdgeModelPtr CreateEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, EdgeModel::DisplayType, ContactPtr);
+EdgeModelPtr CreateEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr,
+                                 EdgeModel::DisplayType, ContactPtr);
 
-template <typename DoubleType>
-class EdgeExprModel : public EdgeModel
-{
-    public:
-        void Serialize(std::ostream &) const;
+template <typename DoubleType> class EdgeExprModel : public EdgeModel {
+public:
+  void Serialize(std::ostream &) const;
 
-        EdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, EdgeModel::DisplayType, ContactPtr cp = nullptr);
+  EdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr,
+                EdgeModel::DisplayType, ContactPtr cp = nullptr);
 
-    private:
-        void RegisterModels();
-        EdgeExprModel();
-        EdgeExprModel(const EdgeExprModel &);
+private:
+  void RegisterModels();
+  EdgeExprModel();
+  EdgeExprModel(const EdgeExprModel &);
 
-        void calcEdgeScalarValues() const;
+  void calcEdgeScalarValues() const;
 
-        const Eqo::EqObjPtr      equation;
+  const Eqo::EqObjPtr equation;
 };
 
 #endif

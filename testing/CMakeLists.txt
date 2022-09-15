@@ -74,7 +74,7 @@ trimesh1
 trimesh2
 noise_res_2d
 dio2_element_2d
-mos_2d 
+mos_2d
 mos_2d_restart
 mos_2d_restart2
 )
@@ -167,5 +167,3 @@ FOREACH(I ${MAGNETIC_TESTS})
 ENDFOREACH(I)
 
 set_tests_properties("testing/laux1" PROPERTIES DEPENDS testing/trimesh2)
-
-

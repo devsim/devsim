@@ -32,4 +32,3 @@ for name, equation in (
 print(devsim.symdiff(expr="diff(kahan3(a,b,c),c);"))
 print(devsim.symdiff(expr="diff(kahan4(a,b,c,d),c);"))
 print(devsim.symdiff(expr="diff(kahan4(a,b,c,c),c);"))
-

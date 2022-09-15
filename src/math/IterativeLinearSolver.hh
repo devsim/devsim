@@ -23,24 +23,28 @@ namespace dsMath {
 // Special case
 // x = inv(A) b
 template <typename DoubleType>
-class IterativeLinearSolver : public LinearSolver<DoubleType>
-{
-   public:
-        IterativeLinearSolver();
-        ~IterativeLinearSolver() {};
-   protected:
-   private:
-        bool SolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<DoubleType> &, std::vector<DoubleType> & );
-        bool ACSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &,  std::vector<std::complex<DoubleType>> &, std::vector<std::complex<DoubleType>> & );
-        bool NoiseSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<std::complex<DoubleType>> &, std::vector<std::complex<DoubleType>> & );
+class IterativeLinearSolver : public LinearSolver<DoubleType> {
+public:
+  IterativeLinearSolver();
+  ~IterativeLinearSolver(){};
 
-        IterativeLinearSolver(const IterativeLinearSolver &);
-        IterativeLinearSolver &operator=(const IterativeLinearSolver &);
+protected:
+private:
+  bool SolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &,
+                 std::vector<DoubleType> &, std::vector<DoubleType> &);
+  bool ACSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &,
+                   std::vector<std::complex<DoubleType>> &,
+                   std::vector<std::complex<DoubleType>> &);
+  bool NoiseSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &,
+                      std::vector<std::complex<DoubleType>> &,
+                      std::vector<std::complex<DoubleType>> &);
 
-        int restart_;
-        int linear_iterations_;
-        DoubleType relative_tolerance_;
+  IterativeLinearSolver(const IterativeLinearSolver &);
+  IterativeLinearSolver &operator=(const IterativeLinearSolver &);
+
+  int restart_;
+  int linear_iterations_;
+  DoubleType relative_tolerance_;
 };
-}
+} // namespace dsMath
 #endif
-

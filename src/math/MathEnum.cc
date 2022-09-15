@@ -15,22 +15,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***/
 
-
 #include "MathEnum.hh"
 
 namespace dsMathEnum {
-  const char *WhatToLoadString[] =
-  {
-    "MATRIXONLY",
-    "RHS",
-    "MATRIXANDRHS",
-    "PERMUTATIONSONLY"
-  };
+const char *WhatToLoadString[] = {"MATRIXONLY", "RHS", "MATRIXANDRHS",
+                                  "PERMUTATIONSONLY"};
 
-  const char *TimeModeString[] =
-  {
-    "DC",
-    "TIME"
-  };
-}
-
+const char *TimeModeString[] = {"DC", "TIME"};
+} // namespace dsMathEnum

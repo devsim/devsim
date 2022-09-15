@@ -27,110 +27,105 @@ limitations under the License.
  * Derivatives are assumed to be zero
  */
 namespace Eqo {
-class UnaryLogical : public EquationObject
-{
-    public:
-        UnaryLogical(const std::string &/*unaryOp*/, EqObjPtr /*arg*/);
-        ~UnaryLogical() {};
+class UnaryLogical : public EquationObject {
+public:
+  UnaryLogical(const std::string & /*unaryOp*/, EqObjPtr /*arg*/);
+  ~UnaryLogical(){};
 
-        EqObjPtr Derivative(EqObjPtr);
-        EqObjPtr Simplify();
+  EqObjPtr Derivative(EqObjPtr);
+  EqObjPtr Simplify();
 
-        EqObjPtr CombineProduct(std::vector<EqObjPtr>);
-        EqObjPtr CombineAdd(std::vector<EqObjPtr>);
+  EqObjPtr CombineProduct(std::vector<EqObjPtr>);
+  EqObjPtr CombineAdd(std::vector<EqObjPtr>);
 
-        bool isZero();
-        bool isOne();
+  bool isZero();
+  bool isOne();
 
-        EqObjPtr getScale();
-        EqObjPtr getUnscaledValue();
+  EqObjPtr getScale();
+  EqObjPtr getUnscaledValue();
 
-        double getSign();
-        EqObjPtr getUnsignedValue();
+  double getSign();
+  EqObjPtr getUnsignedValue();
 
-        EqObjPtr clone();
-        EqObjPtr subst(const std::string &, EqObjPtr);
+  EqObjPtr clone();
+  EqObjPtr subst(const std::string &, EqObjPtr);
 
-        EqObjPtr expand();
+  EqObjPtr expand();
 
-        std::vector<EqObjPtr> getArgs() {
-          return createArgs(arg);
-        }
+  std::vector<EqObjPtr> getArgs() { return createArgs(arg); }
 
-        const std::string &getOperator()
-        {
-          return unaryOperator;
-        }
+  const std::string &getOperator() { return unaryOperator; }
 
-        bool hasReciprocal() {return false;}
-        EqObjPtr getReciprocal() {dsAssert(0, "UNEXPECTED"); return con(0);}
+  bool hasReciprocal() { return false; }
+  EqObjPtr getReciprocal() {
+    dsAssert(0, "UNEXPECTED");
+    return con(0);
+  }
 
-        std::set<std::string> getReferencedType(Eqo::EqObjType rt) {
-            return arg->getReferencedType(rt);
-        }
+  std::set<std::string> getReferencedType(Eqo::EqObjType rt) {
+    return arg->getReferencedType(rt);
+  }
 
-    private:
-        std::string createStringValue();
+private:
+  std::string createStringValue();
 
-        UnaryLogical(const UnaryLogical &);
-        UnaryLogical operator=(const UnaryLogical &);
+  UnaryLogical(const UnaryLogical &);
+  UnaryLogical operator=(const UnaryLogical &);
 
-        const std::string unaryOperator;
-        const EqObjPtr arg;
+  const std::string unaryOperator;
+  const EqObjPtr arg;
 };
 
-class BinaryLogical : public EquationObject
-{
-    public:
-        BinaryLogical(const std::string & /*op*/, EqObjPtr /*left*/, EqObjPtr /*right*/);
-        ~BinaryLogical() {};
+class BinaryLogical : public EquationObject {
+public:
+  BinaryLogical(const std::string & /*op*/, EqObjPtr /*left*/,
+                EqObjPtr /*right*/);
+  ~BinaryLogical(){};
 
-        EqObjPtr Derivative(EqObjPtr);
-        EqObjPtr Simplify();
+  EqObjPtr Derivative(EqObjPtr);
+  EqObjPtr Simplify();
 
-        EqObjPtr CombineProduct(std::vector<EqObjPtr>);
-        EqObjPtr CombineAdd(std::vector<EqObjPtr>);
+  EqObjPtr CombineProduct(std::vector<EqObjPtr>);
+  EqObjPtr CombineAdd(std::vector<EqObjPtr>);
 
-        bool isZero();
-        bool isOne();
+  bool isZero();
+  bool isOne();
 
-        EqObjPtr getScale();
-        EqObjPtr getUnscaledValue();
+  EqObjPtr getScale();
+  EqObjPtr getUnscaledValue();
 
-        double getSign();
-        EqObjPtr getUnsignedValue();
+  double getSign();
+  EqObjPtr getUnsignedValue();
 
-        EqObjPtr clone();
-        EqObjPtr subst(const std::string &, EqObjPtr);
+  EqObjPtr clone();
+  EqObjPtr subst(const std::string &, EqObjPtr);
 
-        EqObjPtr expand();
+  EqObjPtr expand();
 
-        std::vector<EqObjPtr> getArgs() {
-          return createArgs(arg1, arg2);
-        }
+  std::vector<EqObjPtr> getArgs() { return createArgs(arg1, arg2); }
 
-        const std::string &getOperator()
-        {
-          return binaryOperator;
-        }
+  const std::string &getOperator() { return binaryOperator; }
 
-        bool hasReciprocal() {return false;}
-        EqObjPtr getReciprocal() {dsAssert(0, "UNEXPECTED"); return con(0);}
+  bool hasReciprocal() { return false; }
+  EqObjPtr getReciprocal() {
+    dsAssert(0, "UNEXPECTED");
+    return con(0);
+  }
 
-        std::set<std::string> getReferencedType(Eqo::EqObjType rt) {
-            return UniteReferencedType(rt, arg1, arg2);
-        }
+  std::set<std::string> getReferencedType(Eqo::EqObjType rt) {
+    return UniteReferencedType(rt, arg1, arg2);
+  }
 
-    private:
-        std::string createStringValue();
+private:
+  std::string createStringValue();
 
-        BinaryLogical(const BinaryLogical &);
-        BinaryLogical operator=(const BinaryLogical &);
+  BinaryLogical(const BinaryLogical &);
+  BinaryLogical operator=(const BinaryLogical &);
 
-        const std::string binaryOperator;
-        EqObjPtr arg1;
-        EqObjPtr arg2;
+  const std::string binaryOperator;
+  EqObjPtr arg1;
+  EqObjPtr arg2;
 };
-}
+} // namespace Eqo
 
 #endif

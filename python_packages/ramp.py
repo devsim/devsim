@@ -62,4 +62,3 @@ def printAllCurrents(device):
     '''
     for c in ds.get_contact_list(device=device):
         PrintCurrents(device, c)
-

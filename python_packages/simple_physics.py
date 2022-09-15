@@ -49,7 +49,7 @@ def PrintCurrents(device, contact):
     contact_bias_name = GetContactBiasName(contact)
     electron_current= get_contact_current(device=device, contact=contact, equation=ece_name)
     hole_current    = get_contact_current(device=device, contact=contact, equation=hce_name)
-    total_current   = electron_current + hole_current                                        
+    total_current   = electron_current + hole_current
     voltage         = get_parameter(device=device, name=GetContactBiasName(contact))
     print("{0}\t{1}\t{2}\t{3}\t{4}".format(contact, voltage, electron_current, hole_current, total_current))
 
@@ -229,7 +229,7 @@ def CreateSiliconDriftDiffusion(device, region, mu_n="mu_n", mu_p="mu_p"):
     CreateHCE(device, region, mu_p)
 
 
-def CreateSiliconDriftDiffusionAtContact(device, region, contact, is_circuit=False): 
+def CreateSiliconDriftDiffusionAtContact(device, region, contact, is_circuit=False):
     '''
       Restrict electrons and holes to their equilibrium values
       Integrates current into circuit
@@ -306,4 +306,3 @@ def CreateSiliconSiliconInterface(device, interface):
     interface_equation(device=device, interface=interface, name="ElectronContinuityEquation", interface_model=ename, type="continuous")
     hname = CreateContinuousInterfaceModel(device, interface, "Holes")
     interface_equation(device=device, interface=interface, name="HoleContinuityEquation", interface_model=hname, type="continuous")
-

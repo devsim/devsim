@@ -44,4 +44,3 @@ createSiliconDriftDiffusionAtContact(device, "bulk", "drain")
 createSiliconDriftDiffusionAtContact(device, "bulk", "source")
 createSiliconDriftDiffusionAtContact(device, "bulk", "body")
 devsim.solve(type="dc", absolute_error=1.0e30, relative_error=1e-5, maximum_iterations=30)
-

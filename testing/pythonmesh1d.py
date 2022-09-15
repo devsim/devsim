@@ -50,4 +50,3 @@ add_gmsh_interface(mesh="toy", gmsh_name="top_bot_interface", name="top_bot_inte
 finalize_mesh(mesh="toy")
 create_device(mesh="toy", device="toy")
 write_devices(device="toy",file="pythonmesh1d.msh")
-

@@ -111,16 +111,16 @@ end_devicecmd : END_DEVICE {
   dsDevsimParse::DeletePointers();
 }
 
-coordinates : BEG_COORD 
-        | coordinates coordinate 
-        | coordinates END_COORD 
+coordinates : BEG_COORD
+        | coordinates coordinate
+        | coordinates END_COORD
         ;
 
 coordinate : number number number
         {
             dsDevsimParse::DevsimLoader->AddCoordinate(dsMesh::MeshCoordinate($1, $2, $3));
         }
-        ; 
+        ;
 
 number : FLOAT {
             $$ = $1;
@@ -178,7 +178,7 @@ region : BEG_REGION WORD WORD  {
         region regionequation
         ;
 
-nodes : BEG_NODE  
+nodes : BEG_NODE
         {
             if (dsDevsimParse::MeshRegion->HasNodes())
             {
@@ -188,7 +188,7 @@ nodes : BEG_NODE
                 YYABORT;
             }
         } |
-        nodes INT  
+        nodes INT
         {
             if ($2 < 0)
             {
@@ -199,7 +199,7 @@ nodes : BEG_NODE
             }
             else
             {
-//              std::ostringstream os; 
+//              std::ostringstream os;
 //              os << "add node with coord index " << $2 << "\n";
 //              OutputStream::WriteOut(OutputStream::INFO, os.str());
                 dsDevsimParse::MeshRegion->AddNode(dsMesh::MeshNode($2));
@@ -208,7 +208,7 @@ nodes : BEG_NODE
         nodes END_NODE ;
         ;
 
-contact_nodes : BEG_NODE  
+contact_nodes : BEG_NODE
         {
             if (dsDevsimParse::MeshContact->HasNodes())
             {
@@ -218,7 +218,7 @@ contact_nodes : BEG_NODE
                 YYABORT;
             }
         } |
-        contact_nodes INT 
+        contact_nodes INT
         {
             if ($2 < 0)
             {
@@ -293,7 +293,7 @@ contact_triangles : BEG_TRIANGLE
         contact_triangles END_TRIANGLE;
         ;
 
-interface_nodes : BEG_NODE  
+interface_nodes : BEG_NODE
         {
             if (dsDevsimParse::MeshInterface->HasNodesPairs())
             {
@@ -303,7 +303,7 @@ interface_nodes : BEG_NODE
                 YYABORT;
             }
         } |
-        interface_nodes INT INT 
+        interface_nodes INT INT
         {
             if ($2 < 0)
             {
@@ -327,7 +327,7 @@ interface_nodes : BEG_NODE
         interface_nodes END_NODE ;
         ;
 
-interface_edges : BEG_EDGE  
+interface_edges : BEG_EDGE
         {
             if (dsDevsimParse::MeshInterface->HasEdges())
             {
@@ -356,7 +356,7 @@ interface_edges : BEG_EDGE
         interface_edges END_EDGE ;
         ;
 
-interface_triangles : BEG_TRIANGLE  
+interface_triangles : BEG_TRIANGLE
         {
             if (dsDevsimParse::MeshInterface->HasTriangles())
             {
@@ -386,7 +386,7 @@ interface_triangles : BEG_TRIANGLE
         ;
 
 
-edges : BEG_EDGE  
+edges : BEG_EDGE
         {
             if (dsDevsimParse::MeshRegion->HasEdges())
             {
@@ -396,7 +396,7 @@ edges : BEG_EDGE
                 YYABORT;
             }
         } |
-        edges INT INT  
+        edges INT INT
         {
             if ($2 < 0)
             {
@@ -414,7 +414,7 @@ edges : BEG_EDGE
             }
             else
             {
-//              std::ostringstream os; 
+//              std::ostringstream os;
 //              os << "add edge with node index " << $2 << "\t" << $3 << "\n";
 //              OutputStream::WriteOut(OutputStream::INFO, os.str());
                 dsDevsimParse::MeshRegion->AddEdge(dsMesh::MeshEdge($2, $3));
@@ -423,7 +423,7 @@ edges : BEG_EDGE
         edges END_EDGE ;
         ;
 
-triangles : BEG_TRIANGLE  
+triangles : BEG_TRIANGLE
         {
             if (dsDevsimParse::MeshRegion->HasTriangles())
             {
@@ -433,7 +433,7 @@ triangles : BEG_TRIANGLE
                 YYABORT;
             }
         } |
-        triangles INT INT INT  
+        triangles INT INT INT
         {
             if ($2 < 0)
             {
@@ -464,7 +464,7 @@ triangles : BEG_TRIANGLE
         triangles END_TRIANGLE ;
         ;
 
-tetrahedra : BEG_TETRAHEDRON  
+tetrahedra : BEG_TETRAHEDRON
         {
             if (dsDevsimParse::MeshRegion->HasTetrahedra())
             {
@@ -474,7 +474,7 @@ tetrahedra : BEG_TETRAHEDRON
                 YYABORT;
             }
         } |
-        tetrahedra INT INT INT INT 
+        tetrahedra INT INT INT INT
         {
             if ($2 < 0)
             {
@@ -896,7 +896,7 @@ command : command_recursive |
           command COMMAND_EOL
           ;
 
-command_recursive: 
+command_recursive:
           COMMANDSECTION WORD {
             dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::COMMAND);
             dsDevsimParse::Sol->SetCommandName($2);
@@ -971,4 +971,3 @@ int Devsimerror(const char *msg) {
     dsDevsimParse::errors += os.str();
     return 0;
 }
-

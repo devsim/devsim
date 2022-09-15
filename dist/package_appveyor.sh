@@ -77,9 +77,8 @@ Package released as:
 ${DIST_VER}.zip
 
 Source available from:
-http://www.github.com/devsim/devsim 
+http://www.github.com/devsim/devsim
 commit ${COMMIT}
 EOF
 /usr/bin/zip -r ${DIST_DIR}.zip ${DIST_DIR}
 done
-

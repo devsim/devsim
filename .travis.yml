@@ -70,5 +70,3 @@ deploy:
   on:
     repo: devsim/devsim
     tags: true
-
-

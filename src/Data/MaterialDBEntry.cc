@@ -28,22 +28,14 @@ MaterialDBEntry::MaterialDBEntry(const std::string &p, const std::string &u, con
 }
 #endif
 
-MaterialDBEntry::MaterialDBEntry() : entry_type_(EntryType_t::UNDEFINED)
-{
-}
+MaterialDBEntry::MaterialDBEntry() : entry_type_(EntryType_t::UNDEFINED) {}
 
-MaterialDBEntry::MaterialDBEntry(const MaterialDBEntry &o) :
-  unit_(o.unit_),
-  description_(o.description_),
-  value_(o.value_),
-  entry_type_(o.entry_type_)
-{
-}
+MaterialDBEntry::MaterialDBEntry(const MaterialDBEntry &o)
+    : unit_(o.unit_), description_(o.description_), value_(o.value_),
+      entry_type_(o.entry_type_) {}
 
-MaterialDBEntry &MaterialDBEntry::operator=(const MaterialDBEntry &o)
-{
-  if (this != &o)
-  {
+MaterialDBEntry &MaterialDBEntry::operator=(const MaterialDBEntry &o) {
+  if (this != &o) {
     unit_ = o.unit_;
     description_ = o.description_;
     value_ = o.value_;
@@ -52,14 +44,6 @@ MaterialDBEntry &MaterialDBEntry::operator=(const MaterialDBEntry &o)
   return *this;
 }
 
-MaterialDBEntry::MaterialDBEntry(const std::string &u, const std::string &d, const ObjectHolder &v, EntryType_t et) :
-  unit_(u),
-  description_(d),
-  value_(v),
-  entry_type_(et)
-{
-}
-
-
-
-
+MaterialDBEntry::MaterialDBEntry(const std::string &u, const std::string &d,
+                                 const ObjectHolder &v, EntryType_t et)
+    : unit_(u), description_(d), value_(v), entry_type_(et) {}

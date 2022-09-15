@@ -105,4 +105,3 @@ test_common.print_ac_circuit_solution()
 
 devsim.solve(type="ac", frequency=1e15)
 test_common.print_ac_circuit_solution()
-

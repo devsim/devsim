@@ -232,4 +232,3 @@ def createHoleCurrent (device, region):
     for variable in ("Holes", "Potential"):
         der = "simplify(diff(%s, %s))" % (Jp, variable)
         devsim.edge_model(device=device, region=region, name="HoleCurrent", equation=der)
-

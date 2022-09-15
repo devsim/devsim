@@ -63,4 +63,3 @@ if __name__ == '__main__':
     u=400
     R=l/(q*n*u)
     print(0.1/R)
-

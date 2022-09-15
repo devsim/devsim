@@ -16,23 +16,22 @@ limitations under the License.
 ***/
 
 #include "TriangleNodeVolume.hh"
-#include "dsAssert.hh"
-#include "TriangleEdgeScalarData.hh"
-#include "Region.hh"
-#include "EdgeModel.hh"
 #include "Edge.hh"
+#include "EdgeModel.hh"
+#include "Region.hh"
+#include "TriangleEdgeScalarData.hh"
+#include "dsAssert.hh"
 
 template <typename DoubleType>
 TriangleNodeVolume<DoubleType>::TriangleNodeVolume(RegionPtr rp)
-    : TriangleEdgeModel("ElementNodeVolume", rp, TriangleEdgeModel::DisplayType::SCALAR)
-{
-    RegisterCallback("EdgeLength");
-    RegisterCallback("ElementEdgeCouple");
+    : TriangleEdgeModel("ElementNodeVolume", rp,
+                        TriangleEdgeModel::DisplayType::SCALAR) {
+  RegisterCallback("EdgeLength");
+  RegisterCallback("ElementEdgeCouple");
 }
 
 template <typename DoubleType>
-void TriangleNodeVolume<DoubleType>::calcTriangleEdgeScalarValues() const
-{
+void TriangleNodeVolume<DoubleType>::calcTriangleEdgeScalarValues() const {
   const Region &r = GetRegion();
   const size_t dimension = r.GetDimension();
 
@@ -44,7 +43,8 @@ void TriangleNodeVolume<DoubleType>::calcTriangleEdgeScalarValues() const
 
   const EdgeScalarList<DoubleType> elens = elen->GetScalarValues<DoubleType>();
 
-  TriangleEdgeScalarData<DoubleType> evol = TriangleEdgeScalarData<DoubleType>(*eec);
+  TriangleEdgeScalarData<DoubleType> evol =
+      TriangleEdgeScalarData<DoubleType>(*eec);
 
   dsAssert(dimension == 2, "UNEXPECTED");
 
@@ -54,21 +54,21 @@ void TriangleNodeVolume<DoubleType>::calcTriangleEdgeScalarValues() const
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
   std::vector<DoubleType> ev(3 * tl.size());
 
-  for (size_t tindex = 0; tindex < tl.size(); ++tindex)
-  {
+  for (size_t tindex = 0; tindex < tl.size(); ++tindex) {
 
-    const Region::TriangleToConstEdgeList_t &ttelist = GetRegion().GetTriangleToEdgeList();
+    const Region::TriangleToConstEdgeList_t &ttelist =
+        GetRegion().GetTriangleToEdgeList();
     const ConstEdgeList &edgeList = ttelist[tindex];
 
     /// teindex is 0,1,2
-    for (size_t teindex = 0; teindex < edgeList.size(); ++teindex)
-    {
+    for (size_t teindex = 0; teindex < edgeList.size(); ++teindex) {
       DoubleType vol = elens[edgeList[teindex]->GetIndex()];
       //// TODO: get rid of this messy indexing scheme
-      vol *= evol[3*tindex + teindex];
+      vol *= evol[3 * tindex + teindex];
 
-      const size_t oindex = 3*tindex + teindex;
-      /// The symmetry that both nodes on an element edge have the same volume may not apply in 3D
+      const size_t oindex = 3 * tindex + teindex;
+      /// The symmetry that both nodes on an element edge have the same volume
+      /// may not apply in 3D
       ev[oindex] = vol;
     }
   }
@@ -77,8 +77,7 @@ void TriangleNodeVolume<DoubleType>::calcTriangleEdgeScalarValues() const
 }
 
 template <typename DoubleType>
-void TriangleNodeVolume<DoubleType>::Serialize(std::ostream &of) const
-{
+void TriangleNodeVolume<DoubleType>::Serialize(std::ostream &of) const {
   SerializeBuiltIn(of);
 }
 
@@ -87,4 +86,3 @@ template class TriangleNodeVolume<double>;
 #include "Float128.hh"
 template class TriangleNodeVolume<float128>;
 #endif
-

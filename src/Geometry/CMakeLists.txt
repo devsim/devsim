@@ -17,10 +17,10 @@ SET (CXX_SRCS
 
 INCLUDE_DIRECTORIES (
     ../utility
-    ../Equation 
-    ../models 
-     ../Geometry 
-     ../math 
+    ../Equation
+    ../models
+     ../Geometry
+     ../math
     ../errorSystem
      ../common_api
      ../Data

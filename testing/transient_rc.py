@@ -105,4 +105,3 @@ for k, datasets in results.items():
         for i in vals:
             print("%1.5e %1.5e %1.5e %1.5e %1.5e %1.5e" % i)
         print()
-

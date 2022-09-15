@@ -16,22 +16,20 @@ limitations under the License.
 ***/
 
 #include "NodeVolume.hh"
-#include "Region.hh"
 #include "Edge.hh"
 #include "EdgeModel.hh"
 #include "EdgeScalarData.hh"
+#include "Region.hh"
 #include "dsAssert.hh"
 
 template <typename DoubleType>
 NodeVolume<DoubleType>::NodeVolume(RegionPtr rp)
-    : NodeModel("NodeVolume", rp, NodeModel::DisplayType::SCALAR)
-{
-    RegisterCallback("EdgeNodeVolume");
+    : NodeModel("NodeVolume", rp, NodeModel::DisplayType::SCALAR) {
+  RegisterCallback("EdgeNodeVolume");
 }
 
 template <typename DoubleType>
-void NodeVolume<DoubleType>::calcNodeScalarValues() const
-{
+void NodeVolume<DoubleType>::calcNodeScalarValues() const {
   const Region &r = GetRegion();
 
   std::vector<DoubleType> nv(r.GetNumberNodes());
@@ -41,16 +39,14 @@ void NodeVolume<DoubleType>::calcNodeScalarValues() const
 
   EdgeScalarData<DoubleType> evol = EdgeScalarData<DoubleType>(*env);
 
-  for (size_t i = 0; i < nv.size(); ++i)
-  {
+  for (size_t i = 0; i < nv.size(); ++i) {
     DoubleType volume = 0.0;
 
     const ConstEdgeList &el = r.GetNodeToEdgeList()[i];
 
     ConstEdgeList::const_iterator it = el.begin();
     const ConstEdgeList::const_iterator itend = el.end();
-    for ( ; it != itend; ++it)
-    {
+    for (; it != itend; ++it) {
       volume += evol[(*it)->GetIndex()];
     }
 
@@ -60,15 +56,12 @@ void NodeVolume<DoubleType>::calcNodeScalarValues() const
   SetValues(nv);
 }
 
-template <typename DoubleType>
-void NodeVolume<DoubleType>::setInitialValues()
-{
-    DefaultInitializeValues();
+template <typename DoubleType> void NodeVolume<DoubleType>::setInitialValues() {
+  DefaultInitializeValues();
 }
 
 template <typename DoubleType>
-void NodeVolume<DoubleType>::Serialize(std::ostream &of) const
-{
+void NodeVolume<DoubleType>::Serialize(std::ostream &of) const {
   SerializeBuiltIn(of);
 }
 
@@ -77,4 +70,3 @@ template class NodeVolume<double>;
 #include "Float128.hh"
 template class NodeVolume<float128>;
 #endif
-

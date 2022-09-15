@@ -173,11 +173,11 @@ def Klaassen_Mobility(device, region):
     CreateNodeModel          (device, region, "mu_h_D_A_e", mu_h_D_A_e)
     CreateNodeModelDerivative(device, region, "mu_h_D_A_e", mu_h_D_A_e, "Electrons", "Holes")
 
-    mu_bulk_e_Node="mu_e_D_A_h * mu_L_e / (mu_e_D_A_h + mu_L_e)" 
+    mu_bulk_e_Node="mu_e_D_A_h * mu_L_e / (mu_e_D_A_h + mu_L_e)"
     CreateNodeModel          (device, region, "mu_bulk_e_Node", mu_bulk_e_Node)
     CreateNodeModelDerivative(device, region, "mu_bulk_e_Node", mu_bulk_e_Node, "Electrons", "Holes")
 
-    mu_bulk_h_Node="mu_h_D_A_e * mu_L_h / (mu_h_D_A_e + mu_L_h)" 
+    mu_bulk_h_Node="mu_h_D_A_e * mu_L_h / (mu_h_D_A_e + mu_L_h)"
     CreateNodeModel          (device, region, "mu_bulk_h_Node", mu_bulk_h_Node)
     CreateNodeModelDerivative(device, region, "mu_bulk_h_Node", mu_bulk_h_Node, "Electrons", "Holes")
 

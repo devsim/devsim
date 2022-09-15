@@ -124,4 +124,3 @@ devsim.node_model(name="NetDoping"   , device=device, region="bulk", equation="D
 
 devsim.write_devices( file="mos_2d", type="vtk")
 devsim.write_devices( file="mos_2d.flps", type="floops")
-

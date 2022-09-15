@@ -23,7 +23,6 @@ namespace ThreadInfo {
 size_t GetNumberOfThreads();
 
 size_t GetMinimumTaskSize();
-}
+} // namespace ThreadInfo
 
 #endif
-

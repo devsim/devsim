@@ -22,4 +22,3 @@ SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)
 
 # important flag for dynamic linking of static archives on linux
 SET (CMAKE_POSITION_INDEPENDENT_CODE ON)
-

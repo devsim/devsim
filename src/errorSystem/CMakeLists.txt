@@ -15,4 +15,3 @@ INCLUDE_DIRECTORIES (
 )
 
 ADD_LIBRARY (errorSystem ${CXX_SRCS})
-

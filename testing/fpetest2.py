@@ -26,4 +26,3 @@ for name, value in (
         print(devsim.get_node_model_values(device=fpetest1.device, region=fpetest1.region, name="test2"))
     except devsim.error as x:
         print(x)
-

@@ -1,6 +1,6 @@
 PROJECT(SUPERLU C)
 IF(WIN32)
-ADD_DEFINITIONS(-Dadd_ -DPRNTlevel=0 
+ADD_DEFINITIONS(-Dadd_ -DPRNTlevel=0
 -Dd_cnjg=d_cnjg_slu
 -Dd_imag=d_imag_slu
 -Dz_abs=z_abs_slu
@@ -195,4 +195,3 @@ SRC/zutil.c
 )
 
 ADD_LIBRARY(superlu STATIC ${SRCS})
-

@@ -119,4 +119,3 @@ while v < 0.51:
 
 devsim.write_devices(file="dio2_element_2d_dd.flps", type="floops")
 devsim.write_devices(file="dio2_element_2d_dd", type="vtk")
-

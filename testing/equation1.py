@@ -65,5 +65,3 @@ test_common.print_circuit_solution()
 circuit_alter(name="V1", value=2.0)
 solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3)
 test_common.print_circuit_solution()
-
-

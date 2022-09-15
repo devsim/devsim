@@ -21,10 +21,9 @@ class CommandHandler;
 typedef void (*newcmd)(CommandHandler &);
 
 namespace dsCommand {
-struct Commands
-{
+struct Commands {
   const char *name;
-  newcmd      command;
+  newcmd command;
 };
-}
+} // namespace dsCommand
 #endif

@@ -22,23 +22,20 @@ limitations under the License.
 #include <string>
 
 namespace ThreadInfo {
-size_t GetNumberOfThreads()
-{
+size_t GetNumberOfThreads() {
   size_t ret = 0;
   GlobalData &gdata = GlobalData::GetInstance();
   GlobalData::DBEntry_t dbent = gdata.GetDBEntryOnGlobal("threads_available");
-  if (dbent.first)
-  {
+  if (dbent.first) {
     ObjectHolder::IntegerEntry_t ient = dbent.second.GetInteger();
-    if (!ient.first || ient.second < 0)
-    {
+    if (!ient.first || ient.second < 0) {
       std::ostringstream os;
-      os << "Expected valid positive number for \"threads_available\" parameter, but " << dbent.second.GetString() << " was given.\n";
+      os << "Expected valid positive number for \"threads_available\" "
+            "parameter, but "
+         << dbent.second.GetString() << " was given.\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       ret = 0;
-    }
-    else
-    {
+    } else {
       ret = ient.second;
     }
   }
@@ -46,28 +43,24 @@ size_t GetNumberOfThreads()
   return ret;
 }
 
-size_t GetMinimumTaskSize()
-{
+size_t GetMinimumTaskSize() {
   size_t ret = 0;
   GlobalData &gdata = GlobalData::GetInstance();
   GlobalData::DBEntry_t dbent = gdata.GetDBEntryOnGlobal("threads_task_size");
-  if (dbent.first)
-  {
+  if (dbent.first) {
     ObjectHolder::IntegerEntry_t ient = dbent.second.GetInteger();
-    if (!ient.first || ient.second < 0)
-    {
+    if (!ient.first || ient.second < 0) {
       std::ostringstream os;
-      os << "Expected valid positive number for \"threads_task_size\" parameter, but " << dbent.second.GetString() << " was given.\n";
+      os << "Expected valid positive number for \"threads_task_size\" "
+            "parameter, but "
+         << dbent.second.GetString() << " was given.\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       ret = 0;
-    }
-    else
-    {
+    } else {
       ret = ient.second;
     }
   }
 
   return ret;
 }
-}
-
+} // namespace ThreadInfo

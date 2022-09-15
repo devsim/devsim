@@ -53,5 +53,3 @@ for i in libz.a libsqlite3*; do cp -f ${CONDA_PREFIX}/lib/$i linux_x86_64_releas
 
 (cd linux_x86_64_release && make -j2)
 (cd dist && bash package_linux.sh ${1})
-
-

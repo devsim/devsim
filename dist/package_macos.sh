@@ -132,8 +132,7 @@ Package released as:
 ${DIST_VER}.tgz
 
 Source available from:
-http://www.github.com/devsim/devsim 
+http://www.github.com/devsim/devsim
 commit ${COMMIT}
 EOF
 tar czvf ${DIST_VER}.tgz ${DIST_DIR}
-

@@ -27,4 +27,3 @@ devsim.set_parameter(name = "extended_model", value=True)
 devsim.set_parameter(name = "extended_equation", value=True)
 
 import kahan
-

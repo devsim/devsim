@@ -18,7 +18,7 @@ limitations under the License.
 #ifndef DSASSERT_HH
 #define DSASSERT_HH
 //#ifndef NDEBUG
-//void dsAssert_(bool, const char *);
+// void dsAssert_(bool, const char *);
 #include <string>
 void dsAssert_(bool, const std::string &);
 //#endif
@@ -34,20 +34,18 @@ inline void dsAssert(bool cond, const char *msg)
 }
 #endif
 
-// macro to include file and line: http://www.decompile.com/cpp/faq/file_and_line_error_string.htm
+// macro to include file and line:
+// http://www.decompile.com/cpp/faq/file_and_line_error_string.htm
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 #define AT "ASSERT " __FILE__ ":" TOSTRING(__LINE__) " "
 
-#define dsAssert(cond, msg) \
-  do \
-  { \
-    if (!(cond)) \
-    { \
-      dsAssert_(cond, std::string(AT) + msg); \
-    } \
-  } while(0)
-
+#define dsAssert(cond, msg)                                                    \
+  do {                                                                         \
+    if (!(cond)) {                                                             \
+      dsAssert_(cond, std::string(AT) + msg);                                  \
+    }                                                                          \
+  } while (0)
 
 #if 0
 void dsExit(int);

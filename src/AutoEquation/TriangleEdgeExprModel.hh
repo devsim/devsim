@@ -18,34 +18,34 @@ limitations under the License.
 #ifndef TRIANGLE_EDGE_EXPR_MODEL_HH
 #define TRIANGLE_EDGE_EXPR_MODEL_HH
 #include "TriangleEdgeModel.hh"
-#include <string>
 #include <memory>
+#include <string>
 namespace Eqo {
-    class EquationObject;
-    typedef std::shared_ptr<EquationObject> EqObjPtr;
+class EquationObject;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 
-}
+} // namespace Eqo
 
-TriangleEdgeModelPtr CreateTriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TriangleEdgeModel::DisplayType);
+TriangleEdgeModelPtr
+CreateTriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr,
+                            TriangleEdgeModel::DisplayType);
 
 template <typename DoubleType>
-class TriangleEdgeExprModel : public TriangleEdgeModel
-{
-    public:
+class TriangleEdgeExprModel : public TriangleEdgeModel {
+public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  TriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr,
+                        TriangleEdgeModel::DisplayType);
 
-        TriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TriangleEdgeModel::DisplayType);
+private:
+  void RegisterModels();
+  TriangleEdgeExprModel();
+  TriangleEdgeExprModel(const TriangleEdgeExprModel &);
 
-    private:
+  void calcTriangleEdgeScalarValues() const;
 
-        void RegisterModels();
-        TriangleEdgeExprModel();
-        TriangleEdgeExprModel(const TriangleEdgeExprModel &);
-
-        void calcTriangleEdgeScalarValues() const;
-
-        const Eqo::EqObjPtr      equation;
+  const Eqo::EqObjPtr equation;
 };
 
 #endif

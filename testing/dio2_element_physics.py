@@ -223,4 +223,3 @@ def createDriftDiffusionAtContact(device, region, contact):
         devsim.contact_equation(device=device, contact=contact, name="HoleContinuityEquation",
                                 node_model="%snodeholes" % contact,
                                 edge_current_model="HoleCurrent")
-

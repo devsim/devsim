@@ -89,7 +89,7 @@ for c in ("contact1", "contact2"):
                      node_model="%s_bc" % c, edge_charge_model="DField")
 
 ###
-### Set the contact 
+### Set the contact
 ###
 set_parameter(device=device, region=region, name="contact1_bias", value=1.0e-0)
 set_parameter(device=device, region=region, name="contact2_bias", value=0.0)
@@ -104,4 +104,3 @@ solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30
 ###
 for c in ("contact1", "contact2"):
     print ("contact: %s charge: %1.5e" % (c, get_contact_charge(device=device, contact=c, equation="PotentialEquation")))
-

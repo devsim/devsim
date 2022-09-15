@@ -20,34 +20,32 @@ limitations under the License.
 
 namespace dsDevsimParse {
 int meshlineno;
-dsMesh::DevsimLoaderPtr  DevsimLoader = nullptr;
-dsMesh::MeshRegionPtr    MeshRegion = nullptr;
-dsMesh::MeshContactPtr   MeshContact = nullptr;
+dsMesh::DevsimLoaderPtr DevsimLoader = nullptr;
+dsMesh::MeshRegionPtr MeshRegion = nullptr;
+dsMesh::MeshContactPtr MeshContact = nullptr;
 dsMesh::MeshInterfacePtr MeshInterface = nullptr;
-dsMesh::SolutionPtr      Sol= nullptr;
-dsMesh::EquationPtr      Equation= nullptr;
+dsMesh::SolutionPtr Sol = nullptr;
+dsMesh::EquationPtr Equation = nullptr;
 std::string errors;
-}
+} // namespace dsDevsimParse
 
-namespace dsDevsimParse
-{
-void DeletePointers()
-{
-//    delete DevsimLoader;
-    delete MeshRegion;
-    delete MeshContact;
-    delete MeshInterface;
-    delete Sol;
-    delete Equation;
+namespace dsDevsimParse {
+void DeletePointers() {
+  //    delete DevsimLoader;
+  delete MeshRegion;
+  delete MeshContact;
+  delete MeshInterface;
+  delete Sol;
+  delete Equation;
 
-    //// This is owned by the meshkeeper
-    //// We should look to see if this is wise to keep around.  But, it has already been added to the MeshKeeper
-//    DevsimLoader = nullptr;
-    MeshRegion = nullptr;
-    MeshContact = nullptr;
-    MeshInterface = nullptr;
-    Sol = nullptr;
-    Equation = nullptr;
+  //// This is owned by the meshkeeper
+  //// We should look to see if this is wise to keep around.  But, it has
+  /// already been added to the MeshKeeper
+  //    DevsimLoader = nullptr;
+  MeshRegion = nullptr;
+  MeshContact = nullptr;
+  MeshInterface = nullptr;
+  Sol = nullptr;
+  Equation = nullptr;
 }
-}
-
+} // namespace dsDevsimParse

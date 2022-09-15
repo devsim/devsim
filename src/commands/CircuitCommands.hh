@@ -29,6 +29,5 @@ void circuitGetCircuitNodeListCmd(CommandHandler &);
 void circuitGetCircuitNodeValueCmd(CommandHandler &);
 void circuitGetCircuitSolutionListCmd(CommandHandler &);
 void circuitNodeAliasCmd(CommandHandler &);
-}
+} // namespace dsCommand
 #endif
-

@@ -54,5 +54,3 @@ for region in ("dna", "dielectric", "solution"):
                equation="log(abs(Potential-Potential_zero) + 1e-10)/log(10)")
 
 write_devices(file="bioapp1_2d_{0}.dat".format(Ve),  type="tecplot")
-
-

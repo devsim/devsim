@@ -16,4 +16,3 @@ equation evbot -ir ddt 0;
 
 link evtop vtop;
 link evbot vbot;
-

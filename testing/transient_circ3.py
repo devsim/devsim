@@ -51,4 +51,3 @@ devsim.solve(type="transient_tr",   absolute_error=1.0, relative_error=1e-14, ma
 test_common.print_circuit_solution()
 devsim.solve(type="transient_bdf2", absolute_error=1.0, relative_error=1e-14, maximum_iterations=3, tdelta=1e-3, gamma=gamma, charge_error=1e-2)
 test_common.print_circuit_solution()
-

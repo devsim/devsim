@@ -18,32 +18,34 @@ limitations under the License.
 #ifndef TETRAHEDRON_EDGE_EXPR_MODEL_HH
 #define TETRAHEDRON_EDGE_EXPR_MODEL_HH
 #include "TetrahedronEdgeModel.hh"
-#include <string>
 #include <memory>
+#include <string>
 namespace Eqo {
-    class EquationObject;
-    typedef std::shared_ptr<EquationObject> EqObjPtr;
+class EquationObject;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 
-}
+} // namespace Eqo
 
-TetrahedronEdgeModelPtr CreateTetrahedronEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TetrahedronEdgeModel::DisplayType);
+TetrahedronEdgeModelPtr
+CreateTetrahedronEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr,
+                               TetrahedronEdgeModel::DisplayType);
 
 template <typename DoubleType>
-class TetrahedronEdgeExprModel : public TetrahedronEdgeModel
-{
-    public:
-        void Serialize(std::ostream &) const;
+class TetrahedronEdgeExprModel : public TetrahedronEdgeModel {
+public:
+  void Serialize(std::ostream &) const;
 
-        TetrahedronEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TetrahedronEdgeModel::DisplayType);
+  TetrahedronEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr,
+                           TetrahedronEdgeModel::DisplayType);
 
-    private:
-        void RegisterModels();
-        TetrahedronEdgeExprModel();
-        TetrahedronEdgeExprModel(const TetrahedronEdgeExprModel &);
+private:
+  void RegisterModels();
+  TetrahedronEdgeExprModel();
+  TetrahedronEdgeExprModel(const TetrahedronEdgeExprModel &);
 
-        void calcTetrahedronEdgeScalarValues() const;
+  void calcTetrahedronEdgeScalarValues() const;
 
-        const Eqo::EqObjPtr      equation;
+  const Eqo::EqObjPtr equation;
 };
 
 #endif

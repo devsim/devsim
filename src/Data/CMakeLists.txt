@@ -7,7 +7,7 @@ SET (CXX_SRCS
 INCLUDE_DIRECTORIES (
      ../utility
      ../Circuit
-     ../Geometry 
+     ../Geometry
      ../meshing
      ../math
      ../errorSystem

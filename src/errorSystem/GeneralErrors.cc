@@ -18,12 +18,6 @@ limitations under the License.
 #include "GeneralErrors.hh"
 namespace dsErrors {
 namespace ModelInfo {
-const char *ModelTypeStrings[] = {
-  "NODE",
-  "EDGE",
-  "ELEMENTEDGE",
-  "INTERFACE"
-};
+const char *ModelTypeStrings[] = {"NODE", "EDGE", "ELEMENTEDGE", "INTERFACE"};
 }
-}
-
+} // namespace dsErrors

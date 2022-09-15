@@ -29,8 +29,8 @@ set y_diffusion_decay   1e-10
 
 set bulk_doping         -1e15
 set body_doping         -1e19
-set drain_doping        1e19 
-set source_doping       1e19 
+set drain_doping        1e19
+set source_doping       1e19
 set gate_doping         1e20
 
 set y_channel_spacing     1e-8
@@ -86,4 +86,3 @@ node_model -name NetDoping    -device $device -region bulk -equation "DrainDopin
 
 write_devices -file gmsh_mos3d_out.msh
 write_devices -file gmsh_mos3d_out -type vtk
-

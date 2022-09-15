@@ -81,4 +81,3 @@ with open("mos_2d_params.py", "w", encoding="utf-8") as ofh:
             for p in devsim.get_parameter_list(device=i, region=j):
                 v=repr(devsim.get_parameter(device=i, region=j, name=p))
                 ofh.write('devsim.set_parameter(device="%s", region="%s", name="%s", value=%s)\n' % (i, j, p, v))
-

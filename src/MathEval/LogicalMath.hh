@@ -18,56 +18,46 @@ limitations under the License.
 #ifndef LOGICAL_MATH_HH
 #define LOGICAL_MATH_HH
 template <typename DoubleType>
-inline DoubleType ifelsefunc(DoubleType x, DoubleType y, DoubleType z)
-{
+inline DoubleType ifelsefunc(DoubleType x, DoubleType y, DoubleType z) {
   return (x) ? y : z;
 }
 
 template <typename DoubleType>
-inline DoubleType logical_and(DoubleType x, DoubleType y)
-{
+inline DoubleType logical_and(DoubleType x, DoubleType y) {
   return (x && y);
 }
 
 template <typename DoubleType>
-inline DoubleType logical_or(DoubleType x, DoubleType y)
-{
+inline DoubleType logical_or(DoubleType x, DoubleType y) {
   return (x || y);
 }
 
 template <typename DoubleType>
-inline DoubleType logical_eq(DoubleType x, DoubleType y)
-{
+inline DoubleType logical_eq(DoubleType x, DoubleType y) {
   return (x == y);
 }
 
 template <typename DoubleType>
-inline DoubleType logical_lt(DoubleType x, DoubleType y)
-{
+inline DoubleType logical_lt(DoubleType x, DoubleType y) {
   return (x < y);
 }
 
 template <typename DoubleType>
-inline DoubleType logical_lte(DoubleType x, DoubleType y)
-{
+inline DoubleType logical_lte(DoubleType x, DoubleType y) {
   return (x <= y);
 }
 
 template <typename DoubleType>
-inline DoubleType logical_gt(DoubleType x, DoubleType y)
-{
+inline DoubleType logical_gt(DoubleType x, DoubleType y) {
   return (x > y);
 }
 
 template <typename DoubleType>
-inline DoubleType logical_gte(DoubleType x, DoubleType y)
-{
+inline DoubleType logical_gte(DoubleType x, DoubleType y) {
   return (x >= y);
 }
 
-template <typename DoubleType>
-inline DoubleType logical_not(DoubleType x)
-{
+template <typename DoubleType> inline DoubleType logical_not(DoubleType x) {
   return !x;
 }
 

@@ -14,9 +14,8 @@ model vdiff vbot-vtop;
 
 equation evtop  I ddt 0;
 equation evbot -I ddt 0;
-equation eI     vdiff ddt vl; 
+equation eI     vdiff ddt vl;
 
 link evtop vtop;
 link evbot vbot;
 link eI   I;
-

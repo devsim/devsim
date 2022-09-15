@@ -47,4 +47,3 @@ SET (ZLIB_ARCHIVE ${CONDA_PREFIX}/Library/lib/zlib.lib)
 
 SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/${BUILDDIR}/src/engine/Release/symdiff_static.lib)
-

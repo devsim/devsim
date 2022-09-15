@@ -3,7 +3,7 @@
 $!VarSet |LFDSFN1| = '"gmsh_mos2d_dd_kla.dat"'
 $!VarSet |LFDSVL1| = '"x" "y" "Acceptors" "AtContactNode" "BodyDoping" "Donors" "DrainDoping" "Electrons" "Electrons_prev" "F_Pe" "F_Pe:Electrons" "F_Pe:Holes" "F_Ph" "F_Ph:Electrons" "F_Ph:Holes" "G_Pe" "G_Pe:Electrons" "G_Pe:Holes" "G_Ph" "G_Ph:Electrons" "G_Ph:Holes" "Holes" "Holes_prev" "IntrinsicCharge" "IntrinsicCharge:Potential" "IntrinsicElectrons" "IntrinsicElectrons:Potential" "IntrinsicHoles" "IntrinsicHoles:Potential" "NCharge" "NCharge:Electrons" "NI_node" "NSurfaceNormal_x" "NSurfaceNormal_y" "N_A" "N_D" "N_e_sc" "N_e_sc:Electrons" "N_e_sc:Holes" "N_e_sc_eff" "N_e_sc_eff:Electrons" "N_e_sc_eff:Holes" "N_h_sc" "N_h_sc:Electrons" "N_h_sc:Holes" "N_h_sc_eff" "N_h_sc_eff:Electrons" "N_h_sc_eff:Holes" "NetDoping" "NodeVolume" "PBH_e" "PBH_e:Electrons" "PBH_e:Holes" "PBH_h" "PBH_h:Electrons" "PBH_h:Holes" "PCW_e" "PCW_e:Electrons" "PCW_e:Holes" "PCW_h" "PCW_h:Electrons" "PCW_h:Holes" "PCharge" "PCharge:Holes" "Pe" "Pe:Electrons" "Pe:Holes" "Ph" "Ph:Electrons" "Ph:Holes" "Potential" "PotentialIntrinsicNodeCharge" "PotentialIntrinsicNodeCharge:Potential" "PotentialNodeCharge" "PotentialNodeCharge:Electrons" "PotentialNodeCharge:Holes" "Potential_prev" "SourceDoping" "SurfaceArea" "USRH" "USRH:Electrons" "USRH:Holes" "Z_A" "Z_D" "bodynodeelectrons" "bodynodeelectrons:Electrons" "bodynodeholes" "bodynodeholes:Holes" "bodynodemodel" "bodynodemodel:Potential" "celec_body" "celec_drain" "celec_gate" "celec_source" "chole_body" "chole_drain" "chole_gate" "chole_source" "contactcharge_node" "drainnodeelectrons" "drainnodeelectrons:Electrons" "drainnodeholes" "drainnodeholes:Holes" "drainnodemodel" "drainnodemodel:Potential" "gatenodeelectrons" "gatenodeelectrons:Electrons" "gatenodeholes" "gatenodeholes:Holes" "gatenodemodel" "gatenodemodel:Potential" "logElectrons" "mu_L_e" "mu_L_h" "mu_bulk_e_Node" "mu_bulk_e_Node:Electrons" "mu_bulk_e_Node:Holes" "mu_bulk_h_Node" "mu_bulk_h_Node:Electrons" "mu_bulk_h_Node:Holes" "mu_e_D_A_h" "mu_e_D_A_h:Electrons" "mu_e_D_A_h:Holes" "mu_e_N" "mu_e_c" "mu_h_D_A_e" "mu_h_D_A_e:Electrons" "mu_h_D_A_e:Holes" "mu_h_N" "mu_h_c" "sourcenodeelectrons" "sourcenodeelectrons:Electrons" "sourcenodeholes" "sourcenodeholes:Holes" "sourcenodemodel" "sourcenodemodel:Potential" "EdgeCouple" "EdgeInverseLength" "EdgeLength" "Electrons@n0" "Electrons@n1" "Holes@n0" "Holes@n1" "NI" "Potential@n0" "Potential@n1" "edgeElectrons" "edgeElectrons:Electrons@n0" "edgeElectrons:Electrons@n1" "edgeHoles" "edgeHoles:Holes@n0" "edgeHoles:Holes@n1" "mu_bulk_e" "mu_bulk_e:Electrons@n0" "mu_bulk_e:Electrons@n1" "mu_bulk_e:Holes@n0" "mu_bulk_e:Holes@n1" "mu_bulk_h" "mu_bulk_h:Electrons@n0" "mu_bulk_h:Electrons@n1" "mu_bulk_h:Holes@n0" "mu_bulk_h:Holes@n1" "unitx" "unity" "Bern01_x_onNode" "Bern01_y_onNode" "Bern01:Potential@n0_x_onNode" "Bern01:Potential@n0_y_onNode" "Bern01:Potential@n1_x_onNode" "Bern01:Potential@n1_y_onNode" "Bern10_x_onNode" "Bern10_y_onNode" "Bern10:Potential@n0_x_onNode" "Bern10:Potential@n0_y_onNode" "Bern10:Potential@n1_x_onNode" "Bern10:Potential@n1_y_onNode" "ElectricField_x_onNode" "ElectricField_y_onNode" "ElectricField:Potential@n0_x_onNode" "ElectricField:Potential@n0_y_onNode" "ElectricField:Potential@n1_x_onNode" "ElectricField:Potential@n1_y_onNode" "ElectronCurrent_x_onNode" "ElectronCurrent_y_onNode" "ElectronCurrent:Electrons@n0_x_onNode" "ElectronCurrent:Electrons@n0_y_onNode" "ElectronCurrent:Electrons@n1_x_onNode" "ElectronCurrent:Electrons@n1_y_onNode" "ElectronCurrent:Holes@n0_x_onNode" "ElectronCurrent:Holes@n0_y_onNode" "ElectronCurrent:Holes@n1_x_onNode" "ElectronCurrent:Holes@n1_y_onNode" "ElectronCurrent:Potential@n0_x_onNode" "ElectronCurrent:Potential@n0_y_onNode" "ElectronCurrent:Potential@n1_x_onNode" "ElectronCurrent:Potential@n1_y_onNode" "HoleCurrent_x_onNode" "HoleCurrent_y_onNode" "HoleCurrent:Electrons@n0_x_onNode" "HoleCurrent:Electrons@n0_y_onNode" "HoleCurrent:Electrons@n1_x_onNode" "HoleCurrent:Electrons@n1_y_onNode" "HoleCurrent:Holes@n0_x_onNode" "HoleCurrent:Holes@n0_y_onNode" "HoleCurrent:Holes@n1_x_onNode" "HoleCurrent:Holes@n1_y_onNode" "HoleCurrent:Potential@n0_x_onNode" "HoleCurrent:Potential@n0_y_onNode" "HoleCurrent:Potential@n1_x_onNode" "HoleCurrent:Potential@n1_y_onNode" "PotentialEdgeFlux_x_onNode" "PotentialEdgeFlux_y_onNode" "PotentialEdgeFlux:Potential@n0_x_onNode" "PotentialEdgeFlux:Potential@n0_y_onNode" "PotentialEdgeFlux:Potential@n1_x_onNode" "PotentialEdgeFlux:Potential@n1_y_onNode" "T_prime_e_x_onNode" "T_prime_e_y_onNode" "T_prime_h_x_onNode" "T_prime_h_y_onNode" "contactcharge_edge_x_onNode" "contactcharge_edge_y_onNode" "vdiff_x_onNode" "vdiff_y_onNode" "vdiff:Potential@n0_x_onNode" "vdiff:Potential@n0_y_onNode" "vdiff:Potential@n1_x_onNode" "vdiff:Potential@n1_y_onNode" "ElectricField_mag" "ElectricField_mag:Potential@en0" "ElectricField_mag:Potential@en1" "ElectricField_mag:Potential@en2" "ElectricField_x" "ElectricField_x:Potential@en0" "ElectricField_x:Potential@en1" "ElectricField_x:Potential@en2" "ElectricField_y" "ElectricField_y:Potential@en0" "ElectricField_y:Potential@en1" "ElectricField_y:Potential@en2" "ElectronCurrent_mag" "ElectronCurrent_mag:Electrons@en0" "ElectronCurrent_mag:Electrons@en1" "ElectronCurrent_mag:Electrons@en2" "ElectronCurrent_mag:Holes@en0" "ElectronCurrent_mag:Holes@en1" "ElectronCurrent_mag:Holes@en2" "ElectronCurrent_mag:Potential@en0" "ElectronCurrent_mag:Potential@en1" "ElectronCurrent_mag:Potential@en2" "ElectronCurrent_norm_x" "ElectronCurrent_norm_x:Electrons@en0" "ElectronCurrent_norm_x:Electrons@en1" "ElectronCurrent_norm_x:Electrons@en2" "ElectronCurrent_norm_x:Holes@en0" "ElectronCurrent_norm_x:Holes@en1" "ElectronCurrent_norm_x:Holes@en2" "ElectronCurrent_norm_x:Potential@en0" "ElectronCurrent_norm_x:Potential@en1" "ElectronCurrent_norm_x:Potential@en2" "ElectronCurrent_norm_y" "ElectronCurrent_norm_y:Electrons@en0" "ElectronCurrent_norm_y:Electrons@en1" "ElectronCurrent_norm_y:Electrons@en2" "ElectronCurrent_norm_y:Holes@en0" "ElectronCurrent_norm_y:Holes@en1" "ElectronCurrent_norm_y:Holes@en2" "ElectronCurrent_norm_y:Potential@en0" "ElectronCurrent_norm_y:Potential@en1" "ElectronCurrent_norm_y:Potential@en2" "ElectronCurrent_x" "ElectronCurrent_x:Electrons@en0" "ElectronCurrent_x:Electrons@en1" "ElectronCurrent_x:Electrons@en2" "ElectronCurrent_x:Holes@en0" "ElectronCurrent_x:Holes@en1" "ElectronCurrent_x:Holes@en2" "ElectronCurrent_x:Potential@en0" "ElectronCurrent_x:Potential@en1" "ElectronCurrent_x:Potential@en2" "ElectronCurrent_y" "ElectronCurrent_y:Electrons@en0" "ElectronCurrent_y:Electrons@en1" "ElectronCurrent_y:Electrons@en2" "ElectronCurrent_y:Holes@en0" "ElectronCurrent_y:Holes@en1" "ElectronCurrent_y:Holes@en2" "ElectronCurrent_y:Potential@en0" "ElectronCurrent_y:Potential@en1" "ElectronCurrent_y:Potential@en2" "ElementEdgeCouple" "ElementElectronCurrent" "ElementElectronCurrent:Electrons@en0" "ElementElectronCurrent:Electrons@en1" "ElementElectronCurrent:Electrons@en2" "ElementElectronCurrent:Holes@en0" "ElementElectronCurrent:Holes@en1" "ElementElectronCurrent:Holes@en2" "ElementElectronCurrent:Potential@en0" "ElementElectronCurrent:Potential@en1" "ElementElectronCurrent:Potential@en2" "ElementElectronCurrent_x" "ElementElectronCurrent_y" "ElementNodeVolume" "Enormal_ElectronCurrent" "Enormal_ElectronCurrent:Electrons@en0" "Enormal_ElectronCurrent:Electrons@en1" "Enormal_ElectronCurrent:Electrons@en2" "Enormal_ElectronCurrent:Holes@en0" "Enormal_ElectronCurrent:Holes@en1" "Enormal_ElectronCurrent:Holes@en2" "Enormal_ElectronCurrent:Potential@en0" "Enormal_ElectronCurrent:Potential@en1" "Enormal_ElectronCurrent:Potential@en2" "Enormal_HoleCurrent" "Enormal_HoleCurrent:Electrons@en0" "Enormal_HoleCurrent:Electrons@en1" "Enormal_HoleCurrent:Electrons@en2" "Enormal_HoleCurrent:Holes@en0" "Enormal_HoleCurrent:Holes@en1" "Enormal_HoleCurrent:Holes@en2" "Enormal_HoleCurrent:Potential@en0" "Enormal_HoleCurrent:Potential@en1" "Enormal_HoleCurrent:Potential@en2" "Eparallel_ElectronCurrent" "Eparallel_ElectronCurrent:Potential@en0" "Eparallel_ElectronCurrent:Potential@en1" "Eparallel_ElectronCurrent:Potential@en2" "Eparallel_HoleCurrent" "Eparallel_HoleCurrent:Potential@en0" "Eparallel_HoleCurrent:Potential@en1" "Eparallel_HoleCurrent:Potential@en2" "HoleCurrent_mag" "HoleCurrent_mag:Electrons@en0" "HoleCurrent_mag:Electrons@en1" "HoleCurrent_mag:Electrons@en2" "HoleCurrent_mag:Holes@en0" "HoleCurrent_mag:Holes@en1" "HoleCurrent_mag:Holes@en2" "HoleCurrent_mag:Potential@en0" "HoleCurrent_mag:Potential@en1" "HoleCurrent_mag:Potential@en2" "HoleCurrent_norm_x" "HoleCurrent_norm_x:Electrons@en0" "HoleCurrent_norm_x:Electrons@en1" "HoleCurrent_norm_x:Electrons@en2" "HoleCurrent_norm_x:Holes@en0" "HoleCurrent_norm_x:Holes@en1" "HoleCurrent_norm_x:Holes@en2" "HoleCurrent_norm_x:Potential@en0" "HoleCurrent_norm_x:Potential@en1" "HoleCurrent_norm_x:Potential@en2" "HoleCurrent_norm_y" "HoleCurrent_norm_y:Electrons@en0" "HoleCurrent_norm_y:Electrons@en1" "HoleCurrent_norm_y:Electrons@en2" "HoleCurrent_norm_y:Holes@en0" "HoleCurrent_norm_y:Holes@en1" "HoleCurrent_norm_y:Holes@en2" "HoleCurrent_norm_y:Potential@en0" "HoleCurrent_norm_y:Potential@en1" "HoleCurrent_norm_y:Potential@en2" "HoleCurrent_x" "HoleCurrent_x:Electrons@en0" "HoleCurrent_x:Electrons@en1" "HoleCurrent_x:Electrons@en2" "HoleCurrent_x:Holes@en0" "HoleCurrent_x:Holes@en1" "HoleCurrent_x:Holes@en2" "HoleCurrent_x:Potential@en0" "HoleCurrent_x:Potential@en1" "HoleCurrent_x:Potential@en2" "HoleCurrent_y" "HoleCurrent_y:Electrons@en0" "HoleCurrent_y:Electrons@en1" "HoleCurrent_y:Electrons@en2" "HoleCurrent_y:Holes@en0" "HoleCurrent_y:Holes@en1" "HoleCurrent_y:Holes@en2" "HoleCurrent_y:Potential@en0" "HoleCurrent_y:Potential@en1" "HoleCurrent_y:Potential@en2" "epar_ratio" "gamma_e" "gamma_e:Electrons@en0" "gamma_e:Electrons@en1" "gamma_e:Electrons@en2" "gamma_e:Holes@en0" "gamma_e:Holes@en1" "gamma_e:Holes@en2" "gamma_e:Potential@en0" "gamma_e:Potential@en1" "gamma_e:Potential@en2" "gamma_h" "gamma_h:Electrons@en0" "gamma_h:Electrons@en1" "gamma_h:Electrons@en2" "gamma_h:Holes@en0" "gamma_h:Holes@en1" "gamma_h:Holes@en2" "gamma_h:Potential@en0" "gamma_h:Potential@en1" "gamma_h:Potential@en2" "magElementElectronCurrent" "mu_ac_e" "mu_ac_e:Potential@en0" "mu_ac_e:Potential@en1" "mu_ac_e:Potential@en2" "mu_ac_h" "mu_ac_h:Potential@en0" "mu_ac_h:Potential@en1" "mu_ac_h:Potential@en2" "mu_e_0" "mu_e_0:Electrons@en0" "mu_e_0:Electrons@en1" "mu_e_0:Electrons@en2" "mu_e_0:Holes@en0" "mu_e_0:Holes@en1" "mu_e_0:Holes@en2" "mu_e_0:Potential@en0" "mu_e_0:Potential@en1" "mu_e_0:Potential@en2" "mu_h_0" "mu_h_0:Electrons@en0" "mu_h_0:Electrons@en1" "mu_h_0:Electrons@en2" "mu_h_0:Holes@en0" "mu_h_0:Holes@en1" "mu_h_0:Holes@en2" "mu_h_0:Potential@en0" "mu_h_0:Potential@en1" "mu_h_0:Potential@en2" "mu_ratio" "mu_sr_e" "mu_sr_e:Electrons@en0" "mu_sr_e:Electrons@en1" "mu_sr_e:Electrons@en2" "mu_sr_e:Holes@en0" "mu_sr_e:Holes@en1" "mu_sr_e:Holes@en2" "mu_sr_e:Potential@en0" "mu_sr_e:Potential@en1" "mu_sr_e:Potential@en2" "mu_sr_h" "mu_sr_h:Electrons@en0" "mu_sr_h:Electrons@en1" "mu_sr_h:Electrons@en2" "mu_sr_h:Holes@en0" "mu_sr_h:Holes@en1" "mu_sr_h:Holes@en2" "mu_sr_h:Potential@en0" "mu_sr_h:Potential@en1" "mu_sr_h:Potential@en2" "mu_surf_ratio" "mu_vsat_e" "mu_vsat_e:Electrons@en0" "mu_vsat_e:Electrons@en1" "mu_vsat_e:Electrons@en2" "mu_vsat_e:Holes@en0" "mu_vsat_e:Holes@en1" "mu_vsat_e:Holes@en2" "mu_vsat_e:Potential@en0" "mu_vsat_e:Potential@en1" "mu_vsat_e:Potential@en2"'
 $!SETSTYLEBASE FACTORY
-$!GLOBALLINKING 
+$!GLOBALLINKING
   LINKCOLORMAPS = YES
 $!GLOBALCOLORMAP  1
   CONTOURCOLORMAP = SMRAINBOW
@@ -845,9 +845,9 @@ $!GLOBALCOLORMAP  8
         }
       }
     }
-$!PLOTOPTIONS 
+$!PLOTOPTIONS
   SUBDIVIDEALLCELLS = NO
-$!GLOBALPAPER 
+$!GLOBALPAPER
   PAPERSIZEINFO
     {
     LETTER
@@ -860,7 +860,7 @@ $!GLOBALPAPER
       BOTTOMHARDCLIPOFFSET = 0.125
       }
     }
-$!PAGE 
+$!PAGE
   NAME = ''
   PAPERATTRIBUTES
     {
@@ -891,7 +891,7 @@ $!READDATASET  '|LFDSFN1|'
   VARNAMELIST = '|LFDSVL1|'
 $!REMOVEVAR |LFDSVL1|
 $!REMOVEVAR |LFDSFN1|
-$!FRAMELAYOUT 
+$!FRAMELAYOUT
   HEADERCOLOR = RED
   XYPOS
     {
@@ -900,15 +900,15 @@ $!FRAMELAYOUT
     }
   WIDTH = 8.25
   HEIGHT = 7.3118
-$!THREEDAXIS 
+$!THREEDAXIS
   ASPECTRATIOLIMIT = 25
   BOXASPECTRATIOLIMIT = 25
 $!PLOTTYPE  = CARTESIAN2D
 $!FRAMENAME  = 'Frame 001'
 $!ACTIVEFIELDMAPS  =  [1-3]
-$!GLOBALTIME 
+$!GLOBALTIME
   SOLUTIONTIME = 0
-$!GLOBALRGB 
+$!GLOBALRGB
   RANGEMIN = 0
   RANGEMAX = 1
 $!GLOBALCONTOUR  1
@@ -1071,11 +1071,11 @@ $!GLOBALCONTOUR  8
       CMAX = 1
       }
     }
-$!GLOBALTWODVECTOR 
+$!GLOBALTWODVECTOR
   UVAR = 302
   VVAR = 303
   RELATIVELENGTH = 5.5E-13
-$!GLOBALSCATTER 
+$!GLOBALSCATTER
   LEGEND
     {
     XYPOS
@@ -1241,7 +1241,7 @@ $!FIELDMAP  [3]
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     VARNUM = 1
@@ -1251,16 +1251,16 @@ $!TWODAXIS
     VARNUM = 2
     }
 $!VIEW FIT
-$!TWODAXIS 
+$!TWODAXIS
   DEPXTOYRATIO = 1
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     RANGEMIN = 4.2602879255401705175E-05
     RANGEMAX = 5.7806288464374560991E-05
     GRSPACING = 5E-06
     }
-$!TWODAXIS 
+$!TWODAXIS
   YDETAIL
     {
     RANGEMIN = -1.6302121119386949011E-06
@@ -1268,7 +1268,7 @@ $!TWODAXIS
     ISREVERSED = YES
     GRSPACING = 2E-06
     }
-$!ISOSURFACEATTRIBUTES 
+$!ISOSURFACEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   ISOSURFACESELECTION = ONESPECIFICVALUE
   ISOVALUE1 = 331.69
@@ -1279,7 +1279,7 @@ $!ISOSURFACEATTRIBUTES
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!SLICEATTRIBUTES 
+$!SLICEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   PRIMARYPOSITION
     {
@@ -1419,7 +1419,7 @@ $!STREAMTRACE ADD
     X = 4.941353282254892E-05
     Y = 2.743784974013313E-06
     }
-$!STREAMATTRIBUTES 
+$!STREAMATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   STREAMTIMING
     {
@@ -1438,14 +1438,14 @@ $!STREAMATTRIBUTES
       }
     }
   MAXSTEPS = 10000
-$!FIELDLAYERS 
+$!FIELDLAYERS
   SHOWMESH = NO
   SHOWCONTOUR = YES
   SHOWSHADE = YES
   USETRANSLUCENCY = YES
-$!STREAMTRACELAYERS 
+$!STREAMTRACELAYERS
   SHOW = YES
-$!LINKING 
+$!LINKING
   BETWEENFRAMES
     {
     LINKCONTOURLEVELS = YES
@@ -1455,8 +1455,8 @@ $!LINKING
     LINKAXISPOSITION = YES
     }
 ### Frame Number 2 ###
-$!CREATENEWFRAME 
-$!FRAMELAYOUT 
+$!CREATENEWFRAME
+$!FRAMELAYOUT
   HEADERCOLOR = RED
   XYPOS
     {
@@ -1465,15 +1465,15 @@ $!FRAMELAYOUT
     }
   WIDTH = 8.25
   HEIGHT = 7.3118
-$!THREEDAXIS 
+$!THREEDAXIS
   ASPECTRATIOLIMIT = 25
   BOXASPECTRATIOLIMIT = 25
 $!PLOTTYPE  = CARTESIAN2D
 $!FRAMENAME  = 'Frame 005'
 $!ACTIVEFIELDMAPS  =  [1-3]
-$!GLOBALTIME 
+$!GLOBALTIME
   SOLUTIONTIME = 0
-$!GLOBALRGB 
+$!GLOBALRGB
   RANGEMIN = 0
   RANGEMAX = 1
 $!GLOBALCONTOUR  1
@@ -1635,7 +1635,7 @@ $!GLOBALCONTOUR  8
       CMAX = 1
       }
     }
-$!GLOBALSCATTER 
+$!GLOBALSCATTER
   LEGEND
     {
     XYPOS
@@ -1801,7 +1801,7 @@ $!FIELDMAP  [3]
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     VARNUM = 1
@@ -1811,16 +1811,16 @@ $!TWODAXIS
     VARNUM = 2
     }
 $!VIEW FIT
-$!TWODAXIS 
+$!TWODAXIS
   DEPXTOYRATIO = 1
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     RANGEMIN = 4.2602879255401705175E-05
     RANGEMAX = 5.7806288464374560991E-05
     GRSPACING = 5E-06
     }
-$!TWODAXIS 
+$!TWODAXIS
   YDETAIL
     {
     RANGEMIN = -1.6302121119386949011E-06
@@ -1828,7 +1828,7 @@ $!TWODAXIS
     ISREVERSED = YES
     GRSPACING = 2E-06
     }
-$!ISOSURFACEATTRIBUTES 
+$!ISOSURFACEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   ISOSURFACESELECTION = ONESPECIFICVALUE
   ISOVALUE1 = 339.6925
@@ -1839,7 +1839,7 @@ $!ISOSURFACEATTRIBUTES
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!SLICEATTRIBUTES 
+$!SLICEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   PRIMARYPOSITION
     {
@@ -1860,7 +1860,7 @@ $!SLICEATTRIBUTES
     SURFACETRANSLUCENCY = 10
     USETRANSLUCENCY = YES
     }
-$!STREAMATTRIBUTES 
+$!STREAMATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   STREAMTIMING
     {
@@ -1878,14 +1878,14 @@ $!STREAMATTRIBUTES
       }
     }
   MAXSTEPS = 10000
-$!FIELDLAYERS 
+$!FIELDLAYERS
   SHOWMESH = NO
   SHOWCONTOUR = YES
   SHOWSHADE = YES
   USETRANSLUCENCY = YES
-$!STREAMTRACELAYERS 
+$!STREAMTRACELAYERS
   SHOW = NO
-$!LINKING 
+$!LINKING
   BETWEENFRAMES
     {
     LINKFRAMESIZEANDPOSITION = YES
@@ -1894,8 +1894,8 @@ $!LINKING
     LINKAXISPOSITION = YES
     }
 ### Frame Number 3 ###
-$!CREATENEWFRAME 
-$!FRAMELAYOUT 
+$!CREATENEWFRAME
+$!FRAMELAYOUT
   HEADERCOLOR = RED
   XYPOS
     {
@@ -1904,15 +1904,15 @@ $!FRAMELAYOUT
     }
   WIDTH = 8.25
   HEIGHT = 7.3118
-$!THREEDAXIS 
+$!THREEDAXIS
   ASPECTRATIOLIMIT = 25
   BOXASPECTRATIOLIMIT = 25
 $!PLOTTYPE  = CARTESIAN2D
 $!FRAMENAME  = 'Frame 002'
 $!ACTIVEFIELDMAPS  =  [1-3]
-$!GLOBALTIME 
+$!GLOBALTIME
   SOLUTIONTIME = 0
-$!GLOBALRGB 
+$!GLOBALRGB
   RANGEMIN = 0
   RANGEMAX = 1
 $!GLOBALCONTOUR  1
@@ -2101,11 +2101,11 @@ $!GLOBALCONTOUR  8
       CMAX = 1
       }
     }
-$!GLOBALTWODVECTOR 
+$!GLOBALTWODVECTOR
   UVAR = 302
   VVAR = 303
   RELATIVELENGTH = 1.5E-13
-$!GLOBALSCATTER 
+$!GLOBALSCATTER
   LEGEND
     {
     XYPOS
@@ -2271,7 +2271,7 @@ $!FIELDMAP  [3]
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     VARNUM = 1
@@ -2281,16 +2281,16 @@ $!TWODAXIS
     VARNUM = 2
     }
 $!VIEW FIT
-$!TWODAXIS 
+$!TWODAXIS
   DEPXTOYRATIO = 1
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     RANGEMIN = 4.2602879255401705175E-05
     RANGEMAX = 5.7806288464374560991E-05
     GRSPACING = 5E-06
     }
-$!TWODAXIS 
+$!TWODAXIS
   YDETAIL
     {
     RANGEMIN = -1.6302121119386949011E-06
@@ -2298,7 +2298,7 @@ $!TWODAXIS
     ISREVERSED = YES
     GRSPACING = 2E-06
     }
-$!ISOSURFACEATTRIBUTES 
+$!ISOSURFACEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   ISOSURFACESELECTION = ONESPECIFICVALUE
   ISOVALUE1 = 5
@@ -2309,7 +2309,7 @@ $!ISOSURFACEATTRIBUTES
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!SLICEATTRIBUTES 
+$!SLICEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   PRIMARYPOSITION
     {
@@ -2460,7 +2460,7 @@ $!STREAMTRACE ADD
     X = 4.941353282254892E-05
     Y = 2.743784974013313E-06
     }
-$!STREAMATTRIBUTES 
+$!STREAMATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   STREAMTIMING
     {
@@ -2479,14 +2479,14 @@ $!STREAMATTRIBUTES
       }
     }
   MAXSTEPS = 10000
-$!FIELDLAYERS 
+$!FIELDLAYERS
   SHOWMESH = NO
   SHOWCONTOUR = YES
   SHOWSHADE = YES
   USETRANSLUCENCY = YES
-$!STREAMTRACELAYERS 
+$!STREAMTRACELAYERS
   SHOW = NO
-$!LINKING 
+$!LINKING
   BETWEENFRAMES
     {
     LINKFRAMESIZEANDPOSITION = YES
@@ -2495,8 +2495,8 @@ $!LINKING
     LINKAXISPOSITION = YES
     }
 ### Frame Number 4 ###
-$!CREATENEWFRAME 
-$!FRAMELAYOUT 
+$!CREATENEWFRAME
+$!FRAMELAYOUT
   HEADERCOLOR = RED
   XYPOS
     {
@@ -2505,15 +2505,15 @@ $!FRAMELAYOUT
     }
   WIDTH = 8.25
   HEIGHT = 7.3118
-$!THREEDAXIS 
+$!THREEDAXIS
   ASPECTRATIOLIMIT = 25
   BOXASPECTRATIOLIMIT = 25
 $!PLOTTYPE  = CARTESIAN2D
 $!FRAMENAME  = 'Frame 004'
 $!ACTIVEFIELDMAPS  =  [1-3]
-$!GLOBALTIME 
+$!GLOBALTIME
   SOLUTIONTIME = 0
-$!GLOBALRGB 
+$!GLOBALRGB
   RANGEMIN = 0
   RANGEMAX = 1
 $!GLOBALCONTOUR  1
@@ -2675,7 +2675,7 @@ $!GLOBALCONTOUR  8
       CMAX = 1
       }
     }
-$!GLOBALSCATTER 
+$!GLOBALSCATTER
   LEGEND
     {
     XYPOS
@@ -2841,7 +2841,7 @@ $!FIELDMAP  [3]
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     VARNUM = 1
@@ -2851,16 +2851,16 @@ $!TWODAXIS
     VARNUM = 2
     }
 $!VIEW FIT
-$!TWODAXIS 
+$!TWODAXIS
   DEPXTOYRATIO = 1
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     RANGEMIN = 4.2602879255401705175E-05
     RANGEMAX = 5.7806288464374560991E-05
     GRSPACING = 5E-06
     }
-$!TWODAXIS 
+$!TWODAXIS
   YDETAIL
     {
     RANGEMIN = -1.6302121119386949011E-06
@@ -2868,7 +2868,7 @@ $!TWODAXIS
     ISREVERSED = YES
     GRSPACING = 2E-06
     }
-$!ISOSURFACEATTRIBUTES 
+$!ISOSURFACEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   ISOSURFACESELECTION = ONESPECIFICVALUE
   ISOVALUE1 = 352.7825
@@ -2879,7 +2879,7 @@ $!ISOSURFACEATTRIBUTES
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!SLICEATTRIBUTES 
+$!SLICEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   PRIMARYPOSITION
     {
@@ -2900,7 +2900,7 @@ $!SLICEATTRIBUTES
     SURFACETRANSLUCENCY = 10
     USETRANSLUCENCY = YES
     }
-$!STREAMATTRIBUTES 
+$!STREAMATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   STREAMTIMING
     {
@@ -2918,14 +2918,14 @@ $!STREAMATTRIBUTES
       }
     }
   MAXSTEPS = 10000
-$!FIELDLAYERS 
+$!FIELDLAYERS
   SHOWMESH = NO
   SHOWCONTOUR = YES
   SHOWSHADE = YES
   USETRANSLUCENCY = YES
-$!STREAMTRACELAYERS 
+$!STREAMTRACELAYERS
   SHOW = NO
-$!LINKING 
+$!LINKING
   BETWEENFRAMES
     {
     LINKCONTOURLEVELS = YES
@@ -2935,8 +2935,8 @@ $!LINKING
     LINKAXISPOSITION = YES
     }
 ### Frame Number 5 ###
-$!CREATENEWFRAME 
-$!FRAMELAYOUT 
+$!CREATENEWFRAME
+$!FRAMELAYOUT
   HEADERCOLOR = RED
   XYPOS
     {
@@ -2945,15 +2945,15 @@ $!FRAMELAYOUT
     }
   WIDTH = 8.25
   HEIGHT = 7.3118
-$!THREEDAXIS 
+$!THREEDAXIS
   ASPECTRATIOLIMIT = 25
   BOXASPECTRATIOLIMIT = 25
 $!PLOTTYPE  = CARTESIAN2D
 $!FRAMENAME  = 'Frame 003'
 $!ACTIVEFIELDMAPS  =  [1-3]
-$!GLOBALTIME 
+$!GLOBALTIME
   SOLUTIONTIME = 0
-$!GLOBALRGB 
+$!GLOBALRGB
   RANGEMIN = 0
   RANGEMAX = 1
 $!GLOBALCONTOUR  1
@@ -3117,11 +3117,11 @@ $!GLOBALCONTOUR  8
       CMAX = 1
       }
     }
-$!GLOBALTWODVECTOR 
+$!GLOBALTWODVECTOR
   UVAR = 233
   VVAR = 237
   RELATIVELENGTH = 1E-12
-$!GLOBALSCATTER 
+$!GLOBALSCATTER
   LEGEND
     {
     XYPOS
@@ -3287,7 +3287,7 @@ $!FIELDMAP  [3]
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     VARNUM = 1
@@ -3297,16 +3297,16 @@ $!TWODAXIS
     VARNUM = 2
     }
 $!VIEW FIT
-$!TWODAXIS 
+$!TWODAXIS
   DEPXTOYRATIO = 1
-$!TWODAXIS 
+$!TWODAXIS
   XDETAIL
     {
     RANGEMIN = 4.2602879255401705175E-05
     RANGEMAX = 5.7806288464374560991E-05
     GRSPACING = 5E-06
     }
-$!TWODAXIS 
+$!TWODAXIS
   YDETAIL
     {
     RANGEMIN = -1.6302121119386949011E-06
@@ -3314,7 +3314,7 @@ $!TWODAXIS
     ISREVERSED = YES
     GRSPACING = 2E-06
     }
-$!ISOSURFACEATTRIBUTES 
+$!ISOSURFACEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   ISOSURFACESELECTION = ONESPECIFICVALUE
   ISOVALUE1 = 0.24521825
@@ -3325,7 +3325,7 @@ $!ISOSURFACEATTRIBUTES
     {
     LIGHTINGEFFECT = GOURAUD
     }
-$!SLICEATTRIBUTES 
+$!SLICEATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   PRIMARYPOSITION
     {
@@ -3346,7 +3346,7 @@ $!SLICEATTRIBUTES
     SURFACETRANSLUCENCY = 10
     USETRANSLUCENCY = YES
     }
-$!STREAMATTRIBUTES 
+$!STREAMATTRIBUTES
   OBEYSOURCEZONEBLANKING = NO
   STREAMTIMING
     {
@@ -3364,15 +3364,15 @@ $!STREAMATTRIBUTES
       }
     }
   MAXSTEPS = 10000
-$!FIELDLAYERS 
+$!FIELDLAYERS
   SHOWMESH = NO
   SHOWCONTOUR = YES
   SHOWVECTOR = YES
   SHOWSHADE = YES
   USETRANSLUCENCY = YES
-$!STREAMTRACELAYERS 
+$!STREAMTRACELAYERS
   SHOW = NO
-$!LINKING 
+$!LINKING
   BETWEENFRAMES
     {
     LINKFRAMESIZEANDPOSITION = YES

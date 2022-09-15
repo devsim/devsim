@@ -46,4 +46,3 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 IF DEFINED USE_MSYS c:\msys64\usr\bin\bash %BASH_SCRIPT% %PACKAGE_NAME%
 if %errorlevel% neq 0 exit /b %errorlevel%
-

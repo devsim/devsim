@@ -45,4 +45,3 @@ chmod +x bin/symdiff_py3
 #${TCL_BIN} \$*
 #EOF
 #chmod +x bin/symdiff_tcl
-

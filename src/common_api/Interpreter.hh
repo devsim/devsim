@@ -21,48 +21,44 @@ limitations under the License.
 #include <string>
 #include <vector>
 
-class Interpreter
-{
-  public:
-    Interpreter();
-    ~Interpreter();
+class Interpreter {
+public:
+  Interpreter();
+  ~Interpreter();
 
 public:
 #if 0
     bool RunCommand(std::vector<ObjectHolder> &/*command*/);
 #endif
-    bool RunCommand(ObjectHolder & /*command*/, std::vector<ObjectHolder> &/*arguments*/);
+  bool RunCommand(ObjectHolder & /*command*/,
+                  std::vector<ObjectHolder> & /*arguments*/);
 #if 0
     bool RunCommand(const std::string &/*command*/, const std::vector<std::string> &/*arguments*/);
 #endif
-    bool RunInternalCommand(const std::string &/*command*/, const std::vector<std::pair<std::string, ObjectHolder> > &/*arguments*/);
+  bool RunInternalCommand(
+      const std::string & /*command*/,
+      const std::vector<std::pair<std::string, ObjectHolder>> & /*arguments*/);
 
 private:
-    bool RunCommand(const std::string &/*command*/, const std::vector<std::pair<std::string, ObjectHolder> > &/*arguments*/);
+  bool RunCommand(
+      const std::string & /*command*/,
+      const std::vector<std::pair<std::string, ObjectHolder>> & /*arguments*/);
 #if 0
     bool RunCommand(const std::string &/*command*/);
 #endif
 
 public:
-    const std::string &GetErrorString() const
-    {
-      return error_string_;
-    }
+  const std::string &GetErrorString() const { return error_string_; }
 
-    ObjectHolder GetResult()
-    {
-      return result_;
-    }
+  ObjectHolder GetResult() { return result_; }
 
-    std::string GetVariable(const std::string &name);
+  std::string GetVariable(const std::string &name);
 
-  private:
+private:
+  Interpreter &operator=(const Interpreter &);
+  Interpreter(const Interpreter &);
 
-    Interpreter &operator=(const Interpreter &);
-    Interpreter(const Interpreter &);
-
-    std::string   error_string_;
-    ObjectHolder  result_;
+  std::string error_string_;
+  ObjectHolder result_;
 };
 #endif
-

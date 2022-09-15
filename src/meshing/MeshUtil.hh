@@ -18,8 +18,7 @@ limitations under the License.
 #ifndef MESH_UTIL_HH
 #define MESH_UTIL_HH
 #include <vector>
-template <typename T>
-class Vector;
+template <typename T> class Vector;
 class Region;
 namespace MeshUtil {
 extern const double tolerance;
@@ -32,6 +31,6 @@ pts_t getPoints(double xl, double xh, double sl, double sh);
 
 std::vector<Vector<double>> GetUnitVector(const Region &);
 
-}
+} // namespace MeshUtil
 
 #endif

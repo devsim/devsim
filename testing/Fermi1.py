@@ -50,4 +50,3 @@ devsim.node_model(device=device, region=region, name="ni_f", equation="(Nc*Nv)^0
 devsim.node_model(device=device, region=region, name="ni_b", equation="(Nc*Nv)^0.5 * exp(-Eg/(2*Vt))")
 devsim.print_node_values(device=device, region=region, name="ni_f")
 devsim.print_node_values(device=device, region=region, name="ni_b")
-

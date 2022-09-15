@@ -64,5 +64,3 @@ print(devsim.get_contact_charge(device=device, contact="bot", equation="Potentia
 devsim.print_node_values(device=device, region=region, name="NodeVolume")
 devsim.print_edge_values(device=device, region=region, name="ElectricField")
 devsim.print_edge_values(device=device, region=region, name="EdgeCouple")
-
-

@@ -18,4 +18,3 @@
 ####
 import devsim
 print(devsim.get_parameter(name="info"))
-

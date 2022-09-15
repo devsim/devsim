@@ -20,42 +20,48 @@ limitations under the License.
 
 #include "MathWrapper.hh"
 
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
 class ObjectHolder;
 
-template <typename DoubleType>
-class MathEval {
-// first is function name
-// second is args
-// third is error string
-  public:
-    DoubleType EvaluateMathFunc(const std::string &, std::vector<DoubleType> &, std::string &) const ;
-    void   EvaluateMathFunc(const std::string &, std::vector<DoubleType> &, const std::vector<const std::vector<DoubleType> *> &, std::string &, std::vector<DoubleType> &, size_t vlen) const;
+template <typename DoubleType> class MathEval {
+  // first is function name
+  // second is args
+  // third is error string
+public:
+  DoubleType EvaluateMathFunc(const std::string &, std::vector<DoubleType> &,
+                              std::string &) const;
+  void EvaluateMathFunc(const std::string &, std::vector<DoubleType> &,
+                        const std::vector<const std::vector<DoubleType> *> &,
+                        std::string &, std::vector<DoubleType> &,
+                        size_t vlen) const;
 
-    void   EvaluateTclMathFunc(const std::string &, std::vector<DoubleType> &, const std::vector<const std::vector<DoubleType> *> &, std::string &, std::vector<DoubleType> &) const;
+  void EvaluateTclMathFunc(const std::string &, std::vector<DoubleType> &,
+                           const std::vector<const std::vector<DoubleType> *> &,
+                           std::string &, std::vector<DoubleType> &) const;
 
-    static MathEval &GetInstance();
-    static void DestroyInstance();
+  static MathEval &GetInstance();
+  static void DestroyInstance();
 
-    bool AddTclMath(const std::string &, ObjectHolder, size_t, std::string & /*error_string*/);
-    void RemoveTclMath(const std::string &);
+  bool AddTclMath(const std::string &, ObjectHolder, size_t,
+                  std::string & /*error_string*/);
+  void RemoveTclMath(const std::string &);
 
-  private:
-    MathEval(); 
-    ~MathEval();
-    MathEval &operator=(const MathEval &);
-    MathEval(const MathEval &);
+private:
+  MathEval();
+  ~MathEval();
+  MathEval &operator=(const MathEval &);
+  MathEval(const MathEval &);
 
-    static MathEval *instance_;
-    std::map<std::string, Eqomfp::MathWrapperPtr<DoubleType>> FuncPtrMap_;
+  static MathEval *instance_;
+  std::map<std::string, Eqomfp::MathWrapperPtr<DoubleType>> FuncPtrMap_;
 
-    typedef std::map<std::string, std::pair<ObjectHolder, size_t> > tclMathFuncMap_t;
-    tclMathFuncMap_t                      tclMathFuncMap_;
+  typedef std::map<std::string, std::pair<ObjectHolder, size_t>>
+      tclMathFuncMap_t;
+  tclMathFuncMap_t tclMathFuncMap_;
 
-    void InitializeBuiltInMathFunc();
+  void InitializeBuiltInMathFunc();
 };
 #endif
-

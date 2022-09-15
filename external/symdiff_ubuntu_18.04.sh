@@ -45,4 +45,3 @@ export TCLLIBPATH=\${curdir}/../lib
 ${TCL_BIN} \$*
 EOF
 chmod +x bin/symdiff_tcl
-

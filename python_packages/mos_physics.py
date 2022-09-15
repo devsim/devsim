@@ -61,7 +61,7 @@ def CreateNormalElectricFieldFromCurrentFlow(device, region, low_curr):
 
     #### Get the current magnitude on the element
     #### do we need the derivative, since this is only scaling the direction?
-    #### Worry about small denominator 1e-300 is about the limit 
+    #### Worry about small denominator 1e-300 is about the limit
     J_lf_mag="pow({0}_x^2 + {0}_y^2 + 1e-300, 0.5)".format(low_curr)
     CreateElementModel2d(device, region, "{0}_mag".format(low_curr), "{0}".format(J_lf_mag))
     for j in ("Electrons", "Holes", "Potential"):
@@ -114,4 +114,3 @@ def CreateElementHoleCurrent2d(device, region, name, mobility_model):
     CreateElementModel2d(device, region, name, Jp)
     for i in ("Electrons", "Holes", "Potential"):
         CreateElementModelDerivative2d(device, region, name, Jp, i)
-

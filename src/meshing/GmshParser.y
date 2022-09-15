@@ -52,7 +52,7 @@ all : | meshformat
 meshformat :
         BEG_MESHFORMAT EOL MESHFORMAT EOL END_MESHFORMAT EOL
         {
-          if ( 
+          if (
             ($3 != "2.2 0 8") &&
             ($3 != "2.1 0 8")
           )
@@ -295,7 +295,7 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
     const int index = ilist[i];
     if (index < 1)
     {
-      hasNonPositive = true; 
+      hasNonPositive = true;
       break;
     }
     indexes.push_back(ilist[i]);
@@ -328,5 +328,3 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
     return false;
   }
 }
-
-

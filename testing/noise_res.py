@@ -50,4 +50,3 @@ for name, equation in (
 ):
     devsim.node_model(device=res1.device, region=res1.region, name=name, equation=equation)
     devsim.print_node_values(device=res1.device, region=res1.region, name=name)
-

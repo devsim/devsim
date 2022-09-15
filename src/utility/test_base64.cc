@@ -17,8 +17,7 @@ limitations under the License.
 
 #include "base64.hh"
 #include <iostream>
-int main()
-{
+int main() {
   std::string x = "this is a base 64 encoding test string";
   std::string y = dsUtility::encodeBase64(x.c_str(), x.length());
   std::string z;

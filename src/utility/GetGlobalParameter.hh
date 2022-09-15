@@ -17,9 +17,8 @@ limitations under the License.
 
 #ifndef GET_GLOBAL_PARAMETER_HH
 #define GET_GLOBAL_PARAMETER_HH
-#include<string>
+#include <string>
 std::string GetGlobalParameterStringOptional(const std::string &name);
-void        *GetMainInterpreter();
+void *GetMainInterpreter();
 void SetMainInterpreter(void *);
 #endif
-

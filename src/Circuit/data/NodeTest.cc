@@ -15,16 +15,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***/
 
-
-#include <iostream>
 #include "NodeKeeper.hh"
+#include <iostream>
 
 int main() {
-    NodeKeeper &inst = NodeKeeper::instance();
-    inst.AddNode("foo");
-    inst.AddNode("cat");
-//    inst.DeleteNode("dog");
-    inst.SetNodeNumbers();
-    inst.CreateSolution("dcop");
-    return 0;
+  NodeKeeper &inst = NodeKeeper::instance();
+  inst.AddNode("foo");
+  inst.AddNode("cat");
+  //    inst.DeleteNode("dog");
+  inst.SetNodeNumbers();
+  inst.CreateSolution("dcop");
+  return 0;
 }

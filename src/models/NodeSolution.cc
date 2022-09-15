@@ -16,81 +16,66 @@ limitations under the License.
 ***/
 
 #include "NodeSolution.hh"
-#include "Region.hh"
-#include "Node.hh"
-#include "Vector.hh"
 #include "Device.hh"
-#include "dsAssert.hh"
 #include "GeometryStream.hh"
 #include "ModelErrors.hh"
-
+#include "Node.hh"
+#include "Region.hh"
+#include "Vector.hh"
+#include "dsAssert.hh"
 
 #include <sstream>
 
 template <typename DoubleType>
-NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, NodeModel::DisplayType dt)
-    :
-        NodeModel(nm, rp, dt),
-        parentModel()
-{
-}
+NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp,
+                                       NodeModel::DisplayType dt)
+    : NodeModel(nm, rp, dt), parentModel() {}
 
 template <typename DoubleType>
-NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, NodeModel::DisplayType dt, NodeModelPtr nmp)
-    :
-        NodeModel(nm, rp, dt),
-        parentModel(nmp)
-{
+NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp,
+                                       NodeModel::DisplayType dt,
+                                       NodeModelPtr nmp)
+    : NodeModel(nm, rp, dt), parentModel(nmp) {
   parentModelName = parentModel.lock()->GetName();
   RegisterCallback(parentModelName);
 }
 
 template <typename DoubleType>
-void NodeSolution<DoubleType>::calcNodeScalarValues() const
-{
-    if (!parentModelName.empty())
-    {
-        ConstNodeModelPtr nmp = GetRegion().GetNodeModel(parentModelName);
-        if (!parentModel.expired())
-        {
-          parentModel.lock()->template GetScalarValues<DoubleType>();
-        }
-        else if (nmp)
-        {
-          parentModel.reset();
-          dsErrors::ChangedModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::NODE, OutputStream::OutputType::INFO);
-          parentModelName.clear();
-        }
-        else
-        {
-          dsErrors::MissingModelModelDependency(GetRegion(), parentModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
-        }
+void NodeSolution<DoubleType>::calcNodeScalarValues() const {
+  if (!parentModelName.empty()) {
+    ConstNodeModelPtr nmp = GetRegion().GetNodeModel(parentModelName);
+    if (!parentModel.expired()) {
+      parentModel.lock()->template GetScalarValues<DoubleType>();
+    } else if (nmp) {
+      parentModel.reset();
+      dsErrors::ChangedModelModelDependency(
+          GetRegion(), parentModelName, dsErrors::ModelInfo::NODE, GetName(),
+          dsErrors::ModelInfo::NODE, OutputStream::OutputType::INFO);
+      parentModelName.clear();
+    } else {
+      dsErrors::MissingModelModelDependency(
+          GetRegion(), parentModelName, dsErrors::ModelInfo::NODE, GetName(),
+          dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
     }
+  }
 }
 
 template <typename DoubleType>
-void NodeSolution<DoubleType>::setInitialValues()
-{
-    DefaultInitializeValues();
+void NodeSolution<DoubleType>::setInitialValues() {
+  DefaultInitializeValues();
 }
 
 template <typename DoubleType>
-void NodeSolution<DoubleType>::Serialize(std::ostream &of) const
-{
-  if (!parentModelName.empty())
-  {
+void NodeSolution<DoubleType>::Serialize(std::ostream &of) const {
+  if (!parentModelName.empty()) {
     of << "DATAPARENT \"" << parentModelName << "\"";
-  }
-  else if (this->IsUniform())
-  {
+  } else if (this->IsUniform()) {
     of << "UNIFORM " << GetUniformValue<DoubleType>() << "";
-  }
-  else
-  {
+  } else {
     of << "DATA";
-    const NodeScalarList<DoubleType> &vals = this->GetScalarValues<DoubleType>();
-    for (size_t i = 0; i < vals.size(); ++i)
-    {
+    const NodeScalarList<DoubleType> &vals =
+        this->GetScalarValues<DoubleType>();
+    for (size_t i = 0; i < vals.size(); ++i) {
       of << "\n" << vals[i];
     }
   }
@@ -102,14 +87,14 @@ template class NodeSolution<double>;
 template class NodeSolution<float128>;
 #endif
 
-NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModel::DisplayType dt)
-{
-  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt);
+NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp,
+                                NodeModel::DisplayType dt) {
+  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(
+      rp->UseExtendedPrecisionModels(), nm, rp, dt);
 }
 
-NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModel::DisplayType dt, NodeModelPtr nmp)
-{
-  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt, nmp);
+NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp,
+                                NodeModel::DisplayType dt, NodeModelPtr nmp) {
+  return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(
+      rp->UseExtendedPrecisionModels(), nm, rp, dt, nmp);
 }
-
-

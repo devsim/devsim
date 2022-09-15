@@ -14,4 +14,3 @@ cd ${BUILDDIR} && \
 "${CMAKE}" -G "${GENERATOR}" -DCMAKE_BUILD_TYPE=RELEASE .. && \
 "${MAKE}" -j2 \
 )
-

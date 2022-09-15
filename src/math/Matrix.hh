@@ -20,51 +20,53 @@ limitations under the License.
 
 #include "dsMathTypes.hh"
 
-#include<utility>
-#include<map>
-#include<vector>
-
+#include <map>
+#include <utility>
+#include <vector>
 
 namespace dsMath {
-template <typename DoubleType>
-class Matrix {
-    public:
-//      virtual void AddSymbolic(int, int) = 0;  // add row,column to element list
+template <typename DoubleType> class Matrix {
+public:
+  //      virtual void AddSymbolic(int, int) = 0;  // add row,column to element
+  //      list
 
-        virtual void AddEntry(int, int, DoubleType) = 0;  // add row,column, value
+  virtual void AddEntry(int, int, DoubleType) = 0; // add row,column, value
 
-        virtual void AddEntry(int, int, std::complex<DoubleType>) = 0;
+  virtual void AddEntry(int, int, std::complex<DoubleType>) = 0;
 
-        virtual void AddImagEntry(int, int, DoubleType) = 0;  // add row,column, value
+  virtual void AddImagEntry(int, int, DoubleType) = 0; // add row,column, value
 
-        virtual ~Matrix() = 0;
+  virtual ~Matrix() = 0;
 
-        inline size_t size() {return size_;}
+  inline size_t size() { return size_; }
 
+  explicit Matrix(size_t);
 
-        explicit Matrix(size_t);
+  virtual void ClearMatrix() = 0;
 
-        virtual void ClearMatrix() = 0;
+  virtual void Finalize() = 0;
 
-        virtual void Finalize() = 0;
+  virtual void Multiply(const DoubleVec_t<DoubleType> & /*x*/,
+                        DoubleVec_t<DoubleType> & /*y*/) const = 0;
+  virtual void TransposeMultiply(const DoubleVec_t<DoubleType> & /*x*/,
+                                 DoubleVec_t<DoubleType> & /*y*/) const = 0;
+  virtual void Multiply(const ComplexDoubleVec_t<DoubleType> & /*x*/,
+                        ComplexDoubleVec_t<DoubleType> & /*y*/) const = 0;
+  virtual void
+  TransposeMultiply(const ComplexDoubleVec_t<DoubleType> & /*x*/,
+                    ComplexDoubleVec_t<DoubleType> & /*y*/) const = 0;
 
-        virtual void Multiply(const DoubleVec_t<DoubleType> &/*x*/, DoubleVec_t<DoubleType> &/*y*/) const = 0;
-        virtual void TransposeMultiply(const DoubleVec_t<DoubleType> &/*x*/, DoubleVec_t<DoubleType> &/*y*/) const = 0;
-        virtual void Multiply(const ComplexDoubleVec_t<DoubleType> &/*x*/, ComplexDoubleVec_t<DoubleType> &/*y*/) const = 0;
-        virtual void TransposeMultiply(const ComplexDoubleVec_t<DoubleType> &/*x*/, ComplexDoubleVec_t<DoubleType> &/*y*/) const = 0;
+  DoubleVec_t<DoubleType> operator*(const DoubleVec_t<DoubleType> &x) const;
+  ComplexDoubleVec_t<DoubleType>
+  operator*(const ComplexDoubleVec_t<DoubleType> &x) const;
 
-        DoubleVec_t<DoubleType> operator*(const DoubleVec_t<DoubleType> &x) const;
-        ComplexDoubleVec_t<DoubleType> operator*(const ComplexDoubleVec_t<DoubleType> &x) const;
+protected:
+private:
+  Matrix();
+  Matrix(const Matrix &);
+  Matrix &operator=(const Matrix &);
 
-    protected:
-
-    private:
-        Matrix();
-        Matrix(const Matrix &);
-        Matrix &operator= (const Matrix &);
-
-        size_t size_;
+  size_t size_;
 };
-}
+} // namespace dsMath
 #endif
-

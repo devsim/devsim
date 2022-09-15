@@ -19,33 +19,32 @@ limitations under the License.
 #define DS_MKL_PARDISO_HH
 #include "Preconditioner.hh"
 
-
 namespace dsMath {
 
 class MKLPardisoData;
 
 template <typename DoubleType>
-class MKLPardisoPreconditioner : public Preconditioner<DoubleType>
-{
-    public:
-        MKLPardisoPreconditioner(size_t, PEnum::TransposeType_t);
+class MKLPardisoPreconditioner : public Preconditioner<DoubleType> {
+public:
+  MKLPardisoPreconditioner(size_t, PEnum::TransposeType_t);
 
-    protected:
-        bool DerivedLUFactor(Matrix<DoubleType> *);
-        void DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const;
-        void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const;
+protected:
+  bool DerivedLUFactor(Matrix<DoubleType> *);
+  void DerivedLUSolve(DoubleVec_t<DoubleType> &x,
+                      const DoubleVec_t<DoubleType> &b) const;
+  void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x,
+                      const ComplexDoubleVec_t<DoubleType> &b) const;
 
-        ~MKLPardisoPreconditioner();
+  ~MKLPardisoPreconditioner();
 
-    private:
-        MKLPardisoPreconditioner();
+private:
+  MKLPardisoPreconditioner();
 
-        MKLPardisoPreconditioner(const MKLPardisoPreconditioner &);
-        MKLPardisoPreconditioner &operator= (const MKLPardisoPreconditioner &);
+  MKLPardisoPreconditioner(const MKLPardisoPreconditioner &);
+  MKLPardisoPreconditioner &operator=(const MKLPardisoPreconditioner &);
 
-        MKLPardisoData  *mklpardisodata_;
+  MKLPardisoData *mklpardisodata_;
 };
 
-}
+} // namespace dsMath
 #endif
-

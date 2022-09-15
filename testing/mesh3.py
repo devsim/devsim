@@ -15,4 +15,3 @@
 import devsim
 devsim.load_devices(file="mesh2.msh")
 devsim.write_devices(file="mesh3.msh", type="devsim_data", device="MyDevice")
-

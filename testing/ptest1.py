@@ -35,4 +35,3 @@ solve( type="dc", absolute_error= 1.0 , relative_error= 1e-10 , maximum_iteratio
 print((get_contact_charge(device=device_name, contact="top", equation="PotentialEquation")))
 print((get_contact_charge(device=device_name, contact="bot", equation="PotentialEquation")))
 print(get_edge_model_values(device=device_name, region=region_name, name="PotentialEdgeFlux"))
-

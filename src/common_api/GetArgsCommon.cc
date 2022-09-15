@@ -15,30 +15,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***/
 
-
 namespace dsGetArgs {
-const char * optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT", "LIST"};
+const char *optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT",
+                                   "LIST"};
 
-GetArgs::GetArgs(optionList opts) : options(opts)
-{
+GetArgs::GetArgs(optionList opts) : options(opts) {
   Option *it = options;
-  while ((*it).name != nullptr)
-  {
+  while ((*it).name != nullptr) {
     optionMap[(*it).name] = it;
     ++it;
   }
-} 
+}
 
-ObjectHolder GetArgs::GetObjectHolder(const std::string &s) const
-{
+ObjectHolder GetArgs::GetObjectHolder(const std::string &s) const {
   ObjectHolder val;
   ObjectHolderMap_t::const_iterator it = selections.find(s);
-  if (it != selections.end())
-  {
+  if (it != selections.end()) {
     val = (it->second);
-  }
-  else
-  {
+  } else {
     OptionMap_t::const_iterator vit = optionMap.find(s);
     dsAssert(vit != optionMap.end(), "UNEXPECTED");
     const std::string &sval = (vit->second)->defaultValue;
@@ -47,66 +41,54 @@ ObjectHolder GetArgs::GetObjectHolder(const std::string &s) const
   return val;
 }
 
-std::string GetArgs::GetStringOption(const std::string &s) const
-{
+std::string GetArgs::GetStringOption(const std::string &s) const {
   const ObjectHolder &tobj = GetObjectHolder(s);
   return tobj.GetString();
 }
 
-double GetArgs::GetDoubleOption(const std::string &s) const
-{
+double GetArgs::GetDoubleOption(const std::string &s) const {
   double val = 0.0;
 
   const ObjectHolder &tobj = GetObjectHolder(s);
 
   ObjectHolder::DoubleEntry_t ret = tobj.GetDouble();
 
-  if (ret.first)
-  {
+  if (ret.first) {
     val = ret.second;
-  }
-  else
-  {
+  } else {
     const std::string &sval = tobj.GetString();
 
-    if (sval == "MAXDOUBLE")
-    {
+    if (sval == "MAXDOUBLE") {
       val = std::numeric_limits<double>::max();
-    }
-    else if (sval == "-MAXDOUBLE")
-    {
+    } else if (sval == "-MAXDOUBLE") {
       val = -std::numeric_limits<double>::max();
     }
   }
   return val;
 }
 
-bool GetArgs::GetBooleanOption(const std::string &s) const
-{
+bool GetArgs::GetBooleanOption(const std::string &s) const {
   bool val = false;
 
   const ObjectHolder &tobj = GetObjectHolder(s);
 
   ObjectHolder::BooleanEntry_t ret = tobj.GetBoolean();
 
-  if (ret.first)
-  {
+  if (ret.first) {
     val = ret.second;
   }
 
   return val;
 }
 
-int GetArgs::GetIntegerOption(const std::string &s) const
-{
+int GetArgs::GetIntegerOption(const std::string &s) const {
   int val = 0;
 
   const ObjectHolder &tobj = GetObjectHolder(s);
 
   ObjectHolder::IntegerEntry_t ret = tobj.GetInteger();
 
-  if (ret.first)
-  {
+  if (ret.first) {
     val = ret.second;
   }
 
@@ -114,21 +96,23 @@ int GetArgs::GetIntegerOption(const std::string &s) const
 }
 
 namespace {
-void alreadySpecified(const std::string &command, const std::string &arg, const ObjectHolder &val, std::string &error)
-{
+void alreadySpecified(const std::string &command, const std::string &arg,
+                      const ObjectHolder &val, std::string &error) {
   std::ostringstream os;
   os << command << " already passed option " << arg;
-  os << " with value " << val.GetString() << " as an option" << "\n";
+  os << " with value " << val.GetString() << " as an option"
+     << "\n";
   error = os.str();
 }
 
-void notConvertibleToType(const std::string &command, const std::string &arg, optionType ot, const ObjectHolder &val, std::string &error)
-{
+void notConvertibleToType(const std::string &command, const std::string &arg,
+                          optionType ot, const ObjectHolder &val,
+                          std::string &error) {
   std::ostringstream os;
-  os << "Cannot convert \"" << val.GetString() << "\" to a " << optionTypeStrings[static_cast<size_t>(ot)] <<  " for argument " << arg;
+  os << "Cannot convert \"" << val.GetString() << "\" to a "
+     << optionTypeStrings[static_cast<size_t>(ot)] << " for argument " << arg;
 
   error = os.str();
 }
-}
-}
-
+} // namespace
+} // namespace dsGetArgs

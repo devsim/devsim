@@ -42,6 +42,6 @@ void registerFunctionCmd(CommandHandler &);
 void setNodeValueCmd(CommandHandler &);
 void setNodeValuesCmd(CommandHandler &);
 void symdiffCmd(CommandHandler &);
-}
+} // namespace dsCommand
 
 #endif

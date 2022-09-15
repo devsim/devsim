@@ -108,4 +108,3 @@ test_common.print_ac_circuit_solution()
 #devsim.element_model(device=device, region=region, name="EDField", equation="DField")
 #for i in devsim.get_element_model_values(device=device, region=region, name="EDField"):
 #  print(i)
-

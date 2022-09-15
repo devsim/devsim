@@ -19,11 +19,8 @@ limitations under the License.
 #include <boost/math/special_functions/erf.hpp>
 namespace my_policy {
 using namespace boost::math::policies;
-typedef policy<
-  domain_error<errno_on_error>,
-  pole_error<errno_on_error>,
-  overflow_error<errno_on_error>,
-  evaluation_error<errno_on_error>
-> my_policy;
-};
+typedef policy<domain_error<errno_on_error>, pole_error<errno_on_error>,
+               overflow_error<errno_on_error>, evaluation_error<errno_on_error>>
+    my_policy;
+}; // namespace my_policy
 #endif

@@ -17,18 +17,15 @@ limitations under the License.
 
 #include "dsAssert.hh"
 #include "OutputStream.hh"
-#include <string>
 #include <sstream>
+#include <string>
 
-void dsAssert_(bool x, const std::string &msg)
-{
-    if (!x)
-    {
-        std::ostringstream os;
-        os << "There was a fatal exception in the program.  Shutting down.  Please inspect program output.\n";
-        os << msg << "\n";
-        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
-    }
+void dsAssert_(bool x, const std::string &msg) {
+  if (!x) {
+    std::ostringstream os;
+    os << "There was a fatal exception in the program.  Shutting down.  Please "
+          "inspect program output.\n";
+    os << msg << "\n";
+    OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str().c_str());
+  }
 }
-
-

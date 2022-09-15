@@ -32,5 +32,3 @@ INCLUDE_DIRECTORIES (
 
 
 ADD_LIBRARY (commands ${CXX_SRCS})
-
-

@@ -24,28 +24,28 @@ namespace dsMath {
 class SuperLUData;
 
 template <typename DoubleType>
-class SuperLUPreconditioner : public Preconditioner<DoubleType>
-{
-    public:
-        SuperLUPreconditioner(size_t, PEnum::TransposeType_t, PEnum::LUType_t);
+class SuperLUPreconditioner : public Preconditioner<DoubleType> {
+public:
+  SuperLUPreconditioner(size_t, PEnum::TransposeType_t, PEnum::LUType_t);
 
-    protected:
-        bool DerivedLUFactor(Matrix<DoubleType> *);
-        void DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const;
-        void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const;
+protected:
+  bool DerivedLUFactor(Matrix<DoubleType> *);
+  void DerivedLUSolve(DoubleVec_t<DoubleType> &x,
+                      const DoubleVec_t<DoubleType> &b) const;
+  void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x,
+                      const ComplexDoubleVec_t<DoubleType> &b) const;
 
-        ~SuperLUPreconditioner();
+  ~SuperLUPreconditioner();
 
-    private:
-        SuperLUPreconditioner();
+private:
+  SuperLUPreconditioner();
 
-        SuperLUPreconditioner(const SuperLUPreconditioner &);
-        SuperLUPreconditioner &operator= (const SuperLUPreconditioner &);
+  SuperLUPreconditioner(const SuperLUPreconditioner &);
+  SuperLUPreconditioner &operator=(const SuperLUPreconditioner &);
 
-        SuperLUData *superLUData_;
-        PEnum::LUType_t     lutype_;
+  SuperLUData *superLUData_;
+  PEnum::LUType_t lutype_;
 };
 
-}
+} // namespace dsMath
 #endif
-

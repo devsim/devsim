@@ -9,4 +9,3 @@ SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -freal-8-real-16 -ffixed-line-le
 # should be a better way
 ADD_EXECUTABLE(getrftest getrftest.cc xerbla.f)
 TARGET_LINK_LIBRARIES(getrftest getrf)
-

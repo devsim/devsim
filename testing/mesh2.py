@@ -104,4 +104,3 @@ devsim.print_edge_values(device=device, region="MyOxRegion", name="ElectricField
 
 devsim.print_node_values(device=device, region="MySiRegion", name="Potential")
 devsim.print_node_values(device=device, region="MyOxRegion", name="Potential")
-

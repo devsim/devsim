@@ -17,12 +17,11 @@ limitations under the License.
 
 #ifndef OBJHOLDER_HH
 #define OBJHOLDER_HH
+#include <cstddef>
+#include <map>
 #include <string>
 #include <utility>
 #include <vector>
-#include <map>
-#include <cstddef>
-
 
 class ObjectHolder;
 /*Used to create Dictionaries*/
@@ -30,73 +29,65 @@ typedef std::map<std::string, ObjectHolder> ObjectHolderMap_t;
 typedef std::vector<ObjectHolder> ObjectHolderList_t;
 
 class ObjectHolder {
-  public:
-    ObjectHolder();
-    ObjectHolder(const ObjectHolder &);
-    ObjectHolder &operator=(const ObjectHolder &);
-    ~ObjectHolder();
+public:
+  ObjectHolder();
+  ObjectHolder(const ObjectHolder &);
+  ObjectHolder &operator=(const ObjectHolder &);
+  ~ObjectHolder();
 
-    explicit ObjectHolder(void *);
+  explicit ObjectHolder(void *);
 
-    explicit ObjectHolder(const std::string &);
-    explicit ObjectHolder(const char *);
-    explicit ObjectHolder(const void *, size_t);
+  explicit ObjectHolder(const std::string &);
+  explicit ObjectHolder(const char *);
+  explicit ObjectHolder(const void *, size_t);
 
-    explicit ObjectHolder(bool);
-    explicit ObjectHolder(double);
-    explicit ObjectHolder(int);
-    //// Guaranteed these do not change passed values
-    explicit ObjectHolder(ObjectHolderMap_t &);
-    explicit ObjectHolder(ObjectHolderList_t &);
+  explicit ObjectHolder(bool);
+  explicit ObjectHolder(double);
+  explicit ObjectHolder(int);
+  //// Guaranteed these do not change passed values
+  explicit ObjectHolder(ObjectHolderMap_t &);
+  explicit ObjectHolder(ObjectHolderList_t &);
 
+  const void *GetObject() const;
+  void *GetObject();
 
+  std::string GetString() const;
 
-    const void *GetObject() const;
-    void *GetObject();
+  typedef std::pair<bool, double> DoubleEntry_t;
+  typedef std::pair<bool, bool> BooleanEntry_t;
+  typedef std::pair<bool, int> IntegerEntry_t;
+  typedef std::pair<bool, ptrdiff_t> LongEntry_t;
+  DoubleEntry_t GetDouble() const;
+  BooleanEntry_t GetBoolean() const;
+  IntegerEntry_t GetInteger() const;
+  LongEntry_t GetLong() const;
+  bool IsList() const;
+  bool IsCallable() const;
+  bool GetDoubleList(std::vector<double> &) const;
+  bool GetStringList(std::vector<std::string> &) const;
+  bool GetIntegerList(std::vector<int> &) const;
+  bool GetLongList(std::vector<ptrdiff_t> &) const;
+  bool GetUnsignedLongList(std::vector<size_t> &) const;
 
-    std::string GetString() const;
+  bool empty() { return !object_; }
 
-    typedef std::pair<bool, double>    DoubleEntry_t;
-    typedef std::pair<bool, bool>      BooleanEntry_t;
-    typedef std::pair<bool, int>       IntegerEntry_t;
-    typedef std::pair<bool, ptrdiff_t> LongEntry_t;
-    DoubleEntry_t  GetDouble() const;
-    BooleanEntry_t GetBoolean() const;
-    IntegerEntry_t GetInteger() const;
-    LongEntry_t    GetLong() const;
-    bool           IsList() const;
-    bool           IsCallable() const;
-    bool           GetDoubleList(std::vector<double> &) const;
-    bool           GetStringList(std::vector<std::string> &) const;
-    bool           GetIntegerList(std::vector<int> &) const;
-    bool           GetLongList(std::vector<ptrdiff_t> &) const;
-    bool           GetUnsignedLongList(std::vector<size_t> &) const;
+  void clear();
 
-    bool empty()
-    {
-      return !object_;
-    }
+  bool GetListOfObjects(ObjectHolderList_t &) const;
+  bool GetHashKeys(ObjectHolderList_t &) const;
+  bool GetHashMap(ObjectHolderMap_t &) const;
 
-    void clear();
-
-    bool GetListOfObjects(ObjectHolderList_t &) const;
-    bool GetHashKeys(ObjectHolderList_t &) const;
-    bool GetHashMap(ObjectHolderMap_t &) const;
-
-  private:
-    void *object_;
-
+private:
+  void *object_;
 };
 
 template <typename T>
-inline ObjectHolder CreateObjectHolderList(const std::vector<T> &list)
-{
+inline ObjectHolder CreateObjectHolderList(const std::vector<T> &list) {
   ObjectHolder result;
   const size_t length = list.size();
   ObjectHolderList_t objects(length);
 
-  for (size_t i = 0; i < length; ++i)
-  {
+  for (size_t i = 0; i < length; ++i) {
     objects[i] = ObjectHolder(list[i]);
   }
 
@@ -104,14 +95,12 @@ inline ObjectHolder CreateObjectHolderList(const std::vector<T> &list)
 }
 
 template <typename T>
-inline ObjectHolder CreateDoubleObjectHolderList(const std::vector<T> &list)
-{
+inline ObjectHolder CreateDoubleObjectHolderList(const std::vector<T> &list) {
   ObjectHolder result;
   const size_t length = list.size();
   ObjectHolderList_t objects(length);
 
-  for (size_t i = 0; i < length; ++i)
-  {
+  for (size_t i = 0; i < length; ++i) {
     objects[i] = ObjectHolder(static_cast<double>(list[i]));
   }
 
@@ -120,14 +109,12 @@ inline ObjectHolder CreateDoubleObjectHolderList(const std::vector<T> &list)
 
 ObjectHolder CreateArrayObject(const char *s, const ObjectHolder &data_object);
 
-template <typename T>
-ObjectHolder CreatePODArray(const std::vector<T> &list);
+template <typename T> ObjectHolder CreatePODArray(const std::vector<T> &list);
 
 template <typename T>
 ObjectHolder CreateDoublePODArray(const std::vector<T> &list);
 
-template <>
-ObjectHolder CreateDoublePODArray(const std::vector<double> &list);
+template <> ObjectHolder CreateDoublePODArray(const std::vector<double> &list);
 #if 0
 {
   return CreatePODArray<double>(list);
@@ -135,4 +122,3 @@ ObjectHolder CreateDoublePODArray(const std::vector<double> &list);
 #endif
 
 #endif
-
