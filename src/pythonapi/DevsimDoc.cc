@@ -1,7 +1,4 @@
 
-static const char delete_device_doc[] = "";
-static const char delete_mesh_doc[] = "";
-
 static const char add_circuit_node_doc[] =
 R"(    devsim.add_circuit_node (name, value, variable_update)
 
@@ -965,6 +962,28 @@ R"(    devsim.create_interface_from_nodes (device, name, region0, region1, nodes
        list of nodes for the interface in the first region
     nodes1 : str
        list of nodes for the interface in the second region
+)";
+
+static const char delete_device_doc[] =
+R"(    devsim.delete_device (device)
+
+    Delete a device and its parameters
+
+    Parameters
+    ----------
+    device : str
+       name of the device being deleted
+)";
+
+static const char delete_mesh_doc[] =
+R"(    devsim.delete_mesh (mesh)
+
+    Delete a mesh so devices can no longer be instantiated from it.
+
+    Parameters
+    ----------
+    mesh : str
+       Mesh to delete
 )";
 
 static const char finalize_mesh_doc[] =
