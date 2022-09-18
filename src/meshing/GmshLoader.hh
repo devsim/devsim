@@ -199,7 +199,7 @@ class GmshLoader : public Mesh {
         MapToInterfaceInfo_t          interfaceMap;
         MapToRegionInfo_t             regionMap;
 
-        ShapesMap_t                   gmshShapesMap;             
+        ShapesMap_t                   gmshShapesMap;
         size_t                        dimension;
         size_t                        maxCoordinateIndex;
 };

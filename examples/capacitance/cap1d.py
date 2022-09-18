@@ -89,7 +89,7 @@ for c in ("contact1", "contact2"):
                      node_model="%s_bc" % c, edge_charge_model="DField")
 
 ###
-### Set the contact 
+### Set the contact
 ###
 set_parameter(device=device, region=region, name="contact1_bias", value=1.0e-0)
 set_parameter(device=device, region=region, name="contact2_bias", value=0.0)

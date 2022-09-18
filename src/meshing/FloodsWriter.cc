@@ -175,14 +175,14 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
                 }
             }
 
-            myfile << "s"; 
+            myfile << "s";
             for (std::set<std::string>::iterator nmit = nodeModels.begin(); nmit != nodeModels.end(); ++nmit)
             {
                 myfile << " " << *nmit;
             }
             myfile << "\n";
 
-            myfile << "se"; 
+            myfile << "se";
             for (std::set<std::string>::iterator emit = edgeModels.begin(); emit != edgeModels.end(); ++emit)
             {
                 myfile << " " << *emit;

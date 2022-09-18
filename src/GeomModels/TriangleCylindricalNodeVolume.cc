@@ -128,7 +128,7 @@ DoubleType calcCylindricalTriangleVolumeFlat(DoubleType r0, DoubleType z0, Doubl
 
   const DoubleType r21 = abs(r2 - r1);
   ret += r21 * r0 * z;
-  ret *= M_PI; 
+  ret *= M_PI;
 
   return ret;
 }

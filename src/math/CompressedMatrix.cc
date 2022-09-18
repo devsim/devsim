@@ -135,7 +135,7 @@ void CompressedMatrix<DoubleType>::CreateMatrix()
     Ap_[c]=r;
 
     RowInd &rivec = Symbolic_[c];
-    RowInd::iterator iter = rivec.begin();  
+    RowInd::iterator iter = rivec.begin();
     RowInd::iterator iend = rivec.end();
 
     int rb = r;
@@ -313,7 +313,7 @@ void CompressedMatrix<DoubleType>::AddEntry(int r, int c, DoubleType v)
   }
 }
 
-/// Model this after 
+/// Model this after
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::AddImagEntryImpl(int r, int c, DoubleType v)
 {
@@ -389,7 +389,7 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
   {
     return;
   }
-  std::ostringstream os; 
+  std::ostringstream os;
   os << "Matrix Decompress!!! Symbolic pattern changed\n";
   OutputStream::WriteOut(OutputStream::OutputType::VERBOSE1, os.str());
   compressed = false;

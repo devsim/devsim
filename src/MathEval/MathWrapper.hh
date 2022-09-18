@@ -52,7 +52,7 @@ class MathWrapper {
       return nargs_;
     }
 
-  protected:  
+  protected:
 
     virtual void DerivedEvaluate(const std::vector<DoubleType> &/*dvals*/, const std::vector<const std::vector<DoubleType> *> &/*vvals*/, std::vector<DoubleType> &/*result*/, size_t /*vbeg*/, size_t /*vend*/) const = 0;
     virtual DoubleType DerivedEvaluate(const std::vector<DoubleType> &/*vals*/) const = 0;

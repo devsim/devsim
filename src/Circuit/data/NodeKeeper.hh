@@ -74,22 +74,22 @@ class NodeKeeper {
 
         // not many get the privilege to set values
         // please don't const_cast this away!!
-        const Solution &GetSolutionVector(const std::string &) ; 
+        const Solution &GetSolutionVector(const std::string &) ;
 
-        void CreateSolution(const std::string &); 
-        void InitializeSolution(const std::string &); 
-        void DestroySolution(const std::string &); 
+        void CreateSolution(const std::string &);
+        void InitializeSolution(const std::string &);
+        void DestroySolution(const std::string &);
 //      bool HasSolution(const std::string &);
 
         std::vector<double> *GetSolution(const std::string &);
 
         // Update the solution with the given name with the given vector
-        void UpdateSolution(const std::string &, const std::vector<double> &); 
+        void UpdateSolution(const std::string &, const std::vector<double> &);
 
-        void ACUpdateSolution(const std::string &, const std::string &, const std::vector<std::complex<double>> &); 
+        void ACUpdateSolution(const std::string &, const std::string &, const std::vector<std::complex<double>> &);
         // Copy Solution from one vector to another
 
-        void CopySolution(const std::string &, const std::string &); 
+        void CopySolution(const std::string &, const std::string &);
 
         size_t getNumberNodes() {return numberOfNodes_;}
 

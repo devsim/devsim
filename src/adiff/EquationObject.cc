@@ -54,7 +54,7 @@ BinaryTblEntry BinaryTable[] = {
 };
 
 EqUnaryFuncPtr getUnaryFuncPtr(std::string x) {
-    size_t i=0; 
+    size_t i=0;
     while (UnaryTable[i].name != nullptr)
     {
         if (x == UnaryTable[i].name)
@@ -65,7 +65,7 @@ EqUnaryFuncPtr getUnaryFuncPtr(std::string x) {
 }
 
 EqBinaryFuncPtr getBinaryFuncPtr(std::string x) {
-    size_t i=0; 
+    size_t i=0;
     while (BinaryTable[i].name != nullptr)
     {
         if (x == BinaryTable[i].name)
@@ -77,7 +77,7 @@ EqBinaryFuncPtr getBinaryFuncPtr(std::string x) {
 
 #if 0
 EqObjPtr printHelp() {
-    size_t i=0; 
+    size_t i=0;
     cerr << "\n";
     cerr << "Functions:\n"
             "--------------------------------------------------\n";
@@ -86,7 +86,7 @@ EqObjPtr printHelp() {
         cerr << UnaryTable[i].desc << "\n";
         ++i;
     }
-    i=0; 
+    i=0;
     while (BinaryTable[i].name != nullptr)
     {
         cerr << BinaryTable[i].desc << "\n";
@@ -124,8 +124,8 @@ EqObjPtr printHelp() {
     cerr << "\nCommands:\n"
             "--------------------------------------------------\n"
             "quit      -- exit program\n"
-            "help      -- print help text\n" 
-            "copyright -- print copyright\n"; 
+            "help      -- print help text\n"
+            "copyright -- print copyright\n";
     cerr << endl;
     return con(0.0);
 }
@@ -552,7 +552,7 @@ void Product::ProductVecSimplify(std::vector<EqObjPtr> &tvals)
       std::vector<EqObjPtr> tmp;
       tmp.reserve(2*len);
 
-      for (size_t i = 0; i < len; ++i) 
+      for (size_t i = 0; i < len; ++i)
       {
          Product *foo = dynamic_cast<Product *>(tvals[i].get());
          if (foo == nullptr)
@@ -571,13 +571,13 @@ void Product::ProductVecSimplify(std::vector<EqObjPtr> &tvals)
       swap(tmp,tvals); // swap back;
    }
 
-   {  
+   {
       const size_t len = tvals.size();
       std::vector<EqObjPtr> tmp;
       // break down all factors and remove ones
       tmp.reserve(len);
       bool hasOne = false;
-      for (size_t i = 0; i < len; ++i) 
+      for (size_t i = 0; i < len; ++i)
       {
          if (!tvals[i]->isOne())
             tmp.push_back(tvals[i]->Simplify());
@@ -968,7 +968,7 @@ EqObjPtr Product::expand()
     }
     else if (tmp.size() > 1)
     {
-        EquationObject *n = new Product(tmp); 
+        EquationObject *n = new Product(tmp);
         scale = EqObjPtr(n);
     }
 
@@ -1136,7 +1136,7 @@ EqObjPtr Add::Simplify()
       std::vector<EqObjPtr> tmp;
       tmp.reserve(2*len);
 
-      for (size_t i = 0; i < len; ++i) 
+      for (size_t i = 0; i < len; ++i)
       {
          Add *foo = dynamic_cast<Add *>(tvals[i].get());
          if (foo == nullptr)
@@ -1160,7 +1160,7 @@ EqObjPtr Add::Simplify()
       const size_t len = tvals.size();
       std::vector<EqObjPtr> tmp;
       tmp.reserve(len);
-      for (size_t i = 0; i < len; ++i) 
+      for (size_t i = 0; i < len; ++i)
       {
          EqObjPtr tptr = tvals[i] -> Simplify();
          if (!tptr->isZero())

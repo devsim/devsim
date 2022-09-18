@@ -31,7 +31,7 @@
 # acmid = {1012099},
 # publisher = {IBM Corp.},
 # address = {Riverton, NJ, USA},
-#} 
+#}
 
 import sys
 try:

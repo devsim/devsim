@@ -64,7 +64,7 @@ class InterfaceExprEquation : public InterfaceEquation<DoubleType>
         void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         /// Need to decide if we are going to contain equations or models?
-        /// Assume that 
+        /// Assume that
         std::string   interface_node_model_;
         InterfaceExprEquationEnum::EquationType  equation_type_;
         //std::string tdnodemodel; // maybe someday in the future

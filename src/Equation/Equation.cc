@@ -302,7 +302,7 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
 
         const DoubleType n2 = abs(nvals[i]);
 
-        const DoubleType nrerror =  n1 / (n2 + minError); 
+        const DoubleType nrerror =  n1 / (n2 + minError);
 
         if (nrerror > rerr)
         {
@@ -530,7 +530,7 @@ void Equation<DoubleType>::TetrahedronEdgeAssembleRHS(dsMath::RHSEntryVec<Double
 template <typename DoubleType>
 std::string Equation<DoubleType>::GetNoiseRealName(const std::string &outname)
 {
-  std::string out(outname); 
+  std::string out(outname);
   out += "_";
   out += myname;
   out += "_";
@@ -541,7 +541,7 @@ std::string Equation<DoubleType>::GetNoiseRealName(const std::string &outname)
 template <typename DoubleType>
 std::string Equation<DoubleType>::GetNoiseImagName(const std::string &outname)
 {
-  std::string out(outname); 
+  std::string out(outname);
   out += "_";
   out += myname;
   out += "_";

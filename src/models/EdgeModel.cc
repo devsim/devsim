@@ -63,7 +63,7 @@ EdgeModel::EdgeModel(const std::string &nm, const RegionPtr rp, EdgeModel::Displ
       inprocess(false),
       displayType(dt),
       model_data(rp->GetNumberEdges())
-{ 
+{
   myself = rp->AddEdgeModel(this);
 }
 
@@ -301,7 +301,7 @@ void EdgeModel::SetValues(const DoubleType &v)
     model_data.set_indexes(atcontact, v);
   }
   else
-  { 
+  {
     model_data.SetUniformValue<DoubleType>(v);
   }
 

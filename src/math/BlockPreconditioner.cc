@@ -43,7 +43,7 @@ struct SpecialSort
       bool ret = false;
       if (x.row < y.row)
       {
-        ret = true; 
+        ret = true;
       }
       else if (x.row == y.row)
       {
@@ -91,7 +91,7 @@ void BlockPreconditioner<DoubleType>::CreateBlockInfo()
       if (rmin != size_t(-1))
       {
         const size_t rmax = region.GetMaxEquationNumber();
-        const size_t neqns = region.GetNumberEquations(); 
+        const size_t neqns = region.GetNumberEquations();
         const size_t nnodes = region.GetNumberNodes();
 
         for (size_t i = 0; i < neqns; ++i)
@@ -244,7 +244,7 @@ void BlockPreconditioner<DoubleType>::ProcessBlockInfo(const IntVec_t &Cols, con
   {
     DoubleType drop_percent = 100.0 * static_cast<DoubleType>(dropped) / (dropped+kept+outofrange);
     std::ostringstream os;
-    os 
+    os
         << "drop tolerance_ " << drop_tolerance_
         << " dropped " << dropped
         << " kept " << kept

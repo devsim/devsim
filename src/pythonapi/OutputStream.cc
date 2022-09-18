@@ -121,7 +121,7 @@ OutputStream::Verbosity_t OutputStream::GetVerbosity(const std::string &vstring)
     }
     else if (vstring == "verbose")
     {
-      ret = Verbosity_t::V2; 
+      ret = Verbosity_t::V2;
     }
     else
     {

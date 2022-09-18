@@ -188,7 +188,7 @@ getEquationListCmd(CommandHandler &data)
     std::vector<std::string> olist(slist.size());
     for (size_t i = 0; i < slist.size(); ++i)
     {
-      const std::string &s = slist[i]; 
+      const std::string &s = slist[i];
       size_t ei = reg->GetEquationIndex(s);
       dsAssert((ei < slist.size()) && (olist[ei].empty()), "UNEXPECTED");
       olist[ei] = s;

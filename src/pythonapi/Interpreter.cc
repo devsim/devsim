@@ -22,7 +22,7 @@ limitations under the License.
 
 
 Interpreter::Interpreter()
-{  
+{
 }
 
 Interpreter::~Interpreter()
@@ -111,7 +111,7 @@ ObjectHolder CreateTuple(std::vector<ObjectHolder> &objects, size_t beg, size_t 
     // PyTuple_SetItem steals a reference
     Py_INCREF(p);
     PyTuple_SetItem(args, i, p);
-  } 
+  }
   return ret;
 }
 

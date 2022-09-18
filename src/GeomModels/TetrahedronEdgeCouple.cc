@@ -58,7 +58,7 @@ void TetrahedronEdgeCouple<DoubleType>::calcTetrahedronEdgeCouple() const
   //// Make this part of region, if useful
   std::vector<Vector<DoubleType>> edgeCenters(edgeList.size());
   for (size_t i = 0; i < edgeList.size(); ++i)
-  { 
+  {
       const Edge &edge = *(edgeList[i]);
       const auto &h0 = edge.GetHead()->Position();
       const auto &h1 = edge.GetTail()->Position();

@@ -9,8 +9,8 @@ SET (CXX_SRCS
 
 INCLUDE_DIRECTORIES (
     ../utility
-    ../Geometry 
-    ../models 
+    ../Geometry
+    ../models
     ../math
     ../Circuit/data
     ../errorSystem

@@ -535,7 +535,7 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
         bool isvec = vvals[i] != nullptr;
 
         if (isvec)
-        {          
+        {
           tclObjVector[i] = ObjectHolder(static_cast<double>(vvals[i]->operator[](j)));
         }
       }

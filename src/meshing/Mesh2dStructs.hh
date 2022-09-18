@@ -129,7 +129,7 @@ class MeshLine2d {
 
 };
 
-/// must do sanity checking to make sure that regions only meet on new 
+/// must do sanity checking to make sure that regions only meet on new
 class MeshRegion2d {
     public:
         MeshRegion2d(const std::string &/*region*/, const std::string &/*material*/);

@@ -93,8 +93,8 @@ void EdgeExprModel<DoubleType>::calcEdgeScalarValues() const
 
     if (!errors.empty())
     {
-        std::ostringstream os; 
-        os << "while evaluating edge model " << GetName() << 
+        std::ostringstream os;
+        os << "while evaluating edge model " << GetName() <<
         " on Device: " << GetRegion().GetDeviceName() <<
         " on Region: " << GetRegion().GetName()
         << "\n";
@@ -127,7 +127,7 @@ void EdgeExprModel<DoubleType>::calcEdgeScalarValues() const
     }
     else
     {
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "while evaluating model " << GetName() << ": expression "
             << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";

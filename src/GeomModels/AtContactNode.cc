@@ -55,7 +55,7 @@ void AtContactNode<DoubleType>::calcNodeScalarValues() const
         {
 
 #if 0
-            std::ostringstream os; 
+            std::ostringstream os;
             os << region.GetName() << " Node  pointer " << *jt << "\n";
             GeometryStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 #endif

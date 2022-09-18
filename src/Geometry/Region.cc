@@ -93,7 +93,7 @@ const Node *findNodeOppositeOfTriangleEdge(const Edge &edge, const Triangle &tri
     const Node *tnode = tnl[i];
     if ((tnode != h) && (tnode != t))
     {
-      ret = tnode; 
+      ret = tnode;
       break;
     }
   }
@@ -321,12 +321,12 @@ void Region::SetNodeIndexes()
   std::vector<ConstNodePtr>(nodeList).swap(nodeList);
   // Number elements locally
   const size_t len = nodeList.size();
-  for (size_t i=0; i < len; ++i) 
+  for (size_t i=0; i < len; ++i)
   {
     const_cast<NodePtr>(nodeList[i])->SetIndex(i);
   }
 #if 0
-  std::ostringstream os; 
+  std::ostringstream os;
   for (size_t i = 0; i < nodeList.size(); ++i)
   {
     os << "Node " << nodeList[i]->GetIndex() << "\n";
@@ -344,7 +344,7 @@ void Region::SetEdgeIndexes()
   std::vector<ConstEdgePtr>(edgeList).swap(edgeList);
   // Number elements locally
   const size_t elen = edgeList.size();
-  for (size_t i=0; i < elen; ++i) 
+  for (size_t i=0; i < elen; ++i)
   {
     const_cast<EdgePtr>(edgeList[i])->SetIndex(i);
   }
@@ -354,7 +354,7 @@ void Region::SetEdgeIndexes()
 void Region::SetTriangleIndexes()
 {
   const size_t tlen = triangleList.size();
-  for (size_t i=0; i < tlen; ++i) 
+  for (size_t i=0; i < tlen; ++i)
   {
     const_cast<TrianglePtr>(triangleList[i])->SetIndex(i);
   }
@@ -364,7 +364,7 @@ void Region::SetTriangleIndexes()
 void Region::SetTetrahedronIndexes()
 {
   const size_t tlen = tetrahedronList.size();
-  for (size_t i=0; i < tlen; ++i) 
+  for (size_t i=0; i < tlen; ++i)
   {
     const_cast<TetrahedronPtr>(tetrahedronList[i])->SetIndex(i);
   }
@@ -381,8 +381,8 @@ void Region::CreateNodeToEdgeList()
   {
     const size_t nh = edgeList[i]->GetHead()->GetIndex();
     const size_t nt = edgeList[i]->GetTail()->GetIndex();
-    nodeToEdgeList[nh].push_back(edgeList[i]); 
-    nodeToEdgeList[nt].push_back(edgeList[i]); 
+    nodeToEdgeList[nh].push_back(edgeList[i]);
+    nodeToEdgeList[nt].push_back(edgeList[i]);
   }
 
   for (size_t i = 0; i < nodeToEdgeList.size(); ++i)
@@ -908,7 +908,7 @@ NodeModelPtr Region::AddNodeModel(NodeModel *nmp)
     {
         dsAssert(nodeModels[nm].unique(), "UNEXPECTED");
         //// TODO: what happens when there is a dependency on this model???
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "Replacing Node Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
@@ -952,7 +952,7 @@ EdgeModelPtr Region::AddEdgeModel(EdgeModel *emp)
     if (edgeModels.count(nm))
     {
         dsAssert(edgeModels[nm].unique(), "UNEXPECTED");
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "Replacing Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
@@ -995,7 +995,7 @@ TriangleEdgeModelPtr Region::AddTriangleEdgeModel(TriangleEdgeModel *emp)
     if (triangleEdgeModels.count(nm))
     {
         dsAssert(triangleEdgeModels[nm].unique(), "UNEXPECTED");
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "Replacing Triangle Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
@@ -1038,7 +1038,7 @@ TetrahedronEdgeModelPtr Region::AddTetrahedronEdgeModel(TetrahedronEdgeModel *em
     if (tetrahedronEdgeModels.count(nm))
     {
         dsAssert(tetrahedronEdgeModels[nm].unique(), "UNEXPECTED");
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "Replacing Tetrahedron Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
@@ -1099,8 +1099,8 @@ void Region::UnregisterCallback(const std::string &mod)
  */
 void Region::SignalCallbacks(const std::string &str)
 {
-  typedef std::set<std::string> list_t; 
-  list_t list; 
+  typedef std::set<std::string> list_t;
+  list_t list;
   DependencyMap_t::iterator it = DependencyMap.begin();
   const DependencyMap_t::iterator end = DependencyMap.end();
   for ( ; it != end; ++it)
@@ -1175,7 +1175,7 @@ void Region::AddEquation(EquationHolder &eq)
     EquationHolder &oeq = equationPointerMap[nm];
     if (oeq == eq)
     {
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Warning: Will not replace equation with itself.\n"
           "Region: " << this->GetName() << ", Equation: " << nm <<
           ", New Variable: " << var << "\n";
@@ -1185,7 +1185,7 @@ void Region::AddEquation(EquationHolder &eq)
     {
       if (oeq.GetVariable() != var)
       {
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "Warning: Adding a new equation by the same name with a different variable will remove mapping to other variable.\n"
             "Region: " << this->GetName() << ", Equation: " << nm << ", Old variable: " << oeq.GetVariable() << ", New Variable: " << var << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
@@ -1195,7 +1195,7 @@ void Region::AddEquation(EquationHolder &eq)
       }
       else
       {
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "Warning: Replacing equation with equation of the same name.\n"
             "Region: " << this->GetName() << ", Equation: " << nm << ", Variable: " << var << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
@@ -1210,7 +1210,7 @@ void Region::AddEquation(EquationHolder &eq)
     if (variableEquationMap.count(var))
     {
       const std::string oenm = variableEquationMap[var];
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "ERROR: Can't create equation if its variable is already being used\n"
           << "New Equation: " << nm << ", Old Equation: " << oenm << ", Variable: "  << var << "\n";
       GeometryStream::WriteOut(OutputStream::OutputType::FATAL, *this, os.str());
@@ -1508,7 +1508,7 @@ size_t Region::GetEdgeIndexOnTriangle(const Triangle &t, ConstEdgePtr ep) const
 
   size_t tindex = t.GetIndex();
 
-  const TriangleToConstEdgeList_t &ttelist = GetTriangleToEdgeList(); 
+  const TriangleToConstEdgeList_t &ttelist = GetTriangleToEdgeList();
   const ConstEdgeList &elist   = ttelist[tindex];
 
   for (size_t i = 0; i < 3; ++i)
@@ -1529,7 +1529,7 @@ size_t Region::GetEdgeIndexOnTetrahedron(const Tetrahedron &t, ConstEdgePtr ep) 
 
   size_t tindex = t.GetIndex();
 
-  const TetrahedronToConstEdgeDataList_t &ttelist = GetTetrahedronToEdgeDataList(); 
+  const TetrahedronToConstEdgeDataList_t &ttelist = GetTetrahedronToEdgeDataList();
   const ConstEdgeDataList &elist   = ttelist[tindex];
 
   for (size_t i = 0; i < 6; ++i)

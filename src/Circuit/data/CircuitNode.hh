@@ -31,7 +31,7 @@ enum class CircuitNodeType {
     MNA,              // MNA for Voltage sources
     INTERNAL,         // INTERNAL for internal nodes
     GROUND            // Ground CircuitNodes are not solved
-}; 
+};
 
 class CircuitNode {
     public:

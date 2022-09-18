@@ -63,7 +63,7 @@ void Interface::AddInterfaceEquation(InterfaceEquationHolder &iep)
     }
     else
     {
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Warning: Replacing interface equation with equation of the same name.\n"
           "Interface: " << this->GetName() << ", Equation: " << name << "\n";
       GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
@@ -78,7 +78,7 @@ void Interface::DeleteInterfaceEquation(InterfaceEquationHolder &iep)
     if (it != interfaceEquationList.end())
     {
       dsAssert(iep == it->second, "UNEXPECTED");
-      std::ostringstream os; 
+      std::ostringstream os;
       interfaceEquationList.erase(it);
     }
 }
@@ -104,7 +104,7 @@ void Interface::AddInterfaceNodeModel(InterfaceNodeModel *nmp)
     const std::string &nm = nmp->GetName();
     if (interfaceNodeModels.count(nm))
     {
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "Replacing Interface Node Model " << nm << " in interface " << name
                   << " of material " << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
@@ -159,8 +159,8 @@ void Interface::UnregisterCallback(const std::string &mod)
 
 void Interface::SignalCallbacks(const std::string &str)
 {
-  typedef std::set<std::string> list_t; 
-  list_t list; 
+  typedef std::set<std::string> list_t;
+  list_t list;
   DependencyMap_t::iterator it = DependencyMap.begin();
   const DependencyMap_t::iterator end = DependencyMap.end();
   for ( ; it != end; ++it)

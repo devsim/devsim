@@ -82,7 +82,7 @@ Device::~Device()
 
 void Device::AddRegion(const RegionPtr &rp)
 {
-   // Should make map with name or just iterate to find 
+   // Should make map with name or just iterate to find
    dsAssert(rp->GetDimension() == dimension, "UNEXPECTED");
    const std::string &nm = rp->GetName();
 
@@ -275,7 +275,7 @@ void Device::SetBaseEquationNumber(size_t x)
 size_t Device::CalcMaxEquationNumber(bool verbose)
 {
     bool hasEquations = false;
-    std::ostringstream os; 
+    std::ostringstream os;
     size_t x = baseeqnnum;
     RegionList_t::iterator rit = regionList.begin();
     const RegionList_t::iterator rend = regionList.end();
@@ -349,8 +349,8 @@ void Device::Update(const std::vector<DoubleType> &result)
 {
     relError = 0.0;
     absError = 0.0;
-    RegionList_t::iterator it = regionList.begin(); 
-    const RegionList_t::iterator end = regionList.end(); 
+    RegionList_t::iterator it = regionList.begin();
+    const RegionList_t::iterator end = regionList.end();
     for ( ; it != end; ++it)
     {
         Region *rp = it->second;
@@ -370,8 +370,8 @@ void Device::Update(const std::vector<DoubleType> &result)
 template <typename DoubleType>
 void Device::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
 {
-    RegionList_t::iterator it = regionList.begin(); 
-    const RegionList_t::iterator end = regionList.end(); 
+    RegionList_t::iterator it = regionList.begin();
+    const RegionList_t::iterator end = regionList.end();
     for ( ; it != end; ++it)
     {
         Region *rp = it->second;
@@ -383,8 +383,8 @@ void Device::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
 template <typename DoubleType>
 void Device::NoiseUpdate(const std::string &output, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &result)
 {
-    RegionList_t::iterator it = regionList.begin(); 
-    const RegionList_t::iterator end = regionList.end(); 
+    RegionList_t::iterator it = regionList.begin();
+    const RegionList_t::iterator end = regionList.end();
     for ( ; it != end; ++it)
     {
         Region *rp = it->second;
@@ -449,8 +449,8 @@ void Device::RestoreSolutions(const std::string &suffix)
 
 void Device::UpdateContacts()
 {
-  ContactList_t::iterator it = contactList.begin(); 
-  const ContactList_t::iterator end = contactList.end(); 
+  ContactList_t::iterator it = contactList.begin();
+  const ContactList_t::iterator end = contactList.end();
   for ( ; it != end; ++it)
   {
     const ContactEquationPtrMap_t &celist = ((*it).second)->GetEquationPtrList();

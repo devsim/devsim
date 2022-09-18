@@ -60,8 +60,8 @@ class Tetrahedron {
       Tetrahedron (const Tetrahedron &);
       Tetrahedron &operator= (const Tetrahedron &);
 
-      std::vector<ConstNodePtr> nodes; 
-      mutable std::vector<ConstNodePtr> fe_nodes; 
+      std::vector<ConstNodePtr> nodes;
+      mutable std::vector<ConstNodePtr> fe_nodes;
       size_t index;
 };
 

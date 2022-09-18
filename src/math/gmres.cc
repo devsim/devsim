@@ -18,7 +18,7 @@ void Update(Vector &x, int k, Matrix &h, Vector &s, Vector v[])
 {
   Vector y(s);
 
-  // Backsolve:  
+  // Backsolve:
   for (int i = k; i >= 0; i--) {
     y(i) /= h(i,i);
     for (int j = i - 1; j >= 0; j--)
@@ -29,14 +29,14 @@ void Update(Vector &x, int k, Matrix &h, Vector &s, Vector v[])
     x += v[j] * y(j);
 }
 
-template < class Real > Real 
+template < class Real > Real
 abs(Real x)
 {
   return (x > 0 ? x : -x);
 }
 
 #if 0
-template<class Real> 
+template<class Real>
 void GeneratePlaneRotation(Real &dx, Real &dy, Real &cs, Real &sn)
 {
   if (dy == 0.0) {
@@ -71,7 +71,7 @@ void GeneratePlaneRotation(const std::complex<double> &dx, const std::complex<do
 #endif
 
 
-template<class Real> 
+template<class Real>
 void ApplyPlaneRotation(Real &dx, Real &dy, Real &cs, Real &sn)
 {
   Real temp  =  cs * dx + sn * dy;
@@ -213,7 +213,7 @@ class IMLPreconditioner {
       const std::vector<U> &b = bv.GetSTLVector();
       std::vector<U> x(b.size());
       pre_.LUSolve(x, b);
-      IMLVector<U> xv(x); 
+      IMLVector<U> xv(x);
       return xv;
     }
 

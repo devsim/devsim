@@ -120,7 +120,7 @@ InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::op_equal
   {
     if (other.type == datatype::NODEDATA)
     {
-      InterfaceNodeScalarData<DoubleType> *x = new InterfaceNodeScalarData<DoubleType>(val, other.nsd->GetLength()); 
+      InterfaceNodeScalarData<DoubleType> *x = new InterfaceNodeScalarData<DoubleType>(val, other.nsd->GetLength());
       nsd = nsd_ptr(x);
       nsd->op_equal_data(*other.nsd, func);
       type = datatype::NODEDATA;

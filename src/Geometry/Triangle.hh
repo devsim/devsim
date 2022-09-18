@@ -64,8 +64,8 @@ class Triangle {
       Triangle &operator= (const Triangle &);
 
       size_t index;
-      std::vector<ConstNodePtr> nodes; 
-      mutable std::vector<ConstNodePtr> fe_nodes; 
+      std::vector<ConstNodePtr> nodes;
+      mutable std::vector<ConstNodePtr> fe_nodes;
 };
 
 struct TriangleCompIndex

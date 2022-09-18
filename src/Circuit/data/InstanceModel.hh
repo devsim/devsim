@@ -55,12 +55,12 @@ class InstanceModel
 
         virtual bool addParam(const std::string &, double) = 0;
 
-        void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &); 
+        void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &);
 
     protected:
         virtual void assembleDC_impl(const std::vector<double> &sol, dsMath::RealRowColValueVec<double> &mat, dsMath::RHSEntryVec<double> &rhs)=0;
         virtual void assembleTran_impl(const double scl, const std::vector<double> &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs) = 0;
-        virtual void assembleACRHS_impl(std::vector<std::pair<size_t, std::complex<double> > > &) {} 
+        virtual void assembleACRHS_impl(std::vector<std::pair<size_t, std::complex<double> > > &) {}
 
         // Only derived classes can instantiate the base class
         InstanceModel(NodeKeeper *, const char *name);

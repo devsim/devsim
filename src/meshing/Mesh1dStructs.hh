@@ -61,7 +61,7 @@ class MeshLine1d {
         std::string tag;
 };
 
-/// must do sanity checking to make sure that regions only meet on new 
+/// must do sanity checking to make sure that regions only meet on new
 class MeshRegion1d {
     public:
         MeshRegion1d(const std::string &, const std::string &, const std::string &, const std::string &);

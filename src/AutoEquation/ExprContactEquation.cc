@@ -63,7 +63,7 @@ ExprContactEquation<DoubleType>::ExprContactEquation(
 template <typename DoubleType>
 void ExprContactEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-    ModelExprDataCachePtr<DoubleType> model_cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    ModelExprDataCachePtr<DoubleType> model_cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>());
     Region &r = const_cast<Region &>(ContactEquation<DoubleType>::GetRegion());
     r.SetModelExprDataCache(model_cache);
 

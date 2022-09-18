@@ -150,7 +150,7 @@ typedef std::vector<std::string> VariableList_t;
    contains it.
 
    if the numberNodes_ < maxNodeIndex_, then we will recycle free node indexes
-   for reuse      
+   for reuse
 */
 class Region
 {
@@ -470,17 +470,17 @@ class Region
       ConstTetrahedronList tetrahedronList;
 
       // one for one correspondence with nodeList
-      NodeToConstEdgeList_t     nodeToEdgeList; 
+      NodeToConstEdgeList_t     nodeToEdgeList;
 
-      NodeToConstTriangleList_t nodeToTriangleList; 
-      EdgeToConstTriangleList_t edgeToTriangleList; 
-      TriangleToConstEdgeList_t triangleToEdgeList; 
+      NodeToConstTriangleList_t nodeToTriangleList;
+      EdgeToConstTriangleList_t edgeToTriangleList;
+      TriangleToConstEdgeList_t triangleToEdgeList;
 
-      NodeToConstTetrahedronList_t     nodeToTetrahedronList; 
-      EdgeToConstTetrahedronList_t     edgeToTetrahedronList; 
-      TetrahedronToConstEdgeDataList_t tetrahedronToEdgeDataList; 
-      TetrahedronToConstTriangleList_t tetrahedronToTriangleList; 
-      TriangleToConstTetrahedronList_t triangleToTetrahedronList; 
+      NodeToConstTetrahedronList_t     nodeToTetrahedronList;
+      EdgeToConstTetrahedronList_t     edgeToTetrahedronList;
+      TetrahedronToConstEdgeDataList_t tetrahedronToEdgeDataList;
+      TetrahedronToConstTriangleList_t tetrahedronToTriangleList;
+      TriangleToConstTetrahedronList_t triangleToTetrahedronList;
 
       NodeModelList_t            nodeModels;
       EdgeModelList_t            edgeModels;

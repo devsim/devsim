@@ -66,7 +66,7 @@ double Pulse::NextBreakPoint(double tnow)
    double adj = (numper - 1.0) * _per;
 
    // This eliminates all of the redundant cycles
-   double t = tnow - adj; 
+   double t = tnow - adj;
 
    // don't need to correct for number of periods
    if (t < _td)

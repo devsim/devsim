@@ -167,7 +167,7 @@ void NodeKeeper::SetNodeNumbers(size_t start, bool verbose) {
     std::ostringstream os;
 
     size_t i = 0; // Assume c-style indexing
-    for (iter = NodeTable_.begin(); 
+    for (iter = NodeTable_.begin();
             iter != end;
             ++iter)
     {
@@ -367,7 +367,7 @@ void NodeKeeper::UpdateSolution(const std::string &key, const Solution &rhs)
         aerr += n1;
 
         const double n2 = std::abs(nval);
-        const double nrerror =  n1 / (n2 + minError); 
+        const double nrerror =  n1 / (n2 + minError);
         if (nrerror > rerr)
             rerr = nrerror;
 
@@ -446,7 +446,7 @@ void NodeKeeper::PrintSolution(const std::string &sn)
     NodeTable_t::iterator iter;
     NodeTable_t::iterator end = NodeTable_.end();
 
-    for (iter = NodeTable_.begin(); 
+    for (iter = NodeTable_.begin();
             iter != end;
             ++iter)
     {
@@ -471,7 +471,7 @@ void NodeKeeper::ACPrintSolution(const std::string &rk, const std::string &ik)
     NodeTable_t::iterator iter;
     NodeTable_t::iterator end = NodeTable_.end();
 
-    for (iter = NodeTable_.begin(); 
+    for (iter = NodeTable_.begin();
             iter != end;
             ++iter)
     {

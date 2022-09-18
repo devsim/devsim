@@ -49,7 +49,7 @@ InterfaceNodeModel::InterfaceNodeModel(const std::string &nm, const InterfacePtr
     : name(nm),
       myinterface(ip),
       model_data(ip->GetNodes0().size())
-{ 
+{
   ip->AddInterfaceNodeModel(this);
 }
 

@@ -131,8 +131,8 @@ class InterfaceNodeModel {
 
     private:
         void CalculateValues() const;
-        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0; 
-        virtual void   calcNodeScalarValues() const = 0; 
+        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0;
+        virtual void   calcNodeScalarValues() const = 0;
 
         InterfaceNodeModel();
         InterfaceNodeModel(const InterfaceNodeModel &);

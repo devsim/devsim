@@ -464,7 +464,7 @@ addDBEntryCmd(CommandHandler &data)
 
 }
 
-void 
+void
 getDBEntryCmd(CommandHandler &data)
 {
   std::string errorString;
@@ -534,6 +534,6 @@ Commands MaterialCommands[] = {
 };
 //// TODO: Get material (get name of material)
 //// TODO: Set material (get list of models loaded on material)
-//// TODO: Delete db entry (trigger appropriate callbacks) 
+//// TODO: Delete db entry (trigger appropriate callbacks)
 }
 

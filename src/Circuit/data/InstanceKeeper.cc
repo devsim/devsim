@@ -72,7 +72,7 @@ InstanceModelPtr InstanceKeeper::addInstanceModel(InstanceModel *p)
     return addInstanceModel(t1);
 }
 
-// This class will go through each model and add them to 
+// This class will go through each model and add them to
 // their elements to the matrix
 // This would be a bottleneck for parallel processing since
 // everyone is trying to assemble to the same matrix.  Perhaps each

@@ -92,7 +92,7 @@ ConstNodeList_t RemoveContactNodesFromList(const Region &region, const ConstNode
 
       for ( auto &equation_map : contact->GetEquationPtrList())
       {
-        if ((equation_map.second).GetName() == eqname)  
+        if ((equation_map.second).GetName() == eqname)
         {
           active_node = false;
           break;
@@ -185,7 +185,7 @@ ConstNodeList_t RemoveInterfaceNodesFromList(const Interface &interface, const R
 }
 }
 
-///// If a contact for this equation on this region already exists, we 
+///// If a contact for this equation on this region already exists, we
 ///// will skip this node
 ///// If an interface for this equation on this region already exists, we skip out on that
 template <typename DoubleType>

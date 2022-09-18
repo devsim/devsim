@@ -707,7 +707,7 @@ std::string GetMKLVersion()
 {
   if (!blas_table::mkl_get_version_string)
   {
-    return "Intel MKL Not Loaded";    
+    return "Intel MKL Not Loaded";
   }
 
   const size_t maxlen = 128;

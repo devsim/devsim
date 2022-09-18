@@ -50,7 +50,7 @@ class SuperLUData {
     template <typename DoubleType>
     bool LUFactorComplexMatrix(CompressedMatrix<DoubleType> *, const ComplexDoubleVec_t<double> &);
 
-  private:    
+  private:
     int          numeqns_;
     bool         transpose_;
     PEnum::LUType_t     lutype_;

@@ -26,7 +26,7 @@ enum ModelType {
   INTERFACE
 };
 
-extern const char *ModelTypeStrings[]; 
+extern const char *ModelTypeStrings[];
 }
 
 }

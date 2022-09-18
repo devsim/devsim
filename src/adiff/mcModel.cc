@@ -84,8 +84,8 @@ EqObjPtr Model::Derivative(EqObjPtr foo)
     }
 
     std::string bar("d_");
-    bar += value; 
-    bar += "_d_"; 
+    bar += value;
+    bar += "_d_";
     bar += foo->stringValue();
 
     if (!isInModelList(bar))

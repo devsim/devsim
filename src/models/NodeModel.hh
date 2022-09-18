@@ -181,8 +181,8 @@ class NodeModel {
     private:
         void CalculateValues() const;
 
-        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0; 
-        virtual void calcNodeScalarValues() const = 0; 
+        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0;
+        virtual void calcNodeScalarValues() const = 0;
         virtual void setInitialValues() = 0;
 
         NodeModel();

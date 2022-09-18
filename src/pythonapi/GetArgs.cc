@@ -51,7 +51,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
       if (optionMap.count(optname))
       {
         Option     *opt  = optionMap[optname];
-        optionType  type = (*opt).type;  
+        optionType  type = (*opt).type;
 
         if (selections.count(optname))
         {

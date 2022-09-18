@@ -120,7 +120,7 @@ int main()
     }
 
 
-//    std::cout << 
+//    std::cout <<
 }
 #endif
 

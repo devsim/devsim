@@ -27,7 +27,7 @@ GetArgs::GetArgs(optionList opts) : options(opts)
     optionMap[(*it).name] = it;
     ++it;
   }
-} 
+}
 
 ObjectHolder GetArgs::GetObjectHolder(const std::string &s) const
 {

@@ -95,7 +95,7 @@ MeshRegion2dPtr Mesh2d::FindRegion(double x, double y)
 
 bool Mesh2d::Finalize_(std::string &errorString)
 {
-    bool ret = true;    
+    bool ret = true;
 
     std::vector<MeshCoordinate> coordinates;
 //    std::vector<MeshNode>     nodes;

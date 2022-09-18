@@ -62,7 +62,7 @@ struct BlockInfo
   /// Assume that block diagonal so min/max rows share same range as min/max columns
   size_t min_eqnum_;
   size_t max_eqnum_;
-  /// Assume that we break this up into 
+  /// Assume that we break this up into
   size_t min_range_;
   size_t max_range_;
 };

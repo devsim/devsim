@@ -59,7 +59,7 @@ TriangleEdgeModel::TriangleEdgeModel(const std::string &nm, const RegionPtr rp, 
       inprocess(false),
       displayType(dt),
       model_data(rp->GetNumberTriangles() * 3)
-{ 
+{
   myself = rp->AddTriangleEdgeModel(this);
 }
 
@@ -165,7 +165,7 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
     for (size_t i = 0; i < number_triangle; ++i)
     {
       const ConstEdgeList &cel = ttcedl[i];
-      for (size_t j = 0; j < 3; ++j) 
+      for (size_t j = 0; j < 3; ++j)
       {
         const Edge &edge = *cel[j];
         const size_t ni0 = edge.GetHead()->GetIndex();
@@ -200,7 +200,7 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
     for (size_t i = 0; i < number_triangle; ++i)
     {
       const ConstEdgeList &cel = ttcedl[i];
-      for (size_t j = 0; j < 3; ++j) 
+      for (size_t j = 0; j < 3; ++j)
       {
         const Edge &edge = *cel[j];
         const size_t ni0 = edge.GetHead()->GetIndex();

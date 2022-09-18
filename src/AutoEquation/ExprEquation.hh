@@ -68,7 +68,7 @@ class ExprEquation : public Equation<DoubleType>
         void NoiseUpdateValues(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &);
 
         /// Need to decide if we are going to contain equations or models?
-        /// Assume that 
+        /// Assume that
         std::string node_model_;
         std::string edge_model_;
         std::string edge_volume_model_;

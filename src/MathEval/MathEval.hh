@@ -44,7 +44,7 @@ class MathEval {
     void RemoveTclMath(const std::string &);
 
   private:
-    MathEval(); 
+    MathEval();
     ~MathEval();
     MathEval &operator=(const MathEval &);
     MathEval(const MathEval &);

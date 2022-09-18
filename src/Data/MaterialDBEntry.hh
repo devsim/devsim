@@ -21,7 +21,7 @@ limitations under the License.
 
 class MaterialDBEntry {
   public:
-    enum class EntryType_t {UNDEFINED, FROMDB, MODIFIED}; 
+    enum class EntryType_t {UNDEFINED, FROMDB, MODIFIED};
 
     MaterialDBEntry(const std::string &, const std::string &, const ObjectHolder &, EntryType_t);
 //    MaterialDBEntry(const std::string &, const std::string &, const std::string &, const ObjectHolder &, EntryType_t);

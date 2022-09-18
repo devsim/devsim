@@ -91,8 +91,8 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
 
     if (!errors.empty())
     {
-        std::ostringstream os; 
-        os << "while evaluating triangle edge model " << GetName() << 
+        std::ostringstream os;
+        os << "while evaluating triangle edge model " << GetName() <<
         " on Device: " << GetRegion().GetDeviceName() <<
         " on Region: " << GetRegion().GetName()
         << "\n";
@@ -133,7 +133,7 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
     }
     else
     {
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "while evaluating model " << GetName() << ": expression "
             << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";

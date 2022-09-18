@@ -164,7 +164,7 @@ class TriangleEdgeModel {
 
         // Actually performs the computation
         // The nonvirtual method does any required setup.
-        //virtual DoubleType calcEdgeScalarValue(EdgePtr) const = 0; 
+        //virtual DoubleType calcEdgeScalarValue(EdgePtr) const = 0;
         virtual void calcTriangleEdgeScalarValues() const = 0;
 
 

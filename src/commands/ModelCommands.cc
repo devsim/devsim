@@ -86,7 +86,7 @@ using namespace dsValidate;
 #include <sstream>
 
 namespace dsCommand {
-void 
+void
 createNodeSolutionCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -164,7 +164,7 @@ createNodeSolutionCmd(CommandHandler &data)
 }
 
 /// Leverages both node and edge model
-void 
+void
 createNodeModelCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -395,7 +395,7 @@ createNodeModelCmd(CommandHandler &data)
 }
 
 /// Leverages both node and edge model
-void 
+void
 createContactNodeModelCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -525,7 +525,7 @@ createContactNodeModelCmd(CommandHandler &data)
     return;
 }
 
-void 
+void
 createCylindricalCmd(CommandHandler &data)
 {
   std::string errorString;
@@ -602,7 +602,7 @@ createCylindricalCmd(CommandHandler &data)
   }
 }
 
-void 
+void
 createEdgeFromNodeModelCmd(CommandHandler &data)
 {
   std::string errorString;
@@ -719,7 +719,7 @@ createEdgeFromNodeModelCmd(CommandHandler &data)
   }
 }
 
-void 
+void
 createEdgeAverageModelCmd(CommandHandler &data)
 {
   std::string errorString;
@@ -811,7 +811,7 @@ createEdgeAverageModelCmd(CommandHandler &data)
 }
 
 /// Leverages both node and edge model
-void 
+void
 createInterfaceNodeModelCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -877,7 +877,7 @@ createInterfaceNodeModelCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 setNodeValuesCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -1112,7 +1112,7 @@ setNodeValuesCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 setNodeValueCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -1506,7 +1506,7 @@ printElementEdgeValuesCmd(CommandHandler &data)
   }
 }
 
-void 
+void
 getInterfaceValuesCmd(CommandHandler &data)
 {
   std::string errorString;
@@ -1644,7 +1644,7 @@ getNodeModelListCmd(CommandHandler &data)
   }
 }
 
-void 
+void
 getInterfaceModelListCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -1688,7 +1688,7 @@ getInterfaceModelListCmd(CommandHandler &data)
     data.SetStringListResult(GetKeys(nml));
 }
 
-void 
+void
 createVectorElementModelCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -1774,7 +1774,7 @@ createVectorElementModelCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 createTriangleFromEdgeModelCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -1916,7 +1916,7 @@ createTriangleFromEdgeModelCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 debugTriangleCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -1971,7 +1971,7 @@ debugTriangleCmd(CommandHandler &data)
       for (size_t ni = 0; ni < nodeList.size(); ++ni)
       {
         const Node &node = *nodeList[ni];
-        os << "Node " << ni << " index " << node.GetIndex() << " position " << node.Position() << "\n"; 
+        os << "Node " << ni << " index " << node.GetIndex() << " position " << node.Position() << "\n";
       }
 
       const std::vector<ConstEdgePtr> &edgeList = ttelist[i];
@@ -1979,9 +1979,9 @@ debugTriangleCmd(CommandHandler &data)
       {
         const Edge &edge = *edgeList[ei];
         os << "Edge " << ei << " index " << edge.GetIndex()
-                  << " nodeindex0 " << edge.GetHead()->GetIndex() 
-                  << " nodeindex1 " << edge.GetTail()->GetIndex() 
-                  << "\n"; 
+                  << " nodeindex0 " << edge.GetHead()->GetIndex()
+                  << " nodeindex1 " << edge.GetTail()->GetIndex()
+                  << "\n";
       }
       for (Region::TriangleEdgeModelList_t::const_iterator tmit = triangleEdgeModelList.begin(); tmit != triangleEdgeModelList.end(); ++tmit)
       {
@@ -1997,7 +1997,7 @@ debugTriangleCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 createInterfaceNormalModelCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -2053,17 +2053,17 @@ createInterfaceNormalModelCmd(CommandHandler &data)
 
     if (commandName == "interface_normal_model")
     {
-      std::string idist(interfaceName +  "_distance"); 
-      std::string inormx(interfaceName + "_normal_x"); 
-      std::string inormy(interfaceName + "_normal_y"); 
-      std::string inormz(interfaceName + "_normal_z"); 
+      std::string idist(interfaceName +  "_distance");
+      std::string inormx(interfaceName + "_normal_x");
+      std::string inormy(interfaceName + "_normal_y");
+      std::string inormz(interfaceName + "_normal_z");
 
       CreateInterfaceNormal(interfaceName, idist, inormx, inormy, inormz, region);
       data.SetEmptyResult();
     }
 }
 
-void 
+void
 symdiffCmd(CommandHandler &data)
 {
   std::string errorString;
@@ -2113,7 +2113,7 @@ symdiffCmd(CommandHandler &data)
   }
 }
 
-void 
+void
 registerFunctionCmd(CommandHandler &data)
 {
   std::string errorString;

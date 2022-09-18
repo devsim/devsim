@@ -173,7 +173,7 @@ MaterialDB::DBEntry_t MaterialDB::GetDBEntry(const std::string &material_name, c
     err = sqlite3_step(pstmt);
     if (err != SQLITE_DONE)
     {
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Material \"" << material_name
          << "\" database entry \"" << parameter_name
          << "\" has more than one row, using the first.\n";
@@ -207,7 +207,7 @@ MaterialDB::DoubleDBEntry_t MaterialDB::GetDoubleDBEntry(const std::string &mate
     }
     else
     {
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Material \"" << material_name
          << "\" database entry \"" << parameter_name
          << "\" resolves to a string \"" << dbent.second.GetValue().GetString() <<  "\" when a number was expected\n";

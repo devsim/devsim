@@ -159,7 +159,7 @@ bool inModelList(const std::string &x)
 {
   std::shared_ptr<EvalType> et = evaltype.lock();
 
-  bool inlist = false; 
+  bool inlist = false;
   if (et)
   {
     inlist = et->inModelList(x);
@@ -233,7 +233,7 @@ Eqo::EqObjPtr DefaultDevsimDerivative(Eqo::EqObjPtr self, Eqo::EqObjPtr foo)
       else
       {
           std::string out(value);
-          out += ":"; 
+          out += ":";
           out += oval;
           res = EngineAPI::mod(out);
       }

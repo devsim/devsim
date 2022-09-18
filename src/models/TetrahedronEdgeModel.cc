@@ -61,7 +61,7 @@ TetrahedronEdgeModel::TetrahedronEdgeModel(const std::string &nm, const RegionPt
       inprocess(false),
       displayType(dt),
       model_data(rp->GetNumberTetrahedrons() * 6)
-{ 
+{
   myself = rp->AddTetrahedronEdgeModel(this);
 }
 
@@ -166,7 +166,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
     for (size_t i = 0; i < number_tetrahedron; ++i)
     {
       const ConstEdgeDataList &cel = ttcedl[i];
-      for (size_t j = 0; j < 6; ++j) 
+      for (size_t j = 0; j < 6; ++j)
       {
         const Edge &edge = *((*cel[j]).edge);
         size_t ni0 = edge.GetHead()->GetIndex();
@@ -202,7 +202,7 @@ void TetrahedronEdgeModel::GetScalarValuesOnNodes(TetrahedronEdgeModel::Interpol
     for (size_t i = 0; i < number_tetrahedron; ++i)
     {
       const ConstEdgeDataList &cel = ttcedl[i];
-      for (size_t j = 0; j < 3; ++j) 
+      for (size_t j = 0; j < 3; ++j)
       {
         const Edge &edge = *((*cel[j]).edge);
         const size_t ni0 = edge.GetHead()->GetIndex();

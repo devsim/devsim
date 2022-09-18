@@ -23,7 +23,7 @@ output_file = os.path.abspath(os.path.join(args.working, args.output))
 compare_file = os.path.abspath(os.path.join(args.goldendir, args.output))
 
 if (args.working):
-    os.chdir(args.working) 
+    os.chdir(args.working)
 if args.testexe:
     arguments = [args.testexe,]
     if args.args:

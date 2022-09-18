@@ -181,7 +181,7 @@ class Interface {
         Interface & operator=(const Interface &);
 
         std::string name;
-        RegionPtr rp0; 
+        RegionPtr rp0;
         RegionPtr rp1;
         ConstNodeList_t     nodes0;  // Pointers to nodes in region 0
         ConstNodeList_t     nodes1;  // Pointers to nodes in region 1

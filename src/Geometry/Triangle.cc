@@ -126,7 +126,7 @@ Vector<DoubleType> GetTriangleCenter3d(const Vector<DoubleType> &p1, const Vecto
 
   Vector<DoubleType> pc = alpha * p1 + beta * p2 + gamma * p3;
 
-  return pc; 
+  return pc;
 }
 
 template <typename DoubleType>

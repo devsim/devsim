@@ -53,12 +53,12 @@ class DevsimLoader : public Mesh {
         void AddInterface(MeshInterfacePtr ip)
         {
             interfaceList[ip->GetName()] = ip;
-        } 
+        }
 
         void AddContact(MeshContactPtr cp)
         {
             contactList[cp->GetName()] = cp;
-        } 
+        }
 
         bool IsMeshRegion(const std::string &n)
         {

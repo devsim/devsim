@@ -51,7 +51,7 @@ ExprEquation<DoubleType>::ExprEquation(
 template <typename DoubleType>
 void ExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-    ModelExprDataCachePtr<DoubleType> model_cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    ModelExprDataCachePtr<DoubleType> model_cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>());
     Region &r = const_cast<Region &>(Equation<DoubleType>::GetRegion());
     r.SetModelExprDataCache(model_cache);
 

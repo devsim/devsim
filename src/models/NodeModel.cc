@@ -59,7 +59,7 @@ NodeModel::NodeModel(const std::string &nm, const RegionPtr rp, NodeModel::Displ
       inprocess(false),
       displayType(dt),
       model_data(rp->GetNumberNodes())
-{ 
+{
   myself = rp->AddNodeModel(this);
 }
 

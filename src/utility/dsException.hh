@@ -20,8 +20,8 @@ limitations under the License.
 class dsException {
   public:
     //// Should avoid passing something which is going to be deleted in the scope being called.
-    dsException() throw () {}; 
-    dsException(const dsException &) throw () {}; 
+    dsException() throw () {};
+    dsException(const dsException &) throw () {};
     dsException &operator=(const dsException &) throw () {return *this;};
 
     const char *what() const {

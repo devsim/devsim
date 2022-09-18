@@ -152,7 +152,7 @@ class EdgeModel {
         size_t GetLength() const
         {
           return model_data.GetLength();
-        }        
+        }
 
         bool IsZero() const;
 
@@ -183,7 +183,7 @@ class EdgeModel {
         void CalculateValues() const;
         // Actually performs the computation
         // The nonvirtual method does any required setup.
-        //virtual double calcEdgeScalarValue(EdgePtr) const = 0; 
+        //virtual double calcEdgeScalarValue(EdgePtr) const = 0;
         virtual void calcEdgeScalarValues() const = 0;
 
 
