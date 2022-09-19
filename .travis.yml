@@ -40,7 +40,8 @@ before_install:
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    docker exec centos7 bash -c "cd /root/devsim && source scripts/install_miniconda_linux.sh && bash scripts/build_centos_7.sh devsim_linux_${TRAVIS_TAG}";
+    docker exec centos7 bash -c "cd /root/devsim && bash scripts/build_centos_7.sh devsim_linux_${TRAVIS_TAG}";
+    #docker exec centos7 bash -c "cd /root/devsim && source scripts/install_miniconda_linux.sh && bash scripts/build_centos_7.sh devsim_linux_${TRAVIS_TAG}";
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
       source  ./scripts/install_miniconda_macos.sh;
