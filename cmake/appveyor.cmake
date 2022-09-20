@@ -7,7 +7,9 @@
 #SET (CMAKE_CXX_WARNING_LEVEL 4)
 SET (FLEX  "C:/msys64/usr/bin/flex.exe")
 SET (BISON "C:/msys64/usr/bin/bison.exe")
-SET (BOOST_INCLUDE "${CONDA_PREFIX}/Library/include")
+SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
+SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boostorg/config/include ${EXTERNAL_LIB}/boostorg/math/include ${EXTERNAL_LIB}/boostorg/multiprecision/include)
+ADD_DEFINITIONS(-DBOOST_MP_STANDALONE -DBOOST_MP_MATH_AVAILABLE)
 
 ADD_DEFINITIONS(-DSTATIC_BUILD -D_USE_MATH_DEFINES)
 #Math stuff

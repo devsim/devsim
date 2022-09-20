@@ -15,12 +15,6 @@ export CC="/opt/rh/devtoolset-9/root/usr/bin/gcc"
 export CXX="/opt/rh/devtoolset-9/root/usr/bin/g++"
 export F77="/opt/rh/devtoolset-9/root/usr/bin/gfortran"
 
-#minimal conda environments to prevent linking against the wrong libraries
-# now opt for explicit dll load of mkl
-#conda create  -y --name python3_devsim_build python=3 mkl mkl-devel mkl-include boost cmake
-#conda create  -y --name python3_devsim_build python=3 boost cmake nomkl
-#source activate python3_devsim_build
-
 export PYTHON3_BIN=python3
 export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
@@ -33,9 +27,6 @@ export PYTHON3_ARCHIVE=""
 
 # quad precision getrf
 (cd external/getrf && bash setup_centos6.sh && cd build && make -j2)
-
-#
-(cd external && curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boost_1_80_0.tar.gz && tar xzf boost_1_80_0.tar.gz)
 
 # start devsim build
 bash scripts/setup_centos_6.sh

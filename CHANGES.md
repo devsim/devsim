@@ -4,6 +4,10 @@
 
 Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
 
+## Version TBD
+
+Boost is now added as a submodule, instead of using system libraries or Anaconda Python versions.  The Centos 7 build no longer requires Anaconda Python.
+
 ## Version 2.2.0
 
 It is possible to delete devices using the ``delete_device`` command.  Meshes used to instantiate devices may be deleted using the ``delete_mesh`` command.  Parameters set on a device and its regions are also cleared from the parameter database.
