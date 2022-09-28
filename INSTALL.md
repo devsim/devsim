@@ -18,9 +18,9 @@ Supported Platforms:
 
 This runtime may be necessary to run the software.
 
-*  Microsoft Visual C++ Redistributable for Visual Studio 2019
+*  Microsoft Visual C++ Redistributable for Visual Studio 2022
    - [https://www.visualstudio.com/downloads](https://www.visualstudio.com/downloads)
-   - [https://aka.ms/vs/16/release/VC_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+   - [https://aka.ms/vs/17/release/VC_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe)
 
 
 ### Install Anaconda Python
@@ -149,13 +149,13 @@ From a Anaconda environment command prompt:
 where ``version`` is replaced with the desired version.  The compressed file is then ``devsim/dist/devsim_msys_version.zip``.
 
 
-#### Visual Studio 2019 version
+#### Visual Studio 2022 version
 
-Extended 128-bit floating point precision is not available in this version.  Please build the MSYS version if this is required.  It requires installing:
+This version requires installing:
 
 * Anaconda Python (or Miniconda)
 * MSYS 2 [https://www.msys2.org/](https://www.msys2.org/)
-* Microsoft Visual Studio 2019
+* Microsoft Visual Studio 2022 [https://visualstudio.microsoft.com/vs/](https://visualstudio.microsoft.com/vs/)
 
 as well as the prerequisites for the MSYS version above.
 
