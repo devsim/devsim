@@ -85,4 +85,6 @@ If you wish to see simulation results, or run the regression tests yourself.  Th
 | --- | --- |
 | [devsim_bjt_example](https://github.com/devsim/devsim_bjt_example) | Bipolar Junction Transistor example |
 | [devsim_density_gradient](https://github.com/devsim/devsim_density_gradient) | Quantum Corrections to Drift Diffusion simulation |
+| [devsim_3dmos](https://github.com/devsim/devsim_3dmos) | 3D Mosfet example used in publication |
+| [devsim_misc](https://github.com/devsim/devsim_misc) | Miscellaneous scripts |
 
