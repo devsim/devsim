@@ -42,19 +42,38 @@ From a system command prompt, with an active Python environment, install the MKL
 
     conda install mkl numpy
 
+or alternatively,
+
+    pip install mkl numpy
+
+Please note it is not recommended to mix ``pip`` and Anaconda versions of these packages.
+
 ### Install DEVSIM
 
-Binary releases are available from [Zenodo](https://doi.org/10.5281/zenodo.1186952), or from [GitHub](https://github.com/devsim/devsim/releases).  Uncompress the file to the desired directory.  The go into the the directory and run the Python installer.
+#### Python Package Download Using pip
+
+It is now possible to download and install ``devsim`` using ``pip``.
+```
+pip install devsim
+```
+
+#### Alternative Package Download
+
+Binary releases are available from [Zenodo](https://doi.org/10.5281/zenodo.1186952), or from [GitHub](https://github.com/devsim/devsim/releases).  Uncompress the file to the desired directory.  Then go into the the directory and run the Python installer.
 
     cd devsim
     python install.py
 
 This script will install DEVSIM into your environment.  If you should need to remove this environment, you can use ``pip``.  Alternatively, you can set the PYTHONPATH environment variable to the ``devsim/lib`` directory.
 
+#### Basic Test
+
 You should then be able to run an example in the ``testing`` directory.
 
     cd testing
     python cap2.py
+
+If using the ``pip`` installed version, the data files should be available in your environment in the `devsim_data` directory.
 
 ### Troubleshooting
 

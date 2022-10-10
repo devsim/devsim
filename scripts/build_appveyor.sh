@@ -12,6 +12,8 @@ PACKAGE_NAME="$5"
 BASEDIR=$(pwd)
 
 export PYTHON3_BIN=python
+export PIP_BIN=pip
+${PIP_BIN} install wheel
 export PYTHON3_INCLUDE="${CONDA_PREFIX}/include"
 export PYTHON3_ARCHIVE=$(cygpath -w ${CONDA_PREFIX}/libs/python3.lib)
 
@@ -33,3 +35,7 @@ cmake --build . --config Release -- //m //nologo //verbosity:minimal
 cd "${BASEDIR}/dist"
 bash package_appveyor.sh ${PACKAGE_NAME}
 
+cd "${BASEDIR}/dist/${PACKAGE_NAME}"
+cp -f ../bdist_wheel/setup.* .
+${PIP_BIN} wheel .
+cp *.whl ..

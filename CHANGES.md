@@ -4,9 +4,41 @@
 
 Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
 
-## Version TBD
+## Version 2.3.1
 
-Boost is now added as a submodule, instead of using system libraries or Anaconda Python versions.  The Centos 7 build no longer requires Anaconda Python.
+### Python PIP Package
+
+DEVSIM is now available on pypi for macOS, Linux, and Microsoft Windows.  To install this package for your platform:
+
+```
+pip install devsim
+
+```
+
+Users of Anaconda Python should install the Intel MKL using
+```
+conda install mkl
+```
+
+and may find simulation files and documentation in ``$CONDA_PREFIX/devsim_data``.
+
+Users of other Python distributions may install this dependency using:
+```
+pip install mkl
+```
+
+and may find simulation files and documentation in ``$VIRTUAL_ENV/devsim_data`` when using virtual environments.
+
+
+### Remove Windows MSYS Build
+
+The MSYS build is removed as an available binary package.  Windows is still supported through the use of the Visual C++ compiler.
+
+### Build Notes
+
+The compiler for the Linux build are now upgraded to ``devtoolset-10`` and is now built on ``manylinux2014``.
+
+Boost is now added as a submodule, instead of using system libraries or Anaconda Python versions.  The Linux build no longer requires Anaconda Python.
 
 ## Version 2.2.0
 

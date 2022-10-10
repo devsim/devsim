@@ -116,7 +116,7 @@ install:
 #  - x86
 platform:
   - x64
-  - msys
+#  - msys
 
 # to add several platforms to build matrix:
 #platform:
@@ -176,6 +176,7 @@ test: off
 
 artifacts:
   - path: dist\*.zip
+  - path: dist\*.whl
 
 #---------------------------------#
 #     deployment configuration    #
