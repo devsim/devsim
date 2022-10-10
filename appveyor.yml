@@ -73,8 +73,8 @@ matrix:
   allow_failures:
     - platform: x64
       configuration: Release
-    - platform: msys
-      configuration: Release
+#    - platform: msys
+#      configuration: Release
 
 # build cache to preserve files/folders between builds
 #cache:
@@ -176,6 +176,7 @@ test: off
 
 artifacts:
   - path: dist\*.zip
+  - path: dist\*.whl
 
 #---------------------------------#
 #     deployment configuration    #

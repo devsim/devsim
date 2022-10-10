@@ -32,7 +32,7 @@ IF "%1"=="x64" (
 )
 
 IF "%1"=="x86" (
-  SET GENERATOR="Visual Studio 16 2019"
+  SET GENERATOR="Visual Studio 17 2022"
   SET AOPTION="Win32"
   SET BUILDDIR=win32
   SET USE_VISUAL_STUDIO=true

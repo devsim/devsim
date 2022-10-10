@@ -55,6 +55,8 @@ fi
 source activate python3_devsim_build
 
 export PYTHON3_BIN=python
+export PIP_BIN=pip
+${PIP_BIN} install wheel
 export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
 
@@ -102,5 +104,7 @@ fi
 
 (cd osx_x86_64_release && make -j4)
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});
-
+cp -f dist/bdist_wheel/setup.* dist/devsim_macos_${2}
+(cd dist/devsim_macos_${2} && ${PIP_BIN} wheel .)
+(cp dist/devsim_macos_${2}/*.whl dist)
 
