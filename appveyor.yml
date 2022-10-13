@@ -176,6 +176,7 @@ test: off
 
 artifacts:
   - path: dist\*.zip
+  - path: dist\*.whl
 
 #---------------------------------#
 #     deployment configuration    #
