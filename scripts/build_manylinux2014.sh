@@ -42,5 +42,5 @@ bash scripts/setup_centos_6.sh
 ${PIP_BIN} install wheel auditwheel
 cp -f dist/bdist_wheel/setup.* dist/${1}/
 (cd dist/${1} && ${PIP_BIN} wheel .)
-(cd dist/${1} && auditwheel repair "*.whl" )
-(cp "dist/${1}/wheelhouse/*.whl" dist)
+(cd dist/${1} && auditwheel repair *.whl)
+(cp dist/${1}/wheelhouse/*.whl dist)
