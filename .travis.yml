@@ -35,7 +35,7 @@ if: tag IS present
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      bash script/build_docker_manylinux2014.sh ${TRAVIS_TAG}
+      ./scripts/build_docker_manylinux2014.sh ${TRAVIS_TAG}
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
       source  ./scripts/install_miniconda_macos.sh;
