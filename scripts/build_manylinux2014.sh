@@ -18,6 +18,7 @@ export F77="gfortran"
 
 export PYTHON3_BIN=python3.7
 export PIP_BIN=/opt/python/cp37-cp37m/bin/pip
+${PIP_BIN} install wheel auditwheel
 export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
 
@@ -39,7 +40,6 @@ bash scripts/setup_centos_6.sh
 
 (cd linux_x86_64_release && make -j2)
 (cd dist && bash package_linux.sh ${1})
-${PIP_BIN} install wheel auditwheel
 cp -f dist/bdist_wheel/setup.* dist/${1}/
 (cd dist/${1} && ${PIP_BIN} wheel .)
 (cd dist/${1} && auditwheel repair *.whl)
