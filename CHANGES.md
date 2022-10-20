@@ -6,6 +6,8 @@ Please see the release notes in doc/devsim.pdf or at https://devsim.net for more
 
 ## Version 2.3.0
 
+### Python PIP Package
+
 DEVSIM is now available on pypi for macOS, Linux, and Microsoft Windows.  To install this package for your platform:
 
 ```
@@ -13,11 +15,12 @@ pip install devsim
 
 ```
 
-The `install.py` script is now removed.
 
-The compiler for the Linux build are now upgraded to ``devtoolset-10``.
+### Build Notes
 
-Boost is now added as a submodule, instead of using system libraries or Anaconda Python versions.  The Centos 7 build no longer requires Anaconda Python.
+The compiler for the Linux build are now upgraded to ``devtoolset-10`` and is now built on ``manylinux2014`.
+
+Boost is now added as a submodule, instead of using system libraries or Anaconda Python versions.  The Linux build no longer requires Anaconda Python.
 
 ## Version 2.2.0
 
