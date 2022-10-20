@@ -73,8 +73,8 @@ matrix:
   allow_failures:
     - platform: x64
       configuration: Release
-#    - platform: msys
-#      configuration: Release
+    - platform: msys
+      configuration: Release
 
 # build cache to preserve files/folders between builds
 #cache:
@@ -116,7 +116,7 @@ install:
 #  - x86
 platform:
   - x64
-  - msys
+#  - msys
 
 # to add several platforms to build matrix:
 #platform:
