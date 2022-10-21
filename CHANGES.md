@@ -21,7 +21,7 @@ The MSYS build is removed as an available binary package.  Windows is still supp
 
 ### Build Notes
 
-The compiler for the Linux build are now upgraded to ``devtoolset-10`` and is now built on ``manylinux2014`.
+The compiler for the Linux build are now upgraded to ``devtoolset-10`` and is now built on ``manylinux2014``.
 
 Boost is now added as a submodule, instead of using system libraries or Anaconda Python versions.  The Linux build no longer requires Anaconda Python.
 
