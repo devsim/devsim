@@ -10,6 +10,7 @@ class BinaryDistribution(Distribution):
     def has_ext_modules(foo):
         return True
 
+#https://stackoverflow.com/questions/27829754/include-entire-directory-in-python-setup-py-data-files/65432634#65432634
 def generate_data_files():
     data_files = []
     data_dirs = ('doc', 'testing', 'examples')
