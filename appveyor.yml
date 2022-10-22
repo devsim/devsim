@@ -85,6 +85,7 @@ matrix:
 
 # scripts that run after cloning repository
 install:
+  - SET README_BASE_URL=https://github.com/devsim/devsim/blob/%TRAVIS_TAG%
   - cd %APPVEYOR_BUILD_FOLDER%
   - git submodule init
   - git submodule update
