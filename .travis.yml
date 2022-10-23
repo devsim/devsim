@@ -8,7 +8,7 @@ matrix:
     osx_image: xcode10.1
   - os: linux
     sudo: required
-    dist: trusty
+    dist: xenial
     services: docker
 #  - os: osx
 #    env: COMPILER=clang
@@ -21,6 +21,10 @@ addons:
 
 #https://github.com/travis-ci/travis-ci/issues/6893
 if: tag IS present
+
+#https://docs.travis-ci.com/user/customizing-the-build/#git-clone-depth
+git:
+  depth: 3
 
 # prevent duplicate builds on tagged versions on master
 # development to be done on other branches
