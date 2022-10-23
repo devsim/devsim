@@ -5,7 +5,7 @@ SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
 
-SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boostorg/config/include ${EXTERNAL_LIB}/boostorg/math/include ${EXTERNAL_LIB}/boostorg/multiprecision/include)
+SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boostorg/math/include ${EXTERNAL_LIB}/boostorg/multiprecision/include)
 ADD_DEFINITIONS(-DBOOST_MP_STANDALONE -DBOOST_MP_MATH_AVAILABLE)
 
 SET (QUADMATH_ARCHIVE "-lquadmath")
