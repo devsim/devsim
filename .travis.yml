@@ -25,6 +25,7 @@ if: tag IS present
 #https://docs.travis-ci.com/user/customizing-the-build/#git-clone-depth
 git:
   depth: 3
+  submodules: false
 
 # prevent duplicate builds on tagged versions on master
 # development to be done on other branches
@@ -39,6 +40,11 @@ git:
 before_script:
   # specifically for pypi deployment
   - export README_BASE_URL="https://github.com/devsim/devsim/blob/${TRAVIS_TAG}"
+  - git submodule update --init --depth 1 external/symdiff
+  - git submodule update --init --depth 1 external/superlu
+  - git submodule update --init --depth 1 external/boostorg/multiprecision
+  - git submodule update --init --depth 1 external/boostorg/config
+  - git submodule update --init --depth 1 external/boostorg/math
 
 
 script:
