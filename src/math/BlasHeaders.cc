@@ -595,18 +595,16 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
 #error "MKL LIBRARY RT DLL NOT DEFINED FOR PLATFORM"
 #endif
 
+#if defined(__APPLE__) || defined(__linux__)
+  if (const char *env = std::getenv("CONDA_PREFIX"))
+  {
 #if defined(__APPLE__)
-  if (const char *env = std::getenv("CONDA_PREFIX"))
-  {
     search_paths.emplace_back("@rpath/lib/");
-  }
-#endif
-
-#if defined(__linux__)
-  if (const char *env = std::getenv("CONDA_PREFIX"))
-  {
+#elif defined(__linux__)
     search_paths.emplace_back(std::string(env) + "/lib/");
+#endif
   }
+
   if (const char *env = std::getenv("VIRTUAL_ENV"))
   {
     search_paths.emplace_back(std::string(env) + "/lib/");
