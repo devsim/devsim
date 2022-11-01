@@ -4,6 +4,10 @@
 
 Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
 
+## Version 2.3.6
+
+On Windows the ``DEVSIM_MATH_LIBS`` now uses the ``;`` as the path separator.  If not set, and the Intel MKL is not found, each platform will automatically search for openblas, lapack, and blas.
+
 ## Version 2.3.1
 
 ### Python PIP Package

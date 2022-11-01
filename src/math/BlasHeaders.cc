@@ -490,13 +490,13 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
   return GetMathStatus();
 }
 
-LoaderMessages_t LoadFromEnvironment(std::string &errors)
+LoaderMessages_t LoadFromEnvironment(const std::string &environment_var, std::string &errors)
 {
   ClearBlasFunctions();
   std::string search_path;
-  if (const char *env = std::getenv("DEVSIM_MATH_LIBS"))
+  if (!environment_var.empty())
   {
-    search_path = std::string(env);
+    search_path = environment_var;
     std::stringstream os;
     os << "Searching DEVSIM_MATH_LIBS=\"" << search_path << "\"\n";
     OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
@@ -510,7 +510,13 @@ LoaderMessages_t LoadFromEnvironment(std::string &errors)
   std::vector<std::string> dll_names;
   while (!sv.empty())
   {
+#if defined(_WIN32)
+    auto pos = sv.find(';');
+#elif defined(__APPLE__) || defined(__linux__)
     auto pos = sv.find(':');
+#else
+#error "SET SEPARATOR FOR NEW PLATFORM"
+#endif
     if (pos != std::string_view::npos)
     {
       if (pos != 0)
@@ -735,21 +741,38 @@ std::string GetMKLVersion()
 
 LoaderMessages_t LoadMathLibraries(std::string &errors)
 {
-  LoaderMessages_t ret = LoadFromEnvironment(errors);
-#if 0
+  LoaderMessages_t ret = LoaderMessages_t::NO_ENVIRONMENT;
+  const char *env = std::getenv("DEVSIM_MATH_LIBS");
+
+  if (env)
+  {
+    ret = LoadFromEnvironment(env, errors);
+  }
+  else
+  {
+    ret = LoadIntelMKL(errors);
+  }
+
   if ((ret == LoaderMessages_t::MKL_LOADED) || (ret == LoaderMessages_t::MATH_LOADED))
   {
       return ret;
   }
+
+#if defined(_WIN32)
+    const char *teststring = "libopenblas.dll;liblapack.dll;libblas.dll";
+#elif defined(__APPLE__)
+    const char *teststring = "libopenblas.dylib:liblapack.dylib:libblas.dylib";
+#elif defined(__linux__)
+    const char *teststring = "libopenblas.so:liblapack.so:libblas.so";
+#else
+#error "SET MATH LIBRARIES TEST FOR NEW PLATFORM"
 #endif
-  if (ret == LoaderMessages_t::NO_ENVIRONMENT)
+
+  if (!env)
   {
-    ret = LoadIntelMKL(errors);
+    ret = LoadFromEnvironment(teststring, errors);
   }
-  else
-  {
-    errors += "Not attempting to load Intel MKL since DEVSIM_MATH_LIBS is specified.\n";
-  }
+
   return ret;
 }
 

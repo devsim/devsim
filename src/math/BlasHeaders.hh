@@ -27,7 +27,7 @@ enum class LoaderMessages_t {NO_ENVIRONMENT, MISSING_DLL, MISSING_SYMBOLS, MATH_
 LoaderMessages_t LoadMathLibraries(std::string &errors);
 LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool replace);
 void ClearBlasFunctions();
-LoaderMessages_t LoadFromEnvironment(std::string &errors);
+LoaderMessages_t LoadFromEnvironment(const std::string &envstring, std::string &errors);
 LoaderMessages_t LoadIntelMKL(std::string &errors);
 bool IsMathLoaded();
 bool IsMKLLoaded();
