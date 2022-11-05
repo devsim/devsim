@@ -490,13 +490,13 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
   return GetMathStatus();
 }
 
-LoaderMessages_t LoadFromEnvironment(std::string &errors)
+LoaderMessages_t LoadFromEnvironment(const std::string &environment_var, std::string &errors)
 {
   ClearBlasFunctions();
   std::string search_path;
-  if (const char *env = std::getenv("DEVSIM_MATH_LIBS"))
+  if (!environment_var.empty())
   {
-    search_path = std::string(env);
+    search_path = environment_var;
     std::stringstream os;
     os << "Searching DEVSIM_MATH_LIBS=\"" << search_path << "\"\n";
     OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
@@ -510,7 +510,13 @@ LoaderMessages_t LoadFromEnvironment(std::string &errors)
   std::vector<std::string> dll_names;
   while (!sv.empty())
   {
+#if defined(_WIN32)
+    auto pos = sv.find(';');
+#elif defined(__APPLE__) || defined(__linux__)
     auto pos = sv.find(':');
+#else
+#error "SET SEPARATOR FOR NEW PLATFORM"
+#endif
     if (pos != std::string_view::npos)
     {
       if (pos != 0)
@@ -576,7 +582,11 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
 {
   LoaderMessages_t ret = LoaderMessages_t::MISSING_DLL;
   ClearBlasFunctions();
+
+#if 0
   std::vector<std::string> search_paths = {std::string("")};
+#endif
+
 #if defined(__APPLE__)
 // This should always be available through symlink
   const std::string default_name = "libmkl_rt.dylib";
@@ -595,6 +605,7 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
 #error "MKL LIBRARY RT DLL NOT DEFINED FOR PLATFORM"
 #endif
 
+#if 0
 #if defined(__APPLE__) || defined(__linux__)
   if (const char *env = std::getenv("CONDA_PREFIX"))
   {
@@ -610,8 +621,10 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
     search_paths.emplace_back(std::string(env) + "/lib/");
   }
 #endif
+#endif
 
   errors.clear();
+#if 0
   for (auto &path : search_paths)
   {
     ret = LoadBlasDLL(path + default_name, errors, true);
@@ -620,6 +633,9 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
       return ret;
     }
   }
+#else
+  ret = LoadBlasDLL(default_name, errors, true);
+#endif
 
   const size_t max_tested_version = 2;
   const size_t min_version_to_test_for = 1;
@@ -629,6 +645,7 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
   for (size_t i = min_version_to_test_for; i <= max_version_to_test_for; ++i)
   {
     dll_name = prefix_name + std::to_string(i) + suffix_name;
+#if 0
     for (auto &a : search_paths)
     {
       errors.clear();
@@ -639,8 +656,19 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
         goto done;
       }
     }
+#else
+    errors.clear();
+    ret = LoadBlasDLL(dll_name, errors, true);
+    if (ret == LoaderMessages_t::MKL_LOADED)
+    {
+      actual_version = i;
+      break;
+    }
+#endif
   }
+#if 0
 done:
+#endif
   if (actual_version == size_t(-1))
   {
     std::string tested_dll_name = prefix_name + std::to_string(max_tested_version) + suffix_name;
@@ -735,21 +763,38 @@ std::string GetMKLVersion()
 
 LoaderMessages_t LoadMathLibraries(std::string &errors)
 {
-  LoaderMessages_t ret = LoadFromEnvironment(errors);
-#if 0
+  LoaderMessages_t ret = LoaderMessages_t::NO_ENVIRONMENT;
+  const char *env = std::getenv("DEVSIM_MATH_LIBS");
+
+  if (env)
+  {
+    ret = LoadFromEnvironment(env, errors);
+  }
+  else
+  {
+    ret = LoadIntelMKL(errors);
+  }
+
   if ((ret == LoaderMessages_t::MKL_LOADED) || (ret == LoaderMessages_t::MATH_LOADED))
   {
       return ret;
   }
+
+#if defined(_WIN32)
+    const char *teststring = "libopenblas.dll;liblapack.dll;libblas.dll";
+#elif defined(__APPLE__)
+    const char *teststring = "libopenblas.dylib:liblapack.dylib:libblas.dylib";
+#elif defined(__linux__)
+    const char *teststring = "libopenblas.so:liblapack.so:libblas.so";
+#else
+#error "SET MATH LIBRARIES TEST FOR NEW PLATFORM"
 #endif
-  if (ret == LoaderMessages_t::NO_ENVIRONMENT)
+
+  if (!env)
   {
-    ret = LoadIntelMKL(errors);
+    ret = LoadFromEnvironment(teststring, errors);
   }
-  else
-  {
-    errors += "Not attempting to load Intel MKL since DEVSIM_MATH_LIBS is specified.\n";
-  }
+
   return ret;
 }
 

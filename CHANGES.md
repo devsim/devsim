@@ -4,6 +4,26 @@
 
 Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
 
+## Version 2.3.6
+
+On Windows the ``DEVSIM_MATH_LIBS`` now uses the ``;`` as the path separator, while macOS and Linux still use ``:``.
+
+The math library search order is then:
+
+* The math libraries listed in the ``DEVSIM_MATH_LIBS`` environment variable, with the appropriate separator.
+* The Intel Math Kernel Library
+* These dynamic libraries
+  * OpenBLAS (e.g. libopenblas.so)
+  * LAPACK (e.g. liblapack.so)
+  * BLAS (e.g. libblas.so)
+
+All platforms will search for the Intel MKL by trying several version numbers.  When the Intel MKL is not available, the direct solver will switch from Intel MKL Pardiso to SuperLU.
+
+On macOS and Linux, the RPATH has been modified to look in places relative to the `devsim` module, instead of using ``CONDA_PREFIX`` or ``VIRTUAL_ENV``.
+
+* ``macOS`` : ``@loader_path;@loader_path/../lib;@loader_path/../../../../lib;@executable_path/../lib``
+* ``Linux`` : ``$ORIGIN:$ORIGIN/../lib:$ORIGIN/../../../../lib``
+
 ## Version 2.3.1
 
 ### Python PIP Package
