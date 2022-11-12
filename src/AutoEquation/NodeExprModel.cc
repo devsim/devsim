@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -97,8 +97,8 @@ void NodeExprModel<DoubleType>::calcNodeScalarValues() const
 
     if (!errors.empty())
     {
-        std::ostringstream os; 
-        os << "while evaluating node model " << GetName() << 
+        std::ostringstream os;
+        os << "while evaluating node model " << GetName() <<
         " on Device: " << GetRegion().GetDeviceName() <<
         " on Region: " << GetRegion().GetName()
         << "\n";
@@ -131,7 +131,7 @@ void NodeExprModel<DoubleType>::calcNodeScalarValues() const
     }
     else
     {
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "while evaluating model " << GetName() << ": expression "
             << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";

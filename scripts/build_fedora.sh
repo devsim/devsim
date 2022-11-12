@@ -11,7 +11,7 @@ if [[ ${EUID} -ne 0 ]]; then
   SUDO=sudo
 fi
 ${SUDO} dnf install -y git bison flex tcl tcl-devel cmake3 gcc gcc-c++ libquadmath-devel \
-     gcc-gfortran bzip2 boost boost-devel cgnslib cgnslib-devel \
+     gcc-gfortran bzip2 cgnslib cgnslib-devel \
      sqlite-devel python3-devel blas-devel lapack-devel SuperLU SuperLU-devel \
      make rsync
 

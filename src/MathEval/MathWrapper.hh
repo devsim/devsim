@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class MathWrapper {
       return nargs_;
     }
 
-  protected:  
+  protected:
 
     virtual void DerivedEvaluate(const std::vector<DoubleType> &/*dvals*/, const std::vector<const std::vector<DoubleType> *> &/*vvals*/, std::vector<DoubleType> &/*result*/, size_t /*vbeg*/, size_t /*vend*/) const = 0;
     virtual DoubleType DerivedEvaluate(const std::vector<DoubleType> &/*vals*/) const = 0;

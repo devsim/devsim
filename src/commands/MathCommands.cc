@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -143,6 +143,8 @@ solveCmdImpl(CommandHandler &data)
     std::ostringstream os;
     os << "\"direct\" and \"iterative\" are the only valid simulation types\n";
     errorString = os.str();
+    data.SetErrorResult(errorString);
+    return;
   }
 
   if (!errorString.empty())

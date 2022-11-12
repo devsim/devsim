@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -432,28 +432,28 @@ void ModelExprData<DoubleType>::double_op_equal(const ModelExprData<DoubleType> 
   }
   else if (other.type == datatype::NODEDATA)
   {
-    NodeScalarData<DoubleType> *x = new NodeScalarData<DoubleType>(val, other.nodeScalarData->GetLength()); 
+    NodeScalarData<DoubleType> *x = new NodeScalarData<DoubleType>(val, other.nodeScalarData->GetLength());
     nodeScalarData = nodeScalarData_ptr<DoubleType>(x);
     nodeScalarData->op_equal_data(*other.nodeScalarData, func);
     type = datatype::NODEDATA;
   }
   else if (other.type == datatype::EDGEDATA)
   {
-    EdgeScalarData<DoubleType> *x = new EdgeScalarData<DoubleType>(val, other.edgeScalarData->GetLength()); 
+    EdgeScalarData<DoubleType> *x = new EdgeScalarData<DoubleType>(val, other.edgeScalarData->GetLength());
     edgeScalarData = edgeScalarData_ptr<DoubleType>(x);
     edgeScalarData->op_equal_data(*other.edgeScalarData, func);
     type = datatype::EDGEDATA;
   }
   else if (other.type == datatype::TRIANGLEEDGEDATA)
   {
-    TriangleEdgeScalarData<DoubleType> *x = new TriangleEdgeScalarData<DoubleType>(val, other.triangleEdgeScalarData->GetLength()); 
+    TriangleEdgeScalarData<DoubleType> *x = new TriangleEdgeScalarData<DoubleType>(val, other.triangleEdgeScalarData->GetLength());
     triangleEdgeScalarData = triangleEdgeScalarData_ptr<DoubleType>(x);
     triangleEdgeScalarData->op_equal_data(*other.triangleEdgeScalarData, func);
     type = datatype::TRIANGLEEDGEDATA;
   }
   else if (other.type == datatype::TETRAHEDRONEDGEDATA)
   {
-    TetrahedronEdgeScalarData<DoubleType> *x = new TetrahedronEdgeScalarData<DoubleType>(val, other.tetrahedronEdgeScalarData->GetLength()); 
+    TetrahedronEdgeScalarData<DoubleType> *x = new TetrahedronEdgeScalarData<DoubleType>(val, other.tetrahedronEdgeScalarData->GetLength());
     tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr<DoubleType>(x);
     tetrahedronEdgeScalarData->op_equal_data(*other.tetrahedronEdgeScalarData, func);
     type = datatype::TETRAHEDRONEDGEDATA;

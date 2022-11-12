@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -159,7 +159,7 @@ bool inModelList(const std::string &x)
 {
   std::shared_ptr<EvalType> et = evaltype.lock();
 
-  bool inlist = false; 
+  bool inlist = false;
   if (et)
   {
     inlist = et->inModelList(x);
@@ -233,7 +233,7 @@ Eqo::EqObjPtr DefaultDevsimDerivative(Eqo::EqObjPtr self, Eqo::EqObjPtr foo)
       else
       {
           std::string out(value);
-          out += ":"; 
+          out += ":";
           out += oval;
           res = EngineAPI::mod(out);
       }

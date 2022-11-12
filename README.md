@@ -6,7 +6,7 @@
 ## Introduction:
 **DEVSIM** - TCAD Device Simulator
 
-**DEVSIM** is a tool for TCAD Device Simulation, using finite volume methods.  The source code is provided by Devsim LLC.
+**DEVSIM** is a tool for TCAD Device Simulation, using finite volume methods.  The source code is provided by DEVSIM LLC.
 
 ## Website:
 
@@ -66,7 +66,7 @@ If you wish to see simulation results, or run the regression tests yourself.  Th
 | Name | Description |
 | --- | --- |
 | [devsim_tests_msys](https://github.com/devsim/devsim_tests_msys) | Windows MSYS Build |
-| [devsim_tests_win64](https://github.com/devsim/devsim_tests_win64) | Windows Visual Studio 2019 Build |
+| [devsim_tests_win64](https://github.com/devsim/devsim_tests_win64) | Windows Visual Studio 2022 Build |
 | [devsim_tests_macos_gcc_x86_64](https://github.com/devsim/devsim_tests_macos_gcc_x86_64) | macOS Build |
 | [devsim_tests_linux_x86_64](https://github.com/devsim/devsim_tests_linux_x86_64) | Linux |
 
@@ -85,4 +85,6 @@ If you wish to see simulation results, or run the regression tests yourself.  Th
 | --- | --- |
 | [devsim_bjt_example](https://github.com/devsim/devsim_bjt_example) | Bipolar Junction Transistor example |
 | [devsim_density_gradient](https://github.com/devsim/devsim_density_gradient) | Quantum Corrections to Drift Diffusion simulation |
+| [devsim_3dmos](https://github.com/devsim/devsim_3dmos) | 3D Mosfet example used in publication |
+| [devsim_misc](https://github.com/devsim/devsim_misc) | Miscellaneous scripts |
 

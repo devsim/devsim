@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ Vector<DoubleType> GetTriangleCenter3d(const Vector<DoubleType> &p1, const Vecto
 
   Vector<DoubleType> pc = alpha * p1 + beta * p2 + gamma * p3;
 
-  return pc; 
+  return pc;
 }
 
 template <typename DoubleType>

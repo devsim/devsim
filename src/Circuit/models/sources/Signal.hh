@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class Signal {
       void   setVoltage(double v) {_volt = v;}
    protected:
       Signal (SignalType);
-      double _volt;
+      double _volt = 0.0;
    private:
       Signal();
       Signal(const Signal &);

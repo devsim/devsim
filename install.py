@@ -27,10 +27,10 @@ class DevsimCheck:
 #            'Linux' : {'mkl' : 'libmkl_rt.so.1'},
 #            'Windows' : {'mkl' : 'mkl_rt.1.dll'},
 #        }
-#        mkl_found['mkl_loaded'] = False 
+#        mkl_found['mkl_loaded'] = False
 #        try:
 #            mydll = cdll.LoadLibrary(DLL_NAMES[self.osname]['mkl'])
-#            mkl_found['mkl_loaded'] = True 
+#            mkl_found['mkl_loaded'] = True
 #            print('''
 #INFO: Intel MKL %s loaded successfully
 #''' % DLL_NAMES[self.osname]['mkl'])
@@ -72,7 +72,7 @@ class DevsimCheck:
 #''' % DLL_NAMES[self.osname]['mkl'])
 #        except:
 #            print('''
-#ERROR: Visual Studio 2019 C++ redistributable could not be loaded. 
+#ERROR: Visual Studio 2019 C++ redistributable could not be loaded.
 #ERROR: Please download and install from here:
 #ERROR: https://visualstudio.microsoft.com/downloads/
 #ERROR: https://aka.ms/vs/16/release/VC_redist.x64.exe
@@ -135,12 +135,12 @@ INFO: Writing %s
 INFO:''' % ofile)
         with open(ofile, 'w') as of:
           of.write(setup_py)
-        
+
 
         print('''\
 INFO: Please type the following command to install devsim:
 INFO: pip install -e lib
-INFO: 
+INFO:
 INFO: To remove the file, type:
 INFO: pip uninstall devsim
 ''')

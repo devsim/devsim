@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::op_equal
   {
     if (other.type == datatype::NODEDATA)
     {
-      InterfaceNodeScalarData<DoubleType> *x = new InterfaceNodeScalarData<DoubleType>(val, other.nsd->GetLength()); 
+      InterfaceNodeScalarData<DoubleType> *x = new InterfaceNodeScalarData<DoubleType>(val, other.nsd->GetLength());
       nsd = nsd_ptr(x);
       nsd->op_equal_data(*other.nsd, func);
       type = datatype::NODEDATA;

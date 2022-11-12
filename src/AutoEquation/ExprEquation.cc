@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ ExprEquation<DoubleType>::ExprEquation(
 template <typename DoubleType>
 void ExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-    ModelExprDataCachePtr<DoubleType> model_cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    ModelExprDataCachePtr<DoubleType> model_cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>());
     Region &r = const_cast<Region &>(Equation<DoubleType>::GetRegion());
     r.SetModelExprDataCache(model_cache);
 

@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ using std::abs;
 namespace dsMath {
 
 template <typename DoubleType>
-Newton<DoubleType>::Newton() : maxiter(DefaultMaxIter), absLimit(DefaultAbsError), relLimit(DefaultRelError), maxLimit(DefaultMaxAbsError), qrelLimit(DefaultQRelError), dimension(0) {}
+Newton<DoubleType>::Newton() {}
 
 template <typename DoubleType>
 Newton<DoubleType>::~Newton() {};
@@ -519,6 +519,7 @@ DirectSolver GetDirectSolver()
 #ifdef USE_MKL_PARDISO
       ret = DirectSolver::MKLPARDISO;
 #else
+      ret = DirectSolver::SUPERLU;
       std::ostringstream os;
       os << "Solver \"mkl_pardiso\" not supported in this build.  Switching to \"superlu\".\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
@@ -538,6 +539,7 @@ DirectSolver GetDirectSolver()
 
   std::ostringstream os;
   os << "Parameter \"direct_solver\" parameter not set. Valid options are \"mkl_pardiso\" or \"superlu\".\n";
+#if defined(USE_EXPLICIT_MATH_LOAD)
   if (MathLoader::IsMKLLoaded())
   {
     os << "Using \"mkl_pardiso\" direct solver.\n";
@@ -548,13 +550,20 @@ DirectSolver GetDirectSolver()
     os << "Using \"superlu\" direct solver.\n";
     ret = DirectSolver::SUPERLU;
   }
+#elif defined(USE_MKL_PARDISO)
+  os << "Using \"mkl_pardiso\" direct solver.\n";
+  ret = DirectSolver::MKLPARDISO;
+#else
+  os << "Using \"superlu\" direct solver.\n";
+  ret = DirectSolver::SUPERLU;
+#endif
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   return ret;
 }
 
 Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, size_t numeqns)
 {
-  Preconditioner<double> *preconditioner;
+  Preconditioner<double> *preconditioner = nullptr;
   if (dynamic_cast<IterativeLinearSolver<double> *>(&itermethod))
   {
     preconditioner = new BlockPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS);
@@ -582,7 +591,7 @@ Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, s
 #ifdef DEVSIM_EXTENDED_PRECISION
 Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermethod, size_t numeqns)
 {
-  Preconditioner<float128> *preconditioner;
+  Preconditioner<float128> *preconditioner = nullptr;
   if (dynamic_cast<IterativeLinearSolver<float128> *>(&itermethod))
   {
     preconditioner = new BlockPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS);
@@ -745,11 +754,6 @@ void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, Objec
   {
     rhs.clear();
     rhs.resize(numeqns);
-
-    if (!matrix)
-    {
-      matrix = std::unique_ptr<CompressedMatrix<DoubleType>>(new CompressedMatrix<DoubleType>(numeqns, matrix_type, ct));
-    }
 
     LoadMatrixAndRHS(*matrix, rhs, permvec, dsMathEnum::WhatToLoad::MATRIXANDRHS, p.second, static_cast<DoubleType>(1.0));
     matrix->Finalize();

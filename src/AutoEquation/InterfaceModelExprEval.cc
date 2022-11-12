@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -230,7 +230,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateI
             }
 
 
-            const NodeScalarList<DoubleType> &nvals = nm->GetScalarValues<DoubleType>(); 
+            const NodeScalarList<DoubleType> &nvals = nm->GetScalarValues<DoubleType>();
 
 //          dsAssert(nodevec.size() == nvals.size(), "UNEXPECTED");
 
@@ -426,7 +426,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::eval_func
   InterfaceModelExprDataCachePtr<DoubleType> cache = const_cast<Interface *>(data_ref)->GetInterfaceModelExprDataCache<DoubleType>();
   if (!cache)
   {
-    cache = InterfaceModelExprDataCachePtr<DoubleType>(new InterfaceModelExprDataCache<DoubleType>()); 
+    cache = InterfaceModelExprDataCachePtr<DoubleType>(new InterfaceModelExprDataCache<DoubleType>());
     const_cast<Interface *>(data_ref)->SetInterfaceModelExprDataCache(cache);
   }
 
@@ -576,7 +576,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
     {
       dargs.push_back(argv[i].GetDoubleValue());
     }
-    const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
+    const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
     DoubleType res = emath.EvaluateMathFunc(name, dargs, resultstr);
     if (!resultstr.empty())
     {
@@ -641,7 +641,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
               }
           }
 
-          const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
+          const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
           DoubleType res = emath.EvaluateMathFunc(name, dargs, resultstr);
           output[i] = res;
           if (!resultstr.empty())
@@ -652,7 +652,7 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateE
           }
       }
 #else
-    const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
+    const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
     if (all_doubles)
     {
       output.clear();

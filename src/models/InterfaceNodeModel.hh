@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -131,8 +131,8 @@ class InterfaceNodeModel {
 
     private:
         void CalculateValues() const;
-        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0; 
-        virtual void   calcNodeScalarValues() const = 0; 
+        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0;
+        virtual void   calcNodeScalarValues() const = 0;
 
         InterfaceNodeModel();
         InterfaceNodeModel(const InterfaceNodeModel &);
@@ -141,10 +141,10 @@ class InterfaceNodeModel {
         std::string name;
         WeakInterfaceNodeModelPtr myself;
         InterfacePtr   myinterface;
-        mutable bool uptodate;
-        mutable bool inprocess;
+        mutable bool uptodate = false;
+        mutable bool inprocess = false;
         mutable ModelDataHolder model_data;
-        size_t length;
+        size_t length = 0;
 };
 
 template <typename T1, typename T2, typename ... Args>

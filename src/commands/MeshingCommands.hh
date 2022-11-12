@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ void createContactFromInterfaceCmd(CommandHandler &);
 void createInterfaceFromNodesCmd(CommandHandler &);
 void createDeviceCmd(CommandHandler &);
 void createGmshMeshCmd(CommandHandler &);
+void deleteDeviceCmd(CommandHandler &);
+void deleteMeshCmd(CommandHandler &);
 void finalizeMeshCmd(CommandHandler &);
 void loadDevicesCmd(CommandHandler &);
 void writeDevicesCmd(CommandHandler &);

@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,11 +39,8 @@ MeshKeeper &MeshKeeper::GetInstance()
 
 void MeshKeeper::DestroyInstance()
 {
-    if (instance)
-    {
-        delete instance;
-    }
-    instance = 0;
+    delete instance;
+    instance = nullptr;
 }
 
 
@@ -54,6 +51,7 @@ MeshKeeper::~MeshKeeper()
     {
         delete mit->second;
     }
+    meshList.clear();
 }
 
 void MeshKeeper::AddMesh(MeshPtr mp)
@@ -72,6 +70,19 @@ MeshPtr MeshKeeper::GetMesh(const std::string &nm)
         mp = meshList[nm];
     }
     return mp;
+}
+
+bool MeshKeeper::DeleteMesh(const std::string &nm)
+{
+    bool ret = false;
+    if (auto it = meshList.find(nm); it != meshList.end())
+    {
+        auto mp = it->second;
+        meshList.erase(it);
+        delete mp;
+        ret = true;
+    }
+    return ret;
 }
 }
 

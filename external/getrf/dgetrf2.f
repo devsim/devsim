@@ -142,7 +142,7 @@
       EXTERNAL           quad_dlamch, quad_idamax
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           quad_dgemm, quad_dscal, quad_dlaswp, quad_dtrsm, XERBLA
+      EXTERNAL           quad_dgemm, quad_dscal, quad_dlaswp, quad_dtrsm, quad_xerbla
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX, MIN
@@ -160,7 +160,7 @@
          INFO = -4
       END IF
       IF( INFO.NE.0 ) THEN
-         CALL XERBLA( 'quad_dgetrf2', -INFO )
+         CALL quad_xerbla( 'quad_dgetrf2', -INFO )
          RETURN
       END IF
 *

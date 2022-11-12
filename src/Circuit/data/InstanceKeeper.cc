@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ InstanceKeeper &InstanceKeeper::instance()
 void InstanceKeeper::delete_instance()
 {
     delete instance_;
+    instance_ = nullptr;
 }
 
 InstanceKeeper::InstanceKeeper() {}
@@ -71,7 +72,7 @@ InstanceModelPtr InstanceKeeper::addInstanceModel(InstanceModel *p)
     return addInstanceModel(t1);
 }
 
-// This class will go through each model and add them to 
+// This class will go through each model and add them to
 // their elements to the matrix
 // This would be a bottleneck for parallel processing since
 // everyone is trying to assemble to the same matrix.  Perhaps each

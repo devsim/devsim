@@ -21,6 +21,7 @@ IF (MKL_PARDISO)
 SET (CXX_SRCS ${CXX_SRCS} MKLPardisoPreconditioner.cc)
 ENDIF (MKL_PARDISO)
 
+
 INCLUDE_DIRECTORIES (
     ../utility
     ../Geometry
@@ -33,6 +34,7 @@ INCLUDE_DIRECTORIES (
     ../common_api
     ${SUPERLU_INCLUDE}
     ${MKL_PARDISO_INCLUDE}
+    ${EIGEN_INCLUDE}
 )
 
 ADD_LIBRARY (math ${CXX_SRCS})

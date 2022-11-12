@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ limitations under the License.
 
 class MaterialDBEntry {
   public:
-    enum class EntryType_t {UNDEFINED, FROMDB, MODIFIED}; 
+    enum class EntryType_t {UNDEFINED, FROMDB, MODIFIED};
 
     MaterialDBEntry(const std::string &, const std::string &, const ObjectHolder &, EntryType_t);
 //    MaterialDBEntry(const std::string &, const std::string &, const std::string &, const ObjectHolder &, EntryType_t);

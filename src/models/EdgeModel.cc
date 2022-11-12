@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ EdgeModel::EdgeModel(const std::string &nm, const RegionPtr rp, EdgeModel::Displ
       inprocess(false),
       displayType(dt),
       model_data(rp->GetNumberEdges())
-{ 
+{
   myself = rp->AddEdgeModel(this);
 }
 
@@ -301,7 +301,7 @@ void EdgeModel::SetValues(const DoubleType &v)
     model_data.set_indexes(atcontact, v);
   }
   else
-  { 
+  {
     model_data.SetUniformValue<DoubleType>(v);
   }
 

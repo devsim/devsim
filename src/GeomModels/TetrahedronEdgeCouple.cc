@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ void TetrahedronEdgeCouple<DoubleType>::calcTetrahedronEdgeCouple() const
   //// Make this part of region, if useful
   std::vector<Vector<DoubleType>> edgeCenters(edgeList.size());
   for (size_t i = 0; i < edgeList.size(); ++i)
-  { 
+  {
       const Edge &edge = *(edgeList[i]);
       const auto &h0 = edge.GetHead()->Position();
       const auto &h1 = edge.GetTail()->Position();

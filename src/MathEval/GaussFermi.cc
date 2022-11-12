@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2021 Devsim LLC
+Copyright 2021 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,7 +49,9 @@ eprint = { https://doi.org/10.1063/1.3374475 }
 namespace {
 
 //// Fix multiprecision constexpr issue
-#if BOOST_VERSION / 100 >= 1072
+//#if BOOST_VERSION / 100 >= 1072
+//recurrent issue with constexpr
+#if 0
 template <typename T>
 struct MC {
     static constexpr T sqrt2 = boost::math::constants::root_two<T>();

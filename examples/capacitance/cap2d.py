@@ -1,4 +1,4 @@
-# Copyright 2013 Devsim LLC
+# Copyright 2013 DEVSIM LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ for c in ("top", "bot"):
                      node_model="%s_bc" % c, edge_charge_model="DField")
 
 ###
-### Set the contact 
+### Set the contact
 ###
 set_parameter(device=device, name="top_bias", value=1.0e-0)
 set_parameter(device=device, name="bot_bias", value=0.0)

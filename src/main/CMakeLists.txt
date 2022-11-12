@@ -51,10 +51,18 @@ TARGET_LINK_LIBRARIES(devsim_py3 ${PY3LIBRARIES} ${SUPERLU_ARCHIVE} ${BLAS_ARCHI
 ENDIF()
 ENDIF(WIN32)
 IF (APPLE)
-SET_TARGET_PROPERTIES(devsim_py3 PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+SET_TARGET_PROPERTIES(devsim_py3 PROPERTIES
+  LINK_FLAGS "-undefined dynamic_lookup -flat_namespace"
+  INSTALL_RPATH "@loader_path;@loader_path/../lib;@loader_path/../../../../lib;@executable_path/../lib"
+  BUILD_WITH_INSTALL_RPATH TRUE
+)
 ENDIF (APPLE)
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-SET_TARGET_PROPERTIES(devsim_py3 PROPERTIES INSTALL_RPATH "\$ORIGIN/" BUILD_RPATH "\$ORIGIN/")
+SET_TARGET_PROPERTIES(devsim_py3 PROPERTIES
+  # the last bit of the INSTALL_RPATH to match ./lib and ./lib/python3.x/site-packages/devsim
+  INSTALL_RPATH "\$ORIGIN:\$ORIGIN/../lib:\$ORIGIN/../../../../lib"
+  BUILD_WITH_INSTALL_RPATH TRUE
+)
 ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 ENDIF (PYTHON3)
 

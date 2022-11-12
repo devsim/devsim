@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ GetArgs::GetArgs(optionList opts) : options(opts)
     optionMap[(*it).name] = it;
     ++it;
   }
-} 
+}
 
 ObjectHolder GetArgs::GetObjectHolder(const std::string &s) const
 {
@@ -40,9 +40,15 @@ ObjectHolder GetArgs::GetObjectHolder(const std::string &s) const
   else
   {
     OptionMap_t::const_iterator vit = optionMap.find(s);
-    dsAssert(vit != optionMap.end(), "UNEXPECTED");
-    const std::string &sval = (vit->second)->defaultValue;
-    val = ObjectHolder(sval);
+    if (vit == optionMap.end())
+    {
+      dsAssert(vit != optionMap.end(), "UNEXPECTED");
+    }
+    else
+    {
+      const std::string &sval = (vit->second)->defaultValue;
+      val = ObjectHolder(sval);
+    }
   }
   return val;
 }

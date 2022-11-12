@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -61,15 +61,15 @@ InterfaceExprEquation<DoubleType>::InterfaceExprEquation(
 template <typename DoubleType>
 void InterfaceExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
-    ModelExprDataCachePtr<DoubleType> model_cache0 = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    ModelExprDataCachePtr<DoubleType> model_cache0 = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>());
     Region &r0 = *const_cast<Region *>(InterfaceEquation<DoubleType>::GetInterface().GetRegion0());
     r0.SetModelExprDataCache(model_cache0);
 
-    ModelExprDataCachePtr<DoubleType> model_cache1 = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    ModelExprDataCachePtr<DoubleType> model_cache1 = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>());
     Region &r1 = *const_cast<Region *>(InterfaceEquation<DoubleType>::GetInterface().GetRegion1());
     r1.SetModelExprDataCache(model_cache1);
 
-    InterfaceModelExprDataCachePtr<DoubleType> interface_model_cache = InterfaceModelExprDataCachePtr<DoubleType>(new InterfaceModelExprDataCache<DoubleType>()); 
+    InterfaceModelExprDataCachePtr<DoubleType> interface_model_cache = InterfaceModelExprDataCachePtr<DoubleType>(new InterfaceModelExprDataCache<DoubleType>());
     Interface &interface = const_cast<Interface &>(InterfaceEquation<DoubleType>::GetInterface());
     interface.SetInterfaceModelExprDataCache(interface_model_cache);
 

@@ -131,7 +131,7 @@
       INTEGER            I, IINFO, J, JB, NB
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           quad_dgemm, quad_dgetrf2, quad_dlaswp, quad_dtrsm, XERBLA
+      EXTERNAL           quad_dgemm, quad_dgetrf2, quad_dlaswp, quad_dtrsm, quad_xerbla
 *     ..
 *     .. External Functions ..
       INTEGER            quad_ilaenv
@@ -153,7 +153,7 @@
          INFO = -4
       END IF
       IF( INFO.NE.0 ) THEN
-         CALL XERBLA( 'quad_dgetrf', -INFO )
+         CALL quad_xerbla( 'quad_dgetrf', -INFO )
          RETURN
       END IF
 *

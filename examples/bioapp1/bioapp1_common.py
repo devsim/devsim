@@ -1,4 +1,4 @@
-# Copyright 2013 Devsim LLC
+# Copyright 2013 DEVSIM LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 from devsim import *
 #### molarity 0.001 mole / Liter * 1 L / (1e3 cm^3) * 6.02e23 / mole = 6.02e17 /cm^3
 set_parameter(device="disk", region="solution", name="n_bound", value=6.02e17)
-#### 2q/nm^3 -->  2/nm^3 * (1 nm^3/(1e-7 cm)^3) 
+#### 2q/nm^3 -->  2/nm^3 * (1 nm^3/(1e-7 cm)^3)
 #set_parameter device="disk", region="dna",        name="charge_density", value=0,
 set_parameter(device="disk", region="dna",        name="charge_density", value=2e21)
 set_parameter(device="disk", region="dielectric", name="charge_density", value=0)
@@ -127,7 +127,7 @@ equation(device="disk", region="solution", name="AnionContinuityEquation", varia
 equation(device="disk", region="solution", name="CationContinuityEquation", variable_name="cations", \
          edge_model="CationFlux", variable_update="positive")
 
-#create n0, and potential boundary condition at contact 
+#create n0, and potential boundary condition at contact
 for contact in ("top", "bot"):
     node_model(device="disk", region="solution", name="{0}_potential".format(contact), equation="Potential - {0}_bias".format(contact))
     node_model(device="disk", region="solution", name="{0}_potential:Potential".format(contact), equation="1")

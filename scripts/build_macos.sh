@@ -43,19 +43,20 @@ fi
 #minimal conda environments to prevent linking against the wrong libraries
 if [ "${1}" = "gcc" ]
 then
-#conda create  -y --name python3_devsim_build python=3 mkl mkl-devel mkl-include boost cmake
 # now opt for explicit dll load of mkl
-conda create  -y --name python3_devsim_build python=3 boost cmake nomkl
+conda create  -y --name python3_devsim_build python=3 cmake nomkl
 fi
 
 #This version does not use pardiso
 if [ "${1}" = "clang" ]
 then
-conda create  -y --name python3_devsim_build python=3 boost cmake nomkl
+conda create  -y --name python3_devsim_build python=3 cmake nomkl
 fi
 source activate python3_devsim_build
 
 export PYTHON3_BIN=python
+export PIP_BIN=pip
+${PIP_BIN} install wheel
 export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
 
@@ -65,7 +66,7 @@ export PYTHON3_ARCHIVE=""
 
 # SuperLU
 #(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
-(cd external && tar xzf superlu_4.3.tar.gz)
+#(cd external && tar xzf superlu_4.3.tar.gz)
 
 # SYMDIFF build
 if [ "${1}" = "gcc" ]
@@ -84,7 +85,7 @@ fi
 ####(cd external && mkdir -p CGNS-3.1.4/build && cd CGNS-3.1.4/build && cmake -DCMAKE_C_COMPILER=${CC} -DBUILD_CGNSTOOLS=OFF -DCMAKE_INSTALL_PREFIX=$PWD/../../cgnslib .. && make -j4 && make install)
 
 # SUPERLU build
-(cd external/SuperLU_4.3 && sh ../superlu_macos.sh)
+(cd external/superlu && bash ../superlu_macos.sh)
 
 # quad precision getrf
 if [ "${1}" = "gcc" ]
@@ -100,7 +101,10 @@ elif [ "${1}" = "clang" ]
 then
 bash ./scripts/setup_osx_10.10.sh
 fi
+
 (cd osx_x86_64_release && make -j4)
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});
-
+cp -f dist/bdist_wheel/setup.* dist/devsim_macos_${2}
+(cd dist/devsim_macos_${2} && ${PIP_BIN} wheel .)
+(cp dist/devsim_macos_${2}/*.whl dist)
 

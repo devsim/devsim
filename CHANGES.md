@@ -4,6 +4,72 @@
 
 Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
 
+## Version 2.3.6
+
+On Windows the ``DEVSIM_MATH_LIBS`` now uses the ``;`` as the path separator, while macOS and Linux still use ``:``.
+
+The math library search order is then:
+
+* The math libraries listed in the ``DEVSIM_MATH_LIBS`` environment variable, with the appropriate separator.
+* The Intel Math Kernel Library
+* These dynamic libraries
+  * OpenBLAS (e.g. libopenblas.so)
+  * LAPACK (e.g. liblapack.so)
+  * BLAS (e.g. libblas.so)
+
+All platforms will search for the Intel MKL by trying several version numbers.  When the Intel MKL is not available, the direct solver will switch from Intel MKL Pardiso to SuperLU.
+
+On macOS and Linux, the RPATH has been modified to look in places relative to the `devsim` module, instead of using ``CONDA_PREFIX`` or ``VIRTUAL_ENV``.
+
+* ``macOS`` : ``@loader_path;@loader_path/../lib;@loader_path/../../../../lib;@executable_path/../lib``
+* ``Linux`` : ``$ORIGIN:$ORIGIN/../lib:$ORIGIN/../../../../lib``
+
+## Version 2.3.1
+
+### Python PIP Package
+
+DEVSIM is now available on pypi for macOS, Linux, and Microsoft Windows.  To install this package for your platform:
+
+```
+pip install devsim
+
+```
+
+Users of Anaconda Python should install the Intel MKL using
+```
+conda install mkl
+```
+
+and may find simulation files and documentation in ``$CONDA_PREFIX/devsim_data``.
+
+Users of other Python distributions may install this dependency using:
+```
+pip install mkl
+```
+
+and may find simulation files and documentation in ``$VIRTUAL_ENV/devsim_data`` when using virtual environments.
+
+
+### Remove Windows MSYS Build
+
+The MSYS build is removed as an available binary package.  Windows is still supported through the use of the Visual C++ compiler.
+
+### Build Notes
+
+The compiler for the Linux build are now upgraded to ``devtoolset-10`` and is now built on ``manylinux2014``.
+
+Boost is now added as a submodule, instead of using system libraries or Anaconda Python versions.  The Linux build no longer requires Anaconda Python.
+
+## Version 2.2.0
+
+It is possible to delete devices using the ``delete_device`` command.  Meshes used to instantiate devices may be deleted using the ``delete_mesh`` command.  Parameters set on a device and its regions are also cleared from the parameter database.
+
+Extended precision is now available on Windows builds using the Visual Studio Compiler.  Note that this precision is not as accurate as the float128 type used on other systems.
+
+Upgraded to SuperLU 5.3 from SuperLU 4.3.
+
+Fixed defects found in Coverity scanning.
+
 ## Version 2.1.0
 
 ### Explicit math library loading

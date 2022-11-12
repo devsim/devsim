@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -126,7 +126,11 @@ ConstNodeList_t ContactEquation<DoubleType>::GetActiveNodes() const
 
     Device::CoordinateIndexToContact_t::const_iterator cit = ctc.find(ci);
 
-    dsAssert(cit != ctc.end(), "UNEXPECTED");
+    if (cit == ctc.end())
+    {
+      dsAssert(cit != ctc.end(), "UNEXPECTED");
+      continue;
+    }
 
     {
       std::vector<ContactPtr>::const_iterator vit = (cit->second).begin();
@@ -218,6 +222,7 @@ DoubleType ContactEquation<DoubleType>::integrateNodeModelOverNodes(const std::s
     if (!nm)
     {
       dsErrors::MissingContactEquationModel(region, *this, nmodel, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
+      return ch;
     }
 
     ConstNodeModelPtr nv = region.GetNodeModel(node_volume);
@@ -225,6 +230,7 @@ DoubleType ContactEquation<DoubleType>::integrateNodeModelOverNodes(const std::s
     if (!nv)
     {
       dsErrors::MissingContactEquationModel(region, *this, node_volume, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
+      return ch;
     }
 
     NodeScalarData<DoubleType> nsd(*nv);
@@ -256,6 +262,7 @@ DoubleType ContactEquation<DoubleType>::integrateEdgeModelOverNodes(const std::s
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+      return ch;
     }
 
     ConstEdgeModelPtr ec = region.GetEdgeModel(edge_couple);
@@ -264,6 +271,7 @@ DoubleType ContactEquation<DoubleType>::integrateEdgeModelOverNodes(const std::s
     if (!ec)
     {
       dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+      return ch;
     }
 
     EdgeScalarData<DoubleType> esd(*ec);
@@ -309,6 +317,7 @@ DoubleType ContactEquation<DoubleType>::integrateTriangleEdgeModelOverNodes(cons
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+      return ch;
     }
 
     ConstTriangleEdgeModelPtr ec = region.GetTriangleEdgeModel(edge_couple);
@@ -316,6 +325,7 @@ DoubleType ContactEquation<DoubleType>::integrateTriangleEdgeModelOverNodes(cons
     if (!ec)
     {
       dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+      return ch;
     }
 
     TriangleEdgeScalarData<DoubleType> esd(*ec);
@@ -369,6 +379,7 @@ DoubleType ContactEquation<DoubleType>::integrateTetrahedronEdgeModelOverNodes(c
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+      return ch;
     }
 
     ConstTetrahedronEdgeModelPtr ec = region.GetTetrahedronEdgeModel(edge_couple);
@@ -376,6 +387,7 @@ DoubleType ContactEquation<DoubleType>::integrateTetrahedronEdgeModelOverNodes(c
     if (!ec)
     {
       dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+      return ch;
     }
 
     TetrahedronEdgeScalarData<DoubleType> esd(*ec);
@@ -446,6 +458,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel
   if (eqindex == size_t(-1))
   {
     dsErrors::MissingContactEquationIndex(region, *mycontact, GetName(), OutputStream::OutputType::FATAL);
+    return;
   }
 
 
@@ -455,6 +468,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel
   if (!nv)
   {
     dsErrors::MissingContactEquationModel(region, *this, node_volume, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
+    return;
   }
 
   size_t ccol = size_t(-1);
@@ -468,6 +482,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel
     else
     {
       dsErrors::MissingCircuitNodeOnContactEquation(*this, circuitnode, OutputStream::OutputType::FATAL);
+      return;
     }
   }
 
@@ -488,6 +503,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel
     if (!nm)
     {
       dsErrors::MissingContactEquationModel(region, *this, nmodel, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
+      return;
     }
 
     NodeScalarData<DoubleType> nsd(*nv);
@@ -530,6 +546,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquation(const std::string &nmodel
         if (eqindex2 == size_t(-1))
         {
           dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+          return;
         }
 
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
@@ -590,6 +607,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(const std::strin
   else
   {
     dsErrors::MissingCircuitNodeOnContactEquation(*this, circuitnode, OutputStream::OutputType::FATAL);
+    return;
   }
 
   //////
@@ -605,6 +623,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(const std::strin
   if (!nv)
   {
     dsErrors::MissingContactEquationModel(region, *this, node_volume, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
+    return;
   }
 
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
@@ -614,6 +633,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(const std::strin
     if (!nm)
     {
       dsErrors::MissingContactEquationModel(region, *this, nmodel, dsErrors::ModelInfo::NODE, OutputStream::OutputType::FATAL);
+      return;
     }
 
 
@@ -654,6 +674,7 @@ void ContactEquation<DoubleType>::AssembleNodeEquationOnCircuit(const std::strin
           if (eqindex2 == size_t(-1))
           {
             dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+            return;
           }
 
           const size_t col = region.GetEquationNumber(eqindex2, (*cit));
@@ -701,6 +722,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
   if (eqindex == size_t(-1))
   {
     dsErrors::MissingContactEquationIndex(region, *mycontact, GetName(), OutputStream::OutputType::FATAL) ;
+    return;
   }
 
 
@@ -712,6 +734,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+    return;
   }
 
   size_t ccol = size_t(-1);
@@ -725,6 +748,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
     else
     {
       dsErrors::MissingCircuitNodeOnContactEquation(*this, circuitnode, OutputStream::OutputType::FATAL);
+      return;
     }
   }
 
@@ -735,6 +759,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
     EdgeScalarData<DoubleType> esd(*ec);
@@ -799,6 +824,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquation(const std::string &emodel
         if (eqindex2 == size_t(-1))
         {
           dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+          return;
         }
 
         const Region::NodeToConstEdgeList_t &ntelist = region.GetNodeToEdgeList();
@@ -893,6 +919,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
   if (eqindex == size_t(-1))
   {
     dsErrors::MissingContactEquationIndex(region, *mycontact, GetName(), OutputStream::OutputType::FATAL) ;
+    return;
   }
 
   dsAssert(!emodel.empty(), "UNEXPECTED");
@@ -902,6 +929,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+    return;
   }
 
   size_t ccol = size_t(-1);
@@ -916,6 +944,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
     else
     {
       dsErrors::MissingCircuitNodeOnContactEquation(*this, circuitnode, OutputStream::OutputType::FATAL);
+      return;
     }
   }
 
@@ -926,6 +955,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
 
@@ -1008,6 +1038,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
         if (eqindex2 == size_t(-1))
         {
           dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+          return;
         }
 
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
@@ -1129,6 +1160,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
   if (eqindex == size_t(-1))
   {
     dsErrors::MissingContactEquationIndex(region, *mycontact, GetName(), OutputStream::OutputType::FATAL) ;
+    return;
   }
 
   dsAssert(!emodel.empty(), "UNEXPECTED");
@@ -1138,6 +1170,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+    return;
   }
 
   size_t ccol = size_t(-1);
@@ -1152,6 +1185,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
     else
     {
       dsErrors::MissingCircuitNodeOnContactEquation(*this, circuitnode, OutputStream::OutputType::FATAL);
+      return;
     }
   }
 
@@ -1162,6 +1196,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
     TetrahedronEdgeScalarData<DoubleType> esd(*ec);
@@ -1246,6 +1281,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquation(const std::str
         if (eqindex2 == size_t(-1))
         {
           dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+          return;
         }
 
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
@@ -1395,6 +1431,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
   else
   {
     dsErrors::MissingCircuitNodeOnContactEquation(*this, circuitnode, OutputStream::OutputType::FATAL);
+    return;
   }
 
   //////
@@ -1410,6 +1447,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+    return;
   }
 
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
@@ -1419,6 +1457,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
     EdgeScalarData<DoubleType> esd(*ec);
@@ -1482,6 +1521,7 @@ void ContactEquation<DoubleType>::AssembleEdgeEquationOnCircuit(const std::strin
         if (eqindex2 == size_t(-1))
         {
           dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+          return;
         }
 
         const Region::NodeToConstEdgeList_t &ntelist = region.GetNodeToEdgeList();
@@ -1606,6 +1646,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
   else
   {
       dsErrors::MissingCircuitNodeOnContactEquation(*this, circuitnode, OutputStream::OutputType::FATAL);
+      return;
   }
 
   //////
@@ -1621,6 +1662,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+    return;
   }
 
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
@@ -1630,6 +1672,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
 
@@ -1711,6 +1754,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
         if (eqindex2 == size_t(-1))
         {
           dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+          return;
         }
 
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)
@@ -1852,6 +1896,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
   else
   {
       dsErrors::MissingCircuitNodeOnContactEquation(*this, circuitnode, OutputStream::OutputType::FATAL);
+      return;
   }
 
   //////
@@ -1868,6 +1913,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
   if (!ec)
   {
     dsErrors::MissingContactEquationModel(region, *this, edge_couple, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+    return;
   }
 
   if ((w == dsMathEnum::WhatToLoad::RHS) || (w == dsMathEnum::WhatToLoad::MATRIXANDRHS))
@@ -1877,6 +1923,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
     if (!em)
     {
       dsErrors::MissingContactEquationModel(region, *this, emodel, dsErrors::ModelInfo::ELEMENTEDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
     TetrahedronEdgeScalarData<DoubleType> esd(*ec);
@@ -1962,6 +2009,7 @@ void ContactEquation<DoubleType>::AssembleTetrahedronEdgeEquationOnCircuit(const
         if (eqindex2 == size_t(-1))
         {
           dsErrors::MissingEquationIndex(region, myname, var, OutputStream::OutputType::FATAL) ;
+          return;
         }
 
         for (ConstNodeList_t::const_iterator cit = cnodes.begin(); cit != cnodes.end(); ++cit)

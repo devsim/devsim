@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
       if (optionMap.count(optname))
       {
         Option     *opt  = optionMap[optname];
-        optionType  type = (*opt).type;  
+        optionType  type = (*opt).type;
 
         if (selections.count(optname))
         {

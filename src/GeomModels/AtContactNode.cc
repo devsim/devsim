@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ void AtContactNode<DoubleType>::calcNodeScalarValues() const
         {
 
 #if 0
-            std::ostringstream os; 
+            std::ostringstream os;
             os << region.GetName() << " Node  pointer " << *jt << "\n";
             GeometryStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 #endif

@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ class InterfaceExprEquation : public InterfaceEquation<DoubleType>
         void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
         /// Need to decide if we are going to contain equations or models?
-        /// Assume that 
+        /// Assume that
         std::string   interface_node_model_;
         InterfaceExprEquationEnum::EquationType  equation_type_;
         //std::string tdnodemodel; // maybe someday in the future

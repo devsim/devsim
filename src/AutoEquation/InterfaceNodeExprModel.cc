@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
 
     if (!errors.empty())
     {
-        std::ostringstream os; 
+        std::ostringstream os;
         //// TODO: put interface/device/region0/region1 names here
         //// Need to put helper function for getting all of these names
         os << "while evaluating interface model " << GetName()
@@ -129,7 +129,7 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
     }
     else
     {
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "while evaluating model " << GetName() << ": expression "
             << EngineAPI::getStringValue(equation) << " evaluates to a " << IMEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";

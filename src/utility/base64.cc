@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ template <typename T> std::string convertVectorToZlibBase64(const std::vector<T>
   if (numberTInPartialBlock != 0)
   {
     numberOfBlocks++;
-  } 
+  }
 
   const int headerLength = numberOfBlocks + 3;
   std::vector <unsigned int> header(headerLength);
@@ -113,14 +113,14 @@ template <typename T> std::string convertVectorToZlibBase64(const std::vector<T>
 //      header[3 + i] = inputLength;
     }
     else
-    { 
+    {
 //      header[3 + i] = maxLength;
     }
 
 
     Bytef *inputArray = reinterpret_cast<Bytef *>(const_cast<T *>(&x[numberOfTPerBlock * i]));
 
-    uLong outputLength = maxLength; 
+    uLong outputLength = maxLength;
     int zlibRet = compress2(&(outputArray[0]), &outputLength, inputArray, inputLength, Z_DEFAULT_COMPRESSION);
     dsAssert(zlibRet == Z_OK, "UNEXPECTED");
 
@@ -201,7 +201,7 @@ decode_enum decode4(const std::string &in, std::string &tmp, std::string &out)
 
   if ((in[2] == '=') && in[3] != '=')
   {
-    result = BAD; 
+    result = BAD;
   }
 
   if (result != BAD)

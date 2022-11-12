@@ -1,22 +1,22 @@
 //*****************************************************************
 // Iterative template routine -- GMRES
 //
-// GMRES solves the unsymmetric linear system Ax = b using the 
+// GMRES solves the unsymmetric linear system Ax = b using the
 // Generalized Minimum Residual method
 //
-// GMRES follows the algorithm described on p. 20 of the 
+// GMRES follows the algorithm described on p. 20 of the
 // SIAM Templates book.
 //
 // The return value indicates convergence within max_iter (input)
 // iterations (0), or no convergence within max_iter iterations (1).
 //
 // Upon successful return, output arguments have the following values:
-//  
+//
 //        x  --  approximate solution to Ax = b
 // max_iter  --  the number of iterations performed before the
 //               tolerance was reached
 //      tol  --  the residual after the final iteration
-//  
+//
 //*****************************************************************
 /*
 This file is derived from from:

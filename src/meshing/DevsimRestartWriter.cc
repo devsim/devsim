@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -185,6 +185,9 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
 {
   bool ret = true;
   std::ostringstream os;
+
+  std::ios oldState(nullptr);
+  oldState.copyfmt(myfile);
 
   myfile << std::setprecision(15) << std::scientific;
   GlobalData   &gdata = GlobalData::GetInstance();
@@ -393,6 +396,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
       myfile << "end_device\n\n";
 
   }
+  myfile.copyfmt(oldState);
 
   errorString += os.str();
   return ret;

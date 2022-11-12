@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ class GlobalData
         }
 
         DevicePtr GetDevice(const std::string &);
+        bool      DeleteDevice(const std::string &);
 
         //// Need callback system when material parameters change
         void AddDBEntryOnDevice(const std::string &/*device*/, const std::string &/*name*/, ObjectHolder /*value*/);
@@ -108,8 +109,6 @@ class GlobalData
         GlobalDataMap_t   globalData;
 
         TclEquationList_t tclEquationList;
-
-        void             *tclInterp;
 };
 #endif
 

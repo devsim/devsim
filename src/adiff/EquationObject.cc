@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ BinaryTblEntry BinaryTable[] = {
 };
 
 EqUnaryFuncPtr getUnaryFuncPtr(std::string x) {
-    size_t i=0; 
+    size_t i=0;
     while (UnaryTable[i].name != nullptr)
     {
         if (x == UnaryTable[i].name)
@@ -65,7 +65,7 @@ EqUnaryFuncPtr getUnaryFuncPtr(std::string x) {
 }
 
 EqBinaryFuncPtr getBinaryFuncPtr(std::string x) {
-    size_t i=0; 
+    size_t i=0;
     while (BinaryTable[i].name != nullptr)
     {
         if (x == BinaryTable[i].name)
@@ -77,7 +77,7 @@ EqBinaryFuncPtr getBinaryFuncPtr(std::string x) {
 
 #if 0
 EqObjPtr printHelp() {
-    size_t i=0; 
+    size_t i=0;
     cerr << "\n";
     cerr << "Functions:\n"
             "--------------------------------------------------\n";
@@ -86,7 +86,7 @@ EqObjPtr printHelp() {
         cerr << UnaryTable[i].desc << "\n";
         ++i;
     }
-    i=0; 
+    i=0;
     while (BinaryTable[i].name != nullptr)
     {
         cerr << BinaryTable[i].desc << "\n";
@@ -124,8 +124,8 @@ EqObjPtr printHelp() {
     cerr << "\nCommands:\n"
             "--------------------------------------------------\n"
             "quit      -- exit program\n"
-            "help      -- print help text\n" 
-            "copyright -- print copyright\n"; 
+            "help      -- print help text\n"
+            "copyright -- print copyright\n";
     cerr << endl;
     return con(0.0);
 }
@@ -552,7 +552,7 @@ void Product::ProductVecSimplify(std::vector<EqObjPtr> &tvals)
       std::vector<EqObjPtr> tmp;
       tmp.reserve(2*len);
 
-      for (size_t i = 0; i < len; ++i) 
+      for (size_t i = 0; i < len; ++i)
       {
          Product *foo = dynamic_cast<Product *>(tvals[i].get());
          if (foo == nullptr)
@@ -571,13 +571,13 @@ void Product::ProductVecSimplify(std::vector<EqObjPtr> &tvals)
       swap(tmp,tvals); // swap back;
    }
 
-   {  
+   {
       const size_t len = tvals.size();
       std::vector<EqObjPtr> tmp;
       // break down all factors and remove ones
       tmp.reserve(len);
       bool hasOne = false;
-      for (size_t i = 0; i < len; ++i) 
+      for (size_t i = 0; i < len; ++i)
       {
          if (!tvals[i]->isOne())
             tmp.push_back(tvals[i]->Simplify());
@@ -717,7 +717,7 @@ EqObjPtr Product::CombineProduct(std::vector<EqObjPtr> y)
    const size_t len = y.size();
    for (size_t i=0; i < len; ++i)
    {
-      Product *Y = dynamic_cast<Product *>(y[i].get());
+      Product *Y = static_cast<Product *>(y[i].get());
       const size_t len2 = (Y->values).size();
       for (size_t j=0; j < len2; ++j)
          tmp.push_back(Y->values[j]);
@@ -852,8 +852,7 @@ EqObjPtr Product::getUnsignedValue()
         EqObjPtr unscaled = this->getUnscaledValue();
         if (unscaled->getType() == CONST_OBJ)
         {
-            Constant *c = dynamic_cast<Constant *>(unscaled.get());
-            dsAssert(c != 0, "UNEXPECTED"); // this must be true
+            Constant *c = static_cast<Constant *>(unscaled.get());
             // We expect the value to be signed
                 if (c->dvalue < 0.0)
                 {
@@ -867,8 +866,7 @@ EqObjPtr Product::getUnsignedValue()
         else // This must be a product
         {
             EqObjPtr scaled = this->getScale();
-            Constant *s = dynamic_cast<Constant *>(scaled.get());
-            dsAssert(s != 0, "UNEXPECTED"); // this must be true
+            Constant *s = static_cast<Constant *>(scaled.get());
             const double val = s->getDoubleValue();
 
             dsAssert(val < 0.0, "UNEXPECTED");
@@ -963,14 +961,14 @@ EqObjPtr Product::expand()
             tmp.push_back(values[i]->expand());
 
     }
-    EqObjPtr scale;
+    EqObjPtr scale = con(1.0);
     if (tmp.size() == 1)
     {
         scale = tmp[0];
     }
     else if (tmp.size() > 1)
     {
-        EquationObject *n = new Product(tmp); 
+        EquationObject *n = new Product(tmp);
         scale = EqObjPtr(n);
     }
 
@@ -982,8 +980,6 @@ EqObjPtr Product::expand()
     }
     else
     {
-        if (tmp.empty())
-            scale = con(1);
         std::vector<EqObjPtr> pout;
         // break out into separate function
         // do the expansion here
@@ -1140,7 +1136,7 @@ EqObjPtr Add::Simplify()
       std::vector<EqObjPtr> tmp;
       tmp.reserve(2*len);
 
-      for (size_t i = 0; i < len; ++i) 
+      for (size_t i = 0; i < len; ++i)
       {
          Add *foo = dynamic_cast<Add *>(tvals[i].get());
          if (foo == nullptr)
@@ -1164,7 +1160,7 @@ EqObjPtr Add::Simplify()
       const size_t len = tvals.size();
       std::vector<EqObjPtr> tmp;
       tmp.reserve(len);
-      for (size_t i = 0; i < len; ++i) 
+      for (size_t i = 0; i < len; ++i)
       {
          EqObjPtr tptr = tvals[i] -> Simplify();
          if (!tptr->isZero())
@@ -1251,7 +1247,7 @@ EqObjPtr Add::CombineAdd(std::vector<EqObjPtr> y)
    const size_t len = y.size();
    for (size_t i=0; i < len; ++i)
    {
-      Add *Y = dynamic_cast<Add *>(y[i].get());
+      Add *Y = static_cast<Add *>(y[i].get());
       const size_t len2 = (Y->values).size();
       for (size_t j=0; j < len2; ++j)
          tmp.push_back(Y->values[j]);
@@ -1362,7 +1358,7 @@ EqObjPtr Exponent::Simplify()
 
    if (value->getType() == LOG_OBJ)
    {
-      Log *Y = dynamic_cast<Log *>(value.get());
+      Log *Y = static_cast<Log *>(value.get());
       return (Y->value);
    }
 
@@ -1379,8 +1375,7 @@ EqObjPtr Exponent::CombineProduct(std::vector<EqObjPtr> y)
    const size_t len = y.size();
    for (size_t i=0; i < len; ++i)
    {
-      Exponent *Y = dynamic_cast<Exponent *>(y[i].get());
-      dsAssert(Y!=nullptr, "UNEXPECTED");
+      Exponent *Y = static_cast<Exponent *>(y[i].get());
       tmp.push_back(Y->value);
    }
    return EqObjPtr(new Exponent(EqObjPtr(new Add(tmp))));
@@ -1478,21 +1473,21 @@ EqObjPtr Log::Simplify()
    ///log(exp(x))) = x;
    if (value->getType() == EXPONENT_OBJ)
    {
-      Exponent *Y = dynamic_cast<Exponent *>(value.get());
+      Exponent *Y = static_cast<Exponent *>(value.get());
       return (Y->value);
    }
 
    ///log(exp(x))) = x;
    if (value->getType() == EXPONENT_OBJ)
    {
-      Exponent *Y = dynamic_cast<Exponent *>(value.get());
+      Exponent *Y = static_cast<Exponent *>(value.get());
       return (Y->value);
    }
 
    ///log(pow(x,y))) = y*log(x);
    if (value->getType() == POW_OBJ)
    {
-      Pow *Y = dynamic_cast<Pow *>(value.get());
+      Pow *Y = static_cast<Pow *>(value.get());
       return (Y->exponent * log(Y->base));
    }
 

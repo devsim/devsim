@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ std::vector<void *> closeList;
 namespace UserModel {
 
 InstanceModel *instantiateModel(NodeKeeper *nk, const std::string &mod, const std::string &nm, const std::vector<std::string> &nl, const std::vector<std::pair< std::string, double> > &p) {
-    InstanceModel *imp = NULL;
+    InstanceModel *imp = nullptr;
     if (uml.count(mod)) {
 #if 0
         const size_t nn = uml[mod].second;
@@ -87,7 +87,7 @@ void loadModel(const std::string &model, const std::string &file) {
 #endif
 
     const char *msg = ""; //dlerror();
-    if (handle != NULL) {
+    if (handle != nullptr) {
         std::cout << file << " loaded successfully\n";
     } else {
         std::cout << file << " not loaded successfully\n";
@@ -101,7 +101,7 @@ void loadModel(const std::string &model, const std::string &file) {
 #ifndef _WIN32
     void *fp = dlsym(handle, mname.c_str());
     msg = dlerror();
-    if (msg == NULL) {
+    if (msg == nullptr) {
         std::cout << mname << " found\n";
     } else {
         std::cout << mname << " not found\n";
@@ -111,7 +111,7 @@ void loadModel(const std::string &model, const std::string &file) {
     }
 #else
     void *fp = (void *) GetProcAddress(handle, mname.c_str());
-    if (fp != NULL) {
+    if (fp != nullptr) {
         std::cout << mname << " found\n";
     } else {
         std::cout << mname << " not found\n";

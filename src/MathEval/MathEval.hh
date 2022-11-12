@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class MathEval {
     void RemoveTclMath(const std::string &);
 
   private:
-    MathEval(); 
+    MathEval();
     ~MathEval();
     MathEval &operator=(const MathEval &);
     MathEval(const MathEval &);

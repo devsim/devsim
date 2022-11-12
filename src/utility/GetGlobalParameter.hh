@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,5 @@ limitations under the License.
 #define GET_GLOBAL_PARAMETER_HH
 #include<string>
 std::string GetGlobalParameterStringOptional(const std::string &name);
-void        *GetMainInterpreter();
-void SetMainInterpreter(void *);
 #endif
 

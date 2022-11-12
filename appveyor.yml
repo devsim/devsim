@@ -54,7 +54,7 @@ clone_folder: c:\projects\devsim
 #shallow_clone: true                 # default is "false"
 
 # set clone depth
-clone_depth: 1                      # clone entire repository history if not defined
+clone_depth: 3                      # clone entire repository history if not defined
 
 
 # environment variables
@@ -85,9 +85,10 @@ matrix:
 
 # scripts that run after cloning repository
 install:
+  - SET README_BASE_URL=https://github.com/devsim/devsim/blob/%TRAVIS_TAG%
   - cd %APPVEYOR_BUILD_FOLDER%
   - git submodule init
-  - git submodule update
+  - git submodule update --depth 3
   - IF "%PLATFORM%"=="msys" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
   - IF "%PLATFORM%"=="x64" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
   - IF "%PLATFORM%"=="x86" SET CONDA_BIN=c:\Miniconda37\condabin\conda.bat
@@ -116,7 +117,7 @@ install:
 #  - x86
 platform:
   - x64
-  - msys
+#  - msys
 
 # to add several platforms to build matrix:
 #platform:
@@ -176,6 +177,7 @@ test: off
 
 artifacts:
   - path: dist\*.zip
+  - path: dist\*.whl
 
 #---------------------------------#
 #     deployment configuration    #

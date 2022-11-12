@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -60,8 +60,8 @@ class Tetrahedron {
       Tetrahedron (const Tetrahedron &);
       Tetrahedron &operator= (const Tetrahedron &);
 
-      std::vector<ConstNodePtr> nodes; 
-      mutable std::vector<ConstNodePtr> fe_nodes; 
+      std::vector<ConstNodePtr> nodes;
+      mutable std::vector<ConstNodePtr> fe_nodes;
       size_t index;
 };
 

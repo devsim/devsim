@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -114,11 +114,8 @@ MaterialDB &MaterialDB::GetInstance()
 
 void MaterialDB::DestroyInstance()
 {
-  if (instance)
-  {
-    delete instance;
-  }
-  instance = 0;
+  delete instance;
+  instance = nullptr;
 }
 
 MaterialDB::~MaterialDB()
@@ -176,7 +173,7 @@ MaterialDB::DBEntry_t MaterialDB::GetDBEntry(const std::string &material_name, c
     err = sqlite3_step(pstmt);
     if (err != SQLITE_DONE)
     {
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Material \"" << material_name
          << "\" database entry \"" << parameter_name
          << "\" has more than one row, using the first.\n";
@@ -210,7 +207,7 @@ MaterialDB::DoubleDBEntry_t MaterialDB::GetDoubleDBEntry(const std::string &mate
     }
     else
     {
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Material \"" << material_name
          << "\" database entry \"" << parameter_name
          << "\" resolves to a string \"" << dbent.second.GetValue().GetString() <<  "\" when a number was expected\n";

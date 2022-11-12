@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ void getDeviceListCmd(CommandHandler &data)
 /// Get the list of all the regions on the device currently loaded
 /// There is only an error if there are no regions
 /// Ultimately should be able to get based on material
-void 
+void
 getRegionListCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -147,7 +147,7 @@ getRegionListCmd(CommandHandler &data)
               std::vector<std::string> clist;
               clist.push_back(regionName);
               data.SetStringListResult(clist);
-            } 
+            }
           }
           else if (!interfaceName.empty())
           {
@@ -167,7 +167,7 @@ getRegionListCmd(CommandHandler &data)
               rlist.push_back(regionName0);
               rlist.push_back(regionName1);
               data.SetStringListResult(rlist);
-            } 
+            }
           }
           else
           {
@@ -216,7 +216,7 @@ void convertToObjectHolder(const T &eList, ObjectHolderList_t &olist, bool reord
 }
 }
 
-void 
+void
 getElementNodeListCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -259,9 +259,9 @@ getElementNodeListCmd(CommandHandler &data)
     ConstNodeList        nodeList;
 
 
-    const std::string &regionName = data.GetStringOption("region"); 
-    const std::string &contactName = data.GetStringOption("contact"); 
-    const std::string &interfaceName = data.GetStringOption("interface"); 
+    const std::string &regionName = data.GetStringOption("region");
+    const std::string &contactName = data.GetStringOption("contact");
+    const std::string &interfaceName = data.GetStringOption("interface");
 
     if ((!contactName.empty()) && (!interfaceName.empty()))
     {

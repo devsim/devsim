@@ -208,7 +208,7 @@
       EXTERNAL quad_lsame
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL XERBLA
+      EXTERNAL quad_xerbla
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC MAX
@@ -265,7 +265,7 @@
           INFO = 13
       END IF
       IF (INFO.NE.0) THEN
-          CALL XERBLA('quad_dgemm ',INFO)
+          CALL quad_xerbla('quad_dgemm ',INFO)
           RETURN
       END IF
 *

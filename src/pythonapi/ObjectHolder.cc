@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -56,6 +56,18 @@ ObjectHolder &ObjectHolder::operator=(const ObjectHolder &t)
     }
   }
 
+  return *this;
+}
+
+ObjectHolder::ObjectHolder(ObjectHolder &&t) : object_(t.object_)
+{
+  // stealing reference
+  t.object_ = nullptr;
+}
+
+ObjectHolder &ObjectHolder::operator=(ObjectHolder &&t)
+{
+  std::swap(object_, t.object_);
   return *this;
 }
 
@@ -406,7 +418,7 @@ void GetArrayInfo(const ObjectHolder &input, std::string &typecode, long &itemsi
 
     if (bytecall.IsCallable())
     {
-      bytes = ObjectHolder(PyObject_CallObject(reinterpret_cast<PyObject *>(bytecall.GetObject()), NULL));
+      bytes = ObjectHolder(PyObject_CallObject(reinterpret_cast<PyObject *>(bytecall.GetObject()), nullptr));
       PyErr_Clear();
     }
   }

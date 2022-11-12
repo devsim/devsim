@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ MeshLine1d::MeshLine1d(double p, double ps, double ns, const std::string &t) :
 }
 
 MeshRegion1d::MeshRegion1d(const std::string &r, const std::string &m, const std::string &t1, const std::string &t2)
-: name(r), material(m), tag0(t1), tag1(t2), tagssorted(false)
+: name(r), material(m), tag0(t1), tag1(t2), index0(0), index1(0), tagssorted(false)
 {
 }
 const std::string &MeshRegion1d::GetName() const

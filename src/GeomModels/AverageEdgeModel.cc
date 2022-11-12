@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -84,6 +84,7 @@ AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const 
     if (!rp->GetNodeModel(nodeModelName))
     {
       dsErrors::MissingModelModelDependency(GetRegion(), nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
     RegisterCallback(nodeModelName);
@@ -96,6 +97,7 @@ AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const 
         if (!rp->GetNodeModel(derivativeModelName))
         {
           dsErrors::MissingModelModelDependency(GetRegion(), derivativeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+          return;
         }
         RegisterCallback(derivativeModelName);
       }
@@ -156,13 +158,15 @@ void AverageEdgeModel<DoubleType>::calcEdgeScalarValues() const
       nmDerivative = rp->GetNodeModel(derivativeModelName);
       if (!nmDerivative)
       {
-        dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
+        dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+        return;
       }
     }
 
     if (!nm)
     {
-      dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
+      dsErrors::MissingModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+      return;
     }
 
     if (variableName.empty())
@@ -198,6 +202,7 @@ void AverageEdgeModel<DoubleType>::calcEdgeScalarValues() const
       {
         dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, GetName(),      dsErrors::ModelInfo::EDGE, OutputStream::OutputType::ERROR);
         dsErrors::ChangedModelModelDependency(*rp, nodeModelName, dsErrors::ModelInfo::NODE, edgeModel1Name, dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+        return;
       }
 
 
@@ -291,6 +296,7 @@ void AverageEdgeModel<DoubleType>::doGradient(ConstNodeModelPtr nmp, EdgeScalarL
   const ConstEdgeModelPtr em = GetRegion().GetEdgeModel("EdgeInverseLength");
   if (!em) {
     dsErrors::MissingModelModelDependency(region, "EdgeInverseLength", dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+    return;
   }
   const EdgeScalarList<DoubleType> &invLen = em->GetScalarValues<DoubleType>();
 
@@ -318,6 +324,7 @@ void AverageEdgeModel<DoubleType>::doGradient(ConstNodeModelPtr /*nmp*/, ConstNo
   if (!em)
   {
     dsErrors::MissingModelModelDependency(region, "EdgeInverseLength", dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+    return;
   }
   const EdgeScalarList<DoubleType> &invLen = em->GetScalarValues<DoubleType>();
 

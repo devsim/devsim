@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -181,8 +181,8 @@ class NodeModel {
     private:
         void CalculateValues() const;
 
-        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0; 
-        virtual void calcNodeScalarValues() const = 0; 
+        //virtual DoubleType calcNodeScalarValue(NodePtr) = 0;
+        virtual void calcNodeScalarValues() const = 0;
         virtual void setInitialValues() = 0;
 
         NodeModel();

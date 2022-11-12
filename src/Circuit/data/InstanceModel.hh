@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,19 +48,19 @@ class InstanceModel
 
         // Transient stamp is only the AC part
         // scl is the scaling factor to multiply by the time-dependent elements
-        // If the matrix is a NULL pointer, only the rhs is calculated
+        // If the matrix is a nullptr pointer, only the rhs is calculated
         // This is so that it can be used for the charge contributions of
         // previous time steps
         void assembleTran(const double scl, const std::vector<double> &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs);
 
         virtual bool addParam(const std::string &, double) = 0;
 
-        void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &); 
+        void assembleACRHS(std::vector<std::pair<size_t, std::complex<double> > > &);
 
     protected:
         virtual void assembleDC_impl(const std::vector<double> &sol, dsMath::RealRowColValueVec<double> &mat, dsMath::RHSEntryVec<double> &rhs)=0;
         virtual void assembleTran_impl(const double scl, const std::vector<double> &sol, dsMath::RealRowColValueVec<double> *mat, dsMath::RHSEntryVec<double> &rhs) = 0;
-        virtual void assembleACRHS_impl(std::vector<std::pair<size_t, std::complex<double> > > &) {} 
+        virtual void assembleACRHS_impl(std::vector<std::pair<size_t, std::complex<double> > > &) {}
 
         // Only derived classes can instantiate the base class
         InstanceModel(NodeKeeper *, const char *name);

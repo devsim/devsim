@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -237,24 +237,20 @@ class Newton {
 
         void AssembleTclEquations(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        static constexpr DoubleType rhssign = static_cast<DoubleType>(-1.0);
-        static constexpr size_t DefaultMaxIter = 0;
-        static constexpr DoubleType DefaultAbsError = 0.0;
-        static constexpr DoubleType DefaultRelError = 0.0;
-        static constexpr DoubleType DefaultMaxAbsError = 0.0;
-        static constexpr DoubleType DefaultQRelError = 0.0;
+        const DoubleType rhssign = -1.0;
 
         Newton(const Newton &);
 
-        size_t maxiter; /// The maximum number of iterations
-        size_t maxDivergenceCount;
-        DoubleType absLimit;  /// The calculated abs error (maybe come on per device or per region basis)
-        DoubleType relLimit;  /// The calculated rel error
-        DoubleType maxLimit; // The maximum absolute error before solver failure
-        DoubleType qrelLimit;
+        // Many of these values are set from the default options of the solve command
+        size_t maxiter = 0; /// The maximum number of iterations
+        size_t maxDivergenceCount = 0; // abort after this number of diverging iterations
+        DoubleType absLimit = 0.0;  /// The calculated abs error (maybe come on per device or per region basis)
+        DoubleType relLimit = 0.0;  /// The calculated rel error
+        DoubleType maxLimit = 0.0; // The maximum absolute error before solver failure
+        DoubleType qrelLimit = 0.0;
 
 
-        size_t dimension;
+        size_t dimension = 0;
 
 };
 }

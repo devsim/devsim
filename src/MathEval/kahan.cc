@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -52,15 +52,16 @@ class kahan {
 #endif
 
 
-#ifdef DEVSIM_EXTENDED_PRECISION
+#if defined(DEVSIM_EXTENDED_PRECISION)
 template <typename DoubleType>
 struct KahanType;
 template <> struct KahanType<double>
 {
-#ifdef DEVSIM_EXTENDED_PRECISION
-  using type = float128;
-#else
+// better numerical consistency for builds adopting this option
+#if defined(USE_CPP_BIN_FLOAT)
   using type = kahan<double>;
+#else
+  using type = float128;
 #endif
 };
 
@@ -119,7 +120,7 @@ int main()
     }
 
 
-//    std::cout << 
+//    std::cout <<
 }
 #endif
 

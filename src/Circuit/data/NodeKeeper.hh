@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -74,22 +74,22 @@ class NodeKeeper {
 
         // not many get the privilege to set values
         // please don't const_cast this away!!
-        const Solution &GetSolutionVector(const std::string &) ; 
+        const Solution &GetSolutionVector(const std::string &) ;
 
-        void CreateSolution(const std::string &); 
-        void InitializeSolution(const std::string &); 
-        void DestroySolution(const std::string &); 
+        void CreateSolution(const std::string &);
+        void InitializeSolution(const std::string &);
+        void DestroySolution(const std::string &);
 //      bool HasSolution(const std::string &);
 
         std::vector<double> *GetSolution(const std::string &);
 
         // Update the solution with the given name with the given vector
-        void UpdateSolution(const std::string &, const std::vector<double> &); 
+        void UpdateSolution(const std::string &, const std::vector<double> &);
 
-        void ACUpdateSolution(const std::string &, const std::string &, const std::vector<std::complex<double>> &); 
+        void ACUpdateSolution(const std::string &, const std::string &, const std::vector<std::complex<double>> &);
         // Copy Solution from one vector to another
 
-        void CopySolution(const std::string &, const std::string &); 
+        void CopySolution(const std::string &, const std::string &);
 
         size_t getNumberNodes() {return numberOfNodes_;}
 
@@ -126,11 +126,11 @@ class NodeKeeper {
         NodeTable_t       NodeTable_;
         NodeAliasTable_t  NodeAliasTable_;
         SolutionMap_t     Sol_;
-        size_t          numberOfNodes_;
-        bool            SolutionLocked_;
-        bool            NodesNumbered_;
-        size_t          minEquationNumber;
-        size_t          maxEquationNumber;
+        size_t          numberOfNodes_ = 0;
+        bool            SolutionLocked_ = false;
+        bool            NodesNumbered_ = false;
+        size_t          minEquationNumber = 0;
+        size_t          maxEquationNumber = 0;
         NormMap_t       absError;
         NormMap_t       relError;
 };

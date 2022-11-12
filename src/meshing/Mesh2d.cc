@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ MeshRegion2dPtr Mesh2d::FindRegion(double x, double y)
 
 bool Mesh2d::Finalize_(std::string &errorString)
 {
-    bool ret = true;    
+    bool ret = true;
 
     std::vector<MeshCoordinate> coordinates;
 //    std::vector<MeshNode>     nodes;

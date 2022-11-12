@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ using namespace dsValidate;
 
 namespace dsCommand {
 
-void 
+void
 create1dMeshCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -88,7 +88,7 @@ create1dMeshCmd(CommandHandler &data)
     data.SetEmptyResult();
 }
 
-void 
+void
 finalizeMeshCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -125,7 +125,43 @@ finalizeMeshCmd(CommandHandler &data)
     data.SetEmptyResult();
 }
 
-void 
+void
+deleteMeshCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    static dsGetArgs::Option option[] = {
+        {"mesh", "",   dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, meshMustExist},
+        {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
+    };
+
+    bool error = data.processOptions(option, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
+
+    const std::string &meshName = data.GetStringOption("mesh");
+
+    bool ret = mdata.DeleteMesh(meshName);
+
+    if (!ret)
+    {
+      errorString = "Could not delete mesh \"" + meshName + "\"\n";
+      data.SetErrorResult(errorString);
+      return;
+    }
+    data.SetEmptyResult();
+}
+
+void
 add1dMeshLineCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -187,7 +223,7 @@ add1dMeshLineCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 add2dMeshLineCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -259,7 +295,7 @@ add2dMeshLineCmd(CommandHandler &data)
 
 }
 
-void 
+void
 add1dInterfaceCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -304,7 +340,7 @@ add1dInterfaceCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 add1dContactCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -351,7 +387,7 @@ add1dContactCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 add2dInterfaceCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -412,16 +448,16 @@ add2dInterfaceCmd(CommandHandler &data)
         }
         else
         {
-            dsMesh::MeshInterface2dPtr ip(new dsMesh::MeshInterface2d(name, region0Name, region1Name)); 
+            dsMesh::MeshInterface2dPtr ip(new dsMesh::MeshInterface2d(name, region0Name, region1Name));
             m2dp->AddInterface(ip);
             dsMesh::BoundingBox bb(xl, xh, yl, yh, bl);
             ip->AddBoundingBox(bb);
             data.SetEmptyResult();
         }
-    }   
+    }
 }
 
-void 
+void
 add2dContactCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -473,7 +509,7 @@ add2dContactCmd(CommandHandler &data)
     }
     else
     {
-        dsMesh::MeshContact2dPtr cp(new dsMesh::MeshContact2d(name, materialName, regionName)); 
+        dsMesh::MeshContact2dPtr cp(new dsMesh::MeshContact2d(name, materialName, regionName));
         m2dp->AddContact(cp);
         dsMesh::BoundingBox bb(xl, xh, yl, yh, bl);
         cp->AddBoundingBox(bb);
@@ -481,7 +517,7 @@ add2dContactCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 add1dRegionCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -529,7 +565,7 @@ add1dRegionCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 add2dRegionCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -578,7 +614,7 @@ add2dRegionCmd(CommandHandler &data)
     }
     else
     {
-        dsMesh::MeshRegion2dPtr rp(new dsMesh::MeshRegion2d(regionName, materialName)); 
+        dsMesh::MeshRegion2dPtr rp(new dsMesh::MeshRegion2d(regionName, materialName));
         m2dp->AddRegion(rp);
         dsMesh::BoundingBox bb(xl, xh, yl, yh, bl);
         rp->AddBoundingBox(bb);
@@ -586,7 +622,7 @@ add2dRegionCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 createDeviceCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -626,7 +662,45 @@ createDeviceCmd(CommandHandler &data)
     }
 }
 
-void 
+void
+deleteDeviceCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    const std::string commandName = data.GetCommandName();
+
+    using namespace dsGetArgs;
+    static dsGetArgs::Option option[] = {
+        {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
+    };
+
+    bool error = data.processOptions(option, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    const std::string &deviceName = data.GetStringOption("device");
+
+    auto &gdata = GlobalData::GetInstance();
+    bool ret = gdata.DeleteDevice(deviceName);
+
+    if (!ret)
+    {
+      errorString = "Could not delete device \"" + deviceName + "\"\n";
+      data.SetErrorResult(errorString);
+      return;
+    }
+    else
+    {
+      data.SetEmptyResult();
+    }
+}
+
+void
 loadDevicesCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -664,7 +738,7 @@ loadDevicesCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 writeDevicesCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -747,7 +821,7 @@ writeDevicesCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 createGmshMeshCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -875,7 +949,7 @@ createGmshMeshCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 addGmshInterfaceCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -924,7 +998,7 @@ addGmshInterfaceCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 addGmshContactCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -973,7 +1047,7 @@ addGmshContactCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 addGmshRegionCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -1023,7 +1097,7 @@ addGmshRegionCmd(CommandHandler &data)
 /**
 Unlike the other mesh commands, this one is to be called after the device has been instantiated
 */
-void 
+void
 createContactFromInterfaceCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -1210,26 +1284,28 @@ void createInterfaceFromNodesCmd(CommandHandler &data)
 }
 
 Commands MeshingCommands[] = {
-    {"create_1d_mesh",    create1dMeshCmd},
-    {"finalize_mesh",     finalizeMeshCmd},
-    {"add_1d_mesh_line",  add1dMeshLineCmd},
-    {"add_1d_interface",  add1dInterfaceCmd},
     {"add_1d_contact",    add1dContactCmd},
+    {"add_1d_interface",  add1dInterfaceCmd},
+    {"add_1d_mesh_line",  add1dMeshLineCmd},
     {"add_1d_region",     add1dRegionCmd},
-    {"create_2d_mesh",    create1dMeshCmd},
+    {"add_2d_contact",    add2dContactCmd},
+    {"add_2d_interface",  add2dInterfaceCmd},
     {"add_2d_mesh_line",  add2dMeshLineCmd},
     {"add_2d_region",     add2dRegionCmd},
-    {"add_2d_interface",  add2dInterfaceCmd},
-    {"add_2d_contact",    add2dContactCmd},
-    {"create_device",  createDeviceCmd},
-    {"load_devices",   loadDevicesCmd},
-    {"write_devices",  writeDevicesCmd},
-    {"create_gmsh_mesh", createGmshMeshCmd},
     {"add_gmsh_contact", addGmshContactCmd},
     {"add_gmsh_interface", addGmshInterfaceCmd},
     {"add_gmsh_region", addGmshRegionCmd},
+    {"create_1d_mesh",    create1dMeshCmd},
+    {"create_2d_mesh",    create1dMeshCmd},
     {"create_contact_from_interface", createContactFromInterfaceCmd},
+    {"create_device",     createDeviceCmd},
+    {"create_gmsh_mesh", createGmshMeshCmd},
     {"create_interface_from_nodes", createInterfaceFromNodesCmd},
+    {"delete_device",     deleteDeviceCmd},
+    {"delete_mesh",       deleteMeshCmd},
+    {"finalize_mesh",     finalizeMeshCmd},
+    {"load_devices",   loadDevicesCmd},
+    {"write_devices",  writeDevicesCmd},
     {nullptr, nullptr}
 };
 }

@@ -1,4 +1,4 @@
-# Copyright 2013 Devsim LLC
+# Copyright 2013 DEVSIM LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@
 # acmid = {1012099},
 # publisher = {IBM Corp.},
 # address = {Riverton, NJ, USA},
-#} 
+#}
 
 
 import sys
@@ -113,7 +113,7 @@ def GetElementData(element_index, node_indexes):
 def GetNodeMatrices(element_data, unit_vectors):
     # create the matrix associated with a given node
     matrices = []
-    ei = element_data['element_index'] 
+    ei = element_data['element_index']
     for i in range(nen):
         edge_indexes = element_data['node_to_edge_indexes'][i]
         M = numpy.zeros((dim,dim))
@@ -128,14 +128,14 @@ def CalculateEField(element_data, scalar_efield):
     # calculate the vector field with respect to each scalar edge quantity
     # calculated for each of the nen nodes on the element
     vector_efields = []
-    ei = element_data['element_index'] 
+    ei = element_data['element_index']
     matrices = element_data['matrices']
     for i in range(nen):
         edge_indexes = element_data['node_to_edge_indexes'][i]
         B = numpy.zeros((dim,1))
         for j in range(dim):
             edge_index = nee * ei + edge_indexes[j]
-            B[j] = scalar_efield[edge_index] 
+            B[j] = scalar_efield[edge_index]
         ans = numpy.linalg.solve(matrices[i], B)
         vector_efields.append(ans)
     return vector_efields
@@ -155,7 +155,7 @@ def CalculateEFieldDerivatives(element_data, scalar_efield_derivatives):
             edge_index = edge_indexes[j]
             input_edge_index = nee * ei + edge_index
             edge_node_list = element_data['edge_node_list'][edge_index]
-            # these are the derivative nodes corresponding 
+            # these are the derivative nodes corresponding
             for k in range(nen):
                 # this is the node we are taking the derivative with respect to
                 # it is over the entire element
@@ -167,7 +167,7 @@ def CalculateEFieldDerivatives(element_data, scalar_efield_derivatives):
                 elif nk == edge_node_list[1]:
                     val = scalar_efield_derivatives[1][input_edge_index]
                 # each column corresponds to a different derivative node
-                B[j][k] = val 
+                B[j][k] = val
         ans = numpy.linalg.solve(matrices[i], B)
         vector_efield_derivatives.append(ans)
     return vector_efield_derivatives

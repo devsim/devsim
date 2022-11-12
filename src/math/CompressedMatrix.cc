@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -65,27 +65,30 @@ void CompressedMatrix<DoubleType>::DebugMatrix(std::ostream &os) const
   os << "],\n";
 
   os << "'a' : [\n";
-  os << std::setprecision(15);
+
+  std::ostringstream fos;
+  fos << std::setprecision(15);
   if (matType_ == MatrixType::REAL)
   {
     for (size_t i = 0; i < Ax_.size(); ++i)
     {
-      os << Ax_[i] << ",\n";
+      fos << Ax_[i] << ",\n";
     }
   }
   else
   {
     for (size_t i = 0; i < Ax_.size(); ++i)
     {
-      os << "complex(" << Ax_[i]  << "," << Az_[i] << "),\n";
+      fos << "complex(" << Ax_[i]  << "," << Az_[i] << "),\n";
     }
   }
+  os << fos.str();
   os << "],\n";
   os << "}\n";
 }
 
 template <typename DoubleType>
-CompressedMatrix<DoubleType>::CompressedMatrix(size_t sz, MatrixType mt, CompressionType ct) : Matrix<DoubleType>(sz), matType_(mt), compressionType_(ct), compressed(false)
+CompressedMatrix<DoubleType>::CompressedMatrix(size_t sz, MatrixType mt, CompressionType ct) : Matrix<DoubleType>(sz), matType_(mt), compressionType_(ct), compressed(false), symbolicstatus_(SymbolicStatus_t::NEW_SYMBOLIC)
 {
   Symbolic_.resize(this->size());
   OutOfBandEntries_Real.resize(this->size());
@@ -132,7 +135,7 @@ void CompressedMatrix<DoubleType>::CreateMatrix()
     Ap_[c]=r;
 
     RowInd &rivec = Symbolic_[c];
-    RowInd::iterator iter = rivec.begin();  
+    RowInd::iterator iter = rivec.begin();
     RowInd::iterator iend = rivec.end();
 
     int rb = r;
@@ -310,7 +313,7 @@ void CompressedMatrix<DoubleType>::AddEntry(int r, int c, DoubleType v)
   }
 }
 
-/// Model this after 
+/// Model this after
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::AddImagEntryImpl(int r, int c, DoubleType v)
 {
@@ -365,8 +368,8 @@ void CompressedMatrix<DoubleType>::AddImagEntry(int r, int c, DoubleType v)
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::AddEntry(int r, int c, ComplexDouble_t<DoubleType> v)
 {
-  const double rv = v.real();
-  const double iv = v.imag();
+  const double rv = static_cast<double>(v.real());
+  const double iv = static_cast<double>(v.imag());
 
   if (rv != 0.0)
   {
@@ -386,7 +389,7 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
   {
     return;
   }
-  std::ostringstream os; 
+  std::ostringstream os;
   os << "Matrix Decompress!!! Symbolic pattern changed\n";
   OutputStream::WriteOut(OutputStream::OutputType::VERBOSE1, os.str());
   compressed = false;
@@ -409,7 +412,7 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
     {
       for (size_t j = beg; j < end; ++ j)
       {
-        const double z = Az_[j];
+        const double z = static_cast<double>(Az_[j]);
         if (z != 0.0)
         {
           AddImagEntryImpl(Ai_[j], i, z);

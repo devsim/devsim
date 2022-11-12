@@ -1,4 +1,4 @@
-# Copyright 2013 Devsim LLC
+# Copyright 2013 DEVSIM LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ y_diffusion_decay  =1e-10
 bulk_doping        =1e15
 body_doping        =1e19
 #n doping
-drain_doping       =1e19 
-source_doping      =1e19 
+drain_doping       =1e19
+source_doping      =1e19
 gate_doping        =1e20
 
 y_channel_spacing     =1e-8

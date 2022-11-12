@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -190,7 +190,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateModelType(Eqo::EqOb
 
         if (ConstEdgeModelPtr nm = rp->GetEdgeModel(alias_model))
         {
-          std::ostringstream os; 
+          std::ostringstream os;
           os << "Substituting Edge Model " << alias_model << " for Element Edge Model " << model << "\n";
           GeometryStream::WriteOut(OutputStream::OutputType::VERBOSE1, *rp, os.str());
 
@@ -247,7 +247,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateVariableType(Eqo::E
     const DoubleType val = nk.GetNodeValue("dcop", nm);
     out = ModelExprData<DoubleType>(val, data_ref);
 #if 0
-    std::ostringstream os; 
+    std::ostringstream os;
     os << "circuit using : " << nm << " " << val << "\n";
     GeometryStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 #endif
@@ -439,7 +439,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::eval_function(Eqo::EqObjPtr
   ModelExprDataCachePtr<DoubleType> cache = const_cast<Region *>(data_ref)->GetModelExprDataCache<DoubleType>();
   if (!cache)
   {
-    cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>()); 
+    cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>());
     const_cast<Region *>(data_ref)->SetModelExprDataCache(cache);
   }
 
@@ -653,7 +653,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
   // simplest case to handle
   if (mytest.allArgsSame && (mytest.commonType == datatype::DOUBLE))
   {
-      const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
+      const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
 
       std::string resultstr;
       std::vector<DoubleType> dargs;
@@ -720,19 +720,19 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
     output.resize(vlen);
     size_t k = 0;
     size_t indexsize = indexes.size();
-//    os << "model " << model << " has indexsize " << indexsize << "\n"; 
+//    os << "model " << model << " has indexsize " << indexsize << "\n";
 
     //// This is for our contacts
     //// It only evaluates indexes on our list
     if (indexsize)
     {
-      bool tcheck = (((etype == ExpectedType::NODE) && mytest.hasNodeData) 
+      bool tcheck = (((etype == ExpectedType::NODE) && mytest.hasNodeData)
                    ||((etype == ExpectedType::EDGE) && mytest.hasEdgeData));
 
       DoubleType lres = 0.0;
       if (all_doubles)
       {
-        const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
+        const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
         lres = emath.EvaluateMathFunc(name, dargs, resultstr);
       }
 
@@ -774,7 +774,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
             }
           }
 
-          const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
+          const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
           DoubleType res = emath.EvaluateMathFunc(name, dargs, resultstr);
           output[i] = res;
         }
@@ -789,7 +789,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
     }
     else
     {
-      const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance(); 
+      const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
 
       if (all_doubles)
       {

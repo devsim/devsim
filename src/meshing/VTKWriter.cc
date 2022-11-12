@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ void WritePoints(const Region &reg, std::ostream &myfile)
   points.reserve(3*cnl.size());
   for (ConstNodeList::const_iterator it = cnl.begin(); it != cnl.end(); ++it)
   {
-    const Vector<double> &pos = (*it)->Position(); 
+    const Vector<double> &pos = (*it)->Position();
     points.push_back(pos.Getx());
     points.push_back(pos.Gety());
     points.push_back(pos.Getz());
@@ -96,7 +96,7 @@ void WritePoints(const Region &reg, std::ostream &myfile)
 #if 0
   for (ConstNodeList::const_iterator it = cnl.begin(); it != cnl.end(); ++it)
   {
-    const Vector<double> &pos = (*it)->Position(); 
+    const Vector<double> &pos = (*it)->Position();
     myfile
       << " " << pos.Getx()
       << " " << pos.Gety()
@@ -565,7 +565,7 @@ void WriteRegionWithEdgeData(const Region &reg, std::ostream &myfile)
   myfile <<
          "<Piece NumberOfPoints=\"" << num_points << "\""
          " NumberOfCells=\"" << num_cells << "\""
-         ">\n"; 
+         ">\n";
 
   WritePoints(reg, myfile);
 
@@ -611,7 +611,7 @@ void WriteRegionWithTriangleData(const Region &reg, std::ostream &myfile)
   myfile <<
          "<Piece NumberOfPoints=\"" << num_points << "\""
          " NumberOfCells=\"" << num_cells << "\""
-         ">\n"; 
+         ">\n";
 
   WritePoints(reg, myfile);
   WriteTriangles(reg, myfile);

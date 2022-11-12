@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -164,7 +164,7 @@ class TriangleEdgeModel {
 
         // Actually performs the computation
         // The nonvirtual method does any required setup.
-        //virtual DoubleType calcEdgeScalarValue(EdgePtr) const = 0; 
+        //virtual DoubleType calcEdgeScalarValue(EdgePtr) const = 0;
         virtual void calcTriangleEdgeScalarValues() const = 0;
 
 

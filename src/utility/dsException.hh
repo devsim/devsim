@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ limitations under the License.
 class dsException {
   public:
     //// Should avoid passing something which is going to be deleted in the scope being called.
-    dsException() throw () {}; 
-    dsException(const dsException &) throw () {}; 
+    dsException() throw () {};
+    dsException(const dsException &) throw () {};
     dsException &operator=(const dsException &) throw () {return *this;};
 
     const char *what() const {

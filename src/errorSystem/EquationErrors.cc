@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ std::string CreateModelOnRegion(const Region &region, const std::string &model_n
 template <typename DoubleType>
 std::string MissingInterfaceEquationModel(const Region &region, const InterfaceEquation<DoubleType> &interface_equation, const std::string &model_name, OutputStream::OutputType error_level)
 {
-  std::ostringstream os; 
+  std::ostringstream os;
   os << FormatInterfaceEquationOnInterfaceName(region, interface_equation.GetInterface(), interface_equation.GetName())
       << " " <<
       FormatModelNameAndType(model_name, ModelInfo::INTERFACE)

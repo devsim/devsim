@@ -1,7 +1,7 @@
 %{
 /***
 DEVSIM
-Copyright 2016 Devsim LLC
+Copyright 2016 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ all : | meshformat
 meshformat :
         BEG_MESHFORMAT EOL MESHFORMAT EOL END_MESHFORMAT EOL
         {
-          if ( 
+          if (
             ($3 != "2.2 0 8") &&
             ($3 != "2.1 0 8")
           )
@@ -295,7 +295,7 @@ bool processElement(dsMesh::GmshLoader &gmsh, const std::vector<int> &ilist)
     const int index = ilist[i];
     if (index < 1)
     {
-      hasNonPositive = true; 
+      hasNonPositive = true;
       break;
     }
     indexes.push_back(ilist[i]);

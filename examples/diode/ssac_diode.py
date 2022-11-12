@@ -1,4 +1,4 @@
-# Copyright 2013 Devsim LLC
+# Copyright 2013 DEVSIM LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ solve(type="dc", absolute_error=1.0, relative_error=1e-12, maximum_iterations=30
 diode_common.DriftDiffusionInitialSolution(device, region, circuit_contacts=["top"])
 
 v=0.0
-while v < 0.51: 
+while v < 0.51:
     circuit_alter(name="V1", value=v)
     solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
     #TODO: get out circuit information

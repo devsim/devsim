@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -181,7 +181,7 @@ class Interface {
         Interface & operator=(const Interface &);
 
         std::string name;
-        RegionPtr rp0; 
+        RegionPtr rp0;
         RegionPtr rp1;
         ConstNodeList_t     nodes0;  // Pointers to nodes in region 0
         ConstNodeList_t     nodes1;  // Pointers to nodes in region 1

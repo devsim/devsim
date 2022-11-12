@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ Eqo::EqObjPtr CreateDefaultDerivatives()
         "declare(dBdx(x)); "
         "define(B(x),dBdx(x)); "
         "declare(sgn(x)); "
-        "declare(step(x)); " 
+        "declare(step(x)); "
         "define(abs(x), sgn(x)); "
 //// from online wolfram.com
 //// TODO: define pi as a parameter somewhere in the program
@@ -75,7 +75,7 @@ Eqo::EqObjPtr CreateDefaultDerivatives()
 
     if (!terrors.empty())
     {
-        std::ostringstream os; 
+        std::ostringstream os;
         os << "problems with creating default derivatives. " << expr << "\n";
         for (EvalExpr::error_t::iterator it = terrors.begin(); it != terrors.end(); ++it)
         {

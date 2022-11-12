@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ void Contact::AddEquation(ContactEquationHolder &eq)
     ContactEquationHolder &oeq = contactEquationPtrMap[nm];
     if (oeq == eq)
     {
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Warning: Will not replace Contact Equation with itself.\n"
           "Region: " << this->GetName() << ", Equation: " << nm <<
           "\n";
@@ -124,7 +124,7 @@ void Contact::AddEquation(ContactEquationHolder &eq)
     }
     else
     {
-      std::ostringstream os; 
+      std::ostringstream os;
       os << "Warning: Replacing Contact Equation with Contact Equation of the same name.\n"
           "Contact: " << this->GetName() << ", Equation: " << nm << "\n";
       GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());

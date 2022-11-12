@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -476,7 +476,11 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
 {
   tclMathFuncMap_t::const_iterator it = tclMathFuncMap_.find(func);
 
-  dsAssert(it != tclMathFuncMap_.end(), "UNEXPECTED");
+  if (it == tclMathFuncMap_.end())
+  {
+    dsAssert(it != tclMathFuncMap_.end(), "UNEXPECTED");
+    return;
+  }
 
   const size_t tclcount = (it->second).second;
 
@@ -531,7 +535,7 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
         bool isvec = vvals[i] != nullptr;
 
         if (isvec)
-        {          
+        {
           tclObjVector[i] = ObjectHolder(static_cast<double>(vvals[i]->operator[](j)));
         }
       }

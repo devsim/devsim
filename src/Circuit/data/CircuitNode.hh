@@ -2,7 +2,7 @@
 #define CIRCUIT_NODE_HH
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ enum class CircuitNodeType {
     MNA,              // MNA for Voltage sources
     INTERNAL,         // INTERNAL for internal nodes
     GROUND            // Ground CircuitNodes are not solved
-}; 
+};
 
 class CircuitNode {
     public:

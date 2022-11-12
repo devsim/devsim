@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -273,7 +273,7 @@ namespace {
 
         /*** Start with whole model list, assume all derivatives created ***/
        typedef std::list<std::pair<std::string, Eqo::EqObjPtr> >::iterator StrEqListIt;
-       StrEqListIt semit, semend; 
+       StrEqListIt semit, semend;
         semit = ModelList.begin();
         semend = ModelList.end();
         /*** start adding to structure.  ***/
@@ -379,7 +379,7 @@ namespace {
       //// If we are a model, go ahead and print out our equation
       if (eq->getType() == Eqo::MODEL_OBJ) {
          const std::string mname = eq->stringValue();
-         out << 
+         out <<
             "   const double " << eq << " = " << findInModelList(mname) << ";\n";
          wasProcessed[mname] = true;
       }
@@ -424,7 +424,7 @@ void CreateTotalNodeList()
 void PrintModelList()
 {
    typedef std::list<std::pair<std::string, Eqo::EqObjPtr> >::iterator StrEqListIt;
-   StrEqListIt semit, semend; 
+   StrEqListIt semit, semend;
 
    cerr << "Models:\n";
    semit=ModelList.begin();
@@ -447,7 +447,7 @@ void GenerateEquationDerivatives()
 {
    typedef std::map<std::string, std::pair<Eqo::EqObjPtr, Eqo::EqObjPtr> >::iterator StrEqEqMapIt;
 
-   StrEqEqMapIt seemit, seemend; 
+   StrEqEqMapIt seemit, seemend;
 
    typedef std::list<std::string>::iterator strsetit;
    strsetit sit, send;
@@ -518,9 +518,9 @@ void print_hh(ofstream &out) {
 
    out <<
    "class " << ClassName << " : public InstanceModel {\n"
-   "   public:\n" 
+   "   public:\n"
    "        " << ClassName << "(\n"
-   "          NodeKeeper *nk,\n" << 
+   "          NodeKeeper *nk,\n" <<
    "          const char *name,\n";
 
    /*
@@ -570,13 +570,17 @@ out <<
 out << "\n"
 "       //Parameter List\n";
    typedef std::map<std::string, std::pair<std::string, double> >::iterator Plistit;
-   for (Plistit it = ParameterList.begin(); it != ParameterList.end(); ++it)
    {
-      out <<
+     std::ostringstream os;
+     for (Plistit it = ParameterList.begin(); it != ParameterList.end(); ++it)
+     {
+        os <<
 "       double " << std::setw(15) << std::left << parameterListName(it->first) +
-            ";" <<  "//" << std::setw(20) << it->second.first << " " << std::scientific << it->second.second << "\n";
+              ";" <<  "//" << std::setw(20) << it->second.first << " " << std::scientific << it->second.second << "\n";
 
-   }
+     }
+     out << os.str();
+    }
 
    /*
       End of Class Declaration
@@ -618,26 +622,29 @@ ClassName << "::" << ClassName << "( NodeKeeper *nk, const char *name,\n";
    i=1;
    for (lit = ExternalNodeList.begin(); lit != ExternalNodeList.end(); ++lit)
    {
-      out << 
+      out <<
 "       "  << nodePtrName(*lit) << "= this->AddCircuitNode(n" << i <<");\n";
       ++i;
-   } 
+   }
    for (lit = InternalNodeList.begin(); lit != InternalNodeList.end(); ++lit)
    {
-      out << 
+      out <<
 "       "  << nodePtrName(*lit) << "= this->AddInternalNode(\"" <<  *lit << "\");\n";
       ++i;
-   } 
+   }
 
    out << "\n"
 "       //Parameter List\n";
    typedef std::map<std::string, std::pair<std::string, double> >::iterator Plistit;
-   for (Plistit it = ParameterList.begin(); it != ParameterList.end(); ++it)
    {
-      out <<
-"       " << std::setw(15) << std::left << parameterListName(it->first) << 
+      std::ostringstream os;
+      for (Plistit it = ParameterList.begin(); it != ParameterList.end(); ++it)
+      {
+         os <<
+"       " << std::setw(15) << std::left << parameterListName(it->first) <<
             " = " << std::scientific << it->second.second << ";\n";
-
+      }
+      out << os.str();
    }
 out << "}\n";
 
@@ -726,12 +733,12 @@ else if (atype == ACASSEMBLE)
 "{\n";
    // go through all the equations
    typedef std::map<std::string, std::pair<Eqo::EqObjPtr, Eqo::EqObjPtr> >::iterator StrEqEqMapIt;
-   StrEqEqMapIt seemit, seemend; 
+   StrEqEqMapIt seemit, seemend;
    ostringstream bos[7];
    seemend=EquationList.end();
    for (seemit=EquationList.begin(); seemit != EquationList.end(); ++seemit)
    {
-      Eqo::EqObjPtr pt; 
+      Eqo::EqObjPtr pt;
       if (atype == DCASSEMBLE)
          pt = seemit->second.first;
       else if (atype == ACASSEMBLE)
@@ -742,13 +749,13 @@ else if (atype == ACASSEMBLE)
 
       std::string tmpname=(EquationToNodeMap[seemit->first]);
 
-      bos[EQNNUMBER] << 
+      bos[EQNNUMBER] <<
 "   const size_t " << nodeNbrName(tmpname) << " = " << nodePtrName(tmpname) << "->getNumber();\n";
 
-      bos[ISGROUND] << 
+      bos[ISGROUND] <<
 "   const bool   " << nodeIsGndName(tmpname) << " = " << nodePtrName(tmpname) << "->isGROUND();\n";
 
-      bos[SOLUTION] << 
+      bos[SOLUTION] <<
 "   const double " << tmpname << " = (" << nodeIsGndName(tmpname) << ") ? 0.0 : " "sol[" << nodeNbrName(tmpname) << "];\n";
 
 
@@ -831,7 +838,7 @@ else if (atype == ACASSEMBLE)
    out << bos[MODEL].str();
    out << bos[RHSEVAL].str();
 
-   if (atype == ACASSEMBLE) 
+   if (atype == ACASSEMBLE)
    {
       out << "\n"
 "   if (mat == nullptr)\n"

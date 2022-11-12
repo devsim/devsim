@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -53,12 +53,12 @@ class DevsimLoader : public Mesh {
         void AddInterface(MeshInterfacePtr ip)
         {
             interfaceList[ip->GetName()] = ip;
-        } 
+        }
 
         void AddContact(MeshContactPtr cp)
         {
             contactList[cp->GetName()] = cp;
-        } 
+        }
 
         bool IsMeshRegion(const std::string &n)
         {

@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,8 +34,14 @@ dsTimer::~dsTimer()
 
   auto timediff = std::chrono::duration_cast<seconds>(toc - tic_).count();
 
-  std::ostringstream os;
-  os << "\nEND " << msg_ << " (" << timediff << " sec)\n";
-  OutputStream::WriteOut(output_type_, os.str());
+  try
+  {
+    std::ostringstream os;
+    os << "\nEND " << msg_ << " (" << timediff << " sec)\n";
+    OutputStream::WriteOut(output_type_, os.str());
+  }
+  catch(...)
+  {
+  }
 }
 

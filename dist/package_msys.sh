@@ -67,7 +67,7 @@ Package released as:
 ${DIST_VER}.zip
 
 Source available from:
-http://www.github.com/devsim/devsim 
+http://www.github.com/devsim/devsim
 commit ${COMMIT}
 EOF
 

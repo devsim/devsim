@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -275,7 +275,7 @@ class MeshTriangle
           vec.push_back(i);
           vec.push_back(j);
           vec.push_back(k);
-          std::sort(vec.begin(), vec.end()); 
+          std::sort(vec.begin(), vec.end());
           index0 = vec[0];
           index1 = vec[1];
           index2 = vec[2];
@@ -340,7 +340,7 @@ class MeshTetrahedron
           vec.push_back(j);
           vec.push_back(k);
           vec.push_back(l);
-          std::sort(vec.begin(), vec.end()); 
+          std::sort(vec.begin(), vec.end());
           index0 = vec[0];
           index1 = vec[1];
           index2 = vec[2];
@@ -443,7 +443,7 @@ class MeshRegion {
         {
             nodes.reserve(1000);
             edges.reserve(1000);
-        } 
+        }
 
 //      MeshRegion();
 
@@ -552,7 +552,7 @@ class MeshRegion {
     private:
         MeshRegion();
 //      MeshRegion(const MeshRegion &);
-//      MeshRegion &operator=(const MeshRegion &); 
+//      MeshRegion &operator=(const MeshRegion &);
 
         std::string         name;
         std::string         material;
@@ -604,7 +604,7 @@ class MeshInterface {
 
         void AddNodePair(const MeshInterfaceNodePair &np)
         {
-            nodePairs.push_back(np);    
+            nodePairs.push_back(np);
         }
 
         void AddEdgePair(const MeshEdge &t0, const MeshEdge &t1)
@@ -735,7 +735,7 @@ class MeshContact {
 
         void AddNode(const MeshNode &n)
         {
-            region.AddNode(n); 
+            region.AddNode(n);
         }
 
         void AddEdge(const MeshEdge &e)

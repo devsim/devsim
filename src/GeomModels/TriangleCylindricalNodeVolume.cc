@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ DoubleType calcCylindricalTriangleVolumeFlat(DoubleType r0, DoubleType z0, Doubl
 
   const DoubleType r21 = abs(r2 - r1);
   ret += r21 * r0 * z;
-  ret *= M_PI; 
+  ret *= M_PI;
 
   return ret;
 }

@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -188,7 +188,7 @@ getEquationListCmd(CommandHandler &data)
     std::vector<std::string> olist(slist.size());
     for (size_t i = 0; i < slist.size(); ++i)
     {
-      const std::string &s = slist[i]; 
+      const std::string &s = slist[i];
       size_t ei = reg->GetEquationIndex(s);
       dsAssert((ei < slist.size()) && (olist[ei].empty()), "UNEXPECTED");
       olist[ei] = s;
@@ -249,7 +249,10 @@ deleteEquationCmd(CommandHandler &data)
 
     if (commandName == "delete_equation")
     {
-      reg->DeleteEquation(eqn);
+      if (reg)
+      {
+        reg->DeleteEquation(eqn);
+      }
       data.SetEmptyResult();
     }
     else if (commandName == "get_equation_command")
@@ -450,7 +453,10 @@ deleteInterfaceEquationCmd(CommandHandler &data)
 
     if (commandName == "delete_interface_equation")
     {
-      interface->DeleteInterfaceEquation(ieqn);
+      if (interface)
+      {
+        interface->DeleteInterfaceEquation(ieqn);
+      }
       data.SetEmptyResult();
     }
     else if (commandName == "get_interface_equation_command")
@@ -664,7 +670,10 @@ deleteContactEquationCmd(CommandHandler &data)
 
     if (commandName == "delete_contact_equation")
     {
-      contact->DeleteEquation(ceqn);
+      if (contact)
+      {
+        contact->DeleteEquation(ceqn);
+      }
       data.SetEmptyResult();
     }
     else if (commandName == "get_contact_equation_command")

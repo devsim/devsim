@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ void Mesh1d::SetLocationsAndTags()
         {
             size_t pos = locations.size() - 1;
 
-            std::ostringstream os; 
+            std::ostringstream os;
             os << tag << "\n";
             OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 
@@ -134,7 +134,7 @@ struct RegionSort
 
 bool Mesh1d::SanityCheckingAndSetInterfaceIndices(std::string &errorString)
 {
-    bool ret = true;   
+    bool ret = true;
     std::ostringstream os;
 
     dsAssert(indexToInterfaceIndex.empty(), "UNEXPECTED");
@@ -343,7 +343,7 @@ bool Mesh1d::Finalize_(std::string &errorString)
     size_t j = 0;
     for (size_t i = 0; i < locations.size(); ++i)
     {
-        std::ostringstream os; 
+        std::ostringstream os;
 //      os << locations[i];
 
         if (j < regions.size())
@@ -434,7 +434,7 @@ bool Mesh1d::Instantiate_(const std::string &DeviceName, std::string &errorStrin
 
         dev->AddRegion(rp);
 
-        CreateDefaultModels(rp); 
+        CreateDefaultModels(rp);
     }
 
     //// Contacts

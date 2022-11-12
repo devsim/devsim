@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
 
     for (size_t i = 0; i < nodes_to_get; ++i)
     {
-      node_indexes[i] = elements[eeindex + i + 2]; 
+      node_indexes[i] = elements[eeindex + i + 2];
     }
 
     gmshLoader.AddElement(dsMesh::GmshElement(element_count, physical_number, element_type, node_indexes));

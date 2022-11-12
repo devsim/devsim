@@ -1,7 +1,7 @@
 %{
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ limitations under the License.
 #define YY_NO_UNISTD_H
 #else
 #include <unistd.h>
-#endif 
+#endif
 // remove clang compiler warning
 #define register
 %}
@@ -41,7 +41,7 @@ limitations under the License.
 %option nounput
 /*%option stack*/
 
-integer [0-9]+ 
+integer [0-9]+
 float1 [0-9]*\.[0-9]+
 float2 [0-9]+\.[0-9]*
 float3 [0-9]+\.?[0-9]*[eE][+-]?[0-9]+

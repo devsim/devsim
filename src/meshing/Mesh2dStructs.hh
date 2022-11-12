@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -129,7 +129,7 @@ class MeshLine2d {
 
 };
 
-/// must do sanity checking to make sure that regions only meet on new 
+/// must do sanity checking to make sure that regions only meet on new
 class MeshRegion2d {
     public:
         MeshRegion2d(const std::string &/*region*/, const std::string &/*material*/);

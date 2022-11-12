@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,6 +22,11 @@ limitations under the License.
 #include "BlasHeaders.hh"
 #include "OutputStream.hh"
 #include <sstream>
+
+extern "C"
+{
+extern const char * devsim_superluversion;
+}
 
 void devsim_initialization()
 {
@@ -72,6 +77,7 @@ void devsim_initialization()
 #else
     features["explicit_math_load"] = ObjectHolder(false);
 #endif
+    features["superlu_version"] = ObjectHolder(devsim_superluversion);
 
     gdata.AddDBEntryOnGlobal("info", ObjectHolder(features));
 

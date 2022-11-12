@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ class ExprEquation : public Equation<DoubleType>
         void NoiseUpdateValues(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &);
 
         /// Need to decide if we are going to contain equations or models?
-        /// Assume that 
+        /// Assume that
         std::string node_model_;
         std::string edge_model_;
         std::string edge_volume_model_;

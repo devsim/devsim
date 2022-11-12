@@ -1,6 +1,6 @@
 /***
 DEVSIM
-Copyright 2013 Devsim LLC
+Copyright 2013 DEVSIM LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -151,7 +151,7 @@ void addCircuitNodeCmd(CommandHandler &data)
     }
 }
 
-void 
+void
 circuitElementCmd(CommandHandler &data)
 {
     std::string errorString;
@@ -552,7 +552,7 @@ void circuitGetCircuitNodeValueCmd (CommandHandler &data)
     {
         data.SetErrorResult(errorString);
         return;
-    }   
+    }
 
     if (commandName == "get_circuit_node_value")
     {

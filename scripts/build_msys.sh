@@ -17,11 +17,11 @@ export PYTHON3_ARCHIVE=$(cygpath -w ${CONDA_PREFIX}/libs/python3.lib)
 (cd external/symdiff && bash ../symdiff_msys.sh && cd msys_x86_64_release && make -j2);
 
 # SuperLU
-(cd external && bsdtar xzf superlu_4.3.tar.gz && bash build_superlu_msys.sh)
+(cd external && bash build_superlu_msys.sh)
 
 
 # quad precision getrf
-(cd external/getrf && bash setup_msys.sh && cd build && make -j2)
+(cd external/getrf && bash setup_msys.sh && cd msys && make -j2)
 
 
 bash scripts/setup_msys.sh
