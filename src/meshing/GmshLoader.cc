@@ -264,14 +264,15 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
     ++ccount;
   }
   {
-  std::ostringstream os;
-  os << "Device " << deviceName << " has " << ccount << " coordinates with max index " << maxCoordinateIndex << "\n";
-  OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+    std::ostringstream os;
+    os << "Device " << deviceName << " has " << ccount << " coordinates with max index " << maxCoordinateIndex << "\n";
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
 
   std::map<std::string, std::vector<NodePtr> > RegionNameToNodeMap;
 
   //// For each name in the region map, we create a list of nodes which are indexes
+  [this, &RegionNameToNodeMap, dp, &coordinate_list]()
   {
     MeshNodeList_t        mesh_nodes;
     MeshTetrahedronList_t mesh_tetrahedra;
@@ -349,10 +350,10 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       region.FinalizeMesh();
       CreateDefaultModels(&region);
     }
-  }
+  }();
 
   //// Now process the contact
-  {
+  [this, &RegionNameToNodeMap, dp, &ret](){
     MeshNodeList_t mesh_nodes;
     MeshEdgeList_t mesh_edges;
     MeshTriangleList_t mesh_triangles;
@@ -390,7 +391,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       if (dimension == 2 && !mesh_triangles.empty())
       {
         std::ostringstream os;
-        os << "Contact " << contactName << " region name " << regionName << " must be 2 dimensional to be a contact.\n";
+        os << "Contact " << contactName << " region name " << regionName << " must be 1 dimensional to be a contact.\n";
         OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
 
@@ -399,7 +400,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       {
         // mesh edges get created during mesh finalize
         std::ostringstream os;
-        os << "Contact " << contactName << " region name " << regionName << " must be 1 dimensional to be a contact.\n";
+        os << "Contact " << contactName << " region name " << regionName << " must be 0 dimensional to be a contact.\n";
         OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
       }
@@ -499,9 +500,9 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       os << "Contact " << contactName << " in region " << regionName << " with " << cnodes.size() << " nodes" << "\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
-  }
+  }();
 
-  {
+  [this, &RegionNameToNodeMap, dp, &ret](){
     ConstNodeList inodes[2];
     ConstEdgeList iedges[2];
     ConstTriangleList itriangles[2];
@@ -579,7 +580,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       if (dimension == 2 && !mesh_triangles.empty())
       {
         std::ostringstream os;
-        os << "Interface " << interfaceName << " on regions " << regionName0 << " and " << regionName1 << " must be 2 dimensional to be interface.\n";
+        os << "Interface " << interfaceName << " on regions " << regionName0 << " and " << regionName1 << " must be 1 dimensional to be interface.\n";
         OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
 
@@ -588,7 +589,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       {
         // mesh edges get created during mesh finalize
         std::ostringstream os;
-        os << "Interface " << interfaceName << " on regions " << regionName0 << " and " << regionName1 << " must be 1 dimensional to be interface.\n";
+        os << "Interface " << interfaceName << " on regions " << regionName0 << " and " << regionName1 << " must be 0 dimensional to be interface.\n";
         OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
         ret = false;
       }
@@ -706,7 +707,7 @@ bool GmshLoader::Instantiate_(const std::string &deviceName, std::string &errorS
       os << "Adding interface " << interfaceName << " with " << inodes[0].size() << ", " << inodes[1].size() << " nodes" << "\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
-  }
+  }();
 
 
   //// Create the device
