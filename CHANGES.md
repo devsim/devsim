@@ -2,7 +2,11 @@
 
 ## Introduction
 
-Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
+Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
+
+## Version XXXX
+
+When instantiating a mesh from Gmsh, contact and interface related errors to dimensionality have an improved error message.
 
 ## Version 2.3.6
 
