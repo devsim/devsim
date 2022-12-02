@@ -4,9 +4,11 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
-## Version XXXX
+## Version 2.3.7
 
 When instantiating a mesh from Gmsh, contact and interface related errors to dimensionality have an improved error message.
+
+A plotting example using ``pyvista`` is presented in ``examples/plotting/visualization.ipynb``
 
 ## Version 2.3.6
 
