@@ -18,6 +18,7 @@ if [ "${1}" = "gcc" ]
   export CC=/usr/local/bin/gcc-12;
   export CXX=/usr/local/bin/g++-12;
   export F77=/usr/local/bin/gfortran-12;
+  export PLAT_NAME="x86_64"
 #  brew unlink gcc && brew link gcc
 
   # https://github.com/Microsoft/LightGBM/pull/1560
@@ -108,6 +109,7 @@ fi
 (cd osx_x86_64_release && make -j4)
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});
 cp -f dist/bdist_wheel/setup.* dist/devsim_macos_${2}
+(cd dist/devsim_macos_${2} &&  perl -p -i -e "s/^#plat-name/plat-name = ${PLAT_NAME}/" setup.cfg)
 (cd dist/devsim_macos_${2} && ${PIP_BIN} wheel .)
 (cp dist/devsim_macos_${2}/*.whl dist)
 
