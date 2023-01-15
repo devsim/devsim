@@ -6,6 +6,9 @@ matrix:
   - os: osx
     env: COMPILER=gcc
     osx_image: xcode10.1
+  - os: osx
+    env: COMPILER=clang
+    osx_image: xcode14.2
   - os: linux
     sudo: required
     dist: xenial
@@ -15,8 +18,6 @@ matrix:
 
 addons:
   homebrew:
-    packages:
-    - gcc@9
     update: false
 
 #https://github.com/travis-ci/travis-ci/issues/6893
@@ -38,6 +39,15 @@ git:
 #install:
 
 before_script:
+  - export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+      if [ "$COMPILER" == "gcc" ]; then
+        brew install gcc@9 cmake;
+      elif [ "$COMPILER" == "clang" ]; then
+        brew install cmake;
+        git submodule update --init --depth 1 external/eigen;
+      fi
+    fi
   # specifically for pypi deployment
   - export README_BASE_URL="https://github.com/devsim/devsim/blob/${TRAVIS_TAG}"
   - git submodule update --init --depth 1 external/symdiff
@@ -51,11 +61,10 @@ script:
       ./scripts/build_docker_manylinux2014.sh ${TRAVIS_TAG};
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-      source  ./scripts/install_miniconda_macos.sh;
       if [ "$COMPILER" == "gcc" ]; then
         ./scripts/build_macos.sh $COMPILER "${TRAVIS_TAG}";
       elif [ "$COMPILER" == "clang" ]; then
-        ./scripts/build_macos.sh $COMPILER "clang_${TRAVIS_TAG}";
+        ./scripts/build_macos2.sh $COMPILER "${TRAVIS_TAG}";
       fi
     fi
 
@@ -64,7 +73,7 @@ script:
 deploy:
   provider: releases
   api_key:
-    secure: F2Cxh/mYSqsmCTsggWqD2frhUW5x94D2bl61zj2JHYyTUSU0KXyzFp8aQAaGzfyaoBlc9G5JlveozrwPFnJQK9Yh+IW5wj8yiDXA0s2hv/vhlmVQZ/PqOZBXDeHmmptnfZtRuMAFrZD/zm9BUwNi6/2czRFxn5JYKjb45SavV4Q=
+    secure: "M54vU57McJ5eux7jyElblqqIIZd1n5m7YOWY5yV60I8DM5dvRjSnpK+yrX8LSiKQ161hiFYP+avhQKNbY+NlQgx8iqwq4uC9SnUxaNX7bU32OhfN2IiD0lg8/DT9/h2csOtLI2sE7UdGt+dj6juMHPO9T3pCB9zIeJqpH25Pdqk="
   file_glob: true
   file:
     - "dist/devsim*.tgz"

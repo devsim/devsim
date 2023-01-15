@@ -4,6 +4,17 @@
 
 Please see the release notes in doc/devsim.pdf or at https://devsim.net for more detailed information about changes.
 
+## Version 2.3.7
+
+### Apple M1 Support
+
+Intel MKL Pardiso not available, so using system BLAS/LAPACK or openblas by default.
+
+Extended precision is enabled.
+
+Enabled by running pip install.
+
+
 ## Version 2.3.6
 
 On Windows the ``DEVSIM_MATH_LIBS`` now uses the ``;`` as the path separator, while macOS and Linux still use ``:``.
