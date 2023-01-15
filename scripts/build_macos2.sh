@@ -15,9 +15,9 @@ if [ "${1}" = "gcc" ]
   #fi
   export CMAKE="cmake"
   export CMAKE_CXX_FLAGS=""
-  export CC=/usr/local/bin/gcc-9;
-  export CXX=/usr/local/bin/g++-9;
-  export F77=/usr/local/bin/gfortran-9;
+  export CC=/opt/homebrew/bin/gcc-12;
+  export CXX=/opt/homebrew/bin/g++-12;
+  export F77=/opt/homebrew/bin/gfortran-12;
 #  brew unlink gcc && brew link gcc
 
   # https://github.com/Microsoft/LightGBM/pull/1560
