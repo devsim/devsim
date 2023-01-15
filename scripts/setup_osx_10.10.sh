@@ -5,6 +5,7 @@ for TYPE in debug release; do
     NAME=osx_${ARCH}_${TYPE}
     mkdir ${NAME}
     (cd $NAME; cmake \
+      ${ARCH_ARG} \
       -DCMAKE_BUILD_TYPE=${TYPE} \
       -DCMAKE_CXX_COMPILER=${CXX} \
       -DCMAKE_C_COMPILER=${CC} \

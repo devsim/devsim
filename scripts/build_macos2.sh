@@ -15,9 +15,9 @@ if [ "${1}" = "gcc" ]
   #fi
   export CMAKE="cmake"
   export CMAKE_CXX_FLAGS=""
-  export CC=/opt/homebrew/bin/gcc-12;
-  export CXX=/opt/homebrew/bin/g++-12;
-  export F77=/opt/homebrew/bin/gfortran-12;
+  export CC=/usr/local/bin/gcc-12;
+  export CXX=/usr/local/bin/g++-12;
+  export F77=/usr/local/bin/gfortran-12;
 #  brew unlink gcc && brew link gcc
 
   # https://github.com/Microsoft/LightGBM/pull/1560
@@ -34,6 +34,8 @@ elif [ "${1}" = "clang" ]
   export CC=/usr/bin/gcc;
   export CXX=/usr/bin/g++;
   export F77="";
+  export ARCH_ARG='-DCMAKE_OSX_ARCHITECTURES="arm64"'
+  export PLAT_NAME="arm64"
 else
   echo "ERROR: FIRST ARGUMENT MUST BE gcc OR clang";
   exit 1;
@@ -55,8 +57,8 @@ fi
 #source activate python3_devsim_build
 
 # This may be different on x86
-export PYTHON3_BIN=/opt/homebrew/bin/python3
-export PIP_BIN=/opt/homebrew/bin/pip3
+export PYTHON3_BIN=/usr/local/bin/python3
+export PIP_BIN=/usr/local/bin/pip3
 ${PIP_BIN} install wheel
 export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
