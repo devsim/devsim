@@ -42,9 +42,9 @@ before_script:
   - export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
       if [ "$COMPILER" == "gcc" ]; then
-        brew install gcc@9 cmake
+        brew install gcc@9 cmake;
       elif [ "$COMPILER" == "clang" ]; then
-        brew install cmake
+        brew install cmake;
         git submodule update --init --depth 1 external/eigen;
       fi
     fi
