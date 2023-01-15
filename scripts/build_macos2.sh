@@ -106,10 +106,11 @@ bash ./scripts/setup_osx_10.10.sh
 fi
 
 (cd osx_x86_64_release && make -j4)
-(cd dist && bash package_macos.sh ${1} devsim_macos_${2});
-cp -f dist/bdist_wheel/setup.* dist/devsim_macos_${2}
+DIST_NAME=devsim_macos_${PLAT_NAME}_${2}
+(cd dist && bash package_macos.sh ${1} ${DIST_NAME});
+cp -f dist/bdist_wheel/setup.* dist/${DIST_NAME}
 FULL_PLAT_NAME=$(${PYTHON3_BIN} dist/bdist_wheel/fix_macos_arch.py ${PLAT_NAME})
 echo PACKAGING $FULL_PLAT_NAME
-(cd dist/devsim_macos_${2} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg)
-(cd dist/devsim_macos_${2} && ${PIP_BIN} wheel .)
-(cp dist/devsim_macos_${2}/*.whl dist)
+(cd dist/${DIST_NAME} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg)
+(cd dist/${DIST_NAME} && ${PIP_BIN} wheel .)
+(cp dist/${DIST_NAME}/*.whl dist)
