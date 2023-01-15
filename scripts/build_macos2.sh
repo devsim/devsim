@@ -15,9 +15,10 @@ if [ "${1}" = "gcc" ]
   #fi
   export CMAKE="cmake"
   export CMAKE_CXX_FLAGS=""
-  export CC=/usr/local/bin/gcc-9;
-  export CXX=/usr/local/bin/g++-9;
-  export F77=/usr/local/bin/gfortran-9;
+  export CC=/usr/local/bin/gcc-12;
+  export CXX=/usr/local/bin/g++-12;
+  export F77=/usr/local/bin/gfortran-12;
+  export PLAT_NAME="x86_64"
 #  brew unlink gcc && brew link gcc
 
   # https://github.com/Microsoft/LightGBM/pull/1560
@@ -34,6 +35,8 @@ elif [ "${1}" = "clang" ]
   export CC=/usr/bin/gcc;
   export CXX=/usr/bin/g++;
   export F77="";
+  export ARCH_ARG='-DCMAKE_OSX_ARCHITECTURES="arm64"'
+  export PLAT_NAME="arm64"
 else
   echo "ERROR: FIRST ARGUMENT MUST BE gcc OR clang";
   exit 1;
@@ -105,6 +108,8 @@ fi
 (cd osx_x86_64_release && make -j4)
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});
 cp -f dist/bdist_wheel/setup.* dist/devsim_macos_${2}
+FULL_PLAT_NAME=$(${PYTHON3_BIN} dist/bdist_wheel/fix_macos_arch.py ${PLAT_NAME})
+echo PACKAGING $FULL_PLAT_NAME
+(cd dist/devsim_macos_${2} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg)
 (cd dist/devsim_macos_${2} && ${PIP_BIN} wheel .)
 (cp dist/devsim_macos_${2}/*.whl dist)
-

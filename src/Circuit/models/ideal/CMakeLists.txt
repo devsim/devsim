@@ -12,6 +12,7 @@ SET (CXX_SRCS
 
 #### SKIP generation of models on WIN32 until this is well behaved.
 IF (WIN32)
+ELSEIF (APPLE)
 ELSE (WIN32)
 FOREACH (I ${SRCS})
 SET_SOURCE_FILES_PROPERTIES(${I}.cc PROPERTIES GENERATED TRUE)
