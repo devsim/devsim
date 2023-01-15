@@ -43,7 +43,6 @@ before_script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
       if [ "$COMPILER" == "gcc" ]; then
         brew install gcc@9 cmake
-      fi
       elif [ "$COMPILER" == "clang" ]; then
         brew install cmake
         git submodule update --init --depth 1 external/eigen;
