@@ -108,7 +108,8 @@ fi
 (cd osx_x86_64_release && make -j4)
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});
 cp -f dist/bdist_wheel/setup.* dist/devsim_macos_${2}
-#(cd dist/devsim_macos_${2} &&  perl -p -i -e "s/^#plat-name/plat-name = ${PLAT_NAME}/" setup.cfg)
+FULL_PLAT_NAME=$(${PYTHON3_BIN} dist/bdist_wheel/fix_macos_arch.py ${PLAT_NAME})
+echo PACKAGING $FULL_PLAT_NAME
+(cd dist/devsim_macos_${2} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg)
 (cd dist/devsim_macos_${2} && ${PIP_BIN} wheel .)
 (cp dist/devsim_macos_${2}/*.whl dist)
-
