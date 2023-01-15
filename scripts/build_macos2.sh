@@ -57,7 +57,6 @@ fi
 #fi
 #source activate python3_devsim_build
 
-# This may be different on x86
 export PYTHON3_BIN=/usr/local/bin/python3
 export PIP_BIN=/usr/local/bin/pip3
 ${PIP_BIN} install wheel
@@ -109,7 +108,7 @@ fi
 (cd osx_x86_64_release && make -j4)
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});
 cp -f dist/bdist_wheel/setup.* dist/devsim_macos_${2}
-(cd dist/devsim_macos_${2} &&  perl -p -i -e "s/^#plat-name/plat-name = ${PLAT_NAME}/" setup.cfg)
+#(cd dist/devsim_macos_${2} &&  perl -p -i -e "s/^#plat-name/plat-name = ${PLAT_NAME}/" setup.cfg)
 (cd dist/devsim_macos_${2} && ${PIP_BIN} wheel .)
 (cp dist/devsim_macos_${2}/*.whl dist)
 
