@@ -6,19 +6,24 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.3.7
 
-When instantiating a mesh from Gmsh, contact and interface related errors to dimensionality have an improved error message.
-
-A plotting example using ``pyvista`` is presented in ``examples/plotting/visualization.ipynb``
-
-## Version 2.3.7
-
 ### Apple M1 Support
 
-Intel MKL Pardiso not available, so using system BLAS/LAPACK or openblas by default.
+Intel MKL Pardiso not available, so using system BLAS/LAPACK or openblas by default.  In addition, SuperLU, is used instead of the MKL Pardiso.  This results in some test failures, based on the use of a different solver, and not the OS architecture.
 
 Extended precision is enabled.
 
 Enabled by running pip install.
+
+The regression results are in this newly created repo:
+
+* [devsim_tests_macos_arm64](https://github.com/devsim/devsim_tests_macos_arm64)
+
+
+### Python Notebook Example With 3D Visualization
+
+When instantiating a mesh from Gmsh, contact and interface related errors to dimensionality have an improved error message.
+
+A plotting example using ``pyvista`` is presented in ``examples/plotting/visualization.ipynb``
 
 
 ## Version 2.3.6
