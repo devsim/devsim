@@ -1,3 +1,4 @@
+
 # CHANGES
 
 ## Introduction
@@ -21,9 +22,12 @@ The regression results are in this newly created repo:
 
 ### Python Notebook Example With 3D Visualization
 
-When instantiating a mesh from Gmsh, contact and interface related errors to dimensionality have an improved error message.
 
-A plotting example using ``pyvista`` is presented in ``examples/plotting/visualization.ipynb``
+A plotting example using ``pyvista`` is presented in ``examples/plotting/visualization.ipynb``.  This example was provided by [@simbilod](https://github.com/simbilod).
+
+### Bugs
+
+When instantiating a mesh from Gmsh, contact and interface related errors to dimensionality have an improved error message.
 
 
 ## Version 2.3.6
