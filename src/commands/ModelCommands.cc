@@ -2155,6 +2155,9 @@ registerFunctionCmd(CommandHandler &data)
     return;
   }
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+  MathEval<float128>::GetInstance().AddTclMath(name, procedure, static_cast<size_t>(nargs), errorString);
+#endif
   MathEval<double>::GetInstance().AddTclMath(name, procedure, static_cast<size_t>(nargs), errorString);
 
   if (!errorString.empty())
