@@ -11,6 +11,8 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 @ryan3141 fixed an issue where math functions added with ``devsim.register_function`` were not available in extended precision model evaluation.
 
+Update NOTICE with the license files from the various dependencies.
+
 ## Version 2.3.7
 
 ### Apple M1 Support
