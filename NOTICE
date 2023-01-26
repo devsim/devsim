@@ -17,10 +17,43 @@ Boost
 
 Boost Software License - Version 1.0 - August 17th, 2003
 
+COLAMD (Used by SuperLU 5.3)
+---------------------------------
+
+    Copyright and License:
+
+        Copyright (c) 1998-2003 by the University of Florida.
+        All Rights Reserved.
+
+        THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY
+        EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
+
+        Permission is hereby granted to use, copy, modify, and/or distribute
+        this program, provided that the Copyright, this License, and the
+        Availability of the original version is retained on all copies and made
+        accessible to the end-user of any code or package that includes COLAMD
+        or any modified version of COLAMD.
+
+    Availability:
+
+        The colamd/symamd library is available at
+
+            https://web.archive.org/web/20141010162709/http://www.cise.ufl.edu/research/sparse/colamd/
+
+        This is the https://web.archive.org/web/20040113022019/http://www.cise.ufl.edu/research/sparse/colamd/colamd.c
+        file.  It requires the colamd.h file.  It is required by the colamdmex.c
+        and symamdmex.c files, for the MATLAB interface to colamd and symamd.
+
 Eigen
 -----
 
 Mozilla Public License Version 2.0
+
+GMRES routine in DEVSIM iterative solver
+----------------------------------------
+
+Derived from the IML++ Iterative Methods Library
+http://math.nist.gov/iml++/gmres.h.txt
 
 LAPACK
 ------
