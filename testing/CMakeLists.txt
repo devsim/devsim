@@ -45,6 +45,7 @@ SET (NEWPY3TESTS
   sqlite2
   sqlite3
   testfunc
+  testfunc_extended
   utf8_2
   laux1
   pythonmesh1d
