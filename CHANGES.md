@@ -9,7 +9,7 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ### Bugs
 
-@ryan3141 fixed an issue where math functions added with ``devsim.register_function`` were not available in extended precision model evaluation.
+[@ryan3141](https://github.com/ryan3141) fixed an issue where math functions added with ``devsim.register_function`` were not available in extended precision model evaluation.  The ``testing/testfunc_extended.py`` test is added to validate the fix.
 
 Update NOTICE with the license files from the various dependencies.
 
