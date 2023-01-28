@@ -5,7 +5,7 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
-## Version 2.4.0
+## Version 2.3.8
 
 ### Bugs
 
