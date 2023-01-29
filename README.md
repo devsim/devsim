@@ -29,7 +29,7 @@ Please see [LICENSE](LICENSE) and [NOTICE](NOTICE) for license terms.
 
 ## Documentation:
 
-The PDF documentation is located in ``doc/devsim.pdf``.  An online version of the documentation is available at [https://devsim.net](https://devsim.net).  A list of documentation resources is available [online](https://devsim.org/introduction.html#documentation).
+The PDF documentation is located in ``doc/devsim.pdf``.  An online version of the documentation is available at [https://devsim.net](https://devsim.net).  A list of documentation resources is available [online](https://devsim.org/introduction.html#documentation).  Recent changes are available in [CHANGES.md](CHANGES.md).
 
 The repository for the documentation is at [https://github.com/devsim/devsim_documentation](https://github.com/devsim/devsim_documentation).
 
