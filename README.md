@@ -16,7 +16,7 @@ The official website is here:
 
 ## Installation:
 
-Binary releases are available at [Zenodo](https://doi.org/10.5281/zenodo.1186952).  Please see [INSTALL.md](INSTALL.md) for installation instructions from binary or source.
+Please see [INSTALL.md](INSTALL.md) for installation instructions from binary or source.  Archived binary releases are available at [Zenodo](https://doi.org/10.5281/zenodo.1186952).
 
 ## Citing This Work:
 
