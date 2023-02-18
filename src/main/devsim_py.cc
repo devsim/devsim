@@ -74,6 +74,7 @@ void devsim_initialization()
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, errors);
     }
+    features["math_libraries"] = CreateObjectHolderList(MathLoader::GetLoadedMathDLLs());
 #else
     features["explicit_math_load"] = ObjectHolder(false);
 #endif

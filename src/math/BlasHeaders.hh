@@ -21,6 +21,7 @@ limitations under the License.
 
 #ifdef USE_EXPLICIT_MATH_LOAD
 #include <string>
+#include <vector>
 namespace MathLoader {
 // MKL_LOADED implies MKL Functions Loaded
 enum class LoaderMessages_t {NO_ENVIRONMENT, MISSING_DLL, MISSING_SYMBOLS, MATH_LOADED, MKL_LOADED};
@@ -33,6 +34,7 @@ bool IsMathLoaded();
 bool IsMKLLoaded();
 LoaderMessages_t GetMathStatus();
 std::string GetMKLVersion();
+std::vector<std::string> GetLoadedMathDLLs();
 }
 #endif
 

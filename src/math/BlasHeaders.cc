@@ -24,6 +24,7 @@ limitations under the License.
 #include <sstream>
 #include <cstdlib>
 #include <vector>
+#include <algorithm>
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -131,7 +132,7 @@ typedef void   (ztrsv_signature)(char *uplo, char *trans, char *diag, int *n, do
 // initialized through dynamic loading
 namespace {
 struct blas_table {
-  inline static void *dll_handle;
+  inline static std::vector<std::pair<std::string, void *>> dll_handles;
   inline static dgetrf_signature *dgetrf;
   inline static zgetrf_signature *zgetrf;
   inline static dgetrs_signature *dgetrs;
@@ -427,9 +428,9 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
   }
 #else
 #if defined(__APPLE__)
-  auto dllflags = RTLD_LOCAL | RTLD_NOW;
+  const auto dllflags = RTLD_LOCAL | RTLD_NOW;
 #elif defined(__linux__)
-  auto dllflags = RTLD_LOCAL | RTLD_NOW | RTLD_DEEPBIND;
+  const auto dllflags = RTLD_LOCAL | RTLD_NOW | RTLD_DEEPBIND;
 #endif
   void *dll_p = dlopen(dllname.c_str(), RTLD_NOLOAD | dllflags);
   if (!dll_p)
@@ -448,7 +449,7 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
   }
 #endif
 
-  blas_table::dll_handle = dll_p;
+  blas_table::dll_handles.push_back({dllname, dll_p});
 
 
   for (auto &entry : math_function_table)
@@ -467,24 +468,7 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
     if (h)
     {
       *entry.function_pointer = h;
-//      std::cerr << "DEBUG " << entry.symbol_name << " " << h << std::endl;
     }
-#if 0
-    else
-    {
-//handle errors
-      *entry.function_pointer = nullptr;
-#ifdef _WIN32
-      std::ostringstream os;
-      os << "Missing Symbol: \"" << entry.symbol_name << "\"\n";
-      errors += os.str();
-#else
-      errors += dlerror();
-      errors += "\n";
-#endif
-      ret = false;
-    }
-#endif
   }
 
   return GetMathStatus();
@@ -735,6 +719,14 @@ LoaderMessages_t GetMathStatus()
   }
   return ret;
 }
+
+std::vector<std::string> GetLoadedMathDLLs()
+{
+  std::vector<std::string> dll_names(blas_table::dll_handles.size());
+  std::transform(blas_table::dll_handles.begin(), blas_table::dll_handles.end(), dll_names.begin(), [](auto &a){return a.first;});
+  return dll_names;
+}
+
 
 std::string GetMKLVersion()
 {
