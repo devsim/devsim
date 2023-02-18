@@ -1,5 +1,6 @@
 
 set -e
+set -u
 
 GENERATOR="$1"
 AOPTION="$2"

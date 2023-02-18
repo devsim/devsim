@@ -21,6 +21,7 @@ limitations under the License.
 namespace dsMath {
 template <typename DoubleType>
 class Matrix;
+enum class CompressionType;
 
 namespace PEnum {
 enum class TransposeType_t {NOTRANS, TRANS};
@@ -31,7 +32,8 @@ template <typename DoubleType>
 class Preconditioner {
   public:
     virtual ~Preconditioner() = 0;
-
+    virtual dsMath::CompressionType GetRealMatrixCompressionType() const = 0;
+    virtual dsMath::CompressionType GetComplexMatrixCompressionType() const = 0;
 
     Preconditioner(size_t /*numeqns*/, PEnum::TransposeType_t /*tranpose*/);
     bool LUFactor(Matrix<DoubleType> *);     // Factor the matrix

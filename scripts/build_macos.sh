@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -u
 
 if [ "${1}" = "gcc" ]
   then
@@ -18,6 +19,7 @@ if [ "${1}" = "gcc" ]
   export CC=/usr/local/bin/gcc-9;
   export CXX=/usr/local/bin/g++-9;
   export F77=/usr/local/bin/gfortran-9;
+  export ARCH_ARG=""
 #  brew unlink gcc && brew link gcc
 
   # https://github.com/Microsoft/LightGBM/pull/1560
@@ -34,6 +36,7 @@ elif [ "${1}" = "clang" ]
   export CC=/usr/bin/gcc;
   export CXX=/usr/bin/g++;
   export F77="";
+  export ARCH_ARG=""
 else
   echo "ERROR: FIRST ARGUMENT MUST BE gcc OR clang";
   exit 1;
@@ -93,6 +96,8 @@ then
 (cd external/getrf && ./setup_osx.sh && cd build && make -j4)
 fi
 
+# umfpack support
+(cd external/umfpack_lgpl && bash setup_macos.sh && cd build && make -j2)
 
 if [ "${1}" = "gcc" ]
 then

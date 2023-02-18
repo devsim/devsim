@@ -2,6 +2,8 @@
 # http://creativecommons.org/publicdomain/zero/1.0/
 
 # Note: run this file using bash
+set -e
+set -u
 
 ANACONDA_PATH=${CONDA_PREFIX}
 CMAKE=$(cygpath -w ${ANACONDA_PATH}/Library/bin/cmake.exe)
@@ -23,16 +25,4 @@ ARCH=`uname -m`
       ..)
 #  done
 done
-
-#echo $libpath
-# TODO: fix to use conda activate
-/usr/bin/mkdir -p bin
-/usr/bin/cat << EOF > bin/symdiff_py3.bat
-@setlocal
-@echo off
-SET PYTHONIOENCODING=utf-8
-SET PYTHONPATH=$libpath
-python %*
-EOF
-/usr/bin/chmod +x bin/symdiff_py3.bat
 

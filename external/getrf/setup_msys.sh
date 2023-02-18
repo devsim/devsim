@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -u
 mkdir -p msys
 ANACONDA_PATH=${CONDA_PREFIX}
 CMAKE=$(cygpath -w ${ANACONDA_PATH}/Library/bin/cmake.exe)

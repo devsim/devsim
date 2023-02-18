@@ -74,7 +74,7 @@ class ObjectHolder {
     bool           GetLongList(std::vector<ptrdiff_t> &) const;
     bool           GetUnsignedLongList(std::vector<size_t> &) const;
 
-    bool empty()
+    bool empty() const
     {
       return !object_;
     }
@@ -130,11 +130,6 @@ ObjectHolder CreateDoublePODArray(const std::vector<T> &list);
 
 template <>
 ObjectHolder CreateDoublePODArray(const std::vector<double> &list);
-#if 0
-{
-  return CreatePODArray<double>(list);
-}
-#endif
 
 #endif
 

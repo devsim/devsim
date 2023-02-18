@@ -695,10 +695,7 @@ ObjectHolder CreateDoublePODArray(const std::vector<T> &list)
   thread_local std::vector<double> tmp;
   tmp.resize(list.size());
 
-  for (size_t i = 0; i < list.size(); ++i)
-  {
-    tmp[i] = static_cast<double>(list[i]);
-  }
+  std::transform(list.begin(), list.end(), tmp.begin(), [](auto &x){return static_cast<double>(x);});
 
   return CreatePODArray<double>(tmp);
 }

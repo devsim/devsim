@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -u
 
 if [ "${1}" = "gcc" ]
   then
@@ -18,6 +19,7 @@ if [ "${1}" = "gcc" ]
   export CC=/usr/local/bin/gcc-12;
   export CXX=/usr/local/bin/g++-12;
   export F77=/usr/local/bin/gfortran-12;
+  export ARCH_ARG=""
   export PLAT_NAME="x86_64"
 #  brew unlink gcc && brew link gcc
 
@@ -96,6 +98,8 @@ then
 (cd external/getrf && ./setup_osx.sh && cd build && make -j4)
 fi
 
+# umfpack support
+(cd external/umfpack_lgpl && bash setup_macos.sh && cd build && make -j2)
 
 if [ "${1}" = "gcc" ]
 then

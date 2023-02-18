@@ -1,11 +1,12 @@
 PROJECT (DEVSIM CXX)
 cmake_minimum_required(VERSION 3.9)
 
+set(DEVSIM_CONFIG "unknown" CACHE STRING "configuration to load from ./cmake")
 OPTION(VTKWRITER    "Build with VTK Writer" ON)
 OPTION(PYTHON3      "Build Python 3 Interpreter" ON)
 OPTION(DEVSIM_EXTENDED_PRECISION "Build with extended precision" OFF)
 OPTION(DEVSIM_CPP_BIN_FLOAT "Build with boost quadmath emulation" OFF)
-OPTION(MKL_PARDISO  "Build with MKL Pardiso" OFF)
+OPTION(MKL_PARDISO  "Build with MKL Pardiso" ON)
 OPTION(EXPLICIT_MATH_LOAD  "Explicit linking of math libraries" ON)
 OPTION(EIGEN_DENSE "Use eigen for the dense matrix in extended precision" OFF)
 
@@ -16,7 +17,7 @@ INCLUDE(${PROJECT_SOURCE_DIR}/cmake/${DEVSIM_CONFIG}.cmake)
 INCLUDE(${PROJECT_SOURCE_DIR}/local.cmake OPTIONAL)
 
 #also change this in setup.cfg
-ADD_DEFINITIONS(-DDEVSIM_VERSION_STRING=\"2.3.8\")
+ADD_DEFINITIONS(-DDEVSIM_VERSION_STRING=\"2.4.0\")
 ADD_DEFINITIONS(-DDEVSIM_COPYRIGHT_YEAR=\"2009-2023\")
 
 IF (MKL_PARDISO)

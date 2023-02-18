@@ -15,6 +15,8 @@ SET (CXX_SRCS
     gmres.cc
     MathEnum.cc
     BlasHeaders.cc
+    ExternalPreconditioner.cc
+    SolverUtil.cc
 )
 
 IF (MKL_PARDISO)
