@@ -54,6 +54,18 @@ struct SpecialSort
 };
 
 template <typename DoubleType>
+dsMath::CompressionType BlockPreconditioner<DoubleType>::GetRealMatrixCompressionType() const
+{
+  return dsMath::CompressionType::CCM;
+}
+
+template <typename DoubleType>
+dsMath::CompressionType BlockPreconditioner<DoubleType>::GetComplexMatrixCompressionType() const
+{
+  return dsMath::CompressionType::CCM;
+}
+
+template <typename DoubleType>
 BlockPreconditioner<DoubleType>::~BlockPreconditioner()
 {
   delete block_matrix_;

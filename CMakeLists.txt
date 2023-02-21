@@ -1,6 +1,7 @@
 PROJECT (DEVSIM CXX)
 cmake_minimum_required(VERSION 3.9)
 
+set(DEVSIM_CONFIG "unknown" CACHE STRING "configuration to load from ./cmake")
 OPTION(VTKWRITER    "Build with VTK Writer" ON)
 OPTION(PYTHON3      "Build Python 3 Interpreter" ON)
 OPTION(DEVSIM_EXTENDED_PRECISION "Build with extended precision" OFF)

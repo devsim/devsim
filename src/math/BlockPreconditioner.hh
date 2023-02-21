@@ -73,6 +73,8 @@ class BlockPreconditioner : public Preconditioner<DoubleType> {
     virtual ~BlockPreconditioner();
 
     BlockPreconditioner(size_t /*numeqns*/, PEnum::TransposeType_t /*tranpose*/);
+    dsMath::CompressionType GetRealMatrixCompressionType() const override;
+    dsMath::CompressionType GetComplexMatrixCompressionType() const override;
 
   protected:
     void DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const;

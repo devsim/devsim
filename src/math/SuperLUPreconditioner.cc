@@ -30,6 +30,18 @@ SuperLUPreconditioner<DoubleType>::SuperLUPreconditioner(size_t sz, PEnum::Trans
 }
 
 template <typename DoubleType>
+dsMath::CompressionType SuperLUPreconditioner<DoubleType>::GetRealMatrixCompressionType() const
+{
+  return dsMath::CompressionType::CCM;
+}
+
+template <typename DoubleType>
+dsMath::CompressionType SuperLUPreconditioner<DoubleType>::GetComplexMatrixCompressionType() const
+{
+  return dsMath::CompressionType::CCM;
+}
+
+template <typename DoubleType>
 SuperLUPreconditioner<DoubleType>::~SuperLUPreconditioner()
 {
   delete superLUData_;

@@ -29,6 +29,8 @@ class MKLPardisoPreconditioner : public Preconditioner<DoubleType>
 {
     public:
         MKLPardisoPreconditioner(size_t, PEnum::TransposeType_t);
+        dsMath::CompressionType GetRealMatrixCompressionType() const override;
+        dsMath::CompressionType GetComplexMatrixCompressionType() const override;
 
     protected:
         bool DerivedLUFactor(Matrix<DoubleType> *);

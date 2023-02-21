@@ -644,34 +644,14 @@ CompressedMatrix<DoubleType> *CreateMatrix(Preconditioner<DoubleType> *precondit
   const auto numeqns = preconditioner->size();
 
   auto matrix_type = MatrixType::REAL;
+  auto compression_type = preconditioner->GetRealMatrixCompressionType();
   if (is_complex)
   {
     matrix_type = MatrixType::COMPLEX;
-  }
-
-  auto compression_type = CompressionType::CCM;
-
-  if (dynamic_cast<SuperLUPreconditioner<DoubleType> *>(preconditioner))
-  {
-    compression_type = CompressionType::CCM;
-  }
-  else if (dynamic_cast<BlockPreconditioner<DoubleType> *>(preconditioner))
-  {
-    compression_type = CompressionType::CCM;
-  }
-#ifdef USE_MKL_PARDISO
-  else if (dynamic_cast<MKLPardisoPreconditioner<DoubleType> *>(preconditioner))
-  {
-    compression_type = CompressionType::CCM;
-  }
-#endif
-  else
-  {
-    dsAssert(0, "UNEXPECTED");
+    compression_type = preconditioner->GetComplexMatrixCompressionType();
   }
 
   return new CompressedMatrix<DoubleType>(numeqns, matrix_type, compression_type);
-
 }
 
 template <typename DoubleType>

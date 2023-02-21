@@ -115,6 +115,7 @@ ObjectHolder CreateTuple(std::vector<ObjectHolder> &objects, size_t beg, size_t 
   return ret;
 }
 
+#if 0
 ObjectHolder CreateDictionary(const std::vector<std::pair<std::string, ObjectHolder> > &objects)
 {
   ObjectHolder ret;
@@ -130,6 +131,7 @@ ObjectHolder CreateDictionary(const std::vector<std::pair<std::string, ObjectHol
   }
   return ret;
 }
+#endif
 
 void ProcessError(const std::string &commandname, std::string &error_string)
 {
@@ -152,12 +154,6 @@ bool Interpreter::RunCommand(ObjectHolder &procedure, std::vector<ObjectHolder> 
 {
   bool ret = false;
   error_string_.clear();
-
-  if (!error_string_.empty())
-  {
-    ret = false;
-    return ret;
-  }
 
   ObjectHolder args = CreateTuple(objects, 0, objects.size());
 
@@ -183,10 +179,38 @@ bool Interpreter::RunInternalCommand(const std::string &commandname, const std::
   newname.reserve(commandname.size() + 3);
   newname += "ds.";
   newname += commandname;
-  return RunCommand(newname, arguments);
+
+  ObjectHolderMap_t omap(arguments.begin(), arguments.end());
+
+  return RunCommand(newname, omap);
 }
 
-bool Interpreter::RunCommand(const std::string &commandname, const std::vector<std::pair<std::string, ObjectHolder> > &arguments)
+bool Interpreter::RunCommand(ObjectHolder &procedure, ObjectHolderMap_t &arguments)
+{
+  bool ret = false;
+  error_string_.clear();
+
+  ObjectHolder kwargs(arguments);
+
+  PyErr_Clear();
+
+  PyObject *args = PyTuple_New(0);
+  ObjectHolder args_holder(args);
+  PyObject *robj = PyObject_Call(reinterpret_cast<PyObject *>(procedure.GetObject()), args, reinterpret_cast<PyObject *>(kwargs.GetObject()));
+  result_ = ObjectHolder(robj);
+  if (robj)
+  {
+    ret = true;
+  }
+  else
+  {
+    ret = false;
+    ProcessError("Python Command", error_string_);
+  }
+  return ret;
+}
+
+bool Interpreter::RunCommand(const std::string &commandname, ObjectHolderMap_t &arguments)
 {
   bool ret = false;
   error_string_.clear();
@@ -199,26 +223,9 @@ bool Interpreter::RunCommand(const std::string &commandname, const std::vector<s
     return ret;
   }
 
-  ObjectHolder kwargs = CreateDictionary(arguments);
+  return RunCommand(command_object, arguments);
 
-  PyErr_Clear();
-
-  PyObject *args = PyTuple_New(0);
-  ObjectHolder args_holder(args);
-  PyObject *robj = PyObject_Call(reinterpret_cast<PyObject *>(command_object.GetObject()), args, reinterpret_cast<PyObject *>(kwargs.GetObject()));
-  result_ = ObjectHolder(robj);
-  if (robj)
-  {
-    ret = true;
-  }
-  else
-  {
-    ret = false;
-    ProcessError(commandname, error_string_);
-  }
-  return ret;
 }
-
 
 std::string Interpreter::GetVariable(const std::string &name)
 {

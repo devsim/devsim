@@ -391,6 +391,18 @@ MKLPardisoPreconditioner<DoubleType>::MKLPardisoPreconditioner(size_t sz, PEnum:
 }
 
 template <typename DoubleType>
+dsMath::CompressionType MKLPardisoPreconditioner<DoubleType>::GetRealMatrixCompressionType() const
+{
+  return dsMath::CompressionType::CCM;
+}
+
+template <typename DoubleType>
+dsMath::CompressionType MKLPardisoPreconditioner<DoubleType>::GetComplexMatrixCompressionType() const
+{
+  return dsMath::CompressionType::CCM;
+}
+
+template <typename DoubleType>
 MKLPardisoPreconditioner<DoubleType>::~MKLPardisoPreconditioner()
 {
   delete mklpardisodata_;
