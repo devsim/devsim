@@ -9,6 +9,8 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 Python solver
 
+The global parameter ``math_libraries`` provides a list of loaded dlls.
+
 ## Version 2.3.8
 
 ### Bugs
