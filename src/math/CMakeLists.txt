@@ -16,6 +16,7 @@ SET (CXX_SRCS
     MathEnum.cc
     BlasHeaders.cc
     ExternalPreconditioner.cc
+    SolverUtil.cc
 )
 
 IF (MKL_PARDISO)
