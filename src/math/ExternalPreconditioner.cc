@@ -55,6 +55,7 @@ bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &erro
   if (!oh.IsCallable())
   {
     error_string += "python solver object \"" + oh.GetString() + "\" is not callable\n";
+    return false;
   }
   const std::string return_keys[] = {
     "matrix_format",
@@ -71,7 +72,7 @@ bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &erro
   command_handle_ = oh;
   Interpreter interpreter;
   bool ret = interpreter.RunCommand(command_handle_, init_args);
-  if (ret)
+  if (!ret)
   {
     error_string = interpreter.GetErrorString();
   }
@@ -90,7 +91,7 @@ bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &erro
       {
         if (auto it = result_dictionary.find(arg); it == result_dictionary.end())
         {
-          error_string += "python solver object did not return a dictionary containing " + arg + "\n";
+          error_string += "python solver object did not return a dictionary containing \"" + arg + "\"\n";
           ret = false;
         }
       }

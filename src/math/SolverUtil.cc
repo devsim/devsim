@@ -126,7 +126,8 @@ dsMath::Preconditioner<T> *CreateExternalPreconditioner(size_t numeqns, dsMath::
   auto &gdata = GlobalData::GetInstance();
   if (auto dbent = gdata.GetDBEntryOnGlobal("solver_callback"); dbent.first)
   {
-    p->init(dbent.second, errorstring);
+    bool ret = p->init(dbent.second, errorstring);
+    dsAssert(ret, errorstring);
   }
   else
   {
