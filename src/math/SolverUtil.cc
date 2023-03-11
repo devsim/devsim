@@ -21,6 +21,7 @@ limitations under the License.
 #ifdef USE_MKL_PARDISO
 #include "MKLPardisoPreconditioner.hh"
 #endif
+#include "ExternalPreconditioner.hh"
 #include "LinearSolver.hh"
 #include "IterativeLinearSolver.hh"
 #include "CompressedMatrix.hh"
@@ -36,7 +37,8 @@ namespace {
 enum class DirectSolver {
   UNKNOWN,
   MKLPARDISO,
-  SUPERLU
+  SUPERLU,
+  CUSTOM,
 };
 
 DirectSolver GetDirectSolver()
@@ -58,19 +60,37 @@ DirectSolver GetDirectSolver()
 #else
       ret = DirectSolver::SUPERLU;
       std::ostringstream os;
-      os << "Solver \"mkl_pardiso\" not supported in this build.  Switching to \"superlu\".\n";
-      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+      os << "Solver \"mkl_pardiso\" not supported in this build.\n";
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
 #endif
+    }
+    else if (val == "custom")
+    {
+      ret = DirectSolver::CUSTOM;
+      if (auto csolver = gdata.GetDBEntryOnGlobal("solver_callback"); csolver.first)
+      {
+        if (!csolver.second.IsCallable())
+        {
+          ret = DirectSolver::UNKNOWN;
+          std::ostringstream os;
+          os << "Solver \"custom\" specified, but \"solver_callback\" not callable.\n";
+          OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
+        }
+      }
+      else
+      {
+        ret = DirectSolver::UNKNOWN;
+        std::ostringstream os;
+        os << "Solver \"custom\" specified, but \"solver_callback\" not set.\n";
+        OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
+      }
     }
     else
     {
       std::ostringstream os;
-      os << "Unrecognized \"direct_solver\" parameter value \"" << val << "\". Valid options are \"mkl_pardiso\" or \"superlu\".\n";
-      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+      os << "Unrecognized \"direct_solver\" parameter value \"" << val << "\". Valid options are \"mkl_pardiso\", \"superlu\", or \"custom\".\n";
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
-  }
-  if (ret != DirectSolver::UNKNOWN)
-  {
     return ret;
   }
 
@@ -97,6 +117,23 @@ DirectSolver GetDirectSolver()
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   return ret;
 }
+
+template <typename T>
+dsMath::Preconditioner<T> *CreateExternalPreconditioner(size_t numeqns, dsMath::PEnum::TransposeType_t transtype, std::string &errorstring)
+{
+  // TODO: use helper function to encapsulate
+  auto p = new dsMath::ExternalPreconditioner<T>(numeqns, transtype);
+  auto &gdata = GlobalData::GetInstance();
+  if (auto dbent = gdata.GetDBEntryOnGlobal("solver_callback"); dbent.first)
+  {
+    p->init(dbent.second, errorstring);
+  }
+  else
+  {
+    dsAssert(dbent.first, "solver_callback not available");
+  }
+  return p;
+}
 }
 
 namespace dsMath
@@ -121,6 +158,12 @@ Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, s
       preconditioner = new MKLPardisoPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS);
     }
 #endif
+    else if (s == DirectSolver::CUSTOM)
+    {
+      std::string errorstring;
+      preconditioner = CreateExternalPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS, errorstring);
+      dsAssert(preconditioner, errorstring);
+    }
     else
     {
       dsAssert(false, "Unexpected Solver Type");
@@ -150,6 +193,12 @@ Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermetho
       preconditioner = new MKLPardisoPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS);
     }
 #endif
+    else if (s == DirectSolver::CUSTOM)
+    {
+      std::string errorstring;
+      preconditioner = CreateExternalPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS, errorstring);
+      dsAssert(preconditioner, errorstring);
+    }
     else
     {
       dsAssert(false, "Unexpected Solver Type");
@@ -173,6 +222,12 @@ Preconditioner<DoubleType> *CreateACPreconditioner(PEnum::TransposeType_t trans_
       preconditioner = new MKLPardisoPreconditioner<DoubleType>(numeqns, trans_type);
     }
 #endif
+    else if (s == DirectSolver::CUSTOM)
+    {
+      std::string errorstring;
+      preconditioner = CreateExternalPreconditioner<DoubleType>(numeqns, trans_type, errorstring);
+      dsAssert(preconditioner, errorstring);
+    }
     else
     {
       dsAssert(false, "Unexpected Solver Type");

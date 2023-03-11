@@ -6,7 +6,7 @@ OPTION(VTKWRITER    "Build with VTK Writer" ON)
 OPTION(PYTHON3      "Build Python 3 Interpreter" ON)
 OPTION(DEVSIM_EXTENDED_PRECISION "Build with extended precision" OFF)
 OPTION(DEVSIM_CPP_BIN_FLOAT "Build with boost quadmath emulation" OFF)
-OPTION(MKL_PARDISO  "Build with MKL Pardiso" OFF)
+OPTION(MKL_PARDISO  "Build with MKL Pardiso" ON)
 OPTION(EXPLICIT_MATH_LOAD  "Explicit linking of math libraries" ON)
 OPTION(EIGEN_DENSE "Use eigen for the dense matrix in extended precision" OFF)
 
