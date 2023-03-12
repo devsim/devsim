@@ -13,3 +13,6 @@
 [submodule "external/boostorg/math"]
 	path = external/boostorg/math
 	url = https://github.com/boostorg/math
+[submodule "external/umfpack_lgpl"]
+	path = external/umfpack_lgpl
+	url = ../umfpack_lgpl
