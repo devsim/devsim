@@ -34,6 +34,9 @@ export PYTHON3_ARCHIVE=""
 # quad precision getrf
 (cd external/getrf && bash setup_centos6.sh && cd build && make -j2)
 
+# umfpack support
+(cd external/umfpack_lgpl && bash setup_centos6.sh && cd build && make -j2)
+
 # start devsim build
 bash scripts/setup_centos_6.sh
 
