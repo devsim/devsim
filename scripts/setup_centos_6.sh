@@ -1,9 +1,11 @@
-DEVSIM_CONFIG="centos_6"
+#!/bin/bash
+set -e
+set -u
 for TYPE in debug release; do
 ARCH=`uname -m`
 #  for ARCH in i386 x86_64; do
     NAME=linux_${ARCH}_${TYPE}
-    mkdir ${NAME}
+    mkdir -p ${NAME}
     (cd $NAME; ${CMAKE} \
       -DCMAKE_BUILD_TYPE=${TYPE} \
       -DCMAKE_CXX_COMPILER=${CXX} \
@@ -14,7 +16,6 @@ ARCH=`uname -m`
       -DMKL_PARDISO=ON \
       -DPYTHON3=ON \
       -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
-      -DCONDA_PREFIX=${CONDA_PREFIX} \
       ..)
 #  done
 done
