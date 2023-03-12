@@ -261,7 +261,6 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> 
     }
     else
     {
-#warning "REFACTOR common code"
       for (const auto &arg: return_keys)
       {
         if (auto it = result_dictionary.find(arg); it == result_dictionary.end())
@@ -277,8 +276,8 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> 
       std::vector<double> xv;
       preswap(xv, x);
       bool ret = result_dictionary["x"].GetDoubleList(xv);
-      dsAssert(ret && (x.size() == b.size()), "Mismatch in returned x");
       convertToType(xv, x);
+      dsAssert(ret && (x.size() == b.size()), "Mismatch in returned x");
     }
   }
 }
@@ -289,15 +288,11 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
   dsAssert(command_handle_.IsCallable(), "python solver command is not callable\n");
   dsAssert(!command_data_.empty(), "python solver invalid data\n");
 
-  std::vector<DoubleType> Xx(x.size());
-  std::vector<DoubleType> Xz(x.size());
   std::vector<DoubleType> Bx(b.size());
   std::vector<DoubleType> Bz(b.size());
 
   auto realpart = [](auto &x){return x.real();};
   auto imagpart = [](auto &x){return x.imag();};
-  std::transform(x.begin(), x.end(), Xx.begin(), realpart);
-  std::transform(x.begin(), x.end(), Xz.begin(), imagpart);
   std::transform(b.begin(), b.end(), Bx.begin(), realpart);
   std::transform(b.begin(), b.end(), Bz.begin(), imagpart);
 
@@ -323,7 +318,45 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
     error += interpreter.GetErrorString();
     OutputStream::WriteOut(OutputStream::OutputType::FATAL, error.c_str());
   }
-#warning "FINISH COMPLEX CASE"
+  else
+  {
+    std::string error_string;
+    ObjectHolderMap_t result_dictionary;
+    auto result = interpreter.GetResult();
+    ret = result.GetHashMap(result_dictionary);
+    if (!ret)
+    {
+      error_string += "python solver object did not return a dictionary\n";
+    }
+    else
+    {
+      for (const auto &arg: return_keys)
+      {
+        if (auto it = result_dictionary.find(arg); it == result_dictionary.end())
+        {
+          error_string += "python solver object did not return a dictionary containing \"" + arg + "\"\n";
+          ret = false;
+        }
+      }
+      auto status = result_dictionary["status"].GetBoolean().second;
+      auto message = result_dictionary["message"].GetString();
+      error_string += message;
+      dsAssert(status, error_string);
+      std::vector<double> Xxv;
+      std::vector<double> Xzv;
+      bool ret = false;
+      ret = result_dictionary["Xx"].GetDoubleList(Xxv);
+      dsAssert(ret && (Xxv.size() == Bx.size()), "Mismatch in returned Xx");
+      ret = result_dictionary["Xz"].GetDoubleList(Xzv);
+      dsAssert(ret && (Xzv.size() == Bz.size()), "Mismatch in returned Xz");
+
+      x.resize(Xxv.size());
+      for (size_t i = 0; i < Xxv.size(); ++i)
+      {
+        x[i] = std::complex<DoubleType>(Xxv[i], Xzv[i]);
+      }
+    }
+  }
 }
 }
 
