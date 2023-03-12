@@ -115,6 +115,7 @@ bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &erro
       command_data_ = result_dictionary["solver_object"];
     }
   }
+#warning "process status and message"
   return ret;
 }
 
@@ -158,14 +159,47 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
   {
     std::string error = "while factorizing matrix using python solver\n";
     error += interpreter.GetErrorString();
-    OutputStream::WriteOut(OutputStream::OutputType::INFO, error.c_str());
+    OutputStream::WriteOut(OutputStream::OutputType::FATAL, error.c_str());
   }
   else
   {
-
+    ObjectHolderMap_t result_dictionary;
+    auto result = interpreter.GetResult();
+    ret = result.GetHashMap(result_dictionary);
+    if (!ret)
+    {
+      error_string += "python solver object did not return a dictionary\n";
+    }
+    else
+    {
+      for (const auto &arg: return_keys)
+      {
+        if (auto it = result_dictionary.find(arg); it == result_dictionary.end())
+        {
+          error_string += "python solver object did not return a dictionary containing \"" + arg + "\"\n";
+          ret = false;
+        }
+      }
+      if (ret)
+      {
+        auto matrix_format = result_dictionary["matrix_format"].GetString();
+        if (matrix_format == "csc")
+        {
+          compression_type_ = dsMath::CompressionType::CCM;
+        }
+        else if (matrix_format == "csr")
+        {
+          compression_type_ = dsMath::CompressionType::CRM;
+        }
+        else
+        {
+          error_string += R"(python solver object did not return a dictionary containing "csc" or "csr" for "matrix_format")" "\n";
+          ret = false;
+        }
+      }
+      command_data_ = result_dictionary["solver_object"];
+    }
   }
-
-#warning "FINISH HERE WITH RETURN VALUE PROCESSING"
 
   return ret;
 }
@@ -192,9 +226,9 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> 
   bool ret = interpreter.RunCommand(command_handle_, factor_args);
   if (!ret)
   {
-    std::string error = "while factorizing matrix using python solver\n";
+    std::string error = "while solving matrix using python solver\n";
     error += interpreter.GetErrorString();
-    OutputStream::WriteOut(OutputStream::OutputType::INFO, error.c_str());
+    OutputStream::WriteOut(OutputStream::OutputType::FATAL, error.c_str());
   }
 
 #warning "FINISH HERE WITH RETURN VALUE PROCESSING"
@@ -236,12 +270,10 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
   bool ret = interpreter.RunCommand(command_handle_, factor_args);
   if (!ret)
   {
-    std::string error = "while factorizing matrix using python solver\n";
+    std::string error = "while solving matrix using python solver\n";
     error += interpreter.GetErrorString();
-    OutputStream::WriteOut(OutputStream::OutputType::INFO, error.c_str());
+    OutputStream::WriteOut(OutputStream::OutputType::FATAL, error.c_str());
   }
-
-#warning "FINISH HERE WITH RETURN VALUE PROCESSING"
 }
 }
 

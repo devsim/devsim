@@ -15,6 +15,7 @@ class dsobject:
         self.matrix = None
         self.gdata = None
         self.initialize_umfpack()
+        self.umf_control = None
 
     def initialize_umfpack(self):
         self.gdata = umf.global_data()
@@ -28,8 +29,22 @@ class dsobject:
         if mcount != 0:
             raise RuntimeError('Missing %d math functions' % mcount)
 
+    def factor(self, **kwargs):
+        print(kwargs.keys())
+        is_complex = kwargs['is_complex']
+        if not self.umf_control:
+            if is_complex:
+                self.umf_control = umf.umf_control(self.gdata, 'complex')
+            else:
+                self.umf_control = umf.umf_control(self.gdata, 'real')
+        # test same symbolic 
+        self.matrix = umf.di_matrix(uc=self.umf_control, Ap=kwargs['Ap'], Ai=kwargs["Ai"], Ax=kwargs["Ax"])
+        self.symbolic = self.umf_control.symbolic(matrix=self.matrix)
+        self.numeric = self.umf_control.numeric(matrix=self.matrix, Symbolic=self.symbolic)
+
+
 def foo(**kwargs):
-    print(kwargs)
+    print(kwargs['action'])
     if (kwargs['action'] == 'init'):
         so =  dsobject(
               n=kwargs['n'],
@@ -42,10 +57,10 @@ def foo(**kwargs):
           'message' : so.message,
         }
     elif (kwargs['action'] == 'factor'):
-        print(kwargs)
-        raise RuntimeError('DEBUG')
+        kwargs['solver_object'].factor(**kwargs)
     else:
         raise RuntimeError('Unsupported action, ' + kwargs['action'])
+    return False
         
 
 devsim.set_parameter(name="solver_callback", value=foo)
