@@ -77,8 +77,6 @@ install_name_tool -change $j "@loader_path/`basename $j`" $i
 done
 done
 
-cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
-
 # MKL is now versioned
 #for i in ${DIST_PYDLL}/devsim_py*.so
 #do
@@ -105,6 +103,8 @@ fi
 #done
 # keep a copy of unstripped binary
 #cp ${SRC_BIN} ${DIST_VER}_unstripped
+
+cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
 
 
 mkdir -p ${DIST_DIR}/doc
