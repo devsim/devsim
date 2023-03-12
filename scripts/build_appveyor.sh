@@ -18,7 +18,7 @@ export PYTHON3_INCLUDE="${CONDA_PREFIX}/include"
 export PYTHON3_ARCHIVE=$(cygpath -w ${CONDA_PREFIX}/libs/python3.lib)
 
 cd "${BASEDIR}/external/umfpack_lgpl"
-bash ../build_appveyor.sh "${GENERATOR}" "${AOPTION}" "${BUILDDIR}" "${CONDA_PREFIX}"
+bash build_appveyor.sh "${GENERATOR}" "${AOPTION}" "${BUILDDIR}" "${CONDA_PREFIX}"
 
 cd "${BASEDIR}/external"
 bash ./build_superlu_appveyor.sh "${GENERATOR}" "${AOPTION}" "${BUILDDIR}"
