@@ -33,9 +33,9 @@ class MKLPardisoPreconditioner : public Preconditioner<DoubleType>
         dsMath::CompressionType GetComplexMatrixCompressionType() const override;
 
     protected:
-        bool DerivedLUFactor(Matrix<DoubleType> *);
-        void DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const;
-        void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const;
+        bool DerivedLUFactor(Matrix<DoubleType> *) override;
+        void DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const override;
+        void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const override;
 
         ~MKLPardisoPreconditioner();
 
