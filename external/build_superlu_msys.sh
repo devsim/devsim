@@ -1,5 +1,6 @@
 
 set -e
+set -u
 ANACONDA_PATH=${CONDA_PREFIX}
 CMAKE=$(cygpath -w ${ANACONDA_PATH}/Library/bin/cmake.exe)
 MAKE=make

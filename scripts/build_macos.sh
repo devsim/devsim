@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -u
 
 if [ "${1}" = "gcc" ]
   then

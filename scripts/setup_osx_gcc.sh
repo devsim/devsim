@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+set -u
 DEVSIM_CONFIG="osx_gcc"
 for TYPE in debug release; do
   for ARCH in x86_64; do
