@@ -29,6 +29,10 @@ limitations under the License.
 namespace
 {
 // TODO: move this to a common place
+void preswap(std::vector<double> &xin, std::vector<double> &xout)
+{
+  xin.swap(xout);
+}
 void convertToType(std::vector<double> &xin, std::vector<double> &xout)
 {
   xout.swap(xin);
@@ -39,11 +43,13 @@ void convertToType(std::vector<double> &xin, std::vector<double> &xout)
 #include "Float128.hh"
 namespace
 {
+void preswap(std::vector<double> &xin, std::vector<float128> &xout)
+{
+}
 void convertToType(std::vector<double> &xin, std::vector<float128> &xout)
 {
   xout.resize(xin.size());
   std::copy(xin.begin(), xin.end(), xout.begin());
-  //std::copy(xin.begin(), xin.end(), xout.begin(), [](auto x){return static_cast<float128>(x);});
 }
 }
 #endif
@@ -269,6 +275,7 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> 
       error_string += message;
       dsAssert(status, error_string);
       std::vector<double> xv;
+      preswap(xv, x);
       bool ret = result_dictionary["x"].GetDoubleList(xv);
       dsAssert(ret && (x.size() == b.size()), "Mismatch in returned x");
       convertToType(xv, x);
