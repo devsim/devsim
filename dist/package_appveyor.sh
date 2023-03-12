@@ -26,6 +26,7 @@ DIST_VER=${DIST_DIR}
 SYMDIFF_LIBRARY_DIR=../external/symdiff/lib/symdiff
 SYMDIFF_EXAMPLES_DIR=../external/symdiff/examples
 SYMDIFF_DOCUMENTATION_DIR=../external/symdiff/doc
+UMFPACK_LIBRARY_FILE=../external/umfpack_lgpl/${ARCH}/umfpack_lgpl.dll
 
 # make the bin directory and copy binary in
 mkdir -p ${DIST_BIN}
@@ -38,6 +39,9 @@ cp -v __init__.py ${DIST_PYDLL}
 
 # Intel MKL
 #cp -v ${CONDA_PREFIX}/Library/bin/mkl_rt.1.dll ${DIST_PYDLL}
+
+# Copy UMFPACK
+cp -v ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
 
 # goes to lib/symdiff
 cp -R ${SYMDIFF_LIBRARY_DIR} ${DIST_LIB}

@@ -18,6 +18,7 @@ DIST_VER=${DIST_DIR}
 SYMDIFF_LIBRARY_DIR=../external/symdiff/lib/symdiff
 SYMDIFF_EXAMPLES_DIR=../external/symdiff/examples
 SYMDIFF_DOCUMENTATION_DIR=../external/symdiff/doc
+UMFPACK_LIBRARY_FILE=../external/umfpack_lgpl/build/libumfpack_lgpl.so
 
 # make the bin directory and copy binary in
 # we need the wrapper script for libstdc++
@@ -48,6 +49,8 @@ for i in INSTALL.md NOTICE LICENSE README.md CHANGES.md install.py; do
 cp ../$i ${DIST_DIR}
 done
 
+cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
+
 #MKL library
 # $ORIGIN rpath set in src/main/CMakeLists.txt
 #cp "${CONDA_PREFIX}/lib/libmkl_rt.so.1" ${DIST_PYDLL}
@@ -71,7 +74,7 @@ Package released as:
 ${DIST_VER}.tgz
 
 Source available from:
-http://www.github.com/devsim/devsim
+http://github.com/devsim/devsim
 commit ${COMMIT}
 EOF
 tar czvf ${DIST_VER}.tgz ${DIST_DIR}

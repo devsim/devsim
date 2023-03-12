@@ -24,6 +24,7 @@ DIST_VER=${DIST_DIR}
 SYMDIFF_LIBRARY_DIR=../external/symdiff/lib/symdiff
 SYMDIFF_EXAMPLES_DIR=../external/symdiff/examples
 SYMDIFF_DOCUMENTATION_DIR=../external/symdiff/doc
+UMFPACK_LIBRARY_FILE=../external/umfpack_lgpl/build/libumfpack_lgpl.dylib
 
 # make the bin directory and copy binary in
 # Assume libstdc++ is a standard part of the system
@@ -75,6 +76,8 @@ echo install_name_tool -change $j "@loader_path/`basename $j`" $i
 install_name_tool -change $j "@loader_path/`basename $j`" $i
 done
 done
+
+cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
 
 # MKL is now versioned
 #for i in ${DIST_PYDLL}/devsim_py*.so
