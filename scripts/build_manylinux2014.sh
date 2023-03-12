@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e
+set -u
+export DEVSIM_CONFIG="centos_6"
+
 
 # Centos Specific
 #https://fedoraproject.org/wiki/EPEL
