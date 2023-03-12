@@ -4,6 +4,7 @@ devsim.set_parameter(name="direct_solver", value="custom")
 print(devsim.get_parameter(name="info"))
 
 import umfpack_loader as umf
+import array
 
 class dsobject:
     def __init__(self, n, transpose):
@@ -16,6 +17,7 @@ class dsobject:
         self.gdata = None
         self.initialize_umfpack()
         self.umf_control = None
+        self.x = None
 
     def initialize_umfpack(self):
         self.gdata = umf.global_data()
@@ -30,7 +32,8 @@ class dsobject:
             raise RuntimeError('Missing %d math functions' % mcount)
 
     def factor(self, **kwargs):
-        print(kwargs.keys())
+        self.status = False
+        self.message = ''
         is_complex = kwargs['is_complex']
         if not self.umf_control:
             if is_complex:
@@ -41,7 +44,15 @@ class dsobject:
         self.matrix = umf.di_matrix(uc=self.umf_control, Ap=kwargs['Ap'], Ai=kwargs["Ai"], Ax=kwargs["Ax"])
         self.symbolic = self.umf_control.symbolic(matrix=self.matrix)
         self.numeric = self.umf_control.numeric(matrix=self.matrix, Symbolic=self.symbolic)
+        self.status = True
+        self.message = ''
 
+    def solve(self, **kwargs):
+        self.status = False
+        self.message = ''
+        self.x = array.array('d', kwargs['b'])
+        self.umf_control.solve(matrix=self.matrix, Numeric=self.numeric, b=kwargs['b'], transpose=self.transpose, x=self.x)
+        self.status = True
 
 def foo(**kwargs):
     print(kwargs['action'])
@@ -56,8 +67,21 @@ def foo(**kwargs):
           'status' : so.status,
           'message' : so.message,
         }
-    elif (kwargs['action'] == 'factor'):
-        kwargs['solver_object'].factor(**kwargs)
+    elif kwargs['action'] == 'factor':
+        so = kwargs['solver_object']
+        so.factor(**kwargs)
+        return {
+          'status' : so.status,
+          'message' : so.message,
+        }
+    elif kwargs['action'] == 'solve':
+        so = kwargs['solver_object']
+        so.solve(**kwargs)
+        return {
+          'status' : so.status,
+          'message' : so.message,
+          'x' : so.x,
+        }
     else:
         raise RuntimeError('Unsupported action, ' + kwargs['action'])
     return False

@@ -26,6 +26,29 @@ limitations under the License.
 #include <complex>
 #include <algorithm>
 
+namespace
+{
+// TODO: move this to a common place
+void convertToType(std::vector<double> &xin, std::vector<double> &xout)
+{
+  xout.swap(xin);
+}
+}
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+namespace
+{
+void convertToType(std::vector<double> &xin, std::vector<float128> &xout)
+{
+  xout.resize(xin.size());
+  std::copy(xin.begin(), xin.end(), xout.begin());
+  //std::copy(xin.begin(), xin.end(), xout.begin(), [](auto x){return static_cast<float128>(x);});
+}
+}
+#endif
+
+
 namespace dsMath {
 template <typename DoubleType>
 ExternalPreconditioner<DoubleType>::ExternalPreconditioner(size_t sz, PEnum::TransposeType_t transpose) : Preconditioner<DoubleType>(sz, transpose)
@@ -111,11 +134,14 @@ bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &erro
           error_string += R"(python solver object did not return a dictionary containing "csc" or "csr" for "matrix_format")" "\n";
           ret = false;
         }
+        auto status = result_dictionary["status"].GetBoolean().second;
+        auto message = result_dictionary["message"].GetString();
+        error_string += message;
+        dsAssert(status, error_string);
       }
       command_data_ = result_dictionary["solver_object"];
     }
   }
-#warning "process status and message"
   return ret;
 }
 
@@ -163,6 +189,7 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
   }
   else
   {
+    std::string error_string;
     ObjectHolderMap_t result_dictionary;
     auto result = interpreter.GetResult();
     ret = result.GetHashMap(result_dictionary);
@@ -180,24 +207,10 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
           ret = false;
         }
       }
-      if (ret)
-      {
-        auto matrix_format = result_dictionary["matrix_format"].GetString();
-        if (matrix_format == "csc")
-        {
-          compression_type_ = dsMath::CompressionType::CCM;
-        }
-        else if (matrix_format == "csr")
-        {
-          compression_type_ = dsMath::CompressionType::CRM;
-        }
-        else
-        {
-          error_string += R"(python solver object did not return a dictionary containing "csc" or "csr" for "matrix_format")" "\n";
-          ret = false;
-        }
-      }
-      command_data_ = result_dictionary["solver_object"];
+      auto status = result_dictionary["status"].GetBoolean().second;
+      auto message = result_dictionary["message"].GetString();
+      error_string += message;
+      dsAssert(status, error_string);
     }
   }
 
@@ -230,8 +243,37 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> 
     error += interpreter.GetErrorString();
     OutputStream::WriteOut(OutputStream::OutputType::FATAL, error.c_str());
   }
-
-#warning "FINISH HERE WITH RETURN VALUE PROCESSING"
+  else
+  {
+    std::string error_string;
+    ObjectHolderMap_t result_dictionary;
+    auto result = interpreter.GetResult();
+    ret = result.GetHashMap(result_dictionary);
+    if (!ret)
+    {
+      error_string += "python solver object did not return a dictionary\n";
+    }
+    else
+    {
+#warning "REFACTOR common code"
+      for (const auto &arg: return_keys)
+      {
+        if (auto it = result_dictionary.find(arg); it == result_dictionary.end())
+        {
+          error_string += "python solver object did not return a dictionary containing \"" + arg + "\"\n";
+          ret = false;
+        }
+      }
+      auto status = result_dictionary["status"].GetBoolean().second;
+      auto message = result_dictionary["message"].GetString();
+      error_string += message;
+      dsAssert(status, error_string);
+      std::vector<double> xv;
+      bool ret = result_dictionary["x"].GetDoubleList(xv);
+      dsAssert(ret && (x.size() == b.size()), "Mismatch in returned x");
+      convertToType(xv, x);
+    }
+  }
 }
 
 template <typename DoubleType>
@@ -274,6 +316,7 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
     error += interpreter.GetErrorString();
     OutputStream::WriteOut(OutputStream::OutputType::FATAL, error.c_str());
   }
+#warning "FINISH COMPLEX CASE"
 }
 }
 
