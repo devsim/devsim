@@ -98,6 +98,8 @@ then
 (cd external/getrf && ./setup_osx.sh && cd build && make -j4)
 fi
 
+# umfpack support
+(cd external/umfpack_lgpl && bash setup_macos.sh && cd build && make -j2)
 
 if [ "${1}" = "gcc" ]
 then

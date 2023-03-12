@@ -96,6 +96,8 @@ then
 (cd external/getrf && ./setup_osx.sh && cd build && make -j4)
 fi
 
+# umfpack support
+(cd external/umfpack_lgpl && bash setup_macos.sh && cd build && make -j2)
 
 if [ "${1}" = "gcc" ]
 then
@@ -104,9 +106,6 @@ elif [ "${1}" = "clang" ]
 then
 bash ./scripts/setup_osx_10.10.sh
 fi
-
-# umfpack support
-(cd external/umfpack_lgpl && bash setup_centos6.sh && cd build && make -j2)
 
 (cd osx_x86_64_release && make -j4)
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});
