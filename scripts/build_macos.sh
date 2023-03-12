@@ -19,6 +19,7 @@ if [ "${1}" = "gcc" ]
   export CC=/usr/local/bin/gcc-9;
   export CXX=/usr/local/bin/g++-9;
   export F77=/usr/local/bin/gfortran-9;
+  export ARCH_ARG=""
 #  brew unlink gcc && brew link gcc
 
   # https://github.com/Microsoft/LightGBM/pull/1560
@@ -35,6 +36,7 @@ elif [ "${1}" = "clang" ]
   export CC=/usr/bin/gcc;
   export CXX=/usr/bin/g++;
   export F77="";
+  export ARCH_ARG=""
 else
   echo "ERROR: FIRST ARGUMENT MUST BE gcc OR clang";
   exit 1;
@@ -102,6 +104,9 @@ elif [ "${1}" = "clang" ]
 then
 bash ./scripts/setup_osx_10.10.sh
 fi
+
+# umfpack support
+(cd external/umfpack_lgpl && bash setup_centos6.sh && cd build && make -j2)
 
 (cd osx_x86_64_release && make -j4)
 (cd dist && bash package_macos.sh ${1} devsim_macos_${2});

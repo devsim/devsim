@@ -19,6 +19,7 @@ if [ "${1}" = "gcc" ]
   export CC=/usr/local/bin/gcc-12;
   export CXX=/usr/local/bin/g++-12;
   export F77=/usr/local/bin/gfortran-12;
+  export ARCH_ARG=""
   export PLAT_NAME="x86_64"
 #  brew unlink gcc && brew link gcc
 
