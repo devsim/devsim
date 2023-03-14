@@ -5,6 +5,7 @@ print(devsim.get_parameter(name="info"))
 
 import umfpack_loader as umf
 import array
+import os
 
 class dsobject:
     def __init__(self, n, transpose):
@@ -21,7 +22,7 @@ class dsobject:
 
     def initialize_umfpack(self):
         self.gdata = umf.global_data()
-        self.gdata.dll = umf.load_umfpack_dll()
+        self.gdata.dll = umf.load_umfpack_dll(os.path.join(os.path.dirname(devsim.__file__), umf.get_umfpack_name()))
         for b in devsim.get_parameter(name='info')['math_libraries']:
             h = umf.load_blas_dll(self.gdata, blaslib=b, noexcept=True)
             if h:

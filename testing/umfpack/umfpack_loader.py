@@ -104,8 +104,8 @@ def get_dll_naming():
 def get_umfpack_name():
     return "./%(prefix)sumfpack_lgpl%(suffix)s" % get_dll_naming()
 
-def load_umfpack_dll():
-    dll = cdll.LoadLibrary(get_umfpack_name())
+def load_umfpack_dll(dllname):
+    dll = cdll.LoadLibrary(dllname)
     if not dll:
         raise RuntimeError("Cannot find UMFPACK dll")
     return dll
