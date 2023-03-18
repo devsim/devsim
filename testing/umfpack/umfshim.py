@@ -18,6 +18,7 @@ class dsobject:
         self.x = None
 
     def __del__(self):
+        self.matrix=None
         self.umf_control = None
         self.gdata=None
 
@@ -42,7 +43,7 @@ class dsobject:
                 self.umf_control = umf.umf_control(self.gdata, 'complex')
             else:
                 self.umf_control = umf.umf_control(self.gdata, 'real')
-            self.umf_control.init_verbose()
+            #self.umf_control.init_verbose()
         # test same symbolic
         self.matrix = umf.matrix(uc=self.umf_control, Ap=kwargs['Ap'], Ai=kwargs["Ai"], Ax=kwargs["Ax"])
         self.symbolic = self.umf_control.symbolic(matrix=self.matrix)

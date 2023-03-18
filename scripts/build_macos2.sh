@@ -59,8 +59,8 @@ fi
 #fi
 #source activate python3_devsim_build
 
-export PYTHON3_BIN=/usr/local/bin/python3
-export PIP_BIN=/usr/local/bin/pip3
+export PYTHON3_BIN=python3
+export PIP_BIN=pip3
 ${PIP_BIN} install wheel
 export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""

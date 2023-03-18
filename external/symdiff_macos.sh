@@ -5,7 +5,7 @@ set -u
 # http://creativecommons.org/publicdomain/zero/1.0/
 for TYPE in debug release; do
     NAME=osx_${TYPE}
-    mkdir ${NAME}
+    mkdir -p ${NAME}
     (cd $NAME; ${CMAKE} \
         ${ARCH_ARG} \
         -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \

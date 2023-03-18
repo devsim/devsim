@@ -19,6 +19,7 @@ limitations under the License.
 #include "SuperLUData.hh"
 #include "CompressedMatrix.hh"
 #include "dsAssert.hh"
+#include "FPECheck.hh"
 #include <utility>
 #include <complex>
 
@@ -72,6 +73,7 @@ bool SuperLUPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
   }
 
   bool ret = superLUData_->LUFactorMatrix(cm);
+  FPECheck::ClearFPE();
   return ret;
 }
 
@@ -79,12 +81,14 @@ template <typename DoubleType>
 void SuperLUPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const
 {
   superLUData_->LUSolve(x, b);
+  FPECheck::ClearFPE();
 }
 
 template <typename DoubleType>
 void SuperLUPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const
 {
   superLUData_->LUSolve(x, b);
+  FPECheck::ClearFPE();
 }
 }
 

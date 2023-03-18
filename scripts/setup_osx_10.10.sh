@@ -6,7 +6,7 @@ for TYPE in debug release; do
   for ARCH in x86_64; do
   #for ARCH in i386 x86_64; do
     NAME=osx_${ARCH}_${TYPE}
-    mkdir ${NAME}
+    mkdir -p ${NAME}
     (cd $NAME; cmake \
       ${ARCH_ARG} \
       -DCMAKE_BUILD_TYPE=${TYPE} \
