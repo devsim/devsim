@@ -41,7 +41,7 @@ class dsobject:
                 self.umf_control = umf.umf_control(self.gdata, 'real')
         # test same symbolic
         if 'Az' in kwargs:
-            print(kwargs)
+            #print(kwargs)
             if is_complex:
                 self.matrix = umf.di_matrix(uc=self.umf_control, Ap=kwargs['Ap'], Ai=kwargs["Ai"], Ax=kwargs["Ax"], Az=kwargs["Az"])
             else:

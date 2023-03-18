@@ -59,7 +59,7 @@ UMFPACK_OK = 0
 #
 UMFPACK_A = (0)     # /* Ax=b    */
 UMFPACK_At = (1) #    /* A'x=b   */
-##define UMFPACK_Aat    (2)     /* A.'x=b  */
+UMFPACK_Aat = (2) #     /* A.'x=b  */
 #
 UMFPACK_Pt_L = (3)  #   /* P'Lx=b  */
 ##define UMFPACK_L      (4)     /* Lx=b    */
@@ -92,7 +92,7 @@ UMFPACK_CONTROL = 20
 
 def get_transpose(x):
     if x:
-        return UMFPACK_At
+        return UMFPACK_Aat
     else:
         return UMFPACK_A
 
