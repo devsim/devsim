@@ -115,4 +115,5 @@ devsim.set_parameter(name="solver_callback", value=local_solver_callback)
 if __name__ == "__main__":
   #print(sys.argv)
   sys.argv = sys.argv[1:]
+  sys.path.append(os.path.dirname(sys.argv[0]))
   exec(compile(open(sys.argv[0], "rb").read(), sys.argv[0], 'exec'))
