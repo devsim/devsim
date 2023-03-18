@@ -178,11 +178,11 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
   if (cm->GetMatrixType() == MatrixType::COMPLEX)
   {
     factor_args["is_complex"] = ObjectHolder(true);
+    factor_args["Az"] = CreateDoublePODArray(cm->GetAz());
   }
   else
   {
     factor_args["is_complex"] = ObjectHolder(false);
-    factor_args["Az"] = CreateDoublePODArray(cm->GetAz());
   }
 
   Interpreter interpreter;

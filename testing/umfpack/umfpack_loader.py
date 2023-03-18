@@ -192,7 +192,7 @@ class di_symbolic:
             self.umf_control.gdata.dll.umfpack_zi_free_symbolic (byref(self.Symbolic))
             NULL = c_void_p()
             debug_print('umfpack_zi_symbolic 190/u')
-            self.status = self.umf_control.gdata.dll.umfpack_zi_symbolic (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, NULL, byref(self.Symbolic), self.umf_control.Control, self.umf_control.Info)
+            self.status = self.umf_control.gdata.dll.umfpack_zi_symbolic (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, matrix.AZ, byref(self.Symbolic), self.umf_control.Control, self.umf_control.Info)
         else:
             if self.Symbolic:
                 debug_print('umfpack_di_free_symbolic 194')
@@ -223,7 +223,7 @@ class di_numeric:
             self.umf_control.gdata.dll.umfpack_zi_free_numeric (byref(self.Numeric))
             NULL = c_void_p()
             debug_print('umfpack_zi_numeric 222')
-            self.status = self.umf_control.gdata.dll.umfpack_zi_numeric (matrix.AP, matrix.AI, matrix.AX, NULL, Symbolic.Symbolic, byref(self.Numeric), self.umf_control.Control, self.umf_control.Info)
+            self.status = self.umf_control.gdata.dll.umfpack_zi_numeric (matrix.AP, matrix.AI, matrix.AX, matrix.AZ, Symbolic.Symbolic, byref(self.Numeric), self.umf_control.Control, self.umf_control.Info)
         else:
             if self.Numeric:
                 debug_print('umfpack_di_free_numeric 226')
@@ -232,12 +232,17 @@ class di_numeric:
             self.status = self.umf_control.gdata.dll.umfpack_di_numeric (matrix.AP, matrix.AI, matrix.AX, Symbolic.Symbolic, byref(self.Numeric), self.umf_control.Control, self.umf_control.Info)
         return self.status
 
-    def solve(self, matrix, x, b, transpose):
+    def solve(self, matrix, x, b, transpose, xz=None, bz=None):
         X = c_void_p(x.buffer_info()[0])
         B = c_void_p(b.buffer_info()[0])
         if self.umf_control.is_complex:
             NULL = c_void_p()
-            status = self.umf_control.gdata.dll.umfpack_zi_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, NULL, X, NULL, B, NULL, self.Numeric, self.umf_control.Control, self.umf_control.Info)
+            if xz and bz:
+                Xz = c_void_p(xz.buffer_info()[0])
+                Bz = c_void_p(bz.buffer_info()[0])
+            else:
+                raise RuntimeError("MISSING FIELDS")
+            status = self.umf_control.gdata.dll.umfpack_zi_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, matrix.AZ, X, Xz, B, Bz, self.Numeric, self.umf_control.Control, self.umf_control.Info)
         else:
             status = self.umf_control.gdata.dll.umfpack_di_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, X, B, self.Numeric, self.umf_control.Control, self.umf_control.Info)
         return self.status
@@ -268,7 +273,7 @@ class di_triplet:
         pass
 
 class di_matrix:
-    def __init__(self, uc, Ap, Ai, Ax):
+    def __init__(self, uc, Ap, Ai, Ax, Az=None):
         self.umf_control = uc
         self.n = len(Ap)-1
         self.Ap = Ap
@@ -277,6 +282,8 @@ class di_matrix:
         self.AP = c_void_p(Ap.buffer_info()[0])
         self.AI = c_void_p(Ai.buffer_info()[0])
         self.AX = c_void_p(Ax.buffer_info()[0])
+        if Az:
+            self.AZ = c_void_p(Az.buffer_info()[0])
 
     def __del__(self):
         pass
@@ -439,8 +446,14 @@ class umf_control:
         else:
             self.gdata.dll.umfpack_di_report_numeric (Numeric.Numeric, self.Control)
 
-    def solve(self, matrix, x, b, Numeric, transpose):
-        self.status = Numeric.solve(matrix, x, b, transpose)
+    def solve(self, matrix, x, b, Numeric, transpose, xz=None, bz=None):
+        if self.is_complex:
+            if xz and bz:
+                self.status = Numeric.solve(matrix, x, b, transpose, xz=xz, bz=bz)
+            else:
+                raise RuntimeError("complex error")
+        else:
+            self.status = Numeric.solve(matrix, x, b, transpose)
         self.error_on_result(self.status, "umfpack solve")
 
     def determinant(self, x, r, Numeric):
