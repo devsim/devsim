@@ -22,6 +22,7 @@ limitations under the License.
 #include <vector>
 #include <map>
 #include <cstddef>
+#include <complex>
 
 
 class ObjectHolder;
@@ -69,6 +70,7 @@ class ObjectHolder {
     bool           IsList() const;
     bool           IsCallable() const;
     bool           GetDoubleList(std::vector<double> &) const;
+    bool           GetComplexDoubleList(std::vector<std::complex<double>> &) const;
     bool           GetStringList(std::vector<std::string> &) const;
     bool           GetIntegerList(std::vector<int> &) const;
     bool           GetLongList(std::vector<ptrdiff_t> &) const;

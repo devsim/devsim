@@ -16,7 +16,6 @@ class dsobject:
         self.initialize_umfpack()
         self.umf_control = None
         self.x = None
-        self.xz = None
 
     def initialize_umfpack(self):
         self.gdata = umf.global_data()
@@ -40,14 +39,7 @@ class dsobject:
             else:
                 self.umf_control = umf.umf_control(self.gdata, 'real')
         # test same symbolic
-        if 'Az' in kwargs:
-            #print(kwargs)
-            if is_complex:
-                self.matrix = umf.di_matrix(uc=self.umf_control, Ap=kwargs['Ap'], Ai=kwargs["Ai"], Ax=kwargs["Ax"], Az=kwargs["Az"])
-            else:
-                raise RuntimeError("unexpected complex handling")
-        else:
-            self.matrix = umf.di_matrix(uc=self.umf_control, Ap=kwargs['Ap'], Ai=kwargs["Ai"], Ax=kwargs["Ax"])
+        self.matrix = umf.matrix(uc=self.umf_control, Ap=kwargs['Ap'], Ai=kwargs["Ai"], Ax=kwargs["Ax"])
         self.symbolic = self.umf_control.symbolic(matrix=self.matrix)
         self.numeric = self.umf_control.numeric(matrix=self.matrix, Symbolic=self.symbolic)
         self.status = True
@@ -59,9 +51,8 @@ class dsobject:
         if self.umf_control.is_complex:
             #print(kwargs.keys())
             #raise RuntimeError("COMPLEX!")
-            self.x = array.array('d', [0.0]*len(kwargs['Bx']))
-            self.xz = array.array('d', [0.0]*len(kwargs['Bz']))
-            self.umf_control.solve(matrix=self.matrix, Numeric=self.numeric, b=kwargs['Bx'], bz=kwargs['Bz'], transpose=self.transpose, x=self.x, xz=self.xz)
+            self.x = array.array('d', [0.0]*len(kwargs['b']))
+            self.umf_control.solve(matrix=self.matrix, Numeric=self.numeric, b=kwargs['b'], transpose=self.transpose, x=self.x)
         else:
             self.x = array.array('d', kwargs['b'])
             self.umf_control.solve(matrix=self.matrix, Numeric=self.numeric, b=kwargs['b'], transpose=self.transpose, x=self.x)
@@ -94,8 +85,7 @@ def local_solver_callback(**kwargs):
             return {
               'status' : so.status,
               'message' : so.message,
-              'Xx' : so.x,
-              'Xz' : so.xz,
+              'x' : so.x,
             }
         else:
             return {

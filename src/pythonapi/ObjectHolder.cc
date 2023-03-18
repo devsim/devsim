@@ -327,6 +327,13 @@ template <typename T>
 struct pod_info;
 
 template <>
+struct pod_info<std::complex<double>>
+{
+  constexpr static auto pmf = nullptr;
+  constexpr static const char *ptype = "d";
+};
+
+template <>
 struct pod_info<double>
 {
   constexpr static auto pmf = &ObjectHolder::GetDouble;
@@ -358,6 +365,7 @@ bool GetFromList(const ObjectHolder &oh, std::vector<T> &values)
   {
     values.resize(objs.size());
     ok = true;
+    dsAssert(pod_info<T>::pmf, "helper function not implemented");
     for (size_t i = 0; i < objs.size(); ++i)
     {
       const auto &ent = (objs[i].*pod_info<T>::pmf)();
@@ -479,11 +487,17 @@ void convert_to_unsigned(const std::vector<T> &in, std::vector<U> &out)
 
 bool ObjectHolder::GetDoubleList(std::vector<double> &values) const
 {
-  if (!GetArrayFromBytes<double>(*this, values, "d", sizeof(double)))
+  if (!GetArrayFromBytes<double>(*this, values, pod_info<double>::ptype, sizeof(double)))
   {
     return GetFromList<double>(*this, values);
   }
   return true;
+}
+
+bool ObjectHolder::GetComplexDoubleList(std::vector<std::complex<double>> &values) const
+{
+  bool ret = GetArrayFromBytes<std::complex<double>>(*this, values, pod_info<double>::ptype, sizeof(double));
+  return ret;
 }
 
 bool ObjectHolder::GetIntegerList(std::vector<int> &values) const
@@ -681,12 +695,17 @@ ObjectHolder CreateArrayObject(const char *s, const ObjectHolder &data_object)
   return result;
 }
 
+template <typename T>
+ObjectHolder CreatePODArray(const T *data, size_t length)
+{
+  return CreateArrayObject(pod_info<T>::ptype, ObjectHolder(data, length));
+}
 
 template <typename T>
 ObjectHolder CreatePODArray(const std::vector<T> &list)
 {
   const size_t length = list.size() * sizeof(T);
-  return CreateArrayObject(pod_info<T>::ptype, ObjectHolder(list.data(), length));
+  return CreatePODArray(list.data(), length);
 }
 
 template <typename T>
@@ -700,15 +719,35 @@ ObjectHolder CreateDoublePODArray(const std::vector<T> &list)
   return CreatePODArray<double>(tmp);
 }
 
+
 template <>
 ObjectHolder CreateDoublePODArray(const std::vector<double> &list)
 {
   return CreatePODArray<double>(list);
 }
 
+template <>
+ObjectHolder CreateDoublePODArray(const std::vector<std::complex<double>> &list)
+{
+  return CreatePODArray<double>(reinterpret_cast<const double *>(list.data()), sizeof(std::complex<double>) * list.size());
+}
+
 template ObjectHolder CreatePODArray(const std::vector<int> &list);
+//template ObjectHolder CreateDoublePODArray(const std::vector<std::complex<double>> &list);
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 template ObjectHolder CreateDoublePODArray(const std::vector<float128> &list);
+
+template <>
+ObjectHolder CreateDoublePODArray(const std::vector<std::complex<float128>> &list)
+{
+  thread_local std::vector<std::complex<double>> tmp;
+  tmp.resize(list.size());
+
+  std::transform(list.begin(), list.end(), tmp.begin(), [](auto &x){return std::complex<double>(static_cast<double>(x.real()), static_cast<double>(x.imag()));});
+
+  return CreateDoublePODArray(tmp);
+}
+
 #endif
 

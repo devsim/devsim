@@ -28,12 +28,19 @@ limitations under the License.
 
 namespace
 {
-// TODO: move this to a common place
 void preswap(std::vector<double> &xin, std::vector<double> &xout)
 {
   xin.swap(xout);
 }
 void convertToType(std::vector<double> &xin, std::vector<double> &xout)
+{
+  xout.swap(xin);
+}
+void preswap(std::vector<std::complex<double>> &xin, std::vector<std::complex<double>> &xout)
+{
+  xin.swap(xout);
+}
+void convertToType(std::vector<std::complex<double>> &xin, std::vector<std::complex<double>> &xout)
 {
   xout.swap(xin);
 }
@@ -47,6 +54,14 @@ void preswap(std::vector<double> &xin, std::vector<float128> &xout)
 {
 }
 void convertToType(std::vector<double> &xin, std::vector<float128> &xout)
+{
+  xout.resize(xin.size());
+  std::copy(xin.begin(), xin.end(), xout.begin());
+}
+void preswap(std::vector<std::complex<double>> &xin, std::vector<std::complex<float128>> &xout)
+{
+}
+void convertToType(std::vector<std::complex<double>> &xin, std::vector<std::complex<float128>> &xout)
 {
   xout.resize(xin.size());
   std::copy(xin.begin(), xin.end(), xout.begin());
@@ -171,18 +186,27 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
     {"solver_object", command_data_},
     {"Ap", CreatePODArray(cm->GetAp())},
     {"Ai", CreatePODArray(cm->GetAi())},
-    {"Ax", CreateDoublePODArray(cm->GetAx())},
     {"is_same_symbolic", ObjectHolder(cm->GetSymbolicStatus() == SymbolicStatus_t::SAME_SYMBOLIC)},
   };
 
   if (cm->GetMatrixType() == MatrixType::COMPLEX)
   {
+    const auto &ax = cm->GetAx();
+    const auto &az = cm->GetAz();
+    dsAssert(ax.size() == az.size(), "UNEXPECTED");
+    std::vector<DoubleType> ac(2*ax.size());
+    for (size_t i = 0, j = 0; i < ax.size(); ++i)
+    {
+      ac[j++] = ax[i];
+      ac[j++] = az[i];
+    }
     factor_args["is_complex"] = ObjectHolder(true);
-    factor_args["Az"] = CreateDoublePODArray(cm->GetAz());
+    factor_args["Ax"] = CreateDoublePODArray(ac);
   }
   else
   {
     factor_args["is_complex"] = ObjectHolder(false);
+    factor_args["Ax"] = CreateDoublePODArray(cm->GetAx());
   }
 
   Interpreter interpreter;
@@ -288,26 +312,17 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
   dsAssert(command_handle_.IsCallable(), "python solver command is not callable\n");
   dsAssert(!command_data_.empty(), "python solver invalid data\n");
 
-  std::vector<DoubleType> Bx(b.size());
-  std::vector<DoubleType> Bz(b.size());
-
-  auto realpart = [](auto &x){return x.real();};
-  auto imagpart = [](auto &x){return x.imag();};
-  std::transform(b.begin(), b.end(), Bx.begin(), realpart);
-  std::transform(b.begin(), b.end(), Bz.begin(), imagpart);
-
   const std::string return_keys[] = {
     "status",
     "message",
-    "Xx",
-    "Xz",
+    "x",
   };
+
   ObjectHolderMap_t factor_args = {
     {"action", ObjectHolder("solve")},
     {"solver_object", command_data_},
     {"is_complex", ObjectHolder(true)},
-    {"Bx", CreateDoublePODArray(Bx)},
-    {"Bz", CreateDoublePODArray(Bz)},
+    {"b", CreateDoublePODArray(b)},
   };
 
   Interpreter interpreter;
@@ -342,19 +357,13 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
       auto message = result_dictionary["message"].GetString();
       error_string += message;
       dsAssert(status, error_string);
-      std::vector<double> Xxv;
-      std::vector<double> Xzv;
-      bool ret = false;
-      ret = result_dictionary["Xx"].GetDoubleList(Xxv);
-      dsAssert(ret && (Xxv.size() == Bx.size()), "Mismatch in returned Xx");
-      ret = result_dictionary["Xz"].GetDoubleList(Xzv);
-      dsAssert(ret && (Xzv.size() == Bz.size()), "Mismatch in returned Xz");
 
-      x.resize(Xxv.size());
-      for (size_t i = 0; i < Xxv.size(); ++i)
-      {
-        x[i] = std::complex<DoubleType>(Xxv[i], Xzv[i]);
-      }
+      bool ret = false;
+      std::vector<std::complex<double>> xv;
+      preswap(xv, x);
+      ret = result_dictionary["x"].GetComplexDoubleList(xv);
+      convertToType(xv, x);
+      dsAssert(ret && (x.size() == b.size()), "Mismatch in returned x");
     }
   }
 }
