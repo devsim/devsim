@@ -9,7 +9,35 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 Python solver
 
-The global parameter ``math_libraries`` provides a list of loaded dlls.
+### Determine Loaded Math Libraries
+
+To determine the loaded math libraries, use
+```
+devsim.get_parameter(name='info')['math_libraries']
+```
+
+### UMFPACK 5.1 Solver
+
+The ``UMFPACK`` 5.1 solver is now available as a shared library distributed with the software.  It is licensed under the terms of the LGPL 2.1 and our version is hosted here:
+
+[https://github.com/devsim/umfpack_lgpl](https://github.com/devsim/umfpack_lgpl)
+
+Please note that this version uses a scheme to provide the needed math library functions when the library is loaded.
+
+In order to use this library, a shim script is provided to load UMFPACK and set it as the solver.  Please see this example:
+```
+python testing/umfpack/umfpackshim.py ssac_cap.py
+```
+
+### Direct Solver Callback
+
+It is now possible to setup call a custom direct solver.  The direct solver is called from Python and the callback is implemented by setting these parameters:
+```
+devsim.set_parameter(name="direct_solver", value="custom")
+devsim.set_parameter(name="solver_callback", value=local_solver_callback)
+```
+
+Where the first parameter enables the use of the second parameter to set a callback function.  Please see the ``testing/umfpack_shim.py`` for a sample implementation using UMFPACK 5.1.
 
 ## Version 2.3.8
 
