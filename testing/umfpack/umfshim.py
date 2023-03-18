@@ -59,8 +59,8 @@ class dsobject:
         if self.umf_control.is_complex:
             #print(kwargs.keys())
             #raise RuntimeError("COMPLEX!")
-            self.x = array.array('d', kwargs['Bx'])
-            self.xz = array.array('d', kwargs['Bz'])
+            self.x = array.array('d', [0.0]*len(kwargs['Bx']))
+            self.xz = array.array('d', [0.0]*len(kwargs['Bz']))
             self.umf_control.solve(matrix=self.matrix, Numeric=self.numeric, b=kwargs['Bx'], bz=kwargs['Bz'], transpose=self.transpose, x=self.x, xz=self.xz)
         else:
             self.x = array.array('d', kwargs['b'])
