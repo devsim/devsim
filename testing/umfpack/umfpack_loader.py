@@ -183,7 +183,7 @@ class di_symbolic:
             if self.Symbolic:
                 debug_print('umfpack_di_free_symbolic 180')
             self.umf_control.gdata.dll.umfpack_di_free_symbolic (byref(self.Symbolic))
-        pass
+        self.umf_control = None
 
     def factor_symbolic(self, matrix):
         if self.umf_control.is_complex:
@@ -307,10 +307,14 @@ class umf_control:
             self.is_complex = True
         else:
             raise RuntimeError("Unknown matrix_type real/complex")
+        self.set_defaults()
 
     def __del__(self):
         # having a destructor is preventing segmentation fault
+        self.Info = None
+        self.Control = None
         self.gdata = None
+
     def tic(self):
         self.timer = (c_double * 2)()
         self.gdata.dll.umfpack_tic(byref(self.timer))
@@ -323,6 +327,9 @@ class umf_control:
         self.Control = (c_double * UMFPACK_CONTROL)()
         if self.is_complex:
             self.gdata.dll.umfpack_zi_defaults(byref(self.Control))
+            self.Control[3]=0.0
+            self.Control[12]=0.0
+            self.Control[15]=0.0
         else:
             self.gdata.dll.umfpack_di_defaults(byref(self.Control))
         self.Info = (c_int * UMFPACK_INFO)()
@@ -408,7 +415,7 @@ class umf_control:
             self.gdata.dll.umfpack_di_report_status (self.Control, self.status)
 
     def error_on_result(self, status, msg):
-        if status < 0:
+        if status != 0:
             self.print_info(self.Info)
             self.print_status (status)
             raise RuntimeError("%s failed" % (msg,))

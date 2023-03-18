@@ -17,6 +17,10 @@ class dsobject:
         self.umf_control = None
         self.x = None
 
+    def __del__(self):
+        self.umf_control = None
+        self.gdata=None
+
     def initialize_umfpack(self):
         self.gdata = umf.global_data()
         self.gdata.dll = umf.load_umfpack_dll(os.path.join(os.path.dirname(devsim.__file__), umf.get_umfpack_name()))
@@ -38,6 +42,7 @@ class dsobject:
                 self.umf_control = umf.umf_control(self.gdata, 'complex')
             else:
                 self.umf_control = umf.umf_control(self.gdata, 'real')
+            self.umf_control.init_verbose()
         # test same symbolic
         self.matrix = umf.matrix(uc=self.umf_control, Ap=kwargs['Ap'], Ai=kwargs["Ai"], Ax=kwargs["Ax"])
         self.symbolic = self.umf_control.symbolic(matrix=self.matrix)
