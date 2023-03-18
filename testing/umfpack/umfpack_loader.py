@@ -2,6 +2,9 @@ from ctypes import *
 import platform
 import array
 
+def debug_print(arg):
+    pass
+
 #/* used in all UMFPACK_report_* routines: */
 UMFPACK_PRL = 0                  # /* print level */
 
@@ -165,25 +168,36 @@ def set_python_print_callback(gdata):
 def get_info():
     return (c_int * uml.UMFPACK_INFO)();
 
+#TODO: handle same symbolic
 class di_symbolic:
     def __init__(self, uc):
         self.Symbolic = c_void_p()
         self.umf_control = uc
 
     def __del__(self):
-        #if self.umf_control.is_complex:
-        #    self.umf_control.gdata.dll.umfpack_zi_free_symbolic (byref(self.Symbolic))
-        #else:
-        #    self.umf_control.gdata.dll.umfpack_di_free_symbolic (byref(self.Symbolic))
+        if self.umf_control.is_complex:
+            if self.Symbolic:
+                debug_print('umfpack_zi_free_symbolic 176')
+            self.umf_control.gdata.dll.umfpack_zi_free_symbolic (byref(self.Symbolic))
+        else:
+            if self.Symbolic:
+                debug_print('umfpack_di_free_symbolic 180')
+            self.umf_control.gdata.dll.umfpack_di_free_symbolic (byref(self.Symbolic))
         pass
 
     def factor_symbolic(self, matrix):
         if self.umf_control.is_complex:
+            if self.Symbolic:
+                debug_print('umfpack_zi_free_symbolic 187')
             self.umf_control.gdata.dll.umfpack_zi_free_symbolic (byref(self.Symbolic))
             NULL = c_void_p()
+            debug_print('umfpack_zi_symbolic 190/u')
             self.status = self.umf_control.gdata.dll.umfpack_zi_symbolic (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, NULL, byref(self.Symbolic), self.umf_control.Control, self.umf_control.Info)
         else:
+            if self.Symbolic:
+                debug_print('umfpack_di_free_symbolic 194')
             self.umf_control.gdata.dll.umfpack_di_free_symbolic (byref(self.Symbolic))
+            debug_print('umfpack_di_symbolic 196')
             self.status = self.umf_control.gdata.dll.umfpack_di_symbolic (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, byref(self.Symbolic), self.umf_control.Control, self.umf_control.Info)
         return self.status
 
@@ -193,16 +207,28 @@ class di_numeric:
         self.umf_control = uc
 
     def __del__(self):
-        #dll.umfpack_di_free_numeric (byref(self.Numeric))
-        pass
+        if self.umf_control.is_complex:
+            if self.Numeric:
+                debug_print('umfpack_zi_free_numeric 209')
+            self.umf_control.gdata.dll.umfpack_zi_free_numeric (byref(self.Numeric))
+        else:
+            if self.Numeric:
+                debug_print('umfpack_di_free_numeric 213')
+            self.umf_control.gdata.dll.umfpack_di_free_numeric (byref(self.Numeric))
 
     def factor_numeric(self, matrix, Symbolic):
         if self.umf_control.is_complex:
+            if self.Numeric:
+                debug_print('umfpack_zi_free_numeric 219')
             self.umf_control.gdata.dll.umfpack_zi_free_numeric (byref(self.Numeric))
             NULL = c_void_p()
+            debug_print('umfpack_zi_numeric 222')
             self.status = self.umf_control.gdata.dll.umfpack_zi_numeric (matrix.AP, matrix.AI, matrix.AX, NULL, Symbolic.Symbolic, byref(self.Numeric), self.umf_control.Control, self.umf_control.Info)
         else:
+            if self.Numeric:
+                debug_print('umfpack_di_free_numeric 226')
             self.umf_control.gdata.dll.umfpack_di_free_numeric (byref(self.Numeric))
+            debug_print('umfpack_di_numeric 228')
             self.status = self.umf_control.gdata.dll.umfpack_di_numeric (matrix.AP, matrix.AI, matrix.AX, Symbolic.Symbolic, byref(self.Numeric), self.umf_control.Control, self.umf_control.Info)
         return self.status
 
