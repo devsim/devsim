@@ -22,7 +22,6 @@ limitations under the License.
 #include "Interpreter.hh"
 #include "GlobalData.hh"
 #include "OutputStream.hh"
-#include "FPECheck.hh"
 #include <utility>
 #include <complex>
 #include <algorithm>
@@ -164,7 +163,6 @@ bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &erro
       command_data_ = result_dictionary["solver_object"];
     }
   }
-  FPECheck::ClearFPE();
   return ret;
 }
 
@@ -245,7 +243,6 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
       dsAssert(status, error_string);
     }
   }
-  FPECheck::ClearFPE();
   return ret;
 }
 
@@ -306,7 +303,6 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> 
       dsAssert(ret && (x.size() == b.size()), "Mismatch in returned x");
     }
   }
-  FPECheck::ClearFPE();
 }
 
 template <typename DoubleType>
@@ -369,7 +365,6 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
       dsAssert(ret && (x.size() == b.size()), "Mismatch in returned x");
     }
   }
-  FPECheck::ClearFPE();
 }
 }
 
