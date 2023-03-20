@@ -39,6 +39,10 @@ devsim.set_parameter(name="solver_callback", value=local_solver_callback)
 
 Where the first parameter enables the use of the second parameter to set a callback function.  Please see the ``testing/umfpack_shim.py`` for a sample implementation using UMFPACK 5.1.
 
+### Apple M1
+
+On this platform, the software does not check for floating point exceptions during usage of the direct solver.
+
 ## Version 2.3.8
 
 ### Bugs

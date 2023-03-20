@@ -31,31 +31,6 @@ Preconditioner<DoubleType>::Preconditioner(size_t numeqns, PEnum::TransposeType_
 {
 }
 
-#if 0
-template <typename DoubleType>
-void Preconditioner<DoubleType>::SetMatrix(Matrix *m)
-{
-  matrix_ = m;
-  DerivedSetMatrix();
-  factored = false;
-}
-#endif
-
-#if 0
-template <typename DoubleType>
-void Preconditioner<DoubleType>::SetTransposeSolve(bool x)
-{
-  if (x)
-  {
-    transpose_solve_ = PEnum::TransposeType_t::TRANS;
-  }
-  else
-  {
-    transpose_solve_ = PEnum::TransposeType_t::NOTRANS;
-  }
-}
-#endif
-
 template <typename DoubleType>
 bool Preconditioner<DoubleType>::GetTransposeSolve()
 {
@@ -72,6 +47,10 @@ bool Preconditioner<DoubleType>::LUFactor(Matrix<DoubleType> *mat)
   FPECheck::ClearFPE();
 
   bool ret = this->DerivedLUFactor(matrix_);
+
+#if (defined(__arm64__) && defined(__APPLE__)) || defined(__aarch64__)
+  FPECheck::ClearFPE();
+#endif
 
   if (FPECheck::CheckFPE())
   {
@@ -102,6 +81,10 @@ bool Preconditioner<DoubleType>::LUSolve(DoubleVec_t<DoubleType> &x, const Doubl
   //// This should be able to return a value too
   this->DerivedLUSolve(x, b);
 
+#if (defined(__arm64__) && defined(__APPLE__)) || defined(__aarch64__)
+  FPECheck::ClearFPE();
+#endif
+
   if (FPECheck::CheckFPE())
   {
     std::ostringstream os;
@@ -129,6 +112,10 @@ bool Preconditioner<DoubleType>::LUSolve(ComplexDoubleVec_t<DoubleType> &x, cons
 
   //// This should be able to return a value too
   this->DerivedLUSolve(x, b);
+
+#if (defined(__arm64__) && defined(__APPLE__)) || defined(__aarch64__)
+  FPECheck::ClearFPE();
+#endif
 
   if (FPECheck::CheckFPE())
   {
