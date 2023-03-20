@@ -41,7 +41,7 @@ Where the first parameter enables the use of the second parameter to set a callb
 
 ### Apple M1
 
-On this platform, the software does not check for floating point exceptions during usage of the direct solver.
+On this platform, the software does not check for floating point exceptions (FPEs) during usage of the direct solver.  During testing, it was discovered that FPEs were occuring during factorization for both the ``SuperLU`` and the ``UMFPACK``.  Removing this check allows more of the tests to run through to completion.
 
 ## Version 2.3.8
 
