@@ -6,10 +6,13 @@ import re
 
 #https://stackoverflow.com/questions/35112511/pip-setup-py-bdist-wheel-no-longer-builds-forced-non-pure-wheels/36886459#36886459
 #https://stackoverflow.com/questions/24071491/how-can-i-make-a-python-wheel-from-an-existing-native-library/24793171#24793171
+#https://github.com/google/or-tools/issues/616
 class BinaryDistribution(Distribution):
     """Distribution which always forces a binary package with platform name"""
     def has_ext_modules(foo):
         return True
+    def is_pure(self):
+        return False
 
 #https://stackoverflow.com/questions/27829754/include-entire-directory-in-python-setup-py-data-files/65432634#65432634
 def generate_data_files():

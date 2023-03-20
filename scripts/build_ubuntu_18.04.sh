@@ -8,6 +8,7 @@ export CC="/usr/bin/gcc"
 export CXX="/usr/bin/g++"
 export F77="/usr/bin/gfortran"
 export PYTHON3_BIN=python3
+export PIP_BIN=pip
 export PYTHON3_INCLUDE=$(python3 -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
 
@@ -27,5 +28,9 @@ export PYTHON3_ARCHIVE=""
 bash scripts/setup_centos_6.sh
 (cd linux_x86_64_release && make -j2)
 (cd dist && bash package_linux.sh ${1})
-
+cp -f dist/bdist_wheel/setup.* dist/${1}/
+(cd dist/${1} && ${PIP_BIN} wheel .)
+#${PIP_BIN} install auditwheel
+#(cd dist/${1} && ${PYTHON3_BIN} ../bdist_wheel/myauditwheel.py repair *.whl)
+(cp dist/${1}/*.whl dist)
 
