@@ -43,12 +43,13 @@ with open('README.md', 'r') as ifile:
     text = fix_readme(text)
 
 setup(
-      packages=['devsim', 'devsim.python_packages'],
+      packages=['devsim', 'devsim.python_packages', 'devsim.umfpack'],
       package_dir = {
         '' : 'lib',
       },
       package_data={
         'devsim' : ['./*.so', './*.dll', './*.dylib', './*.pyd',],
+        'devsim.umfpack' : ['./*.so', './*.dll', './*.dylib', './*.pyd',],
       },
       distclass=BinaryDistribution,
       data_files = data_files,

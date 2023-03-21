@@ -40,9 +40,6 @@ cp -v __init__.py ${DIST_PYDLL}
 # Intel MKL
 #cp -v ${CONDA_PREFIX}/Library/bin/mkl_rt.1.dll ${DIST_PYDLL}
 
-# Copy UMFPACK
-cp -v ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
-
 # goes to lib/symdiff
 cp -R ${SYMDIFF_LIBRARY_DIR} ${DIST_LIB}
 
@@ -70,6 +67,10 @@ do
 cp -R ../$i ${DIST_DIR}
 done
 cp -R ../python_packages ${DIST_PYDLL}
+cp -R ../umfpack ${DIST_PYDLL}/umfpack
+
+# Copy UMFPACK DLL
+cp -v ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
 
 mkdir -p ${DIST_DIR}/examples/symdiff
 # add trailing slash for rsync

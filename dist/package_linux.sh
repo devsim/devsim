@@ -49,8 +49,6 @@ for i in INSTALL.md NOTICE LICENSE README.md CHANGES.md install.py; do
 cp ../$i ${DIST_DIR}
 done
 
-cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
-
 #MKL library
 # $ORIGIN rpath set in src/main/CMakeLists.txt
 #cp "${CONDA_PREFIX}/lib/libmkl_rt.so.1" ${DIST_PYDLL}
@@ -63,6 +61,10 @@ do
 rsync -aqP --delete ../$i ${DIST_DIR}
 done
 rsync -aqP --delete ../python_packages ${DIST_PYDLL}
+rsync -aqP --delete ../umfpack ${DIST_PYDLL}
+
+# Copy UMFPACK DLL
+cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}/umfpack
 
 mkdir -p ${DIST_DIR}/examples/symdiff
 # add trailing slash for rsync

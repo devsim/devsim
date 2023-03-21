@@ -9,6 +9,7 @@ export CXX="/usr/bin/g++"
 export F77="/usr/bin/gfortran"
 export PYTHON3_BIN=python3
 export PIP_BIN=pip
+${PIP_BIN} install wheel auditwheel
 export PYTHON3_INCLUDE=$(python3 -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
 
@@ -32,5 +33,4 @@ cp -f dist/bdist_wheel/setup.* dist/${1}/
 (cd dist/${1} && ${PIP_BIN} wheel .)
 #${PIP_BIN} install auditwheel
 #(cd dist/${1} && ${PYTHON3_BIN} ../bdist_wheel/myauditwheel.py repair *.whl)
-(cp dist/${1}/*.whl dist)
-
+#(cp dist/${1}/wheelhouse/*.whl dist)
