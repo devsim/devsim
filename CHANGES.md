@@ -7,8 +7,6 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.4.0
 
-Python solver
-
 ### Determine Loaded Math Libraries
 
 To determine the loaded math libraries, use
@@ -26,7 +24,7 @@ Please note that this version uses a scheme to provide the needed math library f
 
 In order to use this library, a shim script is provided to load UMFPACK and set it as the solver.  Please see this example:
 ```
-python testing/umfpack/umfpackshim.py ssac_cap.py
+python -mdevsim.umfpack.umfshim ssac_cap.py
 ```
 
 ### Direct Solver Callback
