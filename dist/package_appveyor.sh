@@ -70,7 +70,7 @@ cp -R ../python_packages ${DIST_PYDLL}
 cp -R ../umfpack ${DIST_PYDLL}/umfpack
 
 # Copy UMFPACK DLL
-cp -v ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
+cp -v ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}/umfpack
 
 mkdir -p ${DIST_DIR}/examples/symdiff
 # add trailing slash for rsync
