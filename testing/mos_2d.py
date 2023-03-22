@@ -12,73 +12,79 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from devsim.python_packages.simple_physics import *
+from devsim.python_packages.ramp import *
+from devsim import *
+
 import mos_2d_create
-from mos_2d_physics import *
 
-import devsim
-device=devsim.get_device_list()[0]
-oxide_regions   = ("oxide",)
-silicon_regions = ("gate", "bulk")
-all_regions     = ("gate", "bulk", "oxide")
+device = "mymos"
+silicon_regions=("gate", "bulk")
+oxide_regions=("oxide",)
+regions = ("gate", "bulk", "oxide")
+interfaces = ("bulk_oxide", "gate_oxide")
 
-for i in all_regions:
-    createSolution(device, i, "Potential")
+for i in regions:
+    CreateSolution(device, i, "Potential")
 
 for i in silicon_regions:
-    setSiliconParameters(device, i)
-    createSiliconPotentialOnly(device, i)
+    SetSiliconParameters(device, i, 300)
+    CreateSiliconPotentialOnly(device, i)
+
 for i in oxide_regions:
-    setOxideParameters(device, i)
-    createOxidePotentialOnly(device, "oxide")
+    SetOxideParameters(device, i, 300)
+    CreateOxidePotentialOnly(device, i, "log_damp")
 
-createSiliconPotentialOnlyContact(device, "gate", "gate")
-createSiliconPotentialOnlyContact(device, "bulk", "drain")
-createSiliconPotentialOnlyContact(device, "bulk", "source")
-createSiliconPotentialOnlyContact(device, "bulk", "body")
+### Set up contacts
+contacts = get_contact_list(device=device)
+for i in contacts:
+    tmp = get_region_list(device=device, contact=i)
+    r = tmp[0]
+    print("%s %s" % (r, i))
+    CreateSiliconPotentialOnlyContact(device, r, i)
+    set_parameter(device=device, name=GetContactBiasName(i), value=0.0)
 
-createSiliconOxideInterface(device, "bulk_oxide")
-createSiliconOxideInterface(device, "gate_oxide")
+for i in interfaces:
+    CreateSiliconOxideInterface(device, i)
 
-devsim.solve(type="dc", absolute_error=1.0e-13, relative_error=1e-12, maximum_iterations=30)
-devsim.solve(type="dc", absolute_error=1.0e-13, relative_error=1e-12, maximum_iterations=30)
+solve(type="dc", absolute_error=1.0e-13, relative_error=1e-12, maximum_iterations=30)
+solve(type="dc", absolute_error=1.0e-13, relative_error=1e-12, maximum_iterations=30)
+#
+##write_devices -file gmsh_mos2d_potentialonly.flps -type floops
+write_devices(file="gmsh_mos2d_potentialonly", type="vtk")
 
-createSolution(device, "gate", "Electrons")
-createSolution(device, "gate", "Holes")
-devsim.set_node_values(device=device, region="gate", name="Electrons", init_from="IntrinsicElectrons")
-devsim.set_node_values(device=device, region="gate", name="Holes",     init_from="IntrinsicHoles")
-createSiliconDriftDiffusion(device, "gate")
-createSiliconDriftDiffusionAtContact(device, "gate", "gate")
+for i in silicon_regions:
+    CreateSolution(device, i, "Electrons")
+    CreateSolution(device, i, "Holes")
+    set_node_values(device=device, region=i, name="Electrons", init_from="IntrinsicElectrons")
+    set_node_values(device=device, region=i, name="Holes",     init_from="IntrinsicHoles")
+    CreateSiliconDriftDiffusion(device, i, "mu_n", "mu_p")
 
-createSolution(device, "bulk", "Electrons")
-createSolution(device, "bulk", "Holes")
-devsim.set_node_values(device=device, region="bulk", name="Electrons", init_from="IntrinsicElectrons")
-devsim.set_node_values(device=device, region="bulk", name="Holes",     init_from="IntrinsicHoles")
-createSiliconDriftDiffusion(device, "bulk")
+for c in contacts:
+    tmp = get_region_list(device=device, contact=c)
+    r = tmp[0]
+    CreateSiliconDriftDiffusionAtContact(device, r, c)
 
+solve(type="dc", absolute_error=1.0e30, relative_error=1e-5, maximum_iterations=30)
 
-createSiliconDriftDiffusionAtContact(device, "bulk", "drain")
-createSiliconDriftDiffusionAtContact(device, "bulk", "source")
-createSiliconDriftDiffusionAtContact(device, "bulk", "body")
+for r in silicon_regions:
+    node_model(device=device, region=r, name="logElectrons", equation="log(Electrons)/log(10)")
 
-devsim.solve(type="dc", absolute_error=1.0e30, relative_error=1e-5, maximum_iterations=30)
-
-devsim.element_from_edge_model(edge_model="ElectricField", device=device, region="bulk")
-
-devsim.write_devices(file="mos_2d_dd.msh", type="devsim")
+write_devices(file="mos_2d_dd.msh", type="devsim")
 
 with open("mos_2d_params.py", "w", encoding="utf-8") as ofh:
     ofh.write('import devsim\n')
-    for p in devsim.get_parameter_list():
-        v=repr(devsim.get_parameter(name=p))
+    for p in get_parameter_list():
+        v=repr(get_parameter(name=p))
         ofh.write('devsim.set_parameter(name="%s", value=%s)\n' % (p, v))
-    for i in devsim.get_device_list():
-        for p in devsim.get_parameter_list(device=i):
-            v=repr(devsim.get_parameter(device=i, name=p))
+    for i in get_device_list():
+        for p in get_parameter_list(device=i):
+            v=repr(get_parameter(device=i, name=p))
             ofh.write('devsim.set_parameter(device="%s", name="%s", value=%s)\n' % (i, p, v))
 
-    for i in devsim.get_device_list():
-        for j in devsim.get_region_list(device=i):
-            for p in devsim.get_parameter_list(device=i, region=j):
-                v=repr(devsim.get_parameter(device=i, region=j, name=p))
+    for i in get_device_list():
+        for j in get_region_list(device=i):
+            for p in get_parameter_list(device=i, region=j):
+                v=repr(get_parameter(device=i, region=j, name=p))
                 ofh.write('devsim.set_parameter(device="%s", region="%s", name="%s", value=%s)\n' % (i, j, p, v))
 
