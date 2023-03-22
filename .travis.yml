@@ -62,11 +62,7 @@ script:
       ./scripts/build_docker_manylinux2014.sh ${TRAVIS_TAG};
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-      if [ "$COMPILER" == "gcc" ]; then
-        ./scripts/build_macos.sh $COMPILER "${TRAVIS_TAG}";
-      elif [ "$COMPILER" == "clang" ]; then
-        ./scripts/build_macos2.sh $COMPILER "${TRAVIS_TAG}";
-      fi
+      ./scripts/build_macos.sh $COMPILER "${TRAVIS_TAG}";
     fi
 
 #before_deploy:
