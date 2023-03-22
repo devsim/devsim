@@ -43,8 +43,13 @@ On this platform, the software does not check for floating point exceptions (FPE
 
 ### Bugs
 
-Fix issue [#104](https://github.com/devsim/devsim/issues/104) where 2D MOSFET example was not fully connected across region interfaces.
-
+Fix issue [#104](https://github.com/devsim/devsim/issues/104) where the 2D MOSFET example was not fully connected across region interfaces.
+```
+testing/mos_2d.py
+testing/mos_2d_restart.py
+testing/mos_2d_restart2.py
+```
+This was resulting in an FPE during testing on macOS M1.
 
 ## Version 2.3.8
 
