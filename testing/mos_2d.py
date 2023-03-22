@@ -75,6 +75,8 @@ write_devices(file="mos_2d_dd.msh", type="devsim")
 with open("mos_2d_params.py", "w", encoding="utf-8") as ofh:
     ofh.write('import devsim\n')
     for p in get_parameter_list():
+        if p in ('solver_callback', 'direct_solver', 'info'):
+            continue
         v=repr(get_parameter(name=p))
         ofh.write('devsim.set_parameter(name="%s", value=%s)\n' % (p, v))
     for i in get_device_list():
