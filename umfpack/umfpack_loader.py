@@ -235,9 +235,9 @@ class di_numeric:
         B = c_void_p(b.buffer_info()[0])
         if self.umf_control.is_complex:
             NULL = c_void_p()
-            status = self.umf_control.gdata.dll.umfpack_zi_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, NULL, X, NULL, B, NULL, self.Numeric, self.umf_control.Control, self.umf_control.Info)
+            self.status = self.umf_control.gdata.dll.umfpack_zi_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, NULL, X, NULL, B, NULL, self.Numeric, self.umf_control.Control, self.umf_control.Info)
         else:
-            status = self.umf_control.gdata.dll.umfpack_di_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, X, B, self.Numeric, self.umf_control.Control, self.umf_control.Info)
+            self.status = self.umf_control.gdata.dll.umfpack_di_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, X, B, self.Numeric, self.umf_control.Control, self.umf_control.Info)
         return self.status
 
     def determinant(self, x, r):
@@ -409,16 +409,16 @@ class umf_control:
         else:
             self.gdata.dll.umfpack_di_report_status (self.Control, self.status)
 
-    def error_on_result(self, status, msg):
-        if status != 0:
-            self.print_info(self.Info)
-            self.print_status (status)
+    def error_on_result(self, msg):
+        if self.status != 0:
+            self.print_info()
+            self.print_status()
             raise RuntimeError("%s failed" % (msg,))
 
     def symbolic(self, matrix):
         Symbolic = di_symbolic(self)
         self.status = Symbolic.factor_symbolic(matrix)
-        self.error_on_result(self.status, "umfpack symbolic")
+        self.error_on_result("umfpack symbolic")
         return Symbolic
 
     def print_symbolic(self, Symbolic):
@@ -431,7 +431,7 @@ class umf_control:
     def numeric(self, matrix, Symbolic):
         Numeric = di_numeric(self)
         self.status = Numeric.factor_numeric(matrix, Symbolic)
-        self.error_on_result(self.status, "umfpack numeric")
+        self.error_on_result("umfpack numeric")
         return Numeric
 
     def print_numeric(self, Numeric):
@@ -446,11 +446,11 @@ class umf_control:
             self.status = Numeric.solve(matrix, x, b, transpose)
         else:
             self.status = Numeric.solve(matrix, x, b, transpose)
-        self.error_on_result(self.status, "umfpack solve")
+        self.error_on_result("umfpack solve")
 
     def determinant(self, x, r, Numeric):
         self.status = Numeric.determinant(x, r)
-        self.error_on_result(self.status, "umfpack get_determinant")
+        self.error_on_result("umfpack get_determinant")
         return self.status
 
     def print_determinant(self, x, r):
