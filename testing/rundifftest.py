@@ -19,8 +19,18 @@ parser.add_argument('--output',       help="output filename to compare with gold
 parser.add_argument('--args',         help="list of input arguments", nargs='+', required=False)
 args = parser.parse_args()
 
-output_file = os.path.abspath(os.path.join(args.working, args.output))
-compare_file = os.path.abspath(os.path.join(args.goldendir, args.output))
+if args.working:
+    output_file = os.path.abspath(os.path.join(args.working, args.output))
+    compare_file = os.path.abspath(os.path.join(args.goldendir, args.output))
+else:
+    head, tail = os.path.split(args.output)
+    if head:
+        output_file = os.path.abspath(args.output)
+        compare_file = os.path.abspath(os.path.join(args.goldendir, tail))
+
+
+if output_file == compare_file:
+    raise RuntimeError("output and golden file cannot be the same file " + output_file)
 
 if (args.working):
     os.chdir(args.working)
