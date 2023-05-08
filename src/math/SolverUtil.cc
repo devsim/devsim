@@ -16,7 +16,6 @@ limitations under the License.
 ***/
 
 #include "SolverUtil.hh"
-#include "SuperLUPreconditioner.hh"
 #include "BlockPreconditioner.hh"
 #ifdef USE_MKL_PARDISO
 #include "MKLPardisoPreconditioner.hh"
@@ -37,7 +36,6 @@ namespace {
 enum class DirectSolver {
   UNKNOWN,
   MKLPARDISO,
-  SUPERLU,
   CUSTOM,
 };
 
@@ -49,16 +47,12 @@ DirectSolver GetDirectSolver()
   if (dbent.first)
   {
     const auto &val = dbent.second.GetString();
-    if (val == "superlu")
-    {
-      ret = DirectSolver::SUPERLU;
-    }
-    else if (val == "mkl_pardiso")
+    if (val == "mkl_pardiso")
     {
 #ifdef USE_MKL_PARDISO
       ret = DirectSolver::MKLPARDISO;
 #else
-      ret = DirectSolver::SUPERLU;
+      ret = DirectSolver::CUSTOM;
       std::ostringstream os;
       os << "Solver \"mkl_pardiso\" not supported in this build.\n";
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
@@ -88,15 +82,15 @@ DirectSolver GetDirectSolver()
     else
     {
       std::ostringstream os;
-      os << "Unrecognized \"direct_solver\" parameter value \"" << val << "\". Valid options are \"mkl_pardiso\", \"superlu\", or \"custom\".\n";
+      os << "Unrecognized \"direct_solver\" parameter value \"" << val << "\". Valid options are \"mkl_pardiso\", or \"custom\".\n";
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
     return ret;
   }
 
   std::ostringstream os;
-  os << "Parameter \"direct_solver\" parameter not set. Valid options are \"mkl_pardiso\" or \"superlu\".\n";
-#if defined(USE_EXPLICIT_MATH_LOAD)
+  os << "Parameter \"direct_solver\" parameter not set. Valid options are \"mkl_pardiso\", or \"custom\".\n";
+
   if (MathLoader::IsMKLLoaded())
   {
     os << "Using \"mkl_pardiso\" direct solver.\n";
@@ -104,16 +98,10 @@ DirectSolver GetDirectSolver()
   }
   else
   {
-    os << "Using \"superlu\" direct solver.\n";
-    ret = DirectSolver::SUPERLU;
+    os << "Using \"custom\" direct solver.\n";
+    ret = DirectSolver::CUSTOM;
   }
-#elif defined(USE_MKL_PARDISO)
-  os << "Using \"mkl_pardiso\" direct solver.\n";
-  ret = DirectSolver::MKLPARDISO;
-#else
-  os << "Using \"superlu\" direct solver.\n";
-  ret = DirectSolver::SUPERLU;
-#endif
+
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   return ret;
 }
@@ -139,83 +127,58 @@ dsMath::Preconditioner<T> *CreateExternalPreconditioner(size_t numeqns, dsMath::
 
 namespace dsMath
 {
-template <>
-Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, size_t numeqns)
+template <typename T>
+Preconditioner<T> *CreateDirectPreconditioner(size_t numeqns)
 {
-  Preconditioner<double> *preconditioner = nullptr;
-  if (dynamic_cast<IterativeLinearSolver<double> *>(&itermethod))
+  Preconditioner<T> *preconditioner = nullptr;
+
+  if (auto s = GetDirectSolver(); s == DirectSolver::CUSTOM)
   {
-    preconditioner = new BlockPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS);
+    std::string errorstring;
+    preconditioner = CreateExternalPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS, errorstring);
+    dsAssert(preconditioner, errorstring);
   }
+#ifdef USE_MKL_PARDISO
+  else if (s == DirectSolver::MKLPARDISO)
+  {
+    preconditioner = new MKLPardisoPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS);
+  }
+#endif
   else
   {
-    if (auto s = GetDirectSolver(); s == DirectSolver::SUPERLU)
-    {
-      preconditioner = new SuperLUPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
-    }
-#ifdef USE_MKL_PARDISO
-    else if (s == DirectSolver::MKLPARDISO)
-    {
-      preconditioner = new MKLPardisoPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS);
-    }
-#endif
-    else if (s == DirectSolver::CUSTOM)
-    {
-      std::string errorstring;
-      preconditioner = CreateExternalPreconditioner<double>(numeqns, PEnum::TransposeType_t::NOTRANS, errorstring);
-      dsAssert(preconditioner, errorstring);
-    }
-    else
-    {
-      dsAssert(false, "Unexpected Solver Type");
-    }
+    dsAssert(false, "Unexpected Solver Type");
   }
+
   return preconditioner;
 }
 
-#ifdef DEVSIM_EXTENDED_PRECISION
-template <>
-Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermethod, size_t numeqns)
+template <typename T>
+Preconditioner<T> *CreatePreconditioner(LinearSolver<T> &itermethod, size_t numeqns)
 {
-  Preconditioner<float128> *preconditioner = nullptr;
-  if (dynamic_cast<IterativeLinearSolver<float128> *>(&itermethod))
+  Preconditioner<T> *preconditioner = nullptr;
+
+  if (dynamic_cast<IterativeLinearSolver<T> *>(&itermethod))
   {
-    preconditioner = new BlockPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS);
+    preconditioner = new BlockPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS);
   }
   else
   {
-    if (auto s = GetDirectSolver(); s == DirectSolver::SUPERLU)
-    {
-      preconditioner = new SuperLUPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
-    }
-#ifdef USE_MKL_PARDISO
-    else if (s == DirectSolver::MKLPARDISO)
-    {
-      preconditioner = new MKLPardisoPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS);
-    }
-#endif
-    else if (s == DirectSolver::CUSTOM)
-    {
-      std::string errorstring;
-      preconditioner = CreateExternalPreconditioner<float128>(numeqns, PEnum::TransposeType_t::NOTRANS, errorstring);
-      dsAssert(preconditioner, errorstring);
-    }
-    else
-    {
-      dsAssert(false, "Unexpected Solver Type");
-    }
+    preconditioner = CreateDirectPreconditioner<T>(numeqns);
   }
+
   return preconditioner;
 }
-#endif
 
 template <typename DoubleType>
 Preconditioner<DoubleType> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns)
 {
     Preconditioner<DoubleType> *preconditioner = nullptr;
-    if (auto s = GetDirectSolver();  s == DirectSolver::SUPERLU)
+
+    if (auto s = GetDirectSolver(); s == DirectSolver::CUSTOM)
     {
-      preconditioner = new SuperLUPreconditioner<DoubleType>(numeqns, trans_type, PEnum::LUType_t::FULL);
+      std::string errorstring;
+      preconditioner = CreateExternalPreconditioner<DoubleType>(numeqns, trans_type, errorstring);
+      dsAssert(preconditioner, errorstring);
     }
 #ifdef USE_MKL_PARDISO
     else if (s == DirectSolver::MKLPARDISO)
@@ -223,12 +186,6 @@ Preconditioner<DoubleType> *CreateACPreconditioner(PEnum::TransposeType_t trans_
       preconditioner = new MKLPardisoPreconditioner<DoubleType>(numeqns, trans_type);
     }
 #endif
-    else if (s == DirectSolver::CUSTOM)
-    {
-      std::string errorstring;
-      preconditioner = CreateExternalPreconditioner<DoubleType>(numeqns, trans_type, errorstring);
-      dsAssert(preconditioner, errorstring);
-    }
     else
     {
       dsAssert(false, "Unexpected Solver Type");
@@ -258,10 +215,14 @@ CompressedMatrix<DoubleType> *CreateACMatrix(Preconditioner<DoubleType> *precond
   return CreateMatrix(preconditioner, true);
 }
 
+template Preconditioner<double> *CreateDirectPreconditioner(size_t numeqns);
+template Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, size_t numeqns);
 template Preconditioner<double> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns);
 template CompressedMatrix<double> *CreateMatrix(Preconditioner<double> *preconditioner, bool is_complex);
 template CompressedMatrix<double> *CreateACMatrix(Preconditioner<double> *preconditioner);
 #ifdef DEVSIM_EXTENDED_PRECISION
+template Preconditioner<float128> *CreateDirectPreconditioner(size_t numeqns);
+template Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermethod, size_t numeqns);
 template Preconditioner<float128> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns);
 template CompressedMatrix<float128> *CreateMatrix(Preconditioner<float128> *preconditioner, bool is_complex);
 template CompressedMatrix<float128> *CreateACMatrix(Preconditioner<float128> *preconditioner);

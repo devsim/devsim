@@ -16,10 +16,10 @@ limitations under the License.
 ***/
 
 #include "BlockPreconditioner.hh"
+#include "SolverUtil.hh"
 #include "dsAssert.hh"
 #include "Matrix.hh"
 #include "CompressedMatrix.hh"
-#include "SuperLUPreconditioner.hh"
 #include "GlobalData.hh"
 #include "Device.hh"
 #include "Region.hh"
@@ -75,7 +75,7 @@ BlockPreconditioner<DoubleType>::~BlockPreconditioner()
 template <typename DoubleType>
 BlockPreconditioner<DoubleType>::BlockPreconditioner(size_t numeqns, PEnum::TransposeType_t transpose) : Preconditioner<DoubleType>(numeqns, transpose), block_matrix_(nullptr), block_preconditioner_(nullptr), drop_tolerance_(0.5)
 {
-  block_preconditioner_ = new SuperLUPreconditioner<DoubleType>(numeqns, transpose, PEnum::LUType_t::FULL);
+  block_preconditioner_ = CreateDirectPreconditioner<DoubleType>(numeqns);
 }
 
 template <typename DoubleType>

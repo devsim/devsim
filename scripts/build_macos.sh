@@ -48,10 +48,6 @@ export PYTHON3_ARCHIVE=""
 #https://developer.apple.com/technologies/tools
 #https://developer.apple.com/performance/accelerateframework.html
 
-# SuperLU
-#(cd external && curl -O http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz && tar xzf superlu_4.3.tar.gz)
-#(cd external && tar xzf superlu_4.3.tar.gz)
-
 # SYMDIFF build
 if [ "${1}" = "gcc" ]
 then
@@ -60,9 +56,6 @@ elif [ "${1}" = "clang" ]
 then
 (cd external/symdiff && bash  ../symdiff_macos.sh && cd osx_release && make -j4)
 fi
-
-# SUPERLU build
-(cd external/superlu && bash ../superlu_macos.sh)
 
 # quad precision getrf
 if [ "${1}" = "gcc" ]

@@ -16,9 +16,6 @@ export PYTHON3_ARCHIVE=""
 # SYMDIFF build
 (cd external/symdiff && bash ../symdiff_centos.sh && cd linux_x86_64_release && make -j2);
 
-# SUPERLU build
-(cd external/superlu && sh ../superlu_centos6.sh)
-
 # quad precision getrf
 (cd external/getrf && bash setup_centos6.sh && cd build && make -j2)
 

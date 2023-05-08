@@ -31,6 +31,9 @@ template <typename T> class Preconditioner;
 template <typename T> class CompressedMatrix;
 
 template <typename T>
+Preconditioner<T> *CreateDirectPreconditioner(size_t numeqns);
+
+template <typename T>
 Preconditioner<T> *CreatePreconditioner(LinearSolver<T> &itermethod, size_t numeqns);
 
 template <typename T>

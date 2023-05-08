@@ -23,19 +23,13 @@ limitations under the License.
 #include <utility>
 #include <complex>
 #include <vector>
-#if defined(USE_EXPLICIT_MATH_LOAD)
+
 extern "C" {
 void PARDISO( void *a, const int *b, const int *c, const int *d,
                    const int *e, const int *f, const void *g, const int *h,
                    const int *i, int *j, const int *k, int *l,
                    const int *m, void *n,    void *o, int *p);
 }
-#else
-#include "mkl.h"
-#include "mkl_pardiso.h"
-#include "mkl_types.h"
-#include "mkl_spblas.h"
-#endif
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"

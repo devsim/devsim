@@ -17,7 +17,6 @@ limitations under the License.
 
 #include "BlasHeaders.hh"
 
-#ifdef USE_EXPLICIT_MATH_LOAD
 #include "dsAssert.hh"
 #include "OutputStream.hh"
 #include <string_view>
@@ -30,7 +29,6 @@ limitations under the License.
 #else
 #include <dlfcn.h>
 #endif
-#endif
 
 
 typedef std::complex<double> doublecomplex;
@@ -42,27 +40,6 @@ typedef std::complex<double> doublecomplex;
 #define external_zgetrf zgetrf_
 #define external_zgetrs zgetrs_
 #define external_zrotg  zrotg_
-// added for SuperLU
-#define external_dasum  dasum_
-#define external_daxpy  daxpy_
-#define external_dcopy  dcopy_
-#define external_dgemm  dgemm_
-#define external_dgemv  dgemv_
-#define external_dnrm2  dnrm2_
-#define external_dswap  dswap_
-#define external_dtrsm  dtrsm_
-#define external_dtrsv  dtrsv_
-#define external_dzasum  dzasum_
-#define external_dznrm2  dznrm2_
-#define external_idamax  idamax_
-#define external_izamax  izamax_
-#define external_zaxpy  zaxpy_
-#define external_zcopy  zcopy_
-#define external_zgemm  zgemm_
-#define external_zgemv  zgemv_
-#define external_zswap  zswap_
-#define external_ztrsm  ztrsm_
-#define external_ztrsv  ztrsv_
 
 #elif 0
 #error "NEW PLATFORM"
@@ -71,7 +48,6 @@ typedef std::complex<double> doublecomplex;
 
 extern "C"
 {
-// forward declaration required when !defined(USE_EXPLICIT_MATH_LOAD)
 void external_dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
 #ifdef _WIN32
 void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info, int trans_len);
@@ -83,7 +59,7 @@ void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *
 void external_drotg(double *a, double *b, double *c, double *d);
 void external_zrotg(std::complex<double> *a, std::complex<double> *b, std::complex<double> *c, std::complex<double> *d);
 }
-#if defined(USE_EXPLICIT_MATH_LOAD)
+
 extern "C"
 {
 using PARDISO_signature = void ( void *,    const int *, const int *, const int *,
@@ -107,31 +83,11 @@ typedef void (zrotg_signature)(std::complex<double> *, std::complex<double> *, s
 
 /////  STUFF for SuperLU BLAS
 //https://stanford.edu/~boyd/l1_tf/C/blas.h
-typedef double (dasum_signature)(int *n, double *dx, int *incx);
-typedef void   (daxpy_signature)(int *n, double *alpha, double *dx, int *incx, double *dy, int *incy);
-typedef void   (dcopy_signature)(int *n, double *dx, int *incx, double *dy, int *incy);
-typedef void   (dgemm_signature)(char *transa, char *transb, int *m, int *n, int *k, double *alpha, double *a, int *lda, double *b, int *ldb, double *beta, double *c, int *ldc);
-typedef void   (dgemv_signature)(char *trans, int *m, int *n, double *alpha, double *a, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
-typedef double (dnrm2_signature)(int *n, double *dx, int *incx);
-typedef void   (dtrsm_signature)(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *a, int *lda, double *b, int *ldb);
-typedef void   (dtrsv_signature)(char *uplo, char *trans, char *diag, int *n, double *a, int *lda, double *x, int *incx);
-typedef void   (dswap_signature)(int *n, double *dx, int *incx, double *dy, int *incy);
-typedef int    (idamax_signature)(int *n, double *dx, int *incx);
-typedef double (dzasum_signature)(int *n, doublecomplex *dx, int *incx);
-typedef double (dznrm2_signature)(int *n, doublecomplex *dx, int *incx);
-typedef int    (izamax_signature)(int *n, doublecomplex *dx, int *incx);
-typedef void   (zaxpy_signature)(int *n, doublecomplex *alpha, doublecomplex *dx, int *incx, doublecomplex *dy, int *incy);
-typedef void   (zcopy_signature)(int *n, doublecomplex *dx, int *incx, doublecomplex *dy, int *incy);
-typedef void   (zgemm_signature)(char *transa, char *transb, int *m, int *n, int *k, doublecomplex *alpha, doublecomplex *a, int *lda, doublecomplex *b, int *ldb, doublecomplex *beta, doublecomplex *c, int *ldc);
-typedef void   (zgemv_signature)(char *trans, int *m, int *n, doublecomplex *alpha, doublecomplex *a, int *lda, doublecomplex *x, int *incx, doublecomplex *beta, doublecomplex *y, int *incy);
-typedef void   (zswap_signature)(int *n, doublecomplex *dx, int *incx, doublecomplex *dy, int *incy);
-typedef void   (ztrsm_signature)(char *side, char *uplo, char *transa, char *diag, int *m, int *n, doublecomplex *alpha, doublecomplex *a, int *lda, doublecomplex *b, int *ldb);
-typedef void   (ztrsv_signature)(char *uplo, char *trans, char *diag, int *n, doublecomplex *a, int *lda, doublecomplex *x, int *incx);
-
 
 // initialized through dynamic loading
 namespace {
 struct blas_table {
+// LAPACK
   inline static std::vector<std::pair<std::string, void *>> dll_handles;
   inline static dgetrf_signature *dgetrf;
   inline static zgetrf_signature *zgetrf;
@@ -139,30 +95,6 @@ struct blas_table {
   inline static zgetrs_signature *zgetrs;
   inline static drotg_signature *drotg;
   inline static zrotg_signature *zrotg;
-// BLAS
-
-  inline static dasum_signature *dasum;
-  inline static daxpy_signature *daxpy;
-  inline static dcopy_signature *dcopy;
-  inline static dgemm_signature *dgemm;
-  inline static dgemv_signature *dgemv;
-  inline static dnrm2_signature *dnrm2;
-  inline static dswap_signature *dswap;
-  inline static dtrsm_signature *dtrsm;
-
-  inline static dtrsv_signature *dtrsv;
-  inline static dzasum_signature *dzasum;
-  inline static dznrm2_signature *dznrm2;
-  inline static idamax_signature *idamax;
-  inline static izamax_signature *izamax;
-  inline static zaxpy_signature *zaxpy;
-  inline static zcopy_signature *zcopy;
-  inline static zgemm_signature *zgemm;
-  inline static zgemv_signature *zgemv;
-  inline static zswap_signature *zswap;
-  inline static ztrsm_signature *ztrsm;
-  inline static ztrsv_signature *ztrsv;
-
 
 // PARDISO
   inline static PARDISO_signature *PARDISO;
@@ -222,115 +154,7 @@ void external_zrotg(std::complex<double> *a, std::complex<double> *b, std::compl
 {
   blas_table::zrotg(a, b, c, d);
 }
-
-
-void external_dtrsv(char *a, char *b, char *c, int *d, double *e, int *f, double *g, int *h)
-{
-  blas_table::dtrsv(a, b, c, d, e, f, g, h);
-}
-
-double external_dasum(int *n, double *dx, int *incx)
-{
-  return blas_table::dasum(n, dx, incx);
-}
-void   external_daxpy(int *n, double *alpha, double *dx, int *incx, double *dy, int *incy)
-{
-  blas_table::daxpy(n, alpha, dx, incx, dy, incy);
-}
-void   external_dcopy(int *n, double *dx, int *incx, double *dy, int *incy)
-{
-  blas_table::dcopy(n, dx, incx, dy, incy);
-}
-void   external_dgemm(char *transa, char *transb, int *m, int *n, int *k, double *alpha, double *a, int *lda, double *b, int *ldb, double *beta, double *c, int *ldc)
-{
-  blas_table::dgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc);
-}
-
-void external_dgemv(char *trans, int *m, int *n,
-                              double *alpha, double *a,
-                              int *lda, double *x, int *incx,
-                              double *beta, double *y, int *incy)
-{
-  blas_table::dgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
-}
-
-void external_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *a, int *lda, double *b, int *ldb)
-{
-  blas_table::dtrsm(side, uplo, transa, diag, m, n, alpha, a, lda, b, ldb);
-}
-
-double external_dnrm2(int *n, double *dx, int *incx)
-{
-  return blas_table::dnrm2(n, dx, incx);
-}
-void   external_dswap(int *n, double *dx, int *incx, double *dy, int *incy)
-{
-  blas_table::dswap(n, dx, incx, dy, incy);
-}
-int external_idamax(int *n, double *dx, int *incx)
-{
-  return blas_table::idamax(n, dx, incx);
-}
-
-double external_dzasum(int *n, doublecomplex *dx, int *incx)
-{
-  return blas_table::dzasum(n, dx, incx);
-}
-
-
-double external_dznrm2(int *n, doublecomplex *dx, int *incx)
-{
-  return blas_table::dznrm2(n, dx, incx);
-}
-
-
-int external_izamax(int *n, doublecomplex *dx, int *incx)
-{
-  return blas_table::izamax(n, dx, incx);
-}
-
-
-void   external_zaxpy(int *n, doublecomplex *alpha, doublecomplex *dx, int *incx, doublecomplex *dy, int *incy)
-{
-  blas_table::zaxpy(n, alpha, dx, incx, dy, incy);
-}
-
-
-void   external_zcopy(int *n, doublecomplex *dx, int *incx, doublecomplex *dy, int *incy)
-{
-  blas_table::zcopy(n, dx, incx, dy, incy);
-}
-
-
-void   external_zgemm(char *transa, char *transb, int *m, int *n, int *k, doublecomplex *alpha, doublecomplex *a, int *lda, doublecomplex *b, int *ldb, doublecomplex *beta, doublecomplex *c, int *ldc)
-{
-  blas_table::zgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc);
-}
-
-
-void   external_zgemv(char *trans, int *m, int *n, doublecomplex *alpha, doublecomplex *a, int *lda, doublecomplex *x, int *incx, doublecomplex *beta, doublecomplex *y, int *incy)
-{
-  blas_table::zgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
-}
-
-
-void   external_zswap(int *n, doublecomplex *dx, int *incx, doublecomplex *dy, int *incy)
-{
-  blas_table::zswap(n, dx, incx, dy, incy);
-}
-
-
-void   external_ztrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, doublecomplex *alpha, doublecomplex *a, int *lda, doublecomplex *b, int *ldb)
-{
-  blas_table::ztrsm(side, uplo, transa, diag, m, n, alpha, a, lda, b, ldb);
-}
-
-void   external_ztrsv(char *uplo, char *trans, char *diag, int *n, doublecomplex *a, int *lda, doublecomplex *x, int *incx)
-{
-  blas_table::ztrsv(uplo, trans, diag, n, a, lda, x, incx);
-}
 } // end extern "C"
-#endif //USE_EXPLICIT_MATH_LOAD
 
 void getrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info )
 {
@@ -356,7 +180,6 @@ void zrotg(std::complex<double> *a, std::complex<double> *b, std::complex<double
   external_zrotg(a, b, c, d);
 }
 
-#ifdef USE_EXPLICIT_MATH_LOAD
 namespace {
 #if 0
 // These are available in dsAssert
@@ -379,27 +202,6 @@ static symtable math_function_table[] = {
   {TOSTRING(external_zgetrs), reinterpret_cast<void **>(&blas_table::zgetrs)},
   {TOSTRING(external_drotg),  reinterpret_cast<void **>(&blas_table::drotg)},
   {TOSTRING(external_zrotg),  reinterpret_cast<void **>(&blas_table::zrotg)},
-  // SUPERLU BLAS
-  {TOSTRING(external_dasum), reinterpret_cast<void **>(&blas_table::dasum)},
-  {TOSTRING(external_daxpy), reinterpret_cast<void **>(&blas_table::daxpy)},
-  {TOSTRING(external_dcopy), reinterpret_cast<void **>(&blas_table::dcopy)},
-  {TOSTRING(external_dgemm), reinterpret_cast<void **>(&blas_table::dgemm)},
-  {TOSTRING(external_dgemv), reinterpret_cast<void **>(&blas_table::dgemv)},
-  {TOSTRING(external_dnrm2), reinterpret_cast<void **>(&blas_table::dnrm2)},
-  {TOSTRING(external_dswap), reinterpret_cast<void **>(&blas_table::dswap)},
-  {TOSTRING(external_dtrsm), reinterpret_cast<void **>(&blas_table::dtrsm)},
-  {TOSTRING(external_dtrsv), reinterpret_cast<void **>(&blas_table::dtrsv)},
-  {TOSTRING(external_dzasum), reinterpret_cast<void **>(&blas_table::dzasum)},
-  {TOSTRING(external_dznrm2), reinterpret_cast<void **>(&blas_table::dznrm2)},
-  {TOSTRING(external_idamax), reinterpret_cast<void **>(&blas_table::idamax)},
-  {TOSTRING(external_izamax), reinterpret_cast<void **>(&blas_table::izamax)},
-  {TOSTRING(external_zaxpy), reinterpret_cast<void **>(&blas_table::zaxpy)},
-  {TOSTRING(external_zcopy), reinterpret_cast<void **>(&blas_table::zcopy)},
-  {TOSTRING(external_zgemm), reinterpret_cast<void **>(&blas_table::zgemm)},
-  {TOSTRING(external_zgemv), reinterpret_cast<void **>(&blas_table::zgemv)},
-  {TOSTRING(external_zswap), reinterpret_cast<void **>(&blas_table::zswap)},
-  {TOSTRING(external_ztrsm), reinterpret_cast<void **>(&blas_table::ztrsm)},
-  {TOSTRING(external_ztrsv), reinterpret_cast<void **>(&blas_table::ztrsv)},
 };
 
 void clear_table()
@@ -523,6 +325,7 @@ LoaderMessages_t LoadFromEnvironment(const std::string &environment_var, std::st
     if (done)
     {
       OutputStream::WriteOut(OutputStream::OutputType::INFO, std::string("Skipping ") + dll_name + "\n");
+      blas_table::dll_handles.push_back({dll_name, nullptr});
       continue;
     }
 
@@ -567,10 +370,6 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
   LoaderMessages_t ret = LoaderMessages_t::MISSING_DLL;
   ClearBlasFunctions();
 
-#if 0
-  std::vector<std::string> search_paths = {std::string("")};
-#endif
-
 #if defined(__APPLE__)
 // This should always be available through symlink
   const std::string default_name = "libmkl_rt.dylib";
@@ -589,37 +388,8 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
 #error "MKL LIBRARY RT DLL NOT DEFINED FOR PLATFORM"
 #endif
 
-#if 0
-#if defined(__APPLE__) || defined(__linux__)
-  if (const char *env = std::getenv("CONDA_PREFIX"))
-  {
-#if defined(__APPLE__)
-    search_paths.emplace_back("@rpath/lib/");
-#elif defined(__linux__)
-    search_paths.emplace_back(std::string(env) + "/lib/");
-#endif
-  }
-
-  if (const char *env = std::getenv("VIRTUAL_ENV"))
-  {
-    search_paths.emplace_back(std::string(env) + "/lib/");
-  }
-#endif
-#endif
-
   errors.clear();
-#if 0
-  for (auto &path : search_paths)
-  {
-    ret = LoadBlasDLL(path + default_name, errors, true);
-    if (ret == LoaderMessages_t::MKL_LOADED)
-    {
-      return ret;
-    }
-  }
-#else
   ret = LoadBlasDLL(default_name, errors, true);
-#endif
 
   const size_t max_tested_version = 2;
   const size_t min_version_to_test_for = 1;
@@ -629,18 +399,6 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
   for (size_t i = min_version_to_test_for; i <= max_version_to_test_for; ++i)
   {
     dll_name = prefix_name + std::to_string(i) + suffix_name;
-#if 0
-    for (auto &a : search_paths)
-    {
-      errors.clear();
-      ret = LoadBlasDLL(a + dll_name, errors, true);
-      if (ret == LoaderMessages_t::MKL_LOADED)
-      {
-        actual_version = i;
-        goto done;
-      }
-    }
-#else
     errors.clear();
     ret = LoadBlasDLL(dll_name, errors, true);
     if (ret == LoaderMessages_t::MKL_LOADED)
@@ -648,11 +406,8 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
       actual_version = i;
       break;
     }
-#endif
   }
-#if 0
-done:
-#endif
+
   if (actual_version == size_t(-1))
   {
     std::string tested_dll_name = prefix_name + std::to_string(max_tested_version) + suffix_name;
@@ -795,23 +550,4 @@ void ClearBlasFunctions()
   clear_table();
 }
 }
-
-#if 0
-void stuff()
-{
-  std::string errors;
-//  bool ret = LoadBlasDLL("./libmkl_rt.dylib", errors);
-//  bool ret = LoadBlasDLL("@rpath/libmkl_rt.dylib", errors);
-  // don't need loader path
-  bool ret = LoadBlasDLL("@executable_path/../lib/libmkl_rt.dylib", errors);
-  if (!errors.empty())
-  {
-    std::cerr << errors;
-  }
-  std::cerr << "dgetrf " << reinterpret_cast<void *>(blas_table::dgetrf) << std::endl;
-  std::cerr << "PARDISO " << blas_table::PARDISO << std::endl;
-}
-#endif
-#endif /*USE_EXPLICIT_MATH_LOAD*/
-
 

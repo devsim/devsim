@@ -19,7 +19,6 @@ limitations under the License.
 #define BLASHEADERS_HH
 #include <complex>
 
-#ifdef USE_EXPLICIT_MATH_LOAD
 #include <string>
 #include <vector>
 namespace MathLoader {
@@ -36,7 +35,6 @@ LoaderMessages_t GetMathStatus();
 std::string GetMKLVersion();
 std::vector<std::string> GetLoadedMathDLLs();
 }
-#endif
 
 void getrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
 

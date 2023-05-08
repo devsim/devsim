@@ -55,33 +55,6 @@ Boost
 
 Boost Software License - Version 1.0 - August 17th, 2003
 
-COLAMD (Used by SuperLU 5.3)
----------------------------------
-
-    Copyright and License:
-
-        Copyright (c) 1998-2003 by the University of Florida.
-        All Rights Reserved.
-
-        THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY
-        EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
-
-        Permission is hereby granted to use, copy, modify, and/or distribute
-        this program, provided that the Copyright, this License, and the
-        Availability of the original version is retained on all copies and made
-        accessible to the end-user of any code or package that includes COLAMD
-        or any modified version of COLAMD.
-
-    Availability:
-
-        The colamd/symamd library is available at
-
-            https://web.archive.org/web/20141010162709/http://www.cise.ufl.edu/research/sparse/colamd/
-
-        This is the https://web.archive.org/web/20040113022019/http://www.cise.ufl.edu/research/sparse/colamd/colamd.c
-        file.  It requires the colamd.h file.  It is required by the colamdmex.c
-        and symamdmex.c files, for the MATLAB interface to colamd and symamd.
-
 Eigen
 -----
 
@@ -149,39 +122,6 @@ Python
 ------
 
 Python Software Foundation License (PSFL)
-
-SuperLU
--------
-
-Copyright (c) 2003, The Regents of the University of California, through
-Lawrence Berkeley National Laboratory (subject to receipt of any required
-approvals from U.S. Dept. of Energy)
-
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-(1) Redistributions of source code must retain the above copyright notice,
-this list of conditions and the following disclaimer.
-(2) Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-(3) Neither the name of Lawrence Berkeley National Laboratory, U.S. Dept. of
-Energy nor the names of its contributors may be used to endorse or promote
-products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Symdiff
 -------

@@ -5,6 +5,14 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.5.0
+
+UMFPACK 5.1 is the new default when the Intel MKL is not available.  SuperLU is removed and no longer available as a solver.
+
+Regression scripts were passing when there were numerical differences in the data diff comparison.  This is now corrected and the regression results have been updated on all platforms.
+
+For those building the software, the ``EXPLICIT_MATH_LOAD`` CMAKE option has been removed, so that the software is not directly linked to any math library.
+
 ## Version 2.4.0
 
 ### Determine Loaded Math Libraries
