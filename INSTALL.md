@@ -135,7 +135,7 @@ Note that the resulting package file does not have any dependencies on Homebrew 
 
 #### Using macOS system compiler
 
-Please note that you will need to install the Xcode developer tools, including the C++ compiler for your system.  This version does not have 128-bit floating point precision support and is not provided as part of the regular release.  By default it uses SuperLU 4.3 as the direct solver, but the build scripts can be modified to support Intel MKL Pardiso.  The rest of the components, including Anaconda Python and various build components are downloaded and installed in the scripts below.  ***There is no need to run ``install_miniconda_macos.sh`` if Anaconda Python is already installed.***
+Please note that you will need to install the Xcode developer tools, including the C++ compiler for your system.  By default it uses UMFPACK 5.1 as the direct solver, but the build scripts can be modified to support Intel MKL Pardiso.  The rest of the components, including Anaconda Python and various build components are downloaded and installed in the scripts below.  ***There is no need to run ``install_miniconda_macos.sh`` if Anaconda Python is already installed.***
 
 ```
 git clone https://github.com/devsim/devsim.git
