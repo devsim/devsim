@@ -7,7 +7,9 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.5.0
 
-UMFPACK 5.1 is the new default when the Intel MKL is not available.  SuperLU is removed and no longer available as a solver.
+UMFPACK 5.1 is the new default when the Intel MKL is not available, making this the default for the macOS arm64 platform.
+
+SuperLU is removed and no longer available as a solver.
 
 Regression scripts were passing when there were numerical differences in the data diff comparison.  This is now corrected and the regression results have been updated on all platforms.
 
