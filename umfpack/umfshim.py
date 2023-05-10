@@ -46,7 +46,8 @@ class dsobject:
             #self.umf_control.init_verbose()
         # test same symbolic
         self.matrix = umf.matrix(uc=self.umf_control, Ap=kwargs['Ap'], Ai=kwargs["Ai"], Ax=kwargs["Ax"])
-        self.symbolic = self.umf_control.symbolic(matrix=self.matrix)
+        if not kwargs['is_same_symbolic']:
+          self.symbolic = self.umf_control.symbolic(matrix=self.matrix)
         self.numeric = self.umf_control.numeric(matrix=self.matrix, Symbolic=self.symbolic)
         self.status = True
         self.message = ''
@@ -57,7 +58,7 @@ class dsobject:
         if self.umf_control.is_complex:
             #print(kwargs.keys())
             #raise RuntimeError("COMPLEX!")
-            self.x = array.array('d', [0.0]*len(kwargs['b']))
+            self.x = array.array('d', [0.0])*len(kwargs['b'])
             self.umf_control.solve(matrix=self.matrix, Numeric=self.numeric, b=kwargs['b'], transpose=self.transpose, x=self.x)
         else:
             self.x = array.array('d', kwargs['b'])
