@@ -15,6 +15,8 @@ Regression scripts were passing when there were numerical differences in the dat
 
 For those building the software, the ``EXPLICIT_MATH_LOAD`` CMAKE option has been removed, so that the software is not directly linked to any math library.
 
+The license text for the Apache 2.0 license has been replaced with the SPDX format of the license string.  This ensures that the text can be used in a consistent manner across all source files.
+
 ## Version 2.4.0
 
 ### Determine Loaded Math Libraries
