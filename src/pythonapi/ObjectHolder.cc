@@ -319,8 +319,8 @@ struct pod_info;
 template <>
 struct pod_info<std::complex<double>>
 {
-  constexpr static auto pmf = nullptr;
-  constexpr static const char *ptype = "d";
+  [[maybe_unused]] constexpr static auto pmf = nullptr;
+  [[maybe_unused]] constexpr static const char *ptype = "d";
 };
 
 template <>
