@@ -212,15 +212,22 @@ bool MKLPardisoData::LUFactorMatrixImpl(CompressedMatrix<DoubleType> *cm, const 
 #endif
   a  = a_input;
 
-  phase = 11;
-  PARDISO (pt, &maxfct, &mnum, &mtype, &phase,
-           &n, a, ia, ja, &idum, &nrhs, &iparm[0], &msglvl, &ddum, &ddum, &error);
+  if (cm->GetSymbolicStatus() == SymbolicStatus_t::NEW_SYMBOLIC)
+  {
+    phase = 11;
+    PARDISO (pt, &maxfct, &mnum, &mtype, &phase,
+             &n, a, ia, ja, &idum, &nrhs, &iparm[0], &msglvl, &ddum, &ddum, &error);
+  }
+  else if (cm->GetSymbolicStatus() == SymbolicStatus_t::SAME_SYMBOLIC)
+  {
+    error = 0;
+  }
+  else
+  {
+    dsAssert(false, "UNEXPECTED");
+    error = 0;
+  }
 
-#if 0
-      std::ostringstream os;
-      os << "Symbolic Error: " << error << "\n";
-      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
-#endif
   if (error != 0)
   {
     // print message

@@ -5,6 +5,10 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.5.1
+
+The Intel MKL solver will now use reuse the symbolic factorization, if the simulation matrix sparse matrix pattern has not changed between nonlinear solver iterations.  This reduces simulation time without changing the result.
+
 ## Version 2.5.0
 
 UMFPACK 5.1 is the new default when the Intel MKL is not available, making this the default for the macOS arm64 platform.
