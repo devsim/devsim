@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 #include <iomanip>
 
 namespace dsMath {
+
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::DebugMatrix(std::ostream &os) const
 {

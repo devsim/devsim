@@ -112,7 +112,7 @@ class CompressedMatrix : public Matrix<DoubleType> {
         bool compressed;
         SymbolicStatus_t symbolicstatus_;
 
-        static constexpr DoubleType DTZERO = 0.0;
+        static const inline DoubleType DTZERO{};
 };
 
 }
