@@ -111,6 +111,8 @@ class CompressedMatrix : public Matrix<DoubleType> {
         DoubleVec_t<DoubleType> Az_;
         bool compressed;
         SymbolicStatus_t symbolicstatus_;
+
+        static constexpr DoubleType DTZERO = 0.0;
 };
 
 }

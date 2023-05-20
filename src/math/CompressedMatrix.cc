@@ -260,7 +260,7 @@ void CompressedMatrix<DoubleType>::AddEntryImpl(int r, int c, DoubleType v)
   dsAssert(static_cast<size_t>(c) < this->size(), "UNEXPECTED");
 #endif
 
-  if (v == 0.0)
+  if (v == DTZERO)
   {
     return;
   }
@@ -313,7 +313,7 @@ void CompressedMatrix<DoubleType>::AddImagEntryImpl(int r, int c, DoubleType v)
   dsAssert(static_cast<size_t>(c) < this->size(), "UNEXPECTED");
 #endif
 
-  if (v == 0.0)
+  if (v == DTZERO)
   {
     return;
   }
@@ -358,15 +358,15 @@ void CompressedMatrix<DoubleType>::AddImagEntry(int r, int c, DoubleType v)
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::AddEntry(int r, int c, ComplexDouble_t<DoubleType> v)
 {
-  const double rv = static_cast<double>(v.real());
-  const double iv = static_cast<double>(v.imag());
+  const auto &rv = v.real();
+  const auto &iv = v.imag();
 
-  if (rv != 0.0)
+  if (rv != DTZERO)
   {
     AddEntry(r, c, rv);
   }
 
-  if (iv != 0.0)
+  if (iv != DTZERO)
   {
     AddImagEntry(r, c, iv);
   }
@@ -383,7 +383,7 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
   os << "Matrix Decompress!!! Symbolic pattern changed\n";
   OutputStream::WriteOut(OutputStream::OutputType::VERBOSE1, os.str());
   compressed = false;
-  size_t sz = Ap_.size() - 1;
+  const size_t sz = Ap_.size() - 1;
 
 #ifndef NDEBUG
   dsAssert(sz == this->size(), "UNEXPECTED");
@@ -402,8 +402,8 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
     {
       for (size_t j = beg; j < end; ++ j)
       {
-        const double z = static_cast<double>(Az_[j]);
-        if (z != 0.0)
+        const auto &z = Az_[j];
+        if (z != DTZERO)
         {
           AddImagEntryImpl(Ai_[j], i, z);
         }
@@ -461,7 +461,7 @@ template <typename DoubleType>
 void CompressedMatrix<DoubleType>::ClearMatrix()
 {
 //  compressed = false;
-  size_t sz = Ax_.size();
+  const size_t sz = Ax_.size();
   Ax_.clear();
   Ax_.resize(sz);
   if (GetMatrixType() == MatrixType::COMPLEX)
