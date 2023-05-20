@@ -10,8 +10,8 @@ SET (ZLIB_ARCHIVE -lz )
 SET (SQLITE3_ARCHIVE -lsqlite3)
 
 
-SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boostorg/math/include ${EXTERNAL_LIB}/boostorg/multiprecision/include)
-ADD_DEFINITIONS(-DBOOST_MP_STANDALONE -DBOOST_MP_MATH_AVAILABLE)
+SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boostorg/config/include ${EXTERNAL_LIB}/boostorg/math/include ${EXTERNAL_LIB}/boostorg/multiprecision/include)
+ADD_DEFINITIONS(-DBOOST_MP_STANDALONE -DBOOST_MATH_STANDALONE)
 SET (QUADMATH_ARCHIVE "-lquadmath")
 SET (DLOPEN_LIB -ldl)
 SET (SQLITE3_INCLUDE /usr/include)
