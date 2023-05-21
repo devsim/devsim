@@ -50,12 +50,7 @@ before_script:
     fi
   # specifically for pypi deployment
   - export README_BASE_URL="https://github.com/devsim/devsim/blob/${TRAVIS_TAG}"
-  - git submodule update --init --depth 1 external/symdiff
-  - git submodule update --init --depth 1 external/boostorg/multiprecision
-  - git submodule update --init --depth 1 external/boostorg/math
-  - git submodule update --init --depth 1 external/boostorg/config
-  - git submodule update --init --depth 1 external/umfpack_lgpl
-
+  - git submodule update --depth 1
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then

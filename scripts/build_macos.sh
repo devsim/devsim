@@ -64,7 +64,7 @@ then
 fi
 
 # umfpack support
-(cd external/umfpack_lgpl && bash setup_macos.sh && cd build && make -j2)
+(cd external/umfpack_lgpl && bash setup_macos.sh && cd build && make -j3)
 
 if [ "${1}" = "gcc" ]
 then

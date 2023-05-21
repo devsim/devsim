@@ -26,13 +26,13 @@ export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as g
 export PYTHON3_ARCHIVE=""
 
 # SYMDIFF build
-(cd external/symdiff && bash ../symdiff_centos.sh && cd linux_x86_64_release && make -j2);
+(cd external/symdiff && bash ../symdiff_centos.sh && cd linux_x86_64_release && make -j3);
 
 # quad precision getrf
-(cd external/getrf && bash setup_centos6.sh && cd build && make -j2)
+(cd external/getrf && bash setup_centos6.sh && cd build && make -j3)
 
 # umfpack support
-(cd external/umfpack_lgpl && bash setup_centos6.sh && cd build && make -j2)
+(cd external/umfpack_lgpl && bash setup_centos6.sh && cd build && make -j3)
 
 # start devsim build
 bash scripts/setup_centos_6.sh
@@ -41,7 +41,7 @@ bash scripts/setup_centos_6.sh
 #mkdir -p linux_x86_64_release/linklibs
 #for i in libz.a libsqlite3*; do cp -f ${CONDA_PREFIX}/lib/$i linux_x86_64_release/linklibs/; done
 
-(cd linux_x86_64_release && make -j2)
+(cd linux_x86_64_release && make -j3)
 (cd dist && bash package_linux.sh ${1})
 cp -f dist/bdist_wheel/setup.* dist/${1}/
 (cd dist/${1} && ${PIP_BIN} wheel .)
