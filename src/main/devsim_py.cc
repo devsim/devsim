@@ -60,5 +60,6 @@ void devsim_initialization()
     features["math_libraries"] = CreateObjectHolderList(MathLoader::GetLoadedMathDLLs());
 
     gdata.AddDBEntryOnGlobal("info", ObjectHolder(features));
+    gdata.AddDBEntryOnGlobal("symbolic_iteration_limit", ObjectHolder(1));
 }
 

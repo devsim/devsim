@@ -632,6 +632,19 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 
   bool converged = false;
 
+  size_t symbolic_iter_limit = 1;
+  if (const auto & [isset, objectholder] = gdata.GetDBEntryOnGlobal("symbolic_iteration_limit"); isset)
+  {
+    if (auto [isvalid, ival] = objectholder.GetInteger(); isvalid)
+    {
+      symbolic_iter_limit = static_cast<decltype(symbolic_iter_limit)>(ival);
+    }
+    else
+    {
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, R"(Global parameter "symbolic_iteration_limit" must be an integer value)" "\n");
+    }
+  }
+
   BackupSolutions();
 
   /////
@@ -702,6 +715,17 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
     matrix->Finalize();
 
 //        std::cerr << "Begin Solve Matrix\n";
+    if (iter <= symbolic_iter_limit)
+    {
+      if (auto cm = dynamic_cast<CompressedMatrix<DoubleType> *>(matrix.get()); cm)
+      {
+        if (cm->GetSymbolicStatus() == SymbolicStatus_t::SAME_SYMBOLIC)
+        {
+          cm->SetSymbolicStatus(SymbolicStatus_t::NEW_SYMBOLIC);
+        }
+      }
+    }
+
     bool solveok = itermethod.Solve(*matrix, *preconditioner, result, rhs);
     if (!solveok)
     {

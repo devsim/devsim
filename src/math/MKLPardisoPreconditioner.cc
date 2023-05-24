@@ -195,13 +195,8 @@ bool MKLPardisoData::LUFactorMatrixImpl(CompressedMatrix<DoubleType> *cm, const 
 #endif
 
   SetComplex(cm);
-  // TODO: CONSIDER LU TYPE
-  // TODO: Assert matrix size
   const IntVec_t    &Rows = cm->GetRows();
   const IntVec_t    &Cols = cm->GetCols();
-  //dsAssert(Vals.size() == Cols.size(), "UNEXPECTED");
-
-  // TODO: symbolic factorization, need to determine if this is worth reusing each time
 
 #ifdef USE_CCM
   ja = &Rows[0];
@@ -370,7 +365,6 @@ MKLPardisoPreconditioner<DoubleType>::MKLPardisoPreconditioner(size_t sz, PEnum:
 {
   mklpardisodata_ = new MKLPardisoData(sz);
 
-// TODO: move this to LUFactor
   if (transpose == PEnum::TransposeType_t::TRANS)
   {
     mklpardisodata_->SetTranspose(true);

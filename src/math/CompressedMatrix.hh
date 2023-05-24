@@ -52,6 +52,11 @@ class CompressedMatrix : public Matrix<DoubleType> {
                                     return compressionType_;
                                   }
 
+        void SetSymbolicStatus(SymbolicStatus_t x)
+        {
+          symbolicstatus_ = x;
+        }
+
         SymbolicStatus_t GetSymbolicStatus() const {
                                     return symbolicstatus_;
                                   }
