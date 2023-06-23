@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/devsim/devsim.svg?branch=master)](https://travis-ci.org/devsim/devsim)
 [![Build status](https://ci.appveyor.com/api/projects/status/github/devsim/devsim?branch=master&svg=true)](https://ci.appveyor.com/project/devsim/devsim)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03898/status.svg)](https://doi.org/10.21105/joss.03898)
 
 # DEVSIM
 
