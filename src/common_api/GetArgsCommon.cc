@@ -21,7 +21,6 @@ GetArgs::GetArgs(optionList opts) : options(opts)
 
 ObjectHolder GetArgs::GetObjectHolder(const std::string &s) const
 {
-#error "find way to get a default option from parameter, e.g. solve.max_iterations, etc"
   ObjectHolder val;
   ObjectHolderMap_t::const_iterator it = selections.find(s);
   if (it != selections.end())

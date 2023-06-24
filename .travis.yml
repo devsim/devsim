@@ -40,17 +40,16 @@ git:
 
 before_script:
   - export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 
+  - git submodule update --init --depth 1
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
       if [ "$COMPILER" == "gcc" ]; then
         brew install gcc@9 cmake;
       elif [ "$COMPILER" == "clang" ]; then
         brew install cmake;
-        git submodule update --init --depth 1 external/eigen;
       fi
     fi
   # specifically for pypi deployment
   - export README_BASE_URL="https://github.com/devsim/devsim/blob/${TRAVIS_TAG}"
-  - git submodule update --depth 1
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
