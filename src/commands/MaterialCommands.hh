@@ -15,6 +15,7 @@ void addDBEntryCmd(CommandHandler &);
 void getDBEntryCmd(CommandHandler &);
 void getParameterCmd(CommandHandler &);
 void openDBCmd(CommandHandler &);
+void MaterialCommandMissing(CommandHandler &);
 }
 
 #endif

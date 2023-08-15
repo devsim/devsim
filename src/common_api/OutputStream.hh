@@ -18,15 +18,10 @@ class OutputStream {
         static Verbosity_t GetVerbosity(const std::string &);
 
     private:
-
-
         OutputStream();
         OutputStream(const OutputStream &);
         OutputStream & operator=(const OutputStream &);
-
-        static OutputStream *instance;
         std::string          verbosity;
-        static void         *interpreter;
 };
 #endif
 

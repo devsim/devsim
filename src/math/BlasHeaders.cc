@@ -186,10 +186,12 @@ static symtable math_function_table[] = {
   // PARDISO
   {"PARDISO",  reinterpret_cast<void **>(&blas_table::PARDISO)},
   {"mkl_get_version_string",   reinterpret_cast<void **>(&blas_table::mkl_get_version_string)},
+#if defined(USE_LAPACK)
   {TOSTRING(external_dgetrf), reinterpret_cast<void **>(&blas_table::dgetrf)},
   {TOSTRING(external_zgetrf), reinterpret_cast<void **>(&blas_table::zgetrf)},
   {TOSTRING(external_dgetrs), reinterpret_cast<void **>(&blas_table::dgetrs)},
   {TOSTRING(external_zgetrs), reinterpret_cast<void **>(&blas_table::zgetrs)},
+#endif
   {TOSTRING(external_drotg),  reinterpret_cast<void **>(&blas_table::drotg)},
   {TOSTRING(external_zrotg),  reinterpret_cast<void **>(&blas_table::zrotg)},
 };

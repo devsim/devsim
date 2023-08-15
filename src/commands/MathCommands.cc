@@ -11,7 +11,10 @@ SPDX-License-Identifier: Apache-2.0
 
 #include "Newton.hh"
 #include "DirectLinearSolver.hh"
+
+#if defined(USE_ITERATIVE_SOLVER)
 #include "IterativeLinearSolver.hh"
+#endif
 
 #include "ContactEquationHolder.hh"
 #include "Region.hh"
@@ -128,7 +131,15 @@ solveCmdImpl(CommandHandler &data)
   }
   else if (solver_type == "iterative")
   {
+#if defined(USE_ITERATIVE_SOLVER)
     linearSolver = std::unique_ptr<dsMath::LinearSolver<DoubleType>>(new dsMath::IterativeLinearSolver<DoubleType>);
+#else
+    std::ostringstream os;
+    os << "\"iterative\" is not a supported simulation type in this build\n";
+    errorString = os.str();
+    data.SetErrorResult(errorString);
+    return;
+#endif
   }
   else
   {

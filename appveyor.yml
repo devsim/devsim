@@ -87,7 +87,12 @@ matrix:
 install:
   - SET README_BASE_URL=https://github.com/devsim/devsim/blob/%TRAVIS_TAG%
   - cd %APPVEYOR_BUILD_FOLDER%
-  - git submodule update --init --depth 1
+  - git submodule update --init --depth 1 external/eigen;
+  - git submodule update --init --depth 1 external/symdiff
+  - git submodule update --init --depth 1 external/boostorg/config
+  - git submodule update --init --depth 1 external/boostorg/multiprecision
+  - git submodule update --init --depth 1 external/boostorg/math
+  - git submodule update --init --depth 1 external/umfpack_lgpl
   - IF "%PLATFORM%"=="msys" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
   - IF "%PLATFORM%"=="x64" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
   - IF "%PLATFORM%"=="x86" SET CONDA_BIN=c:\Miniconda37\condabin\conda.bat

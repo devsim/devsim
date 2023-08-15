@@ -11,7 +11,9 @@ SPDX-License-Identifier: Apache-2.0
 #include "GlobalData.hh"
 #include "Region.hh"
 #include "CheckFunctions.hh"
+#if defined(USE_MATERIALDB)
 #include "MaterialDB.hh"
+#endif
 #include "Device.hh"
 #include "Contact.hh"
 
@@ -284,6 +286,7 @@ getParameterCmd(CommandHandler &data)
     return;
 }
 
+#if defined(USE_MATERIALDB)
 void
 openDBCmd(CommandHandler &data)
 {
@@ -507,18 +510,43 @@ getDBEntryCmd(CommandHandler &data)
   }
 }
 
+#else
+void
+MaterialCommandMissing(CommandHandler &data)
+{
+  std::string errorString;
+  std::ostringstream os;
+  const std::string commandName = data.GetCommandName();
+  os << "Material database command \"" << commandName << "\" not supported on this build\n";
+  errorString = os.str();
+  data.SetErrorResult(errorString);
+  return;
+}
+#endif
+
+
+
 Commands MaterialCommands[] = {
     {"set_parameter", getParameterCmd},
     {"get_parameter", getParameterCmd},
     {"get_parameter_list", getParameterCmd},
     {"set_material", getParameterCmd},
     {"get_material", getParameterCmd},
+#if defined(USE_MATERIALDB)
     {"create_db",       openDBCmd},
     {"open_db",         openDBCmd},
     {"close_db",        openDBCmd},
     {"save_db",         openDBCmd},
     {"add_db_entry",    addDBEntryCmd},
     {"get_db_entry",    getDBEntryCmd},
+#else
+    {"create_db",       MaterialCommandMissing},
+    {"open_db",         MaterialCommandMissing},
+    {"close_db",        MaterialCommandMissing},
+    {"save_db",         MaterialCommandMissing},
+    {"add_db_entry",    MaterialCommandMissing},
+    {"get_db_entry",    MaterialCommandMissing},
+#endif
     {"get_dimension",   getParameterCmd},
     {nullptr, nullptr}
 };

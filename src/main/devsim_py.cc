@@ -9,7 +9,9 @@ SPDX-License-Identifier: Apache-2.0
 #include "DefaultDerivatives.hh"
 #include "FPECheck.hh"
 #include "ObjectHolder.hh"
+#if defined(LOAD_MATHLIBS)
 #include "BlasHeaders.hh"
+#endif
 #include "OutputStream.hh"
 #include <sstream>
 
@@ -30,15 +32,17 @@ void devsim_initialization()
     features["extended_precision"] = ObjectHolder(false);
 #endif
     ObjectHolderList_t solvers;
-#ifdef USE_MKL_PARDISO
+#if defined (USE_MKL_PARDISO)
     solvers.push_back(ObjectHolder("mkl_pardiso"));
-#else
-    solvers.push_back(ObjectHolder("unknown"));
-    features["direct_solver"] = ObjectHolder(solvers);
 #endif
+#if defined (USE_SUPERLU_PRECONDITIONER)
+    solvers.push_back(ObjectHolder("superlu"));
+#endif
+    features["direct_solver"] = ObjectHolder(solvers);
     features["license"] = ObjectHolder("Apache License, Version 2.0");
     features["website"] = ObjectHolder("https://devsim.org");
 
+#if defined(LOAD_MATHLIBS)
     std::string errors;
     auto ret = MathLoader::LoadMathLibraries(errors);
     if (ret == MathLoader::LoaderMessages_t::MKL_LOADED)
@@ -58,6 +62,9 @@ void devsim_initialization()
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, errors);
     }
     features["math_libraries"] = CreateObjectHolderList(MathLoader::GetLoadedMathDLLs());
+#elif defined(USE_SUPERLU_PRECONDITIONER)
+    gdata.AddDBEntryOnGlobal("direct_solver", ObjectHolder("superlu"));
+#endif
 
     gdata.AddDBEntryOnGlobal("info", ObjectHolder(features));
     gdata.AddDBEntryOnGlobal("symbolic_iteration_limit", ObjectHolder(1));

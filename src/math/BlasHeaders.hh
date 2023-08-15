@@ -5,6 +5,10 @@ Copyright 2013 DEVSIM LLC
 SPDX-License-Identifier: Apache-2.0
 ***/
 
+#if !defined(LOAD_MATHLIBS)
+#error "Do not include if LOAD_MATHLIBS is not set"
+#endif
+
 #ifndef BLASHEADERS_HH
 #define BLASHEADERS_HH
 #include <complex>

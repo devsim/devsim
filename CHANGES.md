@@ -17,6 +17,18 @@ solve(symbolic_iteration_limit = -1)
 ```
 where setting the value to ``-1`` will create a new symbolic factorization for all nonlinear iterations.  Setting the value to a number greater than ``0`` will mark all iterations afterwards for reusing the previous symbolic factorization.
 
+### LAPACK is optional
+
+When LAPACK functions are not available, it is now possible to use Eigen instead.  BLAS is still required.  It is up to the direct solver being used to determine necessary LAPACK functions.
+
+### Self contained build
+
+### Reset simulator
+
+### SuperLU Preconditioner
+
+This is now used for self contained builds.
+
 ### Citing DEVSIM
 
 [CITATION.md](CITATION.md) has been updated with recent articles written about the simulator.

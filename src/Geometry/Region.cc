@@ -22,8 +22,11 @@ SPDX-License-Identifier: Apache-2.0
 #include "TriangleElementField.hh"
 #include "TetrahedronElementField.hh"
 #include "EdgeData.hh"
+#if defined(USE_MATERIALDB)
 #include "MaterialDB.hh"
+#endif
 #include "GlobalData.hh"
+#include "ObjectHolder.hh"
 
 #include "Interface.hh"
 #include "InterfaceNodeModel.hh"
@@ -1535,6 +1538,7 @@ size_t Region::GetEdgeIndexOnTetrahedron(const Tetrahedron &t, ConstEdgePtr ep) 
 
 void Region::SetMaterial(const std::string &new_material)
 {
+#if defined(USE_MATERIALDB) 
   //// Our global parameter db has precedence
   GlobalData &gd = GlobalData::GetInstance();
   MaterialDB &md = MaterialDB::GetInstance();
@@ -1583,6 +1587,7 @@ void Region::SetMaterial(const std::string &new_material)
         }
     }
   }
+#endif
 
   materialName = new_material;
 }

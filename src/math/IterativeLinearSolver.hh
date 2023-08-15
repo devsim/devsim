@@ -5,6 +5,10 @@ Copyright 2013 DEVSIM LLC
 SPDX-License-Identifier: Apache-2.0
 ***/
 
+#if !defined(USE_ITERATIVE_SOLVER)
+#error "Do not include if USE_ITERATIVE_SOLVER is not set"
+#endif
+
 #ifndef DS_ITERATIVE_LINEAR_SOLVER_HH
 #define DS_ITERATIVE_LINEAR_SOLVER_HH
 #include "LinearSolver.hh"

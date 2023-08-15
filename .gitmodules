@@ -16,3 +16,6 @@
 [submodule "external/boostorg/config"]
 	path = external/boostorg/config
 	url = https://github.com/boostorg/config
+[submodule "external/superlu"]
+	path = external/superlu
+	url = https://github.com/xiaoyeli/superlu

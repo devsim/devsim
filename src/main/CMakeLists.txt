@@ -4,6 +4,10 @@ INCLUDE_DIRECTORIES (
     ../Data
     ../common_api
     ../math
+    ../Circuit/data
+    ../meshing
+    ../MathEval
+    ${SYMDIFF_INCLUDE}
 )
 
 SET (PY3LIBRARIES
@@ -34,7 +38,7 @@ ENDIF (DEVSIM_EXTENDED_PRECISION)
 
 
 IF (PYTHON3)
-ADD_LIBRARY (devsim_py3 SHARED devsim_py.cc $<TARGET_OBJECTS:pythonapi_interpreter_py3>)
+ADD_LIBRARY (devsim_py3 SHARED devsim_py.cc ResetAllData.cc $<TARGET_OBJECTS:pythonapi_interpreter_py3>)
 IF(WIN32)
 TARGET_LINK_LIBRARIES(devsim_py3 ${PY3LIBRARIES} ${PYTHON3_ARCHIVE} ${SUPERLU_ARCHIVE} ${EXTENDED_BLAS_ARCHIVE} ${SQLITE3_ARCHIVE} ${SYMDIFF_ARCHIVE} ${OPTIONAL_LIBS} ${DLOPEN_LIB})
 ELSE(WIN32)

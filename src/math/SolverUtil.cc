@@ -10,11 +10,18 @@ SPDX-License-Identifier: Apache-2.0
 #ifdef USE_MKL_PARDISO
 #include "MKLPardisoPreconditioner.hh"
 #endif
+#ifdef USE_SUPERLU_PRECONDITIONER
+#include "SuperLUPreconditioner.hh"
+#endif
 #include "ExternalPreconditioner.hh"
 #include "LinearSolver.hh"
+#if defined(USE_ITERATIVE_SOLVER)
 #include "IterativeLinearSolver.hh"
+#endif
 #include "CompressedMatrix.hh"
+#if defined(LOAD_MATHLIBS)
 #include "BlasHeaders.hh"
+#endif
 #include "GlobalData.hh"
 #include "ObjectHolder.hh"
 #include "OutputStream.hh"
@@ -26,6 +33,7 @@ namespace {
 enum class DirectSolver {
   UNKNOWN,
   MKLPARDISO,
+  SUPERLU,
   CUSTOM,
 };
 
@@ -45,6 +53,17 @@ DirectSolver GetDirectSolver()
       ret = DirectSolver::CUSTOM;
       std::ostringstream os;
       os << "Solver \"mkl_pardiso\" not supported in this build.\n";
+      OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
+#endif
+    }
+    else if (val == "superlu")
+    {
+#ifdef USE_SUPERLU_PRECONDITIONER
+      ret = DirectSolver::SUPERLU;
+#else
+      ret = DirectSolver::CUSTOM;
+      std::ostringstream os;
+      os << "Solver \"superlu\" not supported in this build.\n";
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
 #endif
     }
@@ -72,7 +91,7 @@ DirectSolver GetDirectSolver()
     else
     {
       std::ostringstream os;
-      os << "Unrecognized \"direct_solver\" parameter value \"" << val << "\". Valid options are \"mkl_pardiso\", or \"custom\".\n";
+      os << "Unrecognized \"direct_solver\" parameter value \"" << val << "\". Valid options are \"mkl_pardiso\", \"superlu\" or \"custom\".\n";
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
     return ret;
@@ -81,12 +100,14 @@ DirectSolver GetDirectSolver()
   std::ostringstream os;
   os << "Parameter \"direct_solver\" parameter not set. Valid options are \"mkl_pardiso\", or \"custom\".\n";
 
+#if defined(USE_MKL_PARDISO)
   if (MathLoader::IsMKLLoaded())
   {
     os << "Using \"mkl_pardiso\" direct solver.\n";
     ret = DirectSolver::MKLPARDISO;
   }
   else
+#endif
   {
     os << "Using \"custom\" direct solver.\n";
     ret = DirectSolver::CUSTOM;
@@ -134,6 +155,12 @@ Preconditioner<T> *CreateDirectPreconditioner(size_t numeqns)
     preconditioner = new MKLPardisoPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS);
   }
 #endif
+#if defined (USE_SUPERLU_PRECONDITIONER)
+  else if (s == DirectSolver::SUPERLU)
+  {
+    preconditioner = new SuperLUPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+  }
+#endif
   else
   {
     dsAssert(false, "Unexpected Solver Type");
@@ -147,11 +174,13 @@ Preconditioner<T> *CreatePreconditioner(LinearSolver<T> &itermethod, size_t nume
 {
   Preconditioner<T> *preconditioner = nullptr;
 
+#if defined(LOAD_MATHLIBS)
   if (dynamic_cast<IterativeLinearSolver<T> *>(&itermethod))
   {
     preconditioner = new BlockPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS);
   }
   else
+#endif
   {
     preconditioner = CreateDirectPreconditioner<T>(numeqns);
   }
@@ -174,6 +203,12 @@ Preconditioner<DoubleType> *CreateACPreconditioner(PEnum::TransposeType_t trans_
     else if (s == DirectSolver::MKLPARDISO)
     {
       preconditioner = new MKLPardisoPreconditioner<DoubleType>(numeqns, trans_type);
+    }
+#endif
+#ifdef USE_SUPERLU_PRECONDITIONER
+    else if (s == DirectSolver::SUPERLU)
+    {
+      preconditioner = new SuperLUPreconditioner<DoubleType>(numeqns, trans_type, PEnum::LUType_t::FULL);
     }
 #endif
     else

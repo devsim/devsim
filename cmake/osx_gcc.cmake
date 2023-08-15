@@ -24,6 +24,6 @@ SET (ZLIB_ARCHIVE -lz)
 
 
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
-SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_static.a)
+SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)
 
 

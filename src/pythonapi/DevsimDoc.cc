@@ -1,4 +1,10 @@
 
+static const char reset_devsim_doc[] =
+R"(    devsim.reset_devsim
+
+    Resets all data for clean restart. 
+)";
+
 static const char add_circuit_node_doc[] =
 R"(    devsim.add_circuit_node (name, value, variable_update)
 

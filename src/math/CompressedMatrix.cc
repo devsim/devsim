@@ -235,22 +235,26 @@ const dsMath::DoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetImag() c
 }
 
 template <typename DoubleType>
-const dsMath::ComplexDoubleVec_t<DoubleType> CompressedMatrix<DoubleType>::GetComplex() const
+const dsMath::ComplexDoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetComplex() const
 {
   dsAssert(compressed, "UNEXPECTED");
   dsAssert(Ax_.size() == Az_.size(), "UNEXPECTED");
 
   size_t len = Ax_.size();
 
-  ComplexDoubleVec_t<DoubleType> ret(len);
+  Axz_.resize(len);
 
-  /// Not the most efficient
   for (size_t i = 0; i < len; ++i)
   {
-    ret[i] = ComplexDouble_t<DoubleType>(Ax_[i], Az_[i]);
+    Axz_[i].real(Ax_[i]);
   }
 
-  return ret;
+  for (size_t i = 0; i < len; ++i)
+  {
+    Axz_[i].imag(Az_[i]);
+  }
+
+  return Axz_;
 }
 
 template <typename DoubleType>

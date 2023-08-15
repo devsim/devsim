@@ -1,8 +1,10 @@
 SET (CXX_SRCS
     GlobalData.cc
-    MaterialDBEntry.cc
-    MaterialDB.cc
 )
+
+IF (DEVSIM_MATERIALDB)
+SET (CXX_SRCS ${CXX_SRCS} MaterialDBEntry.cc MaterialDB.cc)
+ENDIF ()
 
 INCLUDE_DIRECTORIES (
      ../utility
