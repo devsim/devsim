@@ -337,8 +337,7 @@ struct pod_info<int>
   constexpr static const char *ptype = "i";
 };
 
-#if defined(_WIN32)
-#elif (UINTPTR_MAX > UINT_MAX)
+#if defined(_WIN32) || (UINTPTR_MAX > UINT_MAX)
 template <>
 struct pod_info<ptrdiff_t>
 {
