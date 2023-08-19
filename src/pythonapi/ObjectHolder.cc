@@ -507,7 +507,7 @@ bool ObjectHolder::GetIntegerList(std::vector<int> &values) const
         }
     }();
 #if 0
-#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32) || defined(__ANDROID__)
+#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32)
   static_assert(sizeof(long) == sizeof(int), "wrong sizeof(long)");
   const std::string search("iIlL");
 #elif defined(__linux__) || defined(__APPLE__)
@@ -526,6 +526,21 @@ bool ObjectHolder::GetIntegerList(std::vector<int> &values) const
 
 bool ObjectHolder::GetLongList(std::vector<ptrdiff_t> &values) const
 {
+    static const auto search = []()->auto {
+        if (sizeof(long) == sizeof(int))
+        {
+          return std::string("qQ");
+        }
+        else if (sizeof(long) == sizeof(long long))
+        {
+          return std::string("lLqQ");
+        }
+        else
+        {
+            dsAssert(false, "fix int conversion");
+        }
+    }();
+#if 0
 #if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32)
   static_assert(sizeof(long) == sizeof(int), "wrong sizeof(long)");
   const std::string search("qQ");
@@ -535,6 +550,8 @@ bool ObjectHolder::GetLongList(std::vector<ptrdiff_t> &values) const
 #else
 #error "FIX TYPE"
 #endif
+#endif
+
   if (!GetArrayFromBytes<ptrdiff_t>(*this, values, search, sizeof(ptrdiff_t)))
   {
     return GetFromList<ptrdiff_t>(*this, values);
