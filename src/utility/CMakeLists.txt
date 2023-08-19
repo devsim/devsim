@@ -18,7 +18,7 @@ INCLUDE_DIRECTORIES (
     ${ZLIB_INCLUDE}
 )
 
-ADD_LIBRARY (utility ${CXX_SRCS})
+ADD_LIBRARY (utility STATIC ${CXX_SRCS})
 
 #ADD_EXECUTABLE (test_base64 test_base64.cc)
 #TARGET_LINK_LIBRARIES(test_base64 utility ${ZLIB_ARCHIVE})

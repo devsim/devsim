@@ -18,4 +18,4 @@ INCLUDE_DIRECTORIES (
     ../common_api
 )
 
-ADD_LIBRARY (Equation ${CXX_SRCS})
+ADD_LIBRARY (Equation STATIC ${CXX_SRCS})
