@@ -492,7 +492,22 @@ bool ObjectHolder::GetComplexDoubleList(std::vector<std::complex<double>> &value
 
 bool ObjectHolder::GetIntegerList(std::vector<int> &values) const
 {
-#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32)
+    static const auto search = []()->auto {
+        if (sizeof(long) == sizeof(int))
+        {
+          return std::string("iIlL");
+        }
+        else if (sizeof(long) == sizeof(long long))
+        {
+          return std::string("iI");
+        }
+        else
+        {
+            dsAssert(false, "fix int conversion");
+        }
+    }();
+#if 0
+#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32) || defined(__ANDROID__)
   static_assert(sizeof(long) == sizeof(int), "wrong sizeof(long)");
   const std::string search("iIlL");
 #elif defined(__linux__) || defined(__APPLE__)
@@ -500,6 +515,7 @@ bool ObjectHolder::GetIntegerList(std::vector<int> &values) const
   const std::string search("iI");
 #else
 #error "FIX TYPE"
+#endif
 #endif
   if (!GetArrayFromBytes<int>(*this, values, search, sizeof(int)))
   {
