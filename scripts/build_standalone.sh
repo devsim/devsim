@@ -83,4 +83,7 @@ ${CMAKE} \
       -B bundle/devsim
 
 (cd bundle/devsim && ${CMAKE} --build . -- -j8)
-
+mkdir -p devsim
+cp -v dist/dist_standalone/setup.py .
+cp -v dist/dist_standalone/__init__.py devsim
+rsync -rvP python_packages devsim
