@@ -55,7 +55,8 @@ commit ${COMMIT}
 EOF
 tar czvf ${DIST_VER}.tgz ${DIST_DIR}
 
-cp -f dist/bdist_wheel_standalone/setup.* ${1}/
+cp -f dist/bdist_wheel_standalone/setup.py ${1}/
+cp -f dist/bdist_wheel_standalone/setup.cfg ${1}/
 (cd ${1} && ${PIP_BIN} wheel .)
 (cd ${1} && mv -v *.whl ..)
 
