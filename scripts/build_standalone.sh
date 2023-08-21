@@ -6,8 +6,8 @@ export CMAKE=cmake
 export CMAKE_CXX_FLAGS=""
 export CC=clang
 export CXX=clang++
-export PYTHON3_BIN=python3
-export PYTHON3_INCLUDE=$(python3 -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_BIN=python
+export PYTHON3_INCLUDE=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
 
 mkdir -p bundle/superlu
@@ -84,6 +84,8 @@ ${CMAKE} \
 
 (cd bundle/devsim && ${CMAKE} --build . -- -j8)
 mkdir -p devsim
+cp -v bundle/devsim/src/main/devsim_py3.so devsim
+cp -v dist/bdist_wheel/setup.cfg .
 cp -v dist/dist_standalone/setup.py .
 cp -v dist/dist_standalone/__init__.py devsim
 rsync -rvP python_packages devsim
