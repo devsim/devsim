@@ -12,6 +12,7 @@ OPTION(EIGEN_DENSE_DOUBLE "Use eigen for the dense matrix in double precision" O
 OPTION(SUPERLU_PRECONDITIONER "Use superlu for the preconditioner" OFF)
 OPTION(DEVSIM_LOAD_MATHLIBS "Load BLAS/LAPACK libraries at startup" ON)
 OPTION(DEVSIM_MATERIALDB "Use Material DB (requires sqlite)" ON)
+OPTION(STATICONLY    "Build static only" OFF)
 
 
 set (CMAKE_CXX_STANDARD 17)
