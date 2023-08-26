@@ -53,6 +53,7 @@ before_script:
   - git submodule update --init --depth 1 external/symdiff
   - git submodule update --init --depth 1 external/boostorg/multiprecision
   - git submodule update --init --depth 1 external/boostorg/math
+  - git submodule update --init --depth 1 external/boostorg/config
   - git submodule update --init --depth 1 external/umfpack_lgpl
 
 
