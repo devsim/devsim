@@ -662,7 +662,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 
   ObjectHolderList_t iteration_list;
 
-  const size_t symbolic_iter_max = (std::getenv("DEVSIM_NEW_SYMBOLIC") == std:: nullptr) ? symbolicIterationLimit : size_t(-1);
+  const size_t symbolic_iter_max = (std::getenv("DEVSIM_NEW_SYMBOLIC") == nullptr) ? symbolicIterationLimit : size_t(-1);
 
   for (size_t iter = 0; (iter < maxiter) && (!converged) && (divergence_count < maxDivergenceCount); ++iter)
   {
