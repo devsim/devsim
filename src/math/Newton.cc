@@ -35,6 +35,7 @@ SPDX-License-Identifier: Apache-2.0
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <cstdlib>
 using std::abs;
 
 namespace dsMath {
@@ -661,6 +662,8 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 
   ObjectHolderList_t iteration_list;
 
+  const size_t symbolic_iter_max = (std::getenv("DEVSIM_NEW_SYMBOLIC") == std:: nullptr) ? symbolicIterationLimit : size_t(-1);
+
   for (size_t iter = 0; (iter < maxiter) && (!converged) && (divergence_count < maxDivergenceCount); ++iter)
   {
     if (max_error_hit)
@@ -703,7 +706,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 
 //        std::cerr << "Begin Solve Matrix\n";
     // iter is 0 based
-    if (iter < symbolicIterationLimit)
+    if (iter < symbolic_iter_max)
     {
       if (auto cm = dynamic_cast<CompressedMatrix<DoubleType> *>(matrix.get()); cm)
       {

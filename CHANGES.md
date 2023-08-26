@@ -9,7 +9,7 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ### Symbolic Factorization Reuse
 
-The Intel MKL solver will now use reuse the symbolic factorization, if the simulation matrix sparse matrix pattern has not changed after the second nonlinear solver iteration.  This reduces simulation time, but can result in numerical differences in the simulation result.
+The Intel MKL solver will now use reuse the symbolic factorization, if the simulation matrix sparse matrix pattern has not changed after the second nonlinear solver iteration.  This reduces simulation time, but can result in numerical differences in the simulation result.  Setting the environment variable, ``DEVSIM_NEW_SYMBOLIC``, will do a new symbolic factorization for each iteration.
 
 This behavior may be controlled by using this option in the solve command
 ```
