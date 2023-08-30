@@ -5,6 +5,12 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.6.1
+
+### Bugs
+
+Fix issue [#116](https://github.com/devsim/devsim/issues/116) where the contact current was being calculated incorrectly in transient mode.
+
 ## Version 2.6.0
 
 ### Symbolic Factorization Reuse

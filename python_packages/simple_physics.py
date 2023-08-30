@@ -4,8 +4,6 @@
 
 from .simple_dd import *
 from devsim import *
-#TODO: make this a class so that paramters can be changed
-contactcharge_node="contactcharge_node"
 contactcharge_edge="contactcharge_edge"
 ece_name="ElectronContinuityEquation"
 hce_name="HoleContinuityEquation"
@@ -136,8 +134,6 @@ def CreateSiliconPotentialOnlyContact(device, region, contact, is_circuit=False)
     '''
     # Means of determining contact charge
     # Same for all contacts
-    if not InNodeModelList(device, region, "contactcharge_node"):
-        CreateNodeModel(device, region, "contactcharge_node", "ElectronCharge*IntrinsicCharge")
     #### TODO: This is the same as D-Field
     if not InEdgeModelList(device, region, "contactcharge_edge"):
         CreateEdgeModel(device, region, "contactcharge_edge", "Permittivity*ElectricField")
@@ -159,12 +155,12 @@ def CreateSiliconPotentialOnlyContact(device, region, contact, is_circuit=False)
     if is_circuit:
         contact_equation(device=device, contact=contact, name="PotentialEquation",
                          node_model=contact_model_name, edge_model="",
-                         node_charge_model="contactcharge_node", edge_charge_model="contactcharge_edge",
+                         node_charge_model="", edge_charge_model="contactcharge_edge",
                          node_current_model="", edge_current_model="", circuit_node=GetContactBiasName(contact))
     else:
         contact_equation(device=device, contact=contact, name="PotentialEquation",
                          node_model=contact_model_name, edge_model="",
-                         node_charge_model="contactcharge_node", edge_charge_model="contactcharge_edge",
+                         node_charge_model="", edge_charge_model="contactcharge_edge",
                          node_current_model="", edge_current_model="")
 
 def CreateSRH(device, region):
