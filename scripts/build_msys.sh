@@ -14,13 +14,13 @@ export PYTHON3_ARCHIVE=$(cygpath -w ${CONDA_PREFIX}/libs/python3.lib)
 # this script assumes git clone and submodule initialization has been done
 
 # SYMDIFF build
-(cd external/symdiff && bash ../symdiff_msys.sh && cd msys_x86_64_release && make -j2);
+(cd external/symdiff && bash ../symdiff_msys.sh && cd msys_x86_64_release && make -j3);
 
 # quad precision getrf
-(cd external/getrf && bash setup_msys.sh && cd msys && make -j2)
+(cd external/getrf && bash setup_msys.sh && cd msys && make -j3)
 
 
 bash scripts/setup_msys.sh
-(cd msys_x86_64_release && make -j2)
+(cd msys_x86_64_release && make -j3)
 (cd dist && bash package_msys.sh ${1})
 

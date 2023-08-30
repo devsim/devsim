@@ -39,4 +39,4 @@ INCLUDE_DIRECTORIES (
     ../common_api
 )
 
-ADD_LIBRARY (models ${CXX_SRCS})
+ADD_LIBRARY (models STATIC ${CXX_SRCS})

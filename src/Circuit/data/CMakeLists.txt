@@ -13,4 +13,4 @@ INCLUDE_DIRECTORIES (
     ../../common_api
 )
 
-ADD_LIBRARY (circuitData ${CXX_SRCS})
+ADD_LIBRARY (circuitData STATIC ${CXX_SRCS})

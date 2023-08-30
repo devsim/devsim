@@ -52,6 +52,11 @@ class CompressedMatrix : public Matrix<DoubleType> {
                                     return compressionType_;
                                   }
 
+        void SetSymbolicStatus(SymbolicStatus_t x)
+        {
+          symbolicstatus_ = x;
+        }
+
         SymbolicStatus_t GetSymbolicStatus() const {
                                     return symbolicstatus_;
                                   }
@@ -65,7 +70,7 @@ class CompressedMatrix : public Matrix<DoubleType> {
         const IntVec_t                            &GetRows() const;
         const DoubleVec_t<DoubleType>             &GetReal() const;
         const DoubleVec_t<DoubleType>             &GetImag() const;
-        const ComplexDoubleVec_t<DoubleType>      GetComplex() const;
+        const ComplexDoubleVec_t<DoubleType>      &GetComplex() const;
 
         CompressedMatrix(size_t, MatrixType, CompressionType);
 
@@ -109,8 +114,11 @@ class CompressedMatrix : public Matrix<DoubleType> {
         //// Should these just be one complex vector
         DoubleVec_t<DoubleType> Ax_;
         DoubleVec_t<DoubleType> Az_;
+        mutable ComplexDoubleVec_t<DoubleType> Axz_;
         bool compressed;
         SymbolicStatus_t symbolicstatus_;
+
+        static const inline DoubleType DTZERO{};
 };
 
 }

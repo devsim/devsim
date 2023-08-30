@@ -64,7 +64,7 @@ template <typename DoubleType>
 Vector<DoubleType> GetCenter(const Tetrahedron &);
 
 template <typename DoubleType>
-Vector<DoubleType> GetCenter(const std::vector<ConstNodePtr> &nodes);
+Vector<DoubleType> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes);
 
 #endif
 

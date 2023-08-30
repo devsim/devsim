@@ -5,6 +5,10 @@ Copyright 2013 DEVSIM LLC
 SPDX-License-Identifier: Apache-2.0
 ***/
 
+#if !defined(USE_MATERIALDB)
+#error "Do not include if USE_MATERIALDB is not set"
+#endif
+
 #ifndef MATERIALDB_HH
 #define MATERIALDB_HH
 #include <string>
@@ -75,4 +79,3 @@ class MaterialDB
       sqlite3          *sqlite_;
 };
 #endif
-

@@ -58,7 +58,7 @@ const std::vector<ConstNodePtr> &Tetrahedron::GetFENodeList() const
 
 
 template <typename DoubleType>
-Vector<DoubleType> GetCenter(const std::vector<ConstNodePtr> &nodes)
+Vector<DoubleType> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes)
 {
   const Vector<DoubleType> &v0 = ConvertPosition<DoubleType>(nodes[0]->Position());
 
@@ -105,16 +105,16 @@ Vector<DoubleType> GetCenter(const Tetrahedron &tet)
 {
   const std::vector<ConstNodePtr> &nodes = tet.GetNodeList();
 
-  return GetCenter<DoubleType>(nodes);
+  return GetTetrahedronCenter<DoubleType>(nodes);
 }
 
 
-template Vector<double> GetCenter(const std::vector<ConstNodePtr> &nodes);
+template Vector<double> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes);
 template Vector<double> GetCenter(const Tetrahedron &tet);
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
-template Vector<float128> GetCenter(const std::vector<ConstNodePtr> &nodes);
+template Vector<float128> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes);
 template Vector<float128> GetCenter(const Tetrahedron &tet);
 #endif
 

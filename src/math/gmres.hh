@@ -23,6 +23,10 @@ This file is derived from from:
 http://math.nist.gov/iml++/gmres.h.txt
 */
 
+#if !defined(USE_BLAS)
+#error "Do not include if USE_BLAS is not set"
+#endif
+
 #ifndef IML_GMRES_HH
 #define IML_GMRES_HH
 #include "dsMathTypes.hh"

@@ -26,4 +26,4 @@ INCLUDE_DIRECTORIES (
      ../Data
 )
 
-ADD_LIBRARY (Geometry ${CXX_SRCS})
+ADD_LIBRARY (Geometry STATIC ${CXX_SRCS})

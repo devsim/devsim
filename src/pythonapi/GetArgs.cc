@@ -19,11 +19,6 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
   bool status = false;
 
   CommandHandler &handler = *tdata.command_handler_;
-#if 0
-  Tcl_Obj *const* objv = tdata.objv_;
-  const int objc = tdata.objc_;
-  Tcl_Interp *interp = tdata.interp_;
-#endif
 
   ObjectHolder hash(tdata.kwargs_);
   ObjectHolderMap_t hashmap;
@@ -37,7 +32,6 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
     const std::string &optname = it->first;
     if (!optname.empty())
     {
-      /// Get the stuff past the dash
       if (optionMap.count(optname))
       {
         Option     *opt  = optionMap[optname];

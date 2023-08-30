@@ -1,4 +1,5 @@
 // Geometry Commands
+DS_FUNCTION_TABLE(reset_devsim,       dsCommand::resetDevsimCmd)
 DS_FUNCTION_TABLE(get_device_list,    dsCommand::getDeviceListCmd)
 DS_FUNCTION_TABLE(get_region_list,    dsCommand::getRegionListCmd)
 DS_FUNCTION_TABLE(get_interface_list, dsCommand::getRegionListCmd)
@@ -10,12 +11,21 @@ DS_FUNCTION_TABLE(get_parameter,      dsCommand::getParameterCmd)
 DS_FUNCTION_TABLE(get_parameter_list, dsCommand::getParameterCmd)
 DS_FUNCTION_TABLE(set_material,       dsCommand::getParameterCmd)
 DS_FUNCTION_TABLE(get_material,       dsCommand::getParameterCmd)
+#if defined(USE_MATERIALDB)
 DS_FUNCTION_TABLE(create_db,          dsCommand::openDBCmd)
 DS_FUNCTION_TABLE(open_db,            dsCommand::openDBCmd)
 DS_FUNCTION_TABLE(close_db,           dsCommand::openDBCmd)
 DS_FUNCTION_TABLE(save_db,            dsCommand::openDBCmd)
 DS_FUNCTION_TABLE(add_db_entry,       dsCommand::addDBEntryCmd)
 DS_FUNCTION_TABLE(get_db_entry,       dsCommand::getDBEntryCmd)
+#else
+DS_FUNCTION_TABLE(create_db,          dsCommand::MaterialCommandMissing)
+DS_FUNCTION_TABLE(open_db,            dsCommand::MaterialCommandMissing)
+DS_FUNCTION_TABLE(close_db,           dsCommand::MaterialCommandMissing)
+DS_FUNCTION_TABLE(save_db,            dsCommand::MaterialCommandMissing)
+DS_FUNCTION_TABLE(add_db_entry,       dsCommand::MaterialCommandMissing)
+DS_FUNCTION_TABLE(get_db_entry,       dsCommand::MaterialCommandMissing)
+#endif
 DS_FUNCTION_TABLE(get_dimension,      dsCommand::getParameterCmd)
 // Model Commands
 DS_FUNCTION_TABLE(contact_edge_model,         dsCommand::createContactNodeModelCmd)

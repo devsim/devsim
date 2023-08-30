@@ -195,13 +195,8 @@ bool MKLPardisoData::LUFactorMatrixImpl(CompressedMatrix<DoubleType> *cm, const 
 #endif
 
   SetComplex(cm);
-  // TODO: CONSIDER LU TYPE
-  // TODO: Assert matrix size
   const IntVec_t    &Rows = cm->GetRows();
   const IntVec_t    &Cols = cm->GetCols();
-  //dsAssert(Vals.size() == Cols.size(), "UNEXPECTED");
-
-  // TODO: symbolic factorization, need to determine if this is worth reusing each time
 
 #ifdef USE_CCM
   ja = &Rows[0];
@@ -212,15 +207,22 @@ bool MKLPardisoData::LUFactorMatrixImpl(CompressedMatrix<DoubleType> *cm, const 
 #endif
   a  = a_input;
 
-  phase = 11;
-  PARDISO (pt, &maxfct, &mnum, &mtype, &phase,
-           &n, a, ia, ja, &idum, &nrhs, &iparm[0], &msglvl, &ddum, &ddum, &error);
+  if (cm->GetSymbolicStatus() == SymbolicStatus_t::NEW_SYMBOLIC)
+  {
+    phase = 11;
+    PARDISO (pt, &maxfct, &mnum, &mtype, &phase,
+             &n, a, ia, ja, &idum, &nrhs, &iparm[0], &msglvl, &ddum, &ddum, &error);
+  }
+  else if (cm->GetSymbolicStatus() == SymbolicStatus_t::SAME_SYMBOLIC)
+  {
+    error = 0;
+  }
+  else
+  {
+    dsAssert(false, "UNEXPECTED");
+    error = 0;
+  }
 
-#if 0
-      std::ostringstream os;
-      os << "Symbolic Error: " << error << "\n";
-      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
-#endif
   if (error != 0)
   {
     // print message
@@ -363,7 +365,6 @@ MKLPardisoPreconditioner<DoubleType>::MKLPardisoPreconditioner(size_t sz, PEnum:
 {
   mklpardisodata_ = new MKLPardisoData(sz);
 
-// TODO: move this to LUFactor
   if (transpose == PEnum::TransposeType_t::TRANS)
   {
     mklpardisodata_->SetTranspose(true);

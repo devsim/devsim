@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
 #include "dsException.hh"
 #include "FPECheck.hh"
 #include "OutputStream.hh"
-#include "import.hh"
+#include "DevsimImport.hh"
 
 #include <new>
 #include <sstream>

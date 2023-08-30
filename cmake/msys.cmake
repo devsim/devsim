@@ -4,9 +4,9 @@ ADD_COMPILE_OPTIONS(-Wall)
 SET (FLEX flex)
 SET (BISON bison)
 
-SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boostorg/math/include ${EXTERNAL_LIB}/boostorg/multiprecision/include)
+SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boostorg/config/include ${EXTERNAL_LIB}/boostorg/math/include ${EXTERNAL_LIB}/boostorg/multiprecision/include)
+ADD_DEFINITIONS(-DBOOST_MP_STANDALONE -DBOOST_MATH_STANDALONE)
 ADD_DEFINITIONS(-DBOOST_NO_CXX14_CONSTEXPR)
-ADD_DEFINITIONS(-DBOOST_MP_STANDALONE -DBOOST_MP_MATH_AVAILABLE)
 #ADD_DEFINITIONS(-DSTATIC_BUILD -D_USE_MATH_DEFINES)
 
 #SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:strict /EHsc ${WARNINGS_IGNORE}")
@@ -29,7 +29,7 @@ SET (ZLIB_INCLUDE ${CONDA_PREFIX}/Library/include)
 SET (ZLIB_ARCHIVE ${CONDA_PREFIX}/Library/lib/zlib.lib)
 
 SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
-SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/msys_x86_64_release/src/engine/libsymdiff_static.a)
+SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/msys_x86_64_release/src/engine/libsymdiff_dynamic.a)
 
 SET (QUADMATH_ARCHIVE "-lquadmath")
 

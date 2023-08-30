@@ -36,5 +36,5 @@ INCLUDE_DIRECTORIES (
     ../common_api
 )
 
-ADD_LIBRARY (GeomModels ${CXX_SRCS})
+ADD_LIBRARY (GeomModels STATIC ${CXX_SRCS})
 

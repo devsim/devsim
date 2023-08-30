@@ -5,6 +5,40 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.6.0
+
+### Symbolic Factorization Reuse
+
+The Intel MKL solver will now use reuse the symbolic factorization, if the simulation matrix sparse matrix pattern has not changed after the second nonlinear solver iteration.  This reduces simulation time, but can result in numerical differences in the simulation result.  Setting the environment variable, ``DEVSIM_NEW_SYMBOLIC``, will do a new symbolic factorization for each iteration.
+
+This behavior may be controlled by using this option in the solve command
+```
+solve(symbolic_iteration_limit = -1)
+```
+where setting the value to ``-1`` will create a new symbolic factorization for all nonlinear iterations.  Setting the value to a number greater than ``0`` will mark all iterations afterwards for reusing the previous symbolic factorization.
+
+### Reset Simulator
+
+The ``reset_devsim`` command will clear all simulator data, so that a program restart is not necessary.
+
+### Build Infrastructure
+
+#### LAPACK is Optional
+
+When LAPACK functions are not available, it is now possible to use Eigen instead.  BLAS is still required.  It is up to the direct solver being used to determine necessary LAPACK functions.
+
+#### Self Contained Build
+
+The build infrastructure is being updated to support a small application build on different systems.  For these builds, some commands are removed and SuperLU is the only available solver.
+
+#### SuperLU Solver
+
+For self contained builds, some commands are removed and SuperLU is the only available solver.
+
+### Citing DEVSIM
+
+[CITATION.md](CITATION.md) has been updated with recent articles written about the simulator.
+
 ## Version 2.5.0
 
 UMFPACK 5.1 is the new default when the Intel MKL is not available, making this the default for the macOS arm64 platform.

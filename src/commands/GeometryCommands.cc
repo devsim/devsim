@@ -22,12 +22,25 @@ SPDX-License-Identifier: Apache-2.0
 #include "Triangle.hh"
 #include "Edge.hh"
 #include "Node.hh"
+#include "OutputStream.hh"
 
 #include <sstream>
 
 using namespace dsValidate;
 
+void devsim_initialization();
+void ResetAllData();
 namespace dsCommand {
+
+void resetDevsimCmd (CommandHandler &data)
+{
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, "Resetting DEVSIM\n");
+    ResetAllData();
+    devsim_initialization();
+    data.SetEmptyResult();
+    return;
+}
+
 /// Get the list of all the devices currently loaded
 /// There is only an error if there are no devices
 void getDeviceListCmd(CommandHandler &data)
@@ -388,6 +401,7 @@ getElementNodeListCmd(CommandHandler &data)
 }
 
 Commands GeometryCommands[] = {
+    {"reset_devsim",                resetDevsimCmd},
     {"get_device_list",             getDeviceListCmd},
     {"get_region_list",             getRegionListCmd},
     {"get_interface_list",          getRegionListCmd},

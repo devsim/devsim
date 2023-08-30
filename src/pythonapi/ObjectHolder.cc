@@ -319,8 +319,8 @@ struct pod_info;
 template <>
 struct pod_info<std::complex<double>>
 {
-  constexpr static auto pmf = nullptr;
-  constexpr static const char *ptype = "d";
+  [[maybe_unused]] constexpr static auto pmf = nullptr;
+  [[maybe_unused]] constexpr static const char *ptype = "d";
 };
 
 template <>
@@ -337,12 +337,13 @@ struct pod_info<int>
   constexpr static const char *ptype = "i";
 };
 
-
+#if defined(_WIN32) || (UINTPTR_MAX > UINT_MAX)
 template <>
 struct pod_info<ptrdiff_t>
 {
   constexpr static auto pmf = &ObjectHolder::GetLong;
 };
+#endif
 
 template <typename T>
 bool GetFromList(const ObjectHolder &oh, std::vector<T> &values)
@@ -492,7 +493,7 @@ bool ObjectHolder::GetComplexDoubleList(std::vector<std::complex<double>> &value
 
 bool ObjectHolder::GetIntegerList(std::vector<int> &values) const
 {
-#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32)
+#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32) || (UINTPTR_MAX == UINT_MAX)
   static_assert(sizeof(long) == sizeof(int), "wrong sizeof(long)");
   const std::string search("iIlL");
 #elif defined(__linux__) || defined(__APPLE__)
@@ -510,7 +511,7 @@ bool ObjectHolder::GetIntegerList(std::vector<int> &values) const
 
 bool ObjectHolder::GetLongList(std::vector<ptrdiff_t> &values) const
 {
-#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32)
+#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32) || (UINTPTR_MAX == UINT_MAX)
   static_assert(sizeof(long) == sizeof(int), "wrong sizeof(long)");
   const std::string search("qQ");
 #elif defined(__linux__) || defined(__APPLE__)
@@ -519,6 +520,7 @@ bool ObjectHolder::GetLongList(std::vector<ptrdiff_t> &values) const
 #else
 #error "FIX TYPE"
 #endif
+
   if (!GetArrayFromBytes<ptrdiff_t>(*this, values, search, sizeof(ptrdiff_t)))
   {
     return GetFromList<ptrdiff_t>(*this, values);

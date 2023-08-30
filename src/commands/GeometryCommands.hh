@@ -11,6 +11,7 @@ class CommandHandler;
 namespace dsCommand {
 struct Commands;
 extern Commands GeometryCommands[];
+void resetDevsimCmd(CommandHandler &);
 void getDeviceListCmd(CommandHandler &);
 void getRegionListCmd(CommandHandler &);
 void getElementNodeListCmd(CommandHandler &);

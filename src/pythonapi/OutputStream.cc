@@ -12,13 +12,6 @@ SPDX-License-Identifier: Apache-2.0
 #include "ObjectHolder.hh"
 #include <iostream>
 
-void *OutputStream::interpreter = nullptr;
-
-void OutputStream::SetInterpreter(void *interp)
-{
-    interpreter = interp;
-}
-
 void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::string &msg)
 {
 

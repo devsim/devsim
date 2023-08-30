@@ -446,6 +446,12 @@ R"(    devsim.get_region_list (device, contact, interface)
        If specified, gets the name of the regions belonging to this interface on the device
 )";
 
+static const char reset_devsim_doc[] =
+R"(    devsim.reset_devsim ()
+
+    Resets all data for clean restart.
+)";
+
 static const char add_db_entry_doc[] =
 R"(    devsim.add_db_entry (material, parameter, value, unit, description)
 
@@ -1959,7 +1965,7 @@ R"(    devsim.set_initial_condition (static_rhs, dynamic_rhs)
 )";
 
 static const char solve_doc[] =
-R"(    devsim.solve (type, solver_type, absolute_error, relative_error, maximum_error, charge_error, gamma, tdelta, maximum_iterations, maximum_divergence, frequency, output_node, info)
+R"(    devsim.solve (type, solver_type, absolute_error, relative_error, maximum_error, charge_error, gamma, tdelta, maximum_iterations, maximum_divergence, frequency, output_node, info, symbolic_iteration_limit)
 
     Call the solver.  A small-signal AC source is set with the circuit voltage source.
 
@@ -1991,4 +1997,6 @@ R"(    devsim.solve (type, solver_type, absolute_error, relative_error, maximum_
        Output circuit node for noise simulation
     info : bool, optional
        Solve command return convergence information (default False)
+    symbolic_iteration_limit : int, optional
+       Reuse symbolic matrix factorization after this number of iterations (default 1)
 )";

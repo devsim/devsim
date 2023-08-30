@@ -1,8 +1,10 @@
 SET (CXX_SRCS
     GlobalData.cc
-    MaterialDBEntry.cc
-    MaterialDB.cc
 )
+
+IF (DEVSIM_MATERIALDB)
+SET (CXX_SRCS ${CXX_SRCS} MaterialDBEntry.cc MaterialDB.cc)
+ENDIF ()
 
 INCLUDE_DIRECTORIES (
      ../utility
@@ -15,4 +17,4 @@ INCLUDE_DIRECTORIES (
      ${SQLITE3_INCLUDE}
 )
 
-ADD_LIBRARY (Data ${CXX_SRCS})
+ADD_LIBRARY (Data STATIC ${CXX_SRCS})
