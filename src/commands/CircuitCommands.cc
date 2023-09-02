@@ -488,7 +488,7 @@ void circuitGetCircuitSolutionListCmd (CommandHandler &data)
     return;
 }
 
-void circuitGetCircuitNodeValueCmd (CommandHandler &data)
+void circuitGetCircuitNodeValueCmd(CommandHandler &data)
 {
     AddGroundNode();
 
@@ -555,6 +555,27 @@ void circuitGetCircuitNodeValueCmd (CommandHandler &data)
         data.SetEmptyResult();
     }
 }
+
+void
+circuitDeleteCircuitCmd(CommandHandler &data)
+{
+  std::string errorString;
+
+  static dsGetArgs::Option option[] =
+  {
+    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
+  };
+
+  bool error = data.processOptions(option, errorString);
+
+  if (error)
+  {
+      data.SetErrorResult(errorString);
+  }
+
+  InstanceKeeper::delete_instance();
+  NodeKeeper::delete_instance();
+};
 
 void
 circuitGetCircuitEquationNumberCmd (CommandHandler &data)

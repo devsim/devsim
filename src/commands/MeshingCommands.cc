@@ -152,6 +152,30 @@ deleteMeshCmd(CommandHandler &data)
 }
 
 void
+getMeshListCmd(CommandHandler &data)
+{
+    std::string errorString;
+
+    using namespace dsGetArgs;
+    static dsGetArgs::Option option[] = {
+        {nullptr,   nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
+    };
+
+    bool error = data.processOptions(option, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
+    dsMesh::MeshKeeper &mdata = dsMesh::MeshKeeper::GetInstance();
+    const auto &meshList = mdata.GetMeshList();
+
+    data.SetStringListResult(GetKeys(meshList));
+}
+
+void
 add1dMeshLineCmd(CommandHandler &data)
 {
     std::string errorString;

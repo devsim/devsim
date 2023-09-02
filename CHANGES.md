@@ -5,6 +5,12 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.6.2
+
+``delete_circuit``
+
+``get_mesh_list``
+
 ## Version 2.6.1
 
 ### Bugs
