@@ -34,6 +34,23 @@ namespace dsCommand {
 
 void resetDevsimCmd (CommandHandler &data)
 {
+    std::string errorString;
+
+    /// Will need someway of setting circuit node
+    /// (This would be on the contact and not the contact equation??)
+    static dsGetArgs::Option option[] =
+    {
+        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
+    };
+
+    bool error = data.processOptions(option, errorString);
+
+    if (error)
+    {
+        data.SetErrorResult(errorString);
+        return;
+    }
+
     OutputStream::WriteOut(OutputStream::OutputType::INFO, "Resetting DEVSIM\n");
     ResetAllData();
     devsim_initialization();
@@ -399,17 +416,6 @@ getElementNodeListCmd(CommandHandler &data)
     data.SetObjectResult(ObjectHolder(olist));
 
 }
-
-Commands GeometryCommands[] = {
-    {"reset_devsim",                resetDevsimCmd},
-    {"get_device_list",             getDeviceListCmd},
-    {"get_region_list",             getRegionListCmd},
-    {"get_interface_list",          getRegionListCmd},
-    {"get_contact_list",            getRegionListCmd},
-    {"get_element_node_list",       getElementNodeListCmd},
-    {nullptr, nullptr}
-};
-
 }
 
 

@@ -797,23 +797,5 @@ getEquationNumbersCmd(CommandHandler &data)
     return;
   }
 }
-
-Commands EquationCommands[] = {
-    {"equation",             createEquationCmd},
-    {"interface_equation",   createInterfaceEquationCmd},
-    {"contact_equation",     createContactEquationCmd},
-    {"custom_equation",      createCustomEquationCmd},
-    {"get_equation_numbers", getEquationNumbersCmd},
-    {"get_equation_list",    getEquationListCmd},
-    {"get_interface_equation_list", getInterfaceEquationListCmd},
-    {"get_contact_equation_list", getContactEquationListCmd},
-    {"delete_equation", deleteEquationCmd},
-    {"delete_interface_equation", deleteInterfaceEquationCmd},
-    {"delete_contact_equation", deleteContactEquationCmd},
-    {"get_equation_command",    deleteEquationCmd},
-    {"get_contact_equation_command", deleteContactEquationCmd},
-    {"get_interface_equation_command", deleteInterfaceEquationCmd},
-    {nullptr, nullptr}
-};
 }
 

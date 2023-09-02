@@ -603,19 +603,5 @@ circuitGetCircuitEquationNumberCmd (CommandHandler &data)
     data.SetIntResult(static_cast<int>(number));
   }
 }
-
-Commands CircuitCommands[] = {
-    {"add_circuit_node",   addCircuitNodeCmd},
-    {"circuit_element",    circuitElementCmd},
-    {"circuit_alter",      circuitAlterCmd},
-    {"circuit_node_alias", circuitNodeAliasCmd},
-    {"get_circuit_node_list", circuitGetCircuitNodeListCmd},
-    {"get_circuit_solution_list", circuitGetCircuitSolutionListCmd},
-    {"get_circuit_node_value", circuitGetCircuitNodeValueCmd},
-    {"set_circuit_node_value", circuitGetCircuitNodeValueCmd},
-    {"get_circuit_equation_number", circuitGetCircuitEquationNumberCmd},
-    {nullptr, nullptr}
-};
-
 }
 

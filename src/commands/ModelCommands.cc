@@ -2158,57 +2158,10 @@ registerFunctionCmd(CommandHandler &data)
 
   data.SetEmptyResult();
 }
-
-Commands ModelCommands[] = {
-    {"contact_edge_model",   createContactNodeModelCmd},
-    {"contact_node_model",   createContactNodeModelCmd},
-    {"debug_triangle_models", debugTriangleCmd},
-    {"delete_edge_model",    printEdgeValuesCmd},
-    {"delete_element_model", printElementEdgeValuesCmd},
-    {"delete_interface_model", getInterfaceValuesCmd},
-    {"delete_node_model",    printNodeValuesCmd},
-    {"edge_from_node_model", createEdgeFromNodeModelCmd},
-    {"edge_average_model",   createEdgeAverageModelCmd},
-    {"edge_model",           createNodeModelCmd},
-    {"element_from_edge_model", createTriangleFromEdgeModelCmd},
-    {"element_pair_from_edge_model", createTriangleFromEdgeModelCmd},
-    {"element_from_node_model", createEdgeFromNodeModelCmd},
-    {"vector_element_model", createVectorElementModelCmd},
-    {"element_model",    createNodeModelCmd},
-    {"get_edge_model_list",  getNodeModelListCmd},
-    {"get_edge_model_values",      printEdgeValuesCmd},
-    {"get_element_model_list",  getNodeModelListCmd},
-    {"get_element_model_values", printElementEdgeValuesCmd},
-    {"get_interface_model_list", getInterfaceModelListCmd},
-    {"get_interface_model_values", getInterfaceValuesCmd},
-    {"get_node_model_list",  getNodeModelListCmd},
-    {"get_node_model_values",      printNodeValuesCmd},
-    {"interface_model",      createInterfaceNodeModelCmd},
-    {"interface_normal_model", createInterfaceNormalModelCmd},
-    {"node_model",           createNodeModelCmd},
-    {"node_solution",        createNodeSolutionCmd},
-    {"edge_solution",        createNodeSolutionCmd},
-    {"element_solution",     createNodeSolutionCmd},
-    {"print_edge_values",    printEdgeValuesCmd},
-    {"print_element_values", printElementEdgeValuesCmd},
-    {"print_node_values",    printNodeValuesCmd},
-    {"register_function",     registerFunctionCmd},
-    {"set_node_values",      setNodeValuesCmd},
-    {"set_node_value",       setNodeValueCmd},
-    {"set_edge_values",      setNodeValuesCmd},
-    {"set_element_values",   setNodeValuesCmd},
-    {"symdiff",               symdiffCmd},
-    {"vector_gradient",      createEdgeFromNodeModelCmd},
-    {"cylindrical_edge_couple",  createCylindricalCmd},
-    {"cylindrical_node_volume",  createCylindricalCmd},
-    {"cylindrical_surface_area", createCylindricalCmd},
-    {nullptr, nullptr}
 //// This node and edge model commands include contact
 //get_node_model_command
 //get_edge_model_command
 //get_element_model_command
 //get_interface_model_command
-};
-
 }
 

@@ -1272,31 +1272,5 @@ void createInterfaceFromNodesCmd(CommandHandler &data)
   dev->AddInterface(interface);
   data.SetEmptyResult();
 }
-
-Commands MeshingCommands[] = {
-    {"add_1d_contact",    add1dContactCmd},
-    {"add_1d_interface",  add1dInterfaceCmd},
-    {"add_1d_mesh_line",  add1dMeshLineCmd},
-    {"add_1d_region",     add1dRegionCmd},
-    {"add_2d_contact",    add2dContactCmd},
-    {"add_2d_interface",  add2dInterfaceCmd},
-    {"add_2d_mesh_line",  add2dMeshLineCmd},
-    {"add_2d_region",     add2dRegionCmd},
-    {"add_gmsh_contact", addGmshContactCmd},
-    {"add_gmsh_interface", addGmshInterfaceCmd},
-    {"add_gmsh_region", addGmshRegionCmd},
-    {"create_1d_mesh",    create1dMeshCmd},
-    {"create_2d_mesh",    create1dMeshCmd},
-    {"create_contact_from_interface", createContactFromInterfaceCmd},
-    {"create_device",     createDeviceCmd},
-    {"create_gmsh_mesh", createGmshMeshCmd},
-    {"create_interface_from_nodes", createInterfaceFromNodesCmd},
-    {"delete_device",     deleteDeviceCmd},
-    {"delete_mesh",       deleteMeshCmd},
-    {"finalize_mesh",     finalizeMeshCmd},
-    {"load_devices",   loadDevicesCmd},
-    {"write_devices",  writeDevicesCmd},
-    {nullptr, nullptr}
-};
 }
 

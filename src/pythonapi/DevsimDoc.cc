@@ -992,6 +992,12 @@ R"(    devsim.delete_mesh (mesh)
        Mesh to delete
 )";
 
+static const char get_mesh_list_doc[] =
+R"(    devsim.get_mesh_list_doc ()
+
+    Delete a mesh so devices can no longer be instantiated from it.
+)";
+
 static const char finalize_mesh_doc[] =
 R"(    devsim.finalize_mesh (mesh)
 

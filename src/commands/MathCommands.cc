@@ -521,15 +521,5 @@ setInitialConditionCmd(CommandHandler &data)
   }
   data.SetEmptyResult();
 }
-
-Commands MathCommands[] = {
-    {"get_contact_current",  getContactCurrentCmd},
-    {"get_contact_charge",   getContactCurrentCmd},
-    {"solve",                solveCmd},
-    {"get_matrix_and_rhs",   getMatrixAndRHSCmd},
-    {"set_initial_condition", setInitialConditionCmd},
-    {nullptr, nullptr}
-};
-
 }
 

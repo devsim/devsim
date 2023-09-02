@@ -13,6 +13,7 @@ struct Commands;
 extern Commands CircuitCommands[];
 void addCircuitNodeCmd(CommandHandler &);
 void circuitAlterCmd(CommandHandler &);
+void circuitDeleteCircuitCmd(CommandHandler &);
 void circuitElementCmd(CommandHandler &);
 void circuitGetCircuitEquationNumberCmd(CommandHandler &);
 void circuitGetCircuitNodeListCmd(CommandHandler &);
