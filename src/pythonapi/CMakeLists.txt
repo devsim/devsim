@@ -5,6 +5,7 @@ SET (CXX_SRCS
    ObjectHolder.cc
    OutputStream.cc
    Interpreter.cc
+   ControlGIL.cc
 )
 
 INCLUDE_DIRECTORIES (

@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 #include "Interpreter.hh"
 #include "dsAssert.hh"
 #include "GetGlobalParameter.hh"
-
+#include "ControlGIL.hh"
 
 Interpreter::Interpreter()
 {
@@ -23,6 +23,8 @@ namespace
 {
 PyObject *GetGlobalDictionary()
 {
+  EnsurePythonGIL gil;
+
   PyObject *main    = PyImport_ImportModule("__main__");
   PyObject *globals = PyModule_GetDict(main);
   return globals;
@@ -30,6 +32,8 @@ PyObject *GetGlobalDictionary()
 
 PyObject *GetDevsimDictionary()
 {
+  EnsurePythonGIL gil;
+
   std::string module_name = TOSTRING(DEVSIM_MODULE_NAME);
   std::string long_module_name = "devsim." + module_name;
 
@@ -48,6 +52,8 @@ PyObject *GetDevsimDictionary()
 
 ObjectHolder GetCommandFromInterpreter(const std::string &commandname, std::string &error_string)
 {
+  EnsurePythonGIL gil;
+
   ObjectHolder ret;
 
   PyObject *globals = nullptr;
@@ -90,6 +96,8 @@ ObjectHolder GetCommandFromInterpreter(const std::string &commandname, std::stri
 
 ObjectHolder CreateTuple(std::vector<ObjectHolder> &objects, size_t beg, size_t len)
 {
+  EnsurePythonGIL gil;
+
   ObjectHolder ret;
 
   PyObject *args = PyTuple_New(len);
@@ -125,6 +133,8 @@ ObjectHolder CreateDictionary(const std::vector<std::pair<std::string, ObjectHol
 
 void ProcessError(const std::string &commandname, std::string &error_string)
 {
+  EnsurePythonGIL gil;
+
   if (PyErr_Occurred())
   {
     PyObject *ptype;
@@ -142,6 +152,8 @@ void ProcessError(const std::string &commandname, std::string &error_string)
 
 bool Interpreter::RunCommand(ObjectHolder &procedure, std::vector<ObjectHolder> &objects)
 {
+  EnsurePythonGIL gil;
+
   bool ret = false;
   error_string_.clear();
 
@@ -165,6 +177,8 @@ bool Interpreter::RunCommand(ObjectHolder &procedure, std::vector<ObjectHolder> 
 
 bool Interpreter::RunInternalCommand(const std::string &commandname, const std::vector<std::pair<std::string, ObjectHolder> > &arguments)
 {
+  EnsurePythonGIL gil;
+
   std::string newname;
   newname.reserve(commandname.size() + 3);
   newname += "ds.";
@@ -177,6 +191,8 @@ bool Interpreter::RunInternalCommand(const std::string &commandname, const std::
 
 bool Interpreter::RunCommand(ObjectHolder &procedure, ObjectHolderMap_t &arguments)
 {
+  EnsurePythonGIL gil;
+
   bool ret = false;
   error_string_.clear();
 
@@ -219,6 +235,8 @@ bool Interpreter::RunCommand(const std::string &commandname, ObjectHolderMap_t &
 
 std::string Interpreter::GetVariable(const std::string &name)
 {
+  EnsurePythonGIL gil;
+
   std::string ret;
   PyObject *main = PyImport_ImportModule("__main__");
   ObjectHolder main_holder(main);

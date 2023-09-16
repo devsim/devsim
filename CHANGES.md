@@ -7,6 +7,10 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.6.2
 
+Allow python threading during long solve operations.
+
+## Version 2.6.2
+
 ``delete_circuit``
 
 ``get_mesh_list``

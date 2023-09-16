@@ -9,6 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 #include "Python.h"
 #include "ObjectHolder.hh"
 #include "dsAssert.hh"
+#include "ControlGIL.hh"
 #include <cassert>
 #include <limits>
 #include <algorithm>
@@ -20,6 +21,8 @@ ObjectHolder::ObjectHolder() : object_(nullptr)
 
 ObjectHolder::ObjectHolder(const ObjectHolder &t) : object_(t.object_)
 {
+  EnsurePythonGIL gil;
+
   if (object_)
   {
     Py_INCREF(reinterpret_cast<PyObject *>(object_));
@@ -28,6 +31,8 @@ ObjectHolder::ObjectHolder(const ObjectHolder &t) : object_(t.object_)
 
 ObjectHolder &ObjectHolder::operator=(const ObjectHolder &t)
 {
+  EnsurePythonGIL gil;
+
   /// Need to stop referencing the current object
   if (this != &t)
   {
@@ -63,6 +68,8 @@ ObjectHolder &ObjectHolder::operator=(ObjectHolder &&t)
 
 ObjectHolder::~ObjectHolder()
 {
+  EnsurePythonGIL gil;
+
   if (object_)
   {
     Py_DECREF(reinterpret_cast<PyObject *>(object_));
@@ -71,6 +78,8 @@ ObjectHolder::~ObjectHolder()
 
 void ObjectHolder::clear()
 {
+  EnsurePythonGIL gil;
+
   if (object_)
   {
     Py_DECREF(reinterpret_cast<PyObject *>(object_));
@@ -91,6 +100,8 @@ ObjectHolder::ObjectHolder(void *t) : object_(t)
 
 ObjectHolder::ObjectHolder(bool tval)
 {
+  EnsurePythonGIL gil;
+
   PyObject *obj = nullptr;
   if (tval)
   {
@@ -111,6 +122,8 @@ namespace {
 //https://stackoverflow.com/questions/5356773/python-get-string-representation-of-pyobject
 std::string GetStringFromStringObject(PyObject *obj)
 {
+  EnsurePythonGIL gil;
+
   std::string ret;
   if (PyUnicode_CheckExact(obj))
   {
@@ -129,6 +142,8 @@ std::string GetStringFromStringObject(PyObject *obj)
 
 std::string ObjectHolder::GetString() const
 {
+  EnsurePythonGIL gil;
+
   std::string ret;
   if (object_)
   {
@@ -147,6 +162,8 @@ std::string ObjectHolder::GetString() const
 
 ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
 {
+  EnsurePythonGIL gil;
+
   bool   ok = false;
   double val(0.0);
 
@@ -183,6 +200,8 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
 
 ObjectHolder::BooleanEntry_t ObjectHolder::GetBoolean() const
 {
+  EnsurePythonGIL gil;
+
   bool   ok = false;
   bool   val= false;
 
@@ -203,6 +222,8 @@ ObjectHolder::BooleanEntry_t ObjectHolder::GetBoolean() const
 
 ObjectHolder::IntegerEntry_t ObjectHolder::GetInteger() const
 {
+  EnsurePythonGIL gil;
+
   bool   ok = true;
   int    val= 0;
 
@@ -226,6 +247,8 @@ ObjectHolder::IntegerEntry_t ObjectHolder::GetInteger() const
 
 ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
 {
+  EnsurePythonGIL gil;
+
   bool      ok =false;
   ptrdiff_t val=0;
 
@@ -261,6 +284,8 @@ ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
 
 bool ObjectHolder::IsList() const
 {
+  EnsurePythonGIL gil;
+
   bool ok = false;
   if (object_)
   {
@@ -275,6 +300,8 @@ bool ObjectHolder::IsList() const
 
 bool ObjectHolder::IsCallable() const
 {
+  EnsurePythonGIL gil;
+
   bool ok = false;
   if (object_)
   {
@@ -289,6 +316,8 @@ bool ObjectHolder::IsCallable() const
 
 bool ObjectHolder::GetListOfObjects(ObjectHolderList_t &objs) const
 {
+  EnsurePythonGIL gil;
+
   bool ok = false;
   objs.clear();
 
@@ -377,6 +406,8 @@ bool GetFromList(const ObjectHolder &oh, std::vector<T> &values)
 
 void GetArrayInfo(const ObjectHolder &input, std::string &typecode, long &itemsize, ObjectHolder &bytes)
 {
+  EnsurePythonGIL gil;
+
   typecode.clear();
   itemsize = 0;
   bytes.clear();
@@ -426,6 +457,8 @@ void GetArrayInfo(const ObjectHolder &input, std::string &typecode, long &itemsi
 template <typename T>
 void GetBytesAsVector(ObjectHolder &bytes, std::vector<T> &result)
 {
+  EnsurePythonGIL gil;
+
   char *data = nullptr;
   Py_ssize_t length = 0;
 
@@ -442,6 +475,8 @@ void GetBytesAsVector(ObjectHolder &bytes, std::vector<T> &result)
 template <typename T>
 bool GetArrayFromBytes(const ObjectHolder &input, std::vector<T> &values, const std::string &expected_typecodes, long expected_itemsize)
 {
+  EnsurePythonGIL gil;
+
   values.clear();
 
   ObjectHolder bytes;
@@ -566,6 +601,8 @@ bool ObjectHolder::GetStringList(std::vector<std::string> &values) const
 
 bool ObjectHolder::GetHashKeys(ObjectHolderList_t &keys) const
 {
+  EnsurePythonGIL gil;
+
   bool ret = false;
   keys.clear();
   if (object_ && PyDict_CheckExact(object_))
@@ -579,6 +616,8 @@ bool ObjectHolder::GetHashKeys(ObjectHolderList_t &keys) const
 
 bool ObjectHolder::GetHashMap(ObjectHolderMap_t &hashmap) const
 {
+  EnsurePythonGIL gil;
+
   bool ret = false;
   hashmap.clear();
   if (object_ && PyDict_CheckExact(object_))
@@ -611,32 +650,44 @@ void *ObjectHolder::GetObject()
 
 ObjectHolder::ObjectHolder(const std::string &s)
 {
+  EnsurePythonGIL gil;
+
   object_ = PyUnicode_FromStringAndSize(s.c_str(), s.size());
 }
 
 ObjectHolder::ObjectHolder(const char *s)
 {
+  EnsurePythonGIL gil;
+
   object_ = PyUnicode_FromStringAndSize(s, strlen(s));
 }
 
 ObjectHolder::ObjectHolder(const void *s, size_t len)
 {
+  EnsurePythonGIL gil;
+
   object_ = PyByteArray_FromStringAndSize(static_cast<const char *>(s), len);
 }
 
 
 ObjectHolder::ObjectHolder(double v)
 {
+  EnsurePythonGIL gil;
+
   object_ = PyFloat_FromDouble(v);
 }
 
 ObjectHolder::ObjectHolder(int v)
 {
+  EnsurePythonGIL gil;
+
   object_ = PyLong_FromLong(v);
 }
 
 ObjectHolder::ObjectHolder(ObjectHolderList_t &list)
 {
+  EnsurePythonGIL gil;
+
   const size_t length = list.size();
 
   PyObject *list_object = PyTuple_New(length);
@@ -654,6 +705,8 @@ ObjectHolder::ObjectHolder(ObjectHolderList_t &list)
 
 ObjectHolder::ObjectHolder(ObjectHolderMap_t &map)
 {
+  EnsurePythonGIL gil;
+
   PyObject *map_object = PyDict_New();
   for (ObjectHolderMap_t::iterator it = map.begin(); it != map.end(); ++it)
   {
@@ -669,6 +722,8 @@ ObjectHolder::ObjectHolder(ObjectHolderMap_t &map)
 
 ObjectHolder CreateArrayObject(const char *s, const ObjectHolder &data_object)
 {
+  EnsurePythonGIL gil;
+
   ObjectHolder array_mod(PyImport_ImportModule("array"));
   PyErr_Clear();
   dsAssert(!array_mod.empty(), "array module not available");

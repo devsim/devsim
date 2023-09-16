@@ -10,12 +10,14 @@ SPDX-License-Identifier: Apache-2.0
 #include "dsException.hh"
 #include "GetGlobalParameter.hh"
 #include "ObjectHolder.hh"
+#include "ControlGIL.hh"
+
 #include <iostream>
 
 void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::string &msg)
 {
+  EnsurePythonGIL gil;
 
-// TODO: "do we need a thread lock"
   //// just assume the program has terminated
   if (!Py_IsInitialized())
   {

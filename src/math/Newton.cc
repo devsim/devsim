@@ -32,6 +32,8 @@ SPDX-License-Identifier: Apache-2.0
 #endif
 #include "BoostConstants.hh"
 
+#include "ControlGIL.hh"
+
 #include <sstream>
 #include <iomanip>
 #include <cmath>
@@ -608,6 +610,8 @@ void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, Objec
 template <typename DoubleType>
 bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeMethods::TimeParams<DoubleType> &timeinfo, ObjectHolderMap_t *ohm)
 {
+  MasterGILControl gil;
+
   NodeKeeper &nk = NodeKeeper::instance();
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
@@ -1146,6 +1150,8 @@ void Newton<DoubleType>::UpdateTransientCurrent(const TimeMethods::TimeParams<Do
 template <typename DoubleType>
 bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleType frequency)
 {
+  MasterGILControl gil;
+
   NodeKeeper &nk = NodeKeeper::instance();
   GlobalData &gdata = GlobalData::GetInstance();
   const GlobalData::DeviceList_t      &dlist = gdata.GetDeviceList();
@@ -1233,6 +1239,7 @@ bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleTyp
 template <typename DoubleType>
 bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver<DoubleType> &itermethod, DoubleType frequency)
 {
+  MasterGILControl gil;
 
   NodeKeeper &nk = NodeKeeper::instance();
   const size_t numeqns = NumberEquationsAndSetDimension();
