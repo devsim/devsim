@@ -155,8 +155,8 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
   }
 
 //  options.ColPerm = NATURAL;
-//  options.ColPerm = MMD_ATA;
-  options.ColPerm = COLAMD;
+  options.ColPerm = MMD_ATA;
+//  options.ColPerm = COLAMD;
   if (transpose_)
   {
     options.Trans = TRANS;

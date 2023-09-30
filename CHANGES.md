@@ -5,7 +5,11 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
-## Version 2.6.2
+## Version 2.6.4
+
+Use ``MMD_ATA`` preconditioner for SuperLU builds.
+
+## Version 2.6.3
 
 Allow python threading during long solve operations.
 

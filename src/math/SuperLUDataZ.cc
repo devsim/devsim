@@ -78,8 +78,8 @@ bool SuperLUData::LUFactorComplexMatrix(CompressedMatrix<DoubleType> *cm, const 
   }
 
 //  options.ColPerm = NATURAL;
-//  options.ColPerm = MMD_ATA;
-  options.ColPerm = COLAMD;
+  options.ColPerm = MMD_ATA;
+//  options.ColPerm = COLAMD;
   if (transpose_)
   {
     options.Trans = TRANS;
