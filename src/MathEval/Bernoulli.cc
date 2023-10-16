@@ -25,10 +25,20 @@ template <typename DoubleType>
 DoubleType BernoulliImpl(DoubleType x)
 {
   DoubleType ret = 1.0;
-  static const auto pleps = GetLogEpsilon<DoubleType>();
-
   const auto fx = fabs(x);
 
+
+#if defined(__ANDROID__)
+
+  static auto twoeps = 2 * std::numeric_limits<DoubleType>().epsilon();
+  // B(x) = 1/(1 + x/2 + x*x/6 + ....)
+  if (fx > twoeps)
+  {
+    ret = x;
+    ret /= expm1(x);
+  }
+#else
+  static const auto pleps = GetLogEpsilon<DoubleType>();
   if (fx < pleps)
   {
     const auto ex1 = expm1(x);
@@ -54,6 +64,7 @@ DoubleType BernoulliImpl(DoubleType x)
   {
     ret = -x;
   }
+#endif
 
   return ret;
 }
@@ -96,7 +107,11 @@ DoubleType derBernoulliImpl(DoubleType x)
       const auto ex2 = ex1 - (x * exp(x));
   //  const auto ex2 = (1 - x) * exp(x) - 1;
       ret = ex2;
+#if defined(__ANDROID__)
+      ret /= ex1*ex1;
+#else
       ret *= pow(ex1, -2);
+#endif
     }
     else
     {
