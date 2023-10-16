@@ -46,7 +46,7 @@ DoubleType BernoulliImpl(DoubleType x)
     }
     else
     {
-      const auto ex1 = expm1(x);
+      const auto ex1 = exp(x) - 1.0;
       ret = x / ex1;
     }
 #else
