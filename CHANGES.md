@@ -9,6 +9,8 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 Use ``MMD_ATA`` preconditioner for SuperLU builds.
 
+Android builds use special implementations for the Bernoulli function to prevent overflow.
+
 ## Version 2.6.3
 
 Allow python threading during long solve operations.
