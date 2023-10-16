@@ -28,22 +28,17 @@ DoubleType BernoulliImpl(DoubleType x)
   const auto fx = fabs(x);
 
 
-#if defined(__ANDROID__)
-  //static auto twoeps = 2 * std::numeric_limits<DoubleType>().epsilon();
-  // B(x) = 1/(1 + x/2 + x*x/6 + ....)
-  if ((1.0 + 0.5*fx) != 1.0)
-  {
-    ret = x;
-    ret /= expm1(x);
-  }
-#else
   static const auto pleps = GetLogEpsilon<DoubleType>();
   if (fx < pleps)
   {
     const auto ex1 = expm1(x);
     if (x != ex1)
     {
+#if defined(__ANDROID__)
+      ret = x / ex1;
+#else
       ret = x * pow(ex1, -1);
+#endif
     }
     else
     {
@@ -63,7 +58,6 @@ DoubleType BernoulliImpl(DoubleType x)
   {
     ret = -x;
   }
-#endif
 
   return ret;
 }
