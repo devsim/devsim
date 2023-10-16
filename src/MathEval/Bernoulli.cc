@@ -31,14 +31,24 @@ DoubleType BernoulliImpl(DoubleType x)
   static const auto pleps = GetLogEpsilon<DoubleType>();
   if (fx < pleps)
   {
+#if defined(__ANDROID__)
+    // MAGIC NUMBER, not the expansion results in a quadratic term which is too small to affect the answer
+    //
+    if (fx < 1e-10)
+    {
+      DoubleType d = 1.0 + 0.5 * x;
+      ret = 1.0 / d;
+    }
+    else
+    {
+      const auto ex1 = expm1(x);
+      ret = x / ex1;
+    }
+#else
     const auto ex1 = expm1(x);
     if (x != ex1)
     {
-#if defined(__ANDROID__)
-      ret = x / ex1;
-#else
       ret = x * pow(ex1, -1);
-#endif
     }
     else
     {
@@ -49,6 +59,7 @@ DoubleType BernoulliImpl(DoubleType x)
 #endif
       ret = 1.0 / d;
     }
+#endif
   }
   else if (x > 0.0)
   {
