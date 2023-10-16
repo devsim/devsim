@@ -29,6 +29,7 @@ DoubleType BernoulliImpl(DoubleType x)
 
 
 #if defined(__ANDROID__)
+#error "this is actually being compiled"
 
   static auto twoeps = 2 * std::numeric_limits<DoubleType>().epsilon();
   // B(x) = 1/(1 + x/2 + x*x/6 + ....)
