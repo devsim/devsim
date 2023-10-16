@@ -107,6 +107,29 @@ DoubleType derBernoulliImpl(DoubleType x)
   DoubleType ret = -0.5;
   if (fx < pleps)
   {
+#if defined(__ANDROID__)
+    // this is currently only for double precision based on prior work
+    if (fx < 1.0e-4)
+    {
+      auto b = Bernoulli<DoubleType>(x);
+      ret = -b * b;
+
+      DoubleType num = static_cast<DoubleType>(-0.5);
+
+      auto xv = x;
+      num -= xv / static_cast<DoubleType>(3.);
+      xv *= x;
+      num -= xv / static_cast<DoubleType>(8.);
+      ret *= num;
+    }
+    else
+    {
+      const auto ex = exp(x);
+      const auto ex1 = ex - 1;
+      ret = ex1 - (x * ex);
+      ret /= ex1 * ex1;
+    }
+#else
     const auto ex1 = expm1(x);
 
     //// This condition is IMPORTANT for convergence
@@ -116,11 +139,7 @@ DoubleType derBernoulliImpl(DoubleType x)
       const auto ex2 = ex1 - (x * exp(x));
   //  const auto ex2 = (1 - x) * exp(x) - 1;
       ret = ex2;
-#if defined(__ANDROID__)
-      ret /= ex1*ex1;
-#else
       ret *= pow(ex1, -2);
-#endif
     }
     else
     {
@@ -135,6 +154,7 @@ DoubleType derBernoulliImpl(DoubleType x)
 #endif
       ret = num / den;
     }
+#endif
   }
   else if (x > 0.0)
   {
