@@ -11,6 +11,10 @@ Use ``MMD_ATA`` preconditioner for SuperLU builds.
 
 Android builds use special implementations for the Bernoulli function to prevent overflow.
 
+``testing/pythonmesh1d.py`` demonstrates how to get mesh information using ``devsim.get_element_node_list``.
+
+``examples/diode/tran_diode.py`` demonstrates transient diode simulation.
+
 ## Version 2.6.3
 
 Allow python threading during long solve operations.
