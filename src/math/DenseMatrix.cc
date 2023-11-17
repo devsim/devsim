@@ -106,7 +106,7 @@ struct matrix_data_eigen {
       Eigen::Map<vector_type> v(B, LU_->rows());
       if (ok_)
       {
-        LU_->solve(v);
+        v = LU_->solve(v);
       }
       return ok_;
     }

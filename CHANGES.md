@@ -5,6 +5,13 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+
+## Version 2.6.5
+
+### Bugs
+
+Fixed issue [#123](https://github.com/devsim/devsim/issues/123) identified by [@gluek](https://github.com/gluek) This resulted in bad results on Windows and macOS in calculation of 3d mesh areas and volumes.
+
 ## Version 2.6.4
 
 Use ``MMD_ATA`` preconditioner for SuperLU builds.
