@@ -90,7 +90,8 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
         {
             os << *it << "\n";
         }
-        GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *rp, os.str());
+        output_errors = os.str();
+        GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *rp, output_errors);
     }
 
     /// implicit conversion to triangleedgemodel from edgemodel
@@ -124,6 +125,7 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
     else
     {
         std::ostringstream os;
+        os << output_errors;
         os << "while evaluating model " << GetName() << ": expression "
             << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";

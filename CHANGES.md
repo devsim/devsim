@@ -5,6 +5,9 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.6.6
+
+More helpful exception information returned to python if the error is considered fatal.
 
 ## Version 2.6.5
 

@@ -79,6 +79,7 @@ void TetrahedronEdgeExprModel<DoubleType>::calcTetrahedronEdgeScalarValues() con
     MEE::ModelExprEval<DoubleType> mexp(rp, GetName(), errors);
     MEE::ModelExprData<DoubleType> out = mexp.eval_function(equation);
 
+    std::string output_errors;
     if (!errors.empty())
     {
         std::ostringstream os;
@@ -90,7 +91,8 @@ void TetrahedronEdgeExprModel<DoubleType>::calcTetrahedronEdgeScalarValues() con
         {
             os << *it << "\n";
         }
-        GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *rp, os.str());
+        output_errors = os.str();
+        GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *rp, output_errors);
     }
 
     /// implicit conversion to tetrahedronedgemodel from edgemodel
@@ -124,6 +126,7 @@ void TetrahedronEdgeExprModel<DoubleType>::calcTetrahedronEdgeScalarValues() con
     else
     {
         std::ostringstream os;
+        os << output_errors;
         os << "while evaluating model " << GetName() << ": expression "
             << EngineAPI::getStringValue(equation) << " evaluates to " << MEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";

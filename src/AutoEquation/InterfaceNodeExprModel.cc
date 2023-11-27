@@ -78,6 +78,7 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
     IMEE::InterfaceModelExprEval<DoubleType> mexp(ip, errors);
     IMEE::InterfaceModelExprData<DoubleType> out = mexp.eval_function(equation);
 
+    std::string output_errors;
     if (!errors.empty())
     {
         std::ostringstream os;
@@ -92,7 +93,8 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
         {
             os << *it << "\n";
         }
-        GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *ip, os.str());
+        output_errors = os.str();
+        GeometryStream::WriteOut(OutputStream::OutputType::ERROR, *ip, output_errors);
     }
 
     if (
@@ -120,6 +122,7 @@ void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
     else
     {
         std::ostringstream os;
+        os << output_errors;
         os << "while evaluating model " << GetName() << ": expression "
             << EngineAPI::getStringValue(equation) << " evaluates to a " << IMEE::datatypename[static_cast<size_t>(out.GetType())]
             << "\n";
