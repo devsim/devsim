@@ -59,7 +59,15 @@ void TriangleEdgeModel::CalculateValues() const
   if (!uptodate)
   {
     inprocess = true;
-    this->calcTriangleEdgeScalarValues();
+    try
+    {
+        this->calcTriangleEdgeScalarValues();
+    }
+    catch (...)
+    {
+        inprocess = false;
+        throw;
+    }
     uptodate = true;
     inprocess = false;
   }

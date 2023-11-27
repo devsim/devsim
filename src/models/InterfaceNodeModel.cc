@@ -46,6 +46,21 @@ InterfaceNodeModel::InterfaceNodeModel(const std::string &nm, const InterfacePtr
 void InterfaceNodeModel::CalculateValues() const
 {
   FPECheck::ClearFPE();
+
+  // TODO: fix this so the values are actually cached
+  inprocess = true;
+  try
+  {
+    this->calcNodeScalarValues();
+  }
+  catch (...)
+  {
+    inprocess = false;
+    throw;
+  }
+  inprocess = false;
+#if 0
+  // this is the code before we tried to recover from FATAL model evaluation errors
   this->calcNodeScalarValues();
   if (!uptodate)
   {
@@ -57,6 +72,7 @@ void InterfaceNodeModel::CalculateValues() const
   else
   {
   }
+#endif
 
   if (FPECheck::CheckFPE())
   {

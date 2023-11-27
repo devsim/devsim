@@ -63,7 +63,15 @@ void EdgeModel::CalculateValues() const
   if (!uptodate)
   {
     inprocess = true;
-    this->calcEdgeScalarValues();
+    try
+    {
+        this->calcEdgeScalarValues();
+    }
+    catch (...)
+    {
+        inprocess = false;
+        throw;
+    }
     uptodate = true;
     inprocess = false;
   }

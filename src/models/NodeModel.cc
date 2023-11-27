@@ -85,7 +85,15 @@ void NodeModel::CalculateValues() const
   if (!uptodate)
   {
     inprocess = true;
-    this->calcNodeScalarValues();
+    try
+    {
+        this->calcNodeScalarValues();
+    }
+    catch (...)
+    {
+        inprocess = false;
+        throw;
+    }
     uptodate = true;
     inprocess = false;
   }

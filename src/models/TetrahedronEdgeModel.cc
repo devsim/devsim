@@ -61,7 +61,15 @@ void TetrahedronEdgeModel::CalculateValues() const
   if (!uptodate)
   {
     inprocess = true;
-    this->calcTetrahedronEdgeScalarValues();
+    try
+    {
+        this->calcTetrahedronEdgeScalarValues();
+    }
+    catch (...)
+    {
+        inprocess = false;
+        throw;
+    }
     uptodate = true;
     inprocess = false;
   }
