@@ -79,6 +79,7 @@ void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
     MEE::ModelExprEval<DoubleType> mexp(rp, GetName(), errors);
     MEE::ModelExprData<DoubleType> out = mexp.eval_function(equation);
 
+    std::string output_errors;
     if (!errors.empty())
     {
         std::ostringstream os;
