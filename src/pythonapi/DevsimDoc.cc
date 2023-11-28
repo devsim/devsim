@@ -64,7 +64,7 @@ R"(    devsim.circuit_node_alias (node, alias)
 )";
 
 static const char delete_circuit_doc[] =
-R"(    devsim.delete_circuit
+R"(    devsim.delete_circuit ()
 
     Deletes any present circuit and its solutions.
 )";
@@ -1010,9 +1010,9 @@ R"(    devsim.finalize_mesh (mesh)
 )";
 
 static const char get_mesh_list_doc[] =
-R"(    devsim.get_mesh_list_doc ()
+R"(    devsim.get_mesh_list ()
 
-    Get list of meshes.
+    Get list of meshes
 )";
 
 static const char load_devices_doc[] =

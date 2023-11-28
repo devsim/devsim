@@ -90,7 +90,7 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
     }
     PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
     PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
-    throw dsException();
+    throw dsException(msg);
   }
 }
 

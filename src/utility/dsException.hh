@@ -7,18 +7,19 @@ SPDX-License-Identifier: Apache-2.0
 
 #ifndef DS_EXCEPTION_HH
 #define DS_EXCEPTION_HH
-class dsException {
-  public:
-    //// Should avoid passing something which is going to be deleted in the scope being called.
-    dsException() throw () {};
-    dsException(const dsException &) throw () {};
-    dsException &operator=(const dsException &) throw () {return *this;};
+#include <stdexcept>
+#include <string>
 
-    const char *what() const {
-      return msg;
-    }
+class dsException : std::runtime_error {
+  public:
+
+    dsException(const char *);
+    dsException(const std::string &);
+
+    using std::runtime_error::what;
+
   private:
-    static const char *msg;
+        static const std::string msg;
 };
 #endif
 
