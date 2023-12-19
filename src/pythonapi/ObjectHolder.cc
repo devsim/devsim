@@ -175,23 +175,15 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
       ok  = true;
       val = PyFloat_AsDouble(obj);
     }
-    else if (PyLong_CheckExact(obj))
+    else if (auto *fobj = PyNumber_Float(obj))
     {
-      return this->GetLong();
+      ok = true;
+      val = PyFloat_AsDouble(fobj);
+      Py_DECREF(fobj);
     }
-    else if (PyUnicode_CheckExact(obj) || PyBytes_CheckExact(obj))
+    else
     {
-      PyObject *fobj = PyFloat_FromString(obj);
-      if (fobj)
-      {
-        ok = true;
-        val = PyFloat_AsDouble(fobj);
-        Py_DECREF(fobj);
-      }
-      else
-      {
-        PyErr_Clear();
-      }
+      PyErr_Clear();
     }
   }
 
