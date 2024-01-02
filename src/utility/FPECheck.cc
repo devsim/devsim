@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 
 #include "FPECheck.hh"
 #include <signal.h>
-#if defined(__linux__) && !defined(__ANDROID__)
+#if defined(__linux__) && !defined(__ANDROID__) && !defined(__aarch64__)
 #include <fpu_control.h>
 #endif
 #include <cfenv>
@@ -36,7 +36,7 @@ void FPECheck::InitializeFPE()
 #endif
 #endif
 
-#if defined(__linux__) && !defined(__ANDROID__)
+#if defined(__linux__) && !defined(__ANDROID__) && !defined(__aarch64__)
 //  http://www.wrcad.com/linux_numerics.txt
 /*
     This puts the X86 FPU in 64-bit precision mode.  The default
