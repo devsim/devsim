@@ -54,11 +54,6 @@ before_script:
         git submodule update --init --depth 1 external/eigen;
       fi
     fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-      if [ "$TRAVIS_CPU_ARCH" = "arm64" ]; then
-        git submodule update --init --depth 1 external/eigen;
-      fi
-    fi
   # specifically for pypi deployment
   - export README_BASE_URL="https://github.com/devsim/devsim/blob/${TRAVIS_TAG}"
   - git submodule update --init --depth 1 external/symdiff
@@ -66,6 +61,11 @@ before_script:
   - git submodule update --init --depth 1 external/boostorg/math
   - git submodule update --init --depth 1 external/boostorg/config
   - git submodule update --init --depth 1 external/umfpack_lgpl
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+      if [ "$TRAVIS_CPU_ARCH" = "arm64" ]; then
+        git submodule update --init --depth 1 external/eigen;
+      fi
+    fi
 
 
 script:
