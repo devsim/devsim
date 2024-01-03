@@ -81,7 +81,7 @@ script:
 deploy:
   provider: releases
   api_key:
-    secure: "M54vU57McJ5eux7jyElblqqIIZd1n5m7YOWY5yV60I8DM5dvRjSnpK+yrX8LSiKQ161hiFYP+avhQKNbY+NlQgx8iqwq4uC9SnUxaNX7bU32OhfN2IiD0lg8/DT9/h2csOtLI2sE7UdGt+dj6juMHPO9T3pCB9zIeJqpH25Pdqk="
+  secure: "NC1eth9atMJXJzjtqvUTNFikaHZnfDEhN7b1p0RFpbBDxxzDhpRhxva5QkbiHCWp02S8BKBW1BcVg+wpyck0CJ1b66/3VjBXZaFo0e/KmPaA4+hWvyasEDOHYQUzbhZ2LFleqFYjy7uXifCcX/1u2vVNjRZFhFNRNN9WreHeaUo="
   file_glob: true
   file:
     - "dist/devsim*.tgz"
