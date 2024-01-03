@@ -7,7 +7,8 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.7.1
 
-Support for Linux aarch64, which can be run on Amazon AWS 64 bit instances.
+* Support for Linux aarch64, which can be run on Amazon AWS 64 bit instances.
+* Better implicit float conversions in parameters.
 
 ## Version 2.7.0
 
