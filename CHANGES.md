@@ -5,6 +5,10 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.7.1
+
+Support for Linux aarch64, which can be run on Amazon AWS 64 bit instances.
+
 ## Version 2.7.0
 
 More helpful exception information returned to python if the error is considered fatal.
