@@ -13,6 +13,12 @@ matrix:
     sudo: required
     dist: xenial
     services: docker
+    arch: amd64
+  - os: linux
+    sudo: required
+    dist: xenial
+    services: docker
+    arch: arm64
 #  - os: osx
 #    env: COMPILER=clang
 
@@ -45,6 +51,11 @@ before_script:
         brew install gcc@9 cmake;
       elif [ "$COMPILER" == "clang" ]; then
         brew install cmake;
+        git submodule update --init --depth 1 external/eigen;
+      fi
+    fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      if [ "$TRAVIS_CPU_ARCH" == "arm64" ]; then
         git submodule update --init --depth 1 external/eigen;
       fi
     fi
