@@ -3,24 +3,20 @@ language: cpp
 
 matrix:
   include:
+  - os: osx
+    env: COMPILER=gcc
+    osx_image: xcode10.1
+  - os: osx
+    env: COMPILER=clang
+    osx_image: xcode14.2
   - os: linux
-    sudo: required
+    dist: focal
+    services: docker
+    arch: amd64
+  - os: linux
     dist: focal
     services: docker
     arch: arm64
-#  - os: osx
-#    env: COMPILER=clang
-#  - os: osx
-#    env: COMPILER=gcc
-#    osx_image: xcode10.1
-#  - os: osx
-#    env: COMPILER=clang
-#    osx_image: xcode14.2
-#  - os: linux
-#    sudo: required
-#    dist: xenial
-#    services: docker
-#    arch: amd64
 
 addons:
   homebrew:
