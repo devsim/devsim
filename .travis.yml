@@ -10,11 +10,13 @@ matrix:
     env: COMPILER=clang
     osx_image: xcode14.2
   - os: linux
-    sudo: required
-    dist: xenial
+    dist: focal
     services: docker
-#  - os: osx
-#    env: COMPILER=clang
+    arch: amd64
+  - os: linux
+    dist: focal
+    services: docker
+    arch: arm64
 
 addons:
   homebrew:
@@ -40,10 +42,10 @@ git:
 
 before_script:
   - export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-      if [ "$COMPILER" == "gcc" ]; then
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
+      if [ "$COMPILER" = "gcc" ]; then
         brew install gcc@9 cmake;
-      elif [ "$COMPILER" == "clang" ]; then
+      elif [ "$COMPILER" = "clang" ]; then
         brew install cmake;
         git submodule update --init --depth 1 external/eigen;
       fi
@@ -55,13 +57,18 @@ before_script:
   - git submodule update --init --depth 1 external/boostorg/math
   - git submodule update --init --depth 1 external/boostorg/config
   - git submodule update --init --depth 1 external/umfpack_lgpl
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+      if [ "$TRAVIS_CPU_ARCH" = "arm64" ]; then
+        git submodule update --init --depth 1 external/eigen;
+      fi
+    fi
 
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
       ./scripts/build_docker_manylinux2014.sh ${TRAVIS_TAG};
     fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
       ./scripts/build_macos.sh $COMPILER "${TRAVIS_TAG}";
     fi
 
@@ -70,7 +77,7 @@ script:
 deploy:
   provider: releases
   api_key:
-    secure: "M54vU57McJ5eux7jyElblqqIIZd1n5m7YOWY5yV60I8DM5dvRjSnpK+yrX8LSiKQ161hiFYP+avhQKNbY+NlQgx8iqwq4uC9SnUxaNX7bU32OhfN2IiD0lg8/DT9/h2csOtLI2sE7UdGt+dj6juMHPO9T3pCB9zIeJqpH25Pdqk="
+    secure: "NC1eth9atMJXJzjtqvUTNFikaHZnfDEhN7b1p0RFpbBDxxzDhpRhxva5QkbiHCWp02S8BKBW1BcVg+wpyck0CJ1b66/3VjBXZaFo0e/KmPaA4+hWvyasEDOHYQUzbhZ2LFleqFYjy7uXifCcX/1u2vVNjRZFhFNRNN9WreHeaUo="
   file_glob: true
   file:
     - "dist/devsim*.tgz"
