@@ -5,7 +5,7 @@ export DEVSIM_ARCH=$(uname -m)
 if [ ${DEVSIM_ARCH} = "x86_64" ]
 then
 export DEVSIM_CONFIG="centos_6"
-elif [ ${DEVSIM_ARCH} = 'aarch64' ]
+elif [ ${DEVSIM_ARCH} = "aarch64" ]
 then
 export DEVSIM_CONFIG="nofloat128"
 fi
@@ -33,7 +33,7 @@ export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as g
 export PYTHON3_ARCHIVE=""
 
 # SYMDIFF build
-(cd external/symdiff && bash ../symdiff_centos.sh && cd linux_x86_64_release && make -j3);
+(cd external/symdiff && bash ../symdiff_centos.sh && cd linux_${DEVSIM_ARCH}_release && make -j3);
 
 if [ ${DEVSIM_ARCH} = "x86_64" ]
 then
@@ -54,10 +54,10 @@ bash scripts/setup_nofloat128.sh
 fi
 
 ## overcome bad libstdc++ in anaconda directory
-#mkdir -p linux_x86_64_release/linklibs
-#for i in libz.a libsqlite3*; do cp -f ${CONDA_PREFIX}/lib/$i linux_x86_64_release/linklibs/; done
+#mkdir -p linux_${DEVSIM_ARCH}_release/linklibs
+#for i in libz.a libsqlite3*; do cp -f ${CONDA_PREFIX}/lib/$i linux_${DEVSIM_ARCH}_release/linklibs/; done
 
-(cd linux_x86_64_release && make -j3)
+(cd linux_${DEVSIM_ARCH}_release && make -j3)
 (cd dist && bash package_linux.sh ${1})
 cp -f dist/bdist_wheel/setup.* dist/${1}/
 (cd dist/${1} && ${PIP_BIN} wheel .)
