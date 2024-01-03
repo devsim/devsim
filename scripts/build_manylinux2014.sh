@@ -1,7 +1,14 @@
 #!/bin/bash
 set -e
 set -u
+export DEVSIM_ARCH=$(uname -m)
+if [ ${DEVSIM_ARCH} = "x86_64" ]
+then
 export DEVSIM_CONFIG="centos_6"
+elif [ ${DEVSIM_ARCH} = 'aarch64' ]
+then
+export DEVSIM_CONFIG="nofloat128"
+fi
 
 
 # Centos Specific
@@ -28,14 +35,23 @@ export PYTHON3_ARCHIVE=""
 # SYMDIFF build
 (cd external/symdiff && bash ../symdiff_centos.sh && cd linux_x86_64_release && make -j3);
 
+if [ ${DEVSIM_ARCH} = "x86_64" ]
+then
 # quad precision getrf
 (cd external/getrf && bash setup_centos6.sh && cd build && make -j3)
+fi
 
 # umfpack support
 (cd external/umfpack_lgpl && bash setup_centos6.sh && cd build && make -j3)
 
 # start devsim build
+if [ ${DEVSIM_ARCH} = "x86_64" ]
+then
 bash scripts/setup_centos_6.sh
+elif [ ${DEVSIM_ARCH} = "aarch64" ]
+then
+bash scripts/setup_nofloat128.sh
+fi
 
 ## overcome bad libstdc++ in anaconda directory
 #mkdir -p linux_x86_64_release/linklibs
