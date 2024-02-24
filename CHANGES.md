@@ -5,6 +5,13 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.7.2
+
+* Update Boost version to 1.82
+* Improvements to extended precision complex numbers implementation to work with newer compilers.
+* Script to build for `manylinux_2_28` (Centos 8)
+* Build Linux aarch64 from macOS system with docker
+
 ## Version 2.7.1
 
 * Support for Linux aarch64, which can be run on Amazon AWS 64 bit instances.
