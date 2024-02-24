@@ -6,6 +6,11 @@ if [[ $# -eq 0 ]]; then
 fi
 
 export DEVSIM_ARCH=$(uname -m)
+
+if [ "$DEVSIM_ARCH" = "arm64" ]; then
+DEVSIM_ARCH=aarch64
+fi
+
 export DEVSIM_TAR_NAME=devsim_linux_${DEVSIM_ARCH}_${1}
 
 docker run -it -d -e README_BASE_URL="${README_BASE_URL}" --name manylinux_2_28 quay.io/pypa/manylinux_2_28_${DEVSIM_ARCH} &&
