@@ -8,9 +8,9 @@ SPDX-License-Identifier: Apache-2.0
 #ifndef EQUATION_HH
 #define EQUATION_HH
 #include "MathEnum.hh"
+#include "dsMathTypes.hh"
 #include <string>
 #include <vector>
-#include <complex>
 #include <map>
 #include <iosfwd>
 
@@ -96,14 +96,14 @@ class Equation {
             return variable;
         }
 
-        void Update(NodeModel &, const std::vector<DoubleType> &);
+        void Update(NodeModel &, const dsMath::DoubleVec_t<DoubleType> &);
 
-        void ACUpdate(NodeModel &, const std::vector<std::complex<DoubleType> > &);
-        void NoiseUpdate(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &);
+        void ACUpdate(NodeModel &, const dsMath::ComplexDoubleVec_t<DoubleType> &);
+        void NoiseUpdate(const std::string &, const std::vector<PermutationEntry> &, const dsMath::ComplexDoubleVec_t<DoubleType> &);
 
         std::string GetNoiseRealName(const std::string &);
         std::string GetNoiseImagName(const std::string &);
-        void DefaultNoiseUpdate(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &);
+        void DefaultNoiseUpdate(const std::string &, const std::vector<PermutationEntry> &, const dsMath::ComplexDoubleVec_t<DoubleType> &);
 
         DoubleType GetAbsError() const;
         DoubleType GetRelError() const;
@@ -127,8 +127,8 @@ class Equation {
         virtual void GetCommandOptions_Impl(std::map<std::string, ObjectHolder> &) const = 0;
 
         // for non negative variable
-        void DefaultUpdate(NodeModel &, const std::vector<DoubleType> &);
-        void DefaultACUpdate(NodeModel &, const std::vector<std::complex<DoubleType> > &);
+        void DefaultUpdate(NodeModel &, const dsMath::DoubleVec_t<DoubleType> &);
+        void DefaultACUpdate(NodeModel &, const dsMath::ComplexDoubleVec_t<DoubleType> &);
 
         void setAbsError(DoubleType);
         void setRelError(DoubleType);
@@ -166,9 +166,9 @@ class Equation {
     private:
         virtual void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode) = 0;
 
-        virtual void UpdateValues(NodeModel &, const std::vector<DoubleType> &) = 0;
-        virtual void ACUpdateValues(NodeModel &, const std::vector<std::complex<DoubleType> > &) = 0;
-        virtual void NoiseUpdateValues(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &) = 0;
+        virtual void UpdateValues(NodeModel &, const dsMath::DoubleVec_t<DoubleType> &) = 0;
+        virtual void ACUpdateValues(NodeModel &, const dsMath::ComplexDoubleVec_t<DoubleType> &) = 0;
+        virtual void NoiseUpdateValues(const std::string &, const std::vector<PermutationEntry> &, const dsMath::ComplexDoubleVec_t<DoubleType> &) = 0;
 
 
         void PositiveSolutionUpdate(const NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &, NodeScalarList<DoubleType> &);

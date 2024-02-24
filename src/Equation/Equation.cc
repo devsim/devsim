@@ -123,19 +123,19 @@ void Equation<DoubleType>::Assemble(dsMath::RealRowColValueVec<DoubleType> &m, d
 }
 
 template <typename DoubleType>
-void Equation<DoubleType>::Update(NodeModel &nm, const std::vector<DoubleType> &rhs)
+void Equation<DoubleType>::Update(NodeModel &nm, const dsMath::DoubleVec_t<DoubleType> &rhs)
 {
     UpdateValues(nm, rhs);
 }
 
 template <typename DoubleType>
-void Equation<DoubleType>::ACUpdate(NodeModel &nm, const std::vector<std::complex<DoubleType> > &rhs)
+void Equation<DoubleType>::ACUpdate(NodeModel &nm, const dsMath::ComplexDoubleVec_t<DoubleType> &rhs)
 {
     ACUpdateValues(nm, rhs);
 }
 
 template <typename DoubleType>
-void Equation<DoubleType>::NoiseUpdate(const std::string &nm, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &rhs)
+void Equation<DoubleType>::NoiseUpdate(const std::string &nm, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<DoubleType> &rhs)
 {
     NoiseUpdateValues(nm, permvec, rhs);
 }
@@ -227,7 +227,7 @@ void Equation<DoubleType>::DefaultSolutionUpdate(const NodeScalarList<DoubleType
 }
 
 template <typename DoubleType>
-void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<DoubleType> &result)
+void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const dsMath::DoubleVec_t<DoubleType> &result)
 {
     const Region &reg = *myregion;
 
@@ -310,7 +310,7 @@ void Equation<DoubleType>::DefaultUpdate(NodeModel &nm, const std::vector<Double
 
 //// TODO: Make sure noise and ac kept in sync
 template <typename DoubleType>
-void Equation<DoubleType>::DefaultACUpdate(NodeModel &nm, const std::vector<std::complex<DoubleType> > &result)
+void Equation<DoubleType>::DefaultACUpdate(NodeModel &nm, const dsMath::ComplexDoubleVec_t<DoubleType> &result)
 {
     const std::string &realnodemodel = nm.GetRealName();
     const std::string &imagnodemodel = nm.GetImagName();
@@ -350,7 +350,7 @@ void Equation<DoubleType>::DefaultACUpdate(NodeModel &nm, const std::vector<std:
         const size_t eqindex = (*nit)->GetIndex();
         const size_t eqrow = myregion->GetEquationNumber(ind, *nit);
 
-        const std::complex<DoubleType> upd  = result[eqrow];
+        const dsMath::ComplexDouble_t<DoubleType> &upd  = result[eqrow];
 
         realout[eqindex] = upd.real();
         imagout[eqindex] = upd.imag();
@@ -361,7 +361,7 @@ void Equation<DoubleType>::DefaultACUpdate(NodeModel &nm, const std::vector<std:
 }
 
 template <typename DoubleType>
-void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &result)
+void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<DoubleType> &result)
 {
     const std::string &realnodemodel = GetNoiseRealName(outputname);
     const std::string &imagnodemodel = GetNoiseImagName(outputname);
@@ -404,7 +404,7 @@ void Equation<DoubleType>::DefaultNoiseUpdate(const std::string &outputname, con
         if (eqrow != size_t(-1))
         {
           const size_t eqindex = (*nit)->GetIndex();
-          const std::complex<DoubleType> upd  = result[eqrow];
+          const dsMath::ComplexDouble_t<DoubleType> &upd  = result[eqrow];
           realout[eqindex] = upd.real();
           imagout[eqindex] = upd.imag();
         }

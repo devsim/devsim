@@ -91,19 +91,19 @@ void ExprEquation<DoubleType>::DerivedAssemble(dsMath::RealRowColValueVec<Double
 }
 
 template <typename DoubleType>
-void ExprEquation<DoubleType>::UpdateValues(NodeModel &nm, const std::vector<DoubleType> &rhs)
+void ExprEquation<DoubleType>::UpdateValues(NodeModel &nm, const dsMath::DoubleVec_t<DoubleType> &rhs)
 {
     Equation<DoubleType>::DefaultUpdate(nm, rhs);
 }
 
 template <typename DoubleType>
-void ExprEquation<DoubleType>::ACUpdateValues(NodeModel &nm, const std::vector<std::complex<DoubleType> > &rhs)
+void ExprEquation<DoubleType>::ACUpdateValues(NodeModel &nm, const dsMath::ComplexDoubleVec_t<DoubleType> &rhs)
 {
     Equation<DoubleType>::DefaultACUpdate(nm, rhs);
 }
 
 template <typename DoubleType>
-void ExprEquation<DoubleType>::NoiseUpdateValues(const std::string &nm, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &rhs)
+void ExprEquation<DoubleType>::NoiseUpdateValues(const std::string &nm, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<DoubleType> &rhs)
 {
     Equation<DoubleType>::DefaultNoiseUpdate(nm, permvec, rhs);
 }

@@ -210,7 +210,7 @@ void EquationHolder::Update(NodeModel &nm, const std::vector<float128> &v) const
 #endif
 
 template <>
-void EquationHolder::ACUpdate(NodeModel &nm, const dsMath::ComplexDoubleVec_t<double> &v) const
+void EquationHolder::ACUpdate<double>(NodeModel &nm, const dsMath::ComplexDoubleVec_t<double> &v) const
 {
   if (double_)
   {
@@ -228,7 +228,7 @@ void EquationHolder::ACUpdate(NodeModel &nm, const dsMath::ComplexDoubleVec_t<do
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void EquationHolder::ACUpdate(NodeModel &nm, const dsMath::ComplexDoubleVec_t<float128> &v) const
+void EquationHolder::ACUpdate<float128>(NodeModel &nm, const dsMath::ComplexDoubleVec_t<float128> &v) const
 {
   if (double_)
   {
@@ -244,7 +244,7 @@ void EquationHolder::ACUpdate(NodeModel &nm, const dsMath::ComplexDoubleVec_t<fl
 #endif
 
 template <>
-void EquationHolder::NoiseUpdate(const std::string &nm, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<double> &rhs) const
+void EquationHolder::NoiseUpdate<double>(const std::string &nm, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<double> &rhs) const
 {
   if (double_)
   {
@@ -262,7 +262,7 @@ void EquationHolder::NoiseUpdate(const std::string &nm, const std::vector<Permut
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void EquationHolder::NoiseUpdate(const std::string &nm, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<float128> &rhs) const
+void EquationHolder::NoiseUpdate<float128>(const std::string &nm, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<float128> &rhs) const
 {
   if (double_)
   {
