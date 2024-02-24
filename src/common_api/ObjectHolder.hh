@@ -7,6 +7,9 @@ SPDX-License-Identifier: Apache-2.0
 
 #ifndef OBJHOLDER_HH
 #define OBJHOLDER_HH
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
 #include <string>
 #include <utility>
 #include <vector>
@@ -114,14 +117,16 @@ inline ObjectHolder CreateDoubleObjectHolderList(const std::vector<T> &list)
 
 ObjectHolder CreateArrayObject(const char *s, const ObjectHolder &data_object);
 
-template <typename T>
-ObjectHolder CreatePODArray(const std::vector<T> &list);
+ObjectHolder CreateIntPODArray(const std::vector<int> &list);
 
-template <typename T>
-ObjectHolder CreateDoublePODArray(const std::vector<T> &list);
+ObjectHolder CreateDoublePODArray(const std::vector<double>  &list);
 
-template <>
-ObjectHolder CreateDoublePODArray(const std::vector<double> &list);
+ObjectHolder CreateComplexDoublePODArray(const std::vector<std::complex<double>>  &list);
 
+#ifdef DEVSIM_EXTENDED_PRECISION
+ObjectHolder CreateDoublePODArray(const std::vector<float128> &list);
+
+ObjectHolder CreateComplexDoublePODArray(const std::vector<complex128> &list);
+#endif
 #endif
 

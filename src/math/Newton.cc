@@ -557,10 +557,10 @@ void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, Objec
     matrix->Finalize();
 
     ObjectHolderMap_t lmap;
-    lmap["ai"] = CreatePODArray<int>(matrix->GetAi());
-    lmap["ap"] = CreatePODArray<int>(matrix->GetAp());
-    lmap["av"] = CreateDoublePODArray<DoubleType>(matrix->GetReal());
-    lmap["rhs"]  = CreateDoublePODArray<DoubleType>(rhs);
+    lmap["ai"] = CreateIntPODArray(matrix->GetAi());
+    lmap["ap"] = CreateIntPODArray(matrix->GetAp());
+    lmap["av"] = CreateDoublePODArray(matrix->GetReal());
+    lmap["rhs"]  = CreateDoublePODArray(rhs);
     ohm[p.first] = ObjectHolder(lmap);
 
     matrix.reset();
@@ -589,8 +589,8 @@ void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, Objec
         rb[i] = 1;
       }
     }
-    lmap["row"]  = CreatePODArray<int>(rp);
-    lmap["copy"] = CreatePODArray<int>(rb);
+    lmap["row"]  = CreateIntPODArray(rp);
+    lmap["copy"] = CreateIntPODArray(rb);
     ohm["permutation"] = ObjectHolder(lmap);
   }
 

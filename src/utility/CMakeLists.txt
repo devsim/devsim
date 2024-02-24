@@ -15,6 +15,7 @@ INCLUDE_DIRECTORIES (
     ../errorSystem
     ../Data
     ../common_api
+    ../utility
     ${ZLIB_INCLUDE}
 )
 

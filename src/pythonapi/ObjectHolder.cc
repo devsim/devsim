@@ -10,6 +10,7 @@ SPDX-License-Identifier: Apache-2.0
 #include "ObjectHolder.hh"
 #include "dsAssert.hh"
 #include "ControlGIL.hh"
+#include "dsMathTypes.hh"
 #include <cassert>
 #include <limits>
 #include <algorithm>
@@ -747,10 +748,27 @@ ObjectHolder CreatePODArray(const std::vector<T> &list)
   return CreatePODArray(list.data(), length);
 }
 
-template <typename T>
-ObjectHolder CreateDoublePODArray(const std::vector<T> &list)
+ObjectHolder CreateIntPODArray(const std::vector<int> &list)
 {
-  thread_local std::vector<double> tmp;
+  return CreatePODArray<int>(list);
+}
+
+ObjectHolder CreateDoublePODArray(const dsMath::DoubleVec_t<double> &list)
+{
+  return CreatePODArray<double>(list);
+}
+
+ObjectHolder CreateComplexDoublePODArray(const dsMath::ComplexDoubleVec_t<double> &list)
+{
+  return CreatePODArray<double>(reinterpret_cast<const double *>(list.data()), sizeof(std::complex<double>) * list.size());
+}
+
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#include "dsMathTypes.hh"
+ObjectHolder CreateDoublePODArray(const dsMath::DoubleVec_t<float128> &list)
+{
+  thread_local dsMath::DoubleVec_t<double> tmp;
   tmp.resize(list.size());
 
   std::transform(list.begin(), list.end(), tmp.begin(), [](auto &x){return static_cast<double>(x);});
@@ -758,37 +776,15 @@ ObjectHolder CreateDoublePODArray(const std::vector<T> &list)
   return CreatePODArray<double>(tmp);
 }
 
-
-template <>
-ObjectHolder CreateDoublePODArray(const std::vector<double> &list)
+ObjectHolder CreateComplexDoublePODArray(const dsMath::ComplexDoubleVec_t<float128> &list)
 {
-  return CreatePODArray<double>(list);
-}
-
-template <>
-ObjectHolder CreateDoublePODArray(const std::vector<std::complex<double>> &list)
-{
-  return CreatePODArray<double>(reinterpret_cast<const double *>(list.data()), sizeof(std::complex<double>) * list.size());
-}
-
-template ObjectHolder CreatePODArray(const std::vector<int> &list);
-//template ObjectHolder CreateDoublePODArray(const std::vector<std::complex<double>> &list);
-#ifdef DEVSIM_EXTENDED_PRECISION
-#include "Float128.hh"
-#include "dsMathTypes.hh"
-
-template <>
-ObjectHolder CreateDoublePODArray(const dsMath::ComplexDoubleVec_t<float128> &list)
-{
-  thread_local std::vector<std::complex<double>> tmp;
+  thread_local dsMath::ComplexDoubleVec_t<double> tmp;
   tmp.resize(list.size());
 
   std::transform(list.begin(), list.end(), tmp.begin(), [](auto &x){return std::complex<double>(static_cast<double>(x.real()), static_cast<double>(x.imag()));});
 
-  return CreateDoublePODArray(tmp);
+  return CreateComplexDoublePODArray(tmp);
 }
-
-//template ObjectHolder CreateDoublePODArray(const dsMath::ComplexDoubleVec_t<float128> &list);
 
 #endif
 

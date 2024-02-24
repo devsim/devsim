@@ -177,8 +177,8 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
   ObjectHolderMap_t factor_args = {
     {"action", ObjectHolder("factor")},
     {"solver_object", command_data_},
-    {"Ap", CreatePODArray(cm->GetAp())},
-    {"Ai", CreatePODArray(cm->GetAi())},
+    {"Ap", CreateIntPODArray(cm->GetAp())},
+    {"Ai", CreateIntPODArray(cm->GetAi())},
     {"is_same_symbolic", ObjectHolder(cm->GetSymbolicStatus() == SymbolicStatus_t::SAME_SYMBOLIC)},
   };
 
@@ -314,7 +314,7 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
     {"action", ObjectHolder("solve")},
     {"solver_object", command_data_},
     {"is_complex", ObjectHolder(true)},
-    {"b", CreateDoublePODArray(b)},
+    {"b", CreateComplexDoublePODArray(b)},
   };
 
   Interpreter interpreter;
