@@ -6,8 +6,8 @@ template void Region::SetModelExprDataCache(ModelExprDataCachePtr<DBLTYPE>);
 #endif
 
 template void Region::Update(const std::vector<DBLTYPE> &result);
-template void Region::ACUpdate(const std::vector<std::complex<DBLTYPE> > &result);
-template void Region::NoiseUpdate(const std::string &output, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DBLTYPE> > &result);
+template void Region::ACUpdate<DBLTYPE>(const dsMath::ComplexDoubleVec_t<DBLTYPE> &result);
+template void Region::NoiseUpdate<DBLTYPE>(const std::string &output, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<DBLTYPE> &result);
 template void Region::Assemble(dsMath::RealRowColValueVec<DBLTYPE> &m, dsMath::RHSEntryVec<DBLTYPE> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t);
 template const TriangleElementField<DBLTYPE> &Region::GetTriangleElementField<DBLTYPE>() const;
 template const TetrahedronElementField<DBLTYPE> &Region::GetTetrahedronElementField<DBLTYPE>() const;

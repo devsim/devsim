@@ -13,6 +13,7 @@ SPDX-License-Identifier: Apache-2.0
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 #endif
+#include "dsMathTypes.hh"
 
 class PermutationEntry;
 class ObjectHolder;
@@ -25,7 +26,6 @@ class NodeModel;
 #include <string>
 #include <iosfwd>
 #include <vector>
-#include <complex>
 #include <map>
 #include <memory>
 
@@ -68,13 +68,13 @@ class EquationHolder {
     size_t GetAbsErrorNodeIndex() const;
 
     template <typename DoubleType>
-    void Update(NodeModel &, const std::vector<DoubleType> &) const;
+    void Update(NodeModel &, const dsMath::DoubleVec_t<DoubleType> &) const;
 
     template <typename DoubleType>
-    void ACUpdate(NodeModel &, const std::vector<std::complex<DoubleType>> &) const;
+    void ACUpdate(NodeModel &, const dsMath::ComplexDoubleVec_t<DoubleType> &) const;
 
     template <typename DoubleType>
-    void NoiseUpdate(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &) const;
+    void NoiseUpdate(const std::string &, const std::vector<PermutationEntry> &, const dsMath::ComplexDoubleVec_t<DoubleType> &) const;
 
     template <typename DoubleType>
     void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);

@@ -370,10 +370,10 @@ void Newton<DoubleType>::LoadMatrixAndRHS(Matrix<DoubleType> &matrix, std::vecto
 
 //// This function must be skipped for noise
 template <typename DoubleType>
-void Newton<DoubleType>::LoadCircuitRHSAC(std::vector<std::complex<DoubleType>> &rhs)
+void Newton<DoubleType>::LoadCircuitRHSAC(ComplexDoubleVec_t<DoubleType> &rhs)
 {
 
-  typedef std::vector<std::pair<size_t, std::complex<double> > > ComplexRHSEntryVec_t;
+  typedef std::vector<std::pair<size_t, ComplexDouble_t<double> > > ComplexRHSEntryVec_t;
 
   ComplexRHSEntryVec_t cv;
 
@@ -393,14 +393,14 @@ void Newton<DoubleType>::LoadCircuitRHSAC(std::vector<std::complex<DoubleType>> 
 
     for (typename ComplexRHSEntryVec_t::iterator it = cv.begin(); it != cv.end(); ++it)
     {
-      rhs[it->first + offset] = std::complex<DoubleType>(static_cast<DoubleType>(it->second.real()), static_cast<DoubleType>(it->second.imag()));
+      rhs[it->first + offset] = ComplexDouble_t<DoubleType>(static_cast<DoubleType>(it->second.real()), static_cast<DoubleType>(it->second.imag()));
     }
   }
   OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
 }
 
 template <typename DoubleType>
-void Newton<DoubleType>::LoadMatrixAndRHSAC(Matrix<DoubleType> &matrix, std::vector<std::complex<DoubleType>> &rhs, permvec_t &permvec, DoubleType frequency)
+void Newton<DoubleType>::LoadMatrixAndRHSAC(Matrix<DoubleType> &matrix, ComplexDoubleVec_t<DoubleType> &rhs, permvec_t &permvec, DoubleType frequency)
 {
 #if 1
   static const DoubleType two_pi = boost::math::constants::two_pi<DoubleType>();
@@ -411,10 +411,10 @@ void Newton<DoubleType>::LoadMatrixAndRHSAC(Matrix<DoubleType> &matrix, std::vec
   static const DoubleType two_pi = 2.0*M_PI;
 #endif
 #endif
-  const std::complex<DoubleType> jOmega  = two_pi * std::complex<DoubleType>(0,1.0) * frequency;
+  const ComplexDouble_t<DoubleType> jOmega  = two_pi * ComplexDouble_t<DoubleType>(0,1.0) * frequency;
 
-  std::vector<DoubleType>                   r(rhs.size());
-  std::vector<std::complex<DoubleType>> c(rhs.size());
+  DoubleVec_t<DoubleType>                   r(rhs.size());
+  ComplexDoubleVec_t<DoubleType> c(rhs.size());
   LoadMatrixAndRHS(matrix, r, permvec, dsMathEnum::WhatToLoad::PERMUTATIONSONLY, dsMathEnum::TimeMode::DC,   static_cast<DoubleType>(1.0));
   LoadMatrixAndRHS(matrix, r, permvec, dsMathEnum::WhatToLoad::MATRIXONLY, dsMathEnum::TimeMode::DC,   static_cast<DoubleType>(1.0));
   LoadMatrixAndRHS(matrix, c, permvec, dsMathEnum::WhatToLoad::MATRIXONLY, dsMathEnum::TimeMode::TIME, jOmega);
@@ -498,18 +498,18 @@ void CallUpdateSolution(NodeKeeper &nk, const std::string &name, std::vector<flo
 }
 #endif
 
-void CallACUpdateSolution(NodeKeeper &nk, const std::string &rname, const std::string &iname, std::vector<std::complex<double>> &result)
+void CallACUpdateSolution(NodeKeeper &nk, const std::string &rname, const std::string &iname, std::vector<ComplexDouble_t<double>> &result)
 {
   nk.ACUpdateSolution(rname, iname, result);
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
-void CallACUpdateSolution(NodeKeeper &nk, const std::string &rname, const std::string &iname, std::vector<std::complex<float128>> &result)
+void CallACUpdateSolution(NodeKeeper &nk, const std::string &rname, const std::string &iname, std::vector<ComplexDouble_t<float128>> &result)
 {
-  std::vector<std::complex<double>> tmp(result.size());
+  std::vector<ComplexDouble_t<double>> tmp(result.size());
   for (size_t i = 0; i < result.size(); ++i)
   {
-    tmp[i] = std::complex<double>(static_cast<double>(result[i].real()), static_cast<double>(result[i].imag()));
+    tmp[i] = ComplexDouble_t<double>(static_cast<double>(result[i].real()), static_cast<double>(result[i].imag()));
   }
   nk.ACUpdateSolution(rname, iname, tmp);
 }
@@ -532,7 +532,7 @@ void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, Objec
   const auto matrix_type = MatrixType::REAL;
 
   auto matrix = std::unique_ptr<CompressedMatrix<DoubleType>>(new CompressedMatrix<DoubleType>(numeqns, matrix_type, ct));
-  std::vector<DoubleType> rhs(numeqns);
+  DoubleVec_t<DoubleType> rhs(numeqns);
 
   permvec_t permvec(numeqns);
   for (size_t i = 0; i < permvec.size(); ++i)
@@ -633,7 +633,7 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
 
   matrix = std::unique_ptr<Matrix<DoubleType>>(CreateMatrix(preconditioner.get()));
 
-  std::vector<DoubleType> rhs(numeqns);
+  DoubleVec_t<DoubleType> rhs(numeqns);
 
   bool converged = false;
 
@@ -648,9 +648,9 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
     permvec[i] = PermutationEntry(i, false);
   }
 
-  std::vector<DoubleType> result(numeqns);
+  DoubleVec_t<DoubleType> result(numeqns);
 
-  std::vector<DoubleType> rhs_constant(numeqns);
+  DoubleVec_t<DoubleType> rhs_constant(numeqns);
   if (!timeinfo.IsDCMethod())
   {
     InitializeTransientAssemble(timeinfo, numeqns, rhs_constant);
@@ -806,8 +806,8 @@ bool Newton<DoubleType>::Solve(LinearSolver<DoubleType> &itermethod, const TimeM
     }
   }
 
-  std::vector<DoubleType> newI;
-  std::vector<DoubleType> newQ;
+  DoubleVec_t<DoubleType> newI;
+  DoubleVec_t<DoubleType> newQ;
   if (timeinfo.IsTransient())
   {
     //// New charge based on new assemble
@@ -1007,7 +1007,7 @@ void Newton<DoubleType>::PrintDeviceErrors(const Device &device, ObjectHolderMap
 }
 
 template <typename DoubleType>
-void Newton<DoubleType>::InitializeTransientAssemble(const TimeMethods::TimeParams<DoubleType> &timeinfo, size_t numeqns, std::vector<DoubleType> &rhs_constant)
+void Newton<DoubleType>::InitializeTransientAssemble(const TimeMethods::TimeParams<DoubleType> &timeinfo, size_t numeqns, DoubleVec_t<DoubleType> &rhs_constant)
 {
   TimeData<DoubleType> &tinst = TimeData<DoubleType>::GetInstance();
   if (timeinfo.a1 != 0.0)
@@ -1030,12 +1030,12 @@ void Newton<DoubleType>::InitializeTransientAssemble(const TimeMethods::TimePara
 }
 
 template <typename DoubleType>
-bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &timeinfo, const std::vector<DoubleType> &newQ, ObjectHolderMap_t *ohm)
+bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &timeinfo, const DoubleVec_t<DoubleType> &newQ, ObjectHolderMap_t *ohm)
 {
   const size_t numeqns = newQ.size();
   bool converged = true;
   /// need to make sure projection makes sense
-  std::vector<DoubleType> projectQ(numeqns);
+  DoubleVec_t<DoubleType> projectQ(numeqns);
 
   TimeData<DoubleType> &tinst = TimeData<DoubleType>::GetInstance();
 
@@ -1073,7 +1073,7 @@ bool Newton<DoubleType>::CheckTransientProjection(const TimeMethods::TimeParams<
 }
 
 template <typename DoubleType>
-void Newton<DoubleType>::UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &timeinfo, size_t numeqns, const std::vector<DoubleType> &newI, const std::vector<DoubleType> &newQ)
+void Newton<DoubleType>::UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &timeinfo, size_t numeqns, const DoubleVec_t<DoubleType> &newI, const DoubleVec_t<DoubleType> &newQ)
 {
   TimeData<DoubleType> &tinst = TimeData<DoubleType>::GetInstance();
   if (timeinfo.IsDCMethod())
@@ -1170,7 +1170,7 @@ bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleTyp
 
   std::unique_ptr<Matrix<DoubleType>> matrix(CreateACMatrix<DoubleType>(preconditioner.get()));
 
-  std::vector<std::complex<DoubleType>> rhs(numeqns);
+  ComplexDoubleVec_t<DoubleType> rhs(numeqns);
 
   /// This is to initialize other copies
   permvec_t permvec_temp(numeqns);
@@ -1180,7 +1180,7 @@ bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleTyp
     permvec_temp[i] = PermutationEntry(i, false);
   }
 
-  std::vector<std::complex<DoubleType>> result(numeqns);
+  ComplexDoubleVec_t<DoubleType> result(numeqns);
 
   bool converged = false;
 
@@ -1207,7 +1207,7 @@ bool Newton<DoubleType>::ACSolve(LinearSolver<DoubleType> &itermethod, DoubleTyp
     {
       std::string name = (dit->first);
       Device *dev =      (dit->second);
-      dev->ACUpdate(result);
+      dev->ACUpdate<DoubleType>(result);
     }
 
     if (nk.HaveNodes())
@@ -1288,7 +1288,7 @@ bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver
 
   std::unique_ptr<Matrix<DoubleType>> matrix(CreateACMatrix<DoubleType>(preconditioner.get()));
 
-  std::vector<std::complex<DoubleType>> rhs(numeqns);
+  ComplexDoubleVec_t<DoubleType> rhs(numeqns);
 
   /// This is to initialize other copies
   permvec_t permvec_temp(numeqns);
@@ -1298,7 +1298,7 @@ bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver
       permvec_temp[i] = PermutationEntry(i, false);
   }
 
-  std::vector<std::complex<DoubleType>> result(numeqns);
+  ComplexDoubleVec_t<DoubleType> result(numeqns);
 
   bool converged = false;
 
@@ -1328,7 +1328,7 @@ bool Newton<DoubleType>::NoiseSolve(const std::string &output_name, LinearSolver
     {
       std::string name = (dit->first);
       Device *dev =      (dit->second);
-      dev->NoiseUpdate(output_name, permvec, result);
+      dev->NoiseUpdate<DoubleType>(output_name, permvec, result);
     }
 
     CallACUpdateSolution(nk, circuit_real_name, circuit_imag_name, result);

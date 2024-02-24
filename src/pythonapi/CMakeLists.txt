@@ -13,6 +13,7 @@ INCLUDE_DIRECTORIES (
     ../pythonapi
     ../commands
     ../common_api
+    ../math
 )
 
 IF (PYTHON3)

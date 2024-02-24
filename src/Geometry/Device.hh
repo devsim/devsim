@@ -8,15 +8,17 @@ SPDX-License-Identifier: Apache-2.0
 #ifndef DEVICE_HH
 #define DEVICE_HH
 #include "MathEnum.hh"
+#ifdef DEVSIM_EXTENDED_PRECISION
+#include "Float128.hh"
+#endif
+#include "dsMathTypes.hh"
+
 #include <cstddef>
 #include <string>
 #include <vector>
 #include <map>
 #include <complex>
 
-#ifdef DEVSIM_EXTENDED_PRECISION
-#include "Float128.hh"
-#endif
 
 class PermutationEntry;
 typedef std::map<size_t, PermutationEntry> PermutationMap;
@@ -74,11 +76,11 @@ class Device
       void AddRegion(const RegionPtr &);
 
       template <typename DoubleType>
-      void Update(const std::vector<DoubleType> &/*result*/);
+      void Update(const dsMath::DoubleVec_t<DoubleType> &/*result*/);
       template <typename DoubleType>
-      void ACUpdate(const std::vector<std::complex<DoubleType> > &/*result*/);
+      void ACUpdate(const std::vector<dsMath::ComplexDouble_t<DoubleType>> &/*result*/);
       template <typename DoubleType>
-      void NoiseUpdate(const std::string &/*output*/, const std::vector<PermutationEntry> &/*permvec*/, const std::vector<std::complex<DoubleType> > &/*result*/);
+      void NoiseUpdate(const std::string &/*output*/, const std::vector<PermutationEntry> &/*permvec*/, const std::vector<dsMath::ComplexDouble_t<DoubleType>> &/*result*/);
 
       void UpdateContacts();
       // Need to be careful with accessors and stuff

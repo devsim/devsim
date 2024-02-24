@@ -1374,7 +1374,7 @@ void Region::Update(const std::vector<DoubleType> &result)
 }
 
 template <typename DoubleType>
-void Region::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
+void Region::ACUpdate(const dsMath::ComplexDoubleVec_t<DoubleType> &result)
 {
         if (!numequations)
         {
@@ -1393,12 +1393,12 @@ void Region::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
             NodeModelPtr nm = std::const_pointer_cast<NodeModel, const NodeModel>(GetNodeModel(var));
             dsAssert(nm.get(), "UNEXPECTED");
 
-            eqptr.ACUpdate(*nm, result);
+            eqptr.ACUpdate<DoubleType>(*nm, result);
         }
 }
 
 template <typename DoubleType>
-void Region::NoiseUpdate(const std::string &output, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &result)
+void Region::NoiseUpdate(const std::string &output, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<DoubleType> &result)
 {
         if (!numequations)
         {
@@ -1413,7 +1413,7 @@ void Region::NoiseUpdate(const std::string &output, const std::vector<Permutatio
             const std::string eqname = eit->first;
             const EquationHolder &eqptr = eit->second;
 
-            eqptr.NoiseUpdate(output, permvec, result);
+            eqptr.NoiseUpdate<DoubleType>(output, permvec, result);
         }
 }
 
@@ -1827,5 +1827,6 @@ bool Region::UseExtendedPrecisionEquations() const
 #ifdef DEVSIM_EXTENDED_PRECISION
 #define DBLTYPE float128
 #include "RegionInstantiate.cc"
+#undef DBLTYPE
 #endif
 

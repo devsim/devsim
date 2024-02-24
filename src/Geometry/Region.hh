@@ -15,6 +15,7 @@ typedef float128 extended_type;
 #else
 typedef double extended_type;
 #endif
+#include "dsMathTypes.hh"
 
 #include <memory>
 
@@ -350,11 +351,11 @@ class Region
     }
 
     template <typename DoubleType>
-    void Update(const std::vector<DoubleType> &/*result*/);
+    void Update(const dsMath::DoubleVec_t<DoubleType> &/*result*/);
     template <typename DoubleType>
-    void ACUpdate(const std::vector<std::complex<DoubleType> > &/*result*/);
+    void ACUpdate(const dsMath::ComplexDoubleVec_t<DoubleType> &/*result*/);
     template <typename DoubleType>
-    void NoiseUpdate(const std::string &/*output*/, const std::vector<PermutationEntry> &/*permvec*/, const std::vector<std::complex<DoubleType> > &/*result*/);
+    void NoiseUpdate(const std::string &/*output*/, const std::vector<PermutationEntry> &/*permvec*/, const dsMath::ComplexDoubleVec_t<DoubleType> &/*result*/);
 
     template <typename DoubleType>
     void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);

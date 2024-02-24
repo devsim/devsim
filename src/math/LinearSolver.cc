@@ -24,21 +24,21 @@ LinearSolver<DoubleType>::~LinearSolver()
 {}
 
 template <typename DoubleType>
-bool LinearSolver<DoubleType>::Solve(Matrix<DoubleType> &m, Preconditioner<DoubleType> &p, std::vector<DoubleType> &x, std::vector<DoubleType> &b)
+bool LinearSolver<DoubleType>::Solve(Matrix<DoubleType> &m, Preconditioner<DoubleType> &p, DoubleVec_t<DoubleType> &x, DoubleVec_t<DoubleType> &b)
 {
   dsTimer timer("LinearSolve");
   return this->SolveImpl(m, p, x, b);
 }
 
 template <typename DoubleType>
-bool LinearSolver<DoubleType>::ACSolve(Matrix<DoubleType> &m, Preconditioner<DoubleType> &p, std::vector<std::complex<DoubleType>> &x, std::vector<std::complex<DoubleType>> &b)
+bool LinearSolver<DoubleType>::ACSolve(Matrix<DoubleType> &m, Preconditioner<DoubleType> &p, ComplexDoubleVec_t<DoubleType> &x, ComplexDoubleVec_t<DoubleType> &b)
 {
   dsTimer timer("ACLinearSolve");
   return this->ACSolveImpl(m, p, x, b);
 }
 
 template <typename DoubleType>
-bool LinearSolver<DoubleType>::NoiseSolve(Matrix<DoubleType> &m, Preconditioner<DoubleType> &p, std::vector<std::complex<DoubleType>> &x, std::vector<std::complex<DoubleType>> &b)
+bool LinearSolver<DoubleType>::NoiseSolve(Matrix<DoubleType> &m, Preconditioner<DoubleType> &p, ComplexDoubleVec_t<DoubleType> &x, ComplexDoubleVec_t<DoubleType> &b)
 {
   dsTimer timer("ACLinearSolve");
   return this->NoiseSolveImpl(m, p, x, b);

@@ -39,6 +39,7 @@ void drotg(double *a, double *b, double *c, double *d);
 void zrotg(std::complex<double> *a, std::complex<double> *b, std::complex<double> *c, std::complex<double> *d);
 
 #ifdef DEVSIM_EXTENDED_PRECISION
+#ifndef USE_CPP_BIN_FLOAT
 #include "Float128.hh"
 
 extern "C" {
@@ -56,7 +57,7 @@ inline void getrs( char *trans, int *n, int *nrhs, float128 *a, int *lda, int *i
 {
   quad_dgetrs_(trans, n, nrhs, a, lda, ipiv, b, ldb, info);
 }
-
+#endif
 #endif
 #endif
 

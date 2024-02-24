@@ -203,9 +203,9 @@ class Newton {
         template <typename T>
         void LoadIntoRHSPermutated(const RHSEntryVec<DoubleType> &, std::vector<T> &, const permvec_t &, T scl = 1.0, size_t offset = 0);
     private:
-        void InitializeTransientAssemble(const TimeMethods::TimeParams<DoubleType> &, size_t, std::vector<DoubleType> &);
-        bool CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &, const std::vector<DoubleType> &, ObjectHolderMap_t *ohm);
-        void UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &, size_t, const std::vector<DoubleType> &, const std::vector<DoubleType> &);
+        void InitializeTransientAssemble(const TimeMethods::TimeParams<DoubleType> &, size_t, DoubleVec_t<DoubleType> &);
+        bool CheckTransientProjection(const TimeMethods::TimeParams<DoubleType> &, const DoubleVec_t<DoubleType> &, ObjectHolderMap_t *ohm);
+        void UpdateTransientCurrent(const TimeMethods::TimeParams<DoubleType> &, size_t, const DoubleVec_t<DoubleType> &, const DoubleVec_t<DoubleType> &);
 
         void PrintDeviceErrors(const Device &device, ObjectHolderMap_t *);
         void PrintCircuitErrors(ObjectHolderMap_t *);
@@ -220,8 +220,8 @@ class Newton {
         template <typename T>
         void LoadMatrixAndRHS(Matrix<DoubleType> &, std::vector<T> &, permvec_t &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode, T);
 
-        void LoadMatrixAndRHSAC(Matrix<DoubleType> &, std::vector<std::complex<DoubleType>> &, permvec_t &, DoubleType);
-        void LoadCircuitRHSAC(std::vector<std::complex<DoubleType>> &);
+        void LoadMatrixAndRHSAC(Matrix<DoubleType> &, ComplexDoubleVec_t<DoubleType> &, permvec_t &, DoubleType);
+        void LoadCircuitRHSAC(ComplexDoubleVec_t<DoubleType> &);
 
         void LoadMatrixAndRHSOnCircuit(RealRowColValueVec<DoubleType> &, RHSEntryVec<DoubleType> &rhs, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 

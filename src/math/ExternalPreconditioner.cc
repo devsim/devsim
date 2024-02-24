@@ -13,9 +13,9 @@ SPDX-License-Identifier: Apache-2.0
 #include "GlobalData.hh"
 #include "OutputStream.hh"
 #include <utility>
-#include <complex>
 #include <algorithm>
 
+namespace dsMath {
 namespace
 {
 void preswap(std::vector<double> &xin, std::vector<double> &xout)
@@ -26,18 +26,20 @@ void convertToType(std::vector<double> &xin, std::vector<double> &xout)
 {
   xout.swap(xin);
 }
-void preswap(std::vector<std::complex<double>> &xin, std::vector<std::complex<double>> &xout)
+void preswap(ComplexDoubleVec_t<double> &xin, ComplexDoubleVec_t<double> &xout)
 {
   xin.swap(xout);
 }
-void convertToType(std::vector<std::complex<double>> &xin, std::vector<std::complex<double>> &xout)
+void convertToType(ComplexDoubleVec_t<double> &xin, ComplexDoubleVec_t<double> &xout)
 {
   xout.swap(xin);
+}
 }
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
+namespace dsMath {
 namespace
 {
 void preswap(std::vector<double> &xin, std::vector<float128> &xout)
@@ -48,13 +50,14 @@ void convertToType(std::vector<double> &xin, std::vector<float128> &xout)
   xout.resize(xin.size());
   std::copy(xin.begin(), xin.end(), xout.begin());
 }
-void preswap(std::vector<std::complex<double>> &xin, std::vector<std::complex<float128>> &xout)
+void preswap(ComplexDoubleVec_t<double> &xin, ComplexDoubleVec_t<float128> &xout)
 {
 }
-void convertToType(std::vector<std::complex<double>> &xin, std::vector<std::complex<float128>> &xout)
+void convertToType(ComplexDoubleVec_t<double> &xin, ComplexDoubleVec_t<float128> &xout)
 {
   xout.resize(xin.size());
-  std::copy(xin.begin(), xin.end(), xout.begin());
+  std::transform(xin.begin(), xin.end(), xout.begin(), [](auto x){return static_cast<ComplexDouble_t<float128>>(x);});
+}
 }
 }
 #endif
@@ -348,7 +351,7 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
       dsAssert(status, error_string);
 
       bool ret = false;
-      std::vector<std::complex<double>> xv;
+      ComplexDoubleVec_t<double> xv;
       preswap(xv, x);
       ret = result_dictionary["x"].GetComplexDoubleList(xv);
       convertToType(xv, x);

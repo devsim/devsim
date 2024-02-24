@@ -9,18 +9,10 @@ SPDX-License-Identifier: Apache-2.0
 #define EXPREQUATION_HH
 #include "Equation.hh"
 #include "MathEnum.hh"
+#include "dsMathTypes.hh"
 
 #include <complex>
 #include <string>
-
-/*
-#include <memory>
-namespace Eqo {
-    class EquationObject;
-    typedef std::shared_ptr<EquationObject> EqObjPtr;
-
-}
-*/
 
 class PermutationEntry;
 
@@ -53,9 +45,9 @@ class ExprEquation : public Equation<DoubleType>
 
         void DerivedAssemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
 
-        void UpdateValues(NodeModel &, const std::vector<DoubleType> &);
-        void ACUpdateValues(NodeModel &, const std::vector<std::complex<DoubleType> > &);
-        void NoiseUpdateValues(const std::string &, const std::vector<PermutationEntry> &, const std::vector<std::complex<DoubleType> > &);
+        void UpdateValues(NodeModel &, const dsMath::DoubleVec_t<DoubleType> &);
+        void ACUpdateValues(NodeModel &, const dsMath::ComplexDoubleVec_t<DoubleType> &);
+        void NoiseUpdateValues(const std::string &, const std::vector<PermutationEntry> &, const dsMath::ComplexDoubleVec_t<DoubleType> &);
 
         /// Need to decide if we are going to contain equations or models?
         /// Assume that

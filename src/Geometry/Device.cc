@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 #include "OutputStream.hh"
 #include "Node.hh"
 #include "GeometryStream.hh"
+#include "dsMathTypes.hh"
 #include <algorithm>
 #include <vector>
 
@@ -335,7 +336,7 @@ void Device::RegionAssemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::R
 }
 
 template <typename DoubleType>
-void Device::Update(const std::vector<DoubleType> &result)
+void Device::Update(const dsMath::DoubleVec_t<DoubleType> &result)
 {
     relError = 0.0;
     absError = 0.0;
@@ -358,7 +359,7 @@ void Device::Update(const std::vector<DoubleType> &result)
 }
 
 template <typename DoubleType>
-void Device::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
+void Device::ACUpdate(const dsMath::ComplexDoubleVec_t<DoubleType> &result)
 {
     RegionList_t::iterator it = regionList.begin();
     const RegionList_t::iterator end = regionList.end();
@@ -366,12 +367,12 @@ void Device::ACUpdate(const std::vector<std::complex<DoubleType> > &result)
     {
         Region *rp = it->second;
 
-        rp->ACUpdate(result);
+        rp->ACUpdate<DoubleType>(result);
     }
 }
 
 template <typename DoubleType>
-void Device::NoiseUpdate(const std::string &output, const std::vector<PermutationEntry> &permvec, const std::vector<std::complex<DoubleType> > &result)
+void Device::NoiseUpdate(const std::string &output, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<DoubleType> &result)
 {
     RegionList_t::iterator it = regionList.begin();
     const RegionList_t::iterator end = regionList.end();
@@ -379,7 +380,7 @@ void Device::NoiseUpdate(const std::string &output, const std::vector<Permutatio
     {
         Region *rp = it->second;
 
-        rp->NoiseUpdate(output, permvec, result);
+        rp->NoiseUpdate<DoubleType>(output, permvec, result);
     }
 }
 
@@ -468,5 +469,6 @@ void Device::SignalCallbacksOnInterface(const std::string &nm, const Region *rp)
 #ifdef DEVSIM_EXTENDED_PRECISION
 #define DBLTYPE float128
 #include "DeviceInstantiate.cc"
+#undef DBLTYPE
 #endif
 

@@ -492,7 +492,6 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
     //// put the objects in here
     tclObjVector.resize(cnt);
 
-    size_t numvecs  = 0;
     size_t numelems = 0;
     for (size_t i = 0; i < cnt; ++i)
     {
@@ -503,7 +502,6 @@ void MathEval<DoubleType>::EvaluateTclMathFunc(const std::string &func, std::vec
       else
       {
         tclObjVector[i].clear();
-        ++numvecs;
         if (numelems == 0)
         {
           numelems = vvals[i]->size();
