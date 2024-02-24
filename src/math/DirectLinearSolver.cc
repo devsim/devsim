@@ -65,7 +65,7 @@ bool DirectLinearSolver<DoubleType>::SolveImpl(Matrix<DoubleType> &mat, Precondi
 }
 
 template <typename DoubleType>
-bool DirectLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, std::vector<std::complex<DoubleType>> &sol, std::vector<std::complex<DoubleType>> &rhs)
+bool DirectLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, ComplexDoubleVec_t<DoubleType> &sol, ComplexDoubleVec_t<DoubleType> &rhs)
 {
   bool ret = false;
   bool solved = false;
@@ -88,7 +88,7 @@ bool DirectLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Precon
 }
 
 template <typename DoubleType>
-bool DirectLinearSolver<DoubleType>::NoiseSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, std::vector<std::complex<DoubleType>> &sol, std::vector<std::complex<DoubleType>> &rhs)
+bool DirectLinearSolver<DoubleType>::NoiseSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, ComplexDoubleVec_t<DoubleType> &sol, ComplexDoubleVec_t<DoubleType> &rhs)
 {
   bool ret = false;
   bool solved = false;

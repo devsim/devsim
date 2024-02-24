@@ -24,9 +24,9 @@ class IterativeLinearSolver : public LinearSolver<DoubleType>
         ~IterativeLinearSolver() {};
    protected:
    private:
-        bool SolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<DoubleType> &, std::vector<DoubleType> & );
-        bool ACSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &,  std::vector<std::complex<DoubleType>> &, std::vector<std::complex<DoubleType>> & );
-        bool NoiseSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &, std::vector<std::complex<DoubleType>> &, std::vector<std::complex<DoubleType>> & );
+        bool SolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &, DoubleVec_t<DoubleType> &, DoubleVec_t<DoubleType> & );
+        bool ACSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &,  ComplexDoubleVec_t<DoubleType> &, ComplexDoubleVec_t<DoubleType> & );
+        bool NoiseSolveImpl(Matrix<DoubleType> &, Preconditioner<DoubleType> &, ComplexDoubleVec_t<DoubleType> &, ComplexDoubleVec_t<DoubleType> & );
 
         IterativeLinearSolver(const IterativeLinearSolver &);
         IterativeLinearSolver &operator=(const IterativeLinearSolver &);

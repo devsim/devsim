@@ -23,7 +23,7 @@ class Matrix {
 
         virtual void AddEntry(int, int, DoubleType) = 0;  // add row,column, value
 
-        virtual void AddEntry(int, int, std::complex<DoubleType>) = 0;
+        virtual void AddEntry(int, int, ComplexDouble_t<DoubleType>) = 0;
 
         virtual void AddImagEntry(int, int, DoubleType) = 0;  // add row,column, value
 

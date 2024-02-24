@@ -775,10 +775,10 @@ template ObjectHolder CreatePODArray(const std::vector<int> &list);
 //template ObjectHolder CreateDoublePODArray(const std::vector<std::complex<double>> &list);
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
-template ObjectHolder CreateDoublePODArray(const std::vector<float128> &list);
+#include "dsMathTypes.hh"
 
 template <>
-ObjectHolder CreateDoublePODArray(const std::vector<std::complex<float128>> &list)
+ObjectHolder CreateDoublePODArray(const dsMath::ComplexDoubleVec_t<float128> &list)
 {
   thread_local std::vector<std::complex<double>> tmp;
   tmp.resize(list.size());
@@ -787,6 +787,8 @@ ObjectHolder CreateDoublePODArray(const std::vector<std::complex<float128>> &lis
 
   return CreateDoublePODArray(tmp);
 }
+
+//template ObjectHolder CreateDoublePODArray(const dsMath::ComplexDoubleVec_t<float128> &list);
 
 #endif
 

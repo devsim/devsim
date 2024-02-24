@@ -7,8 +7,8 @@ SPDX-License-Identifier: Apache-2.0
 
 #ifndef DS_MATRIXENTRIES_HH
 #define DS_MATRIXENTRIES_HH
+#include "dsMathTypes.hh"
 #include<vector>
-#include<complex>
 
 namespace dsMath {
 
@@ -27,7 +27,7 @@ template <typename DoubleType>
 using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 
 template <typename DoubleType>
-using ComplexRowColVal = RowColVal<std::complex<DoubleType>>;
+using ComplexRowColVal = RowColVal<ComplexDouble_t<DoubleType>>;
 
 template <typename DoubleType>
 using ComplexRowColValueVec = std::vector<ComplexRowColVal<DoubleType>>;

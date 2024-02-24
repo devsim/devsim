@@ -75,7 +75,7 @@ bool IterativeLinearSolver<float128>::SolveImpl(Matrix<float128> &mat, Precondit
 #endif
 
 template <typename DoubleType>
-bool IterativeLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, std::vector<std::complex<DoubleType>> &sol, std::vector<std::complex<DoubleType>> &rhs)
+bool IterativeLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, ComplexDoubleVec_t<DoubleType> &sol, ComplexDoubleVec_t<DoubleType> &rhs)
 {
   bool ret = false;
   {
@@ -87,7 +87,7 @@ bool IterativeLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Pre
 }
 
 template <typename DoubleType>
-bool IterativeLinearSolver<DoubleType>::NoiseSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, std::vector<std::complex<DoubleType>> &sol, std::vector<std::complex<DoubleType>> &rhs)
+bool IterativeLinearSolver<DoubleType>::NoiseSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, ComplexDoubleVec_t<DoubleType> &sol, ComplexDoubleVec_t<DoubleType> &rhs)
 {
   bool ret = false;
   {
