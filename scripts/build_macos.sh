@@ -30,8 +30,8 @@ elif [ "${1}" = "clang" ]
   export CC=/usr/bin/gcc;
   export CXX=/usr/bin/g++;
   export F77="";
-  export ARCH_ARG='-DCMAKE_OSX_ARCHITECTURES="arm64"'
-  export PLAT_NAME="arm64"
+  export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
+  export PLAT_NAME="universal"
   export PYTHON3_BIN=python3
   export PIP_BIN=pip3
 else
@@ -39,6 +39,7 @@ else
   exit 1;
 fi
 
+export MACOSX_DEPLOYMENT_TARGET=12.0
 
 ${PIP_BIN} install wheel
 export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as gp; print(gp()['include'])")
