@@ -7,6 +7,7 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.7.2
 
+* macOS package is now Universal.  Both `x86_64` and `arm64` will use `clang` compiler and macOS 12.0 is now the minimum supported version. 
 * Update Boost version to 1.82
 * Improvements to extended precision complex numbers implementation to work with newer compilers.
 * Script to build for `manylinux_2_28` (Centos 8)
