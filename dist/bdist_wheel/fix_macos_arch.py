@@ -10,7 +10,7 @@ except TypeError:
 #
 #print(plat)
 
-for i in 'x86_64', 'arm64':
+for i in 'x86_64', 'arm64', 'universal2':
   p = plat.find(i)
   if p != -1:
       prefix = plat[0:p]

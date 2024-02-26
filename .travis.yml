@@ -4,10 +4,6 @@ language: cpp
 matrix:
   include:
   - os: osx
-    env: COMPILER=gcc
-    osx_image: xcode10.1
-  - os: osx
-    env: COMPILER=clang
     osx_image: xcode14.2
   - os: linux
     dist: focal
@@ -43,12 +39,8 @@ git:
 before_script:
   - export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
-      if [ "$COMPILER" = "gcc" ]; then
-        brew install gcc@9 cmake;
-      elif [ "$COMPILER" = "clang" ]; then
-        brew install cmake;
-        git submodule update --init --depth 1 external/eigen;
-      fi
+      brew install cmake;
+      git submodule update --init --depth 1 external/eigen;
     fi
   # specifically for pypi deployment
   - export README_BASE_URL="https://github.com/devsim/devsim/blob/${TRAVIS_TAG}"
@@ -69,7 +61,7 @@ script:
       ./scripts/build_docker_manylinux2014.sh ${TRAVIS_TAG};
     fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
-      ./scripts/build_macos.sh $COMPILER "${TRAVIS_TAG}";
+      ./scripts/build_macos.sh clang "${TRAVIS_TAG}";
     fi
 
 #before_deploy:
