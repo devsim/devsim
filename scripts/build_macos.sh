@@ -31,7 +31,7 @@ elif [ "${1}" = "clang" ]
   export CXX=clang++;
   export F77="";
   export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
-  export PLAT_NAME="universal"
+  export PLAT_NAME="universal2"
   export PYTHON3_BIN=python3
   export PIP_BIN=pip3
 else
