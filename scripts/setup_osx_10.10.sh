@@ -17,7 +17,7 @@ for TYPE in debug release; do
       -DDEVSIM_EXTENDED_PRECISION=ON \
       -DDEVSIM_CPP_BIN_FLOAT=ON \
       -DEIGEN_DENSE_EXTENDED=ON \
-      -DMKL_PARDISO=OFF \
+      -DMKL_PARDISO=ON \
       -DPYTHON3=ON \
       -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
       ..)
