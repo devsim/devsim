@@ -10,13 +10,17 @@ except TypeError:
 #
 #print(plat)
 
+prefix = None
 for i in 'x86_64', 'arm64':
   p = plat.find(i)
   if p != -1:
       prefix = plat[0:p]
       break
 
-print(prefix+ sys.argv[1])
+if prefix is None:
+  print('')
+else:
+  print(prefix+ sys.argv[1])
 #
 #
 #

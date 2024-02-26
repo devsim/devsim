@@ -27,11 +27,11 @@ elif [ "${1}" = "clang" ]
   then
   export CMAKE="cmake"
   export CMAKE_CXX_FLAGS=""
-  export CC=/usr/bin/gcc;
-  export CXX=/usr/bin/g++;
+  export CC=clang;
+  export CXX=clang++;
   export F77="";
-  export ARCH_ARG='-DCMAKE_OSX_ARCHITECTURES="arm64"'
-  export PLAT_NAME="arm64"
+  export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
+  export PLAT_NAME="universal2"
   export PYTHON3_BIN=python3
   export PIP_BIN=pip3
 else
@@ -39,6 +39,7 @@ else
   exit 1;
 fi
 
+export MACOSX_DEPLOYMENT_TARGET=12.0
 
 ${PIP_BIN} install wheel
 export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as gp; print(gp()['include'])")
@@ -80,6 +81,8 @@ DIST_NAME=devsim_macos_${PLAT_NAME}_${2}
 cp -f dist/bdist_wheel/setup.* dist/${DIST_NAME}
 FULL_PLAT_NAME=$(${PYTHON3_BIN} dist/bdist_wheel/fix_macos_arch.py ${PLAT_NAME})
 echo PACKAGING $FULL_PLAT_NAME
-(cd dist/${DIST_NAME} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg)
+if [[ -n "$FULL_PLAT_NAME" ]]; then
+(cd dist/${DIST_NAME} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg);
+fi
 (cd dist/${DIST_NAME} && ${PIP_BIN} wheel .)
 (cp dist/${DIST_NAME}/*.whl dist)
