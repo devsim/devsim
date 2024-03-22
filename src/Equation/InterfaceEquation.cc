@@ -432,7 +432,7 @@ void InterfaceEquation<DoubleType>::NodeVolumeType1Assemble(const std::string &i
                 const Node *node0 = nodes0[i];
                 const Node *node1 = nodes1[i];
 
-                if (!(activeNodes0.count(node0)) && (activeNodes1.count(node1)))
+                if (!(activeNodes0.count(node0) && (activeNodes1.count(node1))))
                 {
                   continue;
                 }

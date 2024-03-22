@@ -5,6 +5,10 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.7.3
+
+Fixed issue [#133](https://github.com/devsim/devsim/issues/133) identified by [k@yh-kwok](https://github.com/@yh-kwok).
+
 ## Version 2.7.2
 
 * macOS package is now Universal.  Both `x86_64` and `arm64` will use `clang` compiler and macOS 12.0 is now the minimum supported version.
@@ -26,7 +30,7 @@ More helpful exception information returned to python if the error is considered
 
 ### Bugs
 
-Fixed issue [#123](https://github.com/devsim/devsim/issues/123) identified by [@gluek](https://github.com/gluek) This resulted in bad results on Windows and macOS in calculation of 3d mesh areas and volumes.
+Fixed issue [#123](https://github.com/devsim/devsim/issues/123) identified by [@gluek](https://github.com/gluek). This resulted in bad results on Windows and macOS in calculation of 3d mesh areas and volumes.
 
 ## Version 2.6.4
 
