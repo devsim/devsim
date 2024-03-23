@@ -7,7 +7,7 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.7.3
 
-Fixed issue [#133](https://github.com/devsim/devsim/issues/133) identified by [k@yh-kwok](https://github.com/@yh-kwok).
+Fixed issue [#133](https://github.com/devsim/devsim/issues/133) identified by [@yh-kwok](https://github.com/yh-kwok).
 
 ## Version 2.7.2
 
