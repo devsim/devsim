@@ -237,7 +237,7 @@ DevsimWriter::~DevsimWriter()
 {
 }
 
-bool DevsimWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::string &errorString)
+bool DevsimWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
@@ -257,7 +257,7 @@ bool DevsimWriter::WriteMesh_(const std::string &deviceName, const std::string &
     return ret;
 }
 
-bool DevsimWriter::WriteMeshes_(const std::string &filename, std::string &errorString)
+bool DevsimWriter::WriteMeshes_(const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;

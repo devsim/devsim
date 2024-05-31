@@ -620,7 +620,7 @@ void WriteRegion(const Region &r, std::ostream &myfile)
 }
 #endif
 
-bool WriteSingleDevice(const std::string &dname, const std::string &filename, std::string &errorString)
+bool WriteSingleDevice(const std::string &dname, const std::string &filename, std::vector<std::string> &include, std::string &errorString)
 {
   bool ret = true;
   std::ostringstream os;
@@ -729,7 +729,7 @@ VTKWriter::~VTKWriter()
 {
 }
 
-bool VTKWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::string &errorString)
+bool VTKWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
@@ -745,7 +745,7 @@ bool VTKWriter::WriteMesh_(const std::string &deviceName, const std::string &fil
     else
     {
 #endif
-        ret = VTK::WriteSingleDevice(deviceName, filename, errorString);
+        ret = VTK::WriteSingleDevice(deviceName, filename, include, errorString);
 #if 0
     }
 #endif
@@ -753,7 +753,7 @@ bool VTKWriter::WriteMesh_(const std::string &deviceName, const std::string &fil
     return ret;
 }
 
-bool VTKWriter::WriteMeshes_(const std::string &filename, std::string &errorString)
+bool VTKWriter::WriteMeshes_(const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
@@ -781,7 +781,7 @@ bool VTKWriter::WriteMeshes_(const std::string &filename, std::string &errorStri
         for (GlobalData::DeviceList_t::const_iterator dit = dlist.begin(); dit != dlist.end(); ++dit)
         {
             const std::string &dname = dit->first;
-            ret = VTK::WriteSingleDevice(dname, filename, errorString);
+            ret = VTK::WriteSingleDevice(dname, filename, include, errorString);
         }
     }
 #if 0
