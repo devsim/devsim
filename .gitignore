@@ -8,3 +8,6 @@ testing/*.vtu
 testing/*.vtm
 testing/*.visit
 testing/*.msh
+
+# Ignore generated directories
+linux*/
