@@ -218,7 +218,7 @@ FloodsWriter::~FloodsWriter()
 {
 }
 
-bool FloodsWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::string &errorString)
+bool FloodsWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
@@ -238,7 +238,7 @@ bool FloodsWriter::WriteMesh_(const std::string &deviceName, const std::string &
     return ret;
 }
 
-bool FloodsWriter::WriteMeshes_(const std::string &filename, std::string &errorString)
+bool FloodsWriter::WriteMeshes_(const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
