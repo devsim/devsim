@@ -27,6 +27,8 @@ SPDX-License-Identifier: Apache-2.0
 #include <fstream>
 #include <iomanip>
 #include <set>
+#include <regex>
+
 namespace Tecplot {
 void BreakLine(std::ostream &myfile, const std::string &output_string)
 {
@@ -397,7 +399,7 @@ void WriteTetrahedra(std::ostream &myfile, const Region &reg)
 }
 
 
-bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::string &errorString)
+bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
 {
   bool ret = true;
   std::ostringstream os;
@@ -439,6 +441,29 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
           if ((name == "x" || name == "y" || name == "z"))
           {
             continue;
+          }
+
+          //// Only save the fields that are "included"
+          bool is_included = false;
+          is_included = include.empty(); // Assume included if no patterns are specified
+          for (const std::string& pattern : include) {
+              if (std::regex_match(name, std::regex(pattern))) {
+                  is_included = true;
+                  break;
+              }
+          }
+
+          //// Ignore fields that are explicitly "excluded"
+          bool is_excluded = false;
+          for (const std::string& pattern : exclude) {
+              if (std::regex_match(name, std::regex(pattern))) {
+                  is_excluded = true;
+                  break;
+              }
+          }
+
+          if (!is_included || is_excluded) {
+              continue;
           }
 
           ConstNodeModelPtr emp = nit->second;
@@ -490,6 +515,29 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
         {
           const std::string name = eit->first;
           ConstEdgeModelPtr emp = eit->second;
+
+          //// Only save the fields that are "included"
+          bool is_included = false;
+          is_included = include.empty(); // Assume included if no patterns are specified
+          for (const std::string& pattern : include) {
+              if (std::regex_match(name, std::regex(pattern))) {
+                  is_included = true;
+                  break;
+              }
+          }
+
+          //// Ignore fields that are explicitly "excluded"
+          bool is_excluded = false;
+          for (const std::string& pattern : exclude) {
+              if (std::regex_match(name, std::regex(pattern))) {
+                  is_excluded = true;
+                  break;
+              }
+          }
+
+          if (!is_included || is_excluded) {
+              continue;
+          }
 
           EdgeModel::DisplayType display_type=emp->GetDisplayType();
 
@@ -768,7 +816,7 @@ TecplotWriter::~TecplotWriter()
 {
 }
 
-bool TecplotWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::string &errorString)
+bool TecplotWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
@@ -782,13 +830,13 @@ bool TecplotWriter::WriteMesh_(const std::string &deviceName, const std::string 
     }
     else
     {
-        ret = Tecplot::WriteSingleDevice(deviceName, myfile, errorString);
+        ret = Tecplot::WriteSingleDevice(deviceName, myfile, include, exclude, errorString);
     }
     errorString += os.str();
     return ret;
 }
 
-bool TecplotWriter::WriteMeshes_(const std::string &filename, std::string &errorString)
+bool TecplotWriter::WriteMeshes_(const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
@@ -814,7 +862,7 @@ bool TecplotWriter::WriteMeshes_(const std::string &filename, std::string &error
         for (GlobalData::DeviceList_t::const_iterator dit = dlist.begin(); dit != dlist.end(); ++dit)
         {
             const std::string &dname = dit->first;
-            ret = Tecplot::WriteSingleDevice(dname, myfile, errorString);
+            ret = Tecplot::WriteSingleDevice(dname, myfile, include, exclude, errorString);
         }
     }
     myfile.close();
@@ -822,4 +870,3 @@ bool TecplotWriter::WriteMeshes_(const std::string &filename, std::string &error
     errorString += os.str();
     return ret;
 }
-

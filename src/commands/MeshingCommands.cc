@@ -760,13 +760,15 @@ writeDevicesCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
+
     static dsGetArgs::Option option[] = {
         {"file",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
-        {"device",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"type",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"include",  "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"exclude",  "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
-
     bool error = data.processOptions(option, errorString);
 
     if (error)
@@ -778,6 +780,38 @@ writeDevicesCmd(CommandHandler &data)
     const std::string &fileName = data.GetStringOption("file");
     const std::string &device   = data.GetStringOption("device");
     const std::string &type = data.GetStringOption("type");
+    std::vector<std::string> include;
+    std::vector<std::string> exclude;
+
+    {
+        ObjectHolder includeData = data.GetObjectHolder("include");
+        if (includeData.IsList())
+        {
+            bool ok = includeData.GetStringList(include);
+            if (!ok)
+            {
+                std::ostringstream os;
+                os << "Option \"include\" could not be converted to a list of strings\n";
+                errorString += os.str();
+            }
+        }
+    }
+
+    {
+        ObjectHolder excludeData = data.GetObjectHolder("exclude");
+        if (excludeData.IsList())
+        {
+            bool ok = excludeData.GetStringList(exclude);
+            if (!ok)
+            {
+                std::ostringstream os;
+                os << "Option \"exclude\" could not be converted to a list of strings\n";
+                errorString += os.str();
+            }
+        }
+    }
+
+    
 
     std::unique_ptr<MeshWriter> mw;
 
@@ -817,11 +851,11 @@ writeDevicesCmd(CommandHandler &data)
     bool ret = true;
     if (device.empty())
     {
-        ret = mw->WriteMeshes(fileName, errorString);
+        ret = mw->WriteMeshes(fileName, include, exclude, errorString);
     }
     else
     {
-        ret = mw->WriteMesh(device, fileName, errorString);
+        ret = mw->WriteMesh(device, fileName, include, exclude, errorString);
     }
 
     if (!ret)

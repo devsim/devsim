@@ -1027,7 +1027,7 @@ R"(    devsim.load_devices (file)
 )";
 
 static const char write_devices_doc[] =
-R"(    devsim.write_devices (file, device, type)
+R"(    devsim.write_devices (file, device, type, include, exclude)
 
     Write a device to a file for visualization or restart
 
@@ -1039,6 +1039,10 @@ R"(    devsim.write_devices (file, device, type)
        name of the device to write
     type : {'devsim', 'devsim_data', 'floops', 'tecplot', 'vtk'}
        format to use
+    include : Tuple[str], optional
+       Tuple of regex strings determining which fields to save. If unspecified, all fields are included. Currently only considered for type='tecplot'.
+    exclude : Tuple[str], optional
+       Tuple of regex strings determining which fields to ignore. If unspecified, no fields are excluded. Currently only considered for type='tecplot'.
 )";
 
 static const char contact_edge_model_doc[] =
