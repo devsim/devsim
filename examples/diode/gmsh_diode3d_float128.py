@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import sys
-from devsim import *
+from devsim import element_from_edge_model, get_parameter, node_model, set_parameter, solve, write_devices
+
 
 if not get_parameter(name='info')['extended_precision']:
     print("Extended precision support is not available with this version")
@@ -13,7 +14,7 @@ set_parameter(name = "extended_solver", value=True)
 set_parameter(name = "extended_model", value=True)
 set_parameter(name = "extended_equation", value=True)
 
-from devsim.python_packages.simple_physics import *
+from devsim.python_packages.simple_physics import GetContactBiasName, PrintCurrents
 import diode_common
 
 device="diode3d"

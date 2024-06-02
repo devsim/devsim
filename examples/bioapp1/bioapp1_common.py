@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import add_db_entry, contact_equation, contact_node_model, create_db, cylindrical_edge_couple, cylindrical_node_volume, edge_from_node_model, edge_model, element_from_edge_model, equation, get_dimension, get_node_model_values, interface_equation, interface_model, node_model, node_solution, set_node_values, set_parameter
+
 #### molarity 0.001 mole / Liter * 1 L / (1e3 cm^3) * 6.02e23 / mole = 6.02e17 /cm^3
 set_parameter(device="disk", region="solution", name="n_bound", value=6.02e17)
 #### 2q/nm^3 -->  2/nm^3 * (1 nm^3/(1e-7 cm)^3)

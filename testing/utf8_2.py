@@ -5,7 +5,8 @@
 
 ##Title: cap1.py
 ##Purpose: Simple example for 1D capacitor
-from devsim import *
+from devsim import add_1d_contact, add_1d_mesh_line, add_1d_region, contact_equation, create_1d_mesh, create_device, edge_from_node_model, edge_model, equation, finalize_mesh, get_contact_charge, get_parameter, node_model, node_solution, set_parameter, solve
+
 
 device_info = {'device' : 'MyDevice'}
 region_info = device_info

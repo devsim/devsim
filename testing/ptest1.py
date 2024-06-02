@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from cap_mesh import *
+from devsim import create_device, get_contact_charge, get_edge_model_values, set_parameter, solve
+from cap_mesh import cap_mesh
 
 region_name = "MyRegion"
 device_name = "MyDevice"
@@ -11,7 +12,7 @@ material_name = "Oxide"
 mesh_name = cap_mesh(region_name, material_name)
 create_device(mesh=mesh_name, device=device_name)
 
-from devsim.python_packages.simple_physics import *
+from devsim.python_packages.simple_physics import CreateOxideContact, SetOxideParameters, CreateOxidePotentialOnly
 
 SetOxideParameters(device_name, region_name, 300)
 CreateOxidePotentialOnly(device_name, region_name)

@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import add_1d_contact, add_1d_mesh_line, add_1d_region, add_db_entry, create_1d_mesh, create_db, create_device, finalize_mesh, get_material, node_model, print_node_values, set_material
+
 #print region_info
 device ="d1"
 region ="r1"

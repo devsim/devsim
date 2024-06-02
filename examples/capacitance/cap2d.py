@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import add_2d_contact, add_2d_mesh_line, add_2d_region, contact_equation, contact_node_model, create_2d_mesh, create_device, edge_from_node_model, edge_model, element_from_edge_model, equation, finalize_mesh, get_contact_charge, node_model, node_solution, set_parameter, solve, write_devices
+
 device="MyDevice"
 region="MyRegion"
 

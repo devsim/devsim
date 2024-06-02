@@ -3,9 +3,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import devsim
+from devsim import get_contact_list, get_region_list, set_parameter, set_node_values
+from devsim.python_packages.model_create import CreateSolution
+
 devsim.load_devices(file="mos_2d_dd.msh")
 device=devsim.get_device_list()[0]
-from devsim.python_packages.simple_physics import *
+from devsim.python_packages.simple_physics import GetContactBiasName, SetOxideParameters, SetSiliconParameters, CreateSiliconPotentialOnly, CreateSiliconPotentialOnlyContact, CreateSiliconDriftDiffusion, CreateSiliconDriftDiffusionAtContact, CreateOxidePotentialOnly, CreateSiliconOxideInterface
 
 device = "mymos"
 silicon_regions=("gate", "bulk")

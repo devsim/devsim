@@ -2,11 +2,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim.python_packages.simple_physics import *
-from devsim.python_packages.ramp import *
-from devsim import *
+from devsim.python_packages.simple_physics import GetContactBiasName, SetOxideParameters, SetSiliconParameters, CreateSiliconPotentialOnly, CreateSiliconPotentialOnlyContact, CreateSiliconDriftDiffusion, CreateSiliconDriftDiffusionAtContact, CreateOxidePotentialOnly, CreateSiliconOxideInterface
+from devsim.python_packages.ramp import rampbias, printAllCurrents
+from devsim import element_from_edge_model, get_contact_list, get_region_list, node_model, set_node_values, set_parameter, solve, write_devices
+from devsim.python_packages.model_create import CreateSolution
 
-import gmsh_mos2d_create
 device = "mos2d"
 silicon_regions=("gate", "bulk")
 oxide_regions=("oxide",)

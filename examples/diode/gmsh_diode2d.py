@@ -2,8 +2,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
-from devsim.python_packages.simple_physics import *
+from devsim import node_model, set_parameter, solve, write_devices
+
+from devsim.python_packages.simple_physics import GetContactBiasName, PrintCurrents
 import diode_common
 
 device="diode2d"

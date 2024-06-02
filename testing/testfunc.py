@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import add_1d_contact, add_1d_mesh_line, add_1d_region, create_1d_mesh, create_device, finalize_mesh, node_model, print_node_values, register_function, symdiff
+
 from math import cos
 from math import sin
 device = "MyDevice"

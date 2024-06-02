@@ -6,7 +6,8 @@ global device
 device = "disk"
 
 import sys
-from devsim import *
+from devsim import add_gmsh_contact, add_gmsh_interface, add_gmsh_region, create_device, create_gmsh_mesh, finalize_mesh, node_model, node_solution, set_node_values, set_parameter, solve, write_devices
+
 
 if len(sys.argv) != 2:
     sys.stderr.write('must specify voltage')
@@ -29,7 +30,8 @@ add_gmsh_interface(mesh="disk", gmsh_name="dna_solution",        region0="dna", 
 finalize_mesh(mesh="disk")
 create_device(mesh="disk", device=device)
 
-from bioapp1_common import *
+import bioapp1_common
+# from bioapp1_common import *
 
 set_parameter(device="disk", region="dna", name="charge_density", value=0)
 solve(type="dc", relative_error=1e-7, absolute_error=1e11, maximum_iterations=100)

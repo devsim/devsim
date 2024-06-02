@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import add_circuit_node, circuit_alter, circuit_element, custom_equation, get_circuit_equation_number, get_circuit_node_value, solve
+
 import test_common
 # basic linear circuit solved by itself
 add_circuit_node(name="n1", variable_update="default")

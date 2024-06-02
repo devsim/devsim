@@ -4,8 +4,7 @@
 
 # this test added specifically to create a mesh for gmsh_diode3d_equil.py
 
-from devsim import *
-from devsim.python_packages.simple_physics import *
+from devsim import node_model, solve, write_devices
 import diode_common
 
 device="diode3d"

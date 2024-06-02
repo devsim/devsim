@@ -1,4 +1,4 @@
-from devsim import *
+
 
 def parse_gmsh_file(file):
     sections=set(['$MeshFormat', '$PhysicalNames', '$Nodes', '$Elements'])

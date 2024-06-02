@@ -8,7 +8,6 @@
 import argparse
 import os
 import subprocess
-import difflib
 
 parser = argparse.ArgumentParser()
 

@@ -3,8 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 #### Small Signal simulation
-from devsim import *
-from devsim.python_packages.simple_physics import *
+from devsim import circuit_alter, circuit_element, get_circuit_node_list, get_circuit_node_value, get_circuit_solution_list, solve
+
+from devsim.python_packages.simple_physics import GetContactBiasName, PrintCurrents
 import diode_common
 import math
 
