@@ -811,8 +811,6 @@ writeDevicesCmd(CommandHandler &data)
         }
     }
 
-    
-
     std::unique_ptr<MeshWriter> mw;
 
     if (type.empty() || (type == "devsim"))
