@@ -98,4 +98,4 @@ for name, equation in (
 
 print(sum(devsim.get_node_model_values(device=device, region=region, name="noise")))
 
-devsim.write_devices(file="noise_res_2d.flps", type="floops")
+devsim.write_devices(file="noise_res_2d.tec", type="tecplot")

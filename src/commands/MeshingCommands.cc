@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 #include "DevsimReader.hh"
 #include "DevsimWriter.hh"
 #include "DevsimRestartWriter.hh"
-#include "FloodsWriter.hh"
 #include "VTKWriter.hh"
 #include "TecplotWriter.hh"
 #include "dsAssert.hh"
@@ -722,9 +721,7 @@ loadDevicesCmd(CommandHandler &data)
     const std::string commandName = data.GetCommandName();
 
     using namespace dsGetArgs;
-// TODO:  "specify list of solutions to read/write"
-// TODO:  "delete device if there is a problem"
-// TODO:  "specify option to only load the mesh creator, but don't instantiate"
+
     static dsGetArgs::Option option[] = {
         {"file",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
@@ -765,8 +762,7 @@ writeDevicesCmd(CommandHandler &data)
         {"file",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, nullptr},
         {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {"type",     "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
-        {"include",  "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, nullptr},
-        {"exclude",  "", dsGetArgs::optionType::LIST, dsGetArgs::requiredType::OPTIONAL, nullptr},
+        {"include_test",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr},
         {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL, nullptr}
     };
     bool error = data.processOptions(option, errorString);
@@ -780,35 +776,34 @@ writeDevicesCmd(CommandHandler &data)
     const std::string &fileName = data.GetStringOption("file");
     const std::string &device   = data.GetStringOption("device");
     const std::string &type = data.GetStringOption("type");
-    std::vector<std::string> include;
-    std::vector<std::string> exclude;
 
+    ObjectHolder include_test;
+
+    if (data.IsSpecified("include_test"))
     {
-        ObjectHolder includeData = data.GetObjectHolder("include");
-        if (includeData.IsList())
+        if (type == "tecplot" || type == "vtk")
         {
-            bool ok = includeData.GetStringList(include);
+            include_test = data.GetObjectHolder("include_test");
+            bool ok = include_test.IsCallable();
             if (!ok)
             {
                 std::ostringstream os;
-                os << "Option \"include\" could not be converted to a list of strings\n";
+                os << "Option \"include_test\" is not a function\n";
                 errorString += os.str();
+                data.SetErrorResult(errorString);
+                return;
             }
+        }
+        else
+        {
+            errorString += R"(Option "include_test" only supported when "type" is "vtk" or "tecplot".)" "\n";
+            data.SetErrorResult(errorString);
+            return;
         }
     }
-
+    else
     {
-        ObjectHolder excludeData = data.GetObjectHolder("exclude");
-        if (excludeData.IsList())
-        {
-            bool ok = excludeData.GetStringList(exclude);
-            if (!ok)
-            {
-                std::ostringstream os;
-                os << "Option \"exclude\" could not be converted to a list of strings\n";
-                errorString += os.str();
-            }
-        }
+      include_test = ObjectHolder("");
     }
 
     std::unique_ptr<MeshWriter> mw;
@@ -821,16 +816,12 @@ writeDevicesCmd(CommandHandler &data)
     {
         mw = std::unique_ptr<MeshWriter>(new DevsimWriter());
     }
-    else if (type == "floops")
-    {
-        mw = std::unique_ptr<MeshWriter>(new FloodsWriter());
-    }
     else if (type == "vtk")
     {
 #ifdef VTKWRITER
         mw = std::unique_ptr<MeshWriter>(new VTKWriter());
 #else
-        errorString += "VTK support was not built into this version.  Please select from \"devsim\", \"devsim_data\", \"floops\", or \"tecplot\".\n";
+        errorString += "VTK support was not built into this version.  Please select from \"devsim\", \"devsim_data\", or \"tecplot\".\n";
         data.SetErrorResult(errorString);
         return;
 #endif
@@ -841,7 +832,7 @@ writeDevicesCmd(CommandHandler &data)
     }
     else
     {
-        errorString += "type: " + type + " is not a valid type.  Please select from \"devsim\", \"devsim_data\", \"floops\", \"vtk\", or \"tecplot\".\n";
+        errorString += "type: " + type + " is not a valid type.  Please select from \"devsim\", \"devsim_data\", \"vtk\", or \"tecplot\".\n";
         data.SetErrorResult(errorString);
         return;
     }
@@ -849,11 +840,11 @@ writeDevicesCmd(CommandHandler &data)
     bool ret = true;
     if (device.empty())
     {
-        ret = mw->WriteMeshes(fileName, include, exclude, errorString);
+        ret = mw->WriteMeshes(fileName, include_test, errorString);
     }
     else
     {
-        ret = mw->WriteMesh(device, fileName, include, exclude, errorString);
+        ret = mw->WriteMesh(device, fileName, include_test, errorString);
     }
 
     if (!ret)

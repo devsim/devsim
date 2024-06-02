@@ -204,4 +204,4 @@ devsim.node_model(
 )
 
 devsim.write_devices(file="mos_2d", type="vtk")
-devsim.write_devices(file="mos_2d.flps", type="floops")
+devsim.write_devices(file="mos_2d.tec", type="tecplot")

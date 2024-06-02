@@ -27,7 +27,6 @@ SPDX-License-Identifier: Apache-2.0
 #include <fstream>
 #include <iomanip>
 #include <set>
-#include <regex>
 
 namespace Tecplot {
 void BreakLine(std::ostream &myfile, const std::string &output_string)
@@ -399,7 +398,7 @@ void WriteTetrahedra(std::ostream &myfile, const Region &reg)
 }
 
 
-bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
+bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWriterTest_t include_test, std::string &errorString)
 {
   bool ret = true;
   std::ostringstream os;
@@ -444,26 +443,9 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::vect
           }
 
           //// Only save the fields that are "included"
-          bool is_included = false;
-          is_included = include.empty(); // Assume included if no patterns are specified
-          for (const std::string& pattern : include) {
-              if (std::regex_match(name, std::regex(pattern))) {
-                  is_included = true;
-                  break;
-              }
-          }
-
-          //// Ignore fields that are explicitly "excluded"
-          bool is_excluded = false;
-          for (const std::string& pattern : exclude) {
-              if (std::regex_match(name, std::regex(pattern))) {
-                  is_excluded = true;
-                  break;
-              }
-          }
-
-          if (!is_included || is_excluded) {
-              continue;
+          if (!include_test(name))
+          {
+            continue;
           }
 
           ConstNodeModelPtr emp = nit->second;
@@ -517,26 +499,9 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::vect
           ConstEdgeModelPtr emp = eit->second;
 
           //// Only save the fields that are "included"
-          bool is_included = false;
-          is_included = include.empty(); // Assume included if no patterns are specified
-          for (const std::string& pattern : include) {
-              if (std::regex_match(name, std::regex(pattern))) {
-                  is_included = true;
-                  break;
-              }
-          }
-
-          //// Ignore fields that are explicitly "excluded"
-          bool is_excluded = false;
-          for (const std::string& pattern : exclude) {
-              if (std::regex_match(name, std::regex(pattern))) {
-                  is_excluded = true;
-                  break;
-              }
-          }
-
-          if (!is_included || is_excluded) {
-              continue;
+          if (!include_test(name))
+          {
+            continue;
           }
 
           EdgeModel::DisplayType display_type=emp->GetDisplayType();
@@ -619,6 +584,12 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::vect
 
         for (Region::TriangleEdgeModelList_t::const_iterator trit = triangle_edge_model_list.begin(); trit != triangle_edge_model_list.end(); ++trit)
         {
+          //// Only save the fields that are "included"
+          if (!include_test(trit->first))
+          {
+            continue;
+          }
+
           if (trit->second->GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR)
           {
             elementEdgeModelsScalar.insert(trit->first);
@@ -630,6 +601,12 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::vect
         }
         for (Region::TetrahedronEdgeModelList_t::const_iterator teit = tetrahedron_edge_model_list.begin(); teit != tetrahedron_edge_model_list.end(); ++teit)
         {
+          //// Only save the fields that are "included"
+          if (!include_test(teit->first))
+          {
+            continue;
+          }
+
           if (teit->second->GetDisplayType() == TetrahedronEdgeModel::DisplayType::SCALAR)
           {
             elementEdgeModelsScalar.insert(teit->first);
@@ -801,9 +778,6 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::vect
 
     }
 
-//TODO:  how about text fields, like parameters?
-//TODO:  "interface edges"
-//TODO:  "contacts edges"
     }
     myfile << "\n";
     errorString += os.str();
@@ -816,7 +790,7 @@ TecplotWriter::~TecplotWriter()
 {
 }
 
-bool TecplotWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
+bool TecplotWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
@@ -830,13 +804,13 @@ bool TecplotWriter::WriteMesh_(const std::string &deviceName, const std::string 
     }
     else
     {
-        ret = Tecplot::WriteSingleDevice(deviceName, myfile, include, exclude, errorString);
+        ret = Tecplot::WriteSingleDevice(deviceName, myfile, include_test, errorString);
     }
     errorString += os.str();
     return ret;
 }
 
-bool TecplotWriter::WriteMeshes_(const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
+bool TecplotWriter::WriteMeshes_(const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
@@ -862,7 +836,7 @@ bool TecplotWriter::WriteMeshes_(const std::string &filename, std::vector<std::s
         for (GlobalData::DeviceList_t::const_iterator dit = dlist.begin(); dit != dlist.end(); ++dit)
         {
             const std::string &dname = dit->first;
-            ret = Tecplot::WriteSingleDevice(dname, myfile, include, exclude, errorString);
+            ret = Tecplot::WriteSingleDevice(dname, myfile, include_test, errorString);
         }
     }
     myfile.close();

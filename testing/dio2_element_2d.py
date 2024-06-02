@@ -89,7 +89,7 @@ dio2_element_physics.createPotentialOnlyContact(device, region, "bot")
 ####
 devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-12, maximum_iterations=30)
 
-devsim.write_devices(file="dio2_element_2d_potentialonly.flps", type="floops")
+devsim.write_devices(file="dio2_element_2d_potentialonly.tec", type="tecplot")
 
 ####
 #### drift diffusion
@@ -132,5 +132,5 @@ while v < 0.51:
     dio2_element_physics.printCurrents(device, "bot", 0.0)
     v += 0.1
 
-devsim.write_devices(file="dio2_element_2d_dd.flps", type="floops")
+devsim.write_devices(file="dio2_element_2d_dd.tec", type="tecplot")
 devsim.write_devices(file="dio2_element_2d_dd", type="vtk")

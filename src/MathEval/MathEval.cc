@@ -594,21 +594,6 @@ bool MathEval<DoubleType>::AddTclMath(const std::string &funcname, ObjectHolder 
   }
   return error.empty();
 }
-#if 0
-template <typename DoubleType>
-void MathEval<DoubleType>::AddTclMath(const std::string &funcname, size_t numargs)
-{
-  ///Really need to make sure number of arguments make sense in tcl api
-  tclMathFuncMap_[funcname] = numargs;
-}
-#endif
-
-template <typename DoubleType>
-void MathEval<DoubleType>::RemoveTclMath(const std::string &funcname)
-{
-  /// Does this throw?
-  tclMathFuncMap_.erase(funcname);
-}
 
 template class MathEval<double>;
 

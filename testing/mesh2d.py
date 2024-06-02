@@ -96,6 +96,10 @@ for region in ("r0", "r1", "r2"):
     devsim.cylindrical_edge_couple(device=device, region=region)
     devsim.cylindrical_surface_area(device=device, region=region)
 
-devsim.write_devices(file="mesh2d.flps", type="floops")
 devsim.write_devices(file="mesh2d.msh", type="devsim")
-devsim.write_devices(file="mesh2d.dat", type="tecplot")
+devsim.write_devices(file="mesh2d.tec", type="tecplot")
+devsim.write_devices(
+    file="mesh2d_reduced.tec",
+    type="tecplot",
+    include_test=lambda x: x in ("NetDoping",),
+)

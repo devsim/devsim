@@ -398,7 +398,7 @@ DevsimRestartWriter::~DevsimRestartWriter()
 {
 }
 
-bool DevsimRestartWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
+bool DevsimRestartWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, MeshWriterTest_t, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
@@ -418,7 +418,7 @@ bool DevsimRestartWriter::WriteMesh_(const std::string &deviceName, const std::s
     return ret;
 }
 
-bool DevsimRestartWriter::WriteMeshes_(const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
+bool DevsimRestartWriter::WriteMeshes_(const std::string &filename, MeshWriterTest_t, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;

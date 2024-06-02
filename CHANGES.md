@@ -5,6 +5,24 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.8.0
+
+### Centos 7 End Of Life
+
+### Data output
+
+#### Reduction in data file sizes
+
+Based on a contribution by [@simbilod](https://github.com/simbilod) `devsim.write_devices` now supports reducing the file size of data files by specifying a callback function to reduce data usage.  This is through the `include_test` option.  This option is a function that takes a string and returns `True` if the model should be written.  It is only supported for the `tecplot` and `vtk` formats.
+
+An example is provided in `testing/XXXXX.py`
+
+
+#### FLOOPS Data File Output
+
+The `floops` option for `devsim.write_devices` has been removed.
+
+
 ## Version 2.7.3
 
 Fixed issue [#133](https://github.com/devsim/devsim/issues/133) identified by [@yh-kwok](https://github.com/yh-kwok).

@@ -15,7 +15,7 @@ class DevsimWriter : public MeshWriter {
     public:
         ~DevsimWriter();
     private:
-        bool WriteMeshes_(const std::string &/*filename*/, std::vector<std::string> &/*include*/, std::vector<std::string> &/*exclude*/, std::string &/*errorString*/);
-        bool WriteMesh_(const std::string &/*deviceName*/, const std::string &/*filename*/, std::vector<std::string> &/*include*/, std::vector<std::string> &/*exclude*/, std::string &/*errorString*/);
+        bool WriteMeshes_(const std::string &/*filename*/, MeshWriterTest_t /*include*/, std::string &/*errorString*/);
+        bool WriteMesh_(const std::string &/*deviceName*/, const std::string &/*filename*/, MeshWriterTest_t /*include*/, std::string &/*errorString*/);
 };
 #endif

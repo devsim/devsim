@@ -95,4 +95,11 @@ ObjectHolder CommandHandler::GetObjectHolder(const std::string &s) const
   return info.get_args_->GetObjectHolder(s);
 }
 
+bool CommandHandler::IsSpecified(const std::string &s) const
+{
+  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsAssert(info.get_args_, "UNEXPECTED");
+  return info.get_args_->IsSpecified(s);
+}
+
 

@@ -43,6 +43,12 @@ ObjectHolder GetArgs::GetObjectHolder(const std::string &s) const
   return val;
 }
 
+bool GetArgs::IsSpecified(const std::string &s) const
+{
+  bool ret = selections.count(s) != 0;
+  return ret;
+}
+
 std::string GetArgs::GetStringOption(const std::string &s) const
 {
   const ObjectHolder &tobj = GetObjectHolder(s);

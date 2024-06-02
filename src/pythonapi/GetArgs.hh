@@ -46,8 +46,8 @@ class GetArgs {
     double GetDoubleOption(const std::string &) const;
     int    GetIntegerOption(const std::string &) const;
     bool   GetBooleanOption(const std::string &) const;
-
     ObjectHolder GetObjectHolder(const std::string &) const;
+    bool IsSpecified(const std::string &) const;
 
     typedef std::map<std::string, ObjectHolder> ObjectHolderMap_t;
     typedef std::map<std::string, Option *>     OptionMap_t;

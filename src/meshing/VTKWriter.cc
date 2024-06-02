@@ -83,32 +83,15 @@ void WritePoints(const Region &reg, std::ostream &myfile)
 
   WriteDataArray(points, std::string(), 3, myfile);
 
-#if 0
-  for (ConstNodeList::const_iterator it = cnl.begin(); it != cnl.end(); ++it)
-  {
-    const Vector<double> &pos = (*it)->Position();
-    myfile
-      << " " << pos.Getx()
-      << " " << pos.Gety()
-      << " " << pos.Getz()
-      ;
-  }
-#endif
-
   myfile << "</Points>\n";
 }
 
-void WritePointData(const Region &reg, std::ostream &myfile)
+void WritePointData(const Region &reg, MeshWriterTest_t include_test, std::ostream &myfile)
 {
 
   const Region::NodeModelList_t            &node_models             = reg.GetNodeModelList();
   const Region::EdgeModelList_t            &edge_models             = reg.GetEdgeModelList();
-#if 0
-  const Region::TriangleEdgeModelList_t    &triangle_edge_models    = reg.GetTriangleEdgeModelList();
-  const Region::TetrahedronEdgeModelList_t &tetrahedron_edge_models = reg.GetTetrahedronEdgeModelList();
-#endif
 
-//  if (node_models.empty() && edge_models.empty() && triangle_edge_models.empty() && tetrahedron_edge_models.empty())
   if (node_models.empty() && edge_models.empty())
   {
     return;
@@ -122,6 +105,11 @@ void WritePointData(const Region &reg, std::ostream &myfile)
     {
       const std::string &nm = it->first;
       const NodeModel   &em = *(it->second);
+
+      if (!include_test(nm))
+      {
+        continue;
+      }
 
       if (em.GetDisplayType() == NodeModel::DisplayType::SCALAR)
       {
@@ -147,6 +135,11 @@ void WritePointData(const Region &reg, std::ostream &myfile)
       const std::string &nm = it->first;
       const EdgeModel &em = *(it->second);
 
+      if (!include_test(nm))
+      {
+        continue;
+      }
+
       if (em.GetDisplayType() == EdgeModel::DisplayType::SCALAR)
       {
         const NodeScalarList<double> &nsl = em.GetScalarValuesOnNodes<double>();
@@ -155,57 +148,6 @@ void WritePointData(const Region &reg, std::ostream &myfile)
     }
   }
 
-
-#if 0
-  //// Require user to use calculator filter
-  if (!triangle_edge_models.empty())
-  {
-    // Strange paraview bug requires scalar before vector data
-    std::vector<double> nsl;
-    for (Region::TriangleEdgeModelList_t::const_iterator it=triangle_edge_models.begin(); it != triangle_edge_models.end(); ++it)
-    {
-      const std::string &nm = it->first;
-      const TriangleEdgeModel &em = *(it->second);
-
-      if (em.GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR)
-      {
-        em.GetScalarValuesOnNodes<double>(TriangleEdgeModel::COUPLE, nsl);
-        WriteDataArray(nsl, nm, 1, myfile);
-      }
-      else if (em.GetDisplayType() == TriangleEdgeModel::DisplayType::NODISPLAY)
-      {
-      }
-      else
-      {
-        dsAssert(0, "UNEXPECTED display type");
-      }
-    }
-  }
-
-  if (!tetrahedron_edge_models.empty())
-  {
-    // Strange paraview bug requires scalar before vector data
-    for (Region::TetrahedronEdgeModelList_t::const_iterator it=tetrahedron_edge_models.begin(); it != tetrahedron_edge_models.end(); ++it)
-    {
-      const std::string &nm = it->first;
-      const TetrahedronEdgeModel &em = *(it->second);
-
-      std::vector<double> nsl;
-      if (em.GetDisplayType() == TetrahedronEdgeModel::DisplayType::SCALAR)
-      {
-        em.GetScalarValuesOnNodes<double>(TetrahedronEdgeModel::COUPLE, nsl);
-        WriteDataArray(nsl, nm, 1, myfile);
-      }
-      else if (em.GetDisplayType() == TetrahedronEdgeModel::DisplayType::NODISPLAY)
-      {
-      }
-      else
-      {
-        dsAssert(0, "UNEXPECTED display type");
-      }
-    }
-  }
-#endif
 
   //// Vector<double> Edge Scalar Data
   if (!edge_models.empty())
@@ -251,89 +193,7 @@ void WritePointData(const Region &reg, std::ostream &myfile)
   myfile << "</PointData>\n";
 }
 
-#if 0
-void WriteLineData(const Region &reg, std::ostream &myfile)
-{
-  const Region::EdgeModelList_t &nml = reg.GetEdgeModelList();
-
-  const std::vector<Vector<double>> unit = MeshUtil::GetUnitVector(reg);
-
-  if (!nml.empty())
-  {
-    myfile << "<CellData>\n";
-
-    // Strange paraview bug requires scalar before vector data
-    for (Region::EdgeModelList_t::const_iterator it=nml.begin(); it != nml.end(); ++it)
-    {
-      const std::string &nm = it->first;
-      const EdgeModel &em = *(it->second);
-
-      if (em.GetDisplayType() == EdgeModel::DisplayType::SCALAR)
-      {
-        const EdgeScalarList<double> &nsl = em.GetScalarValues<double>();
-
-        myfile << "<DataArray Name=\"" << nm << "\" type=\"Float64\" format=\"binary\">\n";
-
-        myfile << convertVectorToZlibBase64(nsl);
-
-#if 0
-        dsAssert(nsl.size() == unit.size(), "UNEXPECTED");
-        const size_t len = unit.size();
-        for (size_t i = 0; i < len; ++i)
-        {
-          const double val = nsl[i];
-          myfile << " " << val;
-        }
-#endif
-        myfile << "\n</DataArray>\n";
-      }
-    }
-    for (Region::EdgeModelList_t::const_iterator it=nml.begin(); it != nml.end(); ++it)
-    {
-      const std::string &nm = it->first;
-      const EdgeModel &em = *(it->second);
-
-      if (em.GetDisplayType() == EdgeModel::DisplayType::VECTOR)
-      {
-        const EdgeScalarList<double> &nsl = em.GetScalarValues<double>();
-
-        myfile << "<DataArray Name=\"" << nm << "\" type=\"Float64\" NumberOfComponents=\"3\" format=\"binary\">\n";
-
-        std::vector<double> points;
-        points.reserve(3*nsl.size());
-
-        dsAssert(nsl.size() == unit.size(), "UNEXPECTED");
-        const size_t len = unit.size();
-        for (size_t i = 0; i < len; ++i)
-        {
-          Vector<double> val = unit[i];
-          val *= nsl[i];
-          points.push_back(val.Getx());
-          points.push_back(val.Gety());
-          points.push_back(val.Getz());
-        }
-        myfile << convertVectorToZlibBase64(points);
-#if 0
-        dsAssert(nsl.size() == unit.size(), "UNEXPECTED");
-        const size_t len = unit.size();
-        for (size_t i = 0; i < len; ++i)
-        {
-          Vector<double> val = unit[i];
-          val *= nsl[i];
-          myfile << " " << val.Getx()
-                 << " " << val.Gety()
-                 << " " << val.Getz();
-        }
-#endif
-        myfile << "\n</DataArray>\n";
-      }
-    }
-    myfile << "</CellData>\n";
-  }
-}
-#endif
-
-void WriteElementData(const Region &reg, std::ostream &myfile)
+void WriteElementData(const Region &reg, MeshWriterTest_t include_test, std::ostream &myfile)
 {
   const Region::TriangleEdgeModelList_t    &triangle_edge_models    = reg.GetTriangleEdgeModelList();
   const Region::TetrahedronEdgeModelList_t &tetrahedron_edge_models = reg.GetTetrahedronEdgeModelList();
@@ -351,6 +211,11 @@ void WriteElementData(const Region &reg, std::ostream &myfile)
     {
       const std::string &nm = it->first;
       const TriangleEdgeModel &em = *(it->second);
+
+      if (!include_test(nm))
+      {
+          continue;
+      }
 
       if (em.GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR)
       {
@@ -528,7 +393,7 @@ void WriteTetrahedrons(const Region &reg, std::ostream &myfile)
   myfile << "</Cells>\n";
 }
 
-void WriteRegionWithEdgeData(const Region &reg, std::ostream &myfile)
+void WriteRegionWithEdgeData(const Region &reg, MeshWriterTest_t include_test, std::ostream &myfile)
 {
   const ConstNodeList &cnl = reg.GetNodeList();
   const size_t num_points = cnl.size();
@@ -572,15 +437,11 @@ void WriteRegionWithEdgeData(const Region &reg, std::ostream &myfile)
     WriteTetrahedrons(reg, myfile);
   }
 
-  WritePointData(reg, myfile);
+  WritePointData(reg, include_test, myfile);
 
-//// deprecated
-#if 0
-  WriteLineData(reg, myfile);
-#endif
   if ((dim == 2) || (dim == 3))
   {
-    WriteElementData(reg, myfile);
+    WriteElementData(reg, include_test, myfile);
   }
 
 
@@ -589,38 +450,7 @@ void WriteRegionWithEdgeData(const Region &reg, std::ostream &myfile)
          ;
 }
 
-#if 0
-void WriteRegionWithTriangleData(const Region &reg, std::ostream &myfile)
-{
-  const ConstNodeList &cnl = reg.GetNodeList();
-  const size_t num_points = cnl.size();
-
-  const ConstTriangleList &ctl = reg.GetTriangleList();
-  const size_t num_cells = ctl.size();
-
-  myfile <<
-         "<Piece NumberOfPoints=\"" << num_points << "\""
-         " NumberOfCells=\"" << num_cells << "\""
-         ">\n";
-
-  WritePoints(reg, myfile);
-  WriteTriangles(reg, myfile);
-
-  myfile <<
-         "</Piece>\n"
-         ;
-}
-#endif
-
-#if 0
-void WriteRegion(const Region &r, std::ostream &myfile)
-{
-  WriteRegionWithEdgeData(r, myfile);
-  WriteRegionWithTriangleData(r, myfile);
-}
-#endif
-
-bool WriteSingleDevice(const std::string &dname, const std::string &filename, std::vector<std::string> &include, std::string &errorString)
+bool WriteSingleDevice(const std::string &dname, const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
 {
   bool ret = true;
   std::ostringstream os;
@@ -685,8 +515,8 @@ bool WriteSingleDevice(const std::string &dname, const std::string &filename, st
           vtufile << std::setprecision(15) << std::scientific;
 
           WriteHeader(vtufile);
-          //// TODO: create separate file for triangle data when we have some
-          WriteRegionWithEdgeData(*(rit->second), vtufile);
+
+          WriteRegionWithEdgeData(*(rit->second), include_test, vtufile);
           WriteFooter(vtufile);
 
           vtufile << "\n";
@@ -729,44 +559,21 @@ VTKWriter::~VTKWriter()
 {
 }
 
-bool VTKWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
+bool VTKWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
 
-#if 0
-    std::ofstream myfile;
-    myfile.open (filename.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
-    if (myfile.bad())
-    {
-        ret = false;
-        os << "Could not open " << filename << " for writing\n";
-    }
-    else
-    {
-#endif
-        ret = VTK::WriteSingleDevice(deviceName, filename, include, errorString);
-#if 0
-    }
-#endif
+    ret = VTK::WriteSingleDevice(deviceName, filename, include_test, errorString);
     errorString += os.str();
+
     return ret;
 }
 
-bool VTKWriter::WriteMeshes_(const std::string &filename, std::vector<std::string> &include, std::vector<std::string> &exclude, std::string &errorString)
+bool VTKWriter::WriteMeshes_(const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
 {
     bool ret = true;
     std::ostringstream os;
-
-#if 0
-    std::ofstream myfile;
-    myfile.open (filename.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
-    if (myfile.bad())
-    {
-        ret = false;
-        os << "Could not open " << filename << " for writing\n";
-    }
-#endif
 
     GlobalData   &gdata = GlobalData::GetInstance();
     const GlobalData::DeviceList_t &dlist = gdata.GetDeviceList();
@@ -781,12 +588,9 @@ bool VTKWriter::WriteMeshes_(const std::string &filename, std::vector<std::strin
         for (GlobalData::DeviceList_t::const_iterator dit = dlist.begin(); dit != dlist.end(); ++dit)
         {
             const std::string &dname = dit->first;
-            ret = VTK::WriteSingleDevice(dname, filename, include, errorString);
+            ret = VTK::WriteSingleDevice(dname, filename, include_test, errorString);
         }
     }
-#if 0
-    myfile.close();
-#endif
 
     errorString += os.str();
     return ret;

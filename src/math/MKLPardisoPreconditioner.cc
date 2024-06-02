@@ -107,7 +107,6 @@ MKLPardisoData::MKLPardisoData(int numeqn) {
   iparm[17] = -1;       /* Output: Number of nonzeros in the factor LU */
   iparm[18] = -1;       /* Output: Mflops for LU factorization */
   iparm[19] = 0;        /* Output: Numbers of CG Iterations */
-//#warning "set to 0 after done debugging"
   iparm[26] = 0;        /* matrix checker */
   iparm[27] = 0;        /* double precision */
   iparm[34] = 1;        /* 0 based solve */

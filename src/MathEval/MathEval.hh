@@ -31,7 +31,6 @@ class MathEval {
     static void DestroyInstance();
 
     bool AddTclMath(const std::string &, ObjectHolder, size_t, std::string & /*error_string*/);
-    void RemoveTclMath(const std::string &);
 
   private:
     MathEval();

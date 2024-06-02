@@ -88,6 +88,7 @@ class CommandHandler
     int         GetIntegerOption(const std::string &) const;
     bool        GetBooleanOption(const std::string &) const;
     ObjectHolder GetObjectHolder(const std::string &) const;
+    bool        IsSpecified(const std::string &) const;
 
 
   private:
