@@ -34,7 +34,8 @@ except:
     sys.exit(0)
 
 
-from devsim import *
+from devsim import element_from_edge_model, element_from_node_model, element_model, element_pair_from_edge_model, get_element_model_values
+
 
 dim = None
 nee = None

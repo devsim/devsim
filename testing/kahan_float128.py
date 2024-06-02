@@ -5,7 +5,6 @@
 #Purpose: Fermi integral and inverse
 
 import devsim
-import test_common
 import sys
 
 if not devsim.get_parameter(name='info')['extended_precision']:
@@ -17,4 +16,3 @@ devsim.set_parameter(name = "extended_model", value=True)
 devsim.set_parameter(name = "extended_equation", value=True)
 
 import kahan
-

@@ -2,9 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import sys
 import devsim as ds
-from .simple_physics import *
+from devsim.python_packages.simple_physics import GetContactBiasName, PrintCurrents
 
 def rampbias(device, contact, end_bias, step_size, min_step, max_iter, rel_error, abs_error, callback):
     '''

@@ -5,8 +5,9 @@
 ####
 #### package test for drift diffusion
 ####
-from devsim import *
-from devsim.python_packages.simple_physics import *
+from devsim import add_1d_contact, add_1d_mesh_line, add_1d_region, create_1d_mesh, create_device, finalize_mesh, get_contact_list, get_node_model_values, set_node_values, set_parameter, solve
+
+from devsim.python_packages.simple_physics import GetContactBiasName, PrintCurrents, SetSiliconParameters, CreateSiliconPotentialOnly, CreateSiliconPotentialOnlyContact, CreateSiliconDriftDiffusion, CreateSiliconDriftDiffusionAtContact
 
 device="MyDevice"
 region="MyRegion"

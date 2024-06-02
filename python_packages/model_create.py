@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import contact_edge_model, contact_node_model, edge_average_model, edge_from_node_model, edge_model, element_model, get_edge_model_list, get_node_model_list, interface_model, node_model, node_solution
+
 debug = False
 def CreateSolution(device, region, name):
     '''

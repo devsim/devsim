@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import add_1d_contact, add_1d_mesh_line, add_1d_region, create_1d_mesh, finalize_mesh
+
 def cap_mesh(region_name, material_name):
     '''
       Creates a simple cap mesh named cap1 for test purposes with a given region name

@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import custom_equation, get_element_node_list, get_equation_numbers, get_node_model_values, get_parameter, node_model, print_node_values, set_parameter, solve, write_devices
+
 import devsim.python_packages.simple_physics as simple_physics
 import diode_common
 #####

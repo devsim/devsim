@@ -32,7 +32,8 @@ except:
     sys.exit(-1)
 
 
-from devsim import *
+from devsim import edge_from_node_model, element_from_edge_model, element_from_node_model, element_model, get_edge_model_values, get_element_model_values, load_devices
+
 
 def calculateValues(scalar_efield, eecouple, sx, sy):
     '''

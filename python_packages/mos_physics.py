@@ -2,8 +2,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
-from devsim.python_packages.model_create import *
+from devsim import contact_equation, element_from_edge_model, equation, get_dimension
+
+from devsim.python_packages.model_create import CreateElementModel2d, CreateElementModelDerivative2d
 
 def CreateElementElectronContinuityEquation(device, region, current_model):
     '''

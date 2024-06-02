@@ -32,8 +32,9 @@ except:
     sys.exit(-1)
 
 
-from devsim import *
-from laux_common import *
+from devsim import load_devices
+
+from laux_common import SetDimension, RunTest
 
 
 load_devices(file="gmsh_diode2d_dd.msh")

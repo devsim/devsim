@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import add_gmsh_contact, add_gmsh_interface, add_gmsh_region, contact_equation, contact_node_model, create_device, create_gmsh_mesh, edge_from_node_model, edge_model, equation, finalize_mesh, get_element_model_values, get_node_model_values, interface_equation, interface_model, node_model, node_solution, set_parameter, solve, vector_gradient, write_devices
+
 device="twowire"
 
 create_gmsh_mesh(file="twowire.msh", mesh="twowire")

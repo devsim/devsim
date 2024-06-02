@@ -6,7 +6,8 @@
 #### cap2.py
 #### tests physics of cap made of two insulating regions
 ####
-from devsim import *
+from devsim import add_1d_contact, add_1d_interface, add_1d_mesh_line, add_1d_region, contact_equation, create_1d_mesh, create_device, delete_contact_equation, delete_edge_model, delete_equation, delete_interface_equation, delete_interface_model, delete_node_model, edge_from_node_model, edge_model, edge_solution, equation, finalize_mesh, get_contact_charge, get_contact_equation_command, get_contact_equation_list, get_contact_list, get_edge_model_values, get_equation_command, get_equation_list, get_interface_equation_command, get_interface_equation_list, get_interface_list, get_node_model_values, get_region_list, interface_equation, interface_model, node_model, node_solution, print_edge_values, print_node_values, set_edge_values, set_node_value, set_node_values, set_parameter, solve
+
 device="MyDevice"
 interface="MySiOx"
 regions =("MyOxRegion", "MySiRegion")

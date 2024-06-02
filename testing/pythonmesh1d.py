@@ -1,5 +1,6 @@
 
-from devsim import *
+from devsim import add_gmsh_contact, add_gmsh_interface, add_gmsh_region, create_device, create_gmsh_mesh, finalize_mesh, get_contact_list, get_element_node_list, get_interface_list, get_node_model_values, get_region_list, write_devices
+
 import itertools
 
 print("coordinates")

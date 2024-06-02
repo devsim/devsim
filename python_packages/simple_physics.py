@@ -2,8 +2,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from .simple_dd import *
-from devsim import *
+from .simple_dd import CreateBernoulli, CreateElectronCurrent, CreateHoleCurrent
+
+from devsim import contact_equation, equation, get_contact_current, get_parameter, interface_equation, set_parameter
+
 contactcharge_edge="contactcharge_edge"
 ece_name="ElectronContinuityEquation"
 hce_name="HoleContinuityEquation"

@@ -1,4 +1,5 @@
-from devsim import *
+from devsim import add_gmsh_contact, add_gmsh_region, create_device, create_gmsh_mesh, finalize_mesh, write_devices
+
 import devsim.python_packages.pythonmesh
 
 

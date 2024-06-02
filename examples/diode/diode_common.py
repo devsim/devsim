@@ -2,8 +2,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
-from devsim.python_packages.simple_physics import *
+from devsim import add_1d_contact, add_1d_mesh_line, add_1d_region, add_2d_contact, add_2d_mesh_line, add_2d_region, add_gmsh_contact, add_gmsh_region, create_1d_mesh, create_2d_mesh, create_device, create_gmsh_mesh, finalize_mesh, get_contact_list, set_node_values, set_parameter
+
+from devsim.python_packages.model_create import CreateNodeModel, CreateSolution
+
+from devsim.python_packages.simple_physics import GetContactBiasName, SetSiliconParameters, CreateSiliconPotentialOnly, CreateSiliconPotentialOnlyContact, CreateSiliconDriftDiffusion, CreateSiliconDriftDiffusionAtContact
 #####
 # dio1
 #

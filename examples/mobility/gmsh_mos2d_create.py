@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import *
+from devsim import add_gmsh_contact, add_gmsh_interface, add_gmsh_region, create_device, create_gmsh_mesh, finalize_mesh, node_model, write_devices
+
 device ="mos2d"
 
 device_width    =1.0e-4

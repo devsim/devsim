@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from .model_create import *
+from devsim.python_packages.model_create import CreateEdgeModel, CreateEdgeModelDerivatives, InEdgeModelList, EnsureEdgeFromNodeModelExists
+
 def CreateBernoulli (device, region):
     '''
     Creates the Bernoulli function for Scharfetter Gummel
