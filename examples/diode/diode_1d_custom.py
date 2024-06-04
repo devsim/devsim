@@ -2,7 +2,18 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import custom_equation, get_element_node_list, get_equation_numbers, get_node_model_values, get_parameter, node_model, print_node_values, set_parameter, solve, write_devices
+from devsim import (
+    custom_equation,
+    get_element_node_list,
+    get_equation_numbers,
+    get_node_model_values,
+    get_parameter,
+    node_model,
+    print_node_values,
+    set_parameter,
+    solve,
+    write_devices,
+)
 
 import devsim.python_packages.simple_physics as simple_physics
 import diode_common
@@ -15,8 +26,8 @@ import diode_common
 # in dio2 add recombination
 #
 
-device="MyDevice"
-region="MyRegion"
+device = "MyDevice"
+region = "MyRegion"
 
 diode_common.CreateMesh(device=device, region=region)
 
@@ -51,37 +62,47 @@ class ContactBC:
         self.contact_bias_name = None
 
     def initialize(self):
-        self.equation_numbers=get_equation_numbers(device=self.device, region=self.region, variable=self.variable)
+        self.equation_numbers = get_equation_numbers(
+            device=self.device, region=self.region, variable=self.variable
+        )
         contact_nodes = []
-        for e in get_element_node_list(device=self.device, region=self.region, contact=self.contact):
+        for e in get_element_node_list(
+            device=self.device, region=self.region, contact=self.contact
+        ):
             contact_nodes.extend(e)
         self.contact_nodes = sorted(set(contact_nodes))
-        self.node_volume = get_node_model_values(device=self.device, region=self.region, name=self.variable)
+        self.node_volume = get_node_model_values(
+            device=self.device, region=self.region, name=self.variable
+        )
         self.contact_bias_name = simple_physics.GetContactBiasName(self.contact)
 
     def assemble(self, what, timemode):
-        '''
-          This assumes that constant bias conditions
-        '''
+        """
+        This assumes that constant bias conditions
+        """
         if not self.contact_nodes:
             self.initialize()
 
-        rcv=[]
-        rv=[]
+        rcv = []
+        rv = []
 
         if timemode != "DC":
             return [rcv, rv]
 
-        if  what != "MATRIXONLY":
+        if what != "MATRIXONLY":
             bias = get_parameter(device=self.device, name=self.contact_bias_name)
-            var = get_node_model_values(device=self.device, region=self.region, name=self.variable)
-            bias_offset = get_node_model_values(device=self.device, region=self.region, name="bias_offset")
+            var = get_node_model_values(
+                device=self.device, region=self.region, name=self.variable
+            )
+            bias_offset = get_node_model_values(
+                device=self.device, region=self.region, name="bias_offset"
+            )
             for c in self.contact_nodes:
                 r = self.equation_numbers[c]
                 v = (var[c] - bias + bias_offset[c]) * self.node_volume[c]
                 rv.extend([r, v])
 
-        if  what != "RHS":
+        if what != "RHS":
             # this is the derivative
             for c in self.contact_nodes:
                 r = self.equation_numbers[c]
@@ -94,18 +115,34 @@ class ContactBC:
     def getAssembleFunc(self):
         return lambda what, timemode: self.assemble(what, timemode)
 
+
 # how return function operating on one class
-f=ContactBC(device=device, region=region, contact="top", variable="Potential")
+f = ContactBC(device=device, region=region, contact="top", variable="Potential")
 custom_equation(name="test1", procedure=f.getAssembleFunc())
 
 ### deactivate the existing contact model
-node_model(device=device, region=region, name=simple_physics.GetContactNodeModelName("top"), equation="0")
-node_model(device=device, region=region, name=simple_physics.GetContactNodeModelName("top")+":Potential", equation="0")
+node_model(
+    device=device,
+    region=region,
+    name=simple_physics.GetContactNodeModelName("top"),
+    equation="0",
+)
+node_model(
+    device=device,
+    region=region,
+    name=simple_physics.GetContactNodeModelName("top") + ":Potential",
+    equation="0",
+)
 
 ### need the bias offset based on the doping
-node_model(device=device, region=region, name="bias_offset", equation="ifelse(NetDoping > 0, \
+node_model(
+    device=device,
+    region=region,
+    name="bias_offset",
+    equation="ifelse(NetDoping > 0, \
     -V_t*log({0}/n_i), \
-    V_t*log({1}/n_i))".format(simple_physics.celec_model, simple_physics.chole_model))
+    V_t*log({1}/n_i))".format(simple_physics.celec_model, simple_physics.chole_model),
+)
 
 
 ####
@@ -120,4 +157,3 @@ while v < 0.51:
     v += 0.1
 
 write_devices(file="diode_1d_custom.dat", type="tecplot")
-

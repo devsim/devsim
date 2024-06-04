@@ -2,27 +2,37 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim import element_from_edge_model, node_model, set_parameter, solve, write_devices
+from devsim import (
+    element_from_edge_model,
+    node_model,
+    set_parameter,
+    solve,
+    write_devices,
+)
 
 from devsim.python_packages.simple_physics import GetContactBiasName, PrintCurrents
 import diode_common
 
-device="diode3d"
-region="Bulk"
+device = "diode3d"
+region = "Bulk"
 
 
 diode_common.Create3DGmshMesh(device, region)
 
 # this is is the devsim format
-write_devices (file="gmsh_diode3d_out.msh")
+write_devices(file="gmsh_diode3d_out.msh")
 
 diode_common.SetParameters(device=device, region=region)
 
 ####
 #### NetDoping
 ####
-node_model(device=device, region=region, name="Acceptors", equation="1.0e18*step(0.5e-5-z);")
-node_model(device=device, region=region, name="Donors",    equation="1.0e18*step(z-0.5e-5);")
+node_model(
+    device=device, region=region, name="Acceptors", equation="1.0e18*step(0.5e-5-z);"
+)
+node_model(
+    device=device, region=region, name="Donors", equation="1.0e18*step(z-0.5e-5);"
+)
 node_model(device=device, region=region, name="NetDoping", equation="Donors-Acceptors;")
 
 diode_common.InitialSolution(device, region)
@@ -48,18 +58,17 @@ while v < 0.51:
     PrintCurrents(device, "bot")
     v += 0.1
 
-element_from_edge_model(edge_model="ElectricField",   device=device, region=region)
+element_from_edge_model(edge_model="ElectricField", device=device, region=region)
 element_from_edge_model(edge_model="ElectronCurrent", device=device, region=region)
-element_from_edge_model(edge_model="HoleCurrent",     device=device, region=region)
+element_from_edge_model(edge_model="HoleCurrent", device=device, region=region)
 
 write_devices(file="gmsh_diode3d_dd.dat", type="tecplot")
 write_devices(file="gmsh_diode3d_dd.msh", type="devsim")
 
-#element_from_node_model(node_model="node_index", device=device, region=region)
-#en0 = map(lambda x : int(x), get_element_model_values(name="node_index@en0", device=device, region=region))
-#en1 = map(lambda x : int(x), get_element_model_values(name="node_index@en1", device=device, region=region))
-#en2 = map(lambda x : int(x), get_element_model_values(name="node_index@en2", device=device, region=region))
-#en3 = map(lambda x : int(x), get_element_model_values(name="node_index@en3", device=device, region=region))
-#for i in range(len(en0)):
+# element_from_node_model(node_model="node_index", device=device, region=region)
+# en0 = map(lambda x : int(x), get_element_model_values(name="node_index@en0", device=device, region=region))
+# en1 = map(lambda x : int(x), get_element_model_values(name="node_index@en1", device=device, region=region))
+# en2 = map(lambda x : int(x), get_element_model_values(name="node_index@en2", device=device, region=region))
+# en3 = map(lambda x : int(x), get_element_model_values(name="node_index@en3", device=device, region=region))
+# for i in range(len(en0)):
 #  print "%d %d %d %d" % (en0[i], en1[i], en2[i], en3[i])
-

@@ -14,7 +14,9 @@ res1.run_initial_bias(use_circuit_bias=True)
 
 for v in (0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10):
     devsim.circuit_alter(name="V1", value=v)
-    devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
+    devsim.solve(
+        type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30
+    )
     for contact in res1.contacts:
         test_common.printResistorCurrent(device=res1.device, contact=contact)
 
@@ -24,6 +26,5 @@ for f in (0, 1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12):
 
 for x in devsim.get_circuit_node_list():
     for y in devsim.get_circuit_solution_list():
-        z=devsim.get_circuit_node_value(node=x, solution=y)
-        print("%s %s %1.15e" % (x,y,z))
-
+        z = devsim.get_circuit_node_value(node=x, solution=y)
+        print("%s %s %1.15e" % (x, y, z))

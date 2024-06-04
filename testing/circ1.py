@@ -9,8 +9,8 @@
 import devsim
 import test_common
 
-devices=("MyDevice1", "MyDevice2")
-region="MyRegion"
+devices = ("MyDevice1", "MyDevice2")
+region = "MyRegion"
 
 ####
 #### Meshing
@@ -29,11 +29,19 @@ devsim.circuit_element(name="R1", n1="cnode1", n2=0, value=1e15)
 devsim.set_parameter(device="MyDevice1", name="topbias", value=0.0)
 devsim.set_parameter(device="MyDevice2", name="botbias", value=0.0)
 
-test_common.SetupInitialResistorContact(device="MyDevice1", contact="top", use_circuit_bias=False)
-test_common.SetupInitialResistorContact(device="MyDevice1", contact="bot", use_circuit_bias=True, circuit_node="cnode1")
+test_common.SetupInitialResistorContact(
+    device="MyDevice1", contact="top", use_circuit_bias=False
+)
+test_common.SetupInitialResistorContact(
+    device="MyDevice1", contact="bot", use_circuit_bias=True, circuit_node="cnode1"
+)
 
-test_common.SetupInitialResistorContact(device="MyDevice2", contact="top", use_circuit_bias=True, circuit_node="cnode1")
-test_common.SetupInitialResistorContact(device="MyDevice2", contact="bot", use_circuit_bias=False)
+test_common.SetupInitialResistorContact(
+    device="MyDevice2", contact="top", use_circuit_bias=True, circuit_node="cnode1"
+)
+test_common.SetupInitialResistorContact(
+    device="MyDevice2", contact="bot", use_circuit_bias=False
+)
 
 devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-14, maximum_iterations=30)
 
@@ -45,18 +53,27 @@ for device in devices:
 for device in devices:
     test_common.SetupCarrierResistorSystem(device=device, region=region)
 
-test_common.SetupCarrierResistorContact(device="MyDevice1", contact="top", use_circuit_bias=False)
-test_common.SetupCarrierResistorContact(device="MyDevice1", contact="bot", use_circuit_bias=True, circuit_node="cnode1")
+test_common.SetupCarrierResistorContact(
+    device="MyDevice1", contact="top", use_circuit_bias=False
+)
+test_common.SetupCarrierResistorContact(
+    device="MyDevice1", contact="bot", use_circuit_bias=True, circuit_node="cnode1"
+)
 
-test_common.SetupCarrierResistorContact(device="MyDevice2", contact="top", use_circuit_bias=True, circuit_node="cnode1")
-test_common.SetupCarrierResistorContact(device="MyDevice2", contact="bot", use_circuit_bias=False)
+test_common.SetupCarrierResistorContact(
+    device="MyDevice2", contact="top", use_circuit_bias=True, circuit_node="cnode1"
+)
+test_common.SetupCarrierResistorContact(
+    device="MyDevice2", contact="bot", use_circuit_bias=False
+)
 
 for v in (0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10):
     print("topbias %f" % v)
     devsim.set_parameter(device="MyDevice1", name="topbias", value=v)
-    devsim.solve(type="dc", absolute_error=1, relative_error=1e-9, maximum_iterations=30)
+    devsim.solve(
+        type="dc", absolute_error=1, relative_error=1e-9, maximum_iterations=30
+    )
     test_common.print_circuit_solution()
     for device in devices:
         test_common.printResistorCurrent(device=device, contact="top")
         test_common.printResistorCurrent(device=device, contact="bot")
-

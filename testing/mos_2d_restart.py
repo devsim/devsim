@@ -6,13 +6,25 @@ import devsim
 from devsim import get_contact_list, get_region_list, set_parameter, set_node_values
 from devsim.python_packages.model_create import CreateSolution
 
+from devsim.python_packages.simple_physics import (
+    GetContactBiasName,
+    SetOxideParameters,
+    SetSiliconParameters,
+    CreateSiliconPotentialOnly,
+    CreateSiliconPotentialOnlyContact,
+    CreateSiliconDriftDiffusion,
+    CreateSiliconDriftDiffusionAtContact,
+    CreateOxidePotentialOnly,
+    CreateSiliconOxideInterface,
+)
+
 devsim.load_devices(file="mos_2d_dd.msh")
-device=devsim.get_device_list()[0]
-from devsim.python_packages.simple_physics import GetContactBiasName, SetOxideParameters, SetSiliconParameters, CreateSiliconPotentialOnly, CreateSiliconPotentialOnlyContact, CreateSiliconDriftDiffusion, CreateSiliconDriftDiffusionAtContact, CreateOxidePotentialOnly, CreateSiliconOxideInterface
+device = devsim.get_device_list()[0]
+
 
 device = "mymos"
-silicon_regions=("gate", "bulk")
-oxide_regions=("oxide",)
+silicon_regions = ("gate", "bulk")
+oxide_regions = ("oxide",)
 regions = ("gate", "bulk", "oxide")
 interfaces = ("bulk_oxide", "gate_oxide")
 
@@ -41,8 +53,10 @@ for i in interfaces:
 for i in silicon_regions:
     CreateSolution(device, i, "Electrons")
     CreateSolution(device, i, "Holes")
-    set_node_values(device=device, region=i, name="Electrons", init_from="IntrinsicElectrons")
-    set_node_values(device=device, region=i, name="Holes",     init_from="IntrinsicHoles")
+    set_node_values(
+        device=device, region=i, name="Electrons", init_from="IntrinsicElectrons"
+    )
+    set_node_values(device=device, region=i, name="Holes", init_from="IntrinsicHoles")
     CreateSiliconDriftDiffusion(device, i, "mu_n", "mu_p")
 
 for c in contacts:
@@ -50,5 +64,6 @@ for c in contacts:
     r = tmp[0]
     CreateSiliconDriftDiffusionAtContact(device, r, c)
 
-devsim.solve(type="dc", absolute_error=1.0e30, relative_error=1e-5, maximum_iterations=30)
-
+devsim.solve(
+    type="dc", absolute_error=1.0e30, relative_error=1e-5, maximum_iterations=30
+)
