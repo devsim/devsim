@@ -4,10 +4,11 @@
 
 import devsim
 
+
 def callSymdiff(arg):
-    x  = devsim.symdiff(expr=arg)
+    x = devsim.symdiff(expr=arg)
     dx = devsim.symdiff(expr="diff(%s,x)" % arg)
-    print ('"%s"\n"%s"\n"%s"\n' % (arg, x, dx))
+    print('"%s"\n"%s"\n"%s"\n' % (arg, x, dx))
 
 
 callSymdiff("min(x*b, x+b)")

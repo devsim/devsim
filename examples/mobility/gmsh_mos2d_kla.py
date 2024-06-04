@@ -2,22 +2,52 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-#set_parameter -name threads_available -value 1
-#set_parameter -name threads_task_size -value 1024
-from devsim import get_contact_list, get_parameter, get_region_list, node_model, set_node_values, set_parameter, solve, vector_element_model, write_devices
+# set_parameter -name threads_available -value 1
+# set_parameter -name threads_task_size -value 1024
+from devsim import (
+    get_contact_list,
+    get_parameter,
+    get_region_list,
+    node_model,
+    set_node_values,
+    set_parameter,
+    solve,
+    vector_element_model,
+    write_devices,
+)
 
-from devsim.python_packages.simple_physics import GetContactBiasName, SetOxideParameters, SetSiliconParameters, CreateSiliconPotentialOnly, CreateSiliconPotentialOnlyContact, CreateSiliconDriftDiffusion, CreateSiliconDriftDiffusionAtContact, CreateOxidePotentialOnly, CreateSiliconOxideInterface
+from devsim.python_packages.simple_physics import (
+    GetContactBiasName,
+    SetOxideParameters,
+    SetSiliconParameters,
+    CreateSiliconPotentialOnly,
+    CreateSiliconPotentialOnlyContact,
+    CreateSiliconDriftDiffusion,
+    CreateSiliconDriftDiffusionAtContact,
+    CreateOxidePotentialOnly,
+    CreateSiliconOxideInterface,
+)
 from devsim.python_packages.ramp import rampbias, printAllCurrents
-from devsim.python_packages.Klaassen import Set_Mobility_Parameters, Klaassen_Mobility, Philips_VelocitySaturation, Philips_Surface_Mobility
-from devsim.python_packages.mos_physics import CreateElementElectronContinuityEquation, CreateElementContactElectronContinuityEquation, CreateNormalElectricFieldFromCurrentFlow, CreateElementElectronCurrent2d
+from devsim.python_packages.Klaassen import (
+    Set_Mobility_Parameters,
+    Klaassen_Mobility,
+    Philips_VelocitySaturation,
+    Philips_Surface_Mobility,
+)
+from devsim.python_packages.mos_physics import (
+    CreateElementElectronContinuityEquation,
+    CreateElementContactElectronContinuityEquation,
+    CreateNormalElectricFieldFromCurrentFlow,
+    CreateElementElectronCurrent2d,
+)
 from devsim.python_packages.model_create import CreateSolution, CreateElementModel2d
 
-import gmsh_mos2d_create
+import gmsh_mos2d_create  # noqa: F401
 
 # TODO: write out mesh, and then read back in as separate test
 device = "mos2d"
-silicon_regions=("gate", "bulk")
-oxide_regions=("oxide",)
+silicon_regions = ("gate", "bulk")
+oxide_regions = ("oxide",)
 regions = ("gate", "bulk", "oxide")
 interfaces = ("bulk_oxide", "gate_oxide")
 
@@ -44,7 +74,7 @@ for i in contacts:
 for i in interfaces:
     CreateSiliconOxideInterface(device, i)
 
-#for d in get_device_list():
+# for d in get_device_list():
 #  for gn in get_parameter_list():
 #    print("{0} {1}").format(gn, get_parameter(device=d, name=gn))
 #  for gn in get_parameter_list(device=d):
@@ -52,7 +82,7 @@ for i in interfaces:
 #  for r in get_region_list(device=d):
 #    for gn in get_parameter_list(device=d, region=r):
 #      print("{0} {1} {2} {3}").format(d, r, gn, get_parameter(device=d, region=r, name=gn))
-#write_devices(file="foo.msh", type="devsim")
+# write_devices(file="foo.msh", type="devsim")
 solve(type="dc", absolute_error=1.0e-13, relative_error=1e-12, maximum_iterations=30)
 solve(type="dc", absolute_error=1.0e-13, relative_error=1e-12, maximum_iterations=30)
 #
@@ -62,12 +92,14 @@ write_devices(file="gmsh_mos2d_potentialonly", type="vtk")
 for i in silicon_regions:
     CreateSolution(device, i, "Electrons")
     CreateSolution(device, i, "Holes")
-    set_node_values(device=device, region=i, name="Electrons", init_from="IntrinsicElectrons")
-    set_node_values(device=device, region=i, name="Holes",     init_from="IntrinsicHoles")
+    set_node_values(
+        device=device, region=i, name="Electrons", init_from="IntrinsicElectrons"
+    )
+    set_node_values(device=device, region=i, name="Holes", init_from="IntrinsicHoles")
 
     Set_Mobility_Parameters(device, i)
     Klaassen_Mobility(device, i)
-    #use bulk Klaassen mobility
+    # use bulk Klaassen mobility
     CreateSiliconDriftDiffusion(device, i, "mu_bulk_e", "mu_bulk_h")
 
 for c in contacts:
@@ -76,40 +108,56 @@ for c in contacts:
     CreateSiliconDriftDiffusionAtContact(device, r, c)
 
 for r in silicon_regions:
-    node_model(device=device, region=r, name="logElectrons", equation="log(Electrons)/log(10)")
+    node_model(
+        device=device, region=r, name="logElectrons", equation="log(Electrons)/log(10)"
+    )
     CreateNormalElectricFieldFromCurrentFlow(device, r, "ElectronCurrent")
     CreateNormalElectricFieldFromCurrentFlow(device, r, "HoleCurrent")
-    Philips_Surface_Mobility(device, r, "Enormal_ElectronCurrent", "Enormal_HoleCurrent")
-    #Philips_VelocitySaturation $device $region mu_vsat_e mu_bulk_e Eparallel_ElectronCurrent vsat_e
-    Philips_VelocitySaturation(device, r, "mu_vsat_e", "mu_e_0", "Eparallel_ElectronCurrent", "vsat_e")
+    Philips_Surface_Mobility(
+        device, r, "Enormal_ElectronCurrent", "Enormal_HoleCurrent"
+    )
+    # Philips_VelocitySaturation $device $region mu_vsat_e mu_bulk_e Eparallel_ElectronCurrent vsat_e
+    Philips_VelocitySaturation(
+        device, r, "mu_vsat_e", "mu_e_0", "Eparallel_ElectronCurrent", "vsat_e"
+    )
     CreateElementModel2d(device, r, "mu_ratio", "mu_vsat_e/mu_bulk_e")
     CreateElementModel2d(device, r, "mu_surf_ratio", "mu_e_0/mu_bulk_e")
-    CreateElementModel2d(device, r, "epar_ratio", "abs(Eparallel_ElectronCurrent/ElectricField_mag)")
-    #createElementElectronCurrent2d $device $region ElementElectronCurrent mu_n
-    #createElementElectronCurrent2d $device $region ElementElectronCurrent mu_bulk_e
+    CreateElementModel2d(
+        device, r, "epar_ratio", "abs(Eparallel_ElectronCurrent/ElectricField_mag)"
+    )
+    # createElementElectronCurrent2d $device $region ElementElectronCurrent mu_n
+    # createElementElectronCurrent2d $device $region ElementElectronCurrent mu_bulk_e
     CreateElementElectronCurrent2d(device, r, "ElementElectronCurrent", "mu_vsat_e")
     # element_from_edge_model -edge_model ElectricField   -device $device -region $i
-    CreateElementModel2d(device, r, "magElementElectronCurrent", "log(abs(ElementElectronCurrent)+1e-10)/log(10)")
-    vector_element_model(device=device, region=r, element_model="ElementElectronCurrent")
+    CreateElementModel2d(
+        device,
+        r,
+        "magElementElectronCurrent",
+        "log(abs(ElementElectronCurrent)+1e-10)/log(10)",
+    )
+    vector_element_model(
+        device=device, region=r, element_model="ElementElectronCurrent"
+    )
     # we aren't going to worry about holes for now.
-    #createNormalElectricFieldFromCurrentFlow $device $region HoleCurrent
+    # createNormalElectricFieldFromCurrentFlow $device $region HoleCurrent
     CreateElementElectronContinuityEquation(device, r, "ElementElectronCurrent")
 
 for contact in ("body", "drain", "source"):
-    CreateElementContactElectronContinuityEquation(device, contact, "ElementElectronCurrent")
+    CreateElementContactElectronContinuityEquation(
+        device, contact, "ElementElectronCurrent"
+    )
 
-#write_devices(file="debug.msh", type="devsim")
+# write_devices(file="debug.msh", type="devsim")
 solve(type="dc", absolute_error=1.0e30, relative_error=1e-10, maximum_iterations=100)
 write_devices(file="gmsh_mos2d_dd_kla_zero.dat", type="tecplot")
 write_devices(file="gmsh_mos2d_dd_kla_zero", type="vtk")
 
 
-drainbias=get_parameter(device=device, name=GetContactBiasName("drain"))
-gatebias=get_parameter(device=device, name=GetContactBiasName("gate"))
+drainbias = get_parameter(device=device, name=GetContactBiasName("drain"))
+gatebias = get_parameter(device=device, name=GetContactBiasName("gate"))
 
-rampbias(device, "gate",  0.5, 0.5, 0.001, 100, 1e-8, 1e30, printAllCurrents)
+rampbias(device, "gate", 0.5, 0.5, 0.001, 100, 1e-8, 1e30, printAllCurrents)
 rampbias(device, "drain", 0.5, 0.1, 0.001, 100, 1e-8, 1e30, printAllCurrents)
 
 write_devices(file="gmsh_mos2d_dd_kla.dat", type="tecplot")
 write_devices(file="gmsh_mos2d_dd_kla", type="vtk")
-

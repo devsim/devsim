@@ -4,7 +4,7 @@
 
 # The purpose is to verify our triangle element field calculation.
 # It is based on Laux's weighting scheme
-#@article{Laux:1985,
+# @article{Laux:1985,
 # author = {Laux, Steven E. and Byrnes, Robert G.},
 # title = {Semiconductor device simulation using generalized mobility models},
 # journal = {IBM J. Res. Dev.},
@@ -21,16 +21,8 @@
 # acmid = {1012099},
 # publisher = {IBM Corp.},
 # address = {Riverton, NJ, USA},
-#}
-
-import sys
-try:
-    import numpy
-    import numpy.linalg
-except:
-    print("numpy is not available with your installation and is not being run")
-    sys.exit(-1)
-
+# }
+import devsim
 
 from devsim import load_devices
 
@@ -48,19 +40,15 @@ nen = laux_common.nen
 dim = laux_common.dim
 
 
-
 # There are nee edges per tetrahedron
-#number_elements = len(scalar_efield)/laux_common.nee;
+# number_elements = len(scalar_efield)/laux_common.nee;
 
 
 number_test = -1
 
 RunTest(device, region, number_test, "ElectricField", "Potential")
 
-import devsim
 devsim.set_parameter(name="V_t", value=0.0259)
 devsim.set_parameter(name="mu_n", value=400)
 devsim.set_parameter(name="ElectronCharge", value=1.6e-19)
 RunTest(device, region, number_test, "ElectronCurrent", "Potential")
-
-

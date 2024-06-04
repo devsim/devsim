@@ -7,5 +7,5 @@
 #### print features for this build
 ####
 import devsim
-print(devsim.get_parameter(name="info"))
 
+print(devsim.get_parameter(name="info"))

@@ -2,15 +2,36 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from devsim.python_packages.simple_physics import GetContactBiasName, SetOxideParameters, SetSiliconParameters, CreateSiliconPotentialOnly, CreateSiliconPotentialOnlyContact, CreateSiliconDriftDiffusion, CreateSiliconDriftDiffusionAtContact, CreateOxidePotentialOnly, CreateSiliconOxideInterface
+from devsim.python_packages.simple_physics import (
+    GetContactBiasName,
+    SetOxideParameters,
+    SetSiliconParameters,
+    CreateSiliconPotentialOnly,
+    CreateSiliconPotentialOnlyContact,
+    CreateSiliconDriftDiffusion,
+    CreateSiliconDriftDiffusionAtContact,
+    CreateOxidePotentialOnly,
+    CreateSiliconOxideInterface,
+)
 from devsim.python_packages.model_create import CreateSolution
-from devsim import get_contact_list, get_device_list, get_parameter, get_parameter_list, get_region_list, node_model, set_node_values, set_parameter, solve, write_devices
+from devsim import (
+    get_contact_list,
+    get_device_list,
+    get_parameter,
+    get_parameter_list,
+    get_region_list,
+    node_model,
+    set_node_values,
+    set_parameter,
+    solve,
+    write_devices,
+)
 
-import mos_2d_create
+import mos_2d_create  # noqa: F401, E402
 
 device = "mymos"
-silicon_regions=("gate", "bulk")
-oxide_regions=("oxide",)
+silicon_regions = ("gate", "bulk")
+oxide_regions = ("oxide",)
 regions = ("gate", "bulk", "oxide")
 interfaces = ("bulk_oxide", "gate_oxide")
 
@@ -46,8 +67,10 @@ write_devices(file="gmsh_mos2d_potentialonly", type="vtk")
 for i in silicon_regions:
     CreateSolution(device, i, "Electrons")
     CreateSolution(device, i, "Holes")
-    set_node_values(device=device, region=i, name="Electrons", init_from="IntrinsicElectrons")
-    set_node_values(device=device, region=i, name="Holes",     init_from="IntrinsicHoles")
+    set_node_values(
+        device=device, region=i, name="Electrons", init_from="IntrinsicElectrons"
+    )
+    set_node_values(device=device, region=i, name="Holes", init_from="IntrinsicHoles")
     CreateSiliconDriftDiffusion(device, i, "mu_n", "mu_p")
 
 for c in contacts:
@@ -58,25 +81,31 @@ for c in contacts:
 solve(type="dc", absolute_error=1.0e30, relative_error=1e-5, maximum_iterations=30)
 
 for r in silicon_regions:
-    node_model(device=device, region=r, name="logElectrons", equation="log(Electrons)/log(10)")
+    node_model(
+        device=device, region=r, name="logElectrons", equation="log(Electrons)/log(10)"
+    )
 
 write_devices(file="mos_2d_dd.msh", type="devsim")
 
 with open("mos_2d_params.py", "w", encoding="utf-8") as ofh:
-    ofh.write('import devsim\n')
+    ofh.write("import devsim\n")
     for p in get_parameter_list():
-        if p in ('solver_callback', 'direct_solver', 'info'):
+        if p in ("solver_callback", "direct_solver", "info"):
             continue
-        v=repr(get_parameter(name=p))
+        v = repr(get_parameter(name=p))
         ofh.write('devsim.set_parameter(name="%s", value=%s)\n' % (p, v))
     for i in get_device_list():
         for p in get_parameter_list(device=i):
-            v=repr(get_parameter(device=i, name=p))
-            ofh.write('devsim.set_parameter(device="%s", name="%s", value=%s)\n' % (i, p, v))
+            v = repr(get_parameter(device=i, name=p))
+            ofh.write(
+                'devsim.set_parameter(device="%s", name="%s", value=%s)\n' % (i, p, v)
+            )
 
     for i in get_device_list():
         for j in get_region_list(device=i):
             for p in get_parameter_list(device=i, region=j):
-                v=repr(get_parameter(device=i, region=j, name=p))
-                ofh.write('devsim.set_parameter(device="%s", region="%s", name="%s", value=%s)\n' % (i, j, p, v))
-
+                v = repr(get_parameter(device=i, region=j, name=p))
+                ofh.write(
+                    'devsim.set_parameter(device="%s", region="%s", name="%s", value=%s)\n'
+                    % (i, j, p, v)
+                )
