@@ -27,6 +27,8 @@ from devsim import (
 from devsim.python_packages.model_create import CreateSolution
 
 
+import gmsh_mos2d_create
+
 device = "mos2d"
 silicon_regions = ("gate", "bulk")
 oxide_regions = ("oxide",)

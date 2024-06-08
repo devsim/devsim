@@ -103,6 +103,8 @@ ADD_TEST("testing/mesh2d_msh_comp" ${RUNDIFFTEST} --output ${RUNDIR}/mesh2d.msh 
 set_tests_properties("testing/mesh2d_msh_comp" PROPERTIES DEPENDS testing/mesh2d)
 ADD_TEST("testing/mesh2d_tec_comp" ${RUNDIFFTEST} --output ${RUNDIR}/mesh2d.tec --golden ${GOLDENDIR}/testing)
 set_tests_properties("testing/mesh2d_tec_comp" PROPERTIES DEPENDS testing/mesh2d)
+ADD_TEST("testing/mesh2d_reduced_tec_comp" ${RUNDIFFTEST} --output ${RUNDIR}/mesh2d.tec --golden ${GOLDENDIR}/testing)
+set_tests_properties("testing/mesh2d_reduced_tec_comp" PROPERTIES DEPENDS testing/mesh2d)
 
 ADD_TEST("testing/noise_res_2d_tec_comp" ${RUNDIFFTEST} --output ${RUNDIR}/noise_res_2d.tec --golden ${GOLDENDIR}/testing)
 set_tests_properties("testing/noise_res_2d_tec_comp" PROPERTIES DEPENDS testing/noise_res_2d)
