@@ -27,7 +27,7 @@ from devsim import (
 from devsim.python_packages.model_create import CreateSolution
 
 
-import gmsh_mos2d_create
+import gmsh_mos2d_create  # noqa
 
 device = "mos2d"
 silicon_regions = ("gate", "bulk")
