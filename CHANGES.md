@@ -7,7 +7,13 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.8.0
 
+### Windows Build Issue
+
+During testing, it was found the Visual Studio 2022 builds were failing a test related to threading.  This was found to be a problem with version `17.10`, but not version `17.9`.  This affects the build automation.
+
 ### Centos 7 End Of Life
+
+This is the last version to support Centos 7 before its end of life on June 30, 2024.  After this date we will be moving to the AlmaLinux 8 based `manylinux_2_28`.
 
 ### Data output
 

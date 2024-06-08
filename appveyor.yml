@@ -40,7 +40,9 @@ skip_non_tags: true
 #---------------------------------#
 
 # Operating system (build VM template)
-image: Visual Studio 2022
+# TODO: 06/08/2024 fpetest2 crashing with version 17.10 and not 17.9
+# Hopefully changing this on appveyor will make automation possible
+image: Previous Visual Studio 2022
 
 # scripts that are called at very beginning, before repo cloning
 init:
