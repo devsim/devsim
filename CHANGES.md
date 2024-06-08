@@ -7,27 +7,41 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.8.0
 
-### Windows Build Issue
+### Python Scripts
 
-During testing, it was found the Visual Studio 2022 builds were failing a test related to threading.  This was found to be a problem with version `17.10`, but not version `17.9`.  This affects the build automation.
-
-### Centos 7 End Of Life
-
-This is the last version to support Centos 7 before its end of life on June 30, 2024.  After this date we will be moving to the AlmaLinux 8 based `manylinux_2_28`.
+Based on a contribution by [@simbilod](https://github.com/simbilod), all of the Python scripts have been reformatted.  The build system was also updated to enforce Python script modifiecations are properly formatted when submitted to the project.
 
 ### Data output
 
-#### Reduction in data file sizes
+#### Reduction in Data File Sizes
 
 Based on a contribution by [@simbilod](https://github.com/simbilod) `devsim.write_devices` now supports reducing the file size of data files by specifying a callback function to reduce data usage.  This is through the `include_test` option.  This option is a function that takes a string and returns `True` if the model should be written.  It is only supported for the `tecplot` and `vtk` formats.
 
-An example is provided in `testing/XXXXX.py`
+In this example, only the `NetDoping` field is written to the Tecplot data file.
+
+```
+devsim.write_devices(
+    file="mesh2d_reduced.tec",
+    type="tecplot",
+    include_test=lambda x: x in ("NetDoping",),
+)
+```
 
 
 #### FLOOPS Data File Output
 
 The `floops` option for `devsim.write_devices` has been removed.
 
+
+### Platform Support
+
+### Windows Build Issue
+
+During testing, it was found the Visual Studio 2022 builds were failing a test related to threading.  This was found to be a problem with version `17.10`, but not version `17.9`.  This affects the build automation, but should not affect the binary releases.
+
+### Centos 7 End of Life
+
+This is the last version to support Centos 7 before its end of life on June 30, 2024.  After this date we will be moving to the AlmaLinux 8 based `manylinux_2_28`.
 
 ## Version 2.7.3
 
