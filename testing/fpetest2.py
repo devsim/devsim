@@ -2,9 +2,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 import devsim
+devsim.set_parameter(name="threads_available", value=2)
 import fpetest1
 
-devsim.set_parameter(name="threads_available", value=2)
 
 for name, value in (
     ("threads_available", 1),
