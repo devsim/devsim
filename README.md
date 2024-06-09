@@ -69,8 +69,8 @@ If you wish to see simulation results, or run the regression tests yourself.  Th
 | [devsim_tests_msys](https://github.com/devsim/devsim_tests_msys) | Windows MSYS Build |
 | [devsim_tests_win64](https://github.com/devsim/devsim_tests_win64) | Windows Visual Studio 2022 Build |
 | [devsim_tests_macos_arm64](https://github.com/devsim/devsim_tests_macos_arm64) | Apple M1 Build |
-| [devsim_tests_macos_gcc_x86_64](https://github.com/devsim/devsim_tests_macos_gcc_x86_64) | macOS Build |
-| [devsim_tests_linux_x86_64](https://github.com/devsim/devsim_tests_linux_x86_64) | Linux |
+| [devsim_tests_linux_x86_64](https://github.com/devsim/devsim_tests_linux_x86_64) | Linux on ``x86_64``|
+| [devsim_tests_linux_aarch64](https://github.com/devsim/devsim_tests_linux_aarch64) | Linux on arm64 |
 
 *The results are platform dependent due to differences in the compiler, operating system, and math libraries used on each platform.*
 
