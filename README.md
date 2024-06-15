@@ -35,15 +35,19 @@ The PDF documentation is located in ``doc/devsim.pdf``.  An online version of th
 The repository for the documentation is at [https://github.com/devsim/devsim_documentation](https://github.com/devsim/devsim_documentation).
 
 ## Supported Platforms:
-* macOS 10.13 (High Sierra)
-* Microsoft Windows (64 bit)
-* Red Hat 7 (Centos Compatible)
+
+| OS | Version | Architecture |
+| --- | --- | --- |
+| macOS | Monterey 12.5 | `arm64`, `x86_64` |
+| Microsoft Windows | Windows 10 | `x64` |
+| Linux | Red Hat 7 (Centos Compatible) | `aarch64`, `x86_64` |
 
 
 ## Software Features:
 * Python scripting 
 * DC, small-signal AC, impedance field method, transient
 * User specified partial differential equations (PDE).
+* Extended floating point precision
 * 1D, 2D, and 3D simulation
 * 1D, 2D mesher
 * Import 3D meshes.

@@ -4,12 +4,6 @@
 
 Please visit the DEVSIM homepage at [https://devsim.org](https://devsim.org) for the latest information concerning the availability of the software.
 
-Supported Platforms:
-
-* Centos, Red Hat 7
-* macOS
-* Microsoft Windows (64 bit)
-
 ## Installing the Binary Package
 
 ### Prerequisites
@@ -59,12 +53,7 @@ pip install devsim
 
 #### Alternative Package Download
 
-Binary releases are available from [Zenodo](https://doi.org/10.5281/zenodo.1186952), or from [GitHub](https://github.com/devsim/devsim/releases).  Uncompress the file to the desired directory.  Then go into the the directory and run the Python installer.
-
-    cd devsim
-    python install.py
-
-This script will install DEVSIM into your environment.  If you should need to remove this environment, you can use ``pip``.  Alternatively, you can set the PYTHONPATH environment variable to the ``devsim/lib`` directory.
+Binary releases are available from [Zenodo](https://doi.org/10.5281/zenodo.1186952), or from [GitHub](https://github.com/devsim/devsim/releases).  Uncompress the file to the desired directory.  The preferred installation method is to install the `.whl` file using `pip`.
 
 #### Basic Test
 
