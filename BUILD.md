@@ -13,6 +13,8 @@ An Anaconda (or Miniconda) installation is optional for `Linux` and `macOS`, but
 
 For `x86_64` or `x64` systems, the Intel MKL is recommended, but it is not needed for building the application.
 
+## Platform Instructions
+
 ### Linux
 
 #### Building Red Hat 7 compatible version
@@ -83,5 +85,4 @@ From a Anaconda environment command prompt:
     scripts\build_appveyor.bat x64 conda version
 
 where ``version`` is replaced with the desired version name.  The Python wheel file is then in the `dist` directory.
-
 
