@@ -55,6 +55,10 @@ The repository for the documentation is at [https://github.com/devsim/devsim_doc
 | Microsoft Windows | Windows 10 | `x64` |
 | Linux | Red Hat 7 (Centos Compatible) | `aarch64`, `x86_64` |
 
+## Code of Conduct:
+
+Please see [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
 ## Support:
 
 For support and general discussion, please join our forum:
