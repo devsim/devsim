@@ -7,6 +7,10 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.8.1
 
+### Help Files
+
+Updated instructions.  Added [BUILD.md](BUILD.md) and removed [install.py](install.py).
+
 ### Material Database
 
 Remove commands:

@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/devsim/devsim.svg?branch=master)](https://travis-ci.org/devsim/devsim)
-[![Build status](https://ci.appveyor.com/api/projects/status/github/devsim/devsim?branch=master&svg=true)](https://ci.appveyor.com/project/devsim/devsim)
+[![Build Status](https://travis-ci.org/devsim/devsim.svg?branch=master)](https://travis-ci.org/devsim/m)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/devsim/devsim?branch=master&svg=ue)](https://ci.appveyor.com/project/devsim/devsim)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.03898/status.svg)](https://doi.org/10.21105/joss.03898)
 
 # DEVSIM
@@ -17,7 +17,7 @@ The official website is here:
 
 ## Installation:
 
-Please see [INSTALL.md](INSTALL.md) for installation instructions from binary or source.  Archived binary releases are available at [Zenodo](https://doi.org/10.5281/zenodo.1186952).
+Please see [INSTALL.md](INSTALL.md) for installation instructions.  Please see [BUILD.md](BUILD.md) for instructions to build from source.
 
 ## Citing This Work:
 
