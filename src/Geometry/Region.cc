@@ -22,9 +22,6 @@ SPDX-License-Identifier: Apache-2.0
 #include "TriangleElementField.hh"
 #include "TetrahedronElementField.hh"
 #include "EdgeData.hh"
-#if defined(USE_MATERIALDB)
-#include "MaterialDB.hh"
-#endif
 #include "GlobalData.hh"
 #include "ObjectHolder.hh"
 
@@ -1538,57 +1535,6 @@ size_t Region::GetEdgeIndexOnTetrahedron(const Tetrahedron &t, ConstEdgePtr ep) 
 
 void Region::SetMaterial(const std::string &new_material)
 {
-#if defined(USE_MATERIALDB) 
-  //// Our global parameter db has precedence
-  GlobalData &gd = GlobalData::GetInstance();
-  MaterialDB &md = MaterialDB::GetInstance();
-
-  const MaterialDB::ParameterDataMap_t &old_data = md.GetOpenEntries(materialName);
-
-  //// We can no longer rely on anything based on our old material name
-  for (MaterialDB::ParameterDataMap_t::const_iterator it = old_data.begin(); it != old_data.end(); ++it)
-  {
-    const std::string &parameter_name = it->first;
-    if (!(gd.GetDBEntryOnRegion(this, parameter_name).first))
-    {
-      this->SignalCallbacks(parameter_name);
-    }
-  }
-
-  const MaterialDB::ParameterDataMap_t &global_data = md.GetOpenEntries("global");
-
-  //// Check for global data.  If old material did not define it, then signal callback
-  //// The next model evaluation will detect if it is available from the db
-  for (MaterialDB::ParameterDataMap_t::const_iterator it = global_data.begin(); it != global_data.end(); ++it)
-  {
-    const std::string &parameter_name = it->first;
-    if (!(gd.GetDBEntryOnRegion(this, parameter_name).first))
-    {
-      if (!old_data.count(parameter_name))
-      {
-        this->SignalCallbacks(parameter_name);
-      }
-    }
-  }
-
-  //// Mark all interface models as being out of date
-  //// contact models already belong to region
-  //// Should do this when parameters change as well
-  const Device::InterfaceList_t &iml = GetDevice()->GetInterfaceList();
-  for (Device::InterfaceList_t::const_iterator it = iml.begin(); it != iml.end(); ++it)
-  {
-    Interface *interface = it->second;
-    if ((interface->GetRegion0() == this) || (interface->GetRegion1() == this))
-    {
-        const Interface::NameToInterfaceNodeModelMap_t &iml = interface->GetInterfaceNodeModelList();
-        for (Interface::NameToInterfaceNodeModelMap_t::const_iterator it = iml.begin(); it != iml.end(); ++it)
-        {
-          it->second->MarkOld();
-        }
-    }
-  }
-#endif
-
   materialName = new_material;
 }
 

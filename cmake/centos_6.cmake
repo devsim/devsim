@@ -19,9 +19,6 @@ SET (BLAS_ARCHIVE -L${MKL_LIB_DIR} -Wl,--no-as-needed -lmkl_rt -lpthread -lm -ld
 SET (EXTENDED_BLAS_ARCHIVE ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
 
 
-SET (SQLITE3_INCLUDE )
-SET (SQLITE3_ARCHIVE -lsqlite3)
-
 SET (ZLIB_INCLUDE )
 SET (ZLIB_ARCHIVE -lz)
 

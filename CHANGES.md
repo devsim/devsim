@@ -5,6 +5,21 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.8.1
+
+### Material Database
+
+Remove commands:
+
+* `create_db`
+* `open_db`
+* `close_db`
+* `save_db`
+* `add_db_entry`
+* `get_db_entry`
+
+This also removes the binary dependence on SQLite.
+
 ## Version 2.8.0
 
 ### Python Scripts

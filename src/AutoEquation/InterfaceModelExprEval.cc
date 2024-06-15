@@ -9,9 +9,6 @@ SPDX-License-Identifier: Apache-2.0
 #include "Interface.hh"
 #include "FPECheck.hh"
 #include "GlobalData.hh"
-#if defined(USE_MATERIALDB)
-#include "MaterialDB.hh"
-#endif
 #include "NodeKeeper.hh"
 #include "Region.hh"
 #include "dsAssert.hh"
@@ -84,9 +81,6 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateV
   InterfaceModelExprData<DoubleType> out;
 
   GlobalData &gd  = GlobalData::GetInstance();
-#if defined(USE_MATERIALDB)
-  MaterialDB &mdb = MaterialDB::GetInstance();
-#endif
   NodeKeeper &nk = NodeKeeper::instance();
 
   const std::string &nm = EngineAPI::getName(arg);
@@ -100,24 +94,10 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateV
   if (r)
   {
       const GlobalData::DoubleDBEntry_t &gdbent = gd.GetDoubleDBEntryOnRegion(r, name);
-#if defined(USE_MATERIALDB)
-      const MaterialDB::DoubleDBEntry_t &mdbentr = mdb.GetDoubleDBEntry(r->GetMaterialName(), nm);
-      const MaterialDB::DoubleDBEntry_t &mdbentg = mdb.GetDoubleDBEntry("global", nm);
-#endif
       if (gdbent.first)
       {
           out = InterfaceModelExprData<DoubleType>(gdbent.second);
       }
-#if defined(USE_MATERIALDB)
-      else if (mdbentr.first)
-      {
-          out = InterfaceModelExprData<DoubleType>(mdbentr.second);
-      }
-      else if (mdbentg.first)
-      {
-          out = InterfaceModelExprData<DoubleType>(mdbentg.second);
-      }
-#endif
       else if (nk.IsCircuitNode(nm))
       {
         const DoubleType val = nk.GetNodeValue("dcop", nm);

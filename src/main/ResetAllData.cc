@@ -15,9 +15,6 @@ SPDX-License-Identifier: Apache-2.0
 #if defined(DEVSIM_EXTENDED_PRECISION)
 #include "Float128.hh"
 #endif
-#if defined(USE_MATERIALDB)
-#include "MaterialDB.hh"
-#endif
 
 void ResetAllData()
 {
@@ -32,9 +29,6 @@ void ResetAllData()
     TimeData<double>::DestroyInstance();
 #if defined(DEVSIM_EXTENDED_PRECISION)
     TimeData<float128>::DestroyInstance();
-#endif
-#if defined(USE_MATERIALDB)
-    MaterialDB::DestroyInstance();
 #endif
     GlobalData::DestroyInstance();
 }

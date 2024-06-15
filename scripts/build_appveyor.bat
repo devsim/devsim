@@ -9,7 +9,7 @@ SET TAG=%3
 c:\msys64\usr\bin\pacman -Su --noconfirm rsync zip bison flex git
 
 :: now opt for explicit dll load of mkl
-call %CONDA_BIN% create -y -n python3_devsim_build python=3 cmake sqlite zlib
+call %CONDA_BIN% create -y -n python3_devsim_build python=3 cmake zlib
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 call %CONDA_BIN% activate python3_devsim_build
