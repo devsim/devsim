@@ -6,12 +6,16 @@
 It is usually not necessary to build from source, however the instructions below are provided  If you need support, please post a message at [https://forum.devsim.org](https://forum.devsim.org).
 
 
-## Prerequisites.
+## Prerequisites
 
 An Anaconda (or Miniconda) installation is optional for `Linux` and `macOS`, but is highly recommended for `Windows`.  The full package may be downloaded from [https://anaconda.com](https://anaconda.com).  The minimal install is available from. [https://docs.anaconda.com/free/miniconda/](https://docs.anaconda.com/free/miniconda/)
 
 
 For `x86_64` or `x64` systems, the Intel MKL is recommended, but it is not needed for building the application.
+
+## Setting Version Number
+
+Set the version number by changing `DEVSIM_VERSION_STRING` in `CMakeLists.txt`.  The `version` also needs to be changed in `dist/bdist_wheel/setup.cfg`.
 
 ## Platform Instructions
 
@@ -39,16 +43,16 @@ or in a docker image.
 bash scripts/build_docker_manylinux2014.sh version
 ```
 
-Note ``version`` is replaced with the desired version.  There should then be a Python `.whl` file in the `dist` directory.
+Note `version` is replaced with the desired version.  There should then be a Python `.whl` file in the `dist` directory.
 
 #### Other Linux Distributions
 
-Additional build scripts are available for ``Ubuntu`` and ``Fedora`` in the ``scripts`` directory.
+Additional build scripts are available for `Ubuntu` and `Fedora` in the `scripts` directory.
 
 
 ### Building macOS
 
-The macOS release version is built using a Travis build server (see ``.travis.yml``), but it can be built locally with the following prerequisites:
+The macOS release version is built using a Travis build server (see `.travis.yml`), but it can be built locally with the following prerequisites:
 
 * Xcode
 * Homebrew [https://brew.sh/](https://brew.sh/)
@@ -63,7 +67,7 @@ git submodule update
 bash scripts/build_macos.sh clang version
 ```
 
-where ``version`` is replaced with the desired version.  The Python wheel file is then in ``devsim/dist/devsim_macos_version.tgz``
+where `version` is replaced with the desired version.  The Python wheel file is then in `devsim/dist`
 Note that the resulting package file does not have any dependencies on Homebrew to run.
 
 ### Building on Windows
@@ -82,7 +86,9 @@ as well as the prerequisites for the MSYS version above.
 
 From a Anaconda environment command prompt:
 
-    scripts\build_appveyor.bat x64 conda version
+```
+scripts\build_appveyor.bat x64 conda version
+```
 
-where ``version`` is replaced with the desired version name.  The Python wheel file is then in the `dist` directory.
+where `version` is replaced with the desired version name.  The Python wheel file is then in the `dist` directory.
 
