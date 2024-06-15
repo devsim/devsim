@@ -42,8 +42,6 @@ SET (NEWPY3TESTS
   equation1
   ptest1
   ptest2
-  sqlite2
-  sqlite3
   testfunc
   testfunc_extended
   utf8_2
@@ -85,7 +83,6 @@ ENDFOREACH(I)
 
 set_tests_properties("testing/mos_2d_restart" PROPERTIES DEPENDS testing/mos_2d)
 set_tests_properties("testing/mos_2d_restart2" PROPERTIES DEPENDS testing/mos_2d)
-set_tests_properties("testing/sqlite3" PROPERTIES DEPENDS testing/sqlite2)
 set_tests_properties("testing/mesh4" PROPERTIES DEPENDS testing/mesh3)
 set_tests_properties("testing/trimesh2" PROPERTIES DEPENDS testing/trimesh1)
 

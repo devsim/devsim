@@ -6,7 +6,7 @@ export DEVSIM_CONFIG="centos_6"
 
 # Centos Specific
 #https://fedoraproject.org/wiki/EPEL
-yum install -y git bison flex zlib-static zlib-devel sqlite-devel python3 python3-devel
+yum install -y git bison flex zlib-static zlib-devel python3 python3-devel
 yum install -y centos-release-scl
 yum install -y devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-libquadmath-devel devtoolset-9-gcc-gfortran make
 yum install -y epel-release
@@ -36,7 +36,7 @@ bash scripts/setup_centos_6.sh
 
 ## overcome bad libstdc++ in anaconda directory
 #mkdir -p linux_x86_64_release/linklibs
-#for i in libz.a libsqlite3*; do cp -f ${CONDA_PREFIX}/lib/$i linux_x86_64_release/linklibs/; done
+#for i in libz.a ; do cp -f ${CONDA_PREFIX}/lib/$i linux_x86_64_release/linklibs/; done
 
 (cd linux_x86_64_release && make -j3)
 (cd dist && bash package_linux.sh ${1})

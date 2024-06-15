@@ -22,10 +22,6 @@ SPDX-License-Identifier: Apache-2.0
 
 #include "FPECheck.hh"
 
-#if defined(USE_MATERIALDB)
-#include "MaterialDB.hh"
-#endif
-
 #include "ObjectCache.hh"
 
 #include "MathEval.hh"
@@ -211,9 +207,6 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateVariableType(Eqo::E
   ModelExprData<DoubleType> out;
 
   GlobalData &gd  = GlobalData::GetInstance();
-#if defined(USE_MATERIALDB)
-  MaterialDB &mdb = MaterialDB::GetInstance();
-#endif
   NodeKeeper &nk = NodeKeeper::instance();
 
   const std::string &nm = EngineAPI::getName(arg);
@@ -221,34 +214,15 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateVariableType(Eqo::E
    * Get the DB entry here
    */
   const GlobalData::DoubleDBEntry_t &gdbent  = gd.GetDoubleDBEntryOnRegion(data_ref, nm);
-#if defined(USE_MATERIALDB)
-  const MaterialDB::DoubleDBEntry_t &mdbentr = mdb.GetDoubleDBEntry(data_ref->GetMaterialName(), nm);
-  const MaterialDB::DoubleDBEntry_t &mdbentg = mdb.GetDoubleDBEntry("global", nm);
-#endif
 
   if (gdbent.first)
   {
     out = ModelExprData<DoubleType>(gdbent.second, data_ref);
   }
-#if defined(USE_MATERIALDB)
-  else if (mdbentr.first)
-  {
-    out = ModelExprData<DoubleType>(mdbentr.second, data_ref);
-  }
-  else if (mdbentg.first)
-  {
-    out = ModelExprData<DoubleType>(mdbentg.second, data_ref);
-  }
-#endif
   else if (nk.IsCircuitNode(nm))
   {
     const DoubleType val = nk.GetNodeValue("dcop", nm);
     out = ModelExprData<DoubleType>(val, data_ref);
-#if 0
-    std::ostringstream os;
-    os << "circuit using : " << nm << " " << val << "\n";
-    GeometryStream::WriteOut(OutputStream::OutputType::INFO, os.str());
-#endif
   }
   else
   {

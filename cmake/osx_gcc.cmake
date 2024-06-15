@@ -18,10 +18,7 @@ SET (BLAS_ARCHIVE -L${MKL_LIB_DIR} -lmkl_rt -lm -ldl)
 
 SET (EXTENDED_BLAS_ARCHIVE  ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
 
-
-SET (SQLITE3_ARCHIVE -lsqlite3)
 SET (ZLIB_ARCHIVE -lz)
-
 
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)

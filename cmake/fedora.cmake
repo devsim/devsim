@@ -10,8 +10,6 @@ SET (QUADMATH_ARCHIVE "-lquadmath")
 SET (BLAS_ARCHIVE -Wl,--no-as-needed -lpthread -lblas -lm -ldl)
 SET (EXTENDED_BLAS_ARCHIVE ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
 
-SET (SQLITE3_ARCHIVE -lsqlite3)
-
 SET (ZLIB_ARCHIVE -lz)
 
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)

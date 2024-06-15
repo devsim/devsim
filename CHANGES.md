@@ -5,11 +5,38 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.8.1
+
+### Help Files
+
+Updated instructions.  Added additional documentation files.
+
+| File | Purpose |
+| --- | --- |
+| [BUILD.md](BUILD.md) | Building from source |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Code of conduct |
+| [TEST.md](TEST.md) | Testing instructions |
+
+and removed [install.py](install.py).
+
+### Database Command Removal
+
+Remove commands:
+
+* `create_db`
+* `open_db`
+* `close_db`
+* `save_db`
+* `add_db_entry`
+* `get_db_entry`
+
+This feature was not used in any example or well documented.  This also removes the binary dependence on SQLite.
+
 ## Version 2.8.0
 
 ### Python Scripts
 
-Based on a contribution by [@simbilod](https://github.com/simbilod), all of the Python scripts have been reformatted.  The build system was also updated to enforce Python script modifiecations are properly formatted when submitted to the project.
+Based on a contribution by [@simbilod](https://github.com/simbilod), all of the Python scripts have been reformatted.  The build system was also updated to enforce Python script modifications are properly formatted when submitted to the project.
 
 ### Data output
 

@@ -12,8 +12,6 @@ SET (BLAS_ARCHIVE  -weak-lblas -weak-llapack)
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 SET (EIGEN_INCLUDE ${EXTERNAL_LIB}/eigen)
 
-SET (SQLITE3_ARCHIVE "-lsqlite3")
-SET (SQLITE3_INCLUDE "/usr/include")
 SET (ZLIB_INCLUDE "/usr/include")
 SET (ZLIB_ARCHIVE "-lz")
 

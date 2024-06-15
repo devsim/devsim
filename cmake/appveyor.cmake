@@ -39,9 +39,6 @@ SET (EIGEN_INCLUDE ${CMAKE_SOURCE_DIR}/external/eigen)
 SET (BLAS_ARCHIVE     ${CONDA_PREFIX}/Library/lib/mkl_rt.lib)
 SET (MKL_PARDISO_INCLUDE ${CONDA_PREFIX}/Library/include)
 
-SET (SQLITE3_INCLUDE  ${CONDA_PREFIX}/Library/include)
-SET (SQLITE3_ARCHIVE  ${CONDA_PREFIX}/Library/lib/sqlite3.lib)
-
 SET (ZLIB_INCLUDE ${CONDA_PREFIX}/Library/include)
 SET (ZLIB_ARCHIVE ${CONDA_PREFIX}/Library/lib/zlib.lib)
 
