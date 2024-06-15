@@ -3,10 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from devsim import (
-    add_db_entry,
     contact_equation,
     contact_node_model,
-    create_db,
     cylindrical_edge_couple,
     cylindrical_node_volume,
     edge_from_node_model,
@@ -14,7 +12,9 @@ from devsim import (
     element_from_edge_model,
     equation,
     get_dimension,
+    get_material,
     get_node_model_values,
+    get_region_list,
     interface_equation,
     interface_model,
     node_model,
@@ -32,49 +32,65 @@ set_parameter(device="disk", region="dielectric", name="charge_density", value=0
 
 dimension = get_dimension(device="disk")
 
-create_db(filename="materialdb_{0}d".format(dimension))
-add_db_entry(
-    material="global",
-    parameter="q",
-    value=1.6e-19,
-    unit="coul",
-    description="Charge of an electron",
+material_parameter_table = (
+    {
+        "material": "global",
+        "parameter": "q",
+        "value": 1.6e-19,
+        "unit": "coul",
+        "description": "Charge of an electron",
+    },
+    {
+        "material": "ionic_solution",
+        "parameter": "mu_c",
+        "value": 7.62e-4,
+        "unit": "cm^2/(V*sec)",
+        "description": "mobility of cations (K+)",
+    },
+    {
+        "material": "ionic_solution",
+        "parameter": "mu_a",
+        "value": 7.98e-4,
+        "unit": "cm^2/(V*sec)",
+        "description": "mobility of anions (Cl-)",
+    },
+    {
+        "material": "ionic_solution",
+        "parameter": "Permittivity",
+        "value": 80 * 8.85e-14,
+        "unit": "F/cm",
+        "description": "",
+    },
+    {
+        "material": "dielectric",
+        "parameter": "Permittivity",
+        "value": 3 * 8.85e-14,
+        "unit": "F/cm",
+        "description": "",
+    },
+    {
+        "material": "dna",
+        "parameter": "Permittivity",
+        "value": 4 * 8.85e-14,
+        "unit": "F/cm",
+        "description": "",
+    },
 )
-add_db_entry(
-    material="ionic_solution",
-    parameter="mu_c",
-    value=7.62e-4,
-    unit="cm^2/(V*sec)",
-    description="mobility of cations (K+)",
-)
-add_db_entry(
-    material="ionic_solution",
-    parameter="mu_a",
-    value=7.98e-4,
-    unit="cm^2/(V*sec)",
-    description="mobility of anions (Cl-)",
-)
-add_db_entry(
-    material="ionic_solution",
-    parameter="Permittivity",
-    value=80 * 8.85e-14,
-    unit="F/cm",
-    description="",
-)
-add_db_entry(
-    material="dielectric",
-    parameter="Permittivity",
-    value=3 * 8.85e-14,
-    unit="F/cm",
-    description="",
-)
-add_db_entry(
-    material="dna",
-    parameter="Permittivity",
-    value=4 * 8.85e-14,
-    unit="F/cm",
-    description="",
-)
+
+material_parameters = {}
+
+for m in material_parameter_table:
+    material_parameters[m["material"]] = {}
+for m in material_parameter_table:
+    material_parameters[m["material"]][m["parameter"]] = m["value"]
+
+for k, v in material_parameters["global"].items():
+    set_parameter(device="disk", name=k, value=v)
+
+for r in get_region_list(device="disk"):
+    m = get_material(device="disk", region=r)
+    for k, v in material_parameters[m].items():
+        set_parameter(device="disk", name=k, value=v)
 
 set_parameter(device="disk", region="solution", name="V_t", value=0.0238)
 
