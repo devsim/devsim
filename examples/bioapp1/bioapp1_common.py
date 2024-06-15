@@ -90,7 +90,7 @@ for k, v in material_parameters["global"].items():
 for r in get_region_list(device="disk"):
     m = get_material(device="disk", region=r)
     for k, v in material_parameters[m].items():
-        set_parameter(device="disk", name=k, value=v)
+        set_parameter(device="disk", region=r, name=k, value=v)
 
 set_parameter(device="disk", region="solution", name="V_t", value=0.0238)
 
