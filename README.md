@@ -27,6 +27,9 @@ The official website is here:
 * 2D cylindrical coordinate simulation
 * ASCII file format with PDE embedded.
 
+## Usage In Research:
+
+Please see this [link](https://docs.google.com/spreadsheets/d/11TpoCrNzKwWDDmjKtP1d5bCiwn8WYNJkm1ZleJI0_k4/edit?usp=sharing) for a list of published research papers using or referring to the DEVSIM simulator.
 
 ## Installation:
 
