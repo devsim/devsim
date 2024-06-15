@@ -32,7 +32,7 @@ cp -v dist/__init__.py ${DIST_PYDLL}
 mkdir -p ${DIST_DIR}/doc
 cp doc/devsim.pdf ${DIST_DIR}/doc
 
-for i in INSTALL.md BUILD.md TEST.md NOTICE LICENSE README.md CHANGES.md; do
+for i in *.md NOTICE LICENSE; do
 cp $i ${DIST_DIR}
 done
 
