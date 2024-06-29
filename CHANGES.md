@@ -5,6 +5,12 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.8.2
+
+### Documentation updates
+
+The documentation has undergone major updates.  Please see it at ``doc/devsim.pdf`` and online at [https://devsim.net](https://devsim.net).
+
 ## Version 2.8.1
 
 ### Help Files
