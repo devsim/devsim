@@ -58,7 +58,7 @@ before_script:
 
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-      ./scripts/build_docker_manylinux2014.sh ${TRAVIS_TAG};
+      ./scripts/build_docker_manylinux_2_28.sh ${TRAVIS_TAG};
     fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
       ./scripts/build_macos.sh clang "${TRAVIS_TAG}";

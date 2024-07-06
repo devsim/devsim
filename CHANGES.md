@@ -5,6 +5,12 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.8.3
+
+### Linux support
+
+Due to the Red Hat 7 end of life, the minimum support level for Linux is now Red Hat 8 using ``manylinux_2_28``.
+
 ## Version 2.8.2
 
 ### Documentation updates
