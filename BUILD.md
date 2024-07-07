@@ -23,7 +23,7 @@ Set the version number by changing `DEVSIM_VERSION_STRING` in `CMakeLists.txt`. 
 
 #### Building Red Hat 7 compatible version
 
-The `Centos 7` compatible [manylinux2014](https://github.com/pypa/manylinux?tab=readme-ov-file#manylinux2014-centos-7-based-glibc-217) distribution is used for binary Linux releases, as it is forward compatible with most Linux distributions and used the Intel MKL.  It will install all required dependencies, including Anaconda Python.  It is recommended to run this in a docker image.
+The `AlmaLinux 8` based [manylinux_2_28](https://github.com/pypa/manylinux?tab=readme-ov-file#manylinux_2_28-almalinux-8-based) distribution is used for binary Linux releases, as it is forward compatible with most Linux distributions.  It will install all required dependencies, including Python.  It is recommended to run this in a docker image.
 
 First download the source on your host Linux machine:
 ```
@@ -35,12 +35,12 @@ git submodule update
 
 Then to build on the local system, use
 ```
-bash scripts/build_manylinux2014.sh version
+bash scripts/build_manylinux_2_28.sh version
 ```
 
 or in a docker image.
 ```
-bash scripts/build_docker_manylinux2014.sh version
+bash scripts/build_docker_manylinux_2_28.sh version
 ```
 
 Note `version` is replaced with the desired version.  There should then be a Python `.whl` file in the `dist` directory.

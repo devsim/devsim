@@ -56,7 +56,7 @@ The repository for the documentation is at [https://github.com/devsim/devsim_doc
 | --- | --- | --- |
 | macOS | Monterey 12.5 | `arm64`, `x86_64` |
 | Microsoft Windows | Windows 10 | `x64` |
-| Linux | Red Hat 7 (Centos Compatible) | `aarch64`, `x86_64` |
+| Linux | AlmaLinux 8 (Red Hat Enterprise Linux 8 Compatible) | `aarch64`, `x86_64` |
 
 ## Code of Conduct:
 
