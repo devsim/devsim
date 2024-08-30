@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0
 #include <stdexcept>
 #include <string>
 
-class dsException : std::runtime_error {
+class dsException : public std::runtime_error {
   public:
 
     dsException(const char *);
