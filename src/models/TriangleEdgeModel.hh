@@ -15,13 +15,13 @@ SPDX-License-Identifier: Apache-2.0
 #include <vector>
 #include <iosfwd>
 
-template<typename T>
+template <typename T>
 using TriangleEdgeScalarList = std::vector<T>;
 
-template<typename T>
+template <typename T>
 using NodeScalarList = std::vector<T>;
 
-template<typename T>
+template <typename T>
 using EdgeScalarList = std::vector<T>;
 
 class Region;
@@ -42,143 +42,119 @@ typedef Triangle *TrianglePtr;
 typedef const Triangle *ConstTrianglePtr;
 
 class TriangleEdgeModel {
-    public:
-        enum class DisplayType {NODISPLAY, SCALAR, UNKNOWN};
-        TriangleEdgeModel(const std::string &, const RegionPtr, TriangleEdgeModel::DisplayType);
-        virtual ~TriangleEdgeModel();
+ public:
+  enum class DisplayType { NODISPLAY, SCALAR, UNKNOWN };
+  TriangleEdgeModel(const std::string &, const RegionPtr,
+                    TriangleEdgeModel::DisplayType);
+  virtual ~TriangleEdgeModel();
 
-        const std::string &GetName() const {
-            return name;
-        }
+  const std::string &GetName() const { return name; }
 
-        template <typename DoubleType>
-        const TriangleEdgeScalarList<DoubleType> &GetScalarValues() const;
+  template <typename DoubleType>
+  const TriangleEdgeScalarList<DoubleType> &GetScalarValues() const;
 
-        enum class InterpolationType {AVERAGE, COUPLE, SUM};
+  enum class InterpolationType { AVERAGE, COUPLE, SUM };
 
-        template <typename DoubleType>
-        void GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType, std::vector<DoubleType> &) const;
+  template <typename DoubleType>
+  void GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType,
+                              std::vector<DoubleType> &) const;
 
-        template <typename DoubleType>
-        void GetScalarValuesOnElements(std::vector<DoubleType> &) const;
+  template <typename DoubleType>
+  void GetScalarValuesOnElements(std::vector<DoubleType> &) const;
 
-        template <typename DoubleType>
-        EdgeScalarList<DoubleType> GetValuesOnEdges() const;
+  template <typename DoubleType>
+  EdgeScalarList<DoubleType> GetValuesOnEdges() const;
 
-        void MarkOld();
+  void MarkOld();
 
-        bool IsUpToDate() const
-        {
-            return uptodate;
-        }
+  bool IsUpToDate() const { return uptodate; }
 
-        /// Use this to break cycles
-        /// Only really valid in context of ExprModels.
-        bool IsInProcess() const
-        {
-            return inprocess;
-        }
+  /// Use this to break cycles
+  /// Only really valid in context of ExprModels.
+  bool IsInProcess() const { return inprocess; }
 
-        template <typename DoubleType>
-        void SetValues(const TriangleEdgeScalarList<DoubleType> &);
+  template <typename DoubleType>
+  void SetValues(const TriangleEdgeScalarList<DoubleType> &);
 
-        template <typename DoubleType>
-        void SetValues(const DoubleType &);
+  template <typename DoubleType>
+  void SetValues(const DoubleType &);
 
-        const Region &GetRegion() const
-        {
-            return *myregion;
-        }
+  const Region &GetRegion() const { return *myregion; }
 
-        TriangleEdgeModel::DisplayType GetDisplayType() const
-        {
-          return displayType;
-        }
+  TriangleEdgeModel::DisplayType GetDisplayType() const { return displayType; }
 
-        const char * GetDisplayTypeString() const
-        {
-          return DisplayTypeString[static_cast<size_t>(displayType)];
-        }
+  const char *GetDisplayTypeString() const
+  {
+    return DisplayTypeString[static_cast<size_t>(displayType)];
+  }
 
-        void SetDisplayType(TriangleEdgeModel::DisplayType dt)
-        {
-          displayType = dt;
-        }
+  void SetDisplayType(TriangleEdgeModel::DisplayType dt) { displayType = dt; }
 
-        ConstTriangleEdgeModelPtr GetConstSelfPtr() const
-        {
-          return myself.lock();
-        }
+  ConstTriangleEdgeModelPtr GetConstSelfPtr() const { return myself.lock(); }
 
-        TriangleEdgeModelPtr GetSelfPtr()
-        {
-          return myself.lock();
-        }
+  TriangleEdgeModelPtr GetSelfPtr() { return myself.lock(); }
 
-        bool IsUniform() const;
+  bool IsUniform() const;
 
-        template <typename DoubleType>
-        const DoubleType &GetUniformValue() const;
+  template <typename DoubleType>
+  const DoubleType &GetUniformValue() const;
 
-        size_t GetLength() const
-        {
-          return model_data.GetLength();
-        }
+  size_t GetLength() const { return model_data.GetLength(); }
 
-        bool IsZero() const;
+  bool IsZero() const;
 
-        bool IsOne() const;
+  bool IsOne() const;
 
-        void DevsimSerialize(std::ostream &) const;
+  void DevsimSerialize(std::ostream &) const;
 
-        const std::string &GetRegionName() const;
+  const std::string &GetRegionName() const;
 
-        const std::string &GetDeviceName() const;
+  const std::string &GetDeviceName() const;
 
-    protected:
-        virtual void Serialize(std::ostream &) const = 0;
-        void SerializeBuiltIn(std::ostream &) const;
+ protected:
+  virtual void Serialize(std::ostream &) const = 0;
+  void SerializeBuiltIn(std::ostream &) const;
 
-        void RegisterCallback(const std::string &);
+  void RegisterCallback(const std::string &);
 
-        template <typename DoubleType>
-        void SetValues(const TriangleEdgeScalarList<DoubleType> &) const;
+  template <typename DoubleType>
+  void SetValues(const TriangleEdgeScalarList<DoubleType> &) const;
 
-        template <typename DoubleType>
-        void SetValues(const DoubleType &) const;
+  template <typename DoubleType>
+  void SetValues(const DoubleType &) const;
 
-        void MarkOld() const;
+  void MarkOld() const;
 
-    private:
-        void CalculateValues() const;
+ private:
+  void CalculateValues() const;
 
-        // Actually performs the computation
-        // The nonvirtual method does any required setup.
-        //virtual DoubleType calcEdgeScalarValue(EdgePtr) const = 0;
-        virtual void calcTriangleEdgeScalarValues() const = 0;
+  // Actually performs the computation
+  // The nonvirtual method does any required setup.
+  // virtual DoubleType calcEdgeScalarValue(EdgePtr) const = 0;
+  virtual void calcTriangleEdgeScalarValues() const = 0;
 
+  TriangleEdgeModel();
+  TriangleEdgeModel(const TriangleEdgeModel &);
+  TriangleEdgeModel &operator=(const TriangleEdgeModel &);
 
-        TriangleEdgeModel();
-        TriangleEdgeModel(const TriangleEdgeModel &);
-        TriangleEdgeModel &operator=(const TriangleEdgeModel &);
-
-        // required for models that store their data
-        // (some models may be created on the fly)
-//      EdgeList data;
-        std::string name;
-        WeakTriangleEdgeModelPtr myself;
-        // need to know my region to get database data and appropriate node and edge lists
-        RegionPtr   myregion;
-        mutable bool uptodate;
-        mutable bool inprocess;
-        DisplayType displayType;
-        mutable ModelDataHolder model_data;
-        static const char *DisplayTypeString[];
+  // required for models that store their data
+  // (some models may be created on the fly)
+  //      EdgeList data;
+  std::string name;
+  WeakTriangleEdgeModelPtr myself;
+  // need to know my region to get database data and appropriate node and edge
+  // lists
+  RegionPtr myregion;
+  mutable bool uptodate;
+  mutable bool inprocess;
+  DisplayType displayType;
+  mutable ModelDataHolder model_data;
+  static const char *DisplayTypeString[];
 };
 
-
-template <typename T1, typename T2, typename ... Args>
-TriangleEdgeModelPtr create_triangle_edge_model(bool use_extended, Args &&...args)
+template <typename T1, typename T2, typename... Args>
+TriangleEdgeModelPtr create_triangle_edge_model(bool use_extended,
+                                                Args &&...args)
 {
   TriangleEdgeModel *ret;
   if (use_extended)
@@ -192,4 +168,3 @@ TriangleEdgeModelPtr create_triangle_edge_model(bool use_extended, Args &&...arg
   return ret->GetSelfPtr();
 }
 #endif
-

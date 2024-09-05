@@ -5,8 +5,8 @@ Copyright 2013 DEVSIM LLC
 SPDX-License-Identifier: Apache-2.0
 ***/
 
-//// We need to move this class out of this directory to one for storing global data
-//// This directory should not depend on the meshing directory
+//// We need to move this class out of this directory to one for storing global
+///data / This directory should not depend on the meshing directory
 #include "GlobalData.hh"
 #include "Device.hh"
 #include "Region.hh"
@@ -16,110 +16,111 @@ SPDX-License-Identifier: Apache-2.0
 
 #include <sstream>
 
-
 GlobalData *GlobalData::instance = 0;
 
-GlobalData::GlobalData()
-{
-  InitializeParameters();
-}
+GlobalData::GlobalData() { InitializeParameters(); }
 
 GlobalData &GlobalData::GetInstance()
 {
-    if (!instance)
-    {
-        instance = new GlobalData;
-    }
-    return *instance;
+  if (!instance)
+  {
+    instance = new GlobalData;
+  }
+  return *instance;
 }
 
 void GlobalData::DestroyInstance()
 {
-    delete instance;
-    instance = nullptr;
+  delete instance;
+  instance = nullptr;
 }
 
 GlobalData::~GlobalData()
 {
   DeviceList_t::iterator dit = deviceList.begin();
-  for ( ; dit != deviceList.end(); ++dit)
+  for (; dit != deviceList.end(); ++dit)
   {
-      delete dit->second;
+    delete dit->second;
   }
   deviceList.clear();
 }
 
 void GlobalData::AddDevice(DevicePtr dp)
 {
-    /// Instead of assertions, we should return a flag
-    const std::string &nm = dp->GetName();
-    dsAssert(deviceList.count(nm) == 0, "UNEXPECTED");
-    deviceList[nm]=dp;
+  /// Instead of assertions, we should return a flag
+  const std::string &nm = dp->GetName();
+  dsAssert(deviceList.count(nm) == 0, "UNEXPECTED");
+  deviceList[nm] = dp;
 }
 
 DevicePtr GlobalData::GetDevice(const std::string &nm)
 {
-    Device *dp = nullptr;
-    if (deviceList.count(nm))
-    {
-        dp = deviceList[nm];
-    }
-    return dp;
+  Device *dp = nullptr;
+  if (deviceList.count(nm))
+  {
+    dp = deviceList[nm];
+  }
+  return dp;
 }
 
 bool GlobalData::DeleteDevice(const std::string &nm)
 {
-    bool ret = false;
-    if (auto it = deviceList.find(nm); it != deviceList.end())
-    {
-        auto dp = it->second;
-        deviceList.erase(it);
-        delete dp;
-        ret = true;
-    }
+  bool ret = false;
+  if (auto it = deviceList.find(nm); it != deviceList.end())
+  {
+    auto dp = it->second;
+    deviceList.erase(it);
+    delete dp;
+    ret = true;
+  }
 
-    if (auto it = deviceData.find(nm); it != deviceData.end())
-    {
-      deviceData.erase(it);
-    }
+  if (auto it = deviceData.find(nm); it != deviceData.end())
+  {
+    deviceData.erase(it);
+  }
 
-    if (auto it = regionData.find(nm); it != regionData.end())
-    {
-      regionData.erase(it);
-    }
+  if (auto it = regionData.find(nm); it != regionData.end())
+  {
+    regionData.erase(it);
+  }
 
-    return ret;
+  return ret;
 }
 
 //// Need callback system when material parameters change
-void GlobalData::AddDBEntryOnDevice(const std::string &device, const std::string &name, ObjectHolder value)
+void GlobalData::AddDBEntryOnDevice(const std::string &device,
+                                    const std::string &name, ObjectHolder value)
 {
-    deviceData[device][name] = value;
+  deviceData[device][name] = value;
 
-    SignalCallbacksOnDevice(device, name);
+  SignalCallbacksOnDevice(device, name);
 }
 
-void GlobalData::AddDBEntryOnRegion(const std::string &device, const std::string &region, const std::string &name, ObjectHolder value)
+void GlobalData::AddDBEntryOnRegion(const std::string &device,
+                                    const std::string &region,
+                                    const std::string &name, ObjectHolder value)
 {
-    regionData[device][region][name] = value;
-    SignalCallbacksOnRegion(device, region, name);
+  regionData[device][region][name] = value;
+  SignalCallbacksOnRegion(device, region, name);
 }
 
-void GlobalData::AddDBEntryOnRegion(const Region *rp, const std::string &name, ObjectHolder value)
+void GlobalData::AddDBEntryOnRegion(const Region *rp, const std::string &name,
+                                    ObjectHolder value)
 {
-    const std::string &device = rp->GetDevice()->GetName();
-    const std::string &region = rp->GetName();
-    AddDBEntryOnRegion(device, region, name, value);
-    SignalCallbacksOnRegion(device, region, name);
+  const std::string &device = rp->GetDevice()->GetName();
+  const std::string &region = rp->GetName();
+  AddDBEntryOnRegion(device, region, name, value);
+  SignalCallbacksOnRegion(device, region, name);
 }
 
 void GlobalData::AddDBEntryOnGlobal(const std::string &name, ObjectHolder value)
 {
-    globalData[name] = value;
-    SignalCallbacksOnGlobal(name);
+  globalData[name] = value;
+  SignalCallbacksOnGlobal(name);
 }
 
-GlobalData::DBEntry_t GlobalData::GetDBEntryOnDevice(const std::string &device, const std::string &name) const
+GlobalData::DBEntry_t GlobalData::GetDBEntryOnDevice(
+    const std::string &device, const std::string &name) const
 {
   DBEntry_t ret = std::make_pair(false, ObjectHolder());
 
@@ -143,7 +144,9 @@ GlobalData::DBEntry_t GlobalData::GetDBEntryOnDevice(const std::string &device, 
   return ret;
 }
 
-GlobalData::DBEntry_t GlobalData::GetDBEntryOnRegion(const std::string &device, const std::string &region, const std::string &name) const
+GlobalData::DBEntry_t GlobalData::GetDBEntryOnRegion(
+    const std::string &device, const std::string &region,
+    const std::string &name) const
 {
   DBEntry_t ret = std::make_pair(false, ObjectHolder());
 
@@ -166,7 +169,7 @@ GlobalData::DBEntry_t GlobalData::GetDBEntryOnRegion(const std::string &device, 
 
   if (!ret.first)
   {
-    ret  = GetDBEntryOnDevice(device, name);
+    ret = GetDBEntryOnDevice(device, name);
   }
 
   if (!ret.first)
@@ -176,14 +179,16 @@ GlobalData::DBEntry_t GlobalData::GetDBEntryOnRegion(const std::string &device, 
   return ret;
 }
 
-GlobalData::DBEntry_t GlobalData::GetDBEntryOnRegion(const Region *rp, const std::string &name) const
+GlobalData::DBEntry_t GlobalData::GetDBEntryOnRegion(
+    const Region *rp, const std::string &name) const
 {
   const std::string &device = rp->GetDevice()->GetName();
   const std::string &region = rp->GetName();
   return GetDBEntryOnRegion(device, region, name);
 }
 
-GlobalData::DBEntry_t GlobalData::GetDBEntryOnGlobal(const std::string &name) const
+GlobalData::DBEntry_t GlobalData::GetDBEntryOnGlobal(
+    const std::string &name) const
 {
   DBEntry_t ret = std::make_pair(false, ObjectHolder());
   GlobalDataMap_t::const_iterator git = globalData.find(name);
@@ -195,10 +200,11 @@ GlobalData::DBEntry_t GlobalData::GetDBEntryOnGlobal(const std::string &name) co
   return ret;
 }
 
-GlobalData::DoubleDBEntry_t GlobalData::GetDoubleDBEntryOnRegion(const Region *rp, const std::string &name) const
+GlobalData::DoubleDBEntry_t GlobalData::GetDoubleDBEntryOnRegion(
+    const Region *rp, const std::string &name) const
 {
   DoubleDBEntry_t ret = std::make_pair(false, 0.0);
-  DBEntry_t       dbent = GetDBEntryOnRegion(rp, name);
+  DBEntry_t dbent = GetDBEntryOnRegion(rp, name);
   if (dbent.first)
   {
     ObjectHolder::DoubleEntry_t dval = dbent.second.GetDouble();
@@ -211,10 +217,9 @@ GlobalData::DoubleDBEntry_t GlobalData::GetDoubleDBEntryOnRegion(const Region *r
       const std::string &region = rp->GetName();
       const std::string &device = rp->GetDevice()->GetName();
       std::ostringstream os;
-      os << "Device \"" << device <<
-         "\" Region \"" << region
-         << "\" database entry \"" << name
-         << "\" resolves to a string \"" << dbent.second.GetString() <<  "\" when a number was expected\n";
+      os << "Device \"" << device << "\" Region \"" << region
+         << "\" database entry \"" << name << "\" resolves to a string \""
+         << dbent.second.GetString() << "\" when a number was expected\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
     }
   }
@@ -225,14 +230,16 @@ std::vector<std::string> GlobalData::GetDBEntryListOnGlobal() const
 {
   std::vector<std::string> ret;
   ret.reserve(globalData.size());
-  for (GlobalDataMap_t::const_iterator git = globalData.begin(); git != globalData.end(); ++git)
+  for (GlobalDataMap_t::const_iterator git = globalData.begin();
+       git != globalData.end(); ++git)
   {
     ret.push_back((*git).first);
   }
   return ret;
 }
 
-std::vector<std::string> GlobalData::GetDBEntryListOnDevice(const std::string &device) const
+std::vector<std::string> GlobalData::GetDBEntryListOnDevice(
+    const std::string &device) const
 {
   std::vector<std::string> ret;
   DeviceDataMap_t::const_iterator dit = deviceData.find(device);
@@ -240,7 +247,8 @@ std::vector<std::string> GlobalData::GetDBEntryListOnDevice(const std::string &d
   {
     const GlobalDataMap_t &gdm = (*dit).second;
     ret.reserve(gdm.size());
-    for (GlobalDataMap_t::const_iterator git = gdm.begin(); git != gdm.end(); ++git)
+    for (GlobalDataMap_t::const_iterator git = gdm.begin(); git != gdm.end();
+         ++git)
     {
       ret.push_back((*git).first);
     }
@@ -248,7 +256,8 @@ std::vector<std::string> GlobalData::GetDBEntryListOnDevice(const std::string &d
   return ret;
 }
 
-std::vector<std::string> GlobalData::GetDBEntryListOnRegion(const std::string &device, const std::string &region) const
+std::vector<std::string> GlobalData::GetDBEntryListOnRegion(
+    const std::string &device, const std::string &region) const
 {
   std::vector<std::string> ret;
   RegionDataMap_t::const_iterator rit = regionData.find(device);
@@ -260,7 +269,8 @@ std::vector<std::string> GlobalData::GetDBEntryListOnRegion(const std::string &d
     {
       const GlobalDataMap_t &gdm = (*dit).second;
       ret.reserve(gdm.size());
-      for (GlobalDataMap_t::const_iterator git = gdm.begin(); git != gdm.end(); ++git)
+      for (GlobalDataMap_t::const_iterator git = gdm.begin(); git != gdm.end();
+           ++git)
       {
         ret.push_back((*git).first);
       }
@@ -271,105 +281,118 @@ std::vector<std::string> GlobalData::GetDBEntryListOnRegion(const std::string &d
 
 void GlobalData::SignalCallbacksOnGlobal(const std::string &name)
 {
-    for (DeviceList_t::iterator it = deviceList.begin(); it != deviceList.end(); ++it)
+  for (DeviceList_t::iterator it = deviceList.begin(); it != deviceList.end();
+       ++it)
+  {
+    const std::string &device = it->first;
+    //      os << "signal " << device << " " << name << std::endl;
+    if (deviceData.count(device))
     {
-        const std::string &device = it->first;
-//      os << "signal " << device << " " << name << std::endl;
-        if (deviceData.count(device))
+      if (deviceData[device].count(name))
+      {
+        std::ostringstream os;
+        os << "Device \"" << device << " shadows global parameter update "
+           << name << "\n";
+        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+      }
+      else
+      {
+        //              os << __LINE__ << " signal " << device << " " << name <<
+        //              std::endl;
+        SignalCallbacksOnDevice(device, name);
+      }
+    }
+    else
+    {
+      //              os << __LINE__ << " signal " << device << " " << name <<
+      //              std::endl;
+      SignalCallbacksOnDevice(device, name);
+    }
+  }
+}
+
+void GlobalData::SignalCallbacksOnDevice(const std::string &device,
+                                         const std::string &name)
+{
+  //    os  << __LINE__ << " signal " << device << " " << name << std::endl;
+  DeviceList_t::iterator it = deviceList.find(device);
+  if (it != deviceList.end())
+  {
+    const Device::RegionList_t &rlist = (it->second)->GetRegionList();
+    for (Device::RegionList_t::const_iterator rit = rlist.begin();
+         rit != rlist.end(); ++rit)
+    {
+      const std::string &region = rit->first;
+      if (regionData.count(device))
+      {
+        if (regionData[device].count(region))
         {
-            if (deviceData[device].count(name))
-            {
-                std::ostringstream os;
-                os << "Device \"" << device << " shadows global parameter update " << name << "\n";
-                OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
-            }
-            else
-            {
-//              os << __LINE__ << " signal " << device << " " << name << std::endl;
-                SignalCallbacksOnDevice(device, name);
-            }
+          if (regionData[device][region].count(name))
+          {
+            std::ostringstream os;
+            os << "Device \"" << device << "\" Region \"" << region
+               << "\" shadows global parameter update " << name << "\n";
+            OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+          }
+          else
+          {
+            //                      os  << __LINE__ << " signal " << device << "
+            //                      " << region << " " << name << std::endl;
+            (rit->second)->SignalCallbacks(name);
+          }
         }
         else
         {
-//              os << __LINE__ << " signal " << device << " " << name << std::endl;
-                SignalCallbacksOnDevice(device, name);
+          //                  os  << __LINE__ << " signal " << device << " " <<
+          //                  region << " " << name << std::endl;
+          (rit->second)->SignalCallbacks(name);
         }
+      }
+      else
+      {
+        //              os  << __LINE__ << " signal " << device << " " << region
+        //              << " " << name << std::endl;
+        (rit->second)->SignalCallbacks(name);
+      }
     }
+  }
 }
 
-void GlobalData::SignalCallbacksOnDevice(const std::string &device, const std::string &name)
+void GlobalData::SignalCallbacksOnRegion(const std::string &device,
+                                         const std::string &region,
+                                         const std::string &name)
 {
-//    os  << __LINE__ << " signal " << device << " " << name << std::endl;
-    DeviceList_t::iterator it = deviceList.find(device);
-    if (it != deviceList.end())
-    {
-        const Device::RegionList_t &rlist = (it->second)->GetRegionList();
-        for (Device::RegionList_t::const_iterator rit = rlist.begin(); rit != rlist.end(); ++rit)
-        {
-            const std::string &region = rit->first;
-            if (regionData.count(device))
-            {
-                if (regionData[device].count(region))
-                {
-                    if (regionData[device][region].count(name))
-                    {
-                        std::ostringstream os;
-                        os << "Device \"" << device <<
-                                     "\" Region \"" << region
-                                     << "\" shadows global parameter update " << name << "\n";
-                        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
-                    }
-                    else
-                    {
-//                      os  << __LINE__ << " signal " << device << " " << region << " " << name << std::endl;
-                        (rit->second)->SignalCallbacks(name);
-                    }
-                }
-                else
-                {
-//                  os  << __LINE__ << " signal " << device << " " << region << " " << name << std::endl;
-                    (rit->second)->SignalCallbacks(name);
-                }
-            }
-            else
-            {
-//              os  << __LINE__ << " signal " << device << " " << region << " " << name << std::endl;
-                (rit->second)->SignalCallbacks(name);
-            }
-        }
-    }
-}
-
-void GlobalData::SignalCallbacksOnRegion(const std::string &device, const std::string &region, const std::string &name)
-{
-    DeviceList_t::iterator it = deviceList.find(device);
-    if (it != deviceList.end())
-    {
+  DeviceList_t::iterator it = deviceList.find(device);
+  if (it != deviceList.end())
+  {
     ///// Need to assert when parameters are being shadowed.
-        const RegionPtr rp = (it->second)->GetRegion(region);
-        if (rp)
-        {
-            rp->SignalCallbacks(name);
-        }
+    const RegionPtr rp = (it->second)->GetRegion(region);
+    if (rp)
+    {
+      rp->SignalCallbacks(name);
     }
+  }
 }
 
 ///// We need to mask when stuff is specified on a device or global basis
-void GlobalData::SignalCallbacksOnMaterialChange(const std::string &material_name, const std::string &parameter_name)
+void GlobalData::SignalCallbacksOnMaterialChange(
+    const std::string &material_name, const std::string &parameter_name)
 {
-
   std::vector<Region *> region_list;
 
-  for (DeviceList_t::iterator dit = deviceList.begin(); dit != deviceList.end(); ++dit)
+  for (DeviceList_t::iterator dit = deviceList.begin(); dit != deviceList.end();
+       ++dit)
   {
     const Device::RegionList_t &rlist = (dit->second)->GetRegionList();
-    for (Device::RegionList_t::const_iterator rit = rlist.begin(); rit != rlist.end(); ++rit)
+    for (Device::RegionList_t::const_iterator rit = rlist.begin();
+         rit != rlist.end(); ++rit)
     {
       region_list.push_back(rit->second);
     }
   }
 
-  for (std::vector<Region *>::const_iterator it = region_list.begin(); it != region_list.end(); ++it)
+  for (std::vector<Region *>::const_iterator it = region_list.begin();
+       it != region_list.end(); ++it)
   {
     Region *rp = *it;
 
@@ -388,30 +411,30 @@ void GlobalData::SignalCallbacksOnMaterialChange(const std::string &material_nam
         const std::string &region = rp->GetName();
         const std::string &device = rp->GetDevice()->GetName();
         std::ostringstream os;
-        os << "Device \"" << device <<
-           "\" Region \"" << region <<
-           "\" Material \"" << material_name
-           << "\" material db entry \"" << parameter_name
-           << "\" is masked by parameter setting.\n";
+        os << "Device \"" << device << "\" Region \"" << region
+           << "\" Material \"" << material_name << "\" material db entry \""
+           << parameter_name << "\" is masked by parameter setting.\n";
         OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       }
     }
   }
 }
 
-bool GlobalData::AddTclEquation(const std::string &name, ObjectHolder procedure, std::string &error)
+bool GlobalData::AddTclEquation(const std::string &name, ObjectHolder procedure,
+                                std::string &error)
 {
   bool ret = false;
   if (tclEquationList.count(name))
   {
-        std::ostringstream os;
-        os << "Custom equation \"" + name + "\" replaced";
-        OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+    std::ostringstream os;
+    os << "Custom equation \"" + name + "\" replaced";
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
 
   if (!procedure.IsCallable())
   {
-    error += std::string("Custom equation \"") + name + "\" does not provide a callable procedure";
+    error += std::string("Custom equation \"") + name +
+             "\" does not provide a callable procedure";
   }
   else
   {
@@ -430,12 +453,15 @@ void GlobalData::InitializeParameters()
 {
   globalData["node_volume_model"] = ObjectHolder(std::string("NodeVolume"));
   globalData["edge_couple_model"] = ObjectHolder(std::string("EdgeCouple"));
-  globalData["element_edge_couple_model"] = ObjectHolder(std::string("ElementEdgeCouple"));
-  globalData["edge_node0_volume_model"] = ObjectHolder(std::string("EdgeNodeVolume"));
-  globalData["edge_node1_volume_model"] = ObjectHolder(std::string("EdgeNodeVolume"));
-  globalData["element_node0_volume_model"] = ObjectHolder(std::string("ElementNodeVolume"));
-  globalData["element_node1_volume_model"] = ObjectHolder(std::string("ElementNodeVolume"));
+  globalData["element_edge_couple_model"] =
+      ObjectHolder(std::string("ElementEdgeCouple"));
+  globalData["edge_node0_volume_model"] =
+      ObjectHolder(std::string("EdgeNodeVolume"));
+  globalData["edge_node1_volume_model"] =
+      ObjectHolder(std::string("EdgeNodeVolume"));
+  globalData["element_node0_volume_model"] =
+      ObjectHolder(std::string("ElementNodeVolume"));
+  globalData["element_node1_volume_model"] =
+      ObjectHolder(std::string("ElementNodeVolume"));
   globalData["surface_area_model"] = ObjectHolder(std::string("SurfaceArea"));
 }
-
-

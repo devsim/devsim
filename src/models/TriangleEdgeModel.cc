@@ -16,12 +16,8 @@ SPDX-License-Identifier: Apache-2.0
 #include "GeometryStream.hh"
 #include "Triangle.hh"
 
-
-const char *TriangleEdgeModel::DisplayTypeString[] = {
-  "nodisplay",
-  "scalar",
-  nullptr
-};
+const char *TriangleEdgeModel::DisplayTypeString[] = {"nodisplay", "scalar",
+                                                      nullptr};
 
 TriangleEdgeModel::~TriangleEdgeModel()
 {
@@ -42,7 +38,8 @@ bool TriangleEdgeModel::IsOne() const
   return model_data.IsUniform() && model_data.IsOne();
 }
 
-TriangleEdgeModel::TriangleEdgeModel(const std::string &nm, const RegionPtr rp, TriangleEdgeModel::DisplayType dt)
+TriangleEdgeModel::TriangleEdgeModel(const std::string &nm, const RegionPtr rp,
+                                     TriangleEdgeModel::DisplayType dt)
     : name(nm),
       myregion(rp),
       uptodate(false),
@@ -61,12 +58,11 @@ void TriangleEdgeModel::CalculateValues() const
     inprocess = true;
     try
     {
-        this->calcTriangleEdgeScalarValues();
-    }
-    catch (...)
+      this->calcTriangleEdgeScalarValues();
+    } catch (...)
     {
-        inprocess = false;
-        throw;
+      inprocess = false;
+      throw;
     }
     uptodate = true;
     inprocess = false;
@@ -75,15 +71,19 @@ void TriangleEdgeModel::CalculateValues() const
   if (FPECheck::CheckFPE())
   {
     std::ostringstream os;
-    os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  while evaluating the edge model " << name
-    << " on Device: " << GetRegion().GetDevice()->GetName() << " on Region: " << GetRegion().GetName() << "\n";
+    os << "There was a floating point exception of type \""
+       << FPECheck::getFPEString() << "\"  while evaluating the edge model "
+       << name << " on Device: " << GetRegion().GetDevice()->GetName()
+       << " on Region: " << GetRegion().GetName() << "\n";
     FPECheck::ClearFPE();
-    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str().c_str());
+    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(),
+                             os.str().c_str());
   }
 }
 
 template <typename DoubleType>
-const TriangleEdgeScalarList<DoubleType> & TriangleEdgeModel::GetScalarValues() const
+const TriangleEdgeScalarList<DoubleType> &TriangleEdgeModel::GetScalarValues()
+    const
 {
   CalculateValues();
 
@@ -102,7 +102,8 @@ void TriangleEdgeModel::SetValues(const TriangleEdgeScalarList<DoubleType> &nv)
 }
 
 template <typename DoubleType>
-void TriangleEdgeModel::SetValues(const TriangleEdgeScalarList<DoubleType> &nv) const
+void TriangleEdgeModel::SetValues(
+    const TriangleEdgeScalarList<DoubleType> &nv) const
 {
   const_cast<TriangleEdgeModel *>(this)->SetValues(nv);
 }
@@ -139,13 +140,15 @@ void TriangleEdgeModel::RegisterCallback(const std::string &nm)
 }
 
 template <typename DoubleType>
-void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationType interpolation_type, std::vector<DoubleType> &values) const
+void TriangleEdgeModel::GetScalarValuesOnNodes(
+    TriangleEdgeModel::InterpolationType interpolation_type,
+    std::vector<DoubleType> &values) const
 {
   //// TODO: optimize for uniform and zero
 
   const Region &region = this->GetRegion();
-  const TriangleEdgeScalarList<DoubleType> &esl = this->GetScalarValues<DoubleType>();
-
+  const TriangleEdgeScalarList<DoubleType> &esl =
+      this->GetScalarValues<DoubleType>();
 
   const size_t number_nodes = region.GetNumberNodes();
 
@@ -154,10 +157,12 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
 
   /// Does a straight average on the whole
 
-  const Region::TriangleToConstEdgeList_t &ttcedl = region.GetTriangleToEdgeList();
+  const Region::TriangleToConstEdgeList_t &ttcedl =
+      region.GetTriangleToEdgeList();
   const size_t number_triangle = ttcedl.size();
 
-  if ((interpolation_type == TriangleEdgeModel::InterpolationType::AVERAGE) || (interpolation_type == TriangleEdgeModel::InterpolationType::SUM))
+  if ((interpolation_type == TriangleEdgeModel::InterpolationType::AVERAGE) ||
+      (interpolation_type == TriangleEdgeModel::InterpolationType::SUM))
   {
     std::vector<size_t> count(number_nodes);
     for (size_t i = 0; i < number_triangle; ++i)
@@ -168,7 +173,7 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
         const Edge &edge = *cel[j];
         const size_t ni0 = edge.GetHead()->GetIndex();
         const size_t ni1 = edge.GetTail()->GetIndex();
-        const DoubleType val = esl[3*i + j];
+        const DoubleType val = esl[3 * i + j];
         values[ni0] += val;
         values[ni1] += val;
         ++count[ni0];
@@ -189,9 +194,11 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
   }
   else if (interpolation_type == TriangleEdgeModel::InterpolationType::COUPLE)
   {
-    ConstTriangleEdgeModelPtr couple_ptr = region.GetTriangleEdgeModel("ElementEdgeCouple");
+    ConstTriangleEdgeModelPtr couple_ptr =
+        region.GetTriangleEdgeModel("ElementEdgeCouple");
     dsAssert(couple_ptr.get(), "UNEXPECTED");
-    const TriangleEdgeScalarList<DoubleType> &element_edge_couples = couple_ptr->GetScalarValues<DoubleType>();
+    const TriangleEdgeScalarList<DoubleType> &element_edge_couples =
+        couple_ptr->GetScalarValues<DoubleType>();
 
     std::vector<DoubleType> scales(number_nodes);
 
@@ -203,10 +210,10 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
         const Edge &edge = *cel[j];
         const size_t ni0 = edge.GetHead()->GetIndex();
         const size_t ni1 = edge.GetTail()->GetIndex();
-        const size_t index = 3*i + j;
+        const size_t index = 3 * i + j;
         /// The scale must be larger than 0
         const DoubleType scale = element_edge_couples[index];
-        const DoubleType val   = scale * esl[index];
+        const DoubleType val = scale * esl[index];
         values[ni0] += val;
         values[ni1] += val;
         scales[ni0] += scale;
@@ -233,18 +240,20 @@ void TriangleEdgeModel::GetScalarValuesOnNodes(TriangleEdgeModel::InterpolationT
 }
 
 template <typename DoubleType>
-void TriangleEdgeModel::GetScalarValuesOnElements(std::vector<DoubleType> &ret) const
+void TriangleEdgeModel::GetScalarValuesOnElements(
+    std::vector<DoubleType> &ret) const
 {
   const Region &region = this->GetRegion();
-  const TriangleEdgeScalarList<DoubleType> &esl = this->GetScalarValues<DoubleType>();
-
+  const TriangleEdgeScalarList<DoubleType> &esl =
+      this->GetScalarValues<DoubleType>();
 
   const size_t number_triangles = region.GetNumberTriangles();
 
   ret.clear();
   ret.resize(number_triangles);
 
-  const DoubleType scale = static_cast<DoubleType>(1.0) / static_cast<DoubleType>(3.0);
+  const DoubleType scale =
+      static_cast<DoubleType>(1.0) / static_cast<DoubleType>(3.0);
   size_t mindex = 0;
   for (size_t i = 0; i < number_triangles; ++i)
   {
@@ -298,24 +307,27 @@ const std::string &TriangleEdgeModel::GetRegionName() const
 template <typename DoubleType>
 EdgeScalarList<DoubleType> TriangleEdgeModel::GetValuesOnEdges() const
 {
-  const TriangleEdgeScalarData<DoubleType> &tec = TriangleEdgeScalarData<DoubleType>(*this);
+  const TriangleEdgeScalarData<DoubleType> &tec =
+      TriangleEdgeScalarData<DoubleType>(*this);
   const ConstEdgeList &edge_list = GetRegion().GetEdgeList();
 
   NodeScalarList<DoubleType> ev(edge_list.size());
 
   for (size_t i = 0; i < edge_list.size(); ++i)
   {
-    const ConstTriangleList &triangle_list = GetRegion().GetEdgeToTriangleList()[i];
+    const ConstTriangleList &triangle_list =
+        GetRegion().GetEdgeToTriangleList()[i];
     ConstTriangleList::const_iterator it = triangle_list.begin();
     const ConstTriangleList::const_iterator itend = triangle_list.end();
     DoubleType vol = 0.0;
-    for ( ; it != itend; ++it)
+    for (; it != itend; ++it)
     {
       const size_t tindex = (**it).GetIndex();
 
-      const size_t eindex = GetRegion().GetEdgeIndexOnTriangle(**it, edge_list[i]);
+      const size_t eindex =
+          GetRegion().GetEdgeIndexOnTriangle(**it, edge_list[i]);
 
-      vol += tec[3*tindex + eindex];
+      vol += tec[3 * tindex + eindex];
     }
     ev[i] = vol;
   }
@@ -326,9 +338,8 @@ EdgeScalarList<DoubleType> TriangleEdgeModel::GetValuesOnEdges() const
 #include "TriangleEdgeModelInstantiate.cc"
 
 #ifdef DEVSIM_EXTENDED_PRECISION
-#undef  DBLTYPE
+#undef DBLTYPE
 #define DBLTYPE float128
 #include "Float128.hh"
 #include "TriangleEdgeModelInstantiate.cc"
 #endif
-

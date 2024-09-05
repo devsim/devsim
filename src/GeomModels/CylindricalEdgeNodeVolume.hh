@@ -12,19 +12,15 @@ SPDX-License-Identifier: Apache-2.0
 EdgeModelPtr CreateCylindricalEdgeNodeVolume(RegionPtr);
 
 template <typename DoubleType>
-class CylindricalEdgeNodeVolume : public EdgeModel
-{
-    public:
+class CylindricalEdgeNodeVolume : public EdgeModel {
+ public:
+  void Serialize(std::ostream &) const;
 
-      void Serialize(std::ostream &) const;
+  CylindricalEdgeNodeVolume(RegionPtr);
 
-      CylindricalEdgeNodeVolume(RegionPtr);
+ private:
+  void calcEdgeScalarValues() const;
 
-    private:
-
-      void calcEdgeScalarValues() const;
-
-      WeakEdgeModelPtr node1Volume_;
+  WeakEdgeModelPtr node1Volume_;
 };
 #endif
-

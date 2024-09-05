@@ -15,27 +15,21 @@ class Coordinate;
 typedef Coordinate *CoordinatePtr;
 
 class Coordinate {
-   public:
-      Coordinate(double, double, double);
+ public:
+  Coordinate(double, double, double);
 
-      const Vector<double> &Position() const;
+  const Vector<double> &Position() const;
 
-      size_t GetIndex() const
-      {
-         return index;
-      }
+  size_t GetIndex() const { return index; }
 
-      void setIndex(size_t i)
-      {
-         index = i;
-      }
+  void setIndex(size_t i) { index = i; }
 
-   private:
-      Coordinate();
-      Coordinate (const Coordinate &);
-      Coordinate &operator=(const Coordinate &);
+ private:
+  Coordinate();
+  Coordinate(const Coordinate &);
+  Coordinate &operator=(const Coordinate &);
 
-      Vector<double> position;
-      size_t index;
+  Vector<double> position;
+  size_t index;
 };
 #endif

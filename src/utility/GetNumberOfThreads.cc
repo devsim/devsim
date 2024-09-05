@@ -23,7 +23,9 @@ size_t GetNumberOfThreads()
     if (!ient.first || ient.second < 0)
     {
       std::ostringstream os;
-      os << "Expected valid positive number for \"threads_available\" parameter, but " << dbent.second.GetString() << " was given.\n";
+      os << "Expected valid positive number for \"threads_available\" "
+            "parameter, but "
+         << dbent.second.GetString() << " was given.\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       ret = 0;
     }
@@ -47,7 +49,9 @@ size_t GetMinimumTaskSize()
     if (!ient.first || ient.second < 0)
     {
       std::ostringstream os;
-      os << "Expected valid positive number for \"threads_task_size\" parameter, but " << dbent.second.GetString() << " was given.\n";
+      os << "Expected valid positive number for \"threads_task_size\" "
+            "parameter, but "
+         << dbent.second.GetString() << " was given.\n";
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       ret = 0;
     }
@@ -59,5 +63,4 @@ size_t GetMinimumTaskSize()
 
   return ret;
 }
-}
-
+}  // namespace ThreadInfo

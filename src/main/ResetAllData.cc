@@ -18,18 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 
 void ResetAllData()
 {
-    InstanceKeeper::delete_instance();
-    NodeKeeper::delete_instance();
-    EngineAPI::ResetAllData();
-    dsMesh::MeshKeeper::DestroyInstance();
-    MathEval<double>::DestroyInstance();
+  InstanceKeeper::delete_instance();
+  NodeKeeper::delete_instance();
+  EngineAPI::ResetAllData();
+  dsMesh::MeshKeeper::DestroyInstance();
+  MathEval<double>::DestroyInstance();
 #if defined(DEVSIM_EXTENDED_PRECISION)
-    MathEval<float128>::DestroyInstance();
+  MathEval<float128>::DestroyInstance();
 #endif
-    TimeData<double>::DestroyInstance();
+  TimeData<double>::DestroyInstance();
 #if defined(DEVSIM_EXTENDED_PRECISION)
-    TimeData<float128>::DestroyInstance();
+  TimeData<float128>::DestroyInstance();
 #endif
-    GlobalData::DestroyInstance();
+  GlobalData::DestroyInstance();
 }
-

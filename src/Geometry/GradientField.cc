@@ -17,7 +17,9 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 GradientField<DoubleType>::~GradientField()
 {
-  for (typename std::vector<dsMath::RealDenseMatrix<DoubleType> *>::iterator it = dense_mats_.begin(); it != dense_mats_.end(); ++it)
+  for (typename std::vector<dsMath::RealDenseMatrix<DoubleType> *>::iterator
+           it = dense_mats_.begin();
+       it != dense_mats_.end(); ++it)
   {
     delete *it;
   }
@@ -44,12 +46,12 @@ void GradientField<DoubleType>::CalcMatrices2d() const
   const NodeScalarList<DoubleType> &xvec = ux->GetScalarValues<DoubleType>();
   const NodeScalarList<DoubleType> &yvec = uy->GetScalarValues<DoubleType>();
 
-
   const ConstTriangleList &tlist = myregion_->GetTriangleList();
 
   dense_mats_.resize(tlist.size());
 
-  for (ConstTriangleList::const_iterator ti = tlist.begin(); ti != tlist.end(); ++ti)
+  for (ConstTriangleList::const_iterator ti = tlist.begin(); ti != tlist.end();
+       ++ti)
   {
     const Triangle &triangle = **ti;
     const size_t triangleIndex = triangle.GetIndex();
@@ -76,7 +78,6 @@ void GradientField<DoubleType>::CalcMatrices2d() const
     M.LUFactor();
 
     dense_mats_[triangleIndex] = dmp;
-
   }
 }
 
@@ -99,17 +100,18 @@ void GradientField<DoubleType>::CalcMatrices3d() const
   const NodeScalarList<DoubleType> &yvec = uy->GetScalarValues<DoubleType>();
   const NodeScalarList<DoubleType> &zvec = uz->GetScalarValues<DoubleType>();
 
-
   const ConstTetrahedronList &tlist = myregion_->GetTetrahedronList();
 
   dense_mats_.resize(tlist.size());
 
-  for (ConstTetrahedronList::const_iterator ti = tlist.begin(); ti != tlist.end(); ++ti)
+  for (ConstTetrahedronList::const_iterator ti = tlist.begin();
+       ti != tlist.end(); ++ti)
   {
     const Tetrahedron &tetrahedron = **ti;
     const size_t tetrahedronIndex = tetrahedron.GetIndex();
 
-    dsMath::RealDenseMatrix<DoubleType> *dmp = new dsMath::RealDenseMatrix<DoubleType>(3);
+    dsMath::RealDenseMatrix<DoubleType> *dmp =
+        new dsMath::RealDenseMatrix<DoubleType>(3);
     dsMath::RealDenseMatrix<DoubleType> &M = *dmp;
 
     const std::vector<ConstNodePtr> &nl = tetrahedron.GetNodeList();
@@ -125,19 +127,19 @@ void GradientField<DoubleType>::CalcMatrices3d() const
       const DoubleType yr = yvec[nir] - y0;
       const DoubleType zr = zvec[nir] - z0;
 
-      M(r-1, 0) = xr;
-      M(r-1, 1) = yr;
-      M(r-1, 2) = zr;
+      M(r - 1, 0) = xr;
+      M(r - 1, 1) = yr;
+      M(r - 1, 2) = zr;
     }
     M.LUFactor();
 
     dense_mats_[tetrahedronIndex] = dmp;
-
   }
 }
 
 template <typename DoubleType>
-Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Triangle &triangle, const NodeModel &nm) const
+Vector<DoubleType> GradientField<DoubleType>::GetGradient(
+    const Triangle &triangle, const NodeModel &nm) const
 {
   if (dense_mats_.empty())
   {
@@ -166,13 +168,14 @@ Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Triangle &triang
   }
   else
   {
-    return Vector<DoubleType>(0,0,0);
+    return Vector<DoubleType>(0, 0, 0);
     //// This is due to the inf result from a bad factorization
   }
 }
 
 template <typename DoubleType>
-Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Tetrahedron &tetrahedron, const NodeModel &nm) const
+Vector<DoubleType> GradientField<DoubleType>::GetGradient(
+    const Tetrahedron &tetrahedron, const NodeModel &nm) const
 {
   if (dense_mats_.empty())
   {
@@ -192,7 +195,7 @@ Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Tetrahedron &tet
   for (size_t i = 1; i < 4; ++i)
   {
     const DoubleType nvr = nvals[nl[i]->GetIndex()] - nv0;
-    B[i-1] = nvr;
+    B[i - 1] = nvr;
   }
   bool info = M.Solve(B.data());
 
@@ -202,7 +205,7 @@ Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Tetrahedron &tet
   }
   else
   {
-    return Vector<DoubleType>(0,0,0);
+    return Vector<DoubleType>(0, 0, 0);
     //// This is due to the inf result from a bad factorization
   }
 }
@@ -212,4 +215,3 @@ template class GradientField<double>;
 #include "Float128.hh"
 template class GradientField<float128>;
 #endif
-

@@ -70,7 +70,7 @@ void CompressedMatrix<DoubleType>::DebugMatrix(std::ostream &os) const
   {
     for (size_t i = 0; i < Ax_.size(); ++i)
     {
-      fos << "complex(" << Ax_[i]  << "," << Az_[i] << "),\n";
+      fos << "complex(" << Ax_[i] << "," << Az_[i] << "),\n";
     }
   }
   os << fos.str();
@@ -79,7 +79,13 @@ void CompressedMatrix<DoubleType>::DebugMatrix(std::ostream &os) const
 }
 
 template <typename DoubleType>
-CompressedMatrix<DoubleType>::CompressedMatrix(size_t sz, MatrixType mt, CompressionType ct) : Matrix<DoubleType>(sz), matType_(mt), compressionType_(ct), compressed(false), symbolicstatus_(SymbolicStatus_t::NEW_SYMBOLIC)
+CompressedMatrix<DoubleType>::CompressedMatrix(size_t sz, MatrixType mt,
+                                               CompressionType ct)
+    : Matrix<DoubleType>(sz),
+      matType_(mt),
+      compressionType_(ct),
+      compressed(false),
+      symbolicstatus_(SymbolicStatus_t::NEW_SYMBOLIC)
 {
   Symbolic_.resize(this->size());
   OutOfBandEntries_Real.resize(this->size());
@@ -95,7 +101,7 @@ CompressedMatrix<DoubleType>::~CompressedMatrix()
 }
 
 /*
-*/
+ */
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::AddSymbolicImpl(int r, int c)
 {
@@ -104,7 +110,7 @@ void CompressedMatrix<DoubleType>::AddSymbolicImpl(int r, int c)
 #ifndef NDEBUG
   dsAssert(!compressed, "UNEXPECTED");
 #endif
-  Symbolic_[c].insert(std::make_pair(r, 0)); // should create implicit entry
+  Symbolic_[c].insert(std::make_pair(r, 0));  // should create implicit entry
 }
 
 /// Create Matrix from symbolic info
@@ -116,14 +122,14 @@ void CompressedMatrix<DoubleType>::CreateMatrix()
   dsAssert(cols == this->size(), "UNEXPECTED");
 #endif
 
-  Ap_.resize(this->size()+1);
+  Ap_.resize(this->size() + 1);
   Ai_.clear();
   Ai_.reserve(this->size());
 
-  int r=0;
-  for (size_t c=0; c < cols;  ++c)
+  int r = 0;
+  for (size_t c = 0; c < cols; ++c)
   {
-    Ap_[c]=r;
+    Ap_[c] = r;
 
     RowInd &rivec = Symbolic_[c];
     RowInd::iterator iter = rivec.begin();
@@ -147,7 +153,7 @@ void CompressedMatrix<DoubleType>::CreateMatrix()
     for (int i = rb; i < r; ++i)
     {
       rivec[Ai_[i]] = i;
-//        (*iter).second = r; // gives us the position in Ai,Ax
+      //        (*iter).second = r; // gives us the position in Ai,Ax
     }
   }
   Ap_[this->size()] = r;
@@ -157,7 +163,8 @@ void CompressedMatrix<DoubleType>::CreateMatrix()
   // reserve room
   Ax_.clear();
   Ax_.resize(Ai_.size());
-  if (GetMatrixType() == MatrixType::COMPLEX) {
+  if (GetMatrixType() == MatrixType::COMPLEX)
+  {
     Az_.clear();
     Az_.resize(Ai_.size());
   }
@@ -168,13 +175,13 @@ void CompressedMatrix<DoubleType>::CreateMatrix()
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::SetCompressed(bool x)
 {
-    compressed = true;
+  compressed = true;
 }
 
 template <typename DoubleType>
 bool CompressedMatrix<DoubleType>::GetCompressed()
 {
-    return compressed;
+  return compressed;
 }
 
 template <typename DoubleType>
@@ -219,7 +226,8 @@ const dsMath::IntVec_t &CompressedMatrix<DoubleType>::GetRows() const
 }
 
 template <typename DoubleType>
-const dsMath::DoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetReal() const
+const dsMath::DoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetReal()
+    const
 {
   dsAssert(compressed, "UNEXPECTED");
 
@@ -227,7 +235,8 @@ const dsMath::DoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetReal() c
 }
 
 template <typename DoubleType>
-const dsMath::DoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetImag() const
+const dsMath::DoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetImag()
+    const
 {
   dsAssert(compressed, "UNEXPECTED");
 
@@ -235,7 +244,8 @@ const dsMath::DoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetImag() c
 }
 
 template <typename DoubleType>
-const dsMath::ComplexDoubleVec_t<DoubleType> &CompressedMatrix<DoubleType>::GetComplex() const
+const dsMath::ComplexDoubleVec_t<DoubleType> &
+CompressedMatrix<DoubleType>::GetComplex() const
 {
   dsAssert(compressed, "UNEXPECTED");
   dsAssert(Ax_.size() == Az_.size(), "UNEXPECTED");
@@ -359,9 +369,9 @@ void CompressedMatrix<DoubleType>::AddImagEntry(int r, int c, DoubleType v)
   }
 }
 
-
 template <typename DoubleType>
-void CompressedMatrix<DoubleType>::AddEntry(int r, int c, ComplexDouble_t<DoubleType> v)
+void CompressedMatrix<DoubleType>::AddEntry(int r, int c,
+                                            ComplexDouble_t<DoubleType> v)
 {
   const auto &rv = v.real();
   const auto &iv = v.imag();
@@ -398,14 +408,14 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
   for (size_t i = 0; i < sz; ++i)
   {
     const size_t beg = Ap_[i];
-    const size_t end = Ap_[i+1];
-    for (size_t j = beg; j < end; ++ j)
+    const size_t end = Ap_[i + 1];
+    for (size_t j = beg; j < end; ++j)
     {
       AddEntryImpl(Ai_[j], i, Ax_[j]);
     }
     if (GetMatrixType() == MatrixType::COMPLEX)
     {
-      for (size_t j = beg; j < end; ++ j)
+      for (size_t j = beg; j < end; ++j)
       {
         const auto &z = Az_[j];
         if (z != DTZERO)
@@ -420,7 +430,6 @@ void CompressedMatrix<DoubleType>::DecompressMatrix()
   Az_.clear();
 }
 
-
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::Finalize()
 {
@@ -432,8 +441,9 @@ void CompressedMatrix<DoubleType>::Finalize()
     for (size_t i = 0; i < OutOfBandEntries_Real.size(); ++i)
     {
       typename ColValueEntry::iterator it = OutOfBandEntries_Real[i].begin();
-      const typename ColValueEntry::iterator itend = OutOfBandEntries_Real[i].end();
-      for ( ; it != itend; ++it)
+      const typename ColValueEntry::iterator itend =
+          OutOfBandEntries_Real[i].end();
+      for (; it != itend; ++it)
       {
         AddEntryImpl(i, it->first, it->second);
       }
@@ -446,8 +456,9 @@ void CompressedMatrix<DoubleType>::Finalize()
       for (size_t i = 0; i < OutOfBandEntries_Imag.size(); ++i)
       {
         typename ColValueEntry::iterator it = OutOfBandEntries_Imag[i].begin();
-        const typename ColValueEntry::iterator itend = OutOfBandEntries_Imag[i].end();
-        for ( ; it != itend; ++it)
+        const typename ColValueEntry::iterator itend =
+            OutOfBandEntries_Imag[i].end();
+        for (; it != itend; ++it)
         {
           AddImagEntryImpl(i, it->first, it->second);
         }
@@ -465,7 +476,7 @@ void CompressedMatrix<DoubleType>::Finalize()
 template <typename DoubleType>
 void CompressedMatrix<DoubleType>::ClearMatrix()
 {
-//  compressed = false;
+  //  compressed = false;
   const size_t sz = Ax_.size();
   Ax_.clear();
   Ax_.resize(sz);
@@ -485,10 +496,12 @@ void CompressedMatrix<DoubleType>::ClearMatrix()
 }
 
 namespace {
-//// Written in terms of compressed column format, note that cols is 1 + the size of the matrix
-//// looks like scaling each column by a constant factor
+//// Written in terms of compressed column format, note that cols is 1 + the
+///size of the matrix / looks like scaling each column by a constant factor
 template <typename T>
-void ColScaleMultiply(const IntVec_t &cols, const IntVec_t &rows, const std::vector<T> &vals, const std::vector<T> &x, std::vector<T> &y)
+void ColScaleMultiply(const IntVec_t &cols, const IntVec_t &rows,
+                      const std::vector<T> &vals, const std::vector<T> &x,
+                      std::vector<T> &y)
 {
   y.clear();
   /// zeroes the entries
@@ -500,7 +513,7 @@ void ColScaleMultiply(const IntVec_t &cols, const IntVec_t &rows, const std::vec
     const T scale = x[c];
 
     const size_t rl = cols[c];
-    const size_t rh = cols[c+1];
+    const size_t rh = cols[c + 1];
 
     for (size_t rit = rl; rit < rh; ++rit)
     {
@@ -511,10 +524,12 @@ void ColScaleMultiply(const IntVec_t &cols, const IntVec_t &rows, const std::vec
   }
 }
 
-//// Written in terms of compressed rows format, note that rows is 1 + the size of the matrix
-//// This looks kind of like a dot product
+//// Written in terms of compressed rows format, note that rows is 1 + the size
+///of the matrix / This looks kind of like a dot product
 template <typename T>
-void RowScaleMultiply(const IntVec_t &rows, const IntVec_t &cols, const std::vector<T> &vals, const std::vector<T> &x, std::vector<T> &y)
+void RowScaleMultiply(const IntVec_t &rows, const IntVec_t &cols,
+                      const std::vector<T> &vals, const std::vector<T> &x,
+                      std::vector<T> &y)
 {
   y.clear();
   /// zeroes the entries
@@ -524,28 +539,29 @@ void RowScaleMultiply(const IntVec_t &rows, const IntVec_t &cols, const std::vec
   for (size_t r = 0; r < size; ++r)
   {
     const size_t cl = rows[r];
-    const size_t ch = rows[r+1];
+    const size_t ch = rows[r + 1];
 
     T &outval = y[r];
 
     for (size_t cit = cl; cit < ch; ++cit)
     {
-      const size_t c  = cols[cit];
-      const T v  = vals[cit];
+      const size_t c = cols[cit];
+      const T v = vals[cit];
       const T xv = x[c];
       outval += v * xv;
     }
   }
 }
-}
+}  // namespace
 
 template <typename DoubleType>
-void CompressedMatrix<DoubleType>::Multiply(const DoubleVec_t<DoubleType> &x, DoubleVec_t<DoubleType> &y) const
+void CompressedMatrix<DoubleType>::Multiply(const DoubleVec_t<DoubleType> &x,
+                                            DoubleVec_t<DoubleType> &y) const
 {
   dsAssert(compressed, "UNEXPECTED");
 
-  const IntVec_t    &Cols = this->GetCols();
-  const IntVec_t    &Rows = this->GetRows();
+  const IntVec_t &Cols = this->GetCols();
+  const IntVec_t &Rows = this->GetRows();
   const DoubleVec_t<DoubleType> &Vals = this->GetReal();
   if (compressionType_ == CompressionType::CCM)
   {
@@ -558,12 +574,13 @@ void CompressedMatrix<DoubleType>::Multiply(const DoubleVec_t<DoubleType> &x, Do
 }
 
 template <typename DoubleType>
-void CompressedMatrix<DoubleType>::TransposeMultiply(const DoubleVec_t<DoubleType> &x, DoubleVec_t<DoubleType> &y) const
+void CompressedMatrix<DoubleType>::TransposeMultiply(
+    const DoubleVec_t<DoubleType> &x, DoubleVec_t<DoubleType> &y) const
 {
   dsAssert(compressed, "UNEXPECTED");
 
-  const IntVec_t    &Cols = this->GetCols();
-  const IntVec_t    &Rows = this->GetRows();
+  const IntVec_t &Cols = this->GetCols();
+  const IntVec_t &Rows = this->GetRows();
   const DoubleVec_t<DoubleType> &Vals = this->GetReal();
   if (compressionType_ == CompressionType::CCM)
   {
@@ -576,12 +593,14 @@ void CompressedMatrix<DoubleType>::TransposeMultiply(const DoubleVec_t<DoubleTyp
 }
 
 template <typename DoubleType>
-void CompressedMatrix<DoubleType>::Multiply(const ComplexDoubleVec_t<DoubleType> &x, ComplexDoubleVec_t<DoubleType> &y) const
+void CompressedMatrix<DoubleType>::Multiply(
+    const ComplexDoubleVec_t<DoubleType> &x,
+    ComplexDoubleVec_t<DoubleType> &y) const
 {
   dsAssert(compressed, "UNEXPECTED");
 
-  const IntVec_t    &Cols =  this->GetCols();
-  const IntVec_t    &Rows =  this->GetRows();
+  const IntVec_t &Cols = this->GetCols();
+  const IntVec_t &Rows = this->GetRows();
   const ComplexDoubleVec_t<DoubleType> &Vals = this->GetComplex();
   if (compressionType_ == CompressionType::CCM)
   {
@@ -594,12 +613,14 @@ void CompressedMatrix<DoubleType>::Multiply(const ComplexDoubleVec_t<DoubleType>
 }
 
 template <typename DoubleType>
-void CompressedMatrix<DoubleType>::TransposeMultiply(const ComplexDoubleVec_t<DoubleType> &x, ComplexDoubleVec_t<DoubleType> &y) const
+void CompressedMatrix<DoubleType>::TransposeMultiply(
+    const ComplexDoubleVec_t<DoubleType> &x,
+    ComplexDoubleVec_t<DoubleType> &y) const
 {
   dsAssert(compressed, "UNEXPECTED");
 
-  const IntVec_t    &Cols =  this->GetCols();
-  const IntVec_t    &Rows =  this->GetRows();
+  const IntVec_t &Cols = this->GetCols();
+  const IntVec_t &Rows = this->GetRows();
   const ComplexDoubleVec_t<DoubleType> &Vals = this->GetComplex();
   if (compressionType_ == CompressionType::CCM)
   {
@@ -610,7 +631,7 @@ void CompressedMatrix<DoubleType>::TransposeMultiply(const ComplexDoubleVec_t<Do
     ColScaleMultiply(Cols, Rows, Vals, x, y);
   }
 }
-}
+}  // namespace dsMath
 
 template class dsMath::CompressedMatrix<double>;
 
@@ -618,4 +639,3 @@ template class dsMath::CompressedMatrix<double>;
 #include "Float128.hh"
 template class dsMath::CompressedMatrix<float128>;
 #endif
-

@@ -20,7 +20,6 @@ SPDX-License-Identifier: Apache-2.0
 #include <dlfcn.h>
 #endif
 
-
 typedef std::complex<double> doublecomplex;
 
 #if defined(__linux__) || defined(__APPLE__) || defined(_WIN32)
@@ -36,48 +35,61 @@ typedef std::complex<double> doublecomplex;
 #define external_zrotg  ZROTG
 #endif
 
-extern "C"
-{
-void external_dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
+extern "C" {
+void external_dgetrf(int *m, int *n, double *a, int *lda, int *ipiv, int *info);
 #ifdef _WIN32
-void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info, int trans_len);
-//void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info, int trans_len);
+void external_dgetrs(char *trans, int *n, int *nrhs, double *a, int *lda,
+                     int *ipiv, double *b, int *ldb, int *info, int trans_len);
+// void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int
+// *lda, int *ipiv, doublecomplex *b, int *ldb, int *info, int trans_len);
 #else
-void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info);
-//void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info);
+void external_dgetrs(char *trans, int *n, int *nrhs, double *a, int *lda,
+                     int *ipiv, double *b, int *ldb, int *info);
+// void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int
+// *lda, int *ipiv, doublecomplex *b, int *ldb, int *info);
 #endif
 void external_drotg(double *a, double *b, double *c, double *d);
-void external_zrotg(std::complex<double> *a, std::complex<double> *b, std::complex<double> *c, std::complex<double> *d);
+void external_zrotg(std::complex<double> *a, std::complex<double> *b,
+                    std::complex<double> *c, std::complex<double> *d);
 }
 
-extern "C"
-{
-using PARDISO_signature = void ( void *,    const int *, const int *, const int *,
-                   const int *, const int *, const void *,    const int *,
-                   const int *, int *, const int *, int *,
-                   const int *, void *,    void *,          int * );
-using mkl_get_version_string_signature = void (char *, int);
+extern "C" {
+using PARDISO_signature = void(void *, const int *, const int *, const int *,
+                               const int *, const int *, const void *,
+                               const int *, const int *, int *, const int *,
+                               int *, const int *, void *, void *, int *);
+using mkl_get_version_string_signature = void(char *, int);
 
-
-typedef void (dgetrf_signature)( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
-typedef void (zgetrf_signature)( int *m, int *n, doublecomplex *a, int *lda, int *ipiv, int *info );
+typedef void(dgetrf_signature)(int *m, int *n, double *a, int *lda, int *ipiv,
+                               int *info);
+typedef void(zgetrf_signature)(int *m, int *n, doublecomplex *a, int *lda,
+                               int *ipiv, int *info);
 #ifdef _WIN32
-typedef void (dgetrs_signature)( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info, int trans_len);
-typedef void (zgetrs_signature)( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info, int trans_len);
+typedef void(dgetrs_signature)(char *trans, int *n, int *nrhs, double *a,
+                               int *lda, int *ipiv, double *b, int *ldb,
+                               int *info, int trans_len);
+typedef void(zgetrs_signature)(char *trans, int *n, int *nrhs, doublecomplex *a,
+                               int *lda, int *ipiv, doublecomplex *b, int *ldb,
+                               int *info, int trans_len);
 #else
-typedef void (dgetrs_signature)( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info);
-typedef void (zgetrs_signature)( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info);
+typedef void(dgetrs_signature)(char *trans, int *n, int *nrhs, double *a,
+                               int *lda, int *ipiv, double *b, int *ldb,
+                               int *info);
+typedef void(zgetrs_signature)(char *trans, int *n, int *nrhs, doublecomplex *a,
+                               int *lda, int *ipiv, doublecomplex *b, int *ldb,
+                               int *info);
 #endif
-typedef void (drotg_signature)(double *, double *, double *, double *);
-typedef void (zrotg_signature)(std::complex<double> *, std::complex<double> *, std::complex<double> *, std::complex<double> *);
+typedef void(drotg_signature)(double *, double *, double *, double *);
+typedef void(zrotg_signature)(std::complex<double> *, std::complex<double> *,
+                              std::complex<double> *, std::complex<double> *);
 
 /////  STUFF for SuperLU BLAS
-//https://stanford.edu/~boyd/l1_tf/C/blas.h
+// https://stanford.edu/~boyd/l1_tf/C/blas.h
 
 // initialized through dynamic loading
 namespace {
 struct blas_table {
-// LAPACK
+  // LAPACK
   inline static std::vector<std::pair<std::string, void *>> dll_handles;
   inline static dgetrf_signature *dgetrf;
   inline static zgetrf_signature *zgetrf;
@@ -86,18 +98,19 @@ struct blas_table {
   inline static drotg_signature *drotg;
   inline static zrotg_signature *zrotg;
 
-// PARDISO
+  // PARDISO
   inline static PARDISO_signature *PARDISO;
   inline static mkl_get_version_string_signature *mkl_get_version_string;
 };
-}
+}  // namespace
 
-void PARDISO( void *a, const int *b, const int *c, const int *d,
-                   const int *e, const int *f, const void *g, const int *h,
-                   const int *i, int *j, const int *k, int *l,
-                   const int *m, void *n,    void *o, int *p)
+void PARDISO(void *a, const int *b, const int *c, const int *d, const int *e,
+             const int *f, const void *g, const int *h, const int *i, int *j,
+             const int *k, int *l, const int *m, void *n, void *o, int *p)
 {
-  dsAssert(MathLoader::IsMKLLoaded(), "MKL Pardiso not available. Please switch solvers or restart program with MKL configured.");
+  dsAssert(MathLoader::IsMKLLoaded(),
+           "MKL Pardiso not available. Please switch solvers or restart "
+           "program with MKL configured.");
   blas_table::PARDISO(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p);
 }
 
@@ -107,56 +120,64 @@ void mkl_get_version_string(char *s, int l)
   blas_table::mkl_get_version_string(s, l);
 }
 
-void external_dgetrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info )
+void external_dgetrf(int *m, int *n, double *a, int *lda, int *ipiv, int *info)
 {
-  blas_table::dgetrf( m, n, a, lda, ipiv, info );
+  blas_table::dgetrf(m, n, a, lda, ipiv, info);
 }
 
-void external_zgetrf( int *m, int *n, doublecomplex *a, int *lda, int *ipiv, int *info )
+void external_zgetrf(int *m, int *n, doublecomplex *a, int *lda, int *ipiv,
+                     int *info)
 {
-  blas_table::zgetrf( m, n, a, lda, ipiv, info );
+  blas_table::zgetrf(m, n, a, lda, ipiv, info);
 }
 
 #ifdef _WIN32
-void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info, int trans_len)
+void external_dgetrs(char *trans, int *n, int *nrhs, double *a, int *lda,
+                     int *ipiv, double *b, int *ldb, int *info, int trans_len)
 {
-  blas_table::dgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info, trans_len);
+  blas_table::dgetrs(trans, n, nrhs, a, lda, ipiv, b, ldb, info, trans_len);
 }
-void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info, int trans_len)
+void external_zgetrs(char *trans, int *n, int *nrhs, doublecomplex *a, int *lda,
+                     int *ipiv, doublecomplex *b, int *ldb, int *info,
+                     int trans_len)
 {
-  blas_table::zgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info, trans_len);
+  blas_table::zgetrs(trans, n, nrhs, a, lda, ipiv, b, ldb, info, trans_len);
 }
 #else
-void external_dgetrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info)
+void external_dgetrs(char *trans, int *n, int *nrhs, double *a, int *lda,
+                     int *ipiv, double *b, int *ldb, int *info)
 {
-  blas_table::dgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info);
+  blas_table::dgetrs(trans, n, nrhs, a, lda, ipiv, b, ldb, info);
 }
-void external_zgetrs( char *trans, int *n, int *nrhs, doublecomplex *a, int *lda, int *ipiv, doublecomplex *b, int *ldb, int *info)
+void external_zgetrs(char *trans, int *n, int *nrhs, doublecomplex *a, int *lda,
+                     int *ipiv, doublecomplex *b, int *ldb, int *info)
 {
-  blas_table::zgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info);
+  blas_table::zgetrs(trans, n, nrhs, a, lda, ipiv, b, ldb, info);
 }
 #endif
 void external_drotg(double *a, double *b, double *c, double *d)
 {
   blas_table::drotg(a, b, c, d);
 }
-void external_zrotg(std::complex<double> *a, std::complex<double> *b, std::complex<double> *c, std::complex<double> *d)
+void external_zrotg(std::complex<double> *a, std::complex<double> *b,
+                    std::complex<double> *c, std::complex<double> *d)
 {
   blas_table::zrotg(a, b, c, d);
 }
-} // end extern "C"
+}  // end extern "C"
 
-void getrf( int *m, int *n, double *a, int *lda, int *ipiv, int *info )
+void getrf(int *m, int *n, double *a, int *lda, int *ipiv, int *info)
 {
-  external_dgetrf( m, n, a, lda, ipiv, info );
+  external_dgetrf(m, n, a, lda, ipiv, info);
 }
 
-void getrs( char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv, double *b, int *ldb, int *info)
+void getrs(char *trans, int *n, int *nrhs, double *a, int *lda, int *ipiv,
+           double *b, int *ldb, int *info)
 {
 #ifdef _WIN32
-  external_dgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info, 1);
+  external_dgetrs(trans, n, nrhs, a, lda, ipiv, b, ldb, info, 1);
 #else
-  external_dgetrs( trans, n, nrhs, a, lda, ipiv, b, ldb, info);
+  external_dgetrs(trans, n, nrhs, a, lda, ipiv, b, ldb, info);
 #endif
 }
 
@@ -165,7 +186,8 @@ void drotg(double *a, double *b, double *c, double *d)
   external_drotg(a, b, c, d);
 }
 
-void zrotg(std::complex<double> *a, std::complex<double> *b, std::complex<double> *c, std::complex<double> *d)
+void zrotg(std::complex<double> *a, std::complex<double> *b,
+           std::complex<double> *c, std::complex<double> *d)
 {
   external_zrotg(a, b, c, d);
 }
@@ -179,21 +201,22 @@ namespace {
 
 struct symtable {
   const char *symbol_name;
-  void ** const function_pointer;
+  void **const function_pointer;
 };
 
 static symtable math_function_table[] = {
-  // PARDISO
-  {"PARDISO",  reinterpret_cast<void **>(&blas_table::PARDISO)},
-  {"mkl_get_version_string",   reinterpret_cast<void **>(&blas_table::mkl_get_version_string)},
+    // PARDISO
+    {"PARDISO", reinterpret_cast<void **>(&blas_table::PARDISO)},
+    {"mkl_get_version_string",
+     reinterpret_cast<void **>(&blas_table::mkl_get_version_string)},
 #if defined(USE_LAPACK)
-  {TOSTRING(external_dgetrf), reinterpret_cast<void **>(&blas_table::dgetrf)},
-  {TOSTRING(external_zgetrf), reinterpret_cast<void **>(&blas_table::zgetrf)},
-  {TOSTRING(external_dgetrs), reinterpret_cast<void **>(&blas_table::dgetrs)},
-  {TOSTRING(external_zgetrs), reinterpret_cast<void **>(&blas_table::zgetrs)},
+    {TOSTRING(external_dgetrf), reinterpret_cast<void **>(&blas_table::dgetrf)},
+    {TOSTRING(external_zgetrf), reinterpret_cast<void **>(&blas_table::zgetrf)},
+    {TOSTRING(external_dgetrs), reinterpret_cast<void **>(&blas_table::dgetrs)},
+    {TOSTRING(external_zgetrs), reinterpret_cast<void **>(&blas_table::zgetrs)},
 #endif
-  {TOSTRING(external_drotg),  reinterpret_cast<void **>(&blas_table::drotg)},
-  {TOSTRING(external_zrotg),  reinterpret_cast<void **>(&blas_table::zrotg)},
+    {TOSTRING(external_drotg), reinterpret_cast<void **>(&blas_table::drotg)},
+    {TOSTRING(external_zrotg), reinterpret_cast<void **>(&blas_table::zrotg)},
 };
 
 void clear_table()
@@ -204,19 +227,21 @@ void clear_table()
     *entry.function_pointer = nullptr;
   }
 }
-}
+}  // namespace
 
 namespace MathLoader {
-LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool replace)
+LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors,
+                             bool replace)
 {
   // consider if the dll is already open, by using RTLD_NOLOAD first
-  //https://stackoverflow.com/questions/34073051/when-we-are-supposed-to-use-rtld-deepbind
+  // https://stackoverflow.com/questions/34073051/when-we-are-supposed-to-use-rtld-deepbind
 #if defined(_WIN32)
   HINSTANCE__ *dll_p = LoadLibrary(dllname.c_str());
   if (!dll_p)
   {
     std::ostringstream os;
-    os << "Windows returned error " << GetLastError() << " while trying to load \"" << dllname << "\"\n";
+    os << "Windows returned error " << GetLastError()
+       << " while trying to load \"" << dllname << "\"\n";
     errors += os.str();
     return LoaderMessages_t::MISSING_DLL;
   }
@@ -232,7 +257,8 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
     // Reference count is zero until this is called
     dll_p = dlopen(dllname.c_str(), dllflags);
   }
-  else // reference count is now 2, but we need to make sure someone else does not close
+  else  // reference count is now 2, but we need to make sure someone else does
+        // not close
   {
   }
   if (!dll_p)
@@ -245,7 +271,6 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
 
   blas_table::dll_handles.push_back({dllname, dll_p});
 
-
   for (auto &entry : math_function_table)
   {
     if ((!replace) && *entry.function_pointer)
@@ -253,9 +278,8 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
       continue;
     }
 
-
 #ifdef _WIN32
-    void *h = (void *) GetProcAddress(dll_p, entry.symbol_name);
+    void *h = (void *)GetProcAddress(dll_p, entry.symbol_name);
 #else
     void *h = dlsym(dll_p, entry.symbol_name);
 #endif
@@ -268,7 +292,8 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
   return GetMathStatus();
 }
 
-LoaderMessages_t LoadFromEnvironment(const std::string &environment_var, std::string &errors)
+LoaderMessages_t LoadFromEnvironment(const std::string &environment_var,
+                                     std::string &errors)
 {
   ClearBlasFunctions();
   std::string search_path;
@@ -316,7 +341,8 @@ LoaderMessages_t LoadFromEnvironment(const std::string &environment_var, std::st
   {
     if (done)
     {
-      OutputStream::WriteOut(OutputStream::OutputType::INFO, std::string("Skipping ") + dll_name + "\n");
+      OutputStream::WriteOut(OutputStream::OutputType::INFO,
+                             std::string("Skipping ") + dll_name + "\n");
       blas_table::dll_handles.push_back({dll_name, nullptr});
       continue;
     }
@@ -363,12 +389,12 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
   ClearBlasFunctions();
 
 #if defined(__APPLE__)
-// This should always be available through symlink
+  // This should always be available through symlink
   const std::string default_name = "libmkl_rt.dylib";
   const std::string prefix_name = "libmkl_rt.";
   const std::string suffix_name = ".dylib";
 #elif defined(__linux__)
-// This should always be available through symlink
+  // This should always be available through symlink
   const std::string default_name = "libmkl_rt.so";
   const std::string prefix_name = "libmkl_rt.so.";
   const std::string suffix_name = "";
@@ -402,22 +428,27 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
 
   if (actual_version == size_t(-1))
   {
-    std::string tested_dll_name = prefix_name + std::to_string(max_tested_version) + suffix_name;
+    std::string tested_dll_name =
+        prefix_name + std::to_string(max_tested_version) + suffix_name;
     std::ostringstream os;
-    os << "Could not find Intel MKL. The maximum tested version is \"" << tested_dll_name << "\"\n";
+    os << "Could not find Intel MKL. The maximum tested version is \""
+       << tested_dll_name << "\"\n";
 #if __linux__
-    os << "This may be fixed by setting LD_LIBRARY_PATH before starting the application.\n";
+    os << "This may be fixed by setting LD_LIBRARY_PATH before starting the "
+          "application.\n";
 #endif
-    //OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
+    // OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
     errors = os.str();
   }
   else
-//  else if (actual_version > max_tested_version)
+  //  else if (actual_version > max_tested_version)
   {
-    std::string tested_dll_name = prefix_name + std::to_string(max_tested_version) + suffix_name;
+    std::string tested_dll_name =
+        prefix_name + std::to_string(max_tested_version) + suffix_name;
     std::ostringstream os;
-    os << "Found Intel MKL as \"" << dll_name << "\".  The maximum tested version is \"" << tested_dll_name << "\"\n";
-    //OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
+    os << "Found Intel MKL as \"" << dll_name
+       << "\".  The maximum tested version is \"" << tested_dll_name << "\"\n";
+    // OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
     errors.clear();
   }
 
@@ -433,7 +464,10 @@ bool IsMathLoaded()
     {
       continue;
     }
-    else if ((entry.function_pointer == reinterpret_cast<void **>(&blas_table::PARDISO)) || (entry.function_pointer == reinterpret_cast<void **>(&blas_table::mkl_get_version_string)))
+    else if ((entry.function_pointer ==
+              reinterpret_cast<void **>(&blas_table::PARDISO)) ||
+             (entry.function_pointer ==
+              reinterpret_cast<void **>(&blas_table::mkl_get_version_string)))
     {
       continue;
     }
@@ -470,10 +504,10 @@ LoaderMessages_t GetMathStatus()
 std::vector<std::string> GetLoadedMathDLLs()
 {
   std::vector<std::string> dll_names(blas_table::dll_handles.size());
-  std::transform(blas_table::dll_handles.begin(), blas_table::dll_handles.end(), dll_names.begin(), [](auto &a){return a.first;});
+  std::transform(blas_table::dll_handles.begin(), blas_table::dll_handles.end(),
+                 dll_names.begin(), [](auto &a) { return a.first; });
   return dll_names;
 }
-
 
 std::string GetMKLVersion()
 {
@@ -495,7 +529,7 @@ std::string GetMKLVersion()
   pos = buf.find_last_not_of(" ");
   if (pos != std::string::npos)
   {
-    buf.resize(pos+1);
+    buf.resize(pos + 1);
   }
   return buf;
 }
@@ -514,17 +548,18 @@ LoaderMessages_t LoadMathLibraries(std::string &errors)
     ret = LoadIntelMKL(errors);
   }
 
-  if ((ret == LoaderMessages_t::MKL_LOADED) || (ret == LoaderMessages_t::MATH_LOADED))
+  if ((ret == LoaderMessages_t::MKL_LOADED) ||
+      (ret == LoaderMessages_t::MATH_LOADED))
   {
-      return ret;
+    return ret;
   }
 
 #if defined(_WIN32)
-    const char *teststring = "libopenblas.dll;liblapack.dll;libblas.dll";
+  const char *teststring = "libopenblas.dll;liblapack.dll;libblas.dll";
 #elif defined(__APPLE__)
-    const char *teststring = "libopenblas.dylib:liblapack.dylib:libblas.dylib";
+  const char *teststring = "libopenblas.dylib:liblapack.dylib:libblas.dylib";
 #elif defined(__linux__)
-    const char *teststring = "libopenblas.so:liblapack.so:libblas.so";
+  const char *teststring = "libopenblas.so:liblapack.so:libblas.so";
 #else
 #error "SET MATH LIBRARIES TEST FOR NEW PLATFORM"
 #endif
@@ -537,9 +572,5 @@ LoaderMessages_t LoadMathLibraries(std::string &errors)
   return ret;
 }
 
-void ClearBlasFunctions()
-{
-  clear_table();
-}
-}
-
+void ClearBlasFunctions() { clear_table(); }
+}  // namespace MathLoader

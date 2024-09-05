@@ -14,19 +14,19 @@ template <typename DoubleType>
 DoubleType GetLogEpsilon()
 {
   // https://stackoverflow.com/questions/1661529/is-meyers-implementation-of-the-singleton-pattern-thread-safe
-  // If control enters the declaration concurrently while the variable is being initialized,
-  // the concurrent execution shall wait for completion of the initialization.
+  // If control enters the declaration concurrently while the variable is being
+  // initialized, the concurrent execution shall wait for completion of the
+  // initialization.
   static auto ret = fabs(log(std::numeric_limits<DoubleType>().epsilon()));
   return ret;
 }
-}
+}  // namespace
 
 template <typename DoubleType>
 DoubleType BernoulliImpl(DoubleType x)
 {
   DoubleType ret = 1.0;
   const auto fx = fabs(x);
-
 
   static const auto pleps = GetLogEpsilon<DoubleType>();
   if (fx < pleps)
@@ -37,11 +37,11 @@ DoubleType BernoulliImpl(DoubleType x)
     {
       DoubleType d = 1.0;
       DoubleType xv = x;
-      d += 1./2. * xv;
+      d += 1. / 2. * xv;
       xv *= x;
-      d += 1./6. * xv;
+      d += 1. / 6. * xv;
       xv *= x;
-      d += 1./24. * xv;
+      d += 1. / 24. * xv;
       ret = 1.0 / d;
     }
     else
@@ -96,7 +96,6 @@ DoubleType Bernoulli(DoubleType x)
   return ret;
 }
 
-
 // for the non-trivial case where x != 0.0
 template <typename DoubleType>
 DoubleType derBernoulliImpl(DoubleType x)
@@ -133,18 +132,19 @@ DoubleType derBernoulliImpl(DoubleType x)
     const auto ex1 = expm1(x);
 
     //// This condition is IMPORTANT for convergence
-    //// TODO: it should be possible to calculate the breakpoint for this condition
+    //// TODO: it should be possible to calculate the breakpoint for this
+    ///condition
     if (x != ex1)
     {
       const auto ex2 = ex1 - (x * exp(x));
-  //  const auto ex2 = (1 - x) * exp(x) - 1;
+      //  const auto ex2 = (1 - x) * exp(x) - 1;
       ret = ex2;
       ret *= pow(ex1, -2);
     }
     else
     {
       DoubleType num = static_cast<DoubleType>(-0.5);
-      DoubleType den = static_cast<DoubleType>( 1.0);
+      DoubleType den = static_cast<DoubleType>(1.0);
       num -= x / static_cast<DoubleType>(3.);
       den += x;
 #if 0
@@ -162,7 +162,7 @@ DoubleType derBernoulliImpl(DoubleType x)
   }
   else
   {
-    ret = - 1.0 - x * exp(x);
+    ret = -1.0 - x * exp(x);
   }
 
   return ret;
@@ -172,7 +172,6 @@ DoubleType derBernoulliImpl(DoubleType x)
 template <typename DoubleType>
 DoubleType derBernoulli(DoubleType x)
 {
-
   DoubleType ret = -0.5;
 
   //// (exp(x) - 1 - x * exp(x)) / pow(exp(x) - 1, 2)
@@ -192,8 +191,8 @@ template float128 Bernoulli<float128>(float128);
 template float128 derBernoulli<float128>(float128);
 #endif
 
-
-//// The following code is done using taylor expansions versus using the expm1 function
+//// The following code is done using taylor expansions versus using the expm1
+///function
 #if 0
 #include <cmath>
 using std::abs;

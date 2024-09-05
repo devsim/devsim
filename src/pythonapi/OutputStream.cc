@@ -14,14 +14,15 @@ SPDX-License-Identifier: Apache-2.0
 
 #include <iostream>
 
-void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::string &msg)
+void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity,
+                            const std::string &msg)
 {
   EnsurePythonGIL gil;
 
   //// just assume the program has terminated
   if (!Py_IsInitialized())
   {
-//    Py_Exit(-1);
+    //    Py_Exit(-1);
     return;
   }
 
@@ -39,7 +40,8 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
       Py_Exit(-1);
     }
     PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-    PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+    PyObject_CallMethod(tc, const_cast<char *>("flush"),
+                        const_cast<char *>(""));
   }
   else if (ot == OutputType::VERBOSE1)
   {
@@ -48,11 +50,12 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
       PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
       if (!tc)
       {
-          std::cerr << "Could not find output channel!";
-          Py_Exit(-1);
+        std::cerr << "Could not find output channel!";
+        Py_Exit(-1);
       }
       PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-      PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+      PyObject_CallMethod(tc, const_cast<char *>("flush"),
+                          const_cast<char *>(""));
     }
   }
   else if (ot == OutputType::VERBOSE2)
@@ -62,11 +65,12 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
       PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
       if (!tc)
       {
-          std::cerr << "Could not find output channel!";
-          Py_Exit(-1);
+        std::cerr << "Could not find output channel!";
+        Py_Exit(-1);
       }
       PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-      PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+      PyObject_CallMethod(tc, const_cast<char *>("flush"),
+                          const_cast<char *>(""));
     }
   }
   else if (ot == OutputType::ERROR)
@@ -78,7 +82,8 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
       Py_Exit(-1);
     }
     PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-    PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+    PyObject_CallMethod(tc, const_cast<char *>("flush"),
+                        const_cast<char *>(""));
   }
   else if (ot == OutputType::FATAL)
   {
@@ -89,11 +94,11 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
       Py_Exit(-1);
     }
     PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-    PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+    PyObject_CallMethod(tc, const_cast<char *>("flush"),
+                        const_cast<char *>(""));
     throw dsException(msg);
   }
 }
-
 
 OutputStream::Verbosity_t OutputStream::GetVerbosity(const std::string &vstring)
 {
@@ -121,4 +126,3 @@ void OutputStream::WriteOut(OutputType ot, const std::string &msg)
   std::string debug_level = GetGlobalParameterStringOptional("debug_level");
   OutputStream::WriteOut(ot, GetVerbosity(debug_level), msg);
 }
-

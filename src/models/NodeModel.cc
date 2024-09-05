@@ -16,11 +16,7 @@ SPDX-License-Identifier: Apache-2.0
 
 #include <algorithm>
 
-const char *NodeModel::DisplayTypeString[] = {
-  "nodisplay",
-  "scalar",
-  nullptr
-};
+const char *NodeModel::DisplayTypeString[] = {"nodisplay", "scalar", nullptr};
 
 bool NodeModel::IsZero() const
 {
@@ -34,14 +30,16 @@ bool NodeModel::IsOne() const
   return model_data.IsUniform() && model_data.IsOne();
 }
 
-NodeModel::~NodeModel() {
+NodeModel::~NodeModel()
+{
 #if 0
     myregion->UnregisterCallback(name);
 #endif
 }
 
 // derived classes must register dependencies
-NodeModel::NodeModel(const std::string &nm, const RegionPtr rp, NodeModel::DisplayType dt, const ContactPtr cp)
+NodeModel::NodeModel(const std::string &nm, const RegionPtr rp,
+                     NodeModel::DisplayType dt, const ContactPtr cp)
     : name(nm),
       myregion(rp),
       mycontact(cp),
@@ -53,29 +51,17 @@ NodeModel::NodeModel(const std::string &nm, const RegionPtr rp, NodeModel::Displ
   myself = rp->AddNodeModel(this);
 }
 
-const std::string &NodeModel::GetName() const
-{
-  return name;
-}
+const std::string &NodeModel::GetName() const { return name; }
 
-std::string NodeModel::GetRealName() const
-{
-  return name + "_Real";
-}
+std::string NodeModel::GetRealName() const { return name + "_Real"; }
 
-std::string NodeModel::GetImagName() const
-{
-  return name + "_Imag";
-}
+std::string NodeModel::GetImagName() const { return name + "_Imag"; }
 
-void NodeModel::InitializeValues()
-{
-  setInitialValues();
-}
+void NodeModel::InitializeValues() { setInitialValues(); }
 
 void NodeModel::DefaultInitializeValues()
 {
-    // default initialization is to 0.0
+  // default initialization is to 0.0
   model_data.clear();
 }
 
@@ -87,12 +73,11 @@ void NodeModel::CalculateValues() const
     inprocess = true;
     try
     {
-        this->calcNodeScalarValues();
-    }
-    catch (...)
+      this->calcNodeScalarValues();
+    } catch (...)
     {
-        inprocess = false;
-        throw;
+      inprocess = false;
+      throw;
     }
     uptodate = true;
     inprocess = false;
@@ -101,17 +86,20 @@ void NodeModel::CalculateValues() const
   if (FPECheck::CheckFPE())
   {
     std::ostringstream os;
-    os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  while evaluating the node model " << name
-    << " on Device: " << GetRegion().GetDevice()->GetName() << " on Region: " << GetRegion().GetName() << "\n";
+    os << "There was a floating point exception of type \""
+       << FPECheck::getFPEString() << "\"  while evaluating the node model "
+       << name << " on Device: " << GetRegion().GetDevice()->GetName()
+       << " on Region: " << GetRegion().GetName() << "\n";
     FPECheck::ClearFPE();
-    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str().c_str());
+    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(),
+                             os.str().c_str());
   }
 }
 
 //
 // If not uptodate, then recalculate the model
 template <typename DoubleType>
-const NodeScalarList<DoubleType> & NodeModel::GetScalarValues() const
+const NodeScalarList<DoubleType> &NodeModel::GetScalarValues() const
 {
   CalculateValues();
 
@@ -134,7 +122,7 @@ void NodeModel::SetValues(const NodeScalarList<DoubleType> &nv)
 {
   if (mycontact)
   {
-    GetContactIndexes(); // safety
+    GetContactIndexes();  // safety
     model_data.set_indexes(atcontact, nv);
   }
   else
@@ -157,7 +145,7 @@ void NodeModel::SetValues(const DoubleType &v)
 {
   if (mycontact)
   {
-    GetContactIndexes(); // safety
+    GetContactIndexes();  // safety
     model_data.set_indexes(atcontact, v);
   }
   else
@@ -169,12 +157,13 @@ void NodeModel::SetValues(const DoubleType &v)
   uptodate = true;
 }
 
-const std::vector<size_t> & NodeModel::GetContactIndexes() const
+const std::vector<size_t> &NodeModel::GetContactIndexes() const
 {
   if ((mycontact) && (atcontact.empty()))
   {
     const ConstNodeList_t &cnodes = mycontact->GetNodes();
-    for (ConstNodeList_t::const_iterator it = cnodes.begin(); it != cnodes.end(); ++it)
+    for (ConstNodeList_t::const_iterator it = cnodes.begin();
+         it != cnodes.end(); ++it)
     {
       atcontact.push_back((*it)->GetIndex());
     }
@@ -201,7 +190,7 @@ void NodeModel::SetNodeValue(size_t index, DoubleType value)
 
   if (mycontact)
   {
-    GetContactIndexes(); // safety
+    GetContactIndexes();  // safety
     model_data.set_indexes(atcontact, value);
   }
   else
@@ -211,7 +200,6 @@ void NodeModel::SetNodeValue(size_t index, DoubleType value)
 
   MarkOld();
   uptodate = true;
-
 }
 
 void NodeModel::MarkOld()
@@ -220,10 +208,7 @@ void NodeModel::MarkOld()
   myregion->SignalCallbacks(name);
 }
 
-void NodeModel::MarkOld() const
-{
-  const_cast<NodeModel *>(this)->MarkOld();
-}
+void NodeModel::MarkOld() const { const_cast<NodeModel *>(this)->MarkOld(); }
 
 void NodeModel::RegisterCallback(const std::string &nm)
 {
@@ -247,10 +232,7 @@ const DoubleType &NodeModel::GetUniformValue() const
   return model_data.GetUniformValue<DoubleType>();
 }
 
-void NodeModel::SerializeBuiltIn(std::ostream &of) const
-{
-  of << "BUILTIN";
-}
+void NodeModel::SerializeBuiltIn(std::ostream &of) const { of << "BUILTIN"; }
 
 void NodeModel::DevsimSerialize(std::ostream &of) const
 {
@@ -282,7 +264,7 @@ const std::string NodeModel::GetContactName() const
   std::string ret;
   if (mycontact)
   {
-  ret = mycontact->GetName();
+    ret = mycontact->GetName();
   }
   return ret;
 }
@@ -291,9 +273,8 @@ const std::string NodeModel::GetContactName() const
 #include "NodeModelInstantiate.cc"
 
 #ifdef DEVSIM_EXTENDED_PRECISION
-#undef  DBLTYPE
+#undef DBLTYPE
 #define DBLTYPE float128
 #include "Float128.hh"
 #include "NodeModelInstantiate.cc"
 #endif
-

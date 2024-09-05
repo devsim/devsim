@@ -35,16 +35,15 @@ using namespace dsValidate;
 namespace dsCommand {
 
 template <typename DoubleType>
-void
-solveCmdImpl(CommandHandler &data)
+void solveCmdImpl(CommandHandler &data)
 {
   std::string errorString;
-//    const std::string commandName = data.GetCommandName();
+  //    const std::string commandName = data.GetCommandName();
   const std::string &type = data.GetStringOption("type");
   const std::string &solver_type = data.GetStringOption("solver_type");
 
   const DoubleType tdelta = data.GetDoubleOption("tdelta");
-  const DoubleType gamma  = data.GetDoubleOption("gamma");
+  const DoubleType gamma = data.GetDoubleOption("gamma");
 
   const bool convergence_info = data.GetBooleanOption("info");
   ObjectHolderMap_t ohm;
@@ -54,7 +53,8 @@ solveCmdImpl(CommandHandler &data)
   {
     if (type == "ac" || type == "noise")
     {
-      errorString += "\"info\" option not supported for \"" + type + "\" analysis\n";
+      errorString +=
+          "\"info\" option not supported for \"" + type + "\" analysis\n";
     }
     else
     {
@@ -74,8 +74,8 @@ solveCmdImpl(CommandHandler &data)
   else if (type == "transient_dc")
   {
   }
-  else if ((type == "transient_bdf1")
-          || (type == "transient_tr") || type == "transient_bdf2")
+  else if ((type == "transient_bdf1") || (type == "transient_tr") ||
+           type == "transient_bdf2")
   {
     if (tdelta == 0.0)
     {
@@ -94,7 +94,9 @@ solveCmdImpl(CommandHandler &data)
   else
   {
     std::ostringstream os;
-    os << "\"dc\", \"ac\", \"noise\", \"transient_dc\", \"transient_bdf1\", \"transient_tr\", \"transient_bdf2\", are the only valid simulation types\n";
+    os << "\"dc\", \"ac\", \"noise\", \"transient_dc\", \"transient_bdf1\", "
+          "\"transient_tr\", \"transient_bdf2\", are the only valid simulation "
+          "types\n";
     errorString = os.str();
   }
 
@@ -110,7 +112,8 @@ solveCmdImpl(CommandHandler &data)
   const DoubleType maximum_error = data.GetDoubleOption("maximum_error");
   const int maximum_iterations = data.GetIntegerOption("maximum_iterations");
   const int maximum_divergence = data.GetIntegerOption("maximum_divergence");
-  const int symbolic_iteration_limit = data.GetIntegerOption("symbolic_iteration_limit");
+  const int symbolic_iteration_limit =
+      data.GetIntegerOption("symbolic_iteration_limit");
   const DoubleType frequency = data.GetDoubleOption("frequency");
   const std::string &outputNode = data.GetStringOption("output_node");
 
@@ -121,18 +124,21 @@ solveCmdImpl(CommandHandler &data)
   solver.SetMaxIter(maximum_iterations);
   solver.SetMaxDiv(maximum_divergence);
   solver.SetMaxAbsError(maximum_error);
-  solver.SetSymbolicIterationLimit(static_cast<size_t>(symbolic_iteration_limit));
+  solver.SetSymbolicIterationLimit(
+      static_cast<size_t>(symbolic_iteration_limit));
 
   std::unique_ptr<dsMath::LinearSolver<DoubleType>> linearSolver;
 
   if (solver_type == "direct")
   {
-    linearSolver = std::unique_ptr<dsMath::LinearSolver<DoubleType>>(new dsMath::DirectLinearSolver<DoubleType>);
+    linearSolver = std::unique_ptr<dsMath::LinearSolver<DoubleType>>(
+        new dsMath::DirectLinearSolver<DoubleType>);
   }
   else if (solver_type == "iterative")
   {
 #if defined(USE_ITERATIVE_SOLVER)
-    linearSolver = std::unique_ptr<dsMath::LinearSolver<DoubleType>>(new dsMath::IterativeLinearSolver<DoubleType>);
+    linearSolver = std::unique_ptr<dsMath::LinearSolver<DoubleType>>(
+        new dsMath::IterativeLinearSolver<DoubleType>);
 #else
     std::ostringstream os;
     os << "\"iterative\" is not a supported simulation type in this build\n";
@@ -160,7 +166,8 @@ solveCmdImpl(CommandHandler &data)
 
   if (type == "dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCOnly<DoubleType>(), p_ohm);
+    res = solver.Solve(*linearSolver, dsMath::TimeMethods::DCOnly<DoubleType>(),
+                       p_ohm);
   }
   else if (type == "ac")
   {
@@ -172,19 +179,26 @@ solveCmdImpl(CommandHandler &data)
   }
   else if (type == "transient_dc")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TransientDC<DoubleType>(), p_ohm);
+    res = solver.Solve(*linearSolver,
+                       dsMath::TimeMethods::TransientDC<DoubleType>(), p_ohm);
   }
   else if (type == "transient_bdf1")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF1<DoubleType>(tdelta, gamma), p_ohm);
+    res = solver.Solve(*linearSolver,
+                       dsMath::TimeMethods::BDF1<DoubleType>(tdelta, gamma),
+                       p_ohm);
   }
   else if (type == "transient_tr")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::TR<DoubleType>(tdelta, gamma), p_ohm);
+    res =
+        solver.Solve(*linearSolver,
+                     dsMath::TimeMethods::TR<DoubleType>(tdelta, gamma), p_ohm);
   }
   else if (type == "transient_bdf2")
   {
-    res = solver.Solve(*linearSolver, dsMath::TimeMethods::BDF2<DoubleType>(tdelta, gamma), p_ohm);
+    res = solver.Solve(*linearSolver,
+                       dsMath::TimeMethods::BDF2<DoubleType>(tdelta, gamma),
+                       p_ohm);
   }
 
   if (p_ohm)
@@ -209,8 +223,7 @@ solveCmdImpl(CommandHandler &data)
   }
 }
 
-void
-solveCmd(CommandHandler &data)
+void solveCmd(CommandHandler &data)
 {
   std::string errorString;
 
@@ -218,33 +231,47 @@ solveCmd(CommandHandler &data)
 
   /// Will need someway of setting circuit node
   /// (This would be on the contact and not the contact equation??)
-  static dsGetArgs::Option option[] =
-  {
-    {"type",               "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-    {"absolute_error",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"relative_error",     "0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"maximum_error",      "MAXDOUBLE", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"maximum_iterations", "20", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::OPTIONAL},
-    {"maximum_divergence", "20", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::OPTIONAL},
-    {"symbolic_iteration_limit", "1", dsGetArgs::optionType::INTEGER, dsGetArgs::requiredType::OPTIONAL},
-    {"frequency",    "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"output_node",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
-    {"solver_type",  "direct", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
-    {"tdelta",       "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"charge_error", "0.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    {"gamma",        "1.0", dsGetArgs::optionType::FLOAT, dsGetArgs::requiredType::OPTIONAL},
-    // empty string converts to bool for python
-    {"info", "", dsGetArgs::optionType::BOOLEAN, dsGetArgs::requiredType::OPTIONAL},
-    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
-  };
-//      {"callback",      "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
+  static dsGetArgs::Option option[] = {
+      {"type", "", dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+      {"absolute_error", "0", dsGetArgs::optionType::FLOAT,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"relative_error", "0", dsGetArgs::optionType::FLOAT,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"maximum_error", "MAXDOUBLE", dsGetArgs::optionType::FLOAT,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"maximum_iterations", "20", dsGetArgs::optionType::INTEGER,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"maximum_divergence", "20", dsGetArgs::optionType::INTEGER,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"symbolic_iteration_limit", "1", dsGetArgs::optionType::INTEGER,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"frequency", "0.0", dsGetArgs::optionType::FLOAT,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"output_node", "", dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"solver_type", "direct", dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"tdelta", "0.0", dsGetArgs::optionType::FLOAT,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"charge_error", "0.0", dsGetArgs::optionType::FLOAT,
+       dsGetArgs::requiredType::OPTIONAL},
+      {"gamma", "1.0", dsGetArgs::optionType::FLOAT,
+       dsGetArgs::requiredType::OPTIONAL},
+      // empty string converts to bool for python
+      {"info", "", dsGetArgs::optionType::BOOLEAN,
+       dsGetArgs::requiredType::OPTIONAL},
+      {nullptr, nullptr, dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::OPTIONAL}};
+  //      {"callback",      "", dsGetArgs::optionType::STRING,
+  //      dsGetArgs::requiredType::OPTIONAL},
 
   bool error = data.processOptions(option, errorString);
 
   if (error)
   {
-      data.SetErrorResult(errorString);
-      return;
+    data.SetErrorResult(errorString);
+    return;
   }
 
   {
@@ -269,8 +296,7 @@ solveCmd(CommandHandler &data)
 }
 
 template <typename DoubleType>
-void
-getMatrixAndRHSCmdImpl(CommandHandler &data)
+void getMatrixAndRHSCmdImpl(CommandHandler &data)
 {
   std::string errorString;
   const std::string &format = data.GetStringOption("format");
@@ -287,7 +313,7 @@ getMatrixAndRHSCmdImpl(CommandHandler &data)
   }
   else if (!format.empty())
   {
-    errorString =+ "Expected \"csc\" or \"csr\" for \"format\" option";
+    errorString = +"Expected \"csc\" or \"csr\" for \"format\" option";
   }
 
   if (!errorString.empty())
@@ -303,25 +329,24 @@ getMatrixAndRHSCmdImpl(CommandHandler &data)
   data.SetObjectResult(ObjectHolder(ohm));
 }
 
-void
-getMatrixAndRHSCmd(CommandHandler &data)
+void getMatrixAndRHSCmd(CommandHandler &data)
 {
   std::string errorString;
 
   const std::string commandName = data.GetCommandName();
 
-  static dsGetArgs::Option option[] =
-  {
-    {"format",             "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL},
-    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
-  };
+  static dsGetArgs::Option option[] = {
+      {"format", "", dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::OPTIONAL},
+      {nullptr, nullptr, dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::OPTIONAL}};
 
   bool error = data.processOptions(option, errorString);
 
   if (error)
   {
-      data.SetErrorResult(errorString);
-      return;
+    data.SetErrorResult(errorString);
+    return;
   }
 
   bool extended_solver = false;
@@ -343,38 +368,41 @@ getMatrixAndRHSCmd(CommandHandler &data)
   }
 }
 
-void
-getContactCurrentCmd(CommandHandler &data)
+void getContactCurrentCmd(CommandHandler &data)
 {
-    std::string errorString;
+  std::string errorString;
 
-    const std::string commandName = data.GetCommandName();
+  const std::string commandName = data.GetCommandName();
 
-    static dsGetArgs::Option option[] = {
-        {"device",   "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
-        {"equation", "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {"contact",  "", dsGetArgs::optionType::STRING, dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
-        {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
-    };
+  static dsGetArgs::Option option[] = {
+      {"device", "", dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::REQUIRED, mustBeValidDevice},
+      {"equation", "", dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+      {"contact", "", dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::REQUIRED, stringCannotBeEmpty},
+      {nullptr, nullptr, dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::OPTIONAL}};
 
-    bool error = data.processOptions(option, errorString);
+  bool error = data.processOptions(option, errorString);
 
-    if (error)
-    {
-        data.SetErrorResult(errorString);
-        return;
-    }
+  if (error)
+  {
+    data.SetErrorResult(errorString);
+    return;
+  }
 
-    const std::string &deviceName   = data.GetStringOption("device");
-    const std::string &contactName  = data.GetStringOption("contact");
-    const std::string &equationName = data.GetStringOption("equation");
+  const std::string &deviceName = data.GetStringOption("device");
+  const std::string &contactName = data.GetStringOption("contact");
+  const std::string &equationName = data.GetStringOption("equation");
 
-    Device   *device = nullptr;
-//    Region   *region = nullptr;
-    Contact  *contact = nullptr;
-    ContactEquationHolder eqn;
+  Device *device = nullptr;
+  //    Region   *region = nullptr;
+  Contact *contact = nullptr;
+  ContactEquationHolder eqn;
 
-    errorString = ValidateDeviceAndContact(deviceName, contactName, device, contact);
+  errorString =
+      ValidateDeviceAndContact(deviceName, contactName, device, contact);
 
 #if 0
     if (contact)
@@ -383,78 +411,83 @@ getContactCurrentCmd(CommandHandler &data)
     }
 #endif
 
-    if (!errorString.empty())
-    {
-      data.SetErrorResult(errorString);
-      return;
-    }
-
-/*
-    const Region::ContactEquationPtrMap_t &cepm = region->GetContactEquationList();
-    std::pair<Region::ContactEquationPtrMap_t::const_iterator, Region::ContactEquationPtrMap_t::const_iterator> cpair = cepm.equal_range(contactName);
-    Region::ContactEquationPtrMap_t::const_iterator cit = cpair.first;
-    Region::ContactEquationPtrMap_t::const_iterator cend = cpair.second;
-*/
-    const ContactEquationPtrMap_t &cepm = contact->GetEquationPtrList();
-
-    for (ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
-    {
-        if (cepmit->second.GetName() == equationName)
-        {
-            eqn = cepmit->second;
-        }
-    }
-
-    double val = 0.0;
-    if (eqn.GetName().empty())
-    {
-        std::ostringstream os;
-        os << "Could not find contact equation \"" << equationName << "\" "
-           << onContactonDevice(contactName, deviceName) << "\n";
-        errorString = os.str();
-        data.SetErrorResult(errorString);
-        return;
-    }
-    else if (commandName == "get_contact_current")
-    {
-        val = eqn.GetCurrent<double>();
-    }
-    else if (commandName == "get_contact_charge")
-    {
-        val = eqn.GetCharge<double>();
-    }
-    else
-    {
-        dsAssert(false, "UNEXPECTED");
-    }
-
-    data.SetDoubleResult(val);
+  if (!errorString.empty())
+  {
+    data.SetErrorResult(errorString);
     return;
+  }
+
+  /*
+      const Region::ContactEquationPtrMap_t &cepm =
+     region->GetContactEquationList();
+      std::pair<Region::ContactEquationPtrMap_t::const_iterator,
+     Region::ContactEquationPtrMap_t::const_iterator> cpair =
+     cepm.equal_range(contactName);
+      Region::ContactEquationPtrMap_t::const_iterator cit = cpair.first;
+      Region::ContactEquationPtrMap_t::const_iterator cend = cpair.second;
+  */
+  const ContactEquationPtrMap_t &cepm = contact->GetEquationPtrList();
+
+  for (ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin();
+       cepmit != cepm.end(); ++cepmit)
+  {
+    if (cepmit->second.GetName() == equationName)
+    {
+      eqn = cepmit->second;
+    }
+  }
+
+  double val = 0.0;
+  if (eqn.GetName().empty())
+  {
+    std::ostringstream os;
+    os << "Could not find contact equation \"" << equationName << "\" "
+       << onContactonDevice(contactName, deviceName) << "\n";
+    errorString = os.str();
+    data.SetErrorResult(errorString);
+    return;
+  }
+  else if (commandName == "get_contact_current")
+  {
+    val = eqn.GetCurrent<double>();
+  }
+  else if (commandName == "get_contact_charge")
+  {
+    val = eqn.GetCharge<double>();
+  }
+  else
+  {
+    dsAssert(false, "UNEXPECTED");
+  }
+
+  data.SetDoubleResult(val);
+  return;
 }
 
-void
-setInitialConditionCmd(CommandHandler &data)
+void setInitialConditionCmd(CommandHandler &data)
 {
   std::string errorString;
 
   const std::string commandName = data.GetCommandName();
 
-  static dsGetArgs::Option option[] =
-  {
-    {"static_rhs",    "", dsGetArgs::optionType::LIST,   dsGetArgs::requiredType::REQUIRED, nullptr},
-    {"dynamic_rhs",    "", dsGetArgs::optionType::LIST,   dsGetArgs::requiredType::REQUIRED, nullptr},
-    {nullptr,  nullptr, dsGetArgs::optionType::STRING, dsGetArgs::requiredType::OPTIONAL}
-  };
+  static dsGetArgs::Option option[] = {
+      {"static_rhs", "", dsGetArgs::optionType::LIST,
+       dsGetArgs::requiredType::REQUIRED, nullptr},
+      {"dynamic_rhs", "", dsGetArgs::optionType::LIST,
+       dsGetArgs::requiredType::REQUIRED, nullptr},
+      {nullptr, nullptr, dsGetArgs::optionType::STRING,
+       dsGetArgs::requiredType::OPTIONAL}};
 
   bool error = data.processOptions(option, errorString);
 
   if (error)
   {
-      data.SetErrorResult(errorString);
-      return;
+    data.SetErrorResult(errorString);
+    return;
   }
 
-  static const std::array<const char *, 2> rhs_names = {"static_rhs", "dynamic_rhs"};
+  static const std::array<const char *, 2> rhs_names = {"static_rhs",
+                                                        "dynamic_rhs"};
   std::array<std::vector<double>, 2> rhs_vectors;
   for (size_t i = 0; i < rhs_names.size(); ++i)
   {
@@ -465,15 +498,19 @@ setInitialConditionCmd(CommandHandler &data)
       if (!ok)
       {
         std::ostringstream os;
-        os << "Option \"" << rhs_names[i] << "\" could not be converted to a list of double values\n";
+        os << "Option \"" << rhs_names[i]
+           << "\" could not be converted to a list of double values\n";
         errorString += os.str();
       }
     }
   }
-  if ((rhs_vectors[0].empty() || rhs_vectors[1].empty()) || (rhs_vectors[0].size() != rhs_vectors[1].size()))
+  if ((rhs_vectors[0].empty() || rhs_vectors[1].empty()) ||
+      (rhs_vectors[0].size() != rhs_vectors[1].size()))
   {
     std::ostringstream os;
-    os << "Node lists \"" << rhs_names[0] << "\", \"" << rhs_names[1] << "\" are empty or not the same size " << rhs_vectors[0].size() << " " << rhs_vectors[1].size() <<"\n";
+    os << "Node lists \"" << rhs_names[0] << "\", \"" << rhs_names[1]
+       << "\" are empty or not the same size " << rhs_vectors[0].size() << " "
+       << rhs_vectors[1].size() << "\n";
     errorString = os.str();
     data.SetErrorResult(errorString);
     return;
@@ -485,7 +522,8 @@ setInitialConditionCmd(CommandHandler &data)
   if (dbent.first)
   {
     auto oh = dbent.second.GetBoolean();
-    extended_solver = (oh.first && oh.second) && (!std::is_same<extended_type, double>::value);
+    extended_solver = (oh.first && oh.second) &&
+                      (!std::is_same<extended_type, double>::value);
   }
 
   if (extended_solver)
@@ -521,5 +559,4 @@ setInitialConditionCmd(CommandHandler &data)
   }
   data.SetEmptyResult();
 }
-}
-
+}  // namespace dsCommand

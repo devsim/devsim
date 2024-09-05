@@ -19,12 +19,8 @@ SPDX-License-Identifier: Apache-2.0
 using std::abs;
 #include <algorithm>
 
-const char *EdgeModel::DisplayTypeString[] = {
-  "nodisplay",
-  "scalar",
-  "vector",
-  nullptr
-};
+const char *EdgeModel::DisplayTypeString[] = {"nodisplay", "scalar", "vector",
+                                              nullptr};
 
 EdgeModel::~EdgeModel()
 {
@@ -45,7 +41,8 @@ bool EdgeModel::IsOne() const
   return model_data.IsUniform() && model_data.IsOne();
 }
 
-EdgeModel::EdgeModel(const std::string &nm, const RegionPtr rp, EdgeModel::DisplayType dt, const ContactPtr cp)
+EdgeModel::EdgeModel(const std::string &nm, const RegionPtr rp,
+                     EdgeModel::DisplayType dt, const ContactPtr cp)
     : name(nm),
       myregion(rp),
       mycontact(cp),
@@ -65,12 +62,11 @@ void EdgeModel::CalculateValues() const
     inprocess = true;
     try
     {
-        this->calcEdgeScalarValues();
-    }
-    catch (...)
+      this->calcEdgeScalarValues();
+    } catch (...)
     {
-        inprocess = false;
-        throw;
+      inprocess = false;
+      throw;
     }
     uptodate = true;
     inprocess = false;
@@ -79,15 +75,18 @@ void EdgeModel::CalculateValues() const
   if (FPECheck::CheckFPE())
   {
     std::ostringstream os;
-    os << "There was a floating point exception of type \"" << FPECheck::getFPEString() << "\"  while evaluating the edge model " << name
-    << " on Device: " << GetRegion().GetDevice()->GetName() << " on Region: " << GetRegion().GetName() << "\n";
+    os << "There was a floating point exception of type \""
+       << FPECheck::getFPEString() << "\"  while evaluating the edge model "
+       << name << " on Device: " << GetRegion().GetDevice()->GetName()
+       << " on Region: " << GetRegion().GetName() << "\n";
     FPECheck::ClearFPE();
-    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str().c_str());
+    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(),
+                             os.str().c_str());
   }
 }
 
 template <typename DoubleType>
-const EdgeScalarList<DoubleType> & EdgeModel::GetScalarValues() const
+const EdgeScalarList<DoubleType> &EdgeModel::GetScalarValues() const
 {
   CalculateValues();
 
@@ -96,11 +95,13 @@ const EdgeScalarList<DoubleType> & EdgeModel::GetScalarValues() const
   return model_data.GetValues<DoubleType>();
 }
 
-///// IF provided in general in the expression parser, WARN about missing derivatives
+///// IF provided in general in the expression parser, WARN about missing
+///derivatives
 template <typename DoubleType>
 NodeScalarList<DoubleType> EdgeModel::GetScalarValuesOnNodes() const
 {
-//  dsAssert(this->GetDisplayType() == EdgeModel::DisplayType::SCALAR, "UNEXPECTED");
+  //  dsAssert(this->GetDisplayType() == EdgeModel::DisplayType::SCALAR,
+  //  "UNEXPECTED");
 
   const Region &region = this->GetRegion();
 
@@ -138,11 +139,12 @@ NodeScalarList<DoubleType> EdgeModel::GetScalarValuesOnNodes() const
   return values;
 }
 
-///// IF provided in general in the expression parser, WARN about missing derivatives
+///// IF provided in general in the expression parser, WARN about missing
+///derivatives
 template <typename DoubleType>
 NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
 {
-//  dsAssert(this->GetDisplayType() == EdgeModel::VECTOR, "UNEXPECTED");
+  //  dsAssert(this->GetDisplayType() == EdgeModel::VECTOR, "UNEXPECTED");
 
   const Region &region = this->GetRegion();
 
@@ -155,9 +157,9 @@ NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
   EdgeVectorList<DoubleType> edge_scaling(number_edges);
   /// these are the accumulated values on each edge
   NodeVectorList<DoubleType> node_values(number_nodes);
-  /// these are how we divide out the values based on how much they are pointing in our direction
+  /// these are how we divide out the values based on how much they are pointing
+  /// in our direction
   NodeVectorList<DoubleType> node_scaling(number_nodes);
-
 
   const size_t dimension = region.GetDimension();
 
@@ -193,7 +195,6 @@ NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
     }
   }
 
-
   const ConstEdgeList &cel = region.GetEdgeList();
 
   for (size_t i = 0; i < number_edges; ++i)
@@ -207,17 +208,20 @@ NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
     //// this is the unit vector
     const Vector<DoubleType> &escal = edge_scaling[i];
     //// project the edge quantity onto the unit vector
-    const Vector<DoubleType> vval   = val * escal;
+    const Vector<DoubleType> vval = val * escal;
 
     /// This is the scaling based on the direction we are pointing in
-    const Vector<DoubleType> sval = Vector<DoubleType>(abs(escal.Getx()), abs(escal.Gety()), abs(escal.Getz()));
+    const Vector<DoubleType> sval = Vector<DoubleType>(
+        abs(escal.Getx()), abs(escal.Gety()), abs(escal.Getz()));
 
     //// Now we must actually weight each direction
-    const Vector<DoubleType> nval = Vector<DoubleType>(vval.Getx()*sval.Getx(), vval.Gety()*sval.Gety(), vval.Getz()*sval.Getz());
+    const Vector<DoubleType> nval =
+        Vector<DoubleType>(vval.Getx() * sval.Getx(), vval.Gety() * sval.Gety(),
+                           vval.Getz() * sval.Getz());
 
-    node_values[ni0]  += nval;
+    node_values[ni0] += nval;
     node_scaling[ni0] += sval;
-    node_values[ni1]  += nval;
+    node_values[ni1] += nval;
     node_scaling[ni1] += sval;
   }
   for (size_t i = 0; i < number_nodes; ++i)
@@ -228,7 +232,7 @@ NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
 
     if (scal.Getx() > 0.0)
     {
-      vval.Setx( vval.Getx() / scal.Getx());
+      vval.Setx(vval.Getx() / scal.Getx());
     }
     else
     {
@@ -237,7 +241,7 @@ NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
 
     if (scal.Gety() > 0.0)
     {
-      vval.Sety( vval.Gety() / scal.Gety());
+      vval.Sety(vval.Gety() / scal.Gety());
     }
     else
     {
@@ -246,7 +250,7 @@ NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
 
     if (scal.Getz() > 0.0)
     {
-      vval.Setz( vval.Getz() / scal.Getz());
+      vval.Setz(vval.Getz() / scal.Getz());
     }
     else
     {
@@ -256,7 +260,8 @@ NodeVectorList<DoubleType> EdgeModel::GetVectorValuesOnNodes() const
     node_values[i] = vval;
   }
 
-  /// TODO: optimize by reusing edge scaling vector on the region (e.g., getEdgeScalingVector)
+  /// TODO: optimize by reusing edge scaling vector on the region (e.g.,
+  /// getEdgeScalingVector)
 
   return node_values;
 }
@@ -307,33 +312,30 @@ void EdgeModel::SetValues(const DoubleType &v)
   uptodate = true;
 }
 
-
 void EdgeModel::MarkOld()
 {
   uptodate = false;
   myregion->SignalCallbacks(name);
 }
 
-void EdgeModel::MarkOld() const
-{
-  const_cast<EdgeModel *>(this)->MarkOld();
-}
+void EdgeModel::MarkOld() const { const_cast<EdgeModel *>(this)->MarkOld(); }
 
 void EdgeModel::RegisterCallback(const std::string &nm)
 {
   myregion->RegisterCallback(name, nm);
 }
 
-const std::vector<size_t> & EdgeModel::GetContactIndexes() const
+const std::vector<size_t> &EdgeModel::GetContactIndexes() const
 {
   if ((mycontact) && (atcontact.empty()))
   {
     const Region::NodeToConstEdgeList_t &nte = myregion->GetNodeToEdgeList();
 
     const ConstNodeList_t &cnodes = mycontact->GetNodes();
-    for (ConstNodeList_t::const_iterator it = cnodes.begin(); it != cnodes.end(); ++it)
+    for (ConstNodeList_t::const_iterator it = cnodes.begin();
+         it != cnodes.end(); ++it)
     {
-      const ConstEdgeList &el  = nte[(*it)->GetIndex()];
+      const ConstEdgeList &el = nte[(*it)->GetIndex()];
       for (ConstEdgeList::const_iterator jt = el.begin(); jt != el.end(); ++jt)
       {
         atcontact.push_back((*jt)->GetIndex());
@@ -362,10 +364,7 @@ const DoubleType &EdgeModel::GetUniformValue() const
   return model_data.GetUniformValue<DoubleType>();
 }
 
-void EdgeModel::SerializeBuiltIn(std::ostream &of) const
-{
-  of << "BUILTIN";
-}
+void EdgeModel::SerializeBuiltIn(std::ostream &of) const { of << "BUILTIN"; }
 
 void EdgeModel::DevsimSerialize(std::ostream &of) const
 {
@@ -396,7 +395,7 @@ const std::string EdgeModel::GetContactName() const
   std::string ret;
   if (mycontact)
   {
-  ret = mycontact->GetName();
+    ret = mycontact->GetName();
   }
   return ret;
 }
@@ -405,9 +404,8 @@ const std::string EdgeModel::GetContactName() const
 #include "EdgeModelInstantiate.cc"
 
 #ifdef DEVSIM_EXTENDED_PRECISION
-#undef  DBLTYPE
+#undef DBLTYPE
 #define DBLTYPE float128
 #include "Float128.hh"
 #include "EdgeModelInstantiate.cc"
 #endif
-

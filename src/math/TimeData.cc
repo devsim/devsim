@@ -25,11 +25,11 @@ TimeData<DoubleType>::TimeData() : IData(3), QData(3)
 template <typename DoubleType>
 TimeData<DoubleType> &TimeData<DoubleType>::GetInstance()
 {
-    if (!instance)
-    {
-        instance = new TimeData<DoubleType>;
-    }
-    return *instance;
+  if (!instance)
+  {
+    instance = new TimeData<DoubleType>;
+  }
+  return *instance;
 }
 
 template <typename DoubleType>
@@ -40,18 +40,20 @@ TimeData<DoubleType>::~TimeData()
 template <typename DoubleType>
 void TimeData<DoubleType>::DestroyInstance()
 {
-    delete instance;
-    instance = nullptr;
+  delete instance;
+  instance = nullptr;
 }
 
 template <typename DoubleType>
-void TimeData<DoubleType>::SetI(TimePoint_t tp, const std::vector<DoubleType> &v)
+void TimeData<DoubleType>::SetI(TimePoint_t tp,
+                                const std::vector<DoubleType> &v)
 {
   IData[static_cast<size_t>(tp)] = v;
 }
 
 template <typename DoubleType>
-void TimeData<DoubleType>::SetQ(TimePoint_t tp, const std::vector<DoubleType> &v)
+void TimeData<DoubleType>::SetQ(TimePoint_t tp,
+                                const std::vector<DoubleType> &v)
 {
   QData[static_cast<size_t>(tp)] = v;
 }
@@ -81,10 +83,13 @@ void TimeData<DoubleType>::ClearQ(TimePoint_t tp)
 }
 
 template <typename DoubleType>
-void TimeData<DoubleType>::AssembleI(TimePoint_t tp, DoubleType scale, std::vector<DoubleType> &v)
+void TimeData<DoubleType>::AssembleI(TimePoint_t tp, DoubleType scale,
+                                     std::vector<DoubleType> &v)
 {
-  dsAssert(!IData[static_cast<size_t>(tp)].empty(),            "UNEXPECTED missing time data");
-  dsAssert( IData[static_cast<size_t>(tp)].size() == v.size(), "UNEXPECTED time data mismatch");
+  dsAssert(!IData[static_cast<size_t>(tp)].empty(),
+           "UNEXPECTED missing time data");
+  dsAssert(IData[static_cast<size_t>(tp)].size() == v.size(),
+           "UNEXPECTED time data mismatch");
 
   const std::vector<DoubleType> &data = IData[static_cast<size_t>(tp)];
 
@@ -95,10 +100,13 @@ void TimeData<DoubleType>::AssembleI(TimePoint_t tp, DoubleType scale, std::vect
 }
 
 template <typename DoubleType>
-void TimeData<DoubleType>::AssembleQ(TimePoint_t tp, DoubleType scale, std::vector<DoubleType> &v)
+void TimeData<DoubleType>::AssembleQ(TimePoint_t tp, DoubleType scale,
+                                     std::vector<DoubleType> &v)
 {
-  dsAssert(!QData[static_cast<size_t>(tp)].empty(),            "UNEXPECTED missing time data");
-  dsAssert( QData[static_cast<size_t>(tp)].size() == v.size(), "UNEXPECTED time data mismatch");
+  dsAssert(!QData[static_cast<size_t>(tp)].empty(),
+           "UNEXPECTED missing time data");
+  dsAssert(QData[static_cast<size_t>(tp)].size() == v.size(),
+           "UNEXPECTED time data mismatch");
 
   const std::vector<DoubleType> &data = QData[static_cast<size_t>(tp)];
 
@@ -113,5 +121,3 @@ template class TimeData<double>;
 #ifdef DEVSIM_EXTENDED_PRECISION
 template class TimeData<float128>;
 #endif
-
-

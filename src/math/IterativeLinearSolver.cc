@@ -17,22 +17,25 @@ SPDX-License-Identifier: Apache-2.0
 
 #include <sstream>
 
-
-//#include <iostream>
+// #include <iostream>
 namespace dsMath {
 template <typename DoubleType>
-IterativeLinearSolver<DoubleType>::IterativeLinearSolver() : restart_(50), linear_iterations_(100), relative_tolerance_(1e-20)
-{}
+IterativeLinearSolver<DoubleType>::IterativeLinearSolver()
+    : restart_(50), linear_iterations_(100), relative_tolerance_(1e-20)
+{
+}
 
 template <>
-bool IterativeLinearSolver<double>::SolveImpl(Matrix<double> &mat, Preconditioner<double> &pre, std::vector<double> &sol, std::vector<double> &rhs)
+bool IterativeLinearSolver<double>::SolveImpl(Matrix<double> &mat,
+                                              Preconditioner<double> &pre,
+                                              std::vector<double> &sol,
+                                              std::vector<double> &rhs)
 {
-
   bool ret = false;
-//std::cerr << "Begin LUFactor Matrix\n";
+  // std::cerr << "Begin LUFactor Matrix\n";
   ret = pre.LUFactor(&mat);
-//std::cerr << "End LUFactor Matrix\n";
-//std::cerr << "Begin LUSolve Matrix\n";
+  // std::cerr << "End LUFactor Matrix\n";
+  // std::cerr << "Begin LUSolve Matrix\n";
   if (ret)
   {
     int m = restart_;
@@ -40,16 +43,10 @@ bool IterativeLinearSolver<double>::SolveImpl(Matrix<double> &mat, Preconditione
     double tol = relative_tolerance_;
     int ret = GMRES(mat, sol, rhs, pre, m, iter, tol);
     std::ostringstream os;
-    os
-      << "GMRES back vectors " << m
-      << "/" << restart_
-      << " linear iterations " << iter
-      << "/" << linear_iterations_
-      << " relative tolerance " << tol
-      << "/" << relative_tolerance_
-      << " linear convergence " << ret
-      << "\n";
-      OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
+    os << "GMRES back vectors " << m << "/" << restart_ << " linear iterations "
+       << iter << "/" << linear_iterations_ << " relative tolerance " << tol
+       << "/" << relative_tolerance_ << " linear convergence " << ret << "\n";
+    OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
   }
   else
   {
@@ -57,14 +54,17 @@ bool IterativeLinearSolver<double>::SolveImpl(Matrix<double> &mat, Preconditione
     os << "Matrix factorization failed\n";
     OutputStream::WriteOut(OutputStream::OutputType::ERROR, os.str());
   }
-//std::cerr << "End LUFactor Matrix\n";
+  // std::cerr << "End LUFactor Matrix\n";
 
   return ret;
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-bool IterativeLinearSolver<float128>::SolveImpl(Matrix<float128> &mat, Preconditioner<float128> &pre, std::vector<float128> &sol, std::vector<float128> &rhs)
+bool IterativeLinearSolver<float128>::SolveImpl(Matrix<float128> &mat,
+                                                Preconditioner<float128> &pre,
+                                                std::vector<float128> &sol,
+                                                std::vector<float128> &rhs)
 {
   bool ret = false;
   std::ostringstream os;
@@ -75,7 +75,9 @@ bool IterativeLinearSolver<float128>::SolveImpl(Matrix<float128> &mat, Precondit
 #endif
 
 template <typename DoubleType>
-bool IterativeLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, ComplexDoubleVec_t<DoubleType> &sol, ComplexDoubleVec_t<DoubleType> &rhs)
+bool IterativeLinearSolver<DoubleType>::ACSolveImpl(
+    Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre,
+    ComplexDoubleVec_t<DoubleType> &sol, ComplexDoubleVec_t<DoubleType> &rhs)
 {
   bool ret = false;
   {
@@ -87,7 +89,9 @@ bool IterativeLinearSolver<DoubleType>::ACSolveImpl(Matrix<DoubleType> &mat, Pre
 }
 
 template <typename DoubleType>
-bool IterativeLinearSolver<DoubleType>::NoiseSolveImpl(Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre, ComplexDoubleVec_t<DoubleType> &sol, ComplexDoubleVec_t<DoubleType> &rhs)
+bool IterativeLinearSolver<DoubleType>::NoiseSolveImpl(
+    Matrix<DoubleType> &mat, Preconditioner<DoubleType> &pre,
+    ComplexDoubleVec_t<DoubleType> &sol, ComplexDoubleVec_t<DoubleType> &rhs)
 {
   bool ret = false;
   {
@@ -98,11 +102,10 @@ bool IterativeLinearSolver<DoubleType>::NoiseSolveImpl(Matrix<DoubleType> &mat, 
   }
   return ret;
 }
-}
+}  // namespace dsMath
 
 template class dsMath::IterativeLinearSolver<double>;
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 template class dsMath::IterativeLinearSolver<float128>;
 #endif
-

@@ -9,32 +9,36 @@ SPDX-License-Identifier: Apache-2.0
 #define SOLVER_UTIL_HH
 #include <cstddef>
 
-namespace dsMath
-{
+namespace dsMath {
 namespace PEnum {
 enum class TransposeType_t;
 enum class LUType_t;
-}
+}  // namespace PEnum
 
-template <typename T> class LinearSolver;
-template <typename T> class Preconditioner;
-template <typename T> class CompressedMatrix;
+template <typename T>
+class LinearSolver;
+template <typename T>
+class Preconditioner;
+template <typename T>
+class CompressedMatrix;
 
 template <typename T>
 Preconditioner<T> *CreateDirectPreconditioner(size_t numeqns);
 
 template <typename T>
-Preconditioner<T> *CreatePreconditioner(LinearSolver<T> &itermethod, size_t numeqns);
+Preconditioner<T> *CreatePreconditioner(LinearSolver<T> &itermethod,
+                                        size_t numeqns);
 
 template <typename T>
-Preconditioner<T> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns);
+Preconditioner<T> *CreateACPreconditioner(PEnum::TransposeType_t trans_type,
+                                          size_t numeqns);
 
 template <typename T>
-CompressedMatrix<T> *CreateMatrix(Preconditioner<T> *preconditioner, bool is_complex=false);
+CompressedMatrix<T> *CreateMatrix(Preconditioner<T> *preconditioner,
+                                  bool is_complex = false);
 
 template <typename T>
 CompressedMatrix<T> *CreateACMatrix(Preconditioner<T> *preconditioner);
-} 
+}  // namespace dsMath
 
 #endif
-

@@ -13,8 +13,8 @@ SPDX-License-Identifier: Apache-2.0
 #include "TetrahedronEdgeModel.hh"
 
 template <typename DoubleType>
-EdgeCouple<DoubleType>::EdgeCouple(RegionPtr rp) :
-EdgeModel("EdgeCouple", rp, EdgeModel::DisplayType::SCALAR)
+EdgeCouple<DoubleType>::EdgeCouple(RegionPtr rp)
+    : EdgeModel("EdgeCouple", rp, EdgeModel::DisplayType::SCALAR)
 {
   const size_t dimension = rp->GetDimension();
   if ((dimension == 2) || (dimension == 3))
@@ -23,11 +23,10 @@ EdgeModel("EdgeCouple", rp, EdgeModel::DisplayType::SCALAR)
   }
 }
 
-
 template <typename DoubleType>
 void EdgeCouple<DoubleType>::calcEdgeScalarValues() const
 {
-  const size_t dimension=GetRegion().GetDimension();
+  const size_t dimension = GetRegion().GetDimension();
 
   if (dimension == 1)
   {
@@ -51,7 +50,8 @@ void EdgeCouple<DoubleType>::calcEdgeScalarValues() const
 template <typename DoubleType>
 void EdgeCouple<DoubleType>::calcEdgeCouple2d() const
 {
-  ConstTriangleEdgeModelPtr eec = GetRegion().GetTriangleEdgeModel("ElementEdgeCouple");
+  ConstTriangleEdgeModelPtr eec =
+      GetRegion().GetTriangleEdgeModel("ElementEdgeCouple");
   dsAssert(eec.get(), "ElementEdgeCouple missing");
 
   std::vector<DoubleType> ev = eec->GetValuesOnEdges<DoubleType>();
@@ -61,11 +61,11 @@ void EdgeCouple<DoubleType>::calcEdgeCouple2d() const
 template <typename DoubleType>
 void EdgeCouple<DoubleType>::calcEdgeCouple3d() const
 {
-  ConstTetrahedronEdgeModelPtr eec = GetRegion().GetTetrahedronEdgeModel("ElementEdgeCouple");
+  ConstTetrahedronEdgeModelPtr eec =
+      GetRegion().GetTetrahedronEdgeModel("ElementEdgeCouple");
   dsAssert(eec.get(), "ElementEdgeCouple missing");
   std::vector<DoubleType> ev = eec->GetValuesOnEdges<DoubleType>();
   SetValues(ev);
-
 }
 
 template <typename DoubleType>
@@ -79,5 +79,3 @@ template class EdgeCouple<double>;
 #include "Float128.hh"
 template class EdgeCouple<float128>;
 #endif
-
-

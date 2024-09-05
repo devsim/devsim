@@ -16,8 +16,7 @@ SPDX-License-Identifier: Apache-2.0
 #include <algorithm>
 
 namespace dsMath {
-namespace
-{
+namespace {
 void preswap(std::vector<double> &xin, std::vector<double> &xout)
 {
   xin.swap(xout);
@@ -30,53 +29,58 @@ void preswap(ComplexDoubleVec_t<double> &xin, ComplexDoubleVec_t<double> &xout)
 {
   xin.swap(xout);
 }
-void convertToType(ComplexDoubleVec_t<double> &xin, ComplexDoubleVec_t<double> &xout)
+void convertToType(ComplexDoubleVec_t<double> &xin,
+                   ComplexDoubleVec_t<double> &xout)
 {
   xout.swap(xin);
 }
-}
-}
+}  // namespace
+}  // namespace dsMath
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 namespace dsMath {
-namespace
-{
-void preswap(std::vector<double> &xin, std::vector<float128> &xout)
-{
-}
+namespace {
+void preswap(std::vector<double> &xin, std::vector<float128> &xout) {}
 void convertToType(std::vector<double> &xin, std::vector<float128> &xout)
 {
   xout.resize(xin.size());
   std::copy(xin.begin(), xin.end(), xout.begin());
 }
-void preswap(ComplexDoubleVec_t<double> &xin, ComplexDoubleVec_t<float128> &xout)
+void preswap(ComplexDoubleVec_t<double> &xin,
+             ComplexDoubleVec_t<float128> &xout)
 {
 }
-void convertToType(ComplexDoubleVec_t<double> &xin, ComplexDoubleVec_t<float128> &xout)
+void convertToType(ComplexDoubleVec_t<double> &xin,
+                   ComplexDoubleVec_t<float128> &xout)
 {
   xout.resize(xin.size());
-  std::transform(xin.begin(), xin.end(), xout.begin(), [](auto x){return static_cast<ComplexDouble_t<float128>>(x);});
+  std::transform(xin.begin(), xin.end(), xout.begin(), [](auto x) {
+    return static_cast<ComplexDouble_t<float128>>(x);
+  });
 }
-}
-}
+}  // namespace
+}  // namespace dsMath
 #endif
-
 
 namespace dsMath {
 template <typename DoubleType>
-ExternalPreconditioner<DoubleType>::ExternalPreconditioner(size_t sz, PEnum::TransposeType_t transpose) : Preconditioner<DoubleType>(sz, transpose)
+ExternalPreconditioner<DoubleType>::ExternalPreconditioner(
+    size_t sz, PEnum::TransposeType_t transpose)
+    : Preconditioner<DoubleType>(sz, transpose)
 {
 }
 
 template <typename DoubleType>
-dsMath::CompressionType ExternalPreconditioner<DoubleType>::GetRealMatrixCompressionType() const
+dsMath::CompressionType
+ExternalPreconditioner<DoubleType>::GetRealMatrixCompressionType() const
 {
   return compression_type_;
 }
 
 template <typename DoubleType>
-dsMath::CompressionType ExternalPreconditioner<DoubleType>::GetComplexMatrixCompressionType() const
+dsMath::CompressionType
+ExternalPreconditioner<DoubleType>::GetComplexMatrixCompressionType() const
 {
   return compression_type_;
 }
@@ -87,23 +91,25 @@ ExternalPreconditioner<DoubleType>::~ExternalPreconditioner()
 }
 
 template <typename DoubleType>
-bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &error_string)
+bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh,
+                                              std::string &error_string)
 {
   if (!oh.IsCallable())
   {
-    error_string += "python solver object \"" + oh.GetString() + "\" is not callable\n";
+    error_string +=
+        "python solver object \"" + oh.GetString() + "\" is not callable\n";
     return false;
   }
   const std::string return_keys[] = {
-    "matrix_format",
-    "solver_object",
-    "status",
-    "message",
+      "matrix_format",
+      "solver_object",
+      "status",
+      "message",
   };
   ObjectHolderMap_t init_args = {
-    {"action", ObjectHolder("init")},
-    {"transpose", ObjectHolder(this->GetTransposeSolve())},
-    {"n", ObjectHolder(static_cast<int>(this->size()))},
+      {"action", ObjectHolder("init")},
+      {"transpose", ObjectHolder(this->GetTransposeSolve())},
+      {"n", ObjectHolder(static_cast<int>(this->size()))},
   };
 
   command_handle_ = oh;
@@ -124,11 +130,14 @@ bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &erro
     }
     else
     {
-      for (const auto &arg: return_keys)
+      for (const auto &arg : return_keys)
       {
-        if (auto it = result_dictionary.find(arg); it == result_dictionary.end())
+        if (auto it = result_dictionary.find(arg);
+            it == result_dictionary.end())
         {
-          error_string += "python solver object did not return a dictionary containing \"" + arg + "\"\n";
+          error_string +=
+              "python solver object did not return a dictionary containing \"" +
+              arg + "\"\n";
           ret = false;
         }
       }
@@ -145,7 +154,9 @@ bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &erro
         }
         else
         {
-          error_string += R"(python solver object did not return a dictionary containing "csc" or "csr" for "matrix_format")" "\n";
+          error_string +=
+              R"(python solver object did not return a dictionary containing "csc" or "csr" for "matrix_format")"
+              "\n";
           ret = false;
         }
         auto status = result_dictionary["status"].GetBoolean().second;
@@ -162,24 +173,27 @@ bool ExternalPreconditioner<DoubleType>::init(ObjectHolder oh, std::string &erro
 template <typename DoubleType>
 bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
 {
-  dsAssert(command_handle_.IsCallable(), "python solver command is not callable\n");
+  dsAssert(command_handle_.IsCallable(),
+           "python solver command is not callable\n");
   dsAssert(!command_data_.empty(), "python solver invalid data\n");
 
-  CompressedMatrix<DoubleType> *cm = dynamic_cast<CompressedMatrix<DoubleType> *>(m);
+  CompressedMatrix<DoubleType> *cm =
+      dynamic_cast<CompressedMatrix<DoubleType> *>(m);
   dsAssert(cm, "UNEXPECTED");
   dsAssert(cm->GetCompressionType() == compression_type_, "UNEXPECTED");
 
   const std::string return_keys[] = {
-    "status",
-    "message",
+      "status",
+      "message",
   };
 
   ObjectHolderMap_t factor_args = {
-    {"action", ObjectHolder("factor")},
-    {"solver_object", command_data_},
-    {"Ap", CreateIntPODArray(cm->GetAp())},
-    {"Ai", CreateIntPODArray(cm->GetAi())},
-    {"is_same_symbolic", ObjectHolder(cm->GetSymbolicStatus() == SymbolicStatus_t::SAME_SYMBOLIC)},
+      {"action", ObjectHolder("factor")},
+      {"solver_object", command_data_},
+      {"Ap", CreateIntPODArray(cm->GetAp())},
+      {"Ai", CreateIntPODArray(cm->GetAi())},
+      {"is_same_symbolic", ObjectHolder(cm->GetSymbolicStatus() ==
+                                        SymbolicStatus_t::SAME_SYMBOLIC)},
   };
 
   if (cm->GetMatrixType() == MatrixType::COMPLEX)
@@ -187,7 +201,7 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
     const auto &ax = cm->GetAx();
     const auto &az = cm->GetAz();
     dsAssert(ax.size() == az.size(), "UNEXPECTED");
-    std::vector<DoubleType> ac(2*ax.size());
+    std::vector<DoubleType> ac(2 * ax.size());
     for (size_t i = 0, j = 0; i < ax.size(); ++i)
     {
       ac[j++] = ax[i];
@@ -222,11 +236,14 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
     }
     else
     {
-      for (const auto &arg: return_keys)
+      for (const auto &arg : return_keys)
       {
-        if (auto it = result_dictionary.find(arg); it == result_dictionary.end())
+        if (auto it = result_dictionary.find(arg);
+            it == result_dictionary.end())
         {
-          error_string += "python solver object did not return a dictionary containing \"" + arg + "\"\n";
+          error_string +=
+              "python solver object did not return a dictionary containing \"" +
+              arg + "\"\n";
           ret = false;
         }
       }
@@ -240,21 +257,23 @@ bool ExternalPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
 }
 
 template <typename DoubleType>
-void ExternalPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const
+void ExternalPreconditioner<DoubleType>::DerivedLUSolve(
+    DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const
 {
-  dsAssert(command_handle_.IsCallable(), "python solver command is not callable\n");
+  dsAssert(command_handle_.IsCallable(),
+           "python solver command is not callable\n");
   dsAssert(!command_data_.empty(), "python solver invalid data\n");
 
   const std::string return_keys[] = {
-    "status",
-    "message",
-    "x",
+      "status",
+      "message",
+      "x",
   };
   ObjectHolderMap_t factor_args = {
-    {"action", ObjectHolder("solve")},
-    {"solver_object", command_data_},
-    {"is_complex", ObjectHolder(false)},
-    {"b", CreateDoublePODArray(b)},
+      {"action", ObjectHolder("solve")},
+      {"solver_object", command_data_},
+      {"is_complex", ObjectHolder(false)},
+      {"b", CreateDoublePODArray(b)},
   };
 
   Interpreter interpreter;
@@ -277,11 +296,14 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> 
     }
     else
     {
-      for (const auto &arg: return_keys)
+      for (const auto &arg : return_keys)
       {
-        if (auto it = result_dictionary.find(arg); it == result_dictionary.end())
+        if (auto it = result_dictionary.find(arg);
+            it == result_dictionary.end())
         {
-          error_string += "python solver object did not return a dictionary containing \"" + arg + "\"\n";
+          error_string +=
+              "python solver object did not return a dictionary containing \"" +
+              arg + "\"\n";
           ret = false;
         }
       }
@@ -299,22 +321,25 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> 
 }
 
 template <typename DoubleType>
-void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const
+void ExternalPreconditioner<DoubleType>::DerivedLUSolve(
+    ComplexDoubleVec_t<DoubleType> &x,
+    const ComplexDoubleVec_t<DoubleType> &b) const
 {
-  dsAssert(command_handle_.IsCallable(), "python solver command is not callable\n");
+  dsAssert(command_handle_.IsCallable(),
+           "python solver command is not callable\n");
   dsAssert(!command_data_.empty(), "python solver invalid data\n");
 
   const std::string return_keys[] = {
-    "status",
-    "message",
-    "x",
+      "status",
+      "message",
+      "x",
   };
 
   ObjectHolderMap_t factor_args = {
-    {"action", ObjectHolder("solve")},
-    {"solver_object", command_data_},
-    {"is_complex", ObjectHolder(true)},
-    {"b", CreateComplexDoublePODArray(b)},
+      {"action", ObjectHolder("solve")},
+      {"solver_object", command_data_},
+      {"is_complex", ObjectHolder(true)},
+      {"b", CreateComplexDoublePODArray(b)},
   };
 
   Interpreter interpreter;
@@ -337,11 +362,14 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
     }
     else
     {
-      for (const auto &arg: return_keys)
+      for (const auto &arg : return_keys)
       {
-        if (auto it = result_dictionary.find(arg); it == result_dictionary.end())
+        if (auto it = result_dictionary.find(arg);
+            it == result_dictionary.end())
         {
-          error_string += "python solver object did not return a dictionary containing \"" + arg + "\"\n";
+          error_string +=
+              "python solver object did not return a dictionary containing \"" +
+              arg + "\"\n";
           ret = false;
         }
       }
@@ -359,12 +387,10 @@ void ExternalPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<Doubl
     }
   }
 }
-}
-
+}  // namespace dsMath
 
 template class dsMath::ExternalPreconditioner<double>;
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 template class dsMath::ExternalPreconditioner<float128>;
 #endif
-

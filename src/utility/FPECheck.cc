@@ -17,19 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 FPECheck::FPEFlag_t FPECheck::fpe_raised_ = 0;
 
 #ifndef _WIN32
-void fpehandle(int)
-{
-  assert(0);
-}
+void fpehandle(int) { assert(0); }
 #endif
 
 void FPECheck::InitializeFPE()
 {
-    /// Prevent the signal handler from trapping the exception and aborting
-    /// This has no effect unless there is an feenableexcept
+  /// Prevent the signal handler from trapping the exception and aborting
+  /// This has no effect unless there is an feenableexcept
 #ifndef _WIN32
-    signal(SIGFPE, fpehandle);
-    ////// THIS IS TO CAUSE THE FPE TO TRIGGER A SIGNAL
+  signal(SIGFPE, fpehandle);
+  ////// THIS IS TO CAUSE THE FPE TO TRIGGER A SIGNAL
 #if 0
     int x=fegetexcept();
     feenableexcept(x| FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
@@ -46,23 +43,22 @@ void FPECheck::InitializeFPE()
     mode.
 */
 #if 1
-    fpu_control_t cw;
-    _FPU_GETCW(cw);
-    cw &= ~_FPU_EXTENDED;
-    cw |= _FPU_DOUBLE;
-    _FPU_SETCW(cw);
+  fpu_control_t cw;
+  _FPU_GETCW(cw);
+  cw &= ~_FPU_EXTENDED;
+  cw |= _FPU_DOUBLE;
+  _FPU_SETCW(cw);
 #endif
 #endif
 
-    /// Set the flags we want to catch
-    ClearFPE();
+  /// Set the flags we want to catch
+  ClearFPE();
 }
-
 
 void FPECheck::ClearFPE()
 {
-    feclearexcept(FE_ALL_EXCEPT);
-    fpe_raised_ = FPECheck::getClearedFlag();
+  feclearexcept(FE_ALL_EXCEPT);
+  fpe_raised_ = FPECheck::getClearedFlag();
 }
 
 FPECheck::FPEFlag_t FPECheck::getFPEMask()
@@ -75,10 +71,7 @@ FPECheck::FPEFlag_t FPECheck::getFPEFlags()
   return fetestexcept(getFPEMask()) | fpe_raised_;
 }
 
-bool FPECheck::CheckFPE()
-{
-  return getFPEFlags() != 0;
-}
+bool FPECheck::CheckFPE() { return getFPEFlags() != 0; }
 
 bool FPECheck::CheckFPE(FPECheck::FPEFlag_t x)
 {
@@ -164,12 +157,10 @@ std::string FPECheck::getFPEString()
   return getFPEString(feFlags);
 }
 
-FPECheck::FPEFlag_t FPECheck::getClearedFlag()
-{
-  return 0;
-}
+FPECheck::FPEFlag_t FPECheck::getClearedFlag() { return 0; }
 
-FPECheck::FPEFlag_t FPECheck::combineFPEFlags(FPECheck::FPEFlag_t x, FPECheck::FPEFlag_t y)
+FPECheck::FPEFlag_t FPECheck::combineFPEFlags(FPECheck::FPEFlag_t x,
+                                              FPECheck::FPEFlag_t y)
 {
   return x | y;
 }
@@ -213,7 +204,7 @@ int main()
   }
 
   FPECheck::ClearFPE();
-  double y = 3.0*4;
+  double y = 3.0 * 4;
   if (FPECheck::CheckFPE())
   {
     std::cerr << "There was an FPE" << std::endl;
@@ -229,4 +220,3 @@ int main()
   }
 }
 #endif /*TEST_FPE_CODE*/
-

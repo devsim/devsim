@@ -10,28 +10,36 @@ SPDX-License-Identifier: Apache-2.0
 #include "TriangleEdgeModel.hh"
 #include <string>
 
-TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
-TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, TriangleEdgeModelPtr);
+TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr,
+                                                TriangleEdgeModel::DisplayType);
+TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr,
+                                                TriangleEdgeModel::DisplayType,
+                                                TriangleEdgeModelPtr);
 
 template <typename DoubleType>
-class TriangleEdgeSubModel : public TriangleEdgeModel
-{
-    public:
-        TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
-        // This model depends on this model to calculate values
-        TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, ConstTriangleEdgeModelPtr);
+class TriangleEdgeSubModel : public TriangleEdgeModel {
+ public:
+  TriangleEdgeSubModel(const std::string &, RegionPtr,
+                       TriangleEdgeModel::DisplayType);
+  // This model depends on this model to calculate values
+  TriangleEdgeSubModel(const std::string &, RegionPtr,
+                       TriangleEdgeModel::DisplayType,
+                       ConstTriangleEdgeModelPtr);
 
-        void Serialize(std::ostream &) const;
+  void Serialize(std::ostream &) const;
 
-        static TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
-        static TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, ConstTriangleEdgeModelPtr);
+  static TriangleEdgeModelPtr CreateTriangleEdgeSubModel(
+      const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
+  static TriangleEdgeModelPtr CreateTriangleEdgeSubModel(
+      const std::string &, RegionPtr, TriangleEdgeModel::DisplayType,
+      ConstTriangleEdgeModelPtr);
 
-    private:
-        void calcTriangleEdgeScalarValues() const;
-        // If we are an auxilary model, create our values from the parent
-        mutable WeakConstTriangleEdgeModelPtr parentModel;
-        // Detect whether parent model still exists
-        mutable std::string parentModelName;
+ private:
+  void calcTriangleEdgeScalarValues() const;
+  // If we are an auxilary model, create our values from the parent
+  mutable WeakConstTriangleEdgeModelPtr parentModel;
+  // Detect whether parent model still exists
+  mutable std::string parentModelName;
 };
 
 #endif

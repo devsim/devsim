@@ -37,4 +37,3 @@ DoubleType vec_min(DoubleType);
 template <typename DoubleType>
 DoubleType dot2dfunc(DoubleType, DoubleType, DoubleType, DoubleType);
 #endif
-

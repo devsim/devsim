@@ -15,7 +15,6 @@ void resetDevsimCmd(CommandHandler &);
 void getDeviceListCmd(CommandHandler &);
 void getRegionListCmd(CommandHandler &);
 void getElementNodeListCmd(CommandHandler &);
-}
+}  // namespace dsCommand
 
 #endif
-

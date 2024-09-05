@@ -29,42 +29,46 @@ template <typename DoubleType>
 class CompressedMatrix;
 
 class SuperLUData {
-  public:
-    SuperLUData(size_t /*numeqns*/, bool /*transpose*/, PEnum::LUType_t /*lutype*/);
-    ~SuperLUData();
+ public:
+  SuperLUData(size_t /*numeqns*/, bool /*transpose*/,
+              PEnum::LUType_t /*lutype*/);
+  ~SuperLUData();
 
-    template <typename DoubleType>
-    bool LUFactorMatrix(CompressedMatrix<DoubleType> *);
+  template <typename DoubleType>
+  bool LUFactorMatrix(CompressedMatrix<DoubleType> *);
 
-    template <typename DoubleType>
-    void LUSolve(DoubleVec_t<DoubleType> &/*x*/, const DoubleVec_t<DoubleType> &/*b*/);
+  template <typename DoubleType>
+  void LUSolve(DoubleVec_t<DoubleType> & /*x*/,
+               const DoubleVec_t<DoubleType> & /*b*/);
 
-    template <typename DoubleType>
-    void LUSolve(ComplexDoubleVec_t<DoubleType> &/*x*/, const ComplexDoubleVec_t<DoubleType> &/*b*/);
+  template <typename DoubleType>
+  void LUSolve(ComplexDoubleVec_t<DoubleType> & /*x*/,
+               const ComplexDoubleVec_t<DoubleType> & /*b*/);
 
-    void DeleteStorage();
+  void DeleteStorage();
 
-  protected:
-    template <typename DoubleType>
-    bool LUFactorRealMatrix(CompressedMatrix<DoubleType> *, const DoubleVec_t<double> &);
-    template <typename DoubleType>
-    bool LUFactorComplexMatrix(CompressedMatrix<DoubleType> *, const ComplexDoubleVec_t<double> &);
+ protected:
+  template <typename DoubleType>
+  bool LUFactorRealMatrix(CompressedMatrix<DoubleType> *,
+                          const DoubleVec_t<double> &);
+  template <typename DoubleType>
+  bool LUFactorComplexMatrix(CompressedMatrix<DoubleType> *,
+                             const ComplexDoubleVec_t<double> &);
 
-  private:
-    int          numeqns_;
-    bool         transpose_;
-    PEnum::LUType_t     lutype_;
-    int         *perm_r_;
-    int         *perm_c_;
-    int         *etree_;
-    SuperMatrix *L_;
-    SuperMatrix *U_;
-    int          info_;
+ private:
+  int numeqns_;
+  bool transpose_;
+  PEnum::LUType_t lutype_;
+  int *perm_r_;
+  int *perm_c_;
+  int *etree_;
+  SuperMatrix *L_;
+  SuperMatrix *U_;
+  int info_;
 };
 
 #if 0
 int check_perm(const int n, const int *perm);
 #endif
-}
+}  // namespace dsMath
 #endif
-

@@ -9,22 +9,24 @@ SPDX-License-Identifier: Apache-2.0
 #define EDGE_SCALAR_DATA_HH
 #include <vector>
 
-template<typename T>
+template <typename T>
 using EdgeScalarList = std::vector<T>;
 
-template<typename T>
+template <typename T>
 using NodeScalarList = std::vector<T>;
 
 #include "ScalarData.hh"
 
 class EdgeModel;
 
-template<typename T>
+template <typename T>
 using EdgeScalarData = ScalarData<EdgeModel, T>;
 
 class Region;
 
 template <typename DoubleType>
-void createEdgeModelsFromNodeModel(const NodeScalarList<DoubleType> &, const Region &, EdgeScalarList<DoubleType> &, EdgeScalarList<DoubleType> &);
+void createEdgeModelsFromNodeModel(const NodeScalarList<DoubleType> &,
+                                   const Region &, EdgeScalarList<DoubleType> &,
+                                   EdgeScalarList<DoubleType> &);
 
 #endif

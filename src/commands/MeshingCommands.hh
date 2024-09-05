@@ -33,7 +33,6 @@ void finalizeMeshCmd(CommandHandler &);
 void loadDevicesCmd(CommandHandler &);
 void writeDevicesCmd(CommandHandler &);
 void getMeshListCmd(CommandHandler &);
-}
+}  // namespace dsCommand
 
 #endif
-

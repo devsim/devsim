@@ -70,13 +70,15 @@ DirectSolver GetDirectSolver()
     else if (val == "custom")
     {
       ret = DirectSolver::CUSTOM;
-      if (auto csolver = gdata.GetDBEntryOnGlobal("solver_callback"); csolver.first)
+      if (auto csolver = gdata.GetDBEntryOnGlobal("solver_callback");
+          csolver.first)
       {
         if (!csolver.second.IsCallable())
         {
           ret = DirectSolver::UNKNOWN;
           std::ostringstream os;
-          os << "Solver \"custom\" specified, but \"solver_callback\" not callable.\n";
+          os << "Solver \"custom\" specified, but \"solver_callback\" not "
+                "callable.\n";
           OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
         }
       }
@@ -91,14 +93,17 @@ DirectSolver GetDirectSolver()
     else
     {
       std::ostringstream os;
-      os << "Unrecognized \"direct_solver\" parameter value \"" << val << "\". Valid options are \"mkl_pardiso\", \"superlu\" or \"custom\".\n";
+      os << "Unrecognized \"direct_solver\" parameter value \"" << val
+         << "\". Valid options are \"mkl_pardiso\", \"superlu\" or "
+            "\"custom\".\n";
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, os.str());
     }
     return ret;
   }
 
   std::ostringstream os;
-  os << "Parameter \"direct_solver\" parameter not set. Valid options are \"mkl_pardiso\", or \"custom\".\n";
+  os << "Parameter \"direct_solver\" parameter not set. Valid options are "
+        "\"mkl_pardiso\", or \"custom\".\n";
 
 #if defined(USE_MKL_PARDISO)
   if (MathLoader::IsMKLLoaded())
@@ -118,7 +123,9 @@ DirectSolver GetDirectSolver()
 }
 
 template <typename T>
-dsMath::Preconditioner<T> *CreateExternalPreconditioner(size_t numeqns, dsMath::PEnum::TransposeType_t transtype, std::string &errorstring)
+dsMath::Preconditioner<T> *CreateExternalPreconditioner(
+    size_t numeqns, dsMath::PEnum::TransposeType_t transtype,
+    std::string &errorstring)
 {
   // TODO: use helper function to encapsulate
   auto p = new dsMath::ExternalPreconditioner<T>(numeqns, transtype);
@@ -134,10 +141,9 @@ dsMath::Preconditioner<T> *CreateExternalPreconditioner(size_t numeqns, dsMath::
   }
   return p;
 }
-}
+}  // namespace
 
-namespace dsMath
-{
+namespace dsMath {
 template <typename T>
 Preconditioner<T> *CreateDirectPreconditioner(size_t numeqns)
 {
@@ -146,19 +152,22 @@ Preconditioner<T> *CreateDirectPreconditioner(size_t numeqns)
   if (auto s = GetDirectSolver(); s == DirectSolver::CUSTOM)
   {
     std::string errorstring;
-    preconditioner = CreateExternalPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS, errorstring);
+    preconditioner = CreateExternalPreconditioner<T>(
+        numeqns, PEnum::TransposeType_t::NOTRANS, errorstring);
     dsAssert(preconditioner, errorstring);
   }
 #ifdef USE_MKL_PARDISO
   else if (s == DirectSolver::MKLPARDISO)
   {
-    preconditioner = new MKLPardisoPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS);
+    preconditioner = new MKLPardisoPreconditioner<T>(
+        numeqns, PEnum::TransposeType_t::NOTRANS);
   }
 #endif
-#if defined (USE_SUPERLU_PRECONDITIONER)
+#if defined(USE_SUPERLU_PRECONDITIONER)
   else if (s == DirectSolver::SUPERLU)
   {
-    preconditioner = new SuperLUPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
+    preconditioner = new SuperLUPreconditioner<T>(
+        numeqns, PEnum::TransposeType_t::NOTRANS, PEnum::LUType_t::FULL);
   }
 #endif
   else
@@ -170,14 +179,16 @@ Preconditioner<T> *CreateDirectPreconditioner(size_t numeqns)
 }
 
 template <typename T>
-Preconditioner<T> *CreatePreconditioner(LinearSolver<T> &itermethod, size_t numeqns)
+Preconditioner<T> *CreatePreconditioner(LinearSolver<T> &itermethod,
+                                        size_t numeqns)
 {
   Preconditioner<T> *preconditioner = nullptr;
 
 #if defined(LOAD_MATHLIBS)
   if (dynamic_cast<IterativeLinearSolver<T> *>(&itermethod))
   {
-    preconditioner = new BlockPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS);
+    preconditioner =
+        new BlockPreconditioner<T>(numeqns, PEnum::TransposeType_t::NOTRANS);
   }
   else
 #endif
@@ -189,37 +200,42 @@ Preconditioner<T> *CreatePreconditioner(LinearSolver<T> &itermethod, size_t nume
 }
 
 template <typename DoubleType>
-Preconditioner<DoubleType> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns)
+Preconditioner<DoubleType> *CreateACPreconditioner(
+    PEnum::TransposeType_t trans_type, size_t numeqns)
 {
-    Preconditioner<DoubleType> *preconditioner = nullptr;
+  Preconditioner<DoubleType> *preconditioner = nullptr;
 
-    if (auto s = GetDirectSolver(); s == DirectSolver::CUSTOM)
-    {
-      std::string errorstring;
-      preconditioner = CreateExternalPreconditioner<DoubleType>(numeqns, trans_type, errorstring);
-      dsAssert(preconditioner, errorstring);
-    }
+  if (auto s = GetDirectSolver(); s == DirectSolver::CUSTOM)
+  {
+    std::string errorstring;
+    preconditioner = CreateExternalPreconditioner<DoubleType>(
+        numeqns, trans_type, errorstring);
+    dsAssert(preconditioner, errorstring);
+  }
 #ifdef USE_MKL_PARDISO
-    else if (s == DirectSolver::MKLPARDISO)
-    {
-      preconditioner = new MKLPardisoPreconditioner<DoubleType>(numeqns, trans_type);
-    }
+  else if (s == DirectSolver::MKLPARDISO)
+  {
+    preconditioner =
+        new MKLPardisoPreconditioner<DoubleType>(numeqns, trans_type);
+  }
 #endif
 #ifdef USE_SUPERLU_PRECONDITIONER
-    else if (s == DirectSolver::SUPERLU)
-    {
-      preconditioner = new SuperLUPreconditioner<DoubleType>(numeqns, trans_type, PEnum::LUType_t::FULL);
-    }
+  else if (s == DirectSolver::SUPERLU)
+  {
+    preconditioner = new SuperLUPreconditioner<DoubleType>(
+        numeqns, trans_type, PEnum::LUType_t::FULL);
+  }
 #endif
-    else
-    {
-      dsAssert(false, "Unexpected Solver Type");
-    }
-    return preconditioner;
+  else
+  {
+    dsAssert(false, "Unexpected Solver Type");
+  }
+  return preconditioner;
 }
 
 template <typename DoubleType>
-CompressedMatrix<DoubleType> *CreateMatrix(Preconditioner<DoubleType> *preconditioner, bool is_complex)
+CompressedMatrix<DoubleType> *CreateMatrix(
+    Preconditioner<DoubleType> *preconditioner, bool is_complex)
 {
   const auto numeqns = preconditioner->size();
 
@@ -231,26 +247,35 @@ CompressedMatrix<DoubleType> *CreateMatrix(Preconditioner<DoubleType> *precondit
     compression_type = preconditioner->GetComplexMatrixCompressionType();
   }
 
-  return new CompressedMatrix<DoubleType>(numeqns, matrix_type, compression_type);
+  return new CompressedMatrix<DoubleType>(numeqns, matrix_type,
+                                          compression_type);
 }
 
 template <typename DoubleType>
-CompressedMatrix<DoubleType> *CreateACMatrix(Preconditioner<DoubleType> *preconditioner)
+CompressedMatrix<DoubleType> *CreateACMatrix(
+    Preconditioner<DoubleType> *preconditioner)
 {
   return CreateMatrix(preconditioner, true);
 }
 
 template Preconditioner<double> *CreateDirectPreconditioner(size_t numeqns);
-template Preconditioner<double> *CreatePreconditioner(LinearSolver<double> &itermethod, size_t numeqns);
-template Preconditioner<double> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns);
-template CompressedMatrix<double> *CreateMatrix(Preconditioner<double> *preconditioner, bool is_complex);
-template CompressedMatrix<double> *CreateACMatrix(Preconditioner<double> *preconditioner);
+template Preconditioner<double> *CreatePreconditioner(
+    LinearSolver<double> &itermethod, size_t numeqns);
+template Preconditioner<double> *CreateACPreconditioner(
+    PEnum::TransposeType_t trans_type, size_t numeqns);
+template CompressedMatrix<double> *CreateMatrix(
+    Preconditioner<double> *preconditioner, bool is_complex);
+template CompressedMatrix<double> *CreateACMatrix(
+    Preconditioner<double> *preconditioner);
 #ifdef DEVSIM_EXTENDED_PRECISION
 template Preconditioner<float128> *CreateDirectPreconditioner(size_t numeqns);
-template Preconditioner<float128> *CreatePreconditioner(LinearSolver<float128> &itermethod, size_t numeqns);
-template Preconditioner<float128> *CreateACPreconditioner(PEnum::TransposeType_t trans_type, size_t numeqns);
-template CompressedMatrix<float128> *CreateMatrix(Preconditioner<float128> *preconditioner, bool is_complex);
-template CompressedMatrix<float128> *CreateACMatrix(Preconditioner<float128> *preconditioner);
+template Preconditioner<float128> *CreatePreconditioner(
+    LinearSolver<float128> &itermethod, size_t numeqns);
+template Preconditioner<float128> *CreateACPreconditioner(
+    PEnum::TransposeType_t trans_type, size_t numeqns);
+template CompressedMatrix<float128> *CreateMatrix(
+    Preconditioner<float128> *preconditioner, bool is_complex);
+template CompressedMatrix<float128> *CreateACMatrix(
+    Preconditioner<float128> *preconditioner);
 #endif
-}
-
+}  // namespace dsMath

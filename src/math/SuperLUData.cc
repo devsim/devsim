@@ -51,15 +51,20 @@ int check_perm(const int n, const int * const perm)
 }
 #endif
 
-
-SuperLUData::SuperLUData(size_t numeqns, bool tran, PEnum::LUType_t lutype) : numeqns_(numeqns), transpose_(tran), lutype_(lutype), perm_r_(nullptr), perm_c_(nullptr), etree_(nullptr), L_(nullptr), U_(nullptr), info_(0)
+SuperLUData::SuperLUData(size_t numeqns, bool tran, PEnum::LUType_t lutype)
+    : numeqns_(numeqns),
+      transpose_(tran),
+      lutype_(lutype),
+      perm_r_(nullptr),
+      perm_c_(nullptr),
+      etree_(nullptr),
+      L_(nullptr),
+      U_(nullptr),
+      info_(0)
 {
 }
 
-SuperLUData::~SuperLUData()
-{
-  DeleteStorage();
-}
+SuperLUData::~SuperLUData() { DeleteStorage(); }
 
 template <>
 bool SuperLUData::LUFactorMatrix(CompressedMatrix<double> *cm)
@@ -97,7 +102,8 @@ bool SuperLUData::LUFactorMatrix(CompressedMatrix<float128> *cm)
     ComplexDoubleVec_t<double> dvals(fvals.size());
     for (size_t i = 0; i < fvals.size(); ++i)
     {
-      dvals[i] = ComplexDouble_t<double>(static_cast<double>(fvals[i].real()), static_cast<double>(fvals[i].imag()));
+      dvals[i] = ComplexDouble_t<double>(static_cast<double>(fvals[i].real()),
+                                         static_cast<double>(fvals[i].imag()));
     }
     ret = LUFactorComplexMatrix(cm, dvals);
   }
@@ -106,31 +112,32 @@ bool SuperLUData::LUFactorMatrix(CompressedMatrix<float128> *cm)
 #endif
 
 template <typename DoubleType>
-bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const DoubleVec_t<double> &Vals)
+bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm,
+                                     const DoubleVec_t<double> &Vals)
 {
-  SymbolicStatus_t sstatus= cm->GetSymbolicStatus();
+  SymbolicStatus_t sstatus = cm->GetSymbolicStatus();
 
   const int n = numeqns_;
 
   int *perm_c = perm_c_; /* column permutation vector */
-  int *etree  = etree_;  /* column elimination tree */
+  int *etree = etree_;   /* column elimination tree */
 
   if (perm_c_ && (sstatus == SymbolicStatus_t::SAME_SYMBOLIC))
   {
     //// This is so it doesn't get deleted by DeleteStorage
     perm_c_ = nullptr;
-    etree_  = nullptr;
+    etree_ = nullptr;
   }
   else
   {
-    perm_c = intMalloc(n+1);
-    etree  = intMalloc(n+1);
+    perm_c = intMalloc(n + 1);
+    etree = intMalloc(n + 1);
   }
 
   DeleteStorage();
 
-  const IntVec_t    &Cols = cm->GetCols();
-  const IntVec_t    &Rows = cm->GetRows();
+  const IntVec_t &Cols = cm->GetCols();
+  const IntVec_t &Rows = cm->GetRows();
 
   const int nnz = Rows.size();
 
@@ -138,7 +145,7 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
   SuperMatrix *L, *U;
   int *perm_r; /* row permutations from partial pivoting */
 
-  int      panel_size, permc_spec, relax;
+  int panel_size, permc_spec, relax;
 
   superlu_options_t options;
 
@@ -154,9 +161,9 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
     ilu_set_default_options(&options);
   }
 
-//  options.ColPerm = NATURAL;
+  //  options.ColPerm = NATURAL;
   options.ColPerm = MMD_ATA;
-//  options.ColPerm = COLAMD;
+  //  options.ColPerm = COLAMD;
   if (transpose_)
   {
     options.Trans = TRANS;
@@ -166,19 +173,18 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
     options.Trans = NOTRANS;
   }
 
-
   /* Initialize the statistics variables. */
   StatInit(&stat);
 
-  int * const rows = const_cast<int *>(&Rows[0]);
-  int * const cols = const_cast<int *>(&Cols[0]);
-  double * const vals = const_cast<double *>(&Vals[0]);
+  int *const rows = const_cast<int *>(&Rows[0]);
+  int *const cols = const_cast<int *>(&Cols[0]);
+  double *const vals = const_cast<double *>(&Vals[0]);
 
-  dCreate_CompCol_Matrix(&A, n, n, nnz, vals, rows, cols,
-                         SLU_NC, SLU_D, SLU_GE);
-  L = (SuperMatrix *) SUPERLU_MALLOC( sizeof(SuperMatrix) );
-  U = (SuperMatrix *) SUPERLU_MALLOC( sizeof(SuperMatrix) );
-  perm_r = intMalloc(n+1);
+  dCreate_CompCol_Matrix(&A, n, n, nnz, vals, rows, cols, SLU_NC, SLU_D,
+                         SLU_GE);
+  L = (SuperMatrix *)SUPERLU_MALLOC(sizeof(SuperMatrix));
+  U = (SuperMatrix *)SUPERLU_MALLOC(sizeof(SuperMatrix));
+  perm_r = intMalloc(n + 1);
 
   /*
    * Get column permutation vector perm_c[], according to permc_spec:
@@ -220,27 +226,26 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
 
   if (lutype_ == PEnum::LUType_t::FULL)
   {
-  #if SUPERLU_MAJOR_VERSION == 5
-    dgstrf(&options, &AC, relax, panel_size,
-           etree, nullptr, 0, perm_c, perm_r, L, U, &Glu, &stat, &info_);
-  #else
-    dgstrf(&options, &AC, relax, panel_size,
-           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
-  #endif
+#if SUPERLU_MAJOR_VERSION == 5
+    dgstrf(&options, &AC, relax, panel_size, etree, nullptr, 0, perm_c, perm_r,
+           L, U, &Glu, &stat, &info_);
+#else
+    dgstrf(&options, &AC, relax, panel_size, etree, nullptr, 0, perm_c, perm_r,
+           L, U, &stat, &info_);
+#endif
   }
   else if (lutype_ == PEnum::LUType_t::INCOMPLETE)
   {
-  #if SUPERLU_MAJOR_VERSION == 5
-    dgsitrf(&options, &AC, relax, panel_size,
-           etree, nullptr, 0, perm_c, perm_r, L, U, &Glu, &stat, &info_);
-  #else
-    dgsitrf(&options, &AC, relax, panel_size,
-           etree, nullptr, 0, perm_c, perm_r, L, U, &stat, &info_);
-  #endif
+#if SUPERLU_MAJOR_VERSION == 5
+    dgsitrf(&options, &AC, relax, panel_size, etree, nullptr, 0, perm_c, perm_r,
+            L, U, &Glu, &stat, &info_);
+#else
+    dgsitrf(&options, &AC, relax, panel_size, etree, nullptr, 0, perm_c, perm_r,
+            L, U, &stat, &info_);
+#endif
   }
 
-
-//  dsAssert(info == 0, "MATRIX FACTORIZATION FAILED");
+  //  dsAssert(info == 0, "MATRIX FACTORIZATION FAILED");
 
 #if 0
   if ( *info == 0 ) {
@@ -268,11 +273,11 @@ bool SuperLUData::LUFactorRealMatrix(CompressedMatrix<DoubleType> *cm, const Dou
   L_ = L;
   U_ = U;
   perm_c_ = perm_c;
-  etree_ =  etree;
+  etree_ = etree;
   perm_r_ = perm_r;
 
   /* Free un-wanted storage */
-//  SUPERLU_FREE(etree);
+  //  SUPERLU_FREE(etree);
   Destroy_SuperMatrix_Store(&A);
   Destroy_CompCol_Permuted(&AC);
   StatFree(&stat);
@@ -294,15 +299,15 @@ void SuperLUData::LUSolve(DoubleVec_t<double> &x, const DoubleVec_t<double> &b)
     return;
   }
 
-/*
-  SuperMatrix A, AC, B;
-*/
+  /*
+    SuperMatrix A, AC, B;
+  */
   SuperMatrix B;
   SuperMatrix *L, *U;
   int *perm_r; /* row permutations from partial pivoting */
   int *perm_c; /* column permutation vector */
 
-  trans_t  trans;
+  trans_t trans;
 
   const int nrhs = 1;
   const int n = numeqns_;
@@ -331,7 +336,7 @@ void SuperLUData::LUSolve(DoubleVec_t<double> &x, const DoubleVec_t<double> &b)
   dCreate_Dense_Matrix(&B, n, nrhs, &x[0], n, SLU_DN, SLU_D, SLU_GE);
 
   /* Solve the system A*X=B, overwriting B with X. */
-  dgstrs (trans, L, U, perm_c, perm_r, &B, &stat, &info_);
+  dgstrs(trans, L, U, perm_c, perm_r, &B, &stat, &info_);
 
   Destroy_SuperMatrix_Store(&B);
   StatFree(&stat);
@@ -339,7 +344,8 @@ void SuperLUData::LUSolve(DoubleVec_t<double> &x, const DoubleVec_t<double> &b)
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void SuperLUData::LUSolve(DoubleVec_t<float128> &x, const DoubleVec_t<float128> &b)
+void SuperLUData::LUSolve(DoubleVec_t<float128> &x,
+                          const DoubleVec_t<float128> &b)
 {
   DoubleVec_t<double> b64(b.size());
   DoubleVec_t<double> x64;
@@ -361,37 +367,37 @@ void SuperLUData::DeleteStorage()
 {
   if (perm_r_)
   {
-    SUPERLU_FREE (perm_r_);
+    SUPERLU_FREE(perm_r_);
     perm_r_ = nullptr;
   }
 
   if (perm_c_)
   {
-    SUPERLU_FREE (perm_c_);
+    SUPERLU_FREE(perm_c_);
     perm_c_ = nullptr;
   }
 
   if (etree_)
   {
-    SUPERLU_FREE (etree_);
+    SUPERLU_FREE(etree_);
     etree_ = nullptr;
   }
 
   if (L_)
   {
     Destroy_SuperNode_Matrix(L_);
-    SUPERLU_FREE (L_);
+    SUPERLU_FREE(L_);
     L_ = nullptr;
   }
 
   if (U_)
   {
     Destroy_CompCol_Matrix(U_);
-    SUPERLU_FREE (U_);
+    SUPERLU_FREE(U_);
     U_ = nullptr;
   }
 }
-}
+}  // namespace dsMath
 
 #if 0
 // Specialized above
@@ -403,8 +409,8 @@ template bool dsMath::SuperLUData::LUFactorMatrix(CompressedMatrix<float128> *cm
 
 #ifdef SUPERLU_MAJOR_VERSION
 extern "C" {
-extern const char * const devsim_superluversion = TOSTRING(SUPERLU_MAJOR_VERSION) "." TOSTRING(SUPERLU_MINOR_VERSION) "."  TOSTRING(SUPERLU_PATCH_VERSION);
+extern const char *const devsim_superluversion =
+    TOSTRING(SUPERLU_MAJOR_VERSION) "." TOSTRING(
+        SUPERLU_MINOR_VERSION) "." TOSTRING(SUPERLU_PATCH_VERSION);
 }
 #endif
-
-

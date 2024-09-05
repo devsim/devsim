@@ -9,10 +9,6 @@ SPDX-License-Identifier: Apache-2.0
 
 const std::string dsException::msg = "DEVSIM FATAL: ";
 
-dsException::dsException(const char *w) : std::runtime_error(msg + w)
-{
-}
+dsException::dsException(const char *w) : std::runtime_error(msg + w) {}
 
-dsException::dsException(const std::string &w) : std::runtime_error(msg + w)
-{
-}
+dsException::dsException(const std::string &w) : std::runtime_error(msg + w) {}

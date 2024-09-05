@@ -11,50 +11,58 @@ SPDX-License-Identifier: Apache-2.0
 #include "dsAssert.hh"
 
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType>::ScalarData(const T &em) : refdata(0), isuniform(false), uniform_value(0.0)
+ScalarData<T, DoubleType>::ScalarData(const T &em)
+    : refdata(0), isuniform(false), uniform_value(0.0)
 {
   if (em.IsUniform())
   {
-    isuniform     = true;
+    isuniform = true;
     uniform_value = em.template GetUniformValue<DoubleType>();
   }
   else
   {
     refdata = &em;
-//    values = em.GetScalarValues();
+    //    values = em.GetScalarValues();
   }
 
   length = em.GetLength();
-
 }
 
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType>::ScalarData(const std::vector<DoubleType> &esl) : refdata(0), isuniform(false), uniform_value(0.0)
+ScalarData<T, DoubleType>::ScalarData(const std::vector<DoubleType> &esl)
+    : refdata(0), isuniform(false), uniform_value(0.0)
 {
   values = esl;
   length = values.size();
 }
 
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType>::ScalarData(DoubleType v, size_t l) : refdata(0), isuniform(true), uniform_value(v), length(l)
+ScalarData<T, DoubleType>::ScalarData(DoubleType v, size_t l)
+    : refdata(0), isuniform(true), uniform_value(v), length(l)
 {
 }
 
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType>::ScalarData(const ScalarData<T, DoubleType> &em) : refdata(em.refdata), values(em.values), isuniform(em.isuniform), uniform_value(em.uniform_value), length(em.length)
+ScalarData<T, DoubleType>::ScalarData(const ScalarData<T, DoubleType> &em)
+    : refdata(em.refdata),
+      values(em.values),
+      isuniform(em.isuniform),
+      uniform_value(em.uniform_value),
+      length(em.length)
 {
 }
 
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::operator=(const ScalarData &em)
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::operator=(
+    const ScalarData &em)
 {
   if (this != &em)
   {
-    refdata       = em.refdata;
-    values        = em.values;
-    isuniform     = em.isuniform;
+    refdata = em.refdata;
+    values = em.values;
+    isuniform = em.isuniform;
     uniform_value = em.uniform_value;
-    length        = em.length;
+    length = em.length;
   }
   return *this;
 }
@@ -86,7 +94,8 @@ DoubleType ScalarData<T, DoubleType>::operator[](size_t x) const
   }
   else if (refdata)
   {
-    const std::vector<DoubleType> &y = refdata->template GetScalarValues<DoubleType>();
+    const std::vector<DoubleType> &y =
+        refdata->template GetScalarValues<DoubleType>();
 
     ret = y[x];
   }
@@ -125,16 +134,20 @@ const std::vector<DoubleType> &ScalarData<T, DoubleType>::GetScalarList() const
   return *data;
 }
 
-template <typename T, typename DoubleType> template <typename V>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::op_equal_model(const T &nm, const V &myop)
+template <typename T, typename DoubleType>
+template <typename V>
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::op_equal_model(
+    const T &nm, const V &myop)
 {
   ScalarData<T, DoubleType> onsd(nm);
   this->op_equal_data(onsd, myop);
   return *this;
 }
 
-template <typename T, typename DoubleType> template <typename V>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::op_equal_data(const ScalarData<T, DoubleType> &esd, const V &myop)
+template <typename T, typename DoubleType>
+template <typename V>
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::op_equal_data(
+    const ScalarData<T, DoubleType> &esd, const V &myop)
 {
   if (isuniform && esd.isuniform)
   {
@@ -157,8 +170,10 @@ ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::op_equal_data(const Scalar
   return *this;
 }
 
-template <typename T, typename DoubleType> template <typename V>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::op_equal_scalar(const DoubleType &v, const V &myop)
+template <typename T, typename DoubleType>
+template <typename V>
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::op_equal_scalar(
+    const DoubleType &v, const V &myop)
 {
   if (isuniform)
   {
@@ -173,9 +188,9 @@ ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::op_equal_scalar(const Doub
   return *this;
 }
 
-
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::times_equal_model(const T &nm)
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::times_equal_model(
+    const T &nm)
 {
   if (this->IsZero() || nm.IsOne())
   {
@@ -197,7 +212,8 @@ ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::times_equal_model(const T 
 }
 
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::times_equal_data(const ScalarData<T, DoubleType> &esd)
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::times_equal_data(
+    const ScalarData<T, DoubleType> &esd)
 {
   if (this->IsZero() || esd.IsOne())
   {
@@ -219,7 +235,8 @@ ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::times_equal_data(const Sca
 }
 
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::times_equal_scalar(DoubleType x)
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::times_equal_scalar(
+    DoubleType x)
 {
   if ((this->IsZero()) || (x == 1.0))
   {
@@ -243,9 +260,9 @@ ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::times_equal_scalar(DoubleT
   return *this;
 }
 
-
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::plus_equal_model(const T &nm)
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::plus_equal_model(
+    const T &nm)
 {
   if (this->IsZero())
   {
@@ -260,7 +277,8 @@ ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::plus_equal_model(const T &
 }
 
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::plus_equal_data(const ScalarData<T, DoubleType> &esd)
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::plus_equal_data(
+    const ScalarData<T, DoubleType> &esd)
 {
   if (this->IsZero())
   {
@@ -277,9 +295,9 @@ ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::plus_equal_data(const Scal
   return *this;
 }
 
-
 template <typename T, typename DoubleType>
-ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::plus_equal_scalar(DoubleType x)
+ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::plus_equal_scalar(
+    DoubleType x)
 {
   if (x == 0.0)
   {
@@ -297,5 +315,3 @@ ScalarData<T, DoubleType> &ScalarData<T, DoubleType>::plus_equal_scalar(DoubleTy
 
   return *this;
 }
-
-

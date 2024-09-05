@@ -18,16 +18,16 @@ SPDX-License-Identifier: Apache-2.0
 #include <vector>
 #include <iosfwd>
 
-template<typename T>
+template <typename T>
 using EdgeScalarList = std::vector<T>;
 
-template<typename T>
+template <typename T>
 using EdgeVectorList = std::vector<Vector<T> >;
 
-template<typename T>
+template <typename T>
 using NodeScalarList = std::vector<T>;
 
-template<typename T>
+template <typename T>
 using NodeVectorList = std::vector<Vector<T> >;
 
 class EdgeModel;
@@ -48,155 +48,124 @@ typedef Edge *EdgePtr;
 typedef const Edge *ConstEdgePtr;
 
 class EdgeModel {
-    public:
-        enum class DisplayType {NODISPLAY, SCALAR, VECTOR, UNKNOWN};
-        EdgeModel(const std::string &, const RegionPtr, EdgeModel::DisplayType, const ContactPtr x = nullptr);
-        virtual ~EdgeModel();
+ public:
+  enum class DisplayType { NODISPLAY, SCALAR, VECTOR, UNKNOWN };
+  EdgeModel(const std::string &, const RegionPtr, EdgeModel::DisplayType,
+            const ContactPtr x = nullptr);
+  virtual ~EdgeModel();
 
-        const std::string &GetName() const {
-            return name;
-        }
+  const std::string &GetName() const { return name; }
 
-        template <typename DoubleType>
-        const EdgeScalarList<DoubleType> &GetScalarValues() const;
+  template <typename DoubleType>
+  const EdgeScalarList<DoubleType> &GetScalarValues() const;
 
-        ///// Does not provide Derivatives!!!!!!!!!!!!!
-        template <typename DoubleType>
-        NodeScalarList<DoubleType> GetScalarValuesOnNodes() const;
+  ///// Does not provide Derivatives!!!!!!!!!!!!!
+  template <typename DoubleType>
+  NodeScalarList<DoubleType> GetScalarValuesOnNodes() const;
 
-        ///// Does not provide Derivatives!!!!!!!!!!!!!
-        template <typename DoubleType>
-        NodeVectorList<DoubleType> GetVectorValuesOnNodes() const;
+  ///// Does not provide Derivatives!!!!!!!!!!!!!
+  template <typename DoubleType>
+  NodeVectorList<DoubleType> GetVectorValuesOnNodes() const;
 
-        const std::vector<size_t> &GetContactIndexes() const;
+  const std::vector<size_t> &GetContactIndexes() const;
 
-        void MarkOld();
+  void MarkOld();
 
-        bool IsUpToDate() const
-        {
-            return uptodate;
-        }
+  bool IsUpToDate() const { return uptodate; }
 
-        /// Use this to break cycles
-        /// Only really valid in context of ExprModels.
-        bool IsInProcess() const
-        {
-            return inprocess;
-        }
+  /// Use this to break cycles
+  /// Only really valid in context of ExprModels.
+  bool IsInProcess() const { return inprocess; }
 
-        template <typename DoubleType>
-        void SetValues(const EdgeScalarList<DoubleType> &);
+  template <typename DoubleType>
+  void SetValues(const EdgeScalarList<DoubleType> &);
 
-        template <typename DoubleType>
-        void SetValues(const DoubleType &);
+  template <typename DoubleType>
+  void SetValues(const DoubleType &);
 
-        const Region &GetRegion() const
-        {
-            return *myregion;
-        }
+  const Region &GetRegion() const { return *myregion; }
 
-        bool AtContact() const
-        {
-            return (mycontact != nullptr);
-        }
+  bool AtContact() const { return (mycontact != nullptr); }
 
-        const Contact &GetContact() const
-        {
-            return *mycontact;
-        }
+  const Contact &GetContact() const { return *mycontact; }
 
-        const std::string GetContactName() const;
+  const std::string GetContactName() const;
 
-        void SetContact(const ContactPtr);
+  void SetContact(const ContactPtr);
 
-        EdgeModel::DisplayType GetDisplayType() const
-        {
-          return displayType;
-        }
+  EdgeModel::DisplayType GetDisplayType() const { return displayType; }
 
-        const char *GetDisplayTypeString() const
-        {
-          return DisplayTypeString[static_cast<size_t>(displayType)];
-        }
+  const char *GetDisplayTypeString() const
+  {
+    return DisplayTypeString[static_cast<size_t>(displayType)];
+  }
 
-        void SetDisplayType(EdgeModel::DisplayType dt)
-        {
-          displayType = dt;
-        }
+  void SetDisplayType(EdgeModel::DisplayType dt) { displayType = dt; }
 
-        ConstEdgeModelPtr GetConstSelfPtr() const
-        {
-          return myself.lock();
-        }
+  ConstEdgeModelPtr GetConstSelfPtr() const { return myself.lock(); }
 
-        EdgeModelPtr GetSelfPtr()
-        {
-          return myself.lock();
-        }
+  EdgeModelPtr GetSelfPtr() { return myself.lock(); }
 
-        bool IsUniform() const;
+  bool IsUniform() const;
 
-        template <typename DoubleType>
-        const DoubleType &GetUniformValue() const;
+  template <typename DoubleType>
+  const DoubleType &GetUniformValue() const;
 
-        size_t GetLength() const
-        {
-          return model_data.GetLength();
-        }
+  size_t GetLength() const { return model_data.GetLength(); }
 
-        bool IsZero() const;
+  bool IsZero() const;
 
-        bool IsOne() const;
+  bool IsOne() const;
 
-        void DevsimSerialize(std::ostream &) const;
+  void DevsimSerialize(std::ostream &) const;
 
-        const std::string &GetRegionName() const;
+  const std::string &GetRegionName() const;
 
-        const std::string &GetDeviceName() const;
+  const std::string &GetDeviceName() const;
 
-    protected:
-        virtual void Serialize(std::ostream &) const = 0;
+ protected:
+  virtual void Serialize(std::ostream &) const = 0;
 
-        void SerializeBuiltIn(std::ostream &) const;
+  void SerializeBuiltIn(std::ostream &) const;
 
-        void RegisterCallback(const std::string &);
+  void RegisterCallback(const std::string &);
 
-        template <typename DoubleType>
-        void SetValues(const EdgeScalarList<DoubleType> &) const;
+  template <typename DoubleType>
+  void SetValues(const EdgeScalarList<DoubleType> &) const;
 
-        template <typename DoubleType>
-        void SetValues(const DoubleType &) const;
+  template <typename DoubleType>
+  void SetValues(const DoubleType &) const;
 
-        void MarkOld() const;
+  void MarkOld() const;
 
-    private:
-        void CalculateValues() const;
-        // Actually performs the computation
-        // The nonvirtual method does any required setup.
-        //virtual double calcEdgeScalarValue(EdgePtr) const = 0;
-        virtual void calcEdgeScalarValues() const = 0;
+ private:
+  void CalculateValues() const;
+  // Actually performs the computation
+  // The nonvirtual method does any required setup.
+  // virtual double calcEdgeScalarValue(EdgePtr) const = 0;
+  virtual void calcEdgeScalarValues() const = 0;
 
+  EdgeModel();
+  EdgeModel(const EdgeModel &);
+  EdgeModel &operator=(const EdgeModel &);
 
-        EdgeModel();
-        EdgeModel(const EdgeModel &);
-        EdgeModel &operator=(const EdgeModel &);
-
-        // required for models that store their data
-        // (some models may be created on the fly)
-        std::string name;
-        // need to know my region to get database data and appropriate node and edge lists
-        RegionPtr   myregion;
-        WeakEdgeModelPtr myself;
-        ContactPtr  mycontact;
-        mutable bool uptodate;
-        mutable bool inprocess;
-        mutable std::vector<size_t> atcontact;
-        DisplayType displayType;
-        mutable ModelDataHolder model_data;
-        static const char *DisplayTypeString[];
+  // required for models that store their data
+  // (some models may be created on the fly)
+  std::string name;
+  // need to know my region to get database data and appropriate node and edge
+  // lists
+  RegionPtr myregion;
+  WeakEdgeModelPtr myself;
+  ContactPtr mycontact;
+  mutable bool uptodate;
+  mutable bool inprocess;
+  mutable std::vector<size_t> atcontact;
+  DisplayType displayType;
+  mutable ModelDataHolder model_data;
+  static const char *DisplayTypeString[];
 };
 
-template <typename T1, typename T2, typename ... Args>
+template <typename T1, typename T2, typename... Args>
 EdgeModelPtr create_edge_model(bool use_extended, Args &&...args)
 {
   EdgeModel *ret;
@@ -212,4 +181,3 @@ EdgeModelPtr create_edge_model(bool use_extended, Args &&...args)
 }
 
 #endif
-

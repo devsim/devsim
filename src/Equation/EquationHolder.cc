@@ -10,11 +10,13 @@ SPDX-License-Identifier: Apache-2.0
 #include "MatrixEntries.hh"
 namespace {
 template <typename T1, typename T2>
-void ConvertVector(const std::vector<std::complex<T1>> &src, std::vector<std::complex<T2>> &dest)
+void ConvertVector(const std::vector<std::complex<T1>> &src,
+                   std::vector<std::complex<T2>> &dest)
 {
   for (size_t i = 0; i < src.size(); ++i)
   {
-    dest[i] = std::complex<T2>(static_cast<T2>(src[i].real()), static_cast<T2>(src[i].imag()));
+    dest[i] = std::complex<T2>(static_cast<T2>(src[i].real()),
+                               static_cast<T2>(src[i].imag()));
   }
 }
 
@@ -28,23 +30,26 @@ void ConvertVector(const std::vector<T1> &src, std::vector<T2> &dest)
 }
 
 template <typename T1, typename T2>
-void ConvertRealRowColVec(const dsMath::RealRowColValueVec<T1> &src, dsMath::RealRowColValueVec<T2> &dest)
+void ConvertRealRowColVec(const dsMath::RealRowColValueVec<T1> &src,
+                          dsMath::RealRowColValueVec<T2> &dest)
 {
-  for (auto & x : src)
+  for (auto &x : src)
   {
-      dest.push_back(dsMath::RealRowColVal<T2>(x.row, x.col, static_cast<T2>(x.val)));
+    dest.push_back(
+        dsMath::RealRowColVal<T2>(x.row, x.col, static_cast<T2>(x.val)));
   }
 }
 
 template <typename T1, typename T2>
-void ConvertRHSEntryVec(const dsMath::RHSEntryVec<T1> &src, dsMath::RHSEntryVec<T2> &dest)
+void ConvertRHSEntryVec(const dsMath::RHSEntryVec<T1> &src,
+                        dsMath::RHSEntryVec<T2> &dest)
 {
-    for (auto &x : src)
-    {
-      dest.push_back(std::make_pair(x.first, static_cast<T2>(x.second)));
-    }
+  for (auto &x : src)
+  {
+    dest.push_back(std::make_pair(x.first, static_cast<T2>(x.second)));
+  }
 }
-}
+}  // namespace
 
 template <>
 EquationHolder::EquationHolder(Equation<double> *eq) : double_(eq)
@@ -58,9 +63,7 @@ EquationHolder::EquationHolder(Equation<float128> *eq) : float128_(eq)
 }
 #endif
 
-EquationHolder::~EquationHolder()
-{
-}
+EquationHolder::~EquationHolder() {}
 
 bool EquationHolder::operator==(const EquationHolder &eq) const
 {
@@ -210,7 +213,8 @@ void EquationHolder::Update(NodeModel &nm, const std::vector<float128> &v) const
 #endif
 
 template <>
-void EquationHolder::ACUpdate<double>(NodeModel &nm, const dsMath::ComplexDoubleVec_t<double> &v) const
+void EquationHolder::ACUpdate<double>(
+    NodeModel &nm, const dsMath::ComplexDoubleVec_t<double> &v) const
 {
   if (double_)
   {
@@ -228,7 +232,8 @@ void EquationHolder::ACUpdate<double>(NodeModel &nm, const dsMath::ComplexDouble
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void EquationHolder::ACUpdate<float128>(NodeModel &nm, const dsMath::ComplexDoubleVec_t<float128> &v) const
+void EquationHolder::ACUpdate<float128>(
+    NodeModel &nm, const dsMath::ComplexDoubleVec_t<float128> &v) const
 {
   if (double_)
   {
@@ -244,7 +249,9 @@ void EquationHolder::ACUpdate<float128>(NodeModel &nm, const dsMath::ComplexDoub
 #endif
 
 template <>
-void EquationHolder::NoiseUpdate<double>(const std::string &nm, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<double> &rhs) const
+void EquationHolder::NoiseUpdate<double>(
+    const std::string &nm, const std::vector<PermutationEntry> &permvec,
+    const dsMath::ComplexDoubleVec_t<double> &rhs) const
 {
   if (double_)
   {
@@ -262,7 +269,9 @@ void EquationHolder::NoiseUpdate<double>(const std::string &nm, const std::vecto
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void EquationHolder::NoiseUpdate<float128>(const std::string &nm, const std::vector<PermutationEntry> &permvec, const dsMath::ComplexDoubleVec_t<float128> &rhs) const
+void EquationHolder::NoiseUpdate<float128>(
+    const std::string &nm, const std::vector<PermutationEntry> &permvec,
+    const dsMath::ComplexDoubleVec_t<float128> &rhs) const
 {
   if (double_)
   {
@@ -278,7 +287,9 @@ void EquationHolder::NoiseUpdate<float128>(const std::string &nm, const std::vec
 #endif
 
 template <>
-void EquationHolder::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void EquationHolder::Assemble(dsMath::RealRowColValueVec<double> &m,
+                              dsMath::RHSEntryVec<double> &v,
+                              dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   if (double_)
   {
@@ -288,7 +299,7 @@ void EquationHolder::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHS
   else if (float128_)
   {
     dsMath::RealRowColValueVec<float128> mm;
-    dsMath::RHSEntryVec<float128>        vv;
+    dsMath::RHSEntryVec<float128> vv;
     (*float128_).Assemble(mm, vv, w, t);
     ConvertRealRowColVec(mm, m);
     ConvertRHSEntryVec(vv, v);
@@ -298,12 +309,14 @@ void EquationHolder::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHS
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void EquationHolder::Assemble(dsMath::RealRowColValueVec<float128> &m, dsMath::RHSEntryVec<float128> &v, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void EquationHolder::Assemble(dsMath::RealRowColValueVec<float128> &m,
+                              dsMath::RHSEntryVec<float128> &v,
+                              dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   if (double_)
   {
     dsMath::RealRowColValueVec<double> mm;
-    dsMath::RHSEntryVec<double>        vv;
+    dsMath::RHSEntryVec<double> vv;
     (*double_).Assemble(mm, vv, w, t);
     ConvertRealRowColVec(mm, m);
     ConvertRHSEntryVec(vv, v);
@@ -315,7 +328,8 @@ void EquationHolder::Assemble(dsMath::RealRowColValueVec<float128> &m, dsMath::R
 }
 #endif
 
-void EquationHolder::GetCommandOptions(std::map<std::string, ObjectHolder> &m) const
+void EquationHolder::GetCommandOptions(
+    std::map<std::string, ObjectHolder> &m) const
 {
   if (double_)
   {
@@ -350,4 +364,3 @@ template double EquationHolder::GetAbsError() const;
 template float128 EquationHolder::GetRelError() const;
 template float128 EquationHolder::GetAbsError() const;
 #endif
-

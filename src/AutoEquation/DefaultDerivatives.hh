@@ -12,7 +12,7 @@ SPDX-License-Identifier: Apache-2.0
 namespace Eqo {
 class EquationObject;
 typedef std::shared_ptr<EquationObject> EqObjPtr;
-}
+}  // namespace Eqo
 namespace dsHelper {
 Eqo::EqObjPtr CreateDefaultDerivatives();
 }

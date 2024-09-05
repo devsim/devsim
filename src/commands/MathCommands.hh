@@ -16,6 +16,6 @@ void getContactCurrentCmd(CommandHandler &);
 void solveCmd(CommandHandler &);
 void getMatrixAndRHSCmd(CommandHandler &);
 void setInitialConditionCmd(CommandHandler &);
-}
+}  // namespace dsCommand
 
 #endif

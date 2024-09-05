@@ -18,5 +18,5 @@ void WriteOut(OutputStream::OutputType, const Device &, const std::string &);
 void WriteOut(OutputStream::OutputType, const Region &, const std::string &);
 void WriteOut(OutputStream::OutputType, const Contact &, const std::string &);
 void WriteOut(OutputStream::OutputType, const Interface &, const std::string &);
-}
+}  // namespace GeometryStream
 #endif

@@ -51,4 +51,3 @@ void CommandHandler::SetIntListResult(const std::vector<int> &list)
 {
   SetObjectResult(CreateObjectHolderList(list));
 }
-

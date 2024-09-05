@@ -11,33 +11,30 @@ SPDX-License-Identifier: Apache-2.0
 #include <string>
 #include <memory>
 namespace Eqo {
-    class EquationObject;
-    typedef std::shared_ptr<EquationObject> EqObjPtr;
+class EquationObject;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 
-}
+}  // namespace Eqo
 
-InterfaceNodeModelPtr CreateInterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
+InterfaceNodeModelPtr CreateInterfaceNodeExprModel(const std::string &,
+                                                   Eqo::EqObjPtr, InterfacePtr);
 
 // need to set general node properties, such as positive only
 template <typename DoubleType>
-class InterfaceNodeExprModel : public InterfaceNodeModel
-{
-    public:
+class InterfaceNodeExprModel : public InterfaceNodeModel {
+ public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  InterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
 
-        InterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
+ private:
+  void calcNodeScalarValues() const;
+  void RegisterModels();
 
-    private:
+  InterfaceNodeExprModel();
+  InterfaceNodeExprModel(const InterfaceNodeExprModel &);
 
-        void calcNodeScalarValues() const;
-        void RegisterModels();
-
-        InterfaceNodeExprModel();
-        InterfaceNodeExprModel(const InterfaceNodeExprModel &);
-
-        const Eqo::EqObjPtr      equation;
+  const Eqo::EqObjPtr equation;
 };
 
 #endif
-

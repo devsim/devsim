@@ -55,10 +55,7 @@ void ModelDataHolder::set_type(MDtype t) const
 #endif
 }
 
-bool ModelDataHolder::IsUniform() const
-{
-  return is_uniform;
-}
+bool ModelDataHolder::IsUniform() const { return is_uniform; }
 
 void ModelDataHolder::expand_uniform() const
 {
@@ -144,7 +141,7 @@ void ModelDataHolder::SetUniformValue(const DoubleType &v)
 {
   clear();
   type = GetMDtype<DoubleType>();
-  double_uniform_value   = static_cast<double>(v);
+  double_uniform_value = static_cast<double>(v);
 #ifdef DEVSIM_EXTENDED_PRECISION
   float128_uniform_value = static_cast<float128>(v);
 #endif
@@ -191,7 +188,8 @@ const std::vector<float128> &ModelDataHolder::GetValues() const
 #endif
 
 template <>
-void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes, const double &v)
+void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes,
+                                  const double &v)
 {
   clear();
 
@@ -204,12 +202,12 @@ void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes, const doub
 
   type = MDtype::DOUBLE;
   is_uniform = false;
-
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes, const float128 &v)
+void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes,
+                                  const float128 &v)
 {
   clear();
 
@@ -226,7 +224,8 @@ void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes, const floa
 #endif
 
 template <>
-void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes, const std::vector<double> &v)
+void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes,
+                                  const std::vector<double> &v)
 {
   clear();
 
@@ -243,7 +242,8 @@ void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes, const std:
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes, const std::vector<float128> &v)
+void ModelDataHolder::set_indexes(const std::vector<size_t> &indexes,
+                                  const std::vector<float128> &v)
 {
   clear();
 
@@ -294,7 +294,6 @@ void ModelDataHolder::SetValue(size_t index, const float128 &nv)
   expand_uniform();
 
   float128_values[index] = nv;
-
 }
 #endif
 
@@ -319,4 +318,3 @@ void ModelDataHolder::SetValue(size_t index, const double &nv)
     double_values[index] = nv;
   }
 }
-

@@ -14,18 +14,21 @@ SPDX-License-Identifier: Apache-2.0
 
 template <typename DoubleType>
 CylindricalEdgeNodeVolume<DoubleType>::CylindricalEdgeNodeVolume(RegionPtr rp)
-    : EdgeModel("CylindricalEdgeNodeVolume@n0", rp, EdgeModel::DisplayType::SCALAR)
+    : EdgeModel("CylindricalEdgeNodeVolume@n0", rp,
+                EdgeModel::DisplayType::SCALAR)
 {
-    const size_t dimension = rp->GetDimension();
-    dsAssert(dimension == 2, "CylindricalEdgeNodeVolume 2d Only");
+  const size_t dimension = rp->GetDimension();
+  dsAssert(dimension == 2, "CylindricalEdgeNodeVolume 2d Only");
 
-    if (dimension == 2)
-    {
-      RegisterCallback("ElementCylindricalNodeVolume@en0");
-      RegisterCallback("ElementCylindricalNodeVolume@en1");
-    }
+  if (dimension == 2)
+  {
+    RegisterCallback("ElementCylindricalNodeVolume@en0");
+    RegisterCallback("ElementCylindricalNodeVolume@en1");
+  }
 
-    node1Volume_ = EdgeSubModel<DoubleType>::CreateEdgeSubModel("CylindricalEdgeNodeVolume@n1", rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  node1Volume_ = EdgeSubModel<DoubleType>::CreateEdgeSubModel(
+      "CylindricalEdgeNodeVolume@n1", rp, EdgeModel::DisplayType::SCALAR,
+      this->GetSelfPtr());
 }
 
 template <typename DoubleType>
@@ -38,23 +41,25 @@ void CylindricalEdgeNodeVolume<DoubleType>::calcEdgeScalarValues() const
 
   std::vector<DoubleType> nv(r.GetNumberNodes());
 
-
   if (dimension == 2)
   {
     const Region &region = GetRegion();
 
-    ConstTriangleEdgeModelPtr eec0 = region.GetTriangleEdgeModel("ElementCylindricalNodeVolume@en0");
-    ConstTriangleEdgeModelPtr eec1 = region.GetTriangleEdgeModel("ElementCylindricalNodeVolume@en1");
+    ConstTriangleEdgeModelPtr eec0 =
+        region.GetTriangleEdgeModel("ElementCylindricalNodeVolume@en0");
+    ConstTriangleEdgeModelPtr eec1 =
+        region.GetTriangleEdgeModel("ElementCylindricalNodeVolume@en1");
 
     dsAssert(eec0.get(), "ElementCylindricalNodeVolume@en0 missing");
     dsAssert(eec1.get(), "ElementCylindricalNodeVolume@en1 missing");
 
-    const EdgeScalarList<DoubleType> &nv0 = eec0->GetValuesOnEdges<DoubleType>();
-    const EdgeScalarList<DoubleType> &nv1 = eec1->GetValuesOnEdges<DoubleType>();
+    const EdgeScalarList<DoubleType> &nv0 =
+        eec0->GetValuesOnEdges<DoubleType>();
+    const EdgeScalarList<DoubleType> &nv1 =
+        eec1->GetValuesOnEdges<DoubleType>();
 
     SetValues(nv0);
     node1Volume_.lock()->SetValues(nv1);
-
   }
   else
   {
@@ -79,7 +84,7 @@ template class CylindricalEdgeNodeVolume<float128>;
 EdgeModelPtr CreateCylindricalEdgeNodeVolume(RegionPtr rp)
 {
   const bool use_extended = rp->UseExtendedPrecisionModels();
-  return create_edge_model<CylindricalEdgeNodeVolume<double>, CylindricalEdgeNodeVolume<extended_type>>(use_extended, rp);
+  return create_edge_model<CylindricalEdgeNodeVolume<double>,
+                           CylindricalEdgeNodeVolume<extended_type>>(
+      use_extended, rp);
 }
-
-

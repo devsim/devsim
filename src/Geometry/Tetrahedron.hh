@@ -24,40 +24,33 @@ typedef const Tetrahedron *ConstTetrahedronPtr;
 typedef std::vector<TetrahedronPtr> TetrahedronList;
 
 class Tetrahedron {
-   public:
-      Tetrahedron(size_t ind, ConstNodePtr, ConstNodePtr, ConstNodePtr, ConstNodePtr);
+ public:
+  Tetrahedron(size_t ind, ConstNodePtr, ConstNodePtr, ConstNodePtr,
+              ConstNodePtr);
 
-      size_t GetIndex() const
-      {
-         return index;
-      }
+  size_t GetIndex() const { return index; }
 
-      void SetIndex(size_t i)
-      {
-         index = i;
-      }
+  void SetIndex(size_t i) { index = i; }
 
-      const std::vector<ConstNodePtr> &GetNodeList() const
-      {
-        return nodes;
-      }
+  const std::vector<ConstNodePtr> &GetNodeList() const { return nodes; }
 
-      const std::vector<ConstNodePtr> &GetFENodeList() const;
+  const std::vector<ConstNodePtr> &GetFENodeList() const;
 
-   private:
+ private:
+  Tetrahedron();
+  Tetrahedron(const Tetrahedron &);
+  Tetrahedron &operator=(const Tetrahedron &);
 
-      Tetrahedron();
-      Tetrahedron (const Tetrahedron &);
-      Tetrahedron &operator= (const Tetrahedron &);
-
-      std::vector<ConstNodePtr> nodes;
-      mutable std::vector<ConstNodePtr> fe_nodes;
-      size_t index;
+  std::vector<ConstNodePtr> nodes;
+  mutable std::vector<ConstNodePtr> fe_nodes;
+  size_t index;
 };
 
-struct TetrahedronCompIndex
-{
-   bool operator()(ConstTetrahedronPtr x, ConstTetrahedronPtr y) { return x->GetIndex() < y->GetIndex(); }
+struct TetrahedronCompIndex {
+  bool operator()(ConstTetrahedronPtr x, ConstTetrahedronPtr y)
+  {
+    return x->GetIndex() < y->GetIndex();
+  }
 };
 
 template <typename DoubleType>
@@ -67,4 +60,3 @@ template <typename DoubleType>
 Vector<DoubleType> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes);
 
 #endif
-

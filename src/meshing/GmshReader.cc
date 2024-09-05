@@ -12,21 +12,22 @@ SPDX-License-Identifier: Apache-2.0
 
 namespace dsGmshParse {
 int meshlineno;
-dsMesh::GmshLoaderPtr    GmshLoader = nullptr;
-//dsMesh::MeshRegionPtr    MeshRegion = nullptr;
-//dsMesh::MeshContactPtr   MeshContact = nullptr;
-//dsMesh::MeshInterfacePtr MeshInterface = nullptr;
-//dsMesh::SolutionPtr      Sol= nullptr;
+dsMesh::GmshLoaderPtr GmshLoader = nullptr;
+// dsMesh::MeshRegionPtr    MeshRegion = nullptr;
+// dsMesh::MeshContactPtr   MeshContact = nullptr;
+// dsMesh::MeshInterfacePtr MeshInterface = nullptr;
+// dsMesh::SolutionPtr      Sol= nullptr;
 std::string errors;
-}
+}  // namespace dsGmshParse
 
-namespace dsGmshParse
-{
-void DeletePointers()
-{
-}
+namespace dsGmshParse {
+void DeletePointers() {}
 
-bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &coordinates, const std::vector<std::string> &physical_names, const std::vector<size_t> &elements, std::string &errorString)
+bool LoadMeshesFromArgs(const std::string &meshName,
+                        const std::vector<double> &coordinates,
+                        const std::vector<std::string> &physical_names,
+                        const std::vector<size_t> &elements,
+                        std::string &errorString)
 {
   dsMesh::GmshLoaderPtr gmshLoaderp = new dsMesh::GmshLoader(meshName);
   dsMesh::MeshKeeper &mk = dsMesh::MeshKeeper::GetInstance();
@@ -34,8 +35,8 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
 
   dsMesh::GmshLoader &gmshLoader = *gmshLoaderp;
 
-  size_t num_coords = coordinates.size()/3;
-  if (3*num_coords != coordinates.size())
+  size_t num_coords = coordinates.size() / 3;
+  if (3 * num_coords != coordinates.size())
   {
     errorString += "The coordinate list length must be divisible by 3\n";
     return false;
@@ -43,7 +44,9 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
 
   for (size_t i = 0; i < num_coords; ++i)
   {
-   gmshLoader.AddCoordinate(i, dsMesh::MeshCoordinate(coordinates[3*i], coordinates[3*i + 1], coordinates[3*i+2]));
+    gmshLoader.AddCoordinate(
+        i, dsMesh::MeshCoordinate(coordinates[3 * i], coordinates[3 * i + 1],
+                                  coordinates[3 * i + 2]));
   }
 
   size_t element_vec_len = elements.size();
@@ -55,7 +58,8 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
   std::map<size_t, size_t> physical_dimensions;
   for (eeindex = 0; eeindex < element_vec_len;)
   {
-    dsMesh::Shapes::ElementType_t element_type = static_cast<dsMesh::Shapes::ElementType_t>(elements[eeindex]);
+    dsMesh::Shapes::ElementType_t element_type =
+        static_cast<dsMesh::Shapes::ElementType_t>(elements[eeindex]);
     switch (element_type)
     {
       case dsMesh::Shapes::ElementType_t::POINT:
@@ -83,14 +87,16 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
     if (nodes_to_get == 0)
     {
       std::ostringstream os;
-      os << "ERROR: element " << static_cast<size_t>(element_type) << " unrecognized type position " << eeindex << "\n";
+      os << "ERROR: element " << static_cast<size_t>(element_type)
+         << " unrecognized type position " << eeindex << "\n";
       errorString = os.str();
       return false;
     }
     else if ((eeindex + nodes_to_get + 1) > element_vec_len)
     {
       std::ostringstream os;
-      os << "ERROR: element list indexing error on element " << element_count << "\n";
+      os << "ERROR: element list indexing error on element " << element_count
+         << "\n";
       errorString = os.str();
       return false;
     }
@@ -100,7 +106,10 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
     if (physical_number > physical_names.size())
     {
       std::ostringstream os;
-      os << "ERROR: element physical index " << physical_number << " must be less than number of physical_names " << physical_names.size() <<  " on element " << element_count << " on position " << eeindex + 1 << "\n";
+      os << "ERROR: element physical index " << physical_number
+         << " must be less than number of physical_names "
+         << physical_names.size() << " on element " << element_count
+         << " on position " << eeindex + 1 << "\n";
       errorString = os.str();
       return false;
     }
@@ -111,7 +120,9 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
     else if (physical_dimensions[physical_number] != pdim)
     {
       std::ostringstream os;
-      os << "ERROR: element dimension " << pdim << " must match other elements " << physical_dimensions[physical_number] <<  " on element " << element_count << " on position " << eeindex + 1 << "\n";
+      os << "ERROR: element dimension " << pdim << " must match other elements "
+         << physical_dimensions[physical_number] << " on element "
+         << element_count << " on position " << eeindex + 1 << "\n";
       errorString = os.str();
       return false;
     }
@@ -123,7 +134,8 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
       node_indexes[i] = elements[eeindex + i + 2];
     }
 
-    gmshLoader.AddElement(dsMesh::GmshElement(element_count, physical_number, element_type, node_indexes));
+    gmshLoader.AddElement(dsMesh::GmshElement(element_count, physical_number,
+                                              element_type, node_indexes));
 
     ++element_count;
     eeindex += nodes_to_get + 2;
@@ -148,7 +160,8 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
     else
     {
       std::ostringstream os;
-      os << "ERROR: physical name \"" << name << "\" index " << i << " has no elements assigned\n";
+      os << "ERROR: physical name \"" << name << "\" index " << i
+         << " has no elements assigned\n";
       errorString = os.str();
       return false;
     }
@@ -156,5 +169,4 @@ bool LoadMeshesFromArgs(const std::string &meshName, const std::vector<double> &
 
   return true;
 }
-}
-
+}  // namespace dsGmshParse

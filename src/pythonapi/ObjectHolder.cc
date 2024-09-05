@@ -15,10 +15,7 @@ SPDX-License-Identifier: Apache-2.0
 #include <limits>
 #include <algorithm>
 
-
-ObjectHolder::ObjectHolder() : object_(nullptr)
-{
-}
+ObjectHolder::ObjectHolder() : object_(nullptr) {}
 
 ObjectHolder::ObjectHolder(const ObjectHolder &t) : object_(t.object_)
 {
@@ -114,13 +111,11 @@ ObjectHolder::ObjectHolder(bool tval)
   }
   Py_INCREF(obj);
   object_ = obj;
-
 }
-
 
 namespace {
 
-//https://stackoverflow.com/questions/5356773/python-get-string-representation-of-pyobject
+// https://stackoverflow.com/questions/5356773/python-get-string-representation-of-pyobject
 std::string GetStringFromStringObject(PyObject *obj)
 {
   EnsurePythonGIL gil;
@@ -139,7 +134,7 @@ std::string GetStringFromStringObject(PyObject *obj)
   return ret;
 }
 
-}
+}  // namespace
 
 std::string ObjectHolder::GetString() const
 {
@@ -165,7 +160,7 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
 {
   EnsurePythonGIL gil;
 
-  bool   ok = false;
+  bool ok = false;
   double val(0.0);
 
   if (object_)
@@ -173,7 +168,7 @@ ObjectHolder::DoubleEntry_t ObjectHolder::GetDouble() const
     PyObject *obj = reinterpret_cast<PyObject *>(object_);
     if (PyFloat_CheckExact(obj))
     {
-      ok  = true;
+      ok = true;
       val = PyFloat_AsDouble(obj);
     }
     else if (auto *fobj = PyNumber_Float(obj))
@@ -195,8 +190,8 @@ ObjectHolder::BooleanEntry_t ObjectHolder::GetBoolean() const
 {
   EnsurePythonGIL gil;
 
-  bool   ok = false;
-  bool   val= false;
+  bool ok = false;
+  bool val = false;
 
   if (object_)
   {
@@ -204,7 +199,7 @@ ObjectHolder::BooleanEntry_t ObjectHolder::GetBoolean() const
     int ret = PyObject_IsTrue(obj);
     if (ret != -1)
     {
-      ok  = true;
+      ok = true;
       val = (ret == 1);
     }
   }
@@ -212,13 +207,12 @@ ObjectHolder::BooleanEntry_t ObjectHolder::GetBoolean() const
   return std::make_pair(ok, val);
 }
 
-
 ObjectHolder::IntegerEntry_t ObjectHolder::GetInteger() const
 {
   EnsurePythonGIL gil;
 
-  bool   ok = true;
-  int    val= 0;
+  bool ok = true;
+  int val = 0;
 
   ObjectHolder::LongEntry_t lent = this->GetLong();
 
@@ -242,8 +236,8 @@ ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
 {
   EnsurePythonGIL gil;
 
-  bool      ok =false;
-  ptrdiff_t val=0;
+  bool ok = false;
+  ptrdiff_t val = 0;
 
   // a long on windows 64 bit is 32 bits
   if (object_)
@@ -324,7 +318,7 @@ bool ObjectHolder::GetListOfObjects(ObjectHolderList_t &objs) const
     {
       //// this is a new reference
       PyObject *lobj = PySequence_GetItem(obj, i);
-      //Py_INCREF(lobj);
+      // Py_INCREF(lobj);
       objs[i] = ObjectHolder(lobj);
     }
   }
@@ -332,37 +326,32 @@ bool ObjectHolder::GetListOfObjects(ObjectHolderList_t &objs) const
   return ok;
 }
 
-namespace
-{
+namespace {
 
 template <typename T>
 struct pod_info;
 
 template <>
-struct pod_info<std::complex<double>>
-{
+struct pod_info<std::complex<double>> {
   [[maybe_unused]] constexpr static auto pmf = nullptr;
   [[maybe_unused]] constexpr static const char *ptype = "d";
 };
 
 template <>
-struct pod_info<double>
-{
+struct pod_info<double> {
   constexpr static auto pmf = &ObjectHolder::GetDouble;
   constexpr static const char *ptype = "d";
 };
 
 template <>
-struct pod_info<int>
-{
+struct pod_info<int> {
   constexpr static auto pmf = &ObjectHolder::GetInteger;
   constexpr static const char *ptype = "i";
 };
 
 #if defined(_WIN32) || (UINTPTR_MAX > UINT_MAX)
 template <>
-struct pod_info<ptrdiff_t>
-{
+struct pod_info<ptrdiff_t> {
   constexpr static auto pmf = &ObjectHolder::GetLong;
 };
 #endif
@@ -397,7 +386,8 @@ bool GetFromList(const ObjectHolder &oh, std::vector<T> &values)
   return ok;
 }
 
-void GetArrayInfo(const ObjectHolder &input, std::string &typecode, long &itemsize, ObjectHolder &bytes)
+void GetArrayInfo(const ObjectHolder &input, std::string &typecode,
+                  long &itemsize, ObjectHolder &bytes)
 {
   EnsurePythonGIL gil;
 
@@ -405,7 +395,8 @@ void GetArrayInfo(const ObjectHolder &input, std::string &typecode, long &itemsi
   itemsize = 0;
   bytes.clear();
 
-  PyObject *obj = reinterpret_cast<PyObject *>(const_cast<void *>(input.GetObject()));
+  PyObject *obj =
+      reinterpret_cast<PyObject *>(const_cast<void *>(input.GetObject()));
 
   if (!obj)
   {
@@ -418,7 +409,6 @@ void GetArrayInfo(const ObjectHolder &input, std::string &typecode, long &itemsi
   }
   else
   {
-
     ObjectHolder bytecall;
 
     if (PyObject_HasAttrString(obj, "tobytes"))
@@ -441,7 +431,8 @@ void GetArrayInfo(const ObjectHolder &input, std::string &typecode, long &itemsi
 
     if (bytecall.IsCallable())
     {
-      bytes = ObjectHolder(PyObject_CallObject(reinterpret_cast<PyObject *>(bytecall.GetObject()), nullptr));
+      bytes = ObjectHolder(PyObject_CallObject(
+          reinterpret_cast<PyObject *>(bytecall.GetObject()), nullptr));
       PyErr_Clear();
     }
   }
@@ -455,7 +446,8 @@ void GetBytesAsVector(ObjectHolder &bytes, std::vector<T> &result)
   char *data = nullptr;
   Py_ssize_t length = 0;
 
-  int r = PyBytes_AsStringAndSize(reinterpret_cast<PyObject *>(bytes.GetObject()), &data, &length);
+  int r = PyBytes_AsStringAndSize(
+      reinterpret_cast<PyObject *>(bytes.GetObject()), &data, &length);
   PyErr_Clear();
   if ((r != -1) && length > 0)
   {
@@ -466,15 +458,17 @@ void GetBytesAsVector(ObjectHolder &bytes, std::vector<T> &result)
 }
 
 template <typename T>
-bool GetArrayFromBytes(const ObjectHolder &input, std::vector<T> &values, const std::string &expected_typecodes, long expected_itemsize)
+bool GetArrayFromBytes(const ObjectHolder &input, std::vector<T> &values,
+                       const std::string &expected_typecodes,
+                       long expected_itemsize)
 {
   EnsurePythonGIL gil;
 
   values.clear();
 
   ObjectHolder bytes;
-  std::string  typecode;
-  long         itemsize = 0;
+  std::string typecode;
+  long itemsize = 0;
 
   GetArrayInfo(input, typecode, itemsize, bytes);
 
@@ -483,9 +477,13 @@ bool GetArrayFromBytes(const ObjectHolder &input, std::vector<T> &values, const 
     return false;
   }
 
-  bool typecode_found = !typecode.empty() && (expected_typecodes.find(typecode) != std::string::npos);
+  bool typecode_found =
+      !typecode.empty() &&
+      (expected_typecodes.find(typecode) != std::string::npos);
 
-  if ((typecode.empty() && (itemsize == 0)) || ((typecode_found) && (itemsize == expected_itemsize)) ||  (typecode.empty() && (itemsize == expected_itemsize)))
+  if ((typecode.empty() && (itemsize == 0)) ||
+      ((typecode_found) && (itemsize == expected_itemsize)) ||
+      (typecode.empty() && (itemsize == expected_itemsize)))
   {
     GetBytesAsVector<T>(bytes, values);
   }
@@ -502,26 +500,30 @@ void convert_to_unsigned(const std::vector<T> &in, std::vector<U> &out)
     out[i] = static_cast<U>(in[i]);
   }
 }
-}
+}  // namespace
 
 bool ObjectHolder::GetDoubleList(std::vector<double> &values) const
 {
-  if (!GetArrayFromBytes<double>(*this, values, pod_info<double>::ptype, sizeof(double)))
+  if (!GetArrayFromBytes<double>(*this, values, pod_info<double>::ptype,
+                                 sizeof(double)))
   {
     return GetFromList<double>(*this, values);
   }
   return true;
 }
 
-bool ObjectHolder::GetComplexDoubleList(std::vector<std::complex<double>> &values) const
+bool ObjectHolder::GetComplexDoubleList(
+    std::vector<std::complex<double>> &values) const
 {
-  bool ret = GetArrayFromBytes<std::complex<double>>(*this, values, pod_info<double>::ptype, sizeof(double));
+  bool ret = GetArrayFromBytes<std::complex<double>>(
+      *this, values, pod_info<double>::ptype, sizeof(double));
   return ret;
 }
 
 bool ObjectHolder::GetIntegerList(std::vector<int> &values) const
 {
-#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32) || (UINTPTR_MAX == UINT_MAX)
+#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32) || \
+    (UINTPTR_MAX == UINT_MAX)
   static_assert(sizeof(long) == sizeof(int), "wrong sizeof(long)");
   const std::string search("iIlL");
 #elif defined(__linux__) || defined(__APPLE__)
@@ -539,7 +541,8 @@ bool ObjectHolder::GetIntegerList(std::vector<int> &values) const
 
 bool ObjectHolder::GetLongList(std::vector<ptrdiff_t> &values) const
 {
-#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32) || (UINTPTR_MAX == UINT_MAX)
+#if defined(__MINGW32__) || defined(__MINGW64__) || defined(_WIN32) || \
+    (UINTPTR_MAX == UINT_MAX)
   static_assert(sizeof(long) == sizeof(int), "wrong sizeof(long)");
   const std::string search("qQ");
 #elif defined(__linux__) || defined(__APPLE__)
@@ -616,7 +619,8 @@ bool ObjectHolder::GetHashMap(ObjectHolderMap_t &hashmap) const
   if (object_ && PyDict_CheckExact(object_))
   {
     ret = true;
-    ObjectHolder items_holder(PyDict_Items(reinterpret_cast<PyObject *>(object_)));
+    ObjectHolder items_holder(
+        PyDict_Items(reinterpret_cast<PyObject *>(object_)));
     ObjectHolderList_t items;
     items_holder.GetListOfObjects(items);
     ObjectHolderList_t item;
@@ -631,15 +635,9 @@ bool ObjectHolder::GetHashMap(ObjectHolderMap_t &hashmap) const
   return ret;
 }
 
-const void *ObjectHolder::GetObject() const
-{
-  return object_;
-}
+const void *ObjectHolder::GetObject() const { return object_; }
 
-void *ObjectHolder::GetObject()
-{
-  return object_;
-}
+void *ObjectHolder::GetObject() { return object_; }
 
 ObjectHolder::ObjectHolder(const std::string &s)
 {
@@ -661,7 +659,6 @@ ObjectHolder::ObjectHolder(const void *s, size_t len)
 
   object_ = PyByteArray_FromStringAndSize(static_cast<const char *>(s), len);
 }
-
 
 ObjectHolder::ObjectHolder(double v)
 {
@@ -706,10 +703,10 @@ ObjectHolder::ObjectHolder(ObjectHolderMap_t &map)
     const std::string &key = it->first;
     PyObject *val = reinterpret_cast<PyObject *>((it->second).GetObject());
     //// does not steal the reference
-    //Py_INCREF(val);
+    // Py_INCREF(val);
     PyDict_SetItemString(map_object, key.c_str(), val);
   }
-  //Py_INCREF(map_object);
+  // Py_INCREF(map_object);
   object_ = map_object;
 }
 
@@ -721,14 +718,17 @@ ObjectHolder CreateArrayObject(const char *s, const ObjectHolder &data_object)
   PyErr_Clear();
   dsAssert(!array_mod.empty(), "array module not available");
 
-  ObjectHolder array_class(PyObject_GetAttrString(reinterpret_cast<PyObject *>(array_mod.GetObject()), "array"));
+  ObjectHolder array_class(PyObject_GetAttrString(
+      reinterpret_cast<PyObject *>(array_mod.GetObject()), "array"));
   PyErr_Clear();
   dsAssert(!array_class.empty(), "array.array not available");
 
   dsAssert(array_class.IsCallable(), "array.array is not callable");
 
-  //https://docs.python.org/3/c-api/arg.html#c.Py_BuildValue
-  ObjectHolder result(PyObject_CallFunction(reinterpret_cast<PyObject *>(array_class.GetObject()), "sO", s, data_object.GetObject()));
+  // https://docs.python.org/3/c-api/arg.html#c.Py_BuildValue
+  ObjectHolder result(PyObject_CallFunction(
+      reinterpret_cast<PyObject *>(array_class.GetObject()), "sO", s,
+      data_object.GetObject()));
   PyErr_Clear();
   dsAssert(!result.empty(), "array.array not able to create data");
 
@@ -758,9 +758,11 @@ ObjectHolder CreateDoublePODArray(const dsMath::DoubleVec_t<double> &list)
   return CreatePODArray<double>(list);
 }
 
-ObjectHolder CreateComplexDoublePODArray(const dsMath::ComplexDoubleVec_t<double> &list)
+ObjectHolder CreateComplexDoublePODArray(
+    const dsMath::ComplexDoubleVec_t<double> &list)
 {
-  return CreatePODArray<double>(reinterpret_cast<const double *>(list.data()), sizeof(std::complex<double>) * list.size());
+  return CreatePODArray<double>(reinterpret_cast<const double *>(list.data()),
+                                sizeof(std::complex<double>) * list.size());
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
@@ -771,20 +773,24 @@ ObjectHolder CreateDoublePODArray(const dsMath::DoubleVec_t<float128> &list)
   thread_local dsMath::DoubleVec_t<double> tmp;
   tmp.resize(list.size());
 
-  std::transform(list.begin(), list.end(), tmp.begin(), [](auto &x){return static_cast<double>(x);});
+  std::transform(list.begin(), list.end(), tmp.begin(),
+                 [](auto &x) { return static_cast<double>(x); });
 
   return CreatePODArray<double>(tmp);
 }
 
-ObjectHolder CreateComplexDoublePODArray(const dsMath::ComplexDoubleVec_t<float128> &list)
+ObjectHolder CreateComplexDoublePODArray(
+    const dsMath::ComplexDoubleVec_t<float128> &list)
 {
   thread_local dsMath::ComplexDoubleVec_t<double> tmp;
   tmp.resize(list.size());
 
-  std::transform(list.begin(), list.end(), tmp.begin(), [](auto &x){return std::complex<double>(static_cast<double>(x.real()), static_cast<double>(x.imag()));});
+  std::transform(list.begin(), list.end(), tmp.begin(), [](auto &x) {
+    return std::complex<double>(static_cast<double>(x.real()),
+                                static_cast<double>(x.imag()));
+  });
 
   return CreateComplexDoublePODArray(tmp);
 }
 
 #endif
-

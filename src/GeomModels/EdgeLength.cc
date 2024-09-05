@@ -13,34 +13,33 @@ SPDX-License-Identifier: Apache-2.0
 #include "Node.hh"
 
 template <typename DoubleType>
-EdgeLength<DoubleType>::EdgeLength(RegionPtr rp) :
-EdgeModel("EdgeLength", rp, EdgeModel::DisplayType::SCALAR)
+EdgeLength<DoubleType>::EdgeLength(RegionPtr rp)
+    : EdgeModel("EdgeLength", rp, EdgeModel::DisplayType::SCALAR)
 {
 }
-
 
 template <typename DoubleType>
 void EdgeLength<DoubleType>::calcEdgeScalarValues() const
 {
-    const ConstEdgeList &el = GetRegion().GetEdgeList();
-    std::vector<DoubleType> ev(el.size());
-    for (size_t i = 0; i < ev.size(); ++i)
-    {
-        ev[i] = calcEdgeLength(el[i]);
-    }
-    SetValues(ev);
+  const ConstEdgeList &el = GetRegion().GetEdgeList();
+  std::vector<DoubleType> ev(el.size());
+  for (size_t i = 0; i < ev.size(); ++i)
+  {
+    ev[i] = calcEdgeLength(el[i]);
+  }
+  SetValues(ev);
 }
 
 template <typename DoubleType>
 DoubleType EdgeLength<DoubleType>::calcEdgeLength(ConstEdgePtr ep) const
 {
-    const auto &h0 = ep->GetNodeList()[0]->Position();
-    const auto &h1 = ep->GetNodeList()[1]->Position();
+  const auto &h0 = ep->GetNodeList()[0]->Position();
+  const auto &h1 = ep->GetNodeList()[1]->Position();
 
-    Vector<DoubleType> vm(h0.Getx(), h0.Gety(), h0.Getz());
-    vm -= Vector<DoubleType>(h1.Getx(), h1.Gety(), h1.Getz());
-    const DoubleType val = vm.magnitude();
-    return val;
+  Vector<DoubleType> vm(h0.Getx(), h0.Gety(), h0.Getz());
+  vm -= Vector<DoubleType>(h1.Getx(), h1.Gety(), h1.Getz());
+  const DoubleType val = vm.magnitude();
+  return val;
 }
 
 template <typename DoubleType>
@@ -54,4 +53,3 @@ template class EdgeLength<double>;
 #include "Float128.hh"
 template class EdgeLength<float128>;
 #endif
-

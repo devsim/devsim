@@ -4,37 +4,44 @@
 
 namespace {
 template <typename T1, typename T2>
-void ConvertRealRowColVec(const dsMath::RealRowColValueVec<T1> &src, dsMath::RealRowColValueVec<T2> &dest)
+void ConvertRealRowColVec(const dsMath::RealRowColValueVec<T1> &src,
+                          dsMath::RealRowColValueVec<T2> &dest)
 {
-  for (auto & x : src)
+  for (auto &x : src)
   {
-      dest.push_back(dsMath::RealRowColVal<T2>(x.row, x.col, static_cast<T2>(x.val)));
+    dest.push_back(
+        dsMath::RealRowColVal<T2>(x.row, x.col, static_cast<T2>(x.val)));
   }
 }
 
 template <typename T1, typename T2>
-void ConvertRHSEntryVec(const dsMath::RHSEntryVec<T1> &src, dsMath::RHSEntryVec<T2> &dest)
+void ConvertRHSEntryVec(const dsMath::RHSEntryVec<T1> &src,
+                        dsMath::RHSEntryVec<T2> &dest)
 {
-    for (auto &x : src)
-    {
-      dest.push_back(std::make_pair(x.first, static_cast<T2>(x.second)));
-    }
+  for (auto &x : src)
+  {
+    dest.push_back(std::make_pair(x.first, static_cast<T2>(x.second)));
+  }
 }
-}
+}  // namespace
 
 template <>
-InterfaceEquationHolder::InterfaceEquationHolder(InterfaceEquation<double> *eq) : double_(eq)
+InterfaceEquationHolder::InterfaceEquationHolder(InterfaceEquation<double> *eq)
+    : double_(eq)
 {
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-InterfaceEquationHolder::InterfaceEquationHolder(InterfaceEquation<float128> *eq) : float128_(eq)
+InterfaceEquationHolder::InterfaceEquationHolder(
+    InterfaceEquation<float128> *eq)
+    : float128_(eq)
 {
 }
 #endif
 
-bool InterfaceEquationHolder::operator==(const InterfaceEquationHolder &eq) const
+bool InterfaceEquationHolder::operator==(
+    const InterfaceEquationHolder &eq) const
 {
   if (double_)
   {
@@ -97,8 +104,12 @@ std::string InterfaceEquationHolder::GetName1() const
   return ret;
 }
 
-template<>
-void InterfaceEquationHolder::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <>
+void InterfaceEquationHolder::Assemble(dsMath::RealRowColValueVec<double> &m,
+                                       dsMath::RHSEntryVec<double> &v,
+                                       PermutationMap &p,
+                                       dsMathEnum::WhatToLoad w,
+                                       dsMathEnum::TimeMode t)
 {
   if (double_)
   {
@@ -108,7 +119,7 @@ void InterfaceEquationHolder::Assemble(dsMath::RealRowColValueVec<double> &m, ds
   else if (float128_)
   {
     dsMath::RealRowColValueVec<float128> mm;
-    dsMath::RHSEntryVec<float128>        vv;
+    dsMath::RHSEntryVec<float128> vv;
     (*float128_).Assemble(mm, vv, p, w, t);
     ConvertRealRowColVec(mm, m);
     ConvertRHSEntryVec(vv, v);
@@ -117,13 +128,17 @@ void InterfaceEquationHolder::Assemble(dsMath::RealRowColValueVec<double> &m, ds
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
-template<>
-void InterfaceEquationHolder::Assemble(dsMath::RealRowColValueVec<float128> &m, dsMath::RHSEntryVec<float128> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+template <>
+void InterfaceEquationHolder::Assemble(dsMath::RealRowColValueVec<float128> &m,
+                                       dsMath::RHSEntryVec<float128> &v,
+                                       PermutationMap &p,
+                                       dsMathEnum::WhatToLoad w,
+                                       dsMathEnum::TimeMode t)
 {
   if (double_)
   {
     dsMath::RealRowColValueVec<double> mm;
-    dsMath::RHSEntryVec<double>        vv;
+    dsMath::RHSEntryVec<double> vv;
     (*double_).Assemble(mm, vv, p, w, t);
     ConvertRealRowColVec(mm, m);
     ConvertRHSEntryVec(vv, v);
@@ -149,7 +164,8 @@ void InterfaceEquationHolder::DevsimSerialize(std::ostream &o) const
 #endif
 }
 
-void InterfaceEquationHolder::GetCommandOptions(std::map<std::string, ObjectHolder> &m) const
+void InterfaceEquationHolder::GetCommandOptions(
+    std::map<std::string, ObjectHolder> &m) const
 {
   if (double_)
   {
@@ -162,4 +178,3 @@ void InterfaceEquationHolder::GetCommandOptions(std::map<std::string, ObjectHold
   }
 #endif
 }
-

@@ -26,12 +26,17 @@ MathWrapper<DoubleType>::~MathWrapper()
 }
 
 template <typename DoubleType>
-void MathWrapper<DoubleType>::Evaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::string &error, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
+void MathWrapper<DoubleType>::Evaluate(
+    const std::vector<DoubleType> &dvals,
+    const std::vector<const std::vector<DoubleType> *> &vvals,
+    std::string &error, std::vector<DoubleType> &result, const size_t vbeg,
+    const size_t vend) const
 {
   if (dvals.size() != this->GetNumberArguments())
   {
     std::ostringstream os;
-    os << "Function " << name_ << " available with " << this->GetNumberArguments() << " but called with " << dvals.size();
+    os << "Function " << name_ << " available with "
+       << this->GetNumberArguments() << " but called with " << dvals.size();
     error += os.str();
   }
   else
@@ -41,14 +46,16 @@ void MathWrapper<DoubleType>::Evaluate(const std::vector<DoubleType> &dvals, con
 }
 
 template <typename DoubleType>
-DoubleType MathWrapper<DoubleType>::Evaluate(const std::vector<DoubleType> &vals, std::string &error) const
+DoubleType MathWrapper<DoubleType>::Evaluate(
+    const std::vector<DoubleType> &vals, std::string &error) const
 {
   DoubleType x = 0.0;
 
   if (vals.size() != this->GetNumberArguments())
   {
     std::ostringstream os;
-    os << "Function " << name_ << " available with " << this->GetNumberArguments() << " but called with " << vals.size();
+    os << "Function " << name_ << " available with "
+       << this->GetNumberArguments() << " but called with " << vals.size();
     error += os.str();
   }
   else
@@ -60,15 +67,19 @@ DoubleType MathWrapper<DoubleType>::Evaluate(const std::vector<DoubleType> &vals
 }
 
 template <typename DoubleType>
-void MathWrapper1<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &/*dvals*/, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
+void MathWrapper1<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> & /*dvals*/,
+    const std::vector<const std::vector<DoubleType> *> &vvals,
+    std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] != nullptr, "UNEXPECTED");
 
-//  const std::vector<DoubleType> &vals = *vvals[0];
-  DoubleType       *vr = &result[vbeg];
+  //  const std::vector<DoubleType> &vals = *vvals[0];
+  DoubleType *vr = &result[vbeg];
   const DoubleType *v0 = &((*vvals[0])[vbeg]);
 
-//    std::transform(vals.begin(), vals.end(), result.begin(), std::ptr_fun(funcptr_));
+  //    std::transform(vals.begin(), vals.end(), result.begin(),
+  //    std::ptr_fun(funcptr_));
   for (size_t i = vbeg; i < vend; ++i)
   {
     *(vr++) = funcptr_(*(v0++));
@@ -76,13 +87,17 @@ void MathWrapper1<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &/*
 }
 
 template <typename DoubleType>
-DoubleType MathWrapper1<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
+DoubleType MathWrapper1<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> &vals) const
 {
   return funcptr_(vals[0]);
 }
 
 template <typename DoubleType>
-void MathWrapper2<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
+void MathWrapper2<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> &dvals,
+    const std::vector<const std::vector<DoubleType> *> &vvals,
+    std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] || vvals[1], "UNEXPECTED");
 
@@ -90,19 +105,18 @@ void MathWrapper2<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dv
   {
     const DoubleType *v0 = &((*vvals[0])[vbeg]);
     const DoubleType *v1 = &((*vvals[1])[vbeg]);
-    DoubleType       *vr = &result[vbeg];
+    DoubleType *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
       *(vr++) = funcptr_(*(v0++), *(v1++));
     }
-
   }
   else if (vvals[0])
   {
     const DoubleType *v0 = &((*vvals[0])[vbeg]);
     const DoubleType dval1 = dvals[1];
-    DoubleType       *vr = &result[vbeg];
+    DoubleType *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
@@ -113,7 +127,7 @@ void MathWrapper2<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dv
   {
     const DoubleType *v1 = &((*vvals[1])[vbeg]);
     const DoubleType dval0 = dvals[0];
-    DoubleType       *vr = &result[vbeg];
+    DoubleType *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
@@ -123,13 +137,17 @@ void MathWrapper2<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dv
 }
 
 template <typename DoubleType>
-DoubleType MathWrapper2<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
+DoubleType MathWrapper2<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> &vals) const
 {
   return funcptr_(vals[0], vals[1]);
 }
 
 template <typename DoubleType>
-void MathWrapper3<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
+void MathWrapper3<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> &dvals,
+    const std::vector<const std::vector<DoubleType> *> &vvals,
+    std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] || vvals[1] || vvals[2], "UNEXPECTED");
 
@@ -149,19 +167,22 @@ void MathWrapper3<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dv
       }
     }
 
-    result[i] =  (*funcptr_)(vals[0], vals[1], vals[2]);
+    result[i] = (*funcptr_)(vals[0], vals[1], vals[2]);
   }
 }
 
 template <typename DoubleType>
-DoubleType MathWrapper3<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
+DoubleType MathWrapper3<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> &vals) const
 {
   return funcptr_(vals[0], vals[1], vals[2]);
 }
 
-
 template <typename DoubleType>
-void MathWrapper4<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
+void MathWrapper4<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> &dvals,
+    const std::vector<const std::vector<DoubleType> *> &vvals,
+    std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] || vvals[1] || vvals[2] || vvals[3], "UNEXPECTED");
 
@@ -181,32 +202,33 @@ void MathWrapper4<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dv
       }
     }
 
-    result[i] =  (*funcptr_)(vals[0], vals[1], vals[2], vals[3]);
+    result[i] = (*funcptr_)(vals[0], vals[1], vals[2], vals[3]);
   }
 }
 
 template <typename DoubleType>
-DoubleType MathWrapper4<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
+DoubleType MathWrapper4<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> &vals) const
 {
   return funcptr_(vals[0], vals[1], vals[2], vals[3]);
 }
 
-namespace
-{
+namespace {
 template <typename DoubleType>
 inline bool IsInt(DoubleType x)
 {
   double y;
   return ((modf(static_cast<double>(x), &y) == 0) &&
           (x >= std::numeric_limits<int>::min()) &&
-          (x <= std::numeric_limits<int>::max())
-         );
+          (x <= std::numeric_limits<int>::max()));
 }
-}
-
+}  // namespace
 
 template <typename DoubleType>
-void PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dvals, const std::vector<const std::vector<DoubleType> *> &vvals, std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
+void PowWrapper<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> &dvals,
+    const std::vector<const std::vector<DoubleType> *> &vvals,
+    std::vector<DoubleType> &result, const size_t vbeg, const size_t vend) const
 {
   dsAssert(vvals[0] || vvals[1], "UNEXPECTED");
 
@@ -214,19 +236,18 @@ void PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dval
   {
     const DoubleType *v0 = &((*vvals[0])[vbeg]);
     const DoubleType *v1 = &((*vvals[1])[vbeg]);
-    DoubleType       *vr = &result[vbeg];
+    DoubleType *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
       *(vr++) = pow(*(v0++), *(v1++));
     }
-
   }
   else if (vvals[0])
   {
     const DoubleType *v0 = &((*vvals[0])[vbeg]);
     const DoubleType dval1 = dvals[1];
-    DoubleType       *vr = &result[vbeg];
+    DoubleType *vr = &result[vbeg];
 
     if (IsInt(dval1))
     {
@@ -247,7 +268,7 @@ void PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dval
   {
     const DoubleType *v1 = &((*vvals[1])[vbeg]);
     const DoubleType dval0 = dvals[0];
-    DoubleType       *vr = &result[vbeg];
+    DoubleType *vr = &result[vbeg];
 
     for (size_t i = vbeg; i < vend; ++i)
     {
@@ -257,7 +278,8 @@ void PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &dval
 }
 
 template <typename DoubleType>
-DoubleType PowWrapper<DoubleType>::DerivedEvaluate(const std::vector<DoubleType> &vals) const
+DoubleType PowWrapper<DoubleType>::DerivedEvaluate(
+    const std::vector<DoubleType> &vals) const
 {
   const DoubleType e = vals[1];
   if (IsInt(e))
@@ -286,5 +308,4 @@ template class MathWrapper4<float128>;
 template class PowWrapper<float128>;
 #endif
 
-}///end Eqomfp
-
+}  // namespace Eqomfp

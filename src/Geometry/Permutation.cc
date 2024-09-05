@@ -8,10 +8,12 @@ SPDX-License-Identifier: Apache-2.0
 #include "Permutation.hh"
 PermutationEntry::PermutationEntry(size_t nr, bool kc)
     : newrow(nr), keepcopy(kc)
-{}
+{
+}
 
 PermutationEntry::PermutationEntry()
-    : newrow(size_t(-1)), keepcopy(false) //, contact(nullptr), interface(nullptr)
+    : newrow(size_t(-1)),
+      keepcopy(false)  //, contact(nullptr), interface(nullptr)
 {
 }
 
@@ -22,13 +24,12 @@ PermutationEntry::PermutationEntry(const PermutationEntry &f)
 
 PermutationEntry &PermutationEntry::operator=(const PermutationEntry &p)
 {
-    if (&p == this)
-    {
-        return *this;
-    }
-
-    newrow = p.newrow;
-    keepcopy = p.keepcopy;
+  if (&p == this)
+  {
     return *this;
-}
+  }
 
+  newrow = p.newrow;
+  keepcopy = p.keepcopy;
+  return *this;
+}

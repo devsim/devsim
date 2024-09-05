@@ -49,7 +49,7 @@ void BreakLine(std::ostream &myfile, const std::string &output_string)
     bool done = false;
     while (!done)
     {
-      size_t seek  = start + 29999;
+      size_t seek = start + 29999;
 
       if (seek > (len - 1))
       {
@@ -77,7 +77,6 @@ void BreakLine(std::ostream &myfile, const std::string &output_string)
           {
             myfile << output_string.substr(start, seek) << "\n";
             start = seek + 1;
-
           }
         }
       }
@@ -89,7 +88,6 @@ void BreakLine(std::ostream &myfile, const std::string &output_string)
     }
   }
 }
-
 
 void WriteBlock(std::ostream &os, const std::vector<double> &values)
 {
@@ -105,7 +103,8 @@ void WriteBlock(std::ostream &os, const std::vector<double> &values)
   }
 }
 
-void WriteUniform(std::ostream &os, const size_t length, const double uniform_value)
+void WriteUniform(std::ostream &os, const size_t length,
+                  const double uniform_value)
 {
 #if 0
   if (uniform_value == 0.0)
@@ -128,7 +127,8 @@ void WriteUniform(std::ostream &os, const size_t length, const double uniform_va
 #endif
 }
 
-void WriteNodeBlock(std::ostream &myfile, const Region &reg, const std::string &model_name)
+void WriteNodeBlock(std::ostream &myfile, const Region &reg,
+                    const std::string &model_name)
 {
   const size_t number_nodes = reg.GetNumberNodes();
   ConstNodeModelPtr nmp = reg.GetNodeModel(model_name);
@@ -156,7 +156,8 @@ void WriteNodeBlock(std::ostream &myfile, const Region &reg, const std::string &
   BreakLine(myfile, os.str());
 }
 
-void WriteEdgeBlockScalar(std::ostream &myfile, const Region &reg, const std::string &model_name)
+void WriteEdgeBlockScalar(std::ostream &myfile, const Region &reg,
+                          const std::string &model_name)
 {
   std::ostringstream os;
   os.copyfmt(myfile);
@@ -166,14 +167,16 @@ void WriteEdgeBlockScalar(std::ostream &myfile, const Region &reg, const std::st
   /// in case the model doesn't exist in our region
   if (emp)
   {
-//    dsAssert(emp->GetDisplayType() == EdgeModel::DisplayType::SCALAR, "UNEXPECTED");
+    //    dsAssert(emp->GetDisplayType() == EdgeModel::DisplayType::SCALAR,
+    //    "UNEXPECTED");
     if (emp->IsUniform())
     {
       WriteUniform(os, number_nodes, emp->GetUniformValue<double>());
     }
     else
     {
-      const NodeScalarList<double> &values = emp->GetScalarValuesOnNodes<double>();
+      const NodeScalarList<double> &values =
+          emp->GetScalarValuesOnNodes<double>();
       WriteBlock(os, values);
     }
   }
@@ -186,19 +189,21 @@ void WriteEdgeBlockScalar(std::ostream &myfile, const Region &reg, const std::st
   BreakLine(myfile, os.str());
 }
 
-void WriteTriangleEdgeBlockScalar(std::ostream &myfile, const Region &reg, const std::string &model_name)
+void WriteTriangleEdgeBlockScalar(std::ostream &myfile, const Region &reg,
+                                  const std::string &model_name)
 {
   std::ostringstream os;
   os.copyfmt(myfile);
 
-//  const size_t number_nodes = reg.GetNumberNodes();
+  //  const size_t number_nodes = reg.GetNumberNodes();
   const size_t number_triangles = reg.GetNumberTriangles();
   ConstTriangleEdgeModelPtr emp = reg.GetTriangleEdgeModel(model_name);
 
   /// in case the model doesn't exist in our region
   if (emp)
   {
-//    dsAssert(emp->GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR, "UNEXPECTED");
+    //    dsAssert(emp->GetDisplayType() ==
+    //    TriangleEdgeModel::DisplayType::SCALAR, "UNEXPECTED");
 
     if (emp->IsUniform())
     {
@@ -219,18 +224,20 @@ void WriteTriangleEdgeBlockScalar(std::ostream &myfile, const Region &reg, const
   BreakLine(myfile, os.str());
 }
 
-void WriteTetrahedronEdgeBlockScalar(std::ostream &myfile, const Region &reg, const std::string &model_name)
+void WriteTetrahedronEdgeBlockScalar(std::ostream &myfile, const Region &reg,
+                                     const std::string &model_name)
 {
   std::ostringstream os;
   os.copyfmt(myfile);
-//  const size_t number_nodes = reg.GetNumberNodes();
+  //  const size_t number_nodes = reg.GetNumberNodes();
   const size_t number_tetrahedrons = reg.GetNumberTetrahedrons();
   ConstTetrahedronEdgeModelPtr emp = reg.GetTetrahedronEdgeModel(model_name);
 
   /// in case the model doesn't exist in our region
   if (emp)
   {
-//    dsAssert(emp->GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR, "UNEXPECTED");
+    //    dsAssert(emp->GetDisplayType() ==
+    //    TriangleEdgeModel::DisplayType::SCALAR, "UNEXPECTED");
 
     if (emp->IsUniform())
     {
@@ -251,11 +258,11 @@ void WriteTetrahedronEdgeBlockScalar(std::ostream &myfile, const Region &reg, co
   BreakLine(myfile, os.str());
 }
 
-
-void WriteEdgeBlockVector(std::ostream &myfile, const Region &reg, const std::string &model_name)
+void WriteEdgeBlockVector(std::ostream &myfile, const Region &reg,
+                          const std::string &model_name)
 {
   const size_t number_nodes = reg.GetNumberNodes();
-  const size_t dimension    = reg.GetDimension();
+  const size_t dimension = reg.GetDimension();
 
   ConstEdgeModelPtr emp = reg.GetEdgeModel(model_name);
 
@@ -267,14 +274,15 @@ void WriteEdgeBlockVector(std::ostream &myfile, const Region &reg, const std::st
   osy.copyfmt(myfile);
   osz.copyfmt(myfile);
 
-
   /// in case the model doesn't exist in our region
   /// TODO: make sure it is the same type in each region
   if (emp)
   {
-    dsAssert(emp->GetDisplayType() == EdgeModel::DisplayType::VECTOR, "UNEXPECTED");
+    dsAssert(emp->GetDisplayType() == EdgeModel::DisplayType::VECTOR,
+             "UNEXPECTED");
 
-    const NodeVectorList<double> &values = emp->GetVectorValuesOnNodes<double>();
+    const NodeVectorList<double> &values =
+        emp->GetVectorValuesOnNodes<double>();
     dsAssert(values.size() > 0, "UNEXPECTED");
 
     NodeVectorList<double>::const_iterator it = values.begin();
@@ -314,44 +322,53 @@ void WriteEdgeBlockVector(std::ostream &myfile, const Region &reg, const std::st
   }
 }
 
-void WriteNodesAndSolutions(std::ostream &myfile, const Region &reg, const std::set<std::string> &solutions)
+void WriteNodesAndSolutions(std::ostream &myfile, const Region &reg,
+                            const std::set<std::string> &solutions)
 {
-  for (std::set<std::string>::const_iterator it = solutions.begin(); it != solutions.end(); ++it)
+  for (std::set<std::string>::const_iterator it = solutions.begin();
+       it != solutions.end(); ++it)
   {
     WriteNodeBlock(myfile, reg, *it);
   }
 }
 
-void WriteScalarEdgeModels(std::ostream &myfile, const Region &reg, const std::set<std::string> &solutions)
+void WriteScalarEdgeModels(std::ostream &myfile, const Region &reg,
+                           const std::set<std::string> &solutions)
 {
-  for (std::set<std::string>::const_iterator it = solutions.begin(); it != solutions.end(); ++it)
+  for (std::set<std::string>::const_iterator it = solutions.begin();
+       it != solutions.end(); ++it)
   {
     WriteEdgeBlockScalar(myfile, reg, *it);
   }
 }
 
-void WriteVectorEdgeModels(std::ostream &myfile, const Region &reg, const std::set<std::string> &solutions)
+void WriteVectorEdgeModels(std::ostream &myfile, const Region &reg,
+                           const std::set<std::string> &solutions)
 {
-  for (std::set<std::string>::const_iterator it = solutions.begin(); it != solutions.end(); ++it)
+  for (std::set<std::string>::const_iterator it = solutions.begin();
+       it != solutions.end(); ++it)
   {
     WriteEdgeBlockVector(myfile, reg, *it);
   }
 }
 
-void WriteScalarElementEdgeModels(std::ostream &myfile, const Region &reg, const std::set<std::string> &solutions)
+void WriteScalarElementEdgeModels(std::ostream &myfile, const Region &reg,
+                                  const std::set<std::string> &solutions)
 {
   const size_t dimension = reg.GetDimension();
   if (dimension == 2)
   {
-    for (std::set<std::string>::const_iterator it = solutions.begin(); it != solutions.end(); ++it)
+    for (std::set<std::string>::const_iterator it = solutions.begin();
+         it != solutions.end(); ++it)
     {
-//      std::cerr << "WRITING " << *it << std::endl;
+      //      std::cerr << "WRITING " << *it << std::endl;
       WriteTriangleEdgeBlockScalar(myfile, reg, *it);
     }
   }
   else if (dimension == 3)
   {
-    for (std::set<std::string>::const_iterator it = solutions.begin(); it != solutions.end(); ++it)
+    for (std::set<std::string>::const_iterator it = solutions.begin();
+         it != solutions.end(); ++it)
     {
       WriteTetrahedronEdgeBlockScalar(myfile, reg, *it);
     }
@@ -360,52 +377,49 @@ void WriteScalarElementEdgeModels(std::ostream &myfile, const Region &reg, const
 
 void WriteEdges(std::ostream &myfile, const Region &reg)
 {
-    const ConstEdgeList &ctl = reg.GetEdgeList();
-    for (ConstEdgeList::const_iterator tit = ctl.begin(); tit != ctl.end(); ++tit)
-    {
-        const ConstNodeList &nlist = (*tit)->GetNodeList();
-        myfile <<  (nlist[0]->GetIndex() + 1)
-        << " " <<  (nlist[1]->GetIndex() + 1)
-        << "\n";
-    }
+  const ConstEdgeList &ctl = reg.GetEdgeList();
+  for (ConstEdgeList::const_iterator tit = ctl.begin(); tit != ctl.end(); ++tit)
+  {
+    const ConstNodeList &nlist = (*tit)->GetNodeList();
+    myfile << (nlist[0]->GetIndex() + 1) << " " << (nlist[1]->GetIndex() + 1)
+           << "\n";
+  }
 }
 
 void WriteTriangles(std::ostream &myfile, const Region &reg)
 {
-    const ConstTriangleList &ctl = reg.GetTriangleList();
-    for (ConstTriangleList::const_iterator tit = ctl.begin(); tit != ctl.end(); ++tit)
-    {
-        const ConstNodeList &nlist = (*tit)->GetFENodeList();
-        myfile <<  (nlist[0]->GetIndex() + 1)
-        << " " <<  (nlist[1]->GetIndex() + 1)
-        << " " <<  (nlist[2]->GetIndex() + 1)
-        << "\n";
-    }
+  const ConstTriangleList &ctl = reg.GetTriangleList();
+  for (ConstTriangleList::const_iterator tit = ctl.begin(); tit != ctl.end();
+       ++tit)
+  {
+    const ConstNodeList &nlist = (*tit)->GetFENodeList();
+    myfile << (nlist[0]->GetIndex() + 1) << " " << (nlist[1]->GetIndex() + 1)
+           << " " << (nlist[2]->GetIndex() + 1) << "\n";
+  }
 }
 
 void WriteTetrahedra(std::ostream &myfile, const Region &reg)
 {
-    const ConstTetrahedronList &ctl = reg.GetTetrahedronList();
-    for (ConstTetrahedronList::const_iterator tit = ctl.begin(); tit != ctl.end(); ++tit)
-    {
-        const ConstNodeList &nlist = (*tit)->GetFENodeList();
-        myfile <<  (nlist[0]->GetIndex() + 1)
-        << " " <<  (nlist[1]->GetIndex() + 1)
-        << " " <<  (nlist[2]->GetIndex() + 1)
-        << " " <<  (nlist[3]->GetIndex() + 1)
-        << "\n";
-    }
+  const ConstTetrahedronList &ctl = reg.GetTetrahedronList();
+  for (ConstTetrahedronList::const_iterator tit = ctl.begin(); tit != ctl.end();
+       ++tit)
+  {
+    const ConstNodeList &nlist = (*tit)->GetFENodeList();
+    myfile << (nlist[0]->GetIndex() + 1) << " " << (nlist[1]->GetIndex() + 1)
+           << " " << (nlist[2]->GetIndex() + 1) << " "
+           << (nlist[3]->GetIndex() + 1) << "\n";
+  }
 }
 
-
-bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWriterTest_t include_test, std::string &errorString)
+bool WriteSingleDevice(const std::string &dname, std::ostream &myfile,
+                       MeshWriterTest_t include_test, std::string &errorString)
 {
   bool ret = true;
   std::ostringstream os;
   os.copyfmt(myfile);
 
-//    myfile << std::setprecision(15) << std::scientific;
-  GlobalData   &gdata = GlobalData::GetInstance();
+  //    myfile << std::setprecision(15) << std::scientific;
+  GlobalData &gdata = GlobalData::GetInstance();
 
   DevicePtr dp = gdata.GetDevice(dname);
 
@@ -429,12 +443,14 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
     std::set<std::string> elementEdgeModelsScalar;
     {
       const Device::RegionList_t &rlist = dev.GetRegionList();
-      for (Device::RegionList_t::const_iterator rit = rlist.begin(); rit != rlist.end(); ++rit)
+      for (Device::RegionList_t::const_iterator rit = rlist.begin();
+           rit != rlist.end(); ++rit)
       {
-        const Region      &reg   = *(rit->second);
+        const Region &reg = *(rit->second);
         const Region::NodeModelList_t nmlist = reg.GetNodeModelList();
 
-        for (Region::NodeModelList_t::const_iterator nit = nmlist.begin(); nit != nmlist.end(); ++nit)
+        for (Region::NodeModelList_t::const_iterator nit = nmlist.begin();
+             nit != nmlist.end(); ++nit)
         {
           const std::string &name = nit->first;
           if ((name == "x" || name == "y" || name == "z"))
@@ -450,10 +466,12 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
 
           ConstNodeModelPtr emp = nit->second;
 
-          NodeModel::DisplayType display_type=emp->GetDisplayType();
+          NodeModel::DisplayType display_type = emp->GetDisplayType();
 
-          const bool s_display = (nodeModelsScalar.find(name) != nodeModelsScalar.end());
-          const bool n_display = (nodeModelsNoDisplay.find(name) != nodeModelsNoDisplay.end());
+          const bool s_display =
+              (nodeModelsScalar.find(name) != nodeModelsScalar.end());
+          const bool n_display =
+              (nodeModelsNoDisplay.find(name) != nodeModelsNoDisplay.end());
 
           std::string conflicting_type;
 
@@ -487,13 +505,15 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
           if (!conflicting_type.empty())
           {
             std::stringstream os;
-            os << "Writing model " << name << " as " << conflicting_type << " since it was the first type encountered\n";
+            os << "Writing model " << name << " as " << conflicting_type
+               << " since it was the first type encountered\n";
             OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
           }
         }
 
         const Region::EdgeModelList_t emlist = reg.GetEdgeModelList();
-        for (Region::EdgeModelList_t::const_iterator eit = emlist.begin(); eit != emlist.end(); ++eit)
+        for (Region::EdgeModelList_t::const_iterator eit = emlist.begin();
+             eit != emlist.end(); ++eit)
         {
           const std::string name = eit->first;
           ConstEdgeModelPtr emp = eit->second;
@@ -504,11 +524,14 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
             continue;
           }
 
-          EdgeModel::DisplayType display_type=emp->GetDisplayType();
+          EdgeModel::DisplayType display_type = emp->GetDisplayType();
 
-          const bool n_display = (edgeModelsNoDisplay.find(name) != edgeModelsNoDisplay.end());
-          const bool v_display = (edgeModelsVector.find(name) != edgeModelsVector.end());
-          const bool s_display = (edgeModelsScalar.find(name) != edgeModelsScalar.end());
+          const bool n_display =
+              (edgeModelsNoDisplay.find(name) != edgeModelsNoDisplay.end());
+          const bool v_display =
+              (edgeModelsVector.find(name) != edgeModelsVector.end());
+          const bool s_display =
+              (edgeModelsScalar.find(name) != edgeModelsScalar.end());
 
           std::string conflicting_type;
 
@@ -565,13 +588,16 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
           if (!conflicting_type.empty())
           {
             std::stringstream os;
-            os << "Writing model " << name << " as " << conflicting_type << " since it was the first type encountered\n";
+            os << "Writing model " << name << " as " << conflicting_type
+               << " since it was the first type encountered\n";
             OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
           }
         }
 
-        const Region::TriangleEdgeModelList_t triangle_edge_model_list = reg.GetTriangleEdgeModelList();
-        const Region::TetrahedronEdgeModelList_t tetrahedron_edge_model_list = reg.GetTetrahedronEdgeModelList();
+        const Region::TriangleEdgeModelList_t triangle_edge_model_list =
+            reg.GetTriangleEdgeModelList();
+        const Region::TetrahedronEdgeModelList_t tetrahedron_edge_model_list =
+            reg.GetTetrahedronEdgeModelList();
 
         if (dimension == 2)
         {
@@ -582,7 +608,9 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
           dsAssert(triangle_edge_model_list.empty(), "UNEXPECTED");
         }
 
-        for (Region::TriangleEdgeModelList_t::const_iterator trit = triangle_edge_model_list.begin(); trit != triangle_edge_model_list.end(); ++trit)
+        for (Region::TriangleEdgeModelList_t::const_iterator trit =
+                 triangle_edge_model_list.begin();
+             trit != triangle_edge_model_list.end(); ++trit)
         {
           //// Only save the fields that are "included"
           if (!include_test(trit->first))
@@ -590,16 +618,21 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
             continue;
           }
 
-          if (trit->second->GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR)
+          if (trit->second->GetDisplayType() ==
+              TriangleEdgeModel::DisplayType::SCALAR)
           {
             elementEdgeModelsScalar.insert(trit->first);
           }
           else
           {
-            dsAssert(trit->second->GetDisplayType() == TriangleEdgeModel::DisplayType::NODISPLAY, "UNEXPECTED");
+            dsAssert(trit->second->GetDisplayType() ==
+                         TriangleEdgeModel::DisplayType::NODISPLAY,
+                     "UNEXPECTED");
           }
         }
-        for (Region::TetrahedronEdgeModelList_t::const_iterator teit = tetrahedron_edge_model_list.begin(); teit != tetrahedron_edge_model_list.end(); ++teit)
+        for (Region::TetrahedronEdgeModelList_t::const_iterator teit =
+                 tetrahedron_edge_model_list.begin();
+             teit != tetrahedron_edge_model_list.end(); ++teit)
         {
           //// Only save the fields that are "included"
           if (!include_test(teit->first))
@@ -607,20 +640,22 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
             continue;
           }
 
-          if (teit->second->GetDisplayType() == TetrahedronEdgeModel::DisplayType::SCALAR)
+          if (teit->second->GetDisplayType() ==
+              TetrahedronEdgeModel::DisplayType::SCALAR)
           {
             elementEdgeModelsScalar.insert(teit->first);
           }
           else
           {
-            dsAssert(teit->second->GetDisplayType() == TetrahedronEdgeModel::DisplayType::NODISPLAY, "UNEXPECTED");
+            dsAssert(teit->second->GetDisplayType() ==
+                         TetrahedronEdgeModel::DisplayType::NODISPLAY,
+                     "UNEXPECTED");
           }
         }
       }
     }
 
     myfile << "TITLE = \"" << dname << "\"\n";
-
 
     std::ostringstream os;
     os.copyfmt(myfile);
@@ -647,41 +682,38 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
       varloc += 3;
     }
 
-    for (std::set<std::string>::iterator nmit = nodeModelsScalar.begin(); nmit != nodeModelsScalar.end(); ++nmit)
+    for (std::set<std::string>::iterator nmit = nodeModelsScalar.begin();
+         nmit != nodeModelsScalar.end(); ++nmit)
     {
-        os << ", \"" << *nmit << "\"";
-        varloc += 1;
+      os << ", \"" << *nmit << "\"";
+      varloc += 1;
     }
 
-    for (std::set<std::string>::iterator it = edgeModelsScalar.begin(); it != edgeModelsScalar.end(); ++it)
+    for (std::set<std::string>::iterator it = edgeModelsScalar.begin();
+         it != edgeModelsScalar.end(); ++it)
     {
-        os << ", \"" << *it << "\"";
-        varloc += 1;
+      os << ", \"" << *it << "\"";
+      varloc += 1;
     }
-    for (std::set<std::string>::iterator it = edgeModelsVector.begin(); it != edgeModelsVector.end(); ++it)
+    for (std::set<std::string>::iterator it = edgeModelsVector.begin();
+         it != edgeModelsVector.end(); ++it)
     {
       if (dim == 1)
       {
-        os
-          << ", \"" << *it << "_x_onNode" << "\""
-        ;
+        os << ", \"" << *it << "_x_onNode" << "\"";
         varloc += 1;
       }
       else if (dim == 2)
       {
-        os
-          << ", \"" << *it << "_x_onNode" << "\""
-          << ", \"" << *it << "_y_onNode" << "\""
-        ;
+        os << ", \"" << *it << "_x_onNode" << "\""
+           << ", \"" << *it << "_y_onNode" << "\"";
         varloc += 2;
       }
       else if (dim == 3)
       {
-        os
-          << ", \"" << *it << "_x_onNode" << "\""
-          << ", \"" << *it << "_y_onNode" << "\""
-          << ", \"" << *it << "_z_onNode" << "\""
-        ;
+        os << ", \"" << *it << "_x_onNode" << "\""
+           << ", \"" << *it << "_y_onNode" << "\""
+           << ", \"" << *it << "_z_onNode" << "\"";
         varloc += 3;
       }
       else
@@ -690,11 +722,12 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
       }
     }
 
-    for (std::set<std::string>::iterator it = elementEdgeModelsScalar.begin(); it != elementEdgeModelsScalar.end(); ++it)
+    for (std::set<std::string>::iterator it = elementEdgeModelsScalar.begin();
+         it != elementEdgeModelsScalar.end(); ++it)
     {
-        os << ", \"" << *it << "\"";
-        varloc += 1;
-        cell_variables.push_back(varloc);
+      os << ", \"" << *it << "\"";
+      varloc += 1;
+      cell_variables.push_back(varloc);
     }
 
     os << "\n";
@@ -717,130 +750,136 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, MeshWrite
       cell_variables_string = os.str();
     }
 
-    for (Device::RegionList_t::const_iterator rit = rlist.begin(); rit != rlist.end(); ++rit)
+    for (Device::RegionList_t::const_iterator rit = rlist.begin();
+         rit != rlist.end(); ++rit)
     {
-        const std::string &rname = rit->first;
-        const Region      &reg   = *(rit->second);
+      const std::string &rname = rit->first;
+      const Region &reg = *(rit->second);
 
-        const size_t numnodes = reg.GetNumberNodes();
+      const size_t numnodes = reg.GetNumberNodes();
 
-        myfile << "ZONE T=\"" << rname << "\" NODES=" << numnodes;
+      myfile << "ZONE T=\"" << rname << "\" NODES=" << numnodes;
 
-        if (dim == 1)
-        {
-          const size_t numelements = reg.GetNumberEdges();
-          myfile << ", ELEMENTS=" << numelements
-            << ", DATAPACKING=BLOCK, ZONETYPE=FELINESEG"
-            << cell_variables_string << "\n";
-          WriteNodeBlock(myfile, reg, "x");
-        }
-        else if (dim == 2)
-        {
-          const size_t numelements = reg.GetNumberTriangles();
-          myfile << ", ELEMENTS=" << numelements
-            << ", DATAPACKING=BLOCK, ZONETYPE=FETRIANGLE"
-            << cell_variables_string << "\n";
-          WriteNodeBlock(myfile, reg, "x");
-          WriteNodeBlock(myfile, reg, "y");
-        }
-        else
-        {
-          const size_t numelements = reg.GetNumberTetrahedrons();
-          myfile << ", ELEMENTS=" << numelements
-            << ", DATAPACKING=BLOCK, ZONETYPE=FETETRAHEDRON"
-            << cell_variables_string << "\n";
-          WriteNodeBlock(myfile, reg, "x");
-          WriteNodeBlock(myfile, reg, "y");
-          WriteNodeBlock(myfile, reg, "z");
-        }
+      if (dim == 1)
+      {
+        const size_t numelements = reg.GetNumberEdges();
+        myfile << ", ELEMENTS=" << numelements
+               << ", DATAPACKING=BLOCK, ZONETYPE=FELINESEG"
+               << cell_variables_string << "\n";
+        WriteNodeBlock(myfile, reg, "x");
+      }
+      else if (dim == 2)
+      {
+        const size_t numelements = reg.GetNumberTriangles();
+        myfile << ", ELEMENTS=" << numelements
+               << ", DATAPACKING=BLOCK, ZONETYPE=FETRIANGLE"
+               << cell_variables_string << "\n";
+        WriteNodeBlock(myfile, reg, "x");
+        WriteNodeBlock(myfile, reg, "y");
+      }
+      else
+      {
+        const size_t numelements = reg.GetNumberTetrahedrons();
+        myfile << ", ELEMENTS=" << numelements
+               << ", DATAPACKING=BLOCK, ZONETYPE=FETETRAHEDRON"
+               << cell_variables_string << "\n";
+        WriteNodeBlock(myfile, reg, "x");
+        WriteNodeBlock(myfile, reg, "y");
+        WriteNodeBlock(myfile, reg, "z");
+      }
 
+      WriteNodesAndSolutions(myfile, reg, nodeModelsScalar);
 
-        WriteNodesAndSolutions(myfile, reg, nodeModelsScalar);
+      WriteScalarEdgeModels(myfile, reg, edgeModelsScalar);
 
-        WriteScalarEdgeModels(myfile, reg, edgeModelsScalar);
+      WriteVectorEdgeModels(myfile, reg, edgeModelsVector);
 
-        WriteVectorEdgeModels(myfile, reg, edgeModelsVector);
+      WriteScalarElementEdgeModels(myfile, reg, elementEdgeModelsScalar);
 
-        WriteScalarElementEdgeModels(myfile, reg, elementEdgeModelsScalar);
-
-        if (dim == 1)
-        {
-          WriteEdges(myfile, reg);
-        }
-        else if (dim == 2)
-        {
-          WriteTriangles(myfile, reg);
-        }
-        else
-        {
-          WriteTetrahedra(myfile, reg);
-        }
-
+      if (dim == 1)
+      {
+        WriteEdges(myfile, reg);
+      }
+      else if (dim == 2)
+      {
+        WriteTriangles(myfile, reg);
+      }
+      else
+      {
+        WriteTetrahedra(myfile, reg);
+      }
     }
-
-    }
-    myfile << "\n";
-    errorString += os.str();
-    return ret;
-
+  }
+  myfile << "\n";
+  errorString += os.str();
+  return ret;
 }
-}
+}  // namespace Tecplot
 
-TecplotWriter::~TecplotWriter()
+TecplotWriter::~TecplotWriter() {}
+
+bool TecplotWriter::WriteMesh_(const std::string &deviceName,
+                               const std::string &filename,
+                               MeshWriterTest_t include_test,
+                               std::string &errorString)
 {
+  bool ret = true;
+  std::ostringstream os;
+
+  std::ofstream myfile;
+  myfile.open(filename.c_str(),
+              std::ios::out | std::ios::trunc | std::ios::binary);
+  if (myfile.bad())
+  {
+    ret = false;
+    os << "Could not open " << filename << " for writing\n";
+  }
+  else
+  {
+    ret = Tecplot::WriteSingleDevice(deviceName, myfile, include_test,
+                                     errorString);
+  }
+  errorString += os.str();
+  return ret;
 }
 
-bool TecplotWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
+bool TecplotWriter::WriteMeshes_(const std::string &filename,
+                                 MeshWriterTest_t include_test,
+                                 std::string &errorString)
 {
-    bool ret = true;
-    std::ostringstream os;
+  bool ret = true;
+  std::ostringstream os;
 
-    std::ofstream myfile;
-    myfile.open (filename.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
-    if (myfile.bad())
+  std::ofstream myfile;
+  myfile.open(filename.c_str(),
+              std::ios::out | std::ios::trunc | std::ios::binary);
+  if (myfile.bad())
+  {
+    ret = false;
+    os << "Could not open " << filename << " for writing\n";
+  }
+
+  GlobalData &gdata = GlobalData::GetInstance();
+  const GlobalData::DeviceList_t &dlist = gdata.GetDeviceList();
+
+  if (dlist.size() > 1)
+  {
+    ret = false;
+    os << "More than 1 device in simulation when output format only supports "
+          "one device.\n";
+  }
+  else
+  {
+    for (GlobalData::DeviceList_t::const_iterator dit = dlist.begin();
+         dit != dlist.end(); ++dit)
     {
-        ret = false;
-        os << "Could not open " << filename << " for writing\n";
+      const std::string &dname = dit->first;
+      ret =
+          Tecplot::WriteSingleDevice(dname, myfile, include_test, errorString);
     }
-    else
-    {
-        ret = Tecplot::WriteSingleDevice(deviceName, myfile, include_test, errorString);
-    }
-    errorString += os.str();
-    return ret;
-}
+  }
+  myfile.close();
 
-bool TecplotWriter::WriteMeshes_(const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
-{
-    bool ret = true;
-    std::ostringstream os;
-
-    std::ofstream myfile;
-    myfile.open (filename.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
-    if (myfile.bad())
-    {
-        ret = false;
-        os << "Could not open " << filename << " for writing\n";
-    }
-
-    GlobalData   &gdata = GlobalData::GetInstance();
-    const GlobalData::DeviceList_t &dlist = gdata.GetDeviceList();
-
-    if (dlist.size() > 1)
-    {
-        ret = false;
-        os << "More than 1 device in simulation when output format only supports one device.\n";
-    }
-    else
-    {
-        for (GlobalData::DeviceList_t::const_iterator dit = dlist.begin(); dit != dlist.end(); ++dit)
-        {
-            const std::string &dname = dit->first;
-            ret = Tecplot::WriteSingleDevice(dname, myfile, include_test, errorString);
-        }
-    }
-    myfile.close();
-
-    errorString += os.str();
-    return ret;
+  errorString += os.str();
+  return ret;
 }

@@ -10,46 +10,41 @@ SPDX-License-Identifier: Apache-2.0
 #include "TetrahedronEdgeModel.hh"
 
 TetrahedronEdgeModelPtr CreateTetrahedronEdgeFromEdgeModelDerivative(
-  const std::string &/*edgemodel*/,
-  const std::string &/*nodemodel*/,
-  RegionPtr /*rp*/
+    const std::string & /*edgemodel*/, const std::string & /*nodemodel*/,
+    RegionPtr /*rp*/
 );
 
 template <typename DoubleType>
 class TetrahedronEdgeFromEdgeModelDerivative : public TetrahedronEdgeModel {
-    public:
+ public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  //// Out naming convention is that the name given is the edge model
+  //// The element edge model is edgemodel_ex, edgemodel_ey
+  TetrahedronEdgeFromEdgeModelDerivative(const std::string & /*edgemodel*/,
+                                         const std::string & /*nodemodel*/,
+                                         RegionPtr /*rp*/
+  );
 
-        //// Out naming convention is that the name given is the edge model
-        //// The element edge model is edgemodel_ex, edgemodel_ey
-        TetrahedronEdgeFromEdgeModelDerivative(
-          const std::string &/*edgemodel*/,
-          const std::string &/*nodemodel*/,
-          RegionPtr /*rp*/
-        );
+ private:
+  void calcTetrahedronEdgeScalarValues() const;
 
-    private:
-        void calcTetrahedronEdgeScalarValues() const;
+  const std::string edgeModelName;
+  const std::string nodeModelName;
 
-
-        const std::string edgeModelName;
-        const std::string nodeModelName;
-
-        // Detect whether parent model still exists
-        std::string edgeModelName0;
-        std::string edgeModelName1;
-        std::string x_ModelName1;
-        std::string x_ModelName2;
-        std::string x_ModelName3;
-        std::string y_ModelName0;
-        std::string y_ModelName1;
-        std::string y_ModelName2;
-        std::string y_ModelName3;
-        std::string z_ModelName0;
-        std::string z_ModelName1;
-        std::string z_ModelName2;
-        std::string z_ModelName3;
+  // Detect whether parent model still exists
+  std::string edgeModelName0;
+  std::string edgeModelName1;
+  std::string x_ModelName1;
+  std::string x_ModelName2;
+  std::string x_ModelName3;
+  std::string y_ModelName0;
+  std::string y_ModelName1;
+  std::string y_ModelName2;
+  std::string y_ModelName3;
+  std::string z_ModelName0;
+  std::string z_ModelName1;
+  std::string z_ModelName2;
+  std::string z_ModelName3;
 };
 #endif
-

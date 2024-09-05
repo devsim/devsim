@@ -17,10 +17,12 @@ namespace dsMesh {
 void Shapes::DecomposeAndUniquify()
 {
   std::sort(Tetrahedra.begin(), Tetrahedra.end());
-  MeshTetrahedronList_t::iterator tetnewend = std::unique(Tetrahedra.begin(), Tetrahedra.end());
+  MeshTetrahedronList_t::iterator tetnewend =
+      std::unique(Tetrahedra.begin(), Tetrahedra.end());
   Tetrahedra.erase(tetnewend, Tetrahedra.end());
 
-  for (MeshTetrahedronList_t::iterator it = Tetrahedra.begin(); it != Tetrahedra.end(); ++it)
+  for (MeshTetrahedronList_t::iterator it = Tetrahedra.begin();
+       it != Tetrahedra.end(); ++it)
   {
     const MeshTetrahedron &tet = *it;
     size_t i0 = tet.Index0();
@@ -35,10 +37,12 @@ void Shapes::DecomposeAndUniquify()
   }
 
   std::sort(Triangles.begin(), Triangles.end());
-  MeshTriangleList_t::iterator trinewend = std::unique(Triangles.begin(), Triangles.end());
+  MeshTriangleList_t::iterator trinewend =
+      std::unique(Triangles.begin(), Triangles.end());
   Triangles.erase(trinewend, Triangles.end());
 
-  for (MeshTriangleList_t::iterator it = Triangles.begin(); it != Triangles.end(); ++it)
+  for (MeshTriangleList_t::iterator it = Triangles.begin();
+       it != Triangles.end(); ++it)
   {
     const MeshTriangle &tri = *it;
     size_t i0 = tri.Index0();
@@ -69,7 +73,7 @@ void Shapes::DecomposeAndUniquify()
   Points.erase(nonewend, Points.end());
 }
 
-void Shapes::AddShape(ElementType_t element_type, const int * node_indexes)
+void Shapes::AddShape(ElementType_t element_type, const int *node_indexes)
 {
   if (element_type == ElementType_t::POINT)
   {
@@ -81,15 +85,18 @@ void Shapes::AddShape(ElementType_t element_type, const int * node_indexes)
   }
   else if (element_type == ElementType_t::TRIANGLE)
   {
-    Triangles.push_back(MeshTriangle(node_indexes[0], node_indexes[1], node_indexes[2]));
+    Triangles.push_back(
+        MeshTriangle(node_indexes[0], node_indexes[1], node_indexes[2]));
   }
   else if (element_type == ElementType_t::TETRAHEDRON)
   {
-    Tetrahedra.push_back(MeshTetrahedron(node_indexes[0], node_indexes[1], node_indexes[2], node_indexes[3]));
+    Tetrahedra.push_back(MeshTetrahedron(node_indexes[0], node_indexes[1],
+                                         node_indexes[2], node_indexes[3]));
   }
 }
 
-void Shapes::AddShape(ElementType_t element_type, const NodeIndexes_t &node_indexes)
+void Shapes::AddShape(ElementType_t element_type,
+                      const NodeIndexes_t &node_indexes)
 {
   AddShape(element_type, &node_indexes[0]);
 }
@@ -153,7 +160,8 @@ void Shapes::AddShapes(Shapes &other_shapes)
   }
   else
   {
-    for (MeshNodeList_t::iterator it = other_shapes.Points.begin(); it != other_shapes.Points.end(); ++it)
+    for (MeshNodeList_t::iterator it = other_shapes.Points.begin();
+         it != other_shapes.Points.end(); ++it)
     {
       Points.push_back(*it);
     }
@@ -168,7 +176,8 @@ void Shapes::AddShapes(Shapes &other_shapes)
   }
   else
   {
-    for (MeshEdgeList_t::iterator it = other_shapes.Lines.begin(); it != other_shapes.Lines.end(); ++it)
+    for (MeshEdgeList_t::iterator it = other_shapes.Lines.begin();
+         it != other_shapes.Lines.end(); ++it)
     {
       Lines.push_back(*it);
     }
@@ -183,7 +192,8 @@ void Shapes::AddShapes(Shapes &other_shapes)
   }
   else
   {
-    for (MeshTriangleList_t::iterator it = other_shapes.Triangles.begin(); it != other_shapes.Triangles.end(); ++it)
+    for (MeshTriangleList_t::iterator it = other_shapes.Triangles.begin();
+         it != other_shapes.Triangles.end(); ++it)
     {
       Triangles.push_back(*it);
     }
@@ -198,7 +208,8 @@ void Shapes::AddShapes(Shapes &other_shapes)
   }
   else
   {
-    for (MeshTetrahedronList_t::iterator it = other_shapes.Tetrahedra.begin(); it != other_shapes.Tetrahedra.end(); ++it)
+    for (MeshTetrahedronList_t::iterator it = other_shapes.Tetrahedra.begin();
+         it != other_shapes.Tetrahedra.end(); ++it)
     {
       Tetrahedra.push_back(*it);
     }
@@ -207,4 +218,4 @@ void Shapes::AddShapes(Shapes &other_shapes)
     t.swap(other_shapes.Tetrahedra);
   }
 }
-}
+}  // namespace dsMesh

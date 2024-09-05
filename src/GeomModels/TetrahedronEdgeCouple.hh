@@ -13,16 +13,16 @@ SPDX-License-Identifier: Apache-2.0
 // Coupling length
 template <typename DoubleType>
 class TetrahedronEdgeCouple : public TetrahedronEdgeModel {
-    public:
-        TetrahedronEdgeCouple(RegionPtr);
+ public:
+  TetrahedronEdgeCouple(RegionPtr);
 
-        void Serialize(std::ostream &) const;
+  void Serialize(std::ostream &) const;
 
-    private:
-        TetrahedronEdgeCouple();
-        TetrahedronEdgeCouple(const TetrahedronEdgeCouple &);
-        TetrahedronEdgeCouple &operator=(const TetrahedronEdgeCouple &);
-        void calcTetrahedronEdgeCouple() const;
-        void calcTetrahedronEdgeScalarValues() const;
+ private:
+  TetrahedronEdgeCouple();
+  TetrahedronEdgeCouple(const TetrahedronEdgeCouple &);
+  TetrahedronEdgeCouple &operator=(const TetrahedronEdgeCouple &);
+  void calcTetrahedronEdgeCouple() const;
+  void calcTetrahedronEdgeScalarValues() const;
 };
 #endif

@@ -16,7 +16,7 @@ template <typename DoubleType>
 NodeVolume<DoubleType>::NodeVolume(RegionPtr rp)
     : NodeModel("NodeVolume", rp, NodeModel::DisplayType::SCALAR)
 {
-    RegisterCallback("EdgeNodeVolume");
+  RegisterCallback("EdgeNodeVolume");
 }
 
 template <typename DoubleType>
@@ -39,7 +39,7 @@ void NodeVolume<DoubleType>::calcNodeScalarValues() const
 
     ConstEdgeList::const_iterator it = el.begin();
     const ConstEdgeList::const_iterator itend = el.end();
-    for ( ; it != itend; ++it)
+    for (; it != itend; ++it)
     {
       volume += evol[(*it)->GetIndex()];
     }
@@ -53,7 +53,7 @@ void NodeVolume<DoubleType>::calcNodeScalarValues() const
 template <typename DoubleType>
 void NodeVolume<DoubleType>::setInitialValues()
 {
-    DefaultInitializeValues();
+  DefaultInitializeValues();
 }
 
 template <typename DoubleType>
@@ -67,4 +67,3 @@ template class NodeVolume<double>;
 #include "Float128.hh"
 template class NodeVolume<float128>;
 #endif
-

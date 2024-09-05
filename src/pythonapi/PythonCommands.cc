@@ -54,17 +54,16 @@ struct module_state {
 };
 
 #define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
-}
+}  // namespace
 
-
-static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, const char *name, newcmd fptr)
+static PyObject *CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs,
+                             const char *name, newcmd fptr)
 {
   PyObject *ret = nullptr;
 
   FPECheck::ClearFPE();
 
   std::string command_name = name;
-
 
   if (args)
   {
@@ -74,7 +73,8 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
       if (argc != 0)
       {
         std::ostringstream os;
-        os << "Command " << command_name << " does not take positional arguments";
+        os << "Command " << command_name
+           << " does not take positional arguments";
         PyErr_SetString(GETSTATE(m)->error, os.str().c_str());
         return ret;
       }
@@ -87,20 +87,20 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
   }
 
   std::string errorString;
-  bool        isError = false;
+  bool isError = false;
 
   try
   {
-
     dsGetArgs::CommandInfo command_info;
-    command_info.self_         =  m;
-    command_info.args_         =  args;
-    if (kwargs) {
-    Py_INCREF(kwargs);
+    command_info.self_ = m;
+    command_info.args_ = args;
+    if (kwargs)
+    {
+      Py_INCREF(kwargs);
     }
-    command_info.kwargs_       =  kwargs;
-    command_info.command_name_ =  command_name;
-    command_info.exception_    =  GETSTATE(m)->error;
+    command_info.kwargs_ = kwargs;
+    command_info.command_name_ = command_name;
+    command_info.exception_ = GETSTATE(m)->error;
 
     CommandHandler data(&command_info);
     command_info.command_handler_ = &data;
@@ -124,19 +124,16 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
       }
     }
 
-  }
-  catch (const dsException &x)
+  } catch (const dsException &x)
   {
     ret = nullptr;
     errorString = x.what();
-  }
-  catch (std::bad_alloc &x)
+  } catch (std::bad_alloc &x)
   {
     ret = nullptr;
     errorString = "OUT OF MEMORY\n";
     errorString += x.what();
-  }
-  catch (std::exception &x)
+  } catch (std::exception &x)
   {
     ret = nullptr;
     errorString = "UNEXPECTED ERROR\n";
@@ -146,7 +143,9 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
   if (FPECheck::CheckFPE())
   {
     std::ostringstream os;
-    os << "Uncaught FPE: There was an uncaught floating point exception of type \"" << FPECheck::getFPEString() << "\"\n";
+    os << "Uncaught FPE: There was an uncaught floating point exception of "
+          "type \""
+       << FPECheck::getFPEString() << "\"\n";
     errorString += os.str();
 
     FPECheck::ClearFPE();
@@ -160,7 +159,8 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
 
   if (!ret)
   {
-    PyErr_SetString(GETSTATE(m)->error, const_cast<char *>(errorString.c_str()));
+    PyErr_SetString(GETSTATE(m)->error,
+                    const_cast<char *>(errorString.c_str()));
   }
 
   return ret;
@@ -174,10 +174,9 @@ PyObject * name ## CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs)
   return CmdDispatch(self, args, kwargs, # name, fptr); \
 }
 
-#define  DS_FUNCTION_TABLE MyNewPyPtr
+#define DS_FUNCTION_TABLE MyNewPyPtr
 #include "CommandTable.cc"
-#undef   DS_FUNCTION_TABLE
-
+#undef DS_FUNCTION_TABLE
 
 #include "DevsimDoc.cc"
 
@@ -186,80 +185,77 @@ PyObject * name ## CmdDispatch(PyObject *self, PyObject *args, PyObject *kwargs)
 
 #define DS_FUNCTION_TABLE MYCOMMAND
 static struct PyMethodDef devsim_methods[] = {
-//    {"devsim", reinterpret_cast<PyCFunction>(CmdDispatch), METH_KEYWORDS, "devsim interpreter"},
+//    {"devsim", reinterpret_cast<PyCFunction>(CmdDispatch), METH_KEYWORDS,
+//    "devsim interpreter"},
 #include "CommandTable.cc"
-{nullptr, nullptr, 0, nullptr}
-};
-#undef   DS_FUNCTION_TABLE
+    {nullptr, nullptr, 0, nullptr}};
+#undef DS_FUNCTION_TABLE
 
 #ifndef _WIN32
-static int devsim_traverse(PyObject *m, visitproc visit, void *arg) {
-    Py_VISIT(GETSTATE(m)->error);
-    return 0;
+static int devsim_traverse(PyObject *m, visitproc visit, void *arg)
+{
+  Py_VISIT(GETSTATE(m)->error);
+  return 0;
 }
 
-static int devsim_clear(PyObject *m) {
-    Py_CLEAR(GETSTATE(m)->error);
-    return 0;
+static int devsim_clear(PyObject *m)
+{
+  Py_CLEAR(GETSTATE(m)->error);
+  return 0;
 }
 #endif
 
 static struct PyModuleDef moduledef = {
-        PyModuleDef_HEAD_INIT,
-        DEVSIM_MODULE_STRING,
-        nullptr,
-        sizeof(struct module_state),
-        devsim_methods,
-        nullptr,
+    PyModuleDef_HEAD_INIT, DEVSIM_MODULE_STRING, nullptr,
+    sizeof(struct module_state), devsim_methods, nullptr,
 #ifdef _WIN32
-// Fix memory error found on Windows 10
-// but no other platforms
-        nullptr,
-        nullptr,
+    // Fix memory error found on Windows 10
+    // but no other platforms
+    nullptr, nullptr,
 #else
         devsim_traverse,
         devsim_clear,
 #endif
-        nullptr
-};
+    nullptr};
 
 #define INITERROR return nullptr
 
-//PyMODINIT_FUNC // this next line is used instead to use DLL_PUBLIC macro
-extern "C" DLL_PUBLIC PyObject *
-DEVSIM_MODULE_INIT(void)
+// PyMODINIT_FUNC // this next line is used instead to use DLL_PUBLIC macro
+extern "C" DLL_PUBLIC PyObject *DEVSIM_MODULE_INIT(void)
 {
   PyObject *module = PyModule_Create(&moduledef);
 
-    if (module == nullptr)
-    {
-      INITERROR;
-    }
+  if (module == nullptr)
+  {
+    INITERROR;
+  }
 
-    // TODO: modify symdiff to use this approach
-    struct module_state *st = GETSTATE(module);
-    st->error = PyErr_NewException(const_cast<char *>(DEVSIM_MODULE_STRING ".error"), nullptr, nullptr);
-    if (st->error == nullptr) {
-        Py_DECREF(module);
-        INITERROR;
-    }
+  // TODO: modify symdiff to use this approach
+  struct module_state *st = GETSTATE(module);
+  st->error = PyErr_NewException(
+      const_cast<char *>(DEVSIM_MODULE_STRING ".error"), nullptr, nullptr);
+  if (st->error == nullptr)
+  {
+    Py_DECREF(module);
+    INITERROR;
+  }
 
-    PyModule_AddObject(module, "error", st->error);
+  PyModule_AddObject(module, "error", st->error);
 
-    //https://www.python.org/dev/peps/pep-0396/
-    PyDict_SetItemString(PyModule_GetDict(module), "__version__", PyUnicode_FromString(DEVSIM_VERSION_STRING));
+  // https://www.python.org/dev/peps/pep-0396/
+  PyDict_SetItemString(PyModule_GetDict(module), "__version__",
+                       PyUnicode_FromString(DEVSIM_VERSION_STRING));
 
-    try {
-      devsim_initialization();
-    }
-    catch (...)
-    {
-        PyErr_SetString(PyExc_RuntimeError, "Issues initializing DEVSIM.");
-        Py_DECREF(module);
-        INITERROR;
-    }
+  try
+  {
+    devsim_initialization();
+  } catch (...)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Issues initializing DEVSIM.");
+    Py_DECREF(module);
+    INITERROR;
+  }
 
   return module;
 }
-}
-
+}  // namespace dsPy

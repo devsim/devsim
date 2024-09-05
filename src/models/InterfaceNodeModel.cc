@@ -14,9 +14,8 @@ SPDX-License-Identifier: Apache-2.0
 #include "FPECheck.hh"
 #include "GeometryStream.hh"
 
-
-
-InterfaceNodeModel::~InterfaceNodeModel() {
+InterfaceNodeModel::~InterfaceNodeModel()
+{
 #if 0
   myinterface->UnregisterCallback(name);
 #endif
@@ -35,10 +34,9 @@ bool InterfaceNodeModel::IsOne() const
 }
 
 // derived classes must register dependencies
-InterfaceNodeModel::InterfaceNodeModel(const std::string &nm, const InterfacePtr ip)
-    : name(nm),
-      myinterface(ip),
-      model_data(ip->GetNodes0().size())
+InterfaceNodeModel::InterfaceNodeModel(const std::string &nm,
+                                       const InterfacePtr ip)
+    : name(nm), myinterface(ip), model_data(ip->GetNodes0().size())
 {
   ip->AddInterfaceNodeModel(this);
 }
@@ -52,8 +50,7 @@ void InterfaceNodeModel::CalculateValues() const
   try
   {
     this->calcNodeScalarValues();
-  }
-  catch (...)
+  } catch (...)
   {
     inprocess = false;
     throw;
@@ -77,11 +74,15 @@ void InterfaceNodeModel::CalculateValues() const
   if (FPECheck::CheckFPE())
   {
     std::ostringstream os;
-    const std::string &dname = GetInterface().GetRegion0()->GetDevice()->GetName();
-    os << "There was a floating point exception while evaluating the interface node model " << name
-    << " on Device: " << dname << " on Interface: " << GetInterface().GetName() << "\n";
+    const std::string &dname =
+        GetInterface().GetRegion0()->GetDevice()->GetName();
+    os << "There was a floating point exception while evaluating the interface "
+          "node model "
+       << name << " on Device: " << dname
+       << " on Interface: " << GetInterface().GetName() << "\n";
     FPECheck::ClearFPE();
-    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetInterface(), os.str().c_str());
+    GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetInterface(),
+                             os.str().c_str());
   }
 }
 
@@ -139,11 +140,10 @@ void InterfaceNodeModel::SetValues(const InterfaceNodeModel &nm)
 }
 #endif
 
-
 void InterfaceNodeModel::MarkOld()
 {
-    uptodate = false;
-    myinterface->SignalCallbacks(name);
+  uptodate = false;
+  myinterface->SignalCallbacks(name);
 }
 
 void InterfaceNodeModel::MarkOld() const
@@ -153,7 +153,7 @@ void InterfaceNodeModel::MarkOld() const
 
 void InterfaceNodeModel::RegisterCallback(const std::string &nm)
 {
-    myinterface->RegisterCallback(name, nm);
+  myinterface->RegisterCallback(name, nm);
 }
 
 bool InterfaceNodeModel::IsUniform() const
@@ -194,9 +194,8 @@ const std::string &InterfaceNodeModel::GetInterfaceName() const
 #include "InterfaceNodeModelInstantiate.cc"
 
 #ifdef DEVSIM_EXTENDED_PRECISION
-#undef  DBLTYPE
+#undef DBLTYPE
 #define DBLTYPE float128
 #include "Float128.hh"
 #include "InterfaceNodeModelInstantiate.cc"
 #endif
-

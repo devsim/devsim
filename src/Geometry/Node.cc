@@ -10,7 +10,6 @@ SPDX-License-Identifier: Apache-2.0
 
 Node::Node(size_t ind, ConstCoordinatePtr cp)
 {
-   index = ind;
-   coord = cp;
+  index = ind;
+  coord = cp;
 }
-

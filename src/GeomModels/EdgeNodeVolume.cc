@@ -14,8 +14,8 @@ SPDX-License-Identifier: Apache-2.0
 #include "EdgeScalarData.hh"
 
 template <typename DoubleType>
-EdgeNodeVolume<DoubleType>::EdgeNodeVolume(RegionPtr rp) :
-EdgeModel("EdgeNodeVolume", rp, EdgeModel::DisplayType::SCALAR)
+EdgeNodeVolume<DoubleType>::EdgeNodeVolume(RegionPtr rp)
+    : EdgeModel("EdgeNodeVolume", rp, EdgeModel::DisplayType::SCALAR)
 {
   const size_t dimension = rp->GetDimension();
 
@@ -29,7 +29,6 @@ EdgeModel("EdgeNodeVolume", rp, EdgeModel::DisplayType::SCALAR)
     RegisterCallback("ElementNodeVolume");
   }
 }
-
 
 template <typename DoubleType>
 void EdgeNodeVolume<DoubleType>::calcEdgeScalarValues() const
@@ -68,7 +67,8 @@ void EdgeNodeVolume<DoubleType>::calcEdgeScalarValues() const
 template <typename DoubleType>
 void EdgeNodeVolume<DoubleType>::calcEdgeNodeVolume2d() const
 {
-  ConstTriangleEdgeModelPtr eec = GetRegion().GetTriangleEdgeModel("ElementNodeVolume");
+  ConstTriangleEdgeModelPtr eec =
+      GetRegion().GetTriangleEdgeModel("ElementNodeVolume");
   dsAssert(eec.get(), "ElementNodeVolume missing");
 
   std::vector<DoubleType> ev = eec->GetValuesOnEdges<DoubleType>();
@@ -78,7 +78,8 @@ void EdgeNodeVolume<DoubleType>::calcEdgeNodeVolume2d() const
 template <typename DoubleType>
 void EdgeNodeVolume<DoubleType>::calcEdgeNodeVolume3d() const
 {
-  ConstTetrahedronEdgeModelPtr eec = GetRegion().GetTetrahedronEdgeModel("ElementNodeVolume");
+  ConstTetrahedronEdgeModelPtr eec =
+      GetRegion().GetTetrahedronEdgeModel("ElementNodeVolume");
   dsAssert(eec.get(), "ElementNodeVolume missing");
   std::vector<DoubleType> ev = eec->GetValuesOnEdges<DoubleType>();
   SetValues(ev);
@@ -95,5 +96,3 @@ template class EdgeNodeVolume<double>;
 #include "Float128.hh"
 template class EdgeNodeVolume<float128>;
 #endif
-
-

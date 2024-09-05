@@ -16,36 +16,36 @@ SPDX-License-Identifier: Apache-2.0
 
 // Needs to be derived from InstanceModel
 class IdealCurrent : public InstanceModel {
-    public:
-        IdealCurrent(
-                NodeKeeper *,
-                const char *name, // level name included
-                const char *n1,
-                const char *n2,
-                double value,
-                const SignalPtr
-//              const ModelPtr,
-//              const InstanceParameterList &
-                );
+ public:
+  IdealCurrent(NodeKeeper *,
+               const char *name,  // level name included
+               const char *n1, const char *n2, double value, const SignalPtr
+               //              const ModelPtr,
+               //              const InstanceParameterList &
+  );
 
-//      IdealCurrent(const char *nplus, const char *nmin, const char *value);
+  //      IdealCurrent(const char *nplus, const char *nmin, const char *value);
 
-//      void getDCStamp(Matrix::RowColEntryVec &);
-//      void getTranStamp(Matrix::RowColEntryVec &) {};
-        bool addParam(const std::string &, double);
+  //      void getDCStamp(Matrix::RowColEntryVec &);
+  //      void getTranStamp(Matrix::RowColEntryVec &) {};
+  bool addParam(const std::string &, double);
 
-    private:
-        void assembleDC_impl(const NodeKeeper::Solution &, dsMath::RealRowColValueVec<double> &, dsMath::RHSEntryVec<double> &);
-        void assembleTran_impl(const double scl, const NodeKeeper::Solution &sol, dsMath::RealRowColValueVec<double> *mat, std::vector<std::pair<int, double> > &rhs) {};
+ private:
+  void assembleDC_impl(const NodeKeeper::Solution &,
+                       dsMath::RealRowColValueVec<double> &,
+                       dsMath::RHSEntryVec<double> &);
+  void assembleTran_impl(const double scl, const NodeKeeper::Solution &sol,
+                         dsMath::RealRowColValueVec<double> *mat,
+                         std::vector<std::pair<int, double> > &rhs) {};
 
-        IdealCurrent();
-        IdealCurrent(const IdealCurrent &);
-        IdealCurrent operator=(const IdealCurrent &);
+  IdealCurrent();
+  IdealCurrent(const IdealCurrent &);
+  IdealCurrent operator=(const IdealCurrent &);
 
-        double  i_; // DC current
-        CircuitNodePtr np_;
-        CircuitNodePtr nm_;
-        SignalPtr sig_; // My signal which controls everything
+  double i_;  // DC current
+  CircuitNodePtr np_;
+  CircuitNodePtr nm_;
+  SignalPtr sig_;  // My signal which controls everything
 };
 
 #endif

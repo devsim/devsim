@@ -14,31 +14,31 @@ namespace dsMath {
 enum class CompressionType;
 
 template <typename DoubleType>
-class ExternalPreconditioner : public Preconditioner<DoubleType>
-{
-    public:
-        ExternalPreconditioner(size_t, PEnum::TransposeType_t);
-        bool init (ObjectHolder, std::string &);
-        dsMath::CompressionType GetRealMatrixCompressionType() const override;
-        dsMath::CompressionType GetComplexMatrixCompressionType() const override;
+class ExternalPreconditioner : public Preconditioner<DoubleType> {
+ public:
+  ExternalPreconditioner(size_t, PEnum::TransposeType_t);
+  bool init(ObjectHolder, std::string &);
+  dsMath::CompressionType GetRealMatrixCompressionType() const override;
+  dsMath::CompressionType GetComplexMatrixCompressionType() const override;
 
-    protected:
-        bool DerivedLUFactor(Matrix<DoubleType> *) override;
-        void DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const override;
-        void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const override;
+ protected:
+  bool DerivedLUFactor(Matrix<DoubleType> *) override;
+  void DerivedLUSolve(DoubleVec_t<DoubleType> &x,
+                      const DoubleVec_t<DoubleType> &b) const override;
+  void DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x,
+                      const ComplexDoubleVec_t<DoubleType> &b) const override;
 
-        ~ExternalPreconditioner();
+  ~ExternalPreconditioner();
 
-    private:
-        ExternalPreconditioner() = delete;
-        ExternalPreconditioner(const ExternalPreconditioner &) = delete;
-        ExternalPreconditioner &operator= (const ExternalPreconditioner &) = delete;
+ private:
+  ExternalPreconditioner() = delete;
+  ExternalPreconditioner(const ExternalPreconditioner &) = delete;
+  ExternalPreconditioner &operator=(const ExternalPreconditioner &) = delete;
 
-        mutable ObjectHolder command_handle_;
-        mutable ObjectHolder command_data_;
-        CompressionType compression_type_;
+  mutable ObjectHolder command_handle_;
+  mutable ObjectHolder command_data_;
+  CompressionType compression_type_;
 };
-}
+}  // namespace dsMath
 
 #endif
-

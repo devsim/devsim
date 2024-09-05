@@ -19,4 +19,3 @@ std::string GetGlobalParameterStringOptional(const std::string &name)
   }
   return ret;
 }
-

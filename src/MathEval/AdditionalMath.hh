@@ -37,14 +37,13 @@ inline U max(U x, U y)
 template <typename U>
 inline U step(U x)
 {
-    return (x >= 0.0) ? 1.0 : 0.0;
+  return (x >= 0.0) ? 1.0 : 0.0;
 }
 
 template <typename U>
 inline U sgn(U x)
 {
-    return (x >= 0.0) ? 1.0 : -1.0;
+  return (x >= 0.0) ? 1.0 : -1.0;
 }
 
 #endif
-

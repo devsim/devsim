@@ -12,15 +12,17 @@ SPDX-License-Identifier: Apache-2.0
 #include "dsAssert.hh"
 
 CommandHandler::CommandHandler(void *command_info)
-  : command_info_(command_info), return_code_(0)
+    : command_info_(command_info), return_code_(0)
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsGetArgs::CommandInfo &info =
+      *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   command_name = info.command_name_;
 }
 
 CommandHandler::~CommandHandler()
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsGetArgs::CommandInfo &info =
+      *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   delete info.get_args_;
 }
 
@@ -51,10 +53,11 @@ void CommandHandler::SetObjectResult(ObjectHolder obj)
   error_string_.clear();
 }
 
-
-bool CommandHandler::processOptions(dsGetArgs::optionList opts, std::string & errors) const
+bool CommandHandler::processOptions(dsGetArgs::optionList opts,
+                                    std::string &errors) const
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsGetArgs::CommandInfo &info =
+      *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   dsAssert(!info.get_args_, "UNEXPECTED");
   info.get_args_ = new dsGetArgs::GetArgs(opts);
   return info.get_args_->processOptions(info, errors);
@@ -62,44 +65,48 @@ bool CommandHandler::processOptions(dsGetArgs::optionList opts, std::string & er
 
 std::string CommandHandler::GetStringOption(const std::string &s) const
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsGetArgs::CommandInfo &info =
+      *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   dsAssert(info.get_args_, "UNEXPECTED");
   return info.get_args_->GetStringOption(s);
 }
 
 double CommandHandler::GetDoubleOption(const std::string &s) const
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsGetArgs::CommandInfo &info =
+      *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   dsAssert(info.get_args_, "UNEXPECTED");
   return info.get_args_->GetDoubleOption(s);
 }
 
-int    CommandHandler::GetIntegerOption(const std::string &s) const
+int CommandHandler::GetIntegerOption(const std::string &s) const
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsGetArgs::CommandInfo &info =
+      *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   dsAssert(info.get_args_, "UNEXPECTED");
   return info.get_args_->GetIntegerOption(s);
 }
 
-bool   CommandHandler::GetBooleanOption(const std::string &s) const
+bool CommandHandler::GetBooleanOption(const std::string &s) const
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsGetArgs::CommandInfo &info =
+      *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   dsAssert(info.get_args_, "UNEXPECTED");
   return info.get_args_->GetBooleanOption(s);
 }
 
 ObjectHolder CommandHandler::GetObjectHolder(const std::string &s) const
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsGetArgs::CommandInfo &info =
+      *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   dsAssert(info.get_args_, "UNEXPECTED");
   return info.get_args_->GetObjectHolder(s);
 }
 
 bool CommandHandler::IsSpecified(const std::string &s) const
 {
-  dsGetArgs::CommandInfo &info = *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
+  dsGetArgs::CommandInfo &info =
+      *(reinterpret_cast<dsGetArgs::CommandInfo *>(command_info_));
   dsAssert(info.get_args_, "UNEXPECTED");
   return info.get_args_->IsSpecified(s);
 }
-
-

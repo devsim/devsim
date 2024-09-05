@@ -19,39 +19,31 @@ SPDX-License-Identifier: Apache-2.0
 #include <string>
 #include <vector>
 
-namespace
+namespace {
+template <typename T>
+void deleteMapPointers(std::map<std::string, T *> &x)
 {
-template <typename T> void deleteMapPointers(std::map<std::string, T *> &x)
-{
-    typedef std::map<std::string, T *> mtype;
+  typedef std::map<std::string, T *> mtype;
 
-    typename mtype::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete it->second;
-    }
+  typename mtype::iterator it = x.begin();
+  for (; it != x.end(); ++it)
+  {
+    delete it->second;
+  }
 }
-}
+}  // namespace
 
-Contact::Contact(const std::string &nm, RegionPtr r, const ConstNodeList_t &cnv, const std::string &mname)
+Contact::Contact(const std::string &nm, RegionPtr r, const ConstNodeList_t &cnv,
+                 const std::string &mname)
     : name(nm), materialName(mname), region(r), contactnodes(cnv)
 {
 }
 
-ConstRegionPtr Contact::GetRegion() const
-{
-    return region;
-}
+ConstRegionPtr Contact::GetRegion() const { return region; }
 
-const std::string &Contact::GetName() const
-{
-    return name;
-}
+const std::string &Contact::GetName() const { return name; }
 
-const std::string &Contact::GetMaterialName() const
-{
-    return materialName;
-}
+const std::string &Contact::GetMaterialName() const { return materialName; }
 
 void Contact::SetMaterial(const std::string &new_material)
 {
@@ -59,7 +51,8 @@ void Contact::SetMaterial(const std::string &new_material)
     for now just invalidate any models that are on the region and on the contact
   */
   const Region::NodeModelList_t &nml = GetRegion()->GetNodeModelList();
-  for (Region::NodeModelList_t::const_iterator it = nml.begin(); it != nml.end(); ++it)
+  for (Region::NodeModelList_t::const_iterator it = nml.begin();
+       it != nml.end(); ++it)
   {
     if (&(it->second->GetContact()) == this)
     {
@@ -67,7 +60,8 @@ void Contact::SetMaterial(const std::string &new_material)
     }
   }
   const Region::EdgeModelList_t &eml = GetRegion()->GetEdgeModelList();
-  for (Region::EdgeModelList_t::const_iterator it = eml.begin(); it != eml.end(); ++it)
+  for (Region::EdgeModelList_t::const_iterator it = eml.begin();
+       it != eml.end(); ++it)
   {
     if (&(it->second->GetContact()) == this)
     {
@@ -77,10 +71,7 @@ void Contact::SetMaterial(const std::string &new_material)
   materialName = new_material;
 }
 
-const ConstNodeList &Contact::GetNodes() const
-{
-    return contactnodes;
-}
+const ConstNodeList &Contact::GetNodes() const { return contactnodes; }
 
 const std::string &Contact::GetDeviceName() const
 {
@@ -99,7 +90,7 @@ Contact::~Contact()
 void Contact::AddEquation(ContactEquationHolder &eq)
 {
   // Replace this with a warning
-  const std::string nm  = eq.GetName();
+  const std::string nm = eq.GetName();
 
   if (contactEquationPtrMap.count(nm))
   {
@@ -108,19 +99,21 @@ void Contact::AddEquation(ContactEquationHolder &eq)
     {
       std::ostringstream os;
       os << "Warning: Will not replace Contact Equation with itself.\n"
-          "Region: " << this->GetName() << ", Equation: " << nm <<
-          "\n";
+            "Region: "
+         << this->GetName() << ", Equation: " << nm << "\n";
       GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
     }
     else
     {
       std::ostringstream os;
-      os << "Warning: Replacing Contact Equation with Contact Equation of the same name.\n"
-          "Contact: " << this->GetName() << ", Equation: " << nm << "\n";
+      os << "Warning: Replacing Contact Equation with Contact Equation of the "
+            "same name.\n"
+            "Contact: "
+         << this->GetName() << ", Equation: " << nm << "\n";
       GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
 
       contactEquationPtrMap[nm] = eq;
-        /// the contactEquationIndexMap doesn't change
+      /// the contactEquationIndexMap doesn't change
     }
   }
   else
@@ -133,7 +126,7 @@ void Contact::AddEquation(ContactEquationHolder &eq)
 //// Decrements the equation index for all other equations
 void Contact::DeleteEquation(ContactEquationHolder &eq)
 {
-  const std::string nm  = eq.GetName();
+  const std::string nm = eq.GetName();
   dsAssert(contactEquationPtrMap.count(nm) != 0, "UNEXPECTED");
   contactEquationPtrMap.erase(nm);
 }
@@ -149,7 +142,9 @@ const ContactEquationPtrMap_t &Contact::GetEquationPtrList() const
 }
 
 template <typename DoubleType>
-void Contact::Assemble(dsMath::RealRowColValueVec<DoubleType> &m, dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
+void Contact::Assemble(dsMath::RealRowColValueVec<DoubleType> &m,
+                       dsMath::RHSEntryVec<DoubleType> &v, PermutationMap &p,
+                       dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t)
 {
   for (auto it : GetEquationPtrList())
   {
@@ -167,7 +162,7 @@ void Contact::FindEdges() const
   {
     return;
   }
-  else if (dimension ==3)
+  else if (dimension == 3)
   {
     FindTriangles();
     return;
@@ -196,9 +191,8 @@ void Contact::FindEdges() const
       continue;
     }
 
-    if ((indexes.find(edge.GetHead()->GetIndex()) != indexes.end())
-      && (indexes.find(edge.GetTail()->GetIndex()) != indexes.end())
-       )
+    if ((indexes.find(edge.GetHead()->GetIndex()) != indexes.end()) &&
+        (indexes.find(edge.GetTail()->GetIndex()) != indexes.end()))
     {
       contactedges.push_back(&edge);
     }
@@ -216,7 +210,8 @@ void Contact::FindTriangles() const
 
   const ConstEdgeList &el = region.GetEdgeList();
 
-  const Region::TriangleToConstTetrahedronList_t &ett = region.GetTriangleToTetrahedronList();
+  const Region::TriangleToConstTetrahedronList_t &ett =
+      region.GetTriangleToTetrahedronList();
 
   const Region::TriangleToConstEdgeList_t &ete = region.GetTriangleToEdgeList();
 
@@ -240,10 +235,9 @@ void Contact::FindTriangles() const
     }
 
     const std::vector<ConstNodePtr> &node_list = triangle.GetNodeList();
-    if ((indexes.find(node_list[0]->GetIndex()) != indexes.end())
-      && (indexes.find(node_list[1]->GetIndex()) != indexes.end())
-      && (indexes.find(node_list[2]->GetIndex()) != indexes.end())
-      )
+    if ((indexes.find(node_list[0]->GetIndex()) != indexes.end()) &&
+        (indexes.find(node_list[1]->GetIndex()) != indexes.end()) &&
+        (indexes.find(node_list[2]->GetIndex()) != indexes.end()))
     {
       contacttriangles.push_back(&triangle);
 
@@ -255,7 +249,8 @@ void Contact::FindTriangles() const
     }
   }
 
-  for (std::set<size_t>::const_iterator it = edge_indexes.begin(); it != edge_indexes.end(); ++it)
+  for (std::set<size_t>::const_iterator it = edge_indexes.begin();
+       it != edge_indexes.end(); ++it)
   {
     contactedges.push_back(el[*it]);
   }
@@ -291,10 +286,14 @@ void Contact::AddTriangles(const ConstTriangleList &tlist)
   region->SignalCallbacks("@@@ContactChange");
 }
 
-
-
-template void Contact::Assemble(dsMath::RealRowColValueVec<double> &m, dsMath::RHSEntryVec<double> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t);
+template void Contact::Assemble(dsMath::RealRowColValueVec<double> &m,
+                                dsMath::RHSEntryVec<double> &v,
+                                PermutationMap &p, dsMathEnum::WhatToLoad w,
+                                dsMathEnum::TimeMode t);
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
-template void Contact::Assemble(dsMath::RealRowColValueVec<float128> &m, dsMath::RHSEntryVec<float128> &v, PermutationMap &p, dsMathEnum::WhatToLoad w, dsMathEnum::TimeMode t);
+template void Contact::Assemble(dsMath::RealRowColValueVec<float128> &m,
+                                dsMath::RHSEntryVec<float128> &v,
+                                PermutationMap &p, dsMathEnum::WhatToLoad w,
+                                dsMathEnum::TimeMode t);
 #endif

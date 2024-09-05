@@ -11,23 +11,20 @@ SPDX-License-Identifier: Apache-2.0
 #include <string>
 #include <array>
 
-TetrahedronEdgeModelPtr CreateTetrahedronEdgePairFromEdgeModel(const std::string &, RegionPtr);
+TetrahedronEdgeModelPtr CreateTetrahedronEdgePairFromEdgeModel(
+    const std::string &, RegionPtr);
 
 template <typename DoubleType>
 class TetrahedronEdgePairFromEdgeModel : public TetrahedronEdgeModel {
-    public:
+ public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  TetrahedronEdgePairFromEdgeModel(const std::string &, RegionPtr);
 
-        TetrahedronEdgePairFromEdgeModel(const std::string &, RegionPtr);
+ private:
+  void calcTetrahedronEdgeScalarValues() const;
 
-
-    private:
-
-        void calcTetrahedronEdgeScalarValues() const;
-
-        const std::string edgeModelName;
-        std::array<std::array<std::string, 3>, 2> model_names;
+  const std::string edgeModelName;
+  std::array<std::array<std::string, 3>, 2> model_names;
 };
 #endif
-

@@ -11,18 +11,14 @@ SPDX-License-Identifier: Apache-2.0
 NodeModelPtr CreateCylindricalNodeVolume(RegionPtr);
 
 template <typename DoubleType>
-class CylindricalNodeVolume : public NodeModel
-{
-    public:
+class CylindricalNodeVolume : public NodeModel {
+ public:
+  void Serialize(std::ostream &) const;
 
-      void Serialize(std::ostream &) const;
+  CylindricalNodeVolume(RegionPtr);
 
-      CylindricalNodeVolume(RegionPtr);
-
-    private:
-
-      void calcNodeScalarValues() const;
-      void setInitialValues();
+ private:
+  void calcNodeScalarValues() const;
+  void setInitialValues();
 };
 #endif
-

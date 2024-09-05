@@ -20,47 +20,52 @@ SPDX-License-Identifier: Apache-2.0
 #include "GradientField.hh"
 #include <complex>
 
-
-const char *VectorGradientEnum::CalcTypeString[] = {
-  "default",
-  "avoidzero",
-  nullptr
-};
+const char *VectorGradientEnum::CalcTypeString[] = {"default", "avoidzero",
+                                                    nullptr};
 
 template <typename DoubleType>
-VectorGradient<DoubleType>::VectorGradient(RegionPtr rp, const std::string &name, VectorGradientEnum::CalcType ct)
-    : NodeModel(name + "_gradx", rp, NodeModel::DisplayType::SCALAR), parentname_(name),  calctype_(ct)
+VectorGradient<DoubleType>::VectorGradient(RegionPtr rp,
+                                           const std::string &name,
+                                           VectorGradientEnum::CalcType ct)
+    : NodeModel(name + "_gradx", rp, NodeModel::DisplayType::SCALAR),
+      parentname_(name),
+      calctype_(ct)
 {
-    /// This is the scalar we are taking the gradient of
-    RegisterCallback(name);
+  /// This is the scalar we are taking the gradient of
+  RegisterCallback(name);
 
-    RegisterCallback("EdgeInverseLength");
-    RegisterCallback("unitx");
-    //// unitx calculates unity and unitz
+  RegisterCallback("EdgeInverseLength");
+  RegisterCallback("unitx");
+  //// unitx calculates unity and unitz
 
-    const size_t dimension = GetRegion().GetDimension();
-    if (dimension == 2)
-    {
-      RegisterCallback("unity");
-      yfield_ = CreateNodeSolution(name + "_grady", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    }
-    else if (dimension == 3)
-    {
-      RegisterCallback("unity");
-      RegisterCallback("unitz");
-      yfield_ = CreateNodeSolution(name + "_grady", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
-      zfield_ = CreateNodeSolution(name + "_gradz", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    }
+  const size_t dimension = GetRegion().GetDimension();
+  if (dimension == 2)
+  {
+    RegisterCallback("unity");
+    yfield_ =
+        CreateNodeSolution(name + "_grady", rp, NodeModel::DisplayType::SCALAR,
+                           this->GetSelfPtr());
+  }
+  else if (dimension == 3)
+  {
+    RegisterCallback("unity");
+    RegisterCallback("unitz");
+    yfield_ =
+        CreateNodeSolution(name + "_grady", rp, NodeModel::DisplayType::SCALAR,
+                           this->GetSelfPtr());
+    zfield_ =
+        CreateNodeSolution(name + "_gradz", rp, NodeModel::DisplayType::SCALAR,
+                           this->GetSelfPtr());
+  }
 }
-
 
 template <typename DoubleType>
 void VectorGradient<DoubleType>::calc1d() const
 {
   const Region &r = GetRegion();
   ConstNodeModelPtr scalarField = r.GetNodeModel(parentname_);
-  ConstEdgeModelPtr edgeSign    = r.GetEdgeModel("unitx");
-  ConstEdgeModelPtr edgeInv     = r.GetEdgeModel("EdgeInverseLength");
+  ConstEdgeModelPtr edgeSign = r.GetEdgeModel("unitx");
+  ConstEdgeModelPtr edgeInv = r.GetEdgeModel("EdgeInverseLength");
   dsAssert(scalarField.get(), "UNEXPECTED");
   dsAssert(edgeSign.get(), "UNEXPECTED");
   dsAssert(edgeInv.get(), "UNEXPECTED");
@@ -70,7 +75,8 @@ void VectorGradient<DoubleType>::calc1d() const
   EdgeScalarData<DoubleType> vgrad(*edgeSign);
   vgrad.times_equal_model(*edgeInv);
 
-  const NodeScalarList<DoubleType> &nsl = scalarField->GetScalarValues<DoubleType>();
+  const NodeScalarList<DoubleType> &nsl =
+      scalarField->GetScalarValues<DoubleType>();
 
   std::vector<size_t> zlist(el.size(), 1);
 
@@ -82,7 +88,8 @@ void VectorGradient<DoubleType>::calc1d() const
 
     vgrad[i] *= (s1 - s0);
 
-    if ((calctype_ == VectorGradientEnum::AVOIDZERO) && ((s0 == 0.0) || (s1 == 0.0)))
+    if ((calctype_ == VectorGradientEnum::AVOIDZERO) &&
+        ((s0 == 0.0) || (s1 == 0.0)))
     {
       zlist[i] = 0;
     }
@@ -117,13 +124,13 @@ void VectorGradient<DoubleType>::calc1d() const
 template <typename DoubleType>
 void VectorGradient<DoubleType>::calc2d() const
 {
-
   const Region &r = GetRegion();
 
   ConstNodeModelPtr scalarField = r.GetNodeModel(parentname_);
   dsAssert(scalarField.get(), "UNEXPECTED");
 
-  const NodeScalarList<DoubleType> &nsl = scalarField->GetScalarValues<DoubleType>();
+  const NodeScalarList<DoubleType> &nsl =
+      scalarField->GetScalarValues<DoubleType>();
 
   NodeScalarList<DoubleType> vx(nsl.size());
   NodeScalarList<DoubleType> vy(nsl.size());
@@ -132,12 +139,14 @@ void VectorGradient<DoubleType>::calc2d() const
   const ConstTriangleList &tl = GetRegion().GetTriangleList();
   std::vector<size_t> zlist(tl.size(), 1);
 
-  std::vector<std::complex<DoubleType> > tvals(tl.size());
+  std::vector<std::complex<DoubleType>> tvals(tl.size());
 
-  for (ConstTriangleList::const_iterator tit = tl.begin(); tit != tl.end(); ++tit)
+  for (ConstTriangleList::const_iterator tit = tl.begin(); tit != tl.end();
+       ++tit)
   {
     Vector<DoubleType> grad = gfield.GetGradient(**tit, *scalarField);
-    tvals[(*tit)->GetIndex()] = std::complex<DoubleType>(grad.Getx(), grad.Gety());
+    tvals[(*tit)->GetIndex()] =
+        std::complex<DoubleType>(grad.Getx(), grad.Gety());
   }
 
   const Region::NodeToConstTriangleList_t &nttlist = r.GetNodeToTriangleList();
@@ -148,7 +157,8 @@ void VectorGradient<DoubleType>::calc2d() const
       if (nsl[i] == 0.0)
       {
         const ConstTriangleList &tlist = nttlist[i];
-        for (ConstTriangleList::const_iterator tit = tlist.begin(); tit != tlist.end(); ++tit)
+        for (ConstTriangleList::const_iterator tit = tlist.begin();
+             tit != tlist.end(); ++tit)
         {
           zlist[(*tit)->GetIndex()] = 0;
         }
@@ -162,7 +172,8 @@ void VectorGradient<DoubleType>::calc2d() const
     size_t count = 0;
 
     const ConstTriangleList &tlist = nttlist[i];
-    for (ConstTriangleList::const_iterator tit = tlist.begin(); tit != tlist.end(); ++tit)
+    for (ConstTriangleList::const_iterator tit = tlist.begin();
+         tit != tlist.end(); ++tit)
     {
       size_t tindex = (*tit)->GetIndex();
 
@@ -187,13 +198,13 @@ void VectorGradient<DoubleType>::calc2d() const
 template <typename DoubleType>
 void VectorGradient<DoubleType>::calc3d() const
 {
-
   const Region &r = GetRegion();
 
   ConstNodeModelPtr scalarField = r.GetNodeModel(parentname_);
   dsAssert(scalarField.get(), "UNEXPECTED");
 
-  const NodeScalarList<DoubleType> &nsl = scalarField->GetScalarValues<DoubleType>();
+  const NodeScalarList<DoubleType> &nsl =
+      scalarField->GetScalarValues<DoubleType>();
 
   NodeScalarList<DoubleType> vx(nsl.size());
   NodeScalarList<DoubleType> vy(nsl.size());
@@ -205,13 +216,16 @@ void VectorGradient<DoubleType>::calc3d() const
 
   std::vector<Vector<DoubleType>> tvals(tl.size());
 
-  for (ConstTetrahedronList::const_iterator tit = tl.begin(); tit != tl.end(); ++tit)
+  for (ConstTetrahedronList::const_iterator tit = tl.begin(); tit != tl.end();
+       ++tit)
   {
     Vector<DoubleType> grad = gfield.GetGradient(**tit, *scalarField);
-    tvals[(*tit)->GetIndex()] = Vector<DoubleType>(grad.Getx(), grad.Gety(), grad.Getz());
+    tvals[(*tit)->GetIndex()] =
+        Vector<DoubleType>(grad.Getx(), grad.Gety(), grad.Getz());
   }
 
-  const Region::NodeToConstTetrahedronList_t &nttlist = r.GetNodeToTetrahedronList();
+  const Region::NodeToConstTetrahedronList_t &nttlist =
+      r.GetNodeToTetrahedronList();
   if (calctype_ == VectorGradientEnum::AVOIDZERO)
   {
     for (size_t i = 0; i < nsl.size(); ++i)
@@ -219,7 +233,8 @@ void VectorGradient<DoubleType>::calc3d() const
       if (nsl[i] == 0.0)
       {
         const ConstTetrahedronList &tlist = nttlist[i];
-        for (ConstTetrahedronList::const_iterator tit = tlist.begin(); tit != tlist.end(); ++tit)
+        for (ConstTetrahedronList::const_iterator tit = tlist.begin();
+             tit != tlist.end(); ++tit)
         {
           zlist[(*tit)->GetIndex()] = 0;
         }
@@ -233,7 +248,8 @@ void VectorGradient<DoubleType>::calc3d() const
     size_t count = 0;
 
     const ConstTetrahedronList &tlist = nttlist[i];
-    for (ConstTetrahedronList::const_iterator tit = tlist.begin(); tit != tlist.end(); ++tit)
+    for (ConstTetrahedronList::const_iterator tit = tlist.begin();
+         tit != tlist.end(); ++tit)
     {
       size_t tindex = (*tit)->GetIndex();
 
@@ -279,20 +295,21 @@ void VectorGradient<DoubleType>::calcNodeScalarValues() const
   {
     dsAssert(0, "UNEXPECTED");
   }
-
 }
 
 template <typename DoubleType>
 void VectorGradient<DoubleType>::setInitialValues()
 {
-    DefaultInitializeValues();
+  DefaultInitializeValues();
 }
 
 template <typename DoubleType>
 void VectorGradient<DoubleType>::Serialize(std::ostream &of) const
 {
-
-  of << "COMMAND vector_gradient -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -calc_type \"" << VectorGradientEnum::CalcTypeString[calctype_] << "\" -node_model \"" << parentname_ << "\"";
+  of << "COMMAND vector_gradient -device \"" << GetDeviceName()
+     << "\" -region \"" << GetRegionName() << "\" -calc_type \""
+     << VectorGradientEnum::CalcTypeString[calctype_] << "\" -node_model \""
+     << parentname_ << "\"";
 }
 
 template class VectorGradient<double>;
@@ -301,10 +318,11 @@ template class VectorGradient<double>;
 template class VectorGradient<float128>;
 #endif
 
-NodeModelPtr CreateVectorGradient(RegionPtr rp, const std::string &name, VectorGradientEnum::CalcType ct)
+NodeModelPtr CreateVectorGradient(RegionPtr rp, const std::string &name,
+                                  VectorGradientEnum::CalcType ct)
 {
   const bool use_extended = rp->UseExtendedPrecisionModels();
-  return create_node_model<VectorGradient<double>, VectorGradient<extended_type>>(use_extended, rp, name, ct);
+  return create_node_model<VectorGradient<double>,
+                           VectorGradient<extended_type>>(use_extended, rp,
+                                                          name, ct);
 }
-
-

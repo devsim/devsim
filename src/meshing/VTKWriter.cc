@@ -33,22 +33,21 @@ namespace VTK {
 
 void WriteHeader(std::ostream &myfile)
 {
-  myfile <<
-  "<?xml version=\"1.0\"?>\n"
-  "<VTKFile type=\"UnstructuredGrid\" version=\"0.1\" byte_order=\"LittleEndian\" compressor=\"vtkZLibDataCompressor\">\n"
-  "<UnstructuredGrid>\n"
-  ;
+  myfile
+      << "<?xml version=\"1.0\"?>\n"
+         "<VTKFile type=\"UnstructuredGrid\" version=\"0.1\" "
+         "byte_order=\"LittleEndian\" compressor=\"vtkZLibDataCompressor\">\n"
+         "<UnstructuredGrid>\n";
 }
 
 void WriteFooter(std::ostream &myfile)
 {
-  myfile <<
-  "</UnstructuredGrid>\n"
-  "</VTKFile>\n"
-  ;
+  myfile << "</UnstructuredGrid>\n"
+            "</VTKFile>\n";
 }
 
-void WriteDataArray(const std::vector<double> &nsl, const std::string &name, const size_t number_components, std::ostream &myfile)
+void WriteDataArray(const std::vector<double> &nsl, const std::string &name,
+                    const size_t number_components, std::ostream &myfile)
 {
   myfile << "<DataArray type=\"Float64\"";
 
@@ -62,8 +61,7 @@ void WriteDataArray(const std::vector<double> &nsl, const std::string &name, con
   }
 
   myfile << " format=\"binary\">\n"
-         << dsUtility::convertVectorToZlibBase64(nsl)
-         << "\n</DataArray>\n";
+         << dsUtility::convertVectorToZlibBase64(nsl) << "\n</DataArray>\n";
 }
 
 void WritePoints(const Region &reg, std::ostream &myfile)
@@ -72,7 +70,7 @@ void WritePoints(const Region &reg, std::ostream &myfile)
 
   const ConstNodeList &cnl = reg.GetNodeList();
   std::vector<double> points;
-  points.reserve(3*cnl.size());
+  points.reserve(3 * cnl.size());
   for (ConstNodeList::const_iterator it = cnl.begin(); it != cnl.end(); ++it)
   {
     const Vector<double> &pos = (*it)->Position();
@@ -86,11 +84,11 @@ void WritePoints(const Region &reg, std::ostream &myfile)
   myfile << "</Points>\n";
 }
 
-void WritePointData(const Region &reg, MeshWriterTest_t include_test, std::ostream &myfile)
+void WritePointData(const Region &reg, MeshWriterTest_t include_test,
+                    std::ostream &myfile)
 {
-
-  const Region::NodeModelList_t            &node_models             = reg.GetNodeModelList();
-  const Region::EdgeModelList_t            &edge_models             = reg.GetEdgeModelList();
+  const Region::NodeModelList_t &node_models = reg.GetNodeModelList();
+  const Region::EdgeModelList_t &edge_models = reg.GetEdgeModelList();
 
   if (node_models.empty() && edge_models.empty())
   {
@@ -101,10 +99,11 @@ void WritePointData(const Region &reg, MeshWriterTest_t include_test, std::ostre
 
   if (!node_models.empty())
   {
-    for (Region::NodeModelList_t::const_iterator it=node_models.begin(); it != node_models.end(); ++it)
+    for (Region::NodeModelList_t::const_iterator it = node_models.begin();
+         it != node_models.end(); ++it)
     {
       const std::string &nm = it->first;
-      const NodeModel   &em = *(it->second);
+      const NodeModel &em = *(it->second);
 
       if (!include_test(nm))
       {
@@ -130,7 +129,8 @@ void WritePointData(const Region &reg, MeshWriterTest_t include_test, std::ostre
   if (!edge_models.empty())
   {
     // Strange paraview bug requires scalar before vector data
-    for (Region::EdgeModelList_t::const_iterator it=edge_models.begin(); it != edge_models.end(); ++it)
+    for (Region::EdgeModelList_t::const_iterator it = edge_models.begin();
+         it != edge_models.end(); ++it)
     {
       const std::string &nm = it->first;
       const EdgeModel &em = *(it->second);
@@ -148,12 +148,12 @@ void WritePointData(const Region &reg, MeshWriterTest_t include_test, std::ostre
     }
   }
 
-
   //// Vector<double> Edge Scalar Data
   if (!edge_models.empty())
   {
     // Strange paraview bug requires scalar before vector data
-    for (Region::EdgeModelList_t::const_iterator it=edge_models.begin(); it != edge_models.end(); ++it)
+    for (Region::EdgeModelList_t::const_iterator it = edge_models.begin();
+         it != edge_models.end(); ++it)
     {
       const std::string &nm = it->first;
       const EdgeModel &em = *(it->second);
@@ -162,9 +162,8 @@ void WritePointData(const Region &reg, MeshWriterTest_t include_test, std::ostre
       {
         const NodeVectorList<double> &nvl = em.GetVectorValuesOnNodes<double>();
 
-
         std::vector<double> points;
-        points.reserve(3*nvl.size());
+        points.reserve(3 * nvl.size());
 
         const size_t len = nvl.size();
         for (size_t i = 0; i < len; ++i)
@@ -193,10 +192,13 @@ void WritePointData(const Region &reg, MeshWriterTest_t include_test, std::ostre
   myfile << "</PointData>\n";
 }
 
-void WriteElementData(const Region &reg, MeshWriterTest_t include_test, std::ostream &myfile)
+void WriteElementData(const Region &reg, MeshWriterTest_t include_test,
+                      std::ostream &myfile)
 {
-  const Region::TriangleEdgeModelList_t    &triangle_edge_models    = reg.GetTriangleEdgeModelList();
-  const Region::TetrahedronEdgeModelList_t &tetrahedron_edge_models = reg.GetTetrahedronEdgeModelList();
+  const Region::TriangleEdgeModelList_t &triangle_edge_models =
+      reg.GetTriangleEdgeModelList();
+  const Region::TetrahedronEdgeModelList_t &tetrahedron_edge_models =
+      reg.GetTetrahedronEdgeModelList();
 
   if (triangle_edge_models.empty() && tetrahedron_edge_models.empty())
   {
@@ -207,14 +209,16 @@ void WriteElementData(const Region &reg, MeshWriterTest_t include_test, std::ost
   if (!triangle_edge_models.empty())
   {
     std::vector<double> nsl;
-    for (Region::TriangleEdgeModelList_t::const_iterator it=triangle_edge_models.begin(); it != triangle_edge_models.end(); ++it)
+    for (Region::TriangleEdgeModelList_t::const_iterator it =
+             triangle_edge_models.begin();
+         it != triangle_edge_models.end(); ++it)
     {
       const std::string &nm = it->first;
       const TriangleEdgeModel &em = *(it->second);
 
       if (!include_test(nm))
       {
-          continue;
+        continue;
       }
 
       if (em.GetDisplayType() == TriangleEdgeModel::DisplayType::SCALAR)
@@ -234,7 +238,9 @@ void WriteElementData(const Region &reg, MeshWriterTest_t include_test, std::ost
 
   if (!tetrahedron_edge_models.empty())
   {
-    for (Region::TetrahedronEdgeModelList_t::const_iterator it=tetrahedron_edge_models.begin(); it != tetrahedron_edge_models.end(); ++it)
+    for (Region::TetrahedronEdgeModelList_t::const_iterator it =
+             tetrahedron_edge_models.begin();
+         it != tetrahedron_edge_models.end(); ++it)
     {
       const std::string &nm = it->first;
       const TetrahedronEdgeModel &em = *(it->second);
@@ -245,7 +251,8 @@ void WriteElementData(const Region &reg, MeshWriterTest_t include_test, std::ost
         em.GetScalarValuesOnElements<double>(nsl);
         WriteDataArray(nsl, nm, 1, myfile);
       }
-      else if (em.GetDisplayType() == TetrahedronEdgeModel::DisplayType::NODISPLAY)
+      else if (em.GetDisplayType() ==
+               TetrahedronEdgeModel::DisplayType::NODISPLAY)
       {
       }
       else
@@ -278,24 +285,17 @@ void WriteLines(const Region &reg, std::ostream &myfile)
     off += 2;
   }
 
-  myfile <<
-      "<Cells>\n";
+  myfile << "<Cells>\n";
 
-  myfile <<
-      "<DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">\n"
-      << connectivity.str() <<
-      "\n</DataArray>\n";
+  myfile
+      << "<DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">\n"
+      << connectivity.str() << "\n</DataArray>\n";
 
-  myfile <<
-      "<DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">\n"
-      << offsets.str() <<
-      "\n</DataArray>\n";
+  myfile << "<DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">\n"
+         << offsets.str() << "\n</DataArray>\n";
 
-  myfile <<
-      "<DataArray type=\"UInt8\" Name=\"types\" format=\"ascii\">\n"
-      << types.str() <<
-      "\n</DataArray>\n";
-
+  myfile << "<DataArray type=\"UInt8\" Name=\"types\" format=\"ascii\">\n"
+         << types.str() << "\n</DataArray>\n";
 
   myfile << "</Cells>\n";
 }
@@ -309,39 +309,30 @@ void WriteTriangles(const Region &reg, std::ostream &myfile)
   std::ostringstream types;
 
   size_t off = 3;
-  for (ConstTriangleList::const_iterator it = ctl.begin(); it != ctl.end(); ++it)
+  for (ConstTriangleList::const_iterator it = ctl.begin(); it != ctl.end();
+       ++it)
   {
-
     const std::vector<ConstNodePtr> &nl = (*it)->GetNodeList();
 
-    connectivity
-              << " " << nl[0]->GetIndex()
-              << " " << nl[1]->GetIndex()
-              << " " << nl[2]->GetIndex();
+    connectivity << " " << nl[0]->GetIndex() << " " << nl[1]->GetIndex() << " "
+                 << nl[2]->GetIndex();
     offsets << " " << off;
     types << " 5";
 
     off += 3;
   }
 
-  myfile <<
-      "<Cells>\n";
+  myfile << "<Cells>\n";
 
-  myfile <<
-      "<DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">\n"
-      << connectivity.str() <<
-      "\n</DataArray>\n";
+  myfile
+      << "<DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">\n"
+      << connectivity.str() << "\n</DataArray>\n";
 
-  myfile <<
-      "<DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">\n"
-      << offsets.str() <<
-      "\n</DataArray>\n";
+  myfile << "<DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">\n"
+         << offsets.str() << "\n</DataArray>\n";
 
-  myfile <<
-      "<DataArray type=\"UInt8\" Name=\"types\" format=\"ascii\">\n"
-      << types.str() <<
-      "\n</DataArray>\n";
-
+  myfile << "<DataArray type=\"UInt8\" Name=\"types\" format=\"ascii\">\n"
+         << types.str() << "\n</DataArray>\n";
 
   myfile << "</Cells>\n";
 }
@@ -355,45 +346,36 @@ void WriteTetrahedrons(const Region &reg, std::ostream &myfile)
   std::ostringstream types;
 
   size_t off = 4;
-  for (ConstTetrahedronList::const_iterator it = ctl.begin(); it != ctl.end(); ++it)
+  for (ConstTetrahedronList::const_iterator it = ctl.begin(); it != ctl.end();
+       ++it)
   {
-
     const std::vector<ConstNodePtr> &nl = (*it)->GetNodeList();
 
-    connectivity
-              << " " << nl[0]->GetIndex()
-              << " " << nl[1]->GetIndex()
-              << " " << nl[2]->GetIndex()
-              << " " << nl[3]->GetIndex();
+    connectivity << " " << nl[0]->GetIndex() << " " << nl[1]->GetIndex() << " "
+                 << nl[2]->GetIndex() << " " << nl[3]->GetIndex();
     offsets << " " << off;
     types << " 10";
 
     off += 4;
   }
 
-  myfile <<
-      "<Cells>\n";
+  myfile << "<Cells>\n";
 
-  myfile <<
-      "<DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">\n"
-      << connectivity.str() <<
-      "\n</DataArray>\n";
+  myfile
+      << "<DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">\n"
+      << connectivity.str() << "\n</DataArray>\n";
 
-  myfile <<
-      "<DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">\n"
-      << offsets.str() <<
-      "\n</DataArray>\n";
+  myfile << "<DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">\n"
+         << offsets.str() << "\n</DataArray>\n";
 
-  myfile <<
-      "<DataArray type=\"UInt8\" Name=\"types\" format=\"ascii\">\n"
-      << types.str() <<
-      "\n</DataArray>\n";
-
+  myfile << "<DataArray type=\"UInt8\" Name=\"types\" format=\"ascii\">\n"
+         << types.str() << "\n</DataArray>\n";
 
   myfile << "</Cells>\n";
 }
 
-void WriteRegionWithEdgeData(const Region &reg, MeshWriterTest_t include_test, std::ostream &myfile)
+void WriteRegionWithEdgeData(const Region &reg, MeshWriterTest_t include_test,
+                             std::ostream &myfile)
 {
   const ConstNodeList &cnl = reg.GetNodeList();
   const size_t num_points = cnl.size();
@@ -417,10 +399,12 @@ void WriteRegionWithEdgeData(const Region &reg, MeshWriterTest_t include_test, s
     num_cells = cel.size();
   }
 
-  myfile <<
-         "<Piece NumberOfPoints=\"" << num_points << "\""
-         " NumberOfCells=\"" << num_cells << "\""
-         ">\n";
+  myfile << "<Piece NumberOfPoints=\"" << num_points
+         << "\""
+            " NumberOfCells=\""
+         << num_cells
+         << "\""
+            ">\n";
 
   WritePoints(reg, myfile);
 
@@ -444,24 +428,21 @@ void WriteRegionWithEdgeData(const Region &reg, MeshWriterTest_t include_test, s
     WriteElementData(reg, include_test, myfile);
   }
 
-
-  myfile <<
-         "</Piece>\n"
-         ;
+  myfile << "</Piece>\n";
 }
 
-bool WriteSingleDevice(const std::string &dname, const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
+bool WriteSingleDevice(const std::string &dname, const std::string &filename,
+                       MeshWriterTest_t include_test, std::string &errorString)
 {
   bool ret = true;
   std::ostringstream os;
 
-  GlobalData   &gdata = GlobalData::GetInstance();
+  GlobalData &gdata = GlobalData::GetInstance();
 
   DevicePtr dp = gdata.GetDevice(dname);
 
   std::string vtmfilename = filename + ".vtm";
   std::string visitfilename = filename + ".visit";
-
 
   if (!dp)
   {
@@ -472,8 +453,10 @@ bool WriteSingleDevice(const std::string &dname, const std::string &filename, Me
   {
     std::ofstream vtmfile;
     std::ofstream visitfile;
-    vtmfile.open (vtmfilename.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
-    visitfile.open (visitfilename.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
+    vtmfile.open(vtmfilename.c_str(),
+                 std::ios::out | std::ios::trunc | std::ios::binary);
+    visitfile.open(visitfilename.c_str(),
+                   std::ios::out | std::ios::trunc | std::ios::binary);
     if (vtmfile.bad())
     {
       ret = false;
@@ -494,7 +477,8 @@ bool WriteSingleDevice(const std::string &dname, const std::string &filename, Me
 
       const Device::RegionList_t &rlist = dev.GetRegionList();
       size_t i = 0;
-      for (Device::RegionList_t::const_iterator rit = rlist.begin(); rit != rlist.end(); ++rit)
+      for (Device::RegionList_t::const_iterator rit = rlist.begin();
+           rit != rlist.end(); ++rit)
       {
         std::ostringstream istring;
         istring << i;
@@ -502,13 +486,14 @@ bool WriteSingleDevice(const std::string &dname, const std::string &filename, Me
         const std::string vtufilename = filename + "_" + istring.str() + ".vtu";
 
         std::ofstream vtufile;
-        vtufile.open (vtufilename.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
+        vtufile.open(vtufilename.c_str(),
+                     std::ios::out | std::ios::trunc | std::ios::binary);
         if (vtufile.bad())
         {
-            ret = false;
-            os << "Could not open " << vtufilename << " for writing\n";
-            vtufile.close();
-            break;
+          ret = false;
+          os << "Could not open " << vtufilename << " for writing\n";
+          vtufile.close();
+          break;
         }
         else
         {
@@ -528,24 +513,24 @@ bool WriteSingleDevice(const std::string &dname, const std::string &filename, Me
 
       if (ret)
       {
-        vtmfile <<
-"<?xml version=\"1.0\"?>\n"
-"<VTKFile type=\"vtkMultiBlockDataSet\" version=\"0.1\" byte_order=\"LittleEndian\" compressor=\"vtkZLibDataCompressor\">\n"
-"  <vtkMultiBlockDataSet>\n";
+        vtmfile << "<?xml version=\"1.0\"?>\n"
+                   "<VTKFile type=\"vtkMultiBlockDataSet\" version=\"0.1\" "
+                   "byte_order=\"LittleEndian\" "
+                   "compressor=\"vtkZLibDataCompressor\">\n"
+                   "  <vtkMultiBlockDataSet>\n";
         visitfile << "!NBLOCKS " << vtufiles.size() << "\n";
         size_t i = 0;
-        for (std::vector<std::string>::iterator it = vtufiles.begin(); it != vtufiles.end(); ++it)
+        for (std::vector<std::string>::iterator it = vtufiles.begin();
+             it != vtufiles.end(); ++it)
         {
-          vtmfile <<
-"    <DataSet group=\"" << i << "\" dataset=\"" << 0 << "\" file=\"" << *it << "\"/>\n";
+          vtmfile << "    <DataSet group=\"" << i << "\" dataset=\"" << 0
+                  << "\" file=\"" << *it << "\"/>\n";
           ++i;
           visitfile << *it << "\n";
         }
-        vtmfile <<
-"  </vtkMultiBlockDataSet>\n"
-"</VTKFile>\n";
+        vtmfile << "  </vtkMultiBlockDataSet>\n"
+                   "</VTKFile>\n";
       }
-
     }
     vtmfile.close();
     visitfile.close();
@@ -553,45 +538,50 @@ bool WriteSingleDevice(const std::string &dname, const std::string &filename, Me
   errorString += os.str();
   return ret;
 }
+}  // namespace VTK
+
+VTKWriter::~VTKWriter() {}
+
+bool VTKWriter::WriteMesh_(const std::string &deviceName,
+                           const std::string &filename,
+                           MeshWriterTest_t include_test,
+                           std::string &errorString)
+{
+  bool ret = true;
+  std::ostringstream os;
+
+  ret = VTK::WriteSingleDevice(deviceName, filename, include_test, errorString);
+  errorString += os.str();
+
+  return ret;
 }
 
-VTKWriter::~VTKWriter()
+bool VTKWriter::WriteMeshes_(const std::string &filename,
+                             MeshWriterTest_t include_test,
+                             std::string &errorString)
 {
-}
+  bool ret = true;
+  std::ostringstream os;
 
-bool VTKWriter::WriteMesh_(const std::string &deviceName, const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
-{
-    bool ret = true;
-    std::ostringstream os;
+  GlobalData &gdata = GlobalData::GetInstance();
+  const GlobalData::DeviceList_t &dlist = gdata.GetDeviceList();
 
-    ret = VTK::WriteSingleDevice(deviceName, filename, include_test, errorString);
-    errorString += os.str();
-
-    return ret;
-}
-
-bool VTKWriter::WriteMeshes_(const std::string &filename, MeshWriterTest_t include_test, std::string &errorString)
-{
-    bool ret = true;
-    std::ostringstream os;
-
-    GlobalData   &gdata = GlobalData::GetInstance();
-    const GlobalData::DeviceList_t &dlist = gdata.GetDeviceList();
-
-    if (dlist.size() > 1)
+  if (dlist.size() > 1)
+  {
+    ret = false;
+    os << "More than 1 device in simulation when output format only supports "
+          "one device.\n";
+  }
+  else
+  {
+    for (GlobalData::DeviceList_t::const_iterator dit = dlist.begin();
+         dit != dlist.end(); ++dit)
     {
-        ret = false;
-        os << "More than 1 device in simulation when output format only supports one device.\n";
+      const std::string &dname = dit->first;
+      ret = VTK::WriteSingleDevice(dname, filename, include_test, errorString);
     }
-    else
-    {
-        for (GlobalData::DeviceList_t::const_iterator dit = dlist.begin(); dit != dlist.end(); ++dit)
-        {
-            const std::string &dname = dit->first;
-            ret = VTK::WriteSingleDevice(dname, filename, include_test, errorString);
-        }
-    }
+  }
 
-    errorString += os.str();
-    return ret;
+  errorString += os.str();
+  return ret;
 }

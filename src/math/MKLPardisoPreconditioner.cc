@@ -5,7 +5,6 @@ Copyright 2018 DEVSIM LLC
 SPDX-License-Identifier: Apache-2.0
 ***/
 
-
 #include "MKLPardisoPreconditioner.hh"
 #include "CompressedMatrix.hh"
 #include "dsAssert.hh"
@@ -15,10 +14,9 @@ SPDX-License-Identifier: Apache-2.0
 #include <vector>
 
 extern "C" {
-void PARDISO( void *a, const int *b, const int *c, const int *d,
-                   const int *e, const int *f, const void *g, const int *h,
-                   const int *i, int *j, const int *k, int *l,
-                   const int *m, void *n,    void *o, int *p);
+void PARDISO(void *a, const int *b, const int *c, const int *d, const int *e,
+             const int *f, const void *g, const int *h, const int *i, int *j,
+             const int *k, int *l, const int *m, void *n, void *o, int *p);
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
@@ -28,7 +26,7 @@ void PARDISO( void *a, const int *b, const int *c, const int *d,
 // USING CCM until we can find out what is wrong with CRM
 #define USE_CCM
 
-//#define DEBUG_MATRIX
+// #define DEBUG_MATRIX
 #ifdef DEBUG_MATRIX
 #include <fstream>
 #endif
@@ -36,8 +34,7 @@ void PARDISO( void *a, const int *b, const int *c, const int *d,
 namespace dsMath {
 
 class MKLPardisoData {
-  public:
-
+ public:
   explicit MKLPardisoData(int numeqn);
 
   ~MKLPardisoData();
@@ -51,18 +48,18 @@ class MKLPardisoData {
   bool LUFactorMatrix(CompressedMatrix<DoubleType> *);
 
   template <typename DoubleType>
-  void LUSolve(DoubleVec_t<DoubleType> &/*x*/, const DoubleVec_t<DoubleType> &/*b*/);
+  void LUSolve(DoubleVec_t<DoubleType> & /*x*/,
+               const DoubleVec_t<DoubleType> & /*b*/);
 
   template <typename DoubleType>
-  void LUSolve(ComplexDoubleVec_t<DoubleType> &/*x*/, const ComplexDoubleVec_t<DoubleType> &/*b*/);
+  void LUSolve(ComplexDoubleVec_t<DoubleType> & /*x*/,
+               const ComplexDoubleVec_t<DoubleType> & /*b*/);
 
+ protected:
+  template <typename DoubleType>
+  bool LUFactorMatrixImpl(CompressedMatrix<DoubleType> *, const void *);
 
-  protected:
-    template <typename DoubleType>
-    bool LUFactorMatrixImpl(CompressedMatrix<DoubleType> *, const void *);
-
-    void LUSolveImpl(void *x, const void *b);
-
+  void LUSolveImpl(void *x, const void *b);
 
   int iparm[64];
   void *pt[64];
@@ -81,41 +78,43 @@ class MKLPardisoData {
   const void *a;
 };
 
-MKLPardisoData::MKLPardisoData(int numeqn) {
+MKLPardisoData::MKLPardisoData(int numeqn)
+{
   for (size_t i = 0; i < 64; ++i)
   {
     iparm[i] = 0;
   }
 
-  iparm[0] = 1;         /* No solver default */
-//  iparm[1] = 0;         /* Fill-in reordering from METIS */
-  iparm[1] = 2;         /* Fill-in reordering from METIS */
-  iparm[3] = 0;         /* No iterative-direct algorithm */
-  iparm[4] = 0;         /* No user fill-in reducing permutation */
-  iparm[5] = 0;         /* Write solution into x */
-  iparm[6] = 0;         /* Not in use */
-  iparm[7] = 0;         /* Max numbers of iterative refinement steps */
-  iparm[8] = 0;         /* Not in use */
-  iparm[9] = 13;        /* Perturb the pivot elements with 1E-13 */
-  iparm[10] = 1;        /* Use nonsymmetric permutation and scaling MPS */
-  iparm[11] = 0;        /* Conjugate transposed/transpose solve */
-  iparm[12] = 1;        /* Maximum weighted matching algorithm is switched-on (default for non-symmetric) */
-  iparm[13] = 0;        /* Output: Number of perturbed pivots */
-  iparm[14] = 0;        /* Not in use */
-  iparm[15] = 0;        /* Not in use */
-  iparm[16] = 0;        /* Not in use */
-  iparm[17] = -1;       /* Output: Number of nonzeros in the factor LU */
-  iparm[18] = -1;       /* Output: Mflops for LU factorization */
-  iparm[19] = 0;        /* Output: Numbers of CG Iterations */
-  iparm[26] = 0;        /* matrix checker */
-  iparm[27] = 0;        /* double precision */
-  iparm[34] = 1;        /* 0 based solve */
+  iparm[0] = 1;   /* No solver default */
+                  //  iparm[1] = 0;         /* Fill-in reordering from METIS */
+  iparm[1] = 2;   /* Fill-in reordering from METIS */
+  iparm[3] = 0;   /* No iterative-direct algorithm */
+  iparm[4] = 0;   /* No user fill-in reducing permutation */
+  iparm[5] = 0;   /* Write solution into x */
+  iparm[6] = 0;   /* Not in use */
+  iparm[7] = 0;   /* Max numbers of iterative refinement steps */
+  iparm[8] = 0;   /* Not in use */
+  iparm[9] = 13;  /* Perturb the pivot elements with 1E-13 */
+  iparm[10] = 1;  /* Use nonsymmetric permutation and scaling MPS */
+  iparm[11] = 0;  /* Conjugate transposed/transpose solve */
+  iparm[12] = 1;  /* Maximum weighted matching algorithm is switched-on (default
+                     for non-symmetric) */
+  iparm[13] = 0;  /* Output: Number of perturbed pivots */
+  iparm[14] = 0;  /* Not in use */
+  iparm[15] = 0;  /* Not in use */
+  iparm[16] = 0;  /* Not in use */
+  iparm[17] = -1; /* Output: Number of nonzeros in the factor LU */
+  iparm[18] = -1; /* Output: Mflops for LU factorization */
+  iparm[19] = 0;  /* Output: Numbers of CG Iterations */
+  iparm[26] = 0;  /* matrix checker */
+  iparm[27] = 0;  /* double precision */
+  iparm[34] = 1;  /* 0 based solve */
 
-  mtype = 11;       /* Real unsymmetric matrix */
-  maxfct = 1;           /* Maximum number of numerical factorizations. */
-  mnum = 1;         /* Which factorization to use. */
-  msglvl = 0;           /* Print statistical information  */
-  error = 0;            /* Initialize error flag */
+  mtype = 11; /* Real unsymmetric matrix */
+  maxfct = 1; /* Maximum number of numerical factorizations. */
+  mnum = 1;   /* Which factorization to use. */
+  msglvl = 0; /* Print statistical information  */
+  error = 0;  /* Initialize error flag */
   phase = 0;
   ddum = 0.0;
   idum = 0;
@@ -124,7 +123,7 @@ MKLPardisoData::MKLPardisoData(int numeqn) {
 
   ia = nullptr;
   ja = nullptr;
-  a  = nullptr;
+  a = nullptr;
 
   for (size_t i = 0; i < 64; ++i)
   {
@@ -132,16 +131,16 @@ MKLPardisoData::MKLPardisoData(int numeqn) {
   }
 }
 
+MKLPardisoData::~MKLPardisoData()
+{
+  phase = -1; /* Release internal memory. */
 
-MKLPardisoData::~MKLPardisoData() {
-  phase = -1;           /* Release internal memory. */
-
-  PARDISO (pt, &maxfct, &mnum, &mtype, &phase,
-           &n, a, ia, ja, &idum, &nrhs,
-           &iparm[0], &msglvl, &ddum, &ddum, &error);
+  PARDISO(pt, &maxfct, &mnum, &mtype, &phase, &n, a, ia, ja, &idum, &nrhs,
+          &iparm[0], &msglvl, &ddum, &ddum, &error);
 }
 
-void MKLPardisoData::SetTranspose(bool trans) {
+void MKLPardisoData::SetTranspose(bool trans)
+{
   // for IFM we use transpose, not conjugate transpose
   if (trans)
   {
@@ -179,7 +178,8 @@ void MKLPardisoData::SetComplex(CompressedMatrix<DoubleType> *cm)
 }
 
 template <typename DoubleType>
-bool MKLPardisoData::LUFactorMatrixImpl(CompressedMatrix<DoubleType> *cm, const void *a_input)
+bool MKLPardisoData::LUFactorMatrixImpl(CompressedMatrix<DoubleType> *cm,
+                                        const void *a_input)
 {
 #ifdef DEBUG_MATRIX
   std::ofstream myfile;
@@ -194,8 +194,8 @@ bool MKLPardisoData::LUFactorMatrixImpl(CompressedMatrix<DoubleType> *cm, const 
 #endif
 
   SetComplex(cm);
-  const IntVec_t    &Rows = cm->GetRows();
-  const IntVec_t    &Cols = cm->GetCols();
+  const IntVec_t &Rows = cm->GetRows();
+  const IntVec_t &Cols = cm->GetCols();
 
 #ifdef USE_CCM
   ja = &Rows[0];
@@ -204,13 +204,13 @@ bool MKLPardisoData::LUFactorMatrixImpl(CompressedMatrix<DoubleType> *cm, const 
   ia = &Rows[0];
   ja = &Cols[0];
 #endif
-  a  = a_input;
+  a = a_input;
 
   if (cm->GetSymbolicStatus() == SymbolicStatus_t::NEW_SYMBOLIC)
   {
     phase = 11;
-    PARDISO (pt, &maxfct, &mnum, &mtype, &phase,
-             &n, a, ia, ja, &idum, &nrhs, &iparm[0], &msglvl, &ddum, &ddum, &error);
+    PARDISO(pt, &maxfct, &mnum, &mtype, &phase, &n, a, ia, ja, &idum, &nrhs,
+            &iparm[0], &msglvl, &ddum, &ddum, &error);
   }
   else if (cm->GetSymbolicStatus() == SymbolicStatus_t::SAME_SYMBOLIC)
   {
@@ -229,8 +229,8 @@ bool MKLPardisoData::LUFactorMatrixImpl(CompressedMatrix<DoubleType> *cm, const 
   }
 
   phase = 22;
-  PARDISO (pt, &maxfct, &mnum, &mtype, &phase,
-          &n, a, ia, ja, &idum, &nrhs, &iparm[0], &msglvl, &ddum, &ddum, &error);
+  PARDISO(pt, &maxfct, &mnum, &mtype, &phase, &n, a, ia, ja, &idum, &nrhs,
+          &iparm[0], &msglvl, &ddum, &ddum, &error);
 
   return (error == 0);
 }
@@ -273,7 +273,8 @@ bool MKLPardisoData::LUFactorMatrix(CompressedMatrix<float128> *cm)
     ComplexDoubleVec_t<double> dvals(fvals.size());
     for (size_t i = 0; i < fvals.size(); ++i)
     {
-      dvals[i] = ComplexDouble_t<double>(static_cast<double>(fvals[i].real()), static_cast<double>(fvals[i].imag()));
+      dvals[i] = ComplexDouble_t<double>(static_cast<double>(fvals[i].real()),
+                                         static_cast<double>(fvals[i].imag()));
     }
     ret = LUFactorMatrixImpl(cm, reinterpret_cast<void *>(&dvals[0]));
   }
@@ -287,12 +288,13 @@ void MKLPardisoData::LUSolveImpl(void *x, const void *b_input)
 
   void *b = const_cast<void *>(b_input);
 
-  PARDISO (pt, &maxfct, &mnum, &mtype, &phase,
-           &n, a, ia, ja, &idum, &nrhs, &iparm[0], &msglvl, b, x, &error);
+  PARDISO(pt, &maxfct, &mnum, &mtype, &phase, &n, a, ia, ja, &idum, &nrhs,
+          &iparm[0], &msglvl, b, x, &error);
 }
 
 template <>
-void MKLPardisoData::LUSolve(DoubleVec_t<double> &x, const DoubleVec_t<double> &b)
+void MKLPardisoData::LUSolve(DoubleVec_t<double> &x,
+                             const DoubleVec_t<double> &b)
 {
   dsAssert(error == 0, "UNEXPECTED");
 
@@ -301,12 +303,12 @@ void MKLPardisoData::LUSolve(DoubleVec_t<double> &x, const DoubleVec_t<double> &
 
   // trans and complex flag should already be set
   LUSolveImpl(&x[0], &b[0]);
-
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void MKLPardisoData::LUSolve(DoubleVec_t<float128> &x, const DoubleVec_t<float128> &b)
+void MKLPardisoData::LUSolve(DoubleVec_t<float128> &x,
+                             const DoubleVec_t<float128> &b)
 {
   DoubleVec_t<double> b64(b.size());
   DoubleVec_t<double> x64;
@@ -324,9 +326,9 @@ void MKLPardisoData::LUSolve(DoubleVec_t<float128> &x, const DoubleVec_t<float12
 }
 #endif
 
-
 template <>
-void MKLPardisoData::LUSolve(ComplexDoubleVec_t<double> &x, const ComplexDoubleVec_t<double> &b)
+void MKLPardisoData::LUSolve(ComplexDoubleVec_t<double> &x,
+                             const ComplexDoubleVec_t<double> &b)
 {
   dsAssert(error == 0, "UNEXPECTED");
 
@@ -335,32 +337,35 @@ void MKLPardisoData::LUSolve(ComplexDoubleVec_t<double> &x, const ComplexDoubleV
 
   // trans and complex flag should already be set
   LUSolveImpl(&x[0], &b[0]);
-
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 template <>
-void MKLPardisoData::LUSolve(ComplexDoubleVec_t<float128> &x, const ComplexDoubleVec_t<float128> &b)
+void MKLPardisoData::LUSolve(ComplexDoubleVec_t<float128> &x,
+                             const ComplexDoubleVec_t<float128> &b)
 {
   ComplexDoubleVec_t<double> b64(b.size());
   ComplexDoubleVec_t<double> x64;
   for (size_t i = 0; i < b.size(); ++i)
   {
-    b64[i] = ComplexDouble_t<double>(static_cast<double>(b[i].real()), static_cast<double>(b[i].imag()));
+    b64[i] = ComplexDouble_t<double>(static_cast<double>(b[i].real()),
+                                     static_cast<double>(b[i].imag()));
   }
   this->LUSolve(x64, b64);
 
   x.resize(x64.size());
   for (size_t i = 0; i < x64.size(); ++i)
   {
-    x[i] = ComplexDouble_t<float128>(static_cast<float128>(x64[i].real()), static_cast<float128>(x64[i].imag()));
+    x[i] = ComplexDouble_t<float128>(static_cast<float128>(x64[i].real()),
+                                     static_cast<float128>(x64[i].imag()));
   }
 }
 #endif
 
-
 template <typename DoubleType>
-MKLPardisoPreconditioner<DoubleType>::MKLPardisoPreconditioner(size_t sz, PEnum::TransposeType_t transpose) : Preconditioner<DoubleType>(sz, transpose), mklpardisodata_(nullptr)
+MKLPardisoPreconditioner<DoubleType>::MKLPardisoPreconditioner(
+    size_t sz, PEnum::TransposeType_t transpose)
+    : Preconditioner<DoubleType>(sz, transpose), mklpardisodata_(nullptr)
 {
   mklpardisodata_ = new MKLPardisoData(sz);
 
@@ -375,13 +380,15 @@ MKLPardisoPreconditioner<DoubleType>::MKLPardisoPreconditioner(size_t sz, PEnum:
 }
 
 template <typename DoubleType>
-dsMath::CompressionType MKLPardisoPreconditioner<DoubleType>::GetRealMatrixCompressionType() const
+dsMath::CompressionType
+MKLPardisoPreconditioner<DoubleType>::GetRealMatrixCompressionType() const
 {
   return dsMath::CompressionType::CCM;
 }
 
 template <typename DoubleType>
-dsMath::CompressionType MKLPardisoPreconditioner<DoubleType>::GetComplexMatrixCompressionType() const
+dsMath::CompressionType
+MKLPardisoPreconditioner<DoubleType>::GetComplexMatrixCompressionType() const
 {
   return dsMath::CompressionType::CCM;
 }
@@ -393,9 +400,11 @@ MKLPardisoPreconditioner<DoubleType>::~MKLPardisoPreconditioner()
 }
 
 template <typename DoubleType>
-bool MKLPardisoPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m)
+bool MKLPardisoPreconditioner<DoubleType>::DerivedLUFactor(
+    Matrix<DoubleType> *m)
 {
-  CompressedMatrix<DoubleType> *cm = dynamic_cast<CompressedMatrix<DoubleType> *>(m);
+  CompressedMatrix<DoubleType> *cm =
+      dynamic_cast<CompressedMatrix<DoubleType> *>(m);
   dsAssert(cm, "UNEXPECTED");
   // Still need to debug what the issue is with CRM Matrix
 #ifdef USE_CCM
@@ -408,28 +417,29 @@ bool MKLPardisoPreconditioner<DoubleType>::DerivedLUFactor(Matrix<DoubleType> *m
 
   auto &data = *mklpardisodata_;
 
-  ret=data.LUFactorMatrix(cm);
+  ret = data.LUFactorMatrix(cm);
 
   return ret;
 }
 
 template <typename DoubleType>
-void MKLPardisoPreconditioner<DoubleType>::DerivedLUSolve(DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const
+void MKLPardisoPreconditioner<DoubleType>::DerivedLUSolve(
+    DoubleVec_t<DoubleType> &x, const DoubleVec_t<DoubleType> &b) const
 {
   mklpardisodata_->LUSolve(x, b);
 }
 
 template <typename DoubleType>
-void MKLPardisoPreconditioner<DoubleType>::DerivedLUSolve(ComplexDoubleVec_t<DoubleType> &x, const ComplexDoubleVec_t<DoubleType> &b) const
+void MKLPardisoPreconditioner<DoubleType>::DerivedLUSolve(
+    ComplexDoubleVec_t<DoubleType> &x,
+    const ComplexDoubleVec_t<DoubleType> &b) const
 {
   mklpardisodata_->LUSolve(x, b);
 }
-}
-
+}  // namespace dsMath
 
 template class dsMath::MKLPardisoPreconditioner<double>;
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 template class dsMath::MKLPardisoPreconditioner<float128>;
 #endif
-

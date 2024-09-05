@@ -9,44 +9,38 @@ SPDX-License-Identifier: Apache-2.0
 #include <cmath>
 using std::abs;
 
-
 #include <vector>
 
 template <typename DoubleType>
 class kahan {
-    public:
-        explicit kahan(DoubleType v) : value_(v), correction_(0.0) {}
-        kahan(const kahan & v) : value_(v.value_), correction_(v.correction_) {}
+ public:
+  explicit kahan(DoubleType v) : value_(v), correction_(0.0) {}
+  kahan(const kahan &v) : value_(v.value_), correction_(v.correction_) {}
 
+  kahan &operator+=(DoubleType v);
+  kahan &operator-=(DoubleType v);
 
-        kahan &operator+=(DoubleType v);
-        kahan &operator-=(DoubleType v);
+  ~kahan() {};
 
-        ~kahan() {};
+  operator DoubleType() { return value_ + correction_; }
 
-        operator DoubleType()
-        {
-            return value_ + correction_;
-        }
+  DoubleType value_;
+  DoubleType correction_;
 
-        DoubleType value_;
-        DoubleType correction_;
-
-    private:
-        kahan();
-        kahan &operator=(const kahan &);
+ private:
+  kahan();
+  kahan &operator=(const kahan &);
 };
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
 #endif
 
-
 #if defined(DEVSIM_EXTENDED_PRECISION)
 template <typename DoubleType>
 struct KahanType;
-template <> struct KahanType<double>
-{
+template <>
+struct KahanType<double> {
 // better numerical consistency for builds adopting this option
 #if defined(USE_CPP_BIN_FLOAT)
   using type = kahan<double>;
@@ -55,19 +49,16 @@ template <> struct KahanType<double>
 #endif
 };
 
-template <> struct KahanType<float128>
-{
+template <>
+struct KahanType<float128> {
   using type = kahan<float128>;
 };
 #else
 template <typename DoubleType>
-struct KahanType
-{
+struct KahanType {
   using type = kahan<DoubleType>;
 };
 #endif
-
-
 
 template <typename DoubleType>
 DoubleType kahan3(DoubleType a, DoubleType b, DoubleType c)
@@ -117,35 +108,35 @@ int main()
 template <typename DoubleType>
 kahan<DoubleType> &kahan<DoubleType>::operator+=(DoubleType v)
 {
-    if (abs(value_) < abs(correction_))
-    {
-      const DoubleType t = value_;
-      value_ = correction_;
-      correction_ = t;
-    }
+  if (abs(value_) < abs(correction_))
+  {
+    const DoubleType t = value_;
+    value_ = correction_;
+    correction_ = t;
+  }
 
-    const DoubleType x = value_ + v;
-    DoubleType c = x;
-    if (abs(value_) < abs(v))
-    {
-      c -= v;
-      c -= value_;
-    }
-    else
-    {
-      c -= value_;
-      c -= v;
-    }
-    value_      = x;
-    correction_ -= c;
-    return *this;
+  const DoubleType x = value_ + v;
+  DoubleType c = x;
+  if (abs(value_) < abs(v))
+  {
+    c -= v;
+    c -= value_;
+  }
+  else
+  {
+    c -= value_;
+    c -= v;
+  }
+  value_ = x;
+  correction_ -= c;
+  return *this;
 }
 
 template <typename DoubleType>
 kahan<DoubleType> &kahan<DoubleType>::operator-=(DoubleType v)
 {
-    (*this) += (-v);
-    return *this;
+  (*this) += (-v);
+  return *this;
 }
 
 template class kahan<double>;
@@ -157,5 +148,3 @@ template class kahan<float128>;
 template float128 kahan3(float128, float128, float128);
 template float128 kahan4(float128, float128, float128, float128);
 #endif
-
-

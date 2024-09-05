@@ -11,15 +11,13 @@ SPDX-License-Identifier: Apache-2.0
 #include <string>
 
 class dsException : public std::runtime_error {
-  public:
+ public:
+  dsException(const char *);
+  dsException(const std::string &);
 
-    dsException(const char *);
-    dsException(const std::string &);
+  using std::runtime_error::what;
 
-    using std::runtime_error::what;
-
-  private:
-        static const std::string msg;
+ private:
+  static const std::string msg;
 };
 #endif
-

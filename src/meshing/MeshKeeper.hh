@@ -15,34 +15,30 @@ class Mesh;
 typedef Mesh *MeshPtr;
 
 // This class is supposed to contain everything
-class MeshKeeper
-{
-    public:
-        typedef std::map<std::string, MeshPtr> MeshList_t;
+class MeshKeeper {
+ public:
+  typedef std::map<std::string, MeshPtr> MeshList_t;
 
-        static MeshKeeper &GetInstance();
-        static void DestroyInstance();
+  static MeshKeeper &GetInstance();
+  static void DestroyInstance();
 
-        void AddMesh(MeshPtr);
+  void AddMesh(MeshPtr);
 
-        const MeshList_t &GetMeshList()
-        {
-            return meshList;
-        }
+  const MeshList_t &GetMeshList() { return meshList; }
 
-        MeshPtr GetMesh(const std::string &);
-        bool DeleteMesh(const std::string &);
+  MeshPtr GetMesh(const std::string &);
+  bool DeleteMesh(const std::string &);
 
-    private:
-        MeshKeeper();
-        MeshKeeper(MeshKeeper &);
-        MeshKeeper &operator=(MeshKeeper &);
-        ~MeshKeeper();
+ private:
+  MeshKeeper();
+  MeshKeeper(MeshKeeper &);
+  MeshKeeper &operator=(MeshKeeper &);
+  ~MeshKeeper();
 
-        static MeshKeeper *instance;
+  static MeshKeeper *instance;
 
-        MeshList_t meshList;
+  MeshList_t meshList;
 };
-}
+}  // namespace dsMesh
 
 #endif

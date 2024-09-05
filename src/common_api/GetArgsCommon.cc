@@ -5,9 +5,9 @@ Copyright 2013 DEVSIM LLC
 SPDX-License-Identifier: Apache-2.0
 ***/
 
-
 namespace dsGetArgs {
-const char * optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT", "LIST"};
+const char *optionTypeStrings[] = {"BOOLEAN", "STRING", "INTEGER", "FLOAT",
+                                   "LIST"};
 
 GetArgs::GetArgs(optionList opts) : options(opts)
 {
@@ -116,7 +116,8 @@ int GetArgs::GetIntegerOption(const std::string &s) const
 }
 
 namespace {
-void alreadySpecified(const std::string &command, const std::string &arg, const ObjectHolder &val, std::string &error)
+void alreadySpecified(const std::string &command, const std::string &arg,
+                      const ObjectHolder &val, std::string &error)
 {
   std::ostringstream os;
   os << command << " already passed option " << arg;
@@ -124,13 +125,15 @@ void alreadySpecified(const std::string &command, const std::string &arg, const 
   error = os.str();
 }
 
-void notConvertibleToType(const std::string &command, const std::string &arg, optionType ot, const ObjectHolder &val, std::string &error)
+void notConvertibleToType(const std::string &command, const std::string &arg,
+                          optionType ot, const ObjectHolder &val,
+                          std::string &error)
 {
   std::ostringstream os;
-  os << "Cannot convert \"" << val.GetString() << "\" to a " << optionTypeStrings[static_cast<size_t>(ot)] <<  " for argument " << arg;
+  os << "Cannot convert \"" << val.GetString() << "\" to a "
+     << optionTypeStrings[static_cast<size_t>(ot)] << " for argument " << arg;
 
   error = os.str();
 }
-}
-}
-
+}  // namespace
+}  // namespace dsGetArgs

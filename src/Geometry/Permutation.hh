@@ -20,34 +20,26 @@ class PermutationEntry;
 // the first entry is the original row
 typedef std::map<size_t /*row*/, PermutationEntry> PermutationMap;
 
-class PermutationEntry
-{
-    public:
-        PermutationEntry(size_t /*newrow*/, bool /*keepcopy*/);
+class PermutationEntry {
+ public:
+  PermutationEntry(size_t /*newrow*/, bool /*keepcopy*/);
 
-        size_t GetRow() const
-        {
-            return newrow;
-        }
+  size_t GetRow() const { return newrow; }
 
-        // special case for handling new interface type
-        bool KeepCopy() const
-        {
-            return keepcopy;
-        }
+  // special case for handling new interface type
+  bool KeepCopy() const { return keepcopy; }
 
-//      // the defaults are needed
-        PermutationEntry();
-        PermutationEntry(const PermutationEntry &);
-        PermutationEntry &operator=(const PermutationEntry &);
+  //      // the defaults are needed
+  PermutationEntry();
+  PermutationEntry(const PermutationEntry &);
+  PermutationEntry &operator=(const PermutationEntry &);
 
-    private:
-        size_t newrow;
-        bool   keepcopy;
+ private:
+  size_t newrow;
+  bool keepcopy;
 #if 0
         ConstContactPtr contact;
         ConstInterfacePtr interface;
 #endif
 };
 #endif
-

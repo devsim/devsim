@@ -17,12 +17,18 @@ class Tetrahedron;
 namespace dsMesh {
 
 struct Shapes {
-  enum class ElementType_t {UNKNOWN = -1, POINT=0, LINE, TRIANGLE, TETRAHEDRON};
+  enum class ElementType_t {
+    UNKNOWN = -1,
+    POINT = 0,
+    LINE,
+    TRIANGLE,
+    TETRAHEDRON
+  };
 
   typedef std::vector<int> NodeIndexes_t;
 
   void AddShape(ElementType_t element_type, const NodeIndexes_t &node_indexes);
-  void AddShape(ElementType_t element_type, const int * node_indexes);
+  void AddShape(ElementType_t element_type, const int *node_indexes);
 
   void AddShapes(Shapes &);
 
@@ -32,11 +38,10 @@ struct Shapes {
 
   size_t GetNumberOfTypes() const;
 
-  MeshNodeList_t        Points;
-  MeshEdgeList_t        Lines;
-  MeshTriangleList_t    Triangles;
+  MeshNodeList_t Points;
+  MeshEdgeList_t Lines;
+  MeshTriangleList_t Triangles;
   MeshTetrahedronList_t Tetrahedra;
 };
-}
+}  // namespace dsMesh
 #endif
-

@@ -13,29 +13,27 @@ SPDX-License-Identifier: Apache-2.0
 #include "dsAssert.hh"
 
 template <typename DoubleType>
-EdgeInverseLength<DoubleType>::EdgeInverseLength(RegionPtr rp) :
-EdgeModel("EdgeInverseLength", rp, EdgeModel::DisplayType::SCALAR)
+EdgeInverseLength<DoubleType>::EdgeInverseLength(RegionPtr rp)
+    : EdgeModel("EdgeInverseLength", rp, EdgeModel::DisplayType::SCALAR)
 {
-    RegisterCallback("EdgeLength");
+  RegisterCallback("EdgeLength");
 }
-
 
 template <typename DoubleType>
 void EdgeInverseLength<DoubleType>::calcEdgeScalarValues() const
 {
-    ConstEdgeModelPtr elen = GetRegion().GetEdgeModel("EdgeLength");
-    dsAssert(elen.get(), "UNEXPECTED");
+  ConstEdgeModelPtr elen = GetRegion().GetEdgeModel("EdgeLength");
+  dsAssert(elen.get(), "UNEXPECTED");
 
-    const EdgeScalarList<DoubleType> &evals = elen->GetScalarValues<DoubleType>();
+  const EdgeScalarList<DoubleType> &evals = elen->GetScalarValues<DoubleType>();
 
-    std::vector<DoubleType> ev(evals.size());
+  std::vector<DoubleType> ev(evals.size());
 
-
-    for (size_t i = 0; i < ev.size(); ++i)
-    {
-        ev[i] = 1.0 / evals[i];
-    }
-    SetValues(ev);
+  for (size_t i = 0; i < ev.size(); ++i)
+  {
+    ev[i] = 1.0 / evals[i];
+  }
+  SetValues(ev);
 }
 
 template <typename DoubleType>
@@ -49,4 +47,3 @@ template class EdgeInverseLength<double>;
 #include "Float128.hh"
 template class EdgeInverseLength<float128>;
 #endif
-

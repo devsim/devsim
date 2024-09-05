@@ -9,23 +9,22 @@ SPDX-License-Identifier: Apache-2.0
 #define NODEPOSITION_HH
 #include "NodeModel.hh"
 template <typename DoubleType>
-class NodePosition : public NodeModel
-{
-    public:
-      NodePosition(RegionPtr);
-      ~NodePosition();
+class NodePosition : public NodeModel {
+ public:
+  NodePosition(RegionPtr);
+  ~NodePosition();
 
-      void Serialize(std::ostream &) const;
+  void Serialize(std::ostream &) const;
 
-    private:
-      DoubleType calcNodePosition(ConstNodePtr) const;
-      void calcNodeScalarValues() const;
-      void setInitialValues();
+ private:
+  DoubleType calcNodePosition(ConstNodePtr) const;
+  void calcNodeScalarValues() const;
+  void setInitialValues();
 
-      WeakNodeModelPtr yposition;
-      WeakNodeModelPtr zposition;
-      WeakNodeModelPtr node_index;
-      WeakNodeModelPtr coordinate_index;
+  WeakNodeModelPtr yposition;
+  WeakNodeModelPtr zposition;
+  WeakNodeModelPtr node_index;
+  WeakNodeModelPtr coordinate_index;
 };
 
 #endif

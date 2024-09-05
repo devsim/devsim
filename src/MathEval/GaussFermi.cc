@@ -24,14 +24,10 @@ Implementation of:
 https://doi.org/10.1063/1.3374475
 @article{doi:10.1063/1.3374475,
 author = {Paasch,Gernot  and Scheinert,Susanne },
-title = {Charge carrier density of organics with Gaussian density of states: Analytical approximation for the Gauss–Fermi integral},
-journal = {Journal of Applied Physics},
-volume = {107},
-number = {10},
-pages = {104501},
-year = {2010},
-doi = {10.1063/1.3374475},
-URL = { https://doi.org/10.1063/1.3374475 },
+title = {Charge carrier density of organics with Gaussian density of states:
+Analytical approximation for the Gauss–Fermi integral}, journal = {Journal of
+Applied Physics}, volume = {107}, number = {10}, pages = {104501}, year =
+{2010}, doi = {10.1063/1.3374475}, URL = { https://doi.org/10.1063/1.3374475 },
 eprint = { https://doi.org/10.1063/1.3374475 }
 }
 */
@@ -39,8 +35,8 @@ eprint = { https://doi.org/10.1063/1.3374475 }
 namespace {
 
 //// Fix multiprecision constexpr issue
-//#if BOOST_VERSION / 100 >= 1072
-//recurrent issue with constexpr
+// #if BOOST_VERSION / 100 >= 1072
+// recurrent issue with constexpr
 #if 0
 template <typename T>
 struct MC {
@@ -51,35 +47,37 @@ struct MC {
 #else
 template <typename T>
 struct MC {
-    const static inline T sqrt2 = boost::math::constants::root_two<T>();
-    const static inline T sqrt2_pi = boost::math::constants::root_two<T>() * boost::math::constants::one_div_root_pi<T>();
-    const static inline T one_div_root_two_pi = boost::math::constants::one_div_root_two_pi<T>();
+  const static inline T sqrt2 = boost::math::constants::root_two<T>();
+  const static inline T sqrt2_pi = boost::math::constants::root_two<T>() *
+                                   boost::math::constants::one_div_root_pi<T>();
+  const static inline T one_div_root_two_pi =
+      boost::math::constants::one_div_root_two_pi<T>();
 };
 #endif
 
 template <typename T>
 inline T calcH_Impl(const T &s, const T &S)
 {
-    const T &sqrt2 = MC<T>::sqrt2;
+  const T &sqrt2 = MC<T>::sqrt2;
 
-    T H = sqrt2 / s * erfc_inv(exp(-0.5 * S));
+  T H = sqrt2 / s * erfc_inv(exp(-0.5 * S));
 #ifdef DEVSIM_UNIT_TEST
-    std::cout << std::setprecision(std::numeric_limits<T>::max_digits10);
-    std::cout << "DEBUG NEW H " << s << " " << H << "\n";
+  std::cout << std::setprecision(std::numeric_limits<T>::max_digits10);
+  std::cout << "DEBUG NEW H " << s << " " << H << "\n";
 #endif
-    return H;
+  return H;
 }
 
 template <typename T>
 inline T calcH(const T &s, const T &S)
 {
-    thread_local auto p = std::make_pair(s, calcH_Impl(s, S));
+  thread_local auto p = std::make_pair(s, calcH_Impl(s, S));
 
-    // Assume that s is constant across the same call in the same region
-    if (p.first != s)
-    {
-      p = std::make_pair(s, calcH_Impl(s, S));
-    }
+  // Assume that s is constant across the same call in the same region
+  if (p.first != s)
+  {
+    p = std::make_pair(s, calcH_Impl(s, S));
+  }
 #if 0
     else
     {
@@ -87,7 +85,7 @@ inline T calcH(const T &s, const T &S)
     }
 #endif
 
-    return p.second;
+  return p.second;
 }
 
 template <typename T>
@@ -99,54 +97,55 @@ inline T calcK(const T &s, const T &S, const T &H)
   return K;
 }
 
-}
+}  // namespace
 
 template <typename T>
 T gfi(T zeta, T s)
 {
-    const T &sqrt2 = MC<T>::sqrt2;
-    const T S = s * s;
+  const T &sqrt2 = MC<T>::sqrt2;
+  const T S = s * s;
 
-    T H = calcH(s, S);
+  T H = calcH(s, S);
 
-    T value;
-    if (zeta < -S)
-    {
-        const T K = calcK(s, S, H);
-        value = exp(0.5 * S + zeta) / (exp(K*(zeta+S)) + 1);
-    }
-    else
-    {
-        value = 0.5 * erfc(-zeta / (s*sqrt2) * H);
-    }
+  T value;
+  if (zeta < -S)
+  {
+    const T K = calcK(s, S, H);
+    value = exp(0.5 * S + zeta) / (exp(K * (zeta + S)) + 1);
+  }
+  else
+  {
+    value = 0.5 * erfc(-zeta / (s * sqrt2) * H);
+  }
 
-    return value;
+  return value;
 }
 
 template <typename T>
 T dgfidx(T zeta, T s)
 {
-    const T S = s * s;
+  const T S = s * s;
 
-    T H = calcH(s, S);
+  T H = calcH(s, S);
 
-    T dvalue;
-    if (zeta < -S)
-    {
-        const T K = calcK(s, S, H);
-        const T den_inv = 1. / (exp(K * (S + zeta)) + 1.);
-        dvalue = exp(0.5 * S + zeta) * den_inv * (1. - K*exp(K * (S+zeta)) * den_inv);
-    }
-    else
-    {
-        const T &one_div_root_two_pi = MC<T>::one_div_root_two_pi;
-        dvalue = one_div_root_two_pi * H / s * exp(-0.5 * pow(H*zeta,2)/S);
-    }
+  T dvalue;
+  if (zeta < -S)
+  {
+    const T K = calcK(s, S, H);
+    const T den_inv = 1. / (exp(K * (S + zeta)) + 1.);
+    dvalue = exp(0.5 * S + zeta) * den_inv *
+             (1. - K * exp(K * (S + zeta)) * den_inv);
+  }
+  else
+  {
+    const T &one_div_root_two_pi = MC<T>::one_div_root_two_pi;
+    dvalue = one_div_root_two_pi * H / s * exp(-0.5 * pow(H * zeta, 2) / S);
+  }
 
-    return dvalue;
+  return dvalue;
 }
 
-//### inverse function for Gaussian Fermi Integral
+// ### inverse function for Gaussian Fermi Integral
 
 namespace {
 template <typename T>
@@ -165,40 +164,40 @@ float128 good_relerror()
   return 1e-31;
 }
 #endif
-}
+}  // namespace
 
 template <typename T>
 T igfi(T g, T s)
 {
-    // using the Newton method
-    // The initial guess
-    // perhaps the degenerate approximation
-    // or provided from the last call
-    // improves speed
-    T x = 0.0;
-    //printf("%d %1.15e %1.15e\n", -1, x, rerr);
+  // using the Newton method
+  // The initial guess
+  // perhaps the degenerate approximation
+  // or provided from the last call
+  // improves speed
+  T x = 0.0;
+  // printf("%d %1.15e %1.15e\n", -1, x, rerr);
 #ifdef DEVSIM_UNIT_TEST
-    std::cout << std::setprecision(std::numeric_limits<T>::max_digits10);
+  std::cout << std::setprecision(std::numeric_limits<T>::max_digits10);
 #endif
-    T arg = 1. - 2. * g;
+  T arg = 1. - 2. * g;
 
-    static const T bound = 1.0 - std::numeric_limits<T>::epsilon();
+  static const T bound = 1.0 - std::numeric_limits<T>::epsilon();
 
-    // prevent infinite results
-    if (arg <= -1.0)
-    {
-      arg = -bound;
-    }
-    else if (arg >= 1.0)
-    {
-      arg = bound;
-    }
+  // prevent infinite results
+  if (arg <= -1.0)
+  {
+    arg = -bound;
+  }
+  else if (arg >= 1.0)
+  {
+    arg = bound;
+  }
 
-    const T &sqrt2 = MC<T>::sqrt2;
-    // using the degenerate approximation
-    const T S = s*s;
-    const T H = calcH(s, S);
-    x = -s * sqrt2 * erf_inv(arg) / H;
+  const T &sqrt2 = MC<T>::sqrt2;
+  // using the degenerate approximation
+  const T S = s * s;
+  const T H = calcH(s, S);
+  x = -s * sqrt2 * erf_inv(arg) / H;
 
 #if 0
     // slightly less accuracy, best to use iteration
@@ -208,32 +207,31 @@ T igfi(T g, T s)
     }
 #endif
 
-    T rerr = 0.0;
-    size_t i = 0;
-    T f;
-    T fp;
-    T upd;
+  T rerr = 0.0;
+  size_t i = 0;
+  T f;
+  T fp;
+  T upd;
 
-    do
-    {
-        f = gfi(x, s) - g;
-        fp = dgfidx(x, s);
-        upd = -f / fp;
-        x += upd;
-        rerr = abs(upd)/(abs(x) + good_relerror<T>());
+  do
+  {
+    f = gfi(x, s) - g;
+    fp = dgfidx(x, s);
+    upd = -f / fp;
+    x += upd;
+    rerr = abs(upd) / (abs(x) + good_relerror<T>());
 #ifdef DEVSIM_UNIT_TEST
     std::cout << i << " " << x << " " << rerr << "\n";
 #endif
-        ++i;
-    } while ((rerr > good_relerror<T>()) && (i < 200));
-    return x;
+    ++i;
+  } while ((rerr > good_relerror<T>()) && (i < 200));
+  return x;
 }
-
 
 template <typename T>
 T digfidx(T g, T s)
 {
-    return 1.0 / dgfidx(igfi(g,s), s);
+  return 1.0 / dgfidx(igfi(g, s), s);
 }
 
 template double gfi<double>(double, double);
@@ -258,16 +256,12 @@ void unit()
     for (size_t i = 0; i <= 10; ++i)
     {
       DoubleType zeta = 7 * i - 70.;
-      DoubleType g= gfi(zeta,s);
-      DoubleType dg= dgfidx(zeta,s);
-      DoubleType ginv= igfi(g,s);
-      DoubleType dginv= digfidx(g,s);
-      std::cout
-                << zeta << " "
-                << g << " "
-                << dg << " "
-                << ginv << " "
-                << dginv << " " << 1.0/dginv << "\n";
+      DoubleType g = gfi(zeta, s);
+      DoubleType dg = dgfidx(zeta, s);
+      DoubleType ginv = igfi(g, s);
+      DoubleType dginv = digfidx(g, s);
+      std::cout << zeta << " " << g << " " << dg << " " << ginv << " " << dginv
+                << " " << 1.0 / dginv << "\n";
     }
   }
 #if 0

@@ -12,10 +12,15 @@ SPDX-License-Identifier: Apache-2.0
 #include <vector>
 /// Start out by writing the all out to one file
 class VTKWriter : public MeshWriter {
-    public:
-        ~VTKWriter();
-    private:
-        bool WriteMeshes_(const std::string &/*filename*/, MeshWriterTest_t /*include*/, std::string &/*errorString*/);
-        bool WriteMesh_(const std::string &/*deviceName*/, const std::string &/*filename*/, MeshWriterTest_t /*include*/, std::string &/*errorString*/);
+ public:
+  ~VTKWriter();
+
+ private:
+  bool WriteMeshes_(const std::string & /*filename*/,
+                    MeshWriterTest_t /*include*/,
+                    std::string & /*errorString*/);
+  bool WriteMesh_(const std::string & /*deviceName*/,
+                  const std::string & /*filename*/,
+                  MeshWriterTest_t /*include*/, std::string & /*errorString*/);
 };
 #endif

@@ -59,7 +59,7 @@ void CreateDefaultModelsImpl(RegionPtr rp)
     new TetrahedronNodeVolume<DoubleType>(rp);
   }
 }
-}
+}  // namespace
 
 void CreateDefaultModels(RegionPtr rp)
 {
@@ -69,4 +69,3 @@ void CreateDefaultModels(RegionPtr rp)
   CreateDefaultModelsImpl<double>(rp);
 #endif
 }
-

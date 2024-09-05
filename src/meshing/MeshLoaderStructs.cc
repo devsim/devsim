@@ -20,41 +20,37 @@ template <typename T> void DeletePointersFromVector(T &x)
 }
 #endif
 
-template <typename T> void DeletePointersFromMap(T &x)
+template <typename T>
+void DeletePointersFromMap(T &x)
 {
-    typename T::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete it->second;
-    }
+  typename T::iterator it = x.begin();
+  for (; it != x.end(); ++it)
+  {
+    delete it->second;
+  }
 }
-}
+}  // namespace
 
-const char * Solution::ModelTypeString[] = {
-    "MUNDEFINED",
-    "Node",
-    "Edge",
-    "Triangle Edge",
-    "Tetrahedron Edge",
-    "Interface Node"};
+const char *Solution::ModelTypeString[] = {
+    "MUNDEFINED",       "Node",          "Edge", "Triangle Edge",
+    "Tetrahedron Edge", "Interface Node"};
 
 MeshContact::~MeshContact()
 {
-//    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
-    DeletePointersFromMap<MeshEquationList_t>(equationList);
+  //    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
+  DeletePointersFromMap<MeshEquationList_t>(equationList);
 }
-
 
 MeshInterface::~MeshInterface()
 {
-    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
-    DeletePointersFromMap<MeshEquationList_t>(equationList);
+  DeletePointersFromMap<MeshSolutionList_t>(solutionList);
+  DeletePointersFromMap<MeshEquationList_t>(equationList);
 }
 
 MeshRegion::~MeshRegion()
 {
-    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
-    DeletePointersFromMap<MeshEquationList_t>(equationList);
+  DeletePointersFromMap<MeshSolutionList_t>(solutionList);
+  DeletePointersFromMap<MeshEquationList_t>(equationList);
 }
 
 void MeshRegion::DecomposeAndUniquify()
@@ -64,7 +60,8 @@ void MeshRegion::DecomposeAndUniquify()
   // element nodes are guaranteed to be sorted when constructed
   if (!tetrahedra.empty() && triangles.empty())
   {
-    for (MeshTetrahedronList_t::iterator it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
+    for (MeshTetrahedronList_t::iterator it = tetrahedra.begin();
+         it != tetrahedra.end(); ++it)
     {
       MeshTetrahedron &t = *it;
       triangles.push_back(MeshTriangle(t.Index0(), t.Index1(), t.Index2()));
@@ -74,13 +71,14 @@ void MeshRegion::DecomposeAndUniquify()
     }
     // sort and collapse
     std::sort(triangles.begin(), triangles.end());
-    MeshTriangleList_t::iterator nonewend = std::unique(triangles.begin(), triangles.end());
+    MeshTriangleList_t::iterator nonewend =
+        std::unique(triangles.begin(), triangles.end());
     triangles.erase(nonewend, triangles.end());
-
   }
   if (!triangles.empty() && edges.empty())
   {
-    for (MeshTriangleList_t::iterator it = triangles.begin(); it != triangles.end(); ++it)
+    for (MeshTriangleList_t::iterator it = triangles.begin();
+         it != triangles.end(); ++it)
     {
       MeshTriangle &t = *it;
       edges.push_back(MeshEdge(t.Index0(), t.Index1()));
@@ -106,10 +104,7 @@ void MeshRegion::DecomposeAndUniquify()
   }
 }
 
-void MeshContact::DecomposeAndUniquify()
-{
-  region.DecomposeAndUniquify();
-}
+void MeshContact::DecomposeAndUniquify() { region.DecomposeAndUniquify(); }
 
 void MeshInterface::DecomposeAndUniquify()
 {
@@ -117,5 +112,4 @@ void MeshInterface::DecomposeAndUniquify()
   region1.DecomposeAndUniquify();
 }
 
-}
-
+}  // namespace dsMesh

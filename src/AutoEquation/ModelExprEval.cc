@@ -35,7 +35,9 @@ SPDX-License-Identifier: Apache-2.0
 namespace MEE {
 
 template <typename DoubleType>
-ModelExprEval<DoubleType>::ModelExprEval(data_ref_t &vals, const std::string &m, error_t &er) : data_ref(vals), model(m), errors(er), etype(ExpectedType::UNKNOWN)
+ModelExprEval<DoubleType>::ModelExprEval(data_ref_t &vals, const std::string &m,
+                                         error_t &er)
+    : data_ref(vals), model(m), errors(er), etype(ExpectedType::UNKNOWN)
 {
   const Region *rp = data_ref;
   dsAssert(rp != nullptr, "UNEXPECTED");
@@ -86,7 +88,8 @@ ModelExprEval<DoubleType>::~ModelExprEval()
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateModelType(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateModelType(
+    Eqo::EqObjPtr arg)
 {
   const std::string &model = EngineAPI::getStringValue(arg);
 
@@ -94,7 +97,6 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateModelType(Eqo::EqOb
 
   ModelExprData<DoubleType> out(rp);
   dsAssert(rp != nullptr, "UNEXPECTED");
-
 
   if (ConstNodeModelPtr nm = rp->GetNodeModel(model))
   {
@@ -143,7 +145,8 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateModelType(Eqo::EqOb
     if (nm->IsInProcess())
     {
       std::ostringstream os;
-      os << "Cyclic dependency while evaluating TetrahedronEdgeModel \"" << model;
+      os << "Cyclic dependency while evaluating TetrahedronEdgeModel \""
+         << model;
       errors.push_back(os.str());
       out = ModelExprData<DoubleType>(rp);
     }
@@ -163,24 +166,27 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateModelType(Eqo::EqOb
     std::string alias_model(model);
 
     //// Why not just try it all the time???
-//    if (model.find(":") != std::string::npos)
+    //    if (model.find(":") != std::string::npos)
     {
       std::string::size_type rpos = alias_model.size();
       if (rpos > 4)
       {
         rpos -= 4;
 
-        if ((alias_model.rfind("@en0") == rpos) || (alias_model.rfind("@en1") == rpos))
+        if ((alias_model.rfind("@en0") == rpos) ||
+            (alias_model.rfind("@en1") == rpos))
         {
           //// look for @n0, @n1 in place of @en0, @en11
-          alias_model.erase(rpos+1, 1);
+          alias_model.erase(rpos + 1, 1);
         }
 
         if (ConstEdgeModelPtr nm = rp->GetEdgeModel(alias_model))
         {
           std::ostringstream os;
-          os << "Substituting Edge Model " << alias_model << " for Element Edge Model " << model << "\n";
-          GeometryStream::WriteOut(OutputStream::OutputType::VERBOSE1, *rp, os.str());
+          os << "Substituting Edge Model " << alias_model
+             << " for Element Edge Model " << model << "\n";
+          GeometryStream::WriteOut(OutputStream::OutputType::VERBOSE1, *rp,
+                                   os.str());
 
           if (nm->IsInProcess())
           {
@@ -202,18 +208,20 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateModelType(Eqo::EqOb
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateVariableType(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateVariableType(
+    Eqo::EqObjPtr arg)
 {
   ModelExprData<DoubleType> out;
 
-  GlobalData &gd  = GlobalData::GetInstance();
+  GlobalData &gd = GlobalData::GetInstance();
   NodeKeeper &nk = NodeKeeper::instance();
 
   const std::string &nm = EngineAPI::getName(arg);
   /**
    * Get the DB entry here
    */
-  const GlobalData::DoubleDBEntry_t &gdbent  = gd.GetDoubleDBEntryOnRegion(data_ref, nm);
+  const GlobalData::DoubleDBEntry_t &gdbent =
+      gd.GetDoubleDBEntryOnRegion(data_ref, nm);
 
   if (gdbent.first)
   {
@@ -235,7 +243,8 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateVariableType(Eqo::E
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateProductType(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateProductType(
+    Eqo::EqObjPtr arg)
 {
   ModelExprData<DoubleType> out;
   //
@@ -243,16 +252,13 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateProductType(Eqo::Eq
   std::vector<Eqo::EqObjPtr> values = EngineAPI::getArgs(arg);
   /// Rewrite this later
   out = ModelExprData<DoubleType>(1.0, data_ref);
-//    out = eval_function(values[0]);
+  //    out = eval_function(values[0]);
   /// Premature optimization
   /// short circuit multiplication
   for (size_t i = 0; i < values.size(); ++i)
   {
     ModelExprData<DoubleType> x = eval_function(values[i]);
-    if (
-      (x.GetType() == datatype::DOUBLE) &&
-      (x.GetDoubleValue() == 0.0)
-    )
+    if ((x.GetType() == datatype::DOUBLE) && (x.GetDoubleValue() == 0.0))
     {
       out = ModelExprData<DoubleType>(0.0, data_ref);
       break;
@@ -267,7 +273,8 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateProductType(Eqo::Eq
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateIfType(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateIfType(
+    Eqo::EqObjPtr arg)
 {
   ModelExprData<DoubleType> out;
 
@@ -299,7 +306,8 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateIfType(Eqo::EqObjPt
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateIfElseType(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateIfElseType(
+    Eqo::EqObjPtr arg)
 {
   ModelExprData<DoubleType> out;
 
@@ -335,11 +343,12 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateIfElseType(Eqo::EqO
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateAddType(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateAddType(
+    Eqo::EqObjPtr arg)
 {
   ModelExprData<DoubleType> out;
 
-//    out = ModelExprData<DoubleType>(0.0, data_ref);
+  //    out = ModelExprData<DoubleType>(0.0, data_ref);
   std::vector<Eqo::EqObjPtr> values = EngineAPI::getArgs(arg);
   out = eval_function(values[0]);
   for (size_t i = 1; i < values.size(); ++i)
@@ -352,7 +361,8 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateAddType(Eqo::EqObjP
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateFunctionType(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateFunctionType(
+    Eqo::EqObjPtr arg)
 {
   ModelExprData<DoubleType> out;
 
@@ -366,7 +376,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateFunctionType(Eqo::E
   margv.reserve(eargv.size());
   for (size_t i = 0; i < eargv.size(); ++i)
   {
-      margv.push_back(eval_function(eargv[i]));
+    margv.push_back(eval_function(eargv[i]));
   }
   out = EvaluateExternalMath(nm, margv);
 
@@ -374,20 +384,22 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateFunctionType(Eqo::E
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateInvalidType(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateInvalidType(
+    Eqo::EqObjPtr arg)
 {
   ModelExprData<DoubleType> out;
 
   std::ostringstream os;
   os << "Could not evaluate expression type for "
-      << EngineAPI::getStringValue(arg);
+     << EngineAPI::getStringValue(arg);
   errors.push_back(os.str());
 
   return out;
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateConstantType(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateConstantType(
+    Eqo::EqObjPtr arg)
 {
   ModelExprData<DoubleType> out;
   out = ModelExprData<DoubleType>(EngineAPI::getDoubleValue(arg), data_ref);
@@ -395,7 +407,8 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateConstantType(Eqo::E
 }
 
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::eval_function(Eqo::EqObjPtr arg)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::eval_function(
+    Eqo::EqObjPtr arg)
 {
   FPECheck::ClearFPE();
 
@@ -408,10 +421,12 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::eval_function(Eqo::EqObjPtr
   ModelExprData<DoubleType> out(data_ref);
 
   bool cache_result = true;
-  ModelExprDataCachePtr<DoubleType> cache = const_cast<Region *>(data_ref)->GetModelExprDataCache<DoubleType>();
+  ModelExprDataCachePtr<DoubleType> cache =
+      const_cast<Region *>(data_ref)->GetModelExprDataCache<DoubleType>();
   if (!cache)
   {
-    cache = ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>());
+    cache =
+        ModelExprDataCachePtr<DoubleType>(new ModelExprDataCache<DoubleType>());
     const_cast<Region *>(data_ref)->SetModelExprDataCache(cache);
   }
 
@@ -421,7 +436,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::eval_function(Eqo::EqObjPtr
   }
   else
   {
-    switch(etype)
+    switch (etype)
     {
       case EngineAPI::MODEL_OBJ:
         out = EvaluateModelType(arg);
@@ -463,7 +478,9 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::eval_function(Eqo::EqObjPtr
     // invalid
     out = ModelExprData<DoubleType>(data_ref);
     std::ostringstream os;
-    os << "There was a " << FPECheck::getFPEString() << " floating point exception while evaluating " << EngineAPI::getStringValue(arg);
+    os << "There was a " << FPECheck::getFPEString()
+       << " floating point exception while evaluating "
+       << EngineAPI::getStringValue(arg);
     errors.push_back(os.str());
     FPECheck::ClearFPE();
   }
@@ -496,12 +513,12 @@ struct checks {
   {
     dsAssert(!argv.empty(), "UNEXPECTED");
     // if we have at least one invalid in arg list, we are screwed
-    hasInvalid          = false;
-    hasEdgeData         = false;
+    hasInvalid = false;
+    hasEdgeData = false;
     hasTriangleEdgeData = false;
     hasTetrahedronEdgeData = false;
-    hasNodeData         = false;
-    hasDouble           = false;
+    hasNodeData = false;
+    hasDouble = false;
     for (size_t i = 0; i < argv.size(); ++i)
     {
       datatype type = argv[i].GetType();
@@ -536,8 +553,8 @@ struct checks {
       }
     }
 
-    commonType    = argv[0].GetType();
-    allArgsSame   = true;
+    commonType = argv[0].GetType();
+    allArgsSame = true;
     for (size_t i = 1; i < argv.size(); ++i)
     {
       if (argv[i].GetType() != commonType)
@@ -548,12 +565,14 @@ struct checks {
     }
   }
 };
-}
+}  // namespace
 
-/// Need function for handling things that can be done locally by node and edge scalar data
-/// We need to take ownership of data in argv to convert to triangle data
+/// Need function for handling things that can be done locally by node and edge
+/// scalar data We need to take ownership of data in argv to convert to triangle
+/// data
 template <typename DoubleType>
-ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const std::string &name, margv_t &argv)
+ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(
+    const std::string &name, margv_t &argv)
 {
   bool invalid = false;
   // if one arg is invalid, we must abort
@@ -573,7 +592,8 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
     if (mytest.hasEdgeData)
     {
       std::ostringstream os;
-      os << "Function " << name << " cannot have both edge and node model arguments";
+      os << "Function " << name
+         << " cannot have both edge and node model arguments";
       errors.push_back(os.str());
       invalid = true;
     }
@@ -581,7 +601,8 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
     if (mytest.hasTriangleEdgeData || mytest.hasTetrahedronEdgeData)
     {
       std::ostringstream os;
-      os << "Function " << name << " cannot have both element edge and node model arguments";
+      os << "Function " << name
+         << " cannot have both element edge and node model arguments";
       errors.push_back(os.str());
       invalid = true;
     }
@@ -607,40 +628,40 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
       }
       mytest.doit(argv);
     }
-
   }
   else if (mytest.hasTetrahedronEdgeData && mytest.hasTriangleEdgeData)
   {
     std::ostringstream os;
-    os << "Function " << name << " cannot have both tetrahedron edge and triangle edge arguments";
+    os << "Function " << name
+       << " cannot have both tetrahedron edge and triangle edge arguments";
     errors.push_back(os.str());
     invalid = true;
   }
 
   if (invalid)
   {
-      return out;
+    return out;
   }
 
   // simplest case to handle
   if (mytest.allArgsSame && (mytest.commonType == datatype::DOUBLE))
   {
-      const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
+    const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
 
-      std::string resultstr;
-      std::vector<DoubleType> dargs;
-      dargs.reserve(argv.size());
-      for (size_t i = 0; i < argv.size(); ++i)
-      {
-          dargs.push_back(argv[i].GetDoubleValue());
-      }
-      DoubleType res = emath.EvaluateMathFunc(name, dargs, resultstr);
-      if (!resultstr.empty())
-      {
-          errors.push_back(resultstr);
-          invalid = true;
-      }
-      out = ModelExprData<DoubleType>(res, data_ref);
+    std::string resultstr;
+    std::vector<DoubleType> dargs;
+    dargs.reserve(argv.size());
+    for (size_t i = 0; i < argv.size(); ++i)
+    {
+      dargs.push_back(argv[i].GetDoubleValue());
+    }
+    DoubleType res = emath.EvaluateMathFunc(name, dargs, resultstr);
+    if (!resultstr.empty())
+    {
+      errors.push_back(resultstr);
+      invalid = true;
+    }
+    out = ModelExprData<DoubleType>(res, data_ref);
   }
   else
   {
@@ -649,13 +670,14 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
     std::vector<DoubleType> output;
     /// default initializer for a vector of pointers is 0
     std::vector<const std::vector<DoubleType> *> vargs(argv.size());
-    //// We enforce above that the vector length must be same across all arguments
+    //// We enforce above that the vector length must be same across all
+    ///arguments
     size_t vlen = 0;
     bool all_doubles = true;
     std::vector<DoubleType> dargs(argv.size());
 
     std::string resultstr;
-    for (size_t i=0; i < argv.size(); ++i)
+    for (size_t i = 0; i < argv.size(); ++i)
     {
       // todo employ caching scheme later on
       if (argv[i].GetType() == datatype::DOUBLE)
@@ -682,7 +704,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
       }
       else
       {
-          /// We should never get here
+        /// We should never get here
         dsAssert(false, "UNEXPECTED");
       }
     }
@@ -692,14 +714,14 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
     output.resize(vlen);
     size_t k = 0;
     size_t indexsize = indexes.size();
-//    os << "model " << model << " has indexsize " << indexsize << "\n";
+    //    os << "model " << model << " has indexsize " << indexsize << "\n";
 
     //// This is for our contacts
     //// It only evaluates indexes on our list
     if (indexsize)
     {
-      bool tcheck = (((etype == ExpectedType::NODE) && mytest.hasNodeData)
-                   ||((etype == ExpectedType::EDGE) && mytest.hasEdgeData));
+      bool tcheck = (((etype == ExpectedType::NODE) && mytest.hasNodeData) ||
+                     ((etype == ExpectedType::EDGE) && mytest.hasEdgeData));
 
       DoubleType lres = 0.0;
       if (all_doubles)
@@ -709,13 +731,13 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
       }
 
       //// for every number in our array
-      for (size_t i=0; i < vlen; ++i)
+      for (size_t i = 0; i < vlen; ++i)
       {
         /// This is in case we are processing edge data by mistake
         if (tcheck && (k < indexsize))
         {
           const size_t myindex = indexes[k];
-//          os << "myindex " << myindex << "\t" << model << "\n";
+          //          os << "myindex " << myindex << "\t" << model << "\n";
 
           if (i < myindex)
           {
@@ -738,15 +760,16 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
         }
         else
         {
-          for (size_t j=0; j < vargs.size(); ++j)
+          for (size_t j = 0; j < vargs.size(); ++j)
           {
-            if(vargs[j] != nullptr)
+            if (vargs[j] != nullptr)
             {
-              dargs[j]=vargs[j]->operator[](i);
+              dargs[j] = vargs[j]->operator[](i);
             }
           }
 
-          const MathEval<DoubleType> &emath = MathEval<DoubleType>::GetInstance();
+          const MathEval<DoubleType> &emath =
+              MathEval<DoubleType>::GetInstance();
           DoubleType res = emath.EvaluateMathFunc(name, dargs, resultstr);
           output[i] = res;
         }
@@ -770,7 +793,7 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
       }
       else
       {
-//        res = 0.0;
+        //        res = 0.0;
         emath.EvaluateMathFunc(name, dargs, vargs, resultstr, output, vlen);
       }
 
@@ -790,7 +813,8 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
       }
       else
       {
-        sum = std::accumulate(output.begin(), output.end(), static_cast<DoubleType>(0.0));
+        sum = std::accumulate(output.begin(), output.end(),
+                              static_cast<DoubleType>(0.0));
       }
       out = ModelExprData<DoubleType>(sum, data_ref);
     }
@@ -824,36 +848,44 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateExternalMath(const 
     {
       if (mytest.hasNodeData)
       {
-        out = ModelExprData<DoubleType>(NodeScalarData<DoubleType>(res, vlen), data_ref);
+        out = ModelExprData<DoubleType>(NodeScalarData<DoubleType>(res, vlen),
+                                        data_ref);
       }
       else if (mytest.hasEdgeData)
       {
-        out = ModelExprData<DoubleType>(EdgeScalarData<DoubleType>(res, vlen), data_ref);
+        out = ModelExprData<DoubleType>(EdgeScalarData<DoubleType>(res, vlen),
+                                        data_ref);
       }
       else if (mytest.hasTriangleEdgeData)
       {
-        out = ModelExprData<DoubleType>(TriangleEdgeScalarData<DoubleType>(res, vlen), data_ref);
+        out = ModelExprData<DoubleType>(
+            TriangleEdgeScalarData<DoubleType>(res, vlen), data_ref);
       }
       else if (mytest.hasTetrahedronEdgeData)
       {
-        out = ModelExprData<DoubleType>(TetrahedronEdgeScalarData<DoubleType>(res, vlen), data_ref);
+        out = ModelExprData<DoubleType>(
+            TetrahedronEdgeScalarData<DoubleType>(res, vlen), data_ref);
       }
     }
     else if (mytest.hasNodeData)
     {
-      out = ModelExprData<DoubleType>(NodeScalarData<DoubleType>(output), data_ref);
+      out = ModelExprData<DoubleType>(NodeScalarData<DoubleType>(output),
+                                      data_ref);
     }
     else if (mytest.hasEdgeData)
     {
-      out = ModelExprData<DoubleType>(EdgeScalarData<DoubleType>(output), data_ref);
+      out = ModelExprData<DoubleType>(EdgeScalarData<DoubleType>(output),
+                                      data_ref);
     }
     else if (mytest.hasTriangleEdgeData)
     {
-      out = ModelExprData<DoubleType>(TriangleEdgeScalarData<DoubleType>(output), data_ref);
+      out = ModelExprData<DoubleType>(
+          TriangleEdgeScalarData<DoubleType>(output), data_ref);
     }
     else if (mytest.hasTetrahedronEdgeData)
     {
-      out = ModelExprData<DoubleType>(TetrahedronEdgeScalarData<DoubleType>(output), data_ref);
+      out = ModelExprData<DoubleType>(
+          TetrahedronEdgeScalarData<DoubleType>(output), data_ref);
     }
     else
     {
@@ -875,5 +907,4 @@ template class ModelExprEval<double>;
 #include "Float128.hh"
 template class ModelExprEval<float128>;
 #endif
-}
-
+}  // namespace MEE

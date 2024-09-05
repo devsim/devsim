@@ -18,10 +18,15 @@ SPDX-License-Identifier: Apache-2.0
 #include "dsAssert.hh"
 #include <limits>
 
-
 template <typename DoubleType>
-InterfaceNormal<DoubleType>::InterfaceNormal(const std::string &iname, const std::string &idistname, const std::string &normx, const std::string &normy, const std::string &normz, RegionPtr rp)
-    : EdgeModel(idistname, rp, EdgeModel::DisplayType::SCALAR), interface_name(iname)
+InterfaceNormal<DoubleType>::InterfaceNormal(const std::string &iname,
+                                             const std::string &idistname,
+                                             const std::string &normx,
+                                             const std::string &normy,
+                                             const std::string &normz,
+                                             RegionPtr rp)
+    : EdgeModel(idistname, rp, EdgeModel::DisplayType::SCALAR),
+      interface_name(iname)
 {
   const size_t dimension = GetRegion().GetDimension();
 
@@ -30,8 +35,10 @@ InterfaceNormal<DoubleType>::InterfaceNormal(const std::string &iname, const std
   }
   else if (dimension == 2)
   {
-    normal_x = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normx, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    normal_y = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normy, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    normal_x = EdgeSubModel<DoubleType>::CreateEdgeSubModel(
+        normx, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    normal_y = EdgeSubModel<DoubleType>::CreateEdgeSubModel(
+        normy, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 
     RegisterCallback("NSurfaceNormal_x");
     RegisterCallback("NSurfaceNormal_y");
@@ -39,10 +46,13 @@ InterfaceNormal<DoubleType>::InterfaceNormal(const std::string &iname, const std
   else if (dimension == 3)
   {
     //// Actually this is off the tetrahedron, not the triangle
-//    RegisterCallback("ElementNodeVolume");
-    normal_x = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normx, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    normal_y = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normy, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    normal_z = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normz, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    //    RegisterCallback("ElementNodeVolume");
+    normal_x = EdgeSubModel<DoubleType>::CreateEdgeSubModel(
+        normx, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    normal_y = EdgeSubModel<DoubleType>::CreateEdgeSubModel(
+        normy, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    normal_z = EdgeSubModel<DoubleType>::CreateEdgeSubModel(
+        normz, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 
     RegisterCallback("NSurfaceNormal_x");
     RegisterCallback("NSurfaceNormal_y");
@@ -54,8 +64,9 @@ InterfaceNormal<DoubleType>::InterfaceNormal(const std::string &iname, const std
 }
 
 template <typename DoubleType>
-void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const {
-  const Device       &device = *GetRegion().GetDevice();
+void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const
+{
+  const Device &device = *GetRegion().GetDevice();
   const size_t dimension = GetRegion().GetDimension();
 
   dsAssert(dimension != 1, "UNEXPECTED");
@@ -79,14 +90,18 @@ void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const {
 
   //// vector of distances and resulting normals
   const ConstEdgeList &el = GetRegion().GetEdgeList();
-  std::vector<DoubleType> distances(el.size(), std::numeric_limits<DoubleType>().max());
+  std::vector<DoubleType> distances(el.size(),
+                                    std::numeric_limits<DoubleType>().max());
   std::vector<Vector<DoubleType>> normals(el.size());
   std::vector<Vector<DoubleType>> edgecenters(el.size());
 
   for (size_t i = 0; i < el.size(); ++i)
   {
     const Edge &edge = *el[i];
-    edgecenters[i] = static_cast<DoubleType>(0.5) * (ConvertVector<DoubleType>(edge.GetHead()->GetCoordinate().Position()) + ConvertVector<DoubleType>(edge.GetTail()->GetCoordinate().Position()));
+    edgecenters[i] =
+        static_cast<DoubleType>(0.5) *
+        (ConvertVector<DoubleType>(edge.GetHead()->GetCoordinate().Position()) +
+         ConvertVector<DoubleType>(edge.GetTail()->GetCoordinate().Position()));
   }
 
   ConstNodeModelPtr nx;
@@ -124,16 +139,17 @@ void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const {
     nzv = nz->GetScalarValues<DoubleType>();
   }
 
-
-
-  for (Interface::ConstNodeList_t::const_iterator it = cnl.begin(); it != cnl.end(); ++it)
+  for (Interface::ConstNodeList_t::const_iterator it = cnl.begin();
+       it != cnl.end(); ++it)
   {
-    const Node   &node   = **it;
-    const Vector<DoubleType> &inp = ConvertVector<DoubleType>(node.GetCoordinate().Position());
+    const Node &node = **it;
+    const Vector<DoubleType> &inp =
+        ConvertVector<DoubleType>(node.GetCoordinate().Position());
 
     const size_t node_index = node.GetIndex();
 
-    Vector<DoubleType> normal(nxv[node_index], nyv[node_index], nzv[node_index]);
+    Vector<DoubleType> normal(nxv[node_index], nyv[node_index],
+                              nzv[node_index]);
 
     for (size_t i = 0; i < el.size(); ++i)
     {
@@ -141,7 +157,7 @@ void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const {
       Vector<DoubleType> t(inp);
       t -= edgecenters[i];
 
-      const DoubleType &dist = dot_prod(t,t);
+      const DoubleType &dist = dot_prod(t, t);
 
       DoubleType &d = distances[i];
       if (dist < d)
@@ -153,7 +169,7 @@ void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const {
         }
         else
         {
-          normals[i] =  normal;
+          normals[i] = normal;
         }
       }
     }
@@ -191,13 +207,14 @@ void InterfaceNormal<DoubleType>::calcEdgeScalarValues() const {
     }
     normal_z.lock()->SetValues(esl);
   }
-
 }
 
 template <typename DoubleType>
 void InterfaceNormal<DoubleType>::Serialize(std::ostream &of) const
 {
-  of << "COMMAND interface_normal_model -device \"" << GetDeviceName() << "\" -region \"" << GetRegionName() << "\" -interface \"" << interface_name << "\"";
+  of << "COMMAND interface_normal_model -device \"" << GetDeviceName()
+     << "\" -region \"" << GetRegionName() << "\" -interface \""
+     << interface_name << "\"";
 }
 
 template class InterfaceNormal<double>;
@@ -206,9 +223,14 @@ template class InterfaceNormal<double>;
 template class InterfaceNormal<float128>;
 #endif
 
-EdgeModelPtr CreateInterfaceNormal(const std::string &iname, const std::string &idistname, const std::string &normx, const std::string &normy, const std::string &normz, RegionPtr rp)
+EdgeModelPtr CreateInterfaceNormal(const std::string &iname,
+                                   const std::string &idistname,
+                                   const std::string &normx,
+                                   const std::string &normy,
+                                   const std::string &normz, RegionPtr rp)
 {
   const bool use_extended = rp->UseExtendedPrecisionModels();
-  return create_edge_model<InterfaceNormal<double>, InterfaceNormal<extended_type>>(use_extended, iname, idistname, normx, normy, normz, rp);
+  return create_edge_model<InterfaceNormal<double>,
+                           InterfaceNormal<extended_type>>(
+      use_extended, iname, idistname, normx, normy, normz, rp);
 }
-

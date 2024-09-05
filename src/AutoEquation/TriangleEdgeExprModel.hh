@@ -11,31 +11,31 @@ SPDX-License-Identifier: Apache-2.0
 #include <string>
 #include <memory>
 namespace Eqo {
-    class EquationObject;
-    typedef std::shared_ptr<EquationObject> EqObjPtr;
+class EquationObject;
+typedef std::shared_ptr<EquationObject> EqObjPtr;
 
-}
+}  // namespace Eqo
 
-TriangleEdgeModelPtr CreateTriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TriangleEdgeModel::DisplayType);
+TriangleEdgeModelPtr CreateTriangleEdgeExprModel(
+    const std::string &, Eqo::EqObjPtr, RegionPtr,
+    TriangleEdgeModel::DisplayType);
 
 template <typename DoubleType>
-class TriangleEdgeExprModel : public TriangleEdgeModel
-{
-    public:
+class TriangleEdgeExprModel : public TriangleEdgeModel {
+ public:
+  void Serialize(std::ostream &) const;
 
-        void Serialize(std::ostream &) const;
+  TriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr,
+                        TriangleEdgeModel::DisplayType);
 
-        TriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TriangleEdgeModel::DisplayType);
+ private:
+  void RegisterModels();
+  TriangleEdgeExprModel();
+  TriangleEdgeExprModel(const TriangleEdgeExprModel &);
 
-    private:
+  void calcTriangleEdgeScalarValues() const;
 
-        void RegisterModels();
-        TriangleEdgeExprModel();
-        TriangleEdgeExprModel(const TriangleEdgeExprModel &);
-
-        void calcTriangleEdgeScalarValues() const;
-
-        const Eqo::EqObjPtr      equation;
+  const Eqo::EqObjPtr equation;
 };
 
 #endif

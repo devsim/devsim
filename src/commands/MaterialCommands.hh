@@ -16,6 +16,6 @@ void getDBEntryCmd(CommandHandler &);
 void getParameterCmd(CommandHandler &);
 void openDBCmd(CommandHandler &);
 void MaterialCommandMissing(CommandHandler &);
-}
+}  // namespace dsCommand
 
 #endif

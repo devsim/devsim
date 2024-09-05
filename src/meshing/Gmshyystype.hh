@@ -10,11 +10,10 @@ SPDX-License-Identifier: Apache-2.0
 #include <string>
 #include <vector>
 typedef struct {
-    std::string str;
-    double           dval;
-    int              ival;
-    std::vector<int> ilist;
+  std::string str;
+  double dval;
+  int ival;
+  std::vector<int> ilist;
 } gmshyystype;
 #define YYSTYPE gmshyystype
 #endif
-

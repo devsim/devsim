@@ -24,18 +24,18 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
   ObjectHolderMap_t hashmap;
   hash.GetHashMap(hashmap);
 
-
   const std::string &commandName = handler.GetCommandName();
 
-  for (ObjectHolderMap_t::iterator it = hashmap.begin(); it != hashmap.end(); ++it)
+  for (ObjectHolderMap_t::iterator it = hashmap.begin(); it != hashmap.end();
+       ++it)
   {
     const std::string &optname = it->first;
     if (!optname.empty())
     {
       if (optionMap.count(optname))
       {
-        Option     *opt  = optionMap[optname];
-        optionType  type = (*opt).type;
+        Option *opt = optionMap[optname];
+        optionType type = (*opt).type;
 
         if (selections.count(optname))
         {
@@ -54,7 +54,8 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
             ObjectHolder::DoubleEntry_t ret = toh.GetDouble();
             if (!ret.first)
             {
-              notConvertibleToType(commandName, optname, optionType::FLOAT, toh, error);
+              notConvertibleToType(commandName, optname, optionType::FLOAT, toh,
+                                   error);
               status = true;
               break;
             }
@@ -64,7 +65,8 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
             ObjectHolder::BooleanEntry_t ret = toh.GetBoolean();
             if (!ret.first)
             {
-              notConvertibleToType(commandName, optname, optionType::BOOLEAN, toh, error);
+              notConvertibleToType(commandName, optname, optionType::BOOLEAN,
+                                   toh, error);
               status = true;
               break;
             }
@@ -74,7 +76,8 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
             ObjectHolder::IntegerEntry_t ret = toh.GetInteger();
             if (!ret.first)
             {
-              notConvertibleToType(commandName, optname, optionType::INTEGER, toh, error);
+              notConvertibleToType(commandName, optname, optionType::INTEGER,
+                                   toh, error);
               status = true;
               break;
             }
@@ -84,7 +87,8 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
             bool ret = toh.IsList();
             if (!ret)
             {
-              notConvertibleToType(commandName, optname, optionType::LIST, toh, error);
+              notConvertibleToType(commandName, optname, optionType::LIST, toh,
+                                   error);
               status = true;
               break;
             }
@@ -106,7 +110,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
         break;
       }
     }
-  }//end for loop through arguments
+  }  // end for loop through arguments
 
   //// Check for required parameters
   if (!status)
@@ -120,8 +124,10 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
       {
         if (!selections.count(name))
         {
-            os << "missing required " << optionTypeStrings[static_cast<size_t>((*it).type)] <<  " parameter - " << name << "\n";
-            status = true;
+          os << "missing required "
+             << optionTypeStrings[static_cast<size_t>((*it).type)]
+             << " parameter - " << name << "\n";
+          status = true;
         }
       }
       ++it;
@@ -129,7 +135,7 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
 
     if (status == true)
     {
-        error = os.str();
+      error = os.str();
     }
   }
 
@@ -160,5 +166,4 @@ bool GetArgs::processOptions(CommandInfo &tdata, std::string &error)
 
   return status;
 }
-}
-
+}  // namespace dsGetArgs

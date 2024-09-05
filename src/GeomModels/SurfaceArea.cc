@@ -28,7 +28,9 @@ SurfaceArea<DoubleType>::SurfaceArea(RegionPtr rp)
 {
   const size_t dimension = GetRegion().GetDimension();
 
-  contact_area = CreateNodeSolution("ContactSurfaceArea", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  contact_area =
+      CreateNodeSolution("ContactSurfaceArea", rp,
+                         NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
 
   if (dimension == 1)
   {
@@ -40,14 +42,24 @@ SurfaceArea<DoubleType>::SurfaceArea(RegionPtr rp)
     RegisterCallback("unitx");
     RegisterCallback("unity");
 
-    nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    nsurf_x =
+        CreateNodeSolution("NSurfaceNormal_x", rp,
+                           NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    nsurf_y =
+        CreateNodeSolution("NSurfaceNormal_y", rp,
+                           NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
   }
   else if (dimension == 3)
   {
-    nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    nsurf_z = CreateNodeSolution("NSurfaceNormal_z", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    nsurf_x =
+        CreateNodeSolution("NSurfaceNormal_x", rp,
+                           NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    nsurf_y =
+        CreateNodeSolution("NSurfaceNormal_y", rp,
+                           NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    nsurf_z =
+        CreateNodeSolution("NSurfaceNormal_z", rp,
+                           NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
   }
   RegisterCallback("@@@InterfaceChange");
   RegisterCallback("@@@ContactChange");
@@ -56,40 +68,41 @@ SurfaceArea<DoubleType>::SurfaceArea(RegionPtr rp)
 template <typename DoubleType>
 void SurfaceArea<DoubleType>::calcSurfaceArea1d() const
 {
-    ConstEdgeModelPtr elen = GetRegion().GetEdgeModel("EdgeLength");
-    dsAssert(elen.get(), "UNEXPECTED");
+  ConstEdgeModelPtr elen = GetRegion().GetEdgeModel("EdgeLength");
+  dsAssert(elen.get(), "UNEXPECTED");
 
-    const Device &device = *GetRegion().GetDevice();
+  const Device &device = *GetRegion().GetDevice();
 
-    const Device::CoordinateIndexToInterface_t &cti = device.GetCoordinateIndexToInterface();
-    const Device::CoordinateIndexToContact_t   &ctc = device.GetCoordinateIndexToContact();
+  const Device::CoordinateIndexToInterface_t &cti =
+      device.GetCoordinateIndexToInterface();
+  const Device::CoordinateIndexToContact_t &ctc =
+      device.GetCoordinateIndexToContact();
 
+  const ConstNodeList &nl = GetRegion().GetNodeList();
 
-    const ConstNodeList &nl = GetRegion().GetNodeList();
+  std::vector<DoubleType> nv(nl.size());
+  std::vector<DoubleType> ca(nl.size());
 
-    std::vector<DoubleType> nv(nl.size());
-    std::vector<DoubleType> ca(nl.size());
+  for (ConstNodeList::const_iterator it = nl.begin(); it != nl.end(); ++it)
+  {
+    const Node &node = *(*it);
+    const size_t ci = node.GetCoordinate().GetIndex();
+    const size_t ni = node.GetIndex();
 
-    for (ConstNodeList::const_iterator it = nl.begin(); it != nl.end(); ++it)
+    if (cti.count(ci))
     {
-        const Node &node = *(*it);
-        const size_t ci  = node.GetCoordinate().GetIndex();
-        const size_t ni  = node.GetIndex();
-
-        if (cti.count(ci))
-        {
-            const DoubleType length = 1.0;
-            nv[ni] += length;
-        }
-        if (ctc.count(ci))
-        {
-            const DoubleType length = 1.0;
-            ca[ni] += length;
-        }
+      const DoubleType length = 1.0;
+      nv[ni] += length;
     }
-    SetValues(nv);
-    dsAssert(!contact_area.expired(), "UNEXPECTED");
-    contact_area.lock()->SetValues(ca);
+    if (ctc.count(ci))
+    {
+      const DoubleType length = 1.0;
+      ca[ni] += length;
+    }
+  }
+  SetValues(nv);
+  dsAssert(!contact_area.expired(), "UNEXPECTED");
+  contact_area.lock()->SetValues(ca);
 }
 
 template <typename DoubleType>
@@ -112,24 +125,26 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
   dsAssert(!nsurf_x.expired(), "UNEXPECTED");
   dsAssert(!nsurf_y.expired(), "UNEXPECTED");
 
-
-  const EdgeScalarList<DoubleType> &edgeLengths = elen->GetScalarValues<DoubleType>();
+  const EdgeScalarList<DoubleType> &edgeLengths =
+      elen->GetScalarValues<DoubleType>();
 
   const EdgeScalarList<DoubleType> &unitx = ux->GetScalarValues<DoubleType>();
   const EdgeScalarList<DoubleType> &unity = uy->GetScalarValues<DoubleType>();
 
-  const Device::ContactList_t   &contact_list   = device.GetContactList();
+  const Device::ContactList_t &contact_list = device.GetContactList();
   const Device::InterfaceList_t &interface_list = device.GetInterfaceList();
 
   ConstEdgeList contact_edge_list;
 
-  for (Device::ContactList_t::const_iterator cit = contact_list.begin(); cit != contact_list.end(); ++cit)
+  for (Device::ContactList_t::const_iterator cit = contact_list.begin();
+       cit != contact_list.end(); ++cit)
   {
     const ConstContactPtr &cp = cit->second;
     if (cp && (cp->GetRegion() == &region))
     {
       const ConstEdgeList_t &temp_edge_list = cp->GetEdges();
-      for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
+      for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin();
+           tit != temp_edge_list.end(); ++tit)
       {
         contact_edge_list.push_back(*tit);
       }
@@ -138,7 +153,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
 
   ConstEdgeList interface_edge_list;
 
-  for (Device::InterfaceList_t::const_iterator iit = interface_list.begin(); iit != interface_list.end(); ++iit)
+  for (Device::InterfaceList_t::const_iterator iit = interface_list.begin();
+       iit != interface_list.end(); ++iit)
   {
     const ConstInterfacePtr &ip = iit->second;
     if (ip)
@@ -146,7 +162,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
       if (ip->GetRegion0() == &region)
       {
         const ConstEdgeList_t &temp_edge_list = ip->GetEdges0();
-        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
+        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin();
+             tit != temp_edge_list.end(); ++tit)
         {
           interface_edge_list.push_back(*tit);
         }
@@ -154,7 +171,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
       else if (ip->GetRegion1() == &region)
       {
         const ConstEdgeList_t &temp_edge_list = ip->GetEdges1();
-        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
+        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin();
+             tit != temp_edge_list.end(); ++tit)
         {
           interface_edge_list.push_back(*tit);
         }
@@ -167,7 +185,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
     std::vector<DoubleType> nvx(nl.size());
     std::vector<DoubleType> nvy(nl.size());
 
-    SurfaceAreaUtil::processEdgeList(contact_edge_list, unitx, unity, edgeLengths, nv, nvx, nvy);
+    SurfaceAreaUtil::processEdgeList(contact_edge_list, unitx, unity,
+                                     edgeLengths, nv, nvx, nvy);
 
     contact_area.lock()->SetValues(nv);
   }
@@ -178,7 +197,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
     std::vector<DoubleType> nvx(nl.size());
     std::vector<DoubleType> nvy(nl.size());
 
-    SurfaceAreaUtil::processEdgeList(interface_edge_list, unitx, unity, edgeLengths, nv, nvx, nvy);
+    SurfaceAreaUtil::processEdgeList(interface_edge_list, unitx, unity,
+                                     edgeLengths, nv, nvx, nvy);
 
     SetValues(nv);
     nsurf_x.lock()->SetValues(nvx);
@@ -192,29 +212,32 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
   const Region &region = GetRegion();
   const Device &device = *(region.GetDevice());
 
-  const ConstNodeList     &nl = region.GetNodeList();
+  const ConstNodeList &nl = region.GetNodeList();
 
   dsAssert(!contact_area.expired(), "UNEXPECTED");
   dsAssert(!nsurf_x.expired(), "UNEXPECTED");
   dsAssert(!nsurf_y.expired(), "UNEXPECTED");
   dsAssert(!nsurf_z.expired(), "UNEXPECTED");
 
-  const std::vector<Vector<DoubleType>> &triangleCenters = region.GetTriangleCenters<DoubleType>();
+  const std::vector<Vector<DoubleType>> &triangleCenters =
+      region.GetTriangleCenters<DoubleType>();
 
   std::vector<DoubleType> nv(nl.size());
 
-  Device::ContactList_t   contact_list   = device.GetContactList();
+  Device::ContactList_t contact_list = device.GetContactList();
   Device::InterfaceList_t interface_list = device.GetInterfaceList();
 
   ConstTriangleList contact_triangle_list;
 
-  for (Device::ContactList_t::const_iterator cit = contact_list.begin(); cit != contact_list.end(); ++cit)
+  for (Device::ContactList_t::const_iterator cit = contact_list.begin();
+       cit != contact_list.end(); ++cit)
   {
     const ConstContactPtr &cp = cit->second;
     if (cp && (cp->GetRegion() == &region))
     {
       const ConstTriangleList_t &temp_triangle_list = cp->GetTriangles();
-      for (ConstTriangleList_t::const_iterator tit = temp_triangle_list.begin(); tit != temp_triangle_list.end(); ++tit)
+      for (ConstTriangleList_t::const_iterator tit = temp_triangle_list.begin();
+           tit != temp_triangle_list.end(); ++tit)
       {
         contact_triangle_list.push_back(*tit);
       }
@@ -223,7 +246,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
 
   ConstTriangleList interface_triangle_list;
 
-  for (Device::InterfaceList_t::const_iterator iit = interface_list.begin(); iit != interface_list.end(); ++iit)
+  for (Device::InterfaceList_t::const_iterator iit = interface_list.begin();
+       iit != interface_list.end(); ++iit)
   {
     const ConstInterfacePtr &ip = iit->second;
     if (ip)
@@ -231,7 +255,9 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
       if (ip->GetRegion0() == &region)
       {
         const ConstTriangleList_t &temp_triangle_list = ip->GetTriangles0();
-        for (ConstTriangleList_t::const_iterator tit = temp_triangle_list.begin(); tit != temp_triangle_list.end(); ++tit)
+        for (ConstTriangleList_t::const_iterator tit =
+                 temp_triangle_list.begin();
+             tit != temp_triangle_list.end(); ++tit)
         {
           interface_triangle_list.push_back(*tit);
         }
@@ -239,7 +265,9 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
       else if (ip->GetRegion1() == &region)
       {
         const ConstTriangleList_t &temp_triangle_list = ip->GetTriangles1();
-        for (ConstTriangleList_t::const_iterator tit = temp_triangle_list.begin(); tit != temp_triangle_list.end(); ++tit)
+        for (ConstTriangleList_t::const_iterator tit =
+                 temp_triangle_list.begin();
+             tit != temp_triangle_list.end(); ++tit)
         {
           interface_triangle_list.push_back(*tit);
         }
@@ -253,7 +281,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
     std::vector<DoubleType> nvy(nl.size());
     std::vector<DoubleType> nvz(nl.size());
 
-    SurfaceAreaUtil::processTriangleList(contact_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
+    SurfaceAreaUtil::processTriangleList(contact_triangle_list, triangleCenters,
+                                         nv, nvx, nvy, nvz);
 
     contact_area.lock()->SetValues(nv);
   }
@@ -266,7 +295,8 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
     std::vector<DoubleType> nvy(nl.size());
     std::vector<DoubleType> nvz(nl.size());
 
-    SurfaceAreaUtil::processTriangleList(interface_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
+    SurfaceAreaUtil::processTriangleList(interface_triangle_list,
+                                         triangleCenters, nv, nvx, nvy, nvz);
 
     SetValues(nv);
 
@@ -312,4 +342,3 @@ template class SurfaceArea<double>;
 #include "Float128.hh"
 template class SurfaceArea<float128>;
 #endif
-

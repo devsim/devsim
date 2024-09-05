@@ -18,30 +18,34 @@ template <typename DoubleType>
 DoubleType derfdx(DoubleType x)
 {
 #if 1
-  static const DoubleType two_div_root_pi = 2.0*boost::math::constants::one_div_root_pi<DoubleType>();
+  static const DoubleType two_div_root_pi =
+      2.0 * boost::math::constants::one_div_root_pi<DoubleType>();
 #else
 #ifdef DEVSIM_EXTENDED_PRECISION
-  static const DoubleType two_div_root_pi = 2.0*boost::math::constants::one_div_root_pi<DoubleType>();
+  static const DoubleType two_div_root_pi =
+      2.0 * boost::math::constants::one_div_root_pi<DoubleType>();
 #else
   static const DoubleType two_div_root_pi = M_2_SQRTPI;
 #endif
 #endif
-  return two_div_root_pi*exp(-x*x);
+  return two_div_root_pi * exp(-x * x);
 }
 
 template <typename DoubleType>
 DoubleType derfcdx(DoubleType x)
 {
 #if 1
-  static const DoubleType mtwo_div_root_pi = -2.0*boost::math::constants::one_div_root_pi<DoubleType>();
+  static const DoubleType mtwo_div_root_pi =
+      -2.0 * boost::math::constants::one_div_root_pi<DoubleType>();
 #else
 #ifdef DEVSIM_EXTENDED_PRECISION
-  static const DoubleType mtwo_div_root_pi = -2.0*boost::math::constants::one_div_root_pi<DoubleType>();
+  static const DoubleType mtwo_div_root_pi =
+      -2.0 * boost::math::constants::one_div_root_pi<DoubleType>();
 #else
   static const DoubleType mtwo_div_root_pi = -M_2_SQRTPI;
 #endif
 #endif
-  return mtwo_div_root_pi*exp(-x*x);
+  return mtwo_div_root_pi * exp(-x * x);
 }
 
 template <typename DoubleType>
@@ -57,7 +61,6 @@ DoubleType derfc_invdx(DoubleType x)
   // g'(x) = 1./(f'(g(x)))
   return 1.0 / derfcdx(boost::math::erfc_inv(x, use_errno()));
 }
-
 
 template <typename DoubleType>
 DoubleType vec_sum(DoubleType x)
@@ -80,7 +83,7 @@ DoubleType vec_min(DoubleType x)
 template <typename DoubleType>
 DoubleType dot2dfunc(DoubleType ax, DoubleType ay, DoubleType bx, DoubleType by)
 {
-  return (ax*bx + ay*by);
+  return (ax * bx + ay * by);
 }
 
 template <typename DoubleType>
@@ -119,4 +122,3 @@ template float128 vec_max(float128 x);
 template float128 vec_min(float128 x);
 template float128 dot2dfunc(float128 ax, float128 ay, float128 bx, float128 by);
 #endif
-

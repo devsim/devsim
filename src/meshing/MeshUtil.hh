@@ -22,6 +22,6 @@ pts_t getPoints(double xl, double xh, double sl, double sh);
 
 std::vector<Vector<double>> GetUnitVector(const Region &);
 
-}
+}  // namespace MeshUtil
 
 #endif

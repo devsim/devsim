@@ -11,17 +11,16 @@ SPDX-License-Identifier: Apache-2.0
 // Coupling length
 template <typename DoubleType>
 class EdgeLength : public EdgeModel {
-    public:
-        EdgeLength(RegionPtr);
+ public:
+  EdgeLength(RegionPtr);
 
-        void Serialize(std::ostream &) const;
+  void Serialize(std::ostream &) const;
 
-    private:
-        EdgeLength();
-        EdgeLength(const EdgeLength &);
-        EdgeLength &operator=(const EdgeLength &);
-        DoubleType calcEdgeLength(ConstEdgePtr) const;
-        void calcEdgeScalarValues() const;
+ private:
+  EdgeLength();
+  EdgeLength(const EdgeLength &);
+  EdgeLength &operator=(const EdgeLength &);
+  DoubleType calcEdgeLength(ConstEdgePtr) const;
+  void calcEdgeScalarValues() const;
 };
 #endif
-

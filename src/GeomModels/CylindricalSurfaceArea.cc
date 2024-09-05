@@ -20,13 +20,13 @@ SPDX-License-Identifier: Apache-2.0
 #include <cmath>
 using std::abs;
 
-
 template <typename DoubleType>
-CylindricalSurfaceArea<DoubleType>::CylindricalSurfaceArea(RegionPtr rp) :
-NodeModel("CylindricalSurfaceArea", rp, NodeModel::DisplayType::SCALAR)
+CylindricalSurfaceArea<DoubleType>::CylindricalSurfaceArea(RegionPtr rp)
+    : NodeModel("CylindricalSurfaceArea", rp, NodeModel::DisplayType::SCALAR)
 {
   //// This needs to be enforced in the Tcl API
-  //// need to validate this is an actual interface or contact name in the Tcl API
+  //// need to validate this is an actual interface or contact name in the Tcl
+  ///API
 
   const Region &region = this->GetRegion();
   const size_t dimension = region.GetDimension();
@@ -38,11 +38,10 @@ NodeModel("CylindricalSurfaceArea", rp, NodeModel::DisplayType::SCALAR)
   RegisterCallback("raxis_variable");
 }
 
-
 template <typename DoubleType>
 void CylindricalSurfaceArea<DoubleType>::calcNodeScalarValues() const
 {
-  const size_t dimension=GetRegion().GetDimension();
+  const size_t dimension = GetRegion().GetDimension();
 
   if (dimension == 1)
   {
@@ -65,16 +64,17 @@ void CylindricalSurfaceArea<DoubleType>::calcNodeScalarValues() const
 namespace {
 //// refactor to just rely on edge length formula
 template <typename DoubleType>
-void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, const std::string &RAxisVariable, DoubleType RAxis0)
+void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out,
+                      const std::string &RAxisVariable, DoubleType RAxis0)
 {
-
   std::set<size_t> visited;
 
   DoubleType r0 = 0.0;
   DoubleType r1 = 0.0;
   DoubleType rm = 0.0;
 
-  for (ConstEdgeList::const_iterator it = edges.begin(); it != edges.end(); ++it)
+  for (ConstEdgeList::const_iterator it = edges.begin(); it != edges.end();
+       ++it)
   {
     const Edge &edge = *(*it);
 
@@ -97,8 +97,8 @@ void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, 
 
     /// This is the midpoint between the edges
     Vector<DoubleType> vm = p1;
-    vm       -= p0;
-    vm       *= 0.5;
+    vm -= p0;
+    vm *= 0.5;
 
     const DoubleType vmag = vm.magnitude();
 
@@ -120,10 +120,9 @@ void CalcAreasOnEdges(const ConstEdgeList &edges, std::vector<DoubleType> &out, 
     out[ni0] += M_PI * abs(rm + r0) * vmag;
     const size_t ni1 = node1.GetIndex();
     out[ni1] += M_PI * abs(r1 + rm) * vmag;
-
   }
 }
-}
+}  // namespace
 
 template <typename DoubleType>
 void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
@@ -137,59 +136,69 @@ void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
   std::string RAxisVariable;
 
   {
-    //// TODO: Make this common to all cylindrical code, right now this is a copy and paste
+    //// TODO: Make this common to all cylindrical code, right now this is a
+    ///copy and paste
     GlobalData &ginst = GlobalData::GetInstance();
 
     std::ostringstream os;
 
-    GlobalData::DoubleDBEntry_t raxisdbentry = ginst.GetDoubleDBEntryOnRegion(&region, "raxis_zero");
+    GlobalData::DoubleDBEntry_t raxisdbentry =
+        ginst.GetDoubleDBEntryOnRegion(&region, "raxis_zero");
     if (raxisdbentry.first)
     {
       RAxis0 = raxisdbentry.second;
     }
     else
     {
-      os << "raxis_zero on Device " << region.GetDeviceName() << " on Region " << region.GetName() << " must be a valid number parameter\n";
+      os << "raxis_zero on Device " << region.GetDeviceName() << " on Region "
+         << region.GetName() << " must be a valid number parameter\n";
     }
 
-    GlobalData::DBEntry_t zvardbentry = ginst.GetDBEntryOnRegion(&region, "raxis_variable");
+    GlobalData::DBEntry_t zvardbentry =
+        ginst.GetDBEntryOnRegion(&region, "raxis_variable");
     if (!zvardbentry.first)
     {
-      os << "raxis_variable on Device " << region.GetDeviceName() << " on Region " << region.GetName() << " must be a valid parameter\n";
+      os << "raxis_variable on Device " << region.GetDeviceName()
+         << " on Region " << region.GetName() << " must be a valid parameter\n";
     }
     else
     {
       RAxisVariable = zvardbentry.second.GetString();
       if ((RAxisVariable != "x") && (RAxisVariable != "y"))
       {
-        os << "raxis_variable on Device " << region.GetDeviceName() << " on Region " << region.GetName() << " must be \"x\" or \"y\"\n";
+        os << "raxis_variable on Device " << region.GetDeviceName()
+           << " on Region " << region.GetName() << " must be \"x\" or \"y\"\n";
       }
     }
 
     if (!os.str().empty())
     {
-      GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(), os.str());
+      GeometryStream::WriteOut(OutputStream::OutputType::FATAL, GetRegion(),
+                               os.str());
     }
   }
 
-  const Device::ContactList_t   &contact_list   = device.GetContactList();
+  const Device::ContactList_t &contact_list = device.GetContactList();
   const Device::InterfaceList_t &interface_list = device.GetInterfaceList();
 
   ConstEdgeList edge_list;
 
-  for (Device::ContactList_t::const_iterator cit = contact_list.begin(); cit != contact_list.end(); ++cit)
+  for (Device::ContactList_t::const_iterator cit = contact_list.begin();
+       cit != contact_list.end(); ++cit)
   {
     const ConstContactPtr &cp = cit->second;
     if (cp && (cp->GetRegion() == &region))
     {
       const ConstEdgeList_t &temp_edge_list = cp->GetEdges();
-      for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
+      for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin();
+           tit != temp_edge_list.end(); ++tit)
       {
         edge_list.push_back(*tit);
       }
     }
   }
-  for (Device::InterfaceList_t::const_iterator iit = interface_list.begin(); iit != interface_list.end(); ++iit)
+  for (Device::InterfaceList_t::const_iterator iit = interface_list.begin();
+       iit != interface_list.end(); ++iit)
   {
     const ConstInterfacePtr &ip = iit->second;
     if (ip)
@@ -197,7 +206,8 @@ void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
       if (ip->GetRegion0() == &region)
       {
         const ConstEdgeList_t &temp_edge_list = ip->GetEdges0();
-        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
+        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin();
+             tit != temp_edge_list.end(); ++tit)
         {
           edge_list.push_back(*tit);
         }
@@ -205,7 +215,8 @@ void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
       else if (ip->GetRegion1() == &region)
       {
         const ConstEdgeList_t &temp_edge_list = ip->GetEdges1();
-        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
+        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin();
+             tit != temp_edge_list.end(); ++tit)
         {
           edge_list.push_back(*tit);
         }
@@ -218,18 +229,18 @@ void CylindricalSurfaceArea<DoubleType>::calcCylindricalSurfaceArea2d() const
   SetValues(nv);
 }
 
-
 template <typename DoubleType>
 void CylindricalSurfaceArea<DoubleType>::Serialize(std::ostream &of) const
 {
-  of << "COMMAND cylindrical_surface_area -device \"" << GetRegion().GetDeviceName() << "\""
+  of << "COMMAND cylindrical_surface_area -device \""
+     << GetRegion().GetDeviceName() << "\""
      << " -region \"" << GetRegionName() << "\"";
 }
 
 template <typename DoubleType>
 void CylindricalSurfaceArea<DoubleType>::setInitialValues()
 {
-    DefaultInitializeValues();
+  DefaultInitializeValues();
 }
 
 template class CylindricalSurfaceArea<double>;
@@ -241,6 +252,7 @@ template class CylindricalSurfaceArea<float128>;
 NodeModelPtr CreateCylindricalSurfaceArea(RegionPtr rp)
 {
   const bool use_extended = rp->UseExtendedPrecisionModels();
-  return create_node_model<CylindricalSurfaceArea<double>, CylindricalSurfaceArea<extended_type>>(use_extended, rp);
+  return create_node_model<CylindricalSurfaceArea<double>,
+                           CylindricalSurfaceArea<extended_type>>(use_extended,
+                                                                  rp);
 }
-

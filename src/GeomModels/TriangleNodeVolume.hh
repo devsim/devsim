@@ -10,20 +10,18 @@ SPDX-License-Identifier: Apache-2.0
 #include "TriangleEdgeModel.hh"
 
 template <typename DoubleType>
-class TriangleNodeVolume : public TriangleEdgeModel
-{
-    public:
-        TriangleNodeVolume(RegionPtr);
+class TriangleNodeVolume : public TriangleEdgeModel {
+ public:
+  TriangleNodeVolume(RegionPtr);
 
-        void Serialize(std::ostream &) const;
+  void Serialize(std::ostream &) const;
 
-    private:
-        TriangleNodeVolume();
-        TriangleNodeVolume(const TriangleNodeVolume &);
-        TriangleNodeVolume &operator=(const TriangleNodeVolume &);
-        void   calcTriangleEdgeScalarValues() const;
-        void   setInitialValues();
+ private:
+  TriangleNodeVolume();
+  TriangleNodeVolume(const TriangleNodeVolume &);
+  TriangleNodeVolume &operator=(const TriangleNodeVolume &);
+  void calcTriangleEdgeScalarValues() const;
+  void setInitialValues();
 };
 
 #endif
-
