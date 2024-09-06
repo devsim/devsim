@@ -17,7 +17,11 @@ Add `.clang-format` file to provide assist automatic formatting for new source c
 
 ### Get equation command
 
-`get_equation_command` now provided the `variable_update` option that was used.
+Fixed issue [#145](https://github.com/devsim/devsim/issues/145). `get_equation_command` now provides the `variable_update` option that was used.
+
+### Exception propagation
+
+Fixed issue where an internal C++ based exception, may not be caught properly on some platforms.
 
 ## Version 2.8.2
 
