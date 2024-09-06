@@ -128,6 +128,7 @@ void ExprEquation<DoubleType>::GetCommandOptions_Impl(std::map<std::string, Obje
   omap["region"] = ObjectHolder(Equation<DoubleType>::GetRegion().GetName());
   omap["name"]   = ObjectHolder(Equation<DoubleType>::GetName());
   omap["variable_name"] = ObjectHolder(Equation<DoubleType>::GetVariable());
+  omap["variable_update"] = ObjectHolder(EquationEnum::UpdateTypeString[Equation<DoubleType>::GetUpdateType()]);
   omap["node_model"] = ObjectHolder(node_model_);
   omap["edge_model"] = ObjectHolder(edge_model_);
   omap["edge_volume_model"] = ObjectHolder(edge_volume_model_);

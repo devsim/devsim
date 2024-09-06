@@ -73,7 +73,7 @@ using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 namespace EquationEnum
 {
   enum UpdateType {DEFAULT, LOGDAMP, POSITIVE};
-  extern const char *UpdateTypeString;
+  extern const char *UpdateTypeString[];
 }
 // base class
 // called for assembly
@@ -94,6 +94,10 @@ class Equation {
 
         const std::string &GetVariable() const {
             return variable;
+        }
+
+        EquationEnum::UpdateType GetUpdateType() const {
+            return updateType;
         }
 
         void Update(NodeModel &, const dsMath::DoubleVec_t<DoubleType> &);

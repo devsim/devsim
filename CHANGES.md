@@ -11,6 +11,14 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 Due to the Red Hat 7 end of life on June 30, 2024, the minimum support level for Linux is now Red Hat 8 using the AlmaLinux 8 based [manylinux_2_28](https://github.com/pypa/manylinux?tab=readme-ov-file#manylinux_2_28-almalinux-8-based).
 
+### Clang format
+
+Add `.clang-format` file to provide assist automatic formatting for new source code.
+
+### Get equation command
+
+`get_equation_command` now provided the `variable_update` option that was used.
+
 ## Version 2.8.2
 
 ### Documentation updates

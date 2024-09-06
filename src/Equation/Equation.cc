@@ -36,6 +36,16 @@ SPDX-License-Identifier: Apache-2.0
 #include <cmath>
 using std::abs;
 
+namespace EquationEnum
+{
+  // must match enum UpdateType in header
+  const char *UpdateTypeString[] = {
+    "default",
+    "log_damp",
+    "positive",
+  };
+}
+
 template <typename DoubleType>
 const DoubleType Equation<DoubleType>::defminError = 1.0e-10;
 
