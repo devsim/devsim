@@ -5,6 +5,10 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.8.4
+
+Write `variable_update` when writing the `equation` command to the devsim file format.
+
 ## Version 2.8.3
 
 ### Linux support
