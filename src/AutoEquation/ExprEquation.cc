@@ -111,14 +111,20 @@ void ExprEquation<DoubleType>::NoiseUpdateValues(const std::string &nm, const st
 template <typename DoubleType>
 void ExprEquation<DoubleType>::Serialize(std::ostream &of) const
 {
-  of << "COMMAND equation -device \"" << Equation<DoubleType>::GetRegion().GetDeviceName() << "\" -region \"" << Equation<DoubleType>::GetRegion().GetName() << "\" -name \"" << Equation<DoubleType>::GetName() << "\" -variable_name \"" << Equation<DoubleType>::GetVariable()
+  of << "COMMAND equation"
+       " -device \"" << Equation<DoubleType>::GetRegion().GetDeviceName()
+    << "\" -region \"" << Equation<DoubleType>::GetRegion().GetName()
+    << "\" -name \"" << Equation<DoubleType>::GetName()
+    << "\" -variable_name \"" << Equation<DoubleType>::GetVariable()
+    << "\" -variable_update \"" << EquationEnum::UpdateTypeString[Equation<DoubleType>::GetUpdateType()]
     << "\" -node_model \"" << node_model_
     << "\" -edge_model \"" << edge_model_
     << "\" -edge_volume_model \"" << edge_volume_model_
     << "\" -element_model \"" << element_model_
     << "\" -volume_node0_model \"" << volume_node0_model_
     << "\" -volume_node1_model \"" << volume_node1_model_
-    << "\" -time_node_model \"" << time_node_model_ << "\"";
+    << "\" -time_node_model \"" << time_node_model_
+    << "\"";
 }
 
 template <typename DoubleType>
