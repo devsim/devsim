@@ -7,7 +7,10 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.8.4
 
-Write `variable_update` when writing the `equation` command to the devsim file format.
+
+### Serialization of equation command
+
+Write ``variable_update`` when writing the ``equation`` command to the devsim file format.
 
 ## Version 2.8.3
 
