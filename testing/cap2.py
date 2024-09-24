@@ -36,6 +36,7 @@ from devsim import (
     get_interface_equation_command,
     get_interface_equation_list,
     get_interface_list,
+    get_matrix_and_rhs,
     get_node_model_values,
     get_region_list,
     interface_equation,
@@ -327,6 +328,7 @@ for i in il:
     interface_equation(**i)
 
 solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
+print(get_matrix_and_rhs())
 
 node_solution(device=device, region="MySiRegion", name="testing")
 set_node_value(device=device, region="MySiRegion", name="testing", value=8, index=3)

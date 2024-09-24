@@ -563,8 +563,10 @@ void Newton<DoubleType>::GetMatrixAndRHSForExternalUse(CompressionType ct, Objec
     lmap["rhs"]  = CreateDoublePODArray(rhs);
     ohm[p.first] = ObjectHolder(lmap);
 
-    matrix.reset();
+    matrix->ClearMatrix();
   }
+
+  matrix.reset();
 
   {
     ObjectHolderMap_t lmap;

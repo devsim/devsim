@@ -7,10 +7,13 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.8.4
 
-
 ### Serialization of equation command
 
 Write ``variable_update`` when writing the ``equation`` command to the devsim file format.
+
+### Simulation Matrix
+
+Fix issue [#148](https://github.com/devsim/devsim/issues/148) segmentation fault in ``get_matrix_and_rhs``.  Matrix and RHS now printed in ``testing/cap2.py``.
 
 ## Version 2.8.3
 
