@@ -15,6 +15,10 @@ Write ``variable_update`` when writing the ``equation`` command to the devsim fi
 
 Fix issue [#148](https://github.com/devsim/devsim/issues/148) segmentation fault in ``get_matrix_and_rhs``.  Matrix and RHS now printed in ``testing/cap2.py``.
 
+### macOS Build
+
+Fix issue [#149](https://github.com/devsim/devsim/issues/149) fix issue with macOS build scripts.
+
 ## Version 2.8.3
 
 ### Linux support

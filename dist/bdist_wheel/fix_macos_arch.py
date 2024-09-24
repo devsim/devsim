@@ -1,12 +1,18 @@
 import wheel
-import wheel.bdist_wheel
 import sys
 
+# get_platform issue
+# https://community.opalstack.com/d/1445-issue-installing-livekit/2
 try:
-    plat = wheel.bdist_wheel.get_platform('')
+    from wheel.bdist_wheel import get_platform
+except ImportError:
+    from wheel._bdist_wheel import get_platform
+
+try:
+    plat = get_platform('')
 except TypeError:
     #TypeError: get_platform() takes 0 positional arguments but 1 was given
-    plat = wheel.bdist_wheel.get_platform()
+    plat = get_platform()
 #
 #print(plat)
 
