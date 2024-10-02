@@ -19,7 +19,34 @@ def rampbias(
 ):
     """
     Ramps bias with assignable callback function
+
+    Uses devsim.get_parameter to get the bias currently at the contact being ramped.
+
+    Parameters:
+    -----------
+
+    device : name of the device
+    contact : contact name
+    end_bias : bias for last step
+    step_size : initial step size
+    min_step : minimum step size
+    max_iter : maximum number of iterations
+    rel_error : required relative error for convergence
+    abs_error : required absolute error for convergence
+    callback : callback function that should be called on success.
+               See printAllCurrents for an example.
+
+    Description:
+    ------------
+
+    Uses GetContactBiasName to get the bias being applied at the contact specified.
+
+    On each successfull bias, the callback function is called.
+
+    Exceptions are raised if there is a failure at the last bias step attempted. 
+
     """
+
     start_bias = ds.get_parameter(device=device, name=GetContactBiasName(contact))
     if start_bias < end_bias:
         step_sign = 1
