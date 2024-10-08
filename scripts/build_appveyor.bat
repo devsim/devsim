@@ -22,9 +22,21 @@ IF "%1"=="msys" (
   SET BASH_SCRIPT=%BASEDIR%\scripts\build_msys.sh
 )
 
+IF "%1"=="clangx64" (
+  SET GENERATOR="Visual Studio 17 2022"
+  SET AOPTION="x64"
+  SET TOOLSET="ClangCL"
+  SET BUILDDIR="clangwin64"
+  SET USE_VISUAL_STUDIO=true
+  SET PACKAGE_NAME="devsim_clangwin64_%TAG%"
+  SET BASH_SCRIPT=%BASEDIR%\scripts\build_appveyor.sh
+)
+
+
 IF "%1"=="x64" (
   SET GENERATOR="Visual Studio 17 2022"
   SET AOPTION="x64"
+  SET TOOLSET="v143"
   SET BUILDDIR=win64
   SET USE_VISUAL_STUDIO=true
   SET PACKAGE_NAME="devsim_win64_%TAG%"
@@ -34,6 +46,7 @@ IF "%1"=="x64" (
 IF "%1"=="x86" (
   SET GENERATOR="Visual Studio 17 2022"
   SET AOPTION="Win32"
+  SET TOOLSET="v143"
   SET BUILDDIR=win32
   SET USE_VISUAL_STUDIO=true
   SET PACKAGE_NAME="devsim_win32_%TAG%"
@@ -41,7 +54,7 @@ IF "%1"=="x86" (
 )
 
 cd %BASEDIR%
-IF DEFINED USE_VISUAL_STUDIO c:\msys64\usr\bin\bash %BASH_SCRIPT% %GENERATOR% %AOPTION% %BUILDDIR% %CONDA_PREFIX% %PACKAGE_NAME%
+IF DEFINED USE_VISUAL_STUDIO c:\msys64\usr\bin\bash %BASH_SCRIPT% %GENERATOR% %AOPTION% %TOOLSET% %BUILDDIR% %CONDA_PREFIX% %PACKAGE_NAME%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 IF DEFINED USE_MSYS c:\msys64\usr\bin\bash %BASH_SCRIPT% %PACKAGE_NAME%

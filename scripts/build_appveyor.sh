@@ -6,9 +6,10 @@ export PATH=/mingw64/bin:/usr/bin:${PATH}
 
 GENERATOR="$1"
 AOPTION="$2"
-BUILDDIR="$3"
-CONDA_PREFIX="$4"
-PACKAGE_NAME="$5"
+TOOLSET="$3"
+BUILDDIR="$4"
+CONDA_PREFIX="$5"
+PACKAGE_NAME="$6"
 BASEDIR=$(pwd)
 
 export PYTHON3_BIN=python
@@ -18,16 +19,16 @@ export PYTHON3_INCLUDE="${CONDA_PREFIX}/include"
 export PYTHON3_ARCHIVE=$(cygpath -w ${CONDA_PREFIX}/libs/python3.lib)
 
 cd "${BASEDIR}/external/umfpack_lgpl"
-bash build_appveyor.sh "${GENERATOR}" "${AOPTION}" "${BUILDDIR}" "${CONDA_PREFIX}"
+bash build_appveyor.sh "${GENERATOR}" "${AOPTION}" "${TOOLSET}" "${BUILDDIR}" "${CONDA_PREFIX}"
 
 cd "${BASEDIR}/external/symdiff"
-bash ../symdiff_appveyor.sh "${GENERATOR}" "${AOPTION}" "${BUILDDIR}" "${CONDA_PREFIX}"
+bash ../symdiff_appveyor.sh "${GENERATOR}" "${AOPTION}" "${TOOLSET}" "${BUILDDIR}" "${CONDA_PREFIX}"
 
 cd "${BUILDDIR}"
 cmake --build . --config Release -- //m //nologo //verbosity:minimal
 
 cd "${BASEDIR}"
-bash scripts/setup_appveyor.sh "${GENERATOR}" "${AOPTION}" "${BUILDDIR}" "${CONDA_PREFIX}"
+bash scripts/setup_appveyor.sh "${GENERATOR}" "${AOPTION}" "${TOOLSET}" "${BUILDDIR}" "${CONDA_PREFIX}"
 
 cd "${BUILDDIR}"
 cmake --build . --config Release -- //m //nologo //verbosity:minimal

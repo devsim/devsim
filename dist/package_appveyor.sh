@@ -7,7 +7,7 @@ if ! [ $1 ]; then
 fi
 
 
-for ARCH in win32 win64; do
+for ARCH in win32 win64 clangwin64; do
 PLATFORM=windows
 SRC_DIR=../${ARCH}/src/main/Release
 

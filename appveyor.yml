@@ -98,6 +98,7 @@ install:
   - IF "%PLATFORM%"=="msys" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
   - IF "%PLATFORM%"=="x64" SET CONDA_BIN=c:\Miniconda37-x64\condabin\conda.bat
   - IF "%PLATFORM%"=="x86" SET CONDA_BIN=c:\Miniconda37\condabin\conda.bat
+  - IF "%PLATFORM%"=="clangx64" SET CONDA_BIN=c:\Miniconda37\condabin\conda.bat
 
 # enable patching of AssemblyInfo.* files
 #assembly_info:
