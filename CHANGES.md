@@ -5,6 +5,10 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.8.5
+
+### Clang build on Windows
+
 ## Version 2.8.4
 
 ### Serialization of equation command
