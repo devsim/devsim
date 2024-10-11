@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 #include "TetrahedronEdgeModel.hh"
 #include "MeshUtil.hh"
 #include "dsAssert.hh"
-#include "base64.hh"
+#include "ObjectHolder.hh"
 #include <sstream>
 #include <fstream>
 #include <iomanip>
@@ -62,7 +62,7 @@ void WriteDataArray(const std::vector<double> &nsl, const std::string &name, con
   }
 
   myfile << " format=\"binary\">\n"
-         << dsUtility::convertVectorToZlibBase64(nsl)
+         << ConvertVectorToZlibBase64(nsl)
          << "\n</DataArray>\n";
 }
 
