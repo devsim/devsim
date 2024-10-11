@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
 #ifndef DS_ZLIB_COMPRESS_HH
 #define DS_ZLIB_COMPRESS_HH
 #include <vector>
-
+#include <cstddef>
 bool DEVSIMZlibCompress(std::vector<char> &/*output*/, char * /*input*/, size_t /*input_length*/);
 
 #endif
