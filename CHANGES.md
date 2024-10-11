@@ -7,6 +7,11 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.8.5
 
+### Official Python support on Windows
+[#151](https://github.com/devsim/devsim/issues/151)
+
+On windows system, use ``zlib`` from Python module instead of Anaconda ``zlib.dll``.
+
 ### Clang build on Windows
 
 ## Version 2.8.4
