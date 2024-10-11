@@ -123,8 +123,6 @@ ObjectHolder CreateDoublePODArray(const std::vector<double>  &list);
 
 ObjectHolder CreateComplexDoublePODArray(const std::vector<std::complex<double>>  &list);
 
-std::string ConvertVectorToZlibBase64(const std::vector<double> &/*list*/);
-
 #ifdef DEVSIM_EXTENDED_PRECISION
 ObjectHolder CreateDoublePODArray(const std::vector<float128> &list);
 

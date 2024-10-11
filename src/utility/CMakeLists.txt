@@ -5,6 +5,7 @@ SET (CXX_SRCS
     GetGlobalParameter.cc
     GetNumberOfThreads.cc
     dsTimer.cc
+    base64.cc
 )
 
 INCLUDE_DIRECTORIES (

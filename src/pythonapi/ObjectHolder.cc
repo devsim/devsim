@@ -6,8 +6,8 @@ SPDX-License-Identifier: Apache-2.0
 ***/
 
 /// Python is insisting on defined _POSIX_C_SOURCE and _X_OPEN_SOURCE
-#include "Python.h"
 #include "ObjectHolder.hh"
+#include "Python.h"
 #include "dsAssert.hh"
 #include "ControlGIL.hh"
 #include "dsMathTypes.hh"
@@ -761,51 +761,6 @@ ObjectHolder CreateDoublePODArray(const dsMath::DoubleVec_t<double> &list)
 ObjectHolder CreateComplexDoublePODArray(const dsMath::ComplexDoubleVec_t<double> &list)
 {
   return CreatePODArray<double>(reinterpret_cast<const double *>(list.data()), sizeof(std::complex<double>) * list.size());
-}
-
-std::string ConvertVectorToZlibBase64(const std::vector<double> &vals)
-{
-
-  EnsurePythonGIL gil;
-
-  auto mod_importer = [](auto modname)->auto {
-    ObjectHolder mod(PyImport_ImportModule(modname));
-    PyErr_Clear();
-    dsAssert(!mod.empty(), modname + " module not available");
-    return mod;
-  };
-
-  auto get_callable = [](auto mod, auto fname)->auto
-  {
-    ObjectHolder fobj(PyObject_GetAttrString(reinterpret_cast<PyObject *>(mod.GetObject()), fname));
-    PyErr_Clear();
-    dsAssert(!fobj.empty(), fname + " not available");
-    dsAssert(fobj.IsCallable(), fname + " is not callable");
-    return fobj;
-  };
-
-  auto call_method = [](auto fobj, auto arg, auto error)->auto
-  {
-    ObjectHolder ret(PyObject_CallFunction(reinterpret_cast<PyObject *>(fobj.GetObject()), "O", arg.GetObject()));
-    PyErr_Clear();
-    dsAssert(!ret.empty(), error);
-    return ret;
-  };
-
-  auto compress_method = get_callable(mod_importer("zlib"), "compress");
-
-  auto double_data = CreateDoublePODArray(vals);
-
-  auto compressed_data = call_method(compress_method, double_data, "issue compressing data");
-
-  auto encode_method = get_callable(mod_importer("base64"), "b64encode");
-
-  auto encoded_data = call_method(encode_method, compressed_data, "issue base64 encoding data");
-
-  auto s = PyBytes_AsString(reinterpret_cast<PyObject *>(encoded_data.GetObject()));
-  PyErr_Clear();
-  dsAssert(s, "Error converting to compressed base 64 string");
-  return std::string(s);
 }
 
 #ifdef DEVSIM_EXTENDED_PRECISION

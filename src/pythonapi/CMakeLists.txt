@@ -6,6 +6,7 @@ SET (CXX_SRCS
    OutputStream.cc
    Interpreter.cc
    ControlGIL.cc
+   ZlibCompress.cc
 )
 
 INCLUDE_DIRECTORIES (
