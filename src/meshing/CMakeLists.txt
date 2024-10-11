@@ -20,11 +20,8 @@ SET (CXX_SRCS
     Mesh2d.cc
     Mesh2dStructs.cc
     TecplotWriter.cc
+    VTKWriter.cc
 )
-
-IF (VTKWRITER)
-SET (CXX_SRCS ${CXX_SRCS} VTKWriter.cc)
-ENDIF (VTKWRITER)
 
 INCLUDE_DIRECTORIES (
     ../utility

@@ -20,8 +20,8 @@ ADD_DEFINITIONS(-DBOOST_NO_CXX14_CONSTEXPR)
 
 SET (EXTENDED_BLAS_ARCHIVE ${CMAKE_SOURCE_DIR}/external/getrf/msys/libgetrf.a)
 
-SET (ZLIB_INCLUDE ${CONDA_PREFIX}/Library/include)
-SET (ZLIB_ARCHIVE ${CONDA_PREFIX}/Library/lib/zlib.lib)
+#SET (ZLIB_INCLUDE ${CONDA_PREFIX}/Library/include)
+#SET (ZLIB_ARCHIVE ${CONDA_PREFIX}/Library/lib/zlib.lib)
 
 SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/msys_x86_64_release/src/engine/libsymdiff_dynamic.a)

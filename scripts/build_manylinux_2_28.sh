@@ -13,7 +13,7 @@ fi
 
 # Centos Specific
 #https://fedoraproject.org/wiki/EPEL
-#yum install -y git bison flex zlib-static zlib-devel python3 python3-devel
+#yum install -y git bison flex python3 python3-devel
 #yum install -y centos-release-scl
 #yum install -y devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-libquadmath-devel devtoolset-9-gcc-gfortran make
 #yum install -y epel-release

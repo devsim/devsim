@@ -232,20 +232,3 @@ bool Interpreter::RunCommand(const std::string &commandname, ObjectHolderMap_t &
   return RunCommand(command_object, arguments);
 
 }
-
-std::string Interpreter::GetVariable(const std::string &name)
-{
-  EnsurePythonGIL gil;
-
-  std::string ret;
-  PyObject *main = PyImport_ImportModule("__main__");
-  ObjectHolder main_holder(main);
-  PyObject *robj = PyObject_GetAttrString(main, name.c_str());
-  ObjectHolder ro(robj);
-  if (robj)
-  {
-    ret = ro.GetString();
-  }
-  return ret;
-}
-

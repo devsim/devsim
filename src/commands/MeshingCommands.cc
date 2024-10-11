@@ -818,13 +818,7 @@ writeDevicesCmd(CommandHandler &data)
     }
     else if (type == "vtk")
     {
-#ifdef VTKWRITER
         mw = std::unique_ptr<MeshWriter>(new VTKWriter());
-#else
-        errorString += "VTK support was not built into this version.  Please select from \"devsim\", \"devsim_data\", or \"tecplot\".\n";
-        data.SetErrorResult(errorString);
-        return;
-#endif
     }
     else if (type == "tecplot")
     {

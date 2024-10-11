@@ -11,8 +11,8 @@ SET (QUADMATH_ARCHIVE "-lquadmath")
 SET (EXTENDED_BLAS_ARCHIVE ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
 
 
-SET (ZLIB_INCLUDE )
-SET (ZLIB_ARCHIVE -lz)
+#SET (ZLIB_INCLUDE )
+#SET (ZLIB_ARCHIVE -lz)
 
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)

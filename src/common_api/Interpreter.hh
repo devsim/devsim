@@ -32,8 +32,6 @@ public:
       return result_;
     }
 
-    std::string GetVariable(const std::string &name);
-
   private:
     bool RunCommand(const std::string &/*command*/, ObjectHolderMap_t &/*arguments*/);
 
