@@ -53,10 +53,6 @@ then
 bash scripts/setup_nofloat128.sh
 fi
 
-## overcome bad libstdc++ in anaconda directory
-#mkdir -p linux_${DEVSIM_ARCH}_release/linklibs
-#for i in libz.a ; do cp -f ${CONDA_PREFIX}/lib/$i linux_${DEVSIM_ARCH}_release/linklibs/; done
-
 (cd linux_${DEVSIM_ARCH}_release && make -j3)
 (cd dist && bash package_linux.sh ${1})
 cp -f dist/bdist_wheel/setup.* dist/${1}/

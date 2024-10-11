@@ -21,16 +21,7 @@ This runtime may be necessary to run the software.
 
 *Please note that most Python 3 environments should work.  The Anaconda distributions are recommended since they provide ready access to the Intel Math Kernel Library (MKL).  As of DEVSIM version 2.1.0, you can configure the software to load alternative libraries implementing the math library functions.*
 
-Install [Anaconda](https://www.anaconda.com/products/individual) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) environment.  The following install scripts are available in the ``devsim/scripts`` directory to install the latest version of Miniconda into ``${HOME}/anaconda``. 
-
-* ``scripts/install_miniconda_macos.sh``
-* ``scripts/install_miniconda_linux.sh``
-
-The Python environment can be loaded in a terminal using:
-
-```
-source ${HOME}/anaconda/bin/activate
-```
+Install [Anaconda](https://www.anaconda.com/products/individual) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) environment.
 
 From a system command prompt, with an active Python environment, install the MKL.
 

@@ -18,9 +18,7 @@ ADD_DEFINITIONS(-DBOOST_NO_CXX14_CONSTEXPR)
 
 # windows build
 
-SET (BLAS_ARCHIVE          ${CONDA_PREFIX}/Library/lib/mkl_rt.lib)
 SET (EXTENDED_BLAS_ARCHIVE ${CMAKE_SOURCE_DIR}/external/getrf/msys/libgetrf.a)
-SET (MKL_PARDISO_INCLUDE ${CONDA_PREFIX}/Library/include)
 
 SET (ZLIB_INCLUDE ${CONDA_PREFIX}/Library/include)
 SET (ZLIB_ARCHIVE ${CONDA_PREFIX}/Library/lib/zlib.lib)

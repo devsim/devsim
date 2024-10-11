@@ -10,12 +10,6 @@ ADD_DEFINITIONS(-DBOOST_MP_STANDALONE -DBOOST_MATH_STANDALONE)
 
 SET (QUADMATH_ARCHIVE "-lquadmath")
 
-#SET (MKL_PARDISO_INCLUDE ${CONDA_PREFIX}/include)
-#SET (MKL_LIB_DIR         ${CONDA_PREFIX}/lib)
-#http://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
-#
-SET (BLAS_ARCHIVE -L${MKL_LIB_DIR} -lmkl_rt -lm -ldl)
-
 SET (EXTENDED_BLAS_ARCHIVE  ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
 
 SET (ZLIB_ARCHIVE -lz)
