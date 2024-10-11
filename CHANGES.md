@@ -7,10 +7,11 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.8.5
 
-### Official Python support on Windows
+### VTK Writer
+
 [#151](https://github.com/devsim/devsim/issues/151)
 
-On windows system, use ``zlib`` from Python module instead of Anaconda ``zlib.dll``.
+Use ``zlib`` from Python module instead of Anaconda ``zlib.dll`` or the system ``zlib`` for other operating systems.  The compressed binary data written to the ``.vtu`` files should be numerically the same.
 
 ### Clang build on Windows
 
