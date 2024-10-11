@@ -105,7 +105,7 @@ template <typename T> std::string convertVectorToZlibBase64(const std::vector<T>
 
     char *inputArray = reinterpret_cast<char *>(const_cast<T *>(&x[numberOfTPerBlock * i]));
 
-    int zlibRet = DEVSIMZlibCompress(outputArray, inputArray, inputLength);
+    bool zlibRet = DEVSIMZlibCompress(outputArray, inputArray, inputLength);
     dsAssert(zlibRet == true, "UNEXPECTED");
 
     compressedOutput += std::string_view(outputArray.data(), outputArray.size());
