@@ -7,6 +7,10 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.8.5
 
+### Windows Python Support
+
+The official ``python.org`` distribution is beter supported.  This is since the ``python.org`` distribution does not appear to ship the ``zlib.dll``.
+
 ### VTK Writer
 
 [#151](https://github.com/devsim/devsim/issues/151)
@@ -14,6 +18,8 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 Use ``zlib`` from Python module instead of Anaconda ``zlib.dll`` or the system ``zlib`` for other operating systems.  The compressed binary data written to the ``.vtu`` files should be numerically the same.
 
 ### Clang build on Windows
+
+While the Windows version is still built with Visual Studio 2022, the build system now supports building with the Clang compilers.
 
 ## Version 2.8.4
 
