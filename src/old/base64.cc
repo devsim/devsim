@@ -6,10 +6,9 @@ SPDX-License-Identifier: Apache-2.0
 ***/
 
 #include "base64.hh"
-#include "ZlibCompress.hh"
+#include "zlib.h"
 #include "dsAssert.hh"
 #include <cctype>
-#include <string_view>
 
 namespace dsUtility {
 
@@ -94,22 +93,29 @@ template <typename T> std::string convertVectorToZlibBase64(const std::vector<T>
   header[2] = numberTInPartialBlock * sizeof(T);
 
   std::string        compressedOutput;
-  std::vector<char> outputArray;
+  std::vector<Bytef> outputArray(maxLength);
   for (size_t i = 0; i < numberOfBlocks; ++i)
   {
-    size_t inputLength = maxLength;
+    uLong inputLength = maxLength;
     if (i == (numberOfBlocks - 1))
     {
       inputLength = sizeof(T) * numberTInPartialBlock;
+//      header[3 + i] = inputLength;
+    }
+    else
+    {
+//      header[3 + i] = maxLength;
     }
 
-    char *inputArray = reinterpret_cast<char *>(const_cast<T *>(&x[numberOfTPerBlock * i]));
 
-    bool zlibRet = DEVSIMZlibCompress(outputArray, inputArray, inputLength);
-    dsAssert(zlibRet == true, "UNEXPECTED");
+    Bytef *inputArray = reinterpret_cast<Bytef *>(const_cast<T *>(&x[numberOfTPerBlock * i]));
 
-    compressedOutput += std::string_view(outputArray.data(), outputArray.size());
-    header[3 + i] = outputArray.size();
+    uLong outputLength = maxLength;
+    int zlibRet = compress2(&(outputArray[0]), &outputLength, inputArray, inputLength, Z_DEFAULT_COMPRESSION);
+    dsAssert(zlibRet == Z_OK, "UNEXPECTED");
+
+    compressedOutput += std::string(reinterpret_cast<const char *>(&outputArray[0]), outputLength);
+    header[3 + i] = outputLength;
 
   }
   const std::string encodedData = encodeBase64(compressedOutput.c_str(), compressedOutput.size());

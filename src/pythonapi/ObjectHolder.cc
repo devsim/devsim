@@ -5,9 +5,9 @@ Copyright 2013 DEVSIM LLC
 SPDX-License-Identifier: Apache-2.0
 ***/
 
+#include "ObjectHolder.hh"
 /// Python is insisting on defined _POSIX_C_SOURCE and _X_OPEN_SOURCE
 #include "Python.h"
-#include "ObjectHolder.hh"
 #include "dsAssert.hh"
 #include "ControlGIL.hh"
 #include "dsMathTypes.hh"
@@ -785,6 +785,4 @@ ObjectHolder CreateComplexDoublePODArray(const dsMath::ComplexDoubleVec_t<float1
 
   return CreateComplexDoublePODArray(tmp);
 }
-
 #endif
-

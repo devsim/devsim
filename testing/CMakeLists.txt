@@ -105,8 +105,14 @@ set_tests_properties("testing/mesh2d_reduced_tec_comp" PROPERTIES DEPENDS testin
 
 ADD_TEST("testing/noise_res_2d_tec_comp" ${RUNDIFFTEST} --output ${RUNDIR}/noise_res_2d.tec --golden ${GOLDENDIR}/testing)
 set_tests_properties("testing/noise_res_2d_tec_comp" PROPERTIES DEPENDS testing/noise_res_2d)
+
 ADD_TEST("testing/mos_2d_dd_comp" ${RUNDIFFTEST} --output ${RUNDIR}/mos_2d_dd.msh --golden ${GOLDENDIR}/testing)
 set_tests_properties("testing/mos_2d_dd_comp" PROPERTIES DEPENDS testing/mos_2d)
+
+ADD_TEST("testing/mos_2d_vtu_comp" ${RUNDIFFTEST} --output ${RUNDIR}/mos_2d_0.vtu --golden ${GOLDENDIR}/testing)
+set_tests_properties("testing/mos_2d_vtu_comp" PROPERTIES DEPENDS testing/mos_2d)
+
+
 ADD_TEST("testing/mos_2d_restart2_comp" ${RUNDIFFTEST} --output ${RUNDIR}/mos_2d_restart2.msh --golden ${GOLDENDIR}/testing)
 set_tests_properties("testing/mos_2d_restart2_comp" PROPERTIES DEPENDS testing/mos_2d_restart2)
 
