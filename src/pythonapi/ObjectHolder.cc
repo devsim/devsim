@@ -5,8 +5,8 @@ Copyright 2013 DEVSIM LLC
 SPDX-License-Identifier: Apache-2.0
 ***/
 
-/// Python is insisting on defined _POSIX_C_SOURCE and _X_OPEN_SOURCE
 #include "ObjectHolder.hh"
+/// Python is insisting on defined _POSIX_C_SOURCE and _X_OPEN_SOURCE
 #include "Python.h"
 #include "dsAssert.hh"
 #include "ControlGIL.hh"

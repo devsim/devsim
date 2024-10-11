@@ -45,8 +45,16 @@ bool DEVSIMZlibCompress(std::vector<char> &output, char *input, size_t input_len
 
   auto compress_method = get_callable(mod_importer("zlib"), "compress");
 
+#if 1
+// https://github.com/python/cpython/issues/98680
+#ifndef PyBUF_READ
+#define PyBUF_READ 0x100
+#endif
+  auto double_data = ObjectHolder(PyMemoryView_FromMemory(input, input_length, PyBUF_READ));
+#else
   // TODO: "consider using memory view for Vector array creation form c++"
   auto double_data = ObjectHolder(input, input_length);
+#endif
 
   auto compressed_data = call_method(compress_method, double_data, "issue compressing data");
 
