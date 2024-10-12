@@ -59,8 +59,6 @@ If using the ``pip`` installed version, the data files should be available in yo
 
 If you have any issues with this process.  Please contact us through the DEVSIM forum at [https://forum.devsim.org](https://forum.devsim.org).
 
-At this time, the macOS version only targets Intel-based systems.  There has been a report that users may have to grant permission for code from "unknown" developers.
-
 ## Building from Source
 
 Please see [BUILD.md](BUILD.md) for instructions for building from source.
