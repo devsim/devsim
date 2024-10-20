@@ -26,9 +26,11 @@ class InterfaceNodeExprModel : public InterfaceNodeModel
 
         void Serialize(std::ostream &) const;
 
+    private:
+        friend class dsModelFactory<InterfaceNodeExprModel>;
         InterfaceNodeExprModel(const std::string &, Eqo::EqObjPtr, InterfacePtr);
 
-    private:
+        void derived_init();
 
         void calcNodeScalarValues() const;
         void RegisterModels();

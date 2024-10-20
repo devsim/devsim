@@ -18,6 +18,10 @@ EdgeModel("edge_index", rp, EdgeModel::DisplayType::SCALAR)
 {
 }
 
+template <typename DoubleType>
+void EdgeIndex<DoubleType>::derived_init()
+{
+}
 
 template <typename DoubleType>
 void EdgeIndex<DoubleType>::calcEdgeScalarValues() const

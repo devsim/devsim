@@ -14,15 +14,13 @@ TetrahedronEdgeModelPtr CreateTetrahedronEdgeFromEdgeModel(const std::string &, 
 template <typename DoubleType>
 class TetrahedronEdgeFromEdgeModel : public TetrahedronEdgeModel {
     public:
-
         void Serialize(std::ostream &) const;
 
-        //// Out naming convention is that the name given is the edge model
-        //// The element edge model is edgemodel_ex, edgemodel_ey
+    private:
+        friend class dsModelFactory<TetrahedronEdgeFromEdgeModel>;
         TetrahedronEdgeFromEdgeModel(const std::string &, RegionPtr);
 
-
-    private:
+        void derived_init();
 
         void calcTetrahedronEdgeScalarValues() const;
 

@@ -16,6 +16,11 @@ template <typename DoubleType>
 NodeVolume<DoubleType>::NodeVolume(RegionPtr rp)
     : NodeModel("NodeVolume", rp, NodeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void NodeVolume<DoubleType>::derived_init()
+{
     RegisterCallback("EdgeNodeVolume");
 }
 

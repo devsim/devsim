@@ -45,18 +45,16 @@ using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 template <typename DoubleType>
 class ContactEquation {
     public:
-        ContactEquation(const std::string &/*eqn*/, ContactPtr, RegionPtr);
+        ContactEquation(const std::string &/*eqn*/, const std::string &/*circuitnode*/, ContactPtr, RegionPtr);
         virtual ~ContactEquation() = 0;
         void Assemble(dsMath::RealRowColValueVec<DoubleType> &, dsMath::RHSEntryVec<DoubleType> &, PermutationMap &, dsMathEnum::WhatToLoad, dsMathEnum::TimeMode);
         const std::string &GetName() const {
             return myname;
         }
         DoubleType GetCurrent() {
-//          calcCurrent();
             return current;
         }
         DoubleType GetCharge() {
-//          calcCharge();
             return charge;
         }
         const Contact &GetContact() const
@@ -72,7 +70,6 @@ class ContactEquation {
 
         ConstNodeList_t GetActiveNodes() const;
 
-        //// This is how we will get our equation index and stuff for flux
         void SetCircuitNode(const std::string &);
 
         const std::string &GetCircuitNode() const;

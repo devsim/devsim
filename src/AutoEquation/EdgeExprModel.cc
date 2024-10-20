@@ -23,9 +23,11 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 EdgeExprModel<DoubleType>::EdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, EdgeModel::DisplayType dt, ContactPtr cp) : EdgeModel(nm, rp, dt, cp), equation(eq)
 {
-#if 0
-    os << "creating EdgeExprModel " << nm << " with equation " << eq << "\n";
-#endif
+}
+
+template <typename DoubleType>
+void EdgeExprModel<DoubleType>::derived_init()
+{
     RegisterModels();
 }
 
@@ -61,9 +63,6 @@ void EdgeExprModel<DoubleType>::RegisterModels()
 
     for (refmodels_t::iterator it = refs.begin(); it != refs.end(); ++it)
     {
-#if 0
-    os << "registering callback " << *it << " for EdgeExprModel " << this->GetName() << "\n";
-#endif
         RegisterCallback(*it);
     }
 }
@@ -71,11 +70,6 @@ void EdgeExprModel<DoubleType>::RegisterModels()
 template <typename DoubleType>
 void EdgeExprModel<DoubleType>::calcEdgeScalarValues() const
 {
-    // need to write the calculator
-//    dsAssert(false, "UNEXPECTED");
-#if 0
-        os << "updating EdgeExprModel " << GetName() << " from expression " << EngineAPI::getStringValue(equation) << "\n";
-#endif
     typename MEE::ModelExprEval<DoubleType>::error_t errors;
     const Region *rp = &(this->GetRegion());
     MEE::ModelExprEval<DoubleType> mexp(rp, GetName(), errors);

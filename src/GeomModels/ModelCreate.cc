@@ -6,6 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 ***/
 
 #include "ModelCreate.hh"
+#include "ModelFactory.hh"
 #include "NodeVolume.hh"
 #include "EdgeNodeVolume.hh"
 #include "EdgeCouple.hh"
@@ -35,28 +36,28 @@ namespace {
 template <typename DoubleType>
 void CreateDefaultModelsImpl(RegionPtr rp)
 {
-  new EdgeCouple<DoubleType>(rp);
-  new EdgeLength<DoubleType>(rp);
-  new EdgeIndex<DoubleType>(rp);
-  new EdgeNodeVolume<DoubleType>(rp);
-  new NodeVolume<DoubleType>(rp);
-  new EdgeInverseLength<DoubleType>(rp);
-  new NodePosition<DoubleType>(rp);
-  new AtContactNode<DoubleType>(rp);
-  new SurfaceArea<DoubleType>(rp);
-  new UnitVec<DoubleType>(rp);
+  dsModelFactory<EdgeCouple<DoubleType>>::create(rp);
+  dsModelFactory<EdgeLength<DoubleType>>::create(rp);
+  dsModelFactory<EdgeIndex<DoubleType>>::create(rp);
+  dsModelFactory<EdgeNodeVolume<DoubleType>>::create(rp);
+  dsModelFactory<NodeVolume<DoubleType>>::create(rp);
+  dsModelFactory<EdgeInverseLength<DoubleType>>::create(rp);
+  dsModelFactory<NodePosition<DoubleType>>::create(rp);
+  dsModelFactory<AtContactNode<DoubleType>>::create(rp);
+  dsModelFactory<SurfaceArea<DoubleType>>::create(rp);
+  dsModelFactory<UnitVec<DoubleType>>::create(rp);
 
   const size_t dimension = rp->GetDimension();
 
   if (dimension == 2)
   {
-    new TriangleEdgeCouple<DoubleType>(rp);
-    new TriangleNodeVolume<DoubleType>(rp);
+    dsModelFactory<TriangleEdgeCouple<DoubleType>>::create(rp);
+    dsModelFactory<TriangleNodeVolume<DoubleType>>::create(rp);
   }
   else if (dimension == 3)
   {
-    new TetrahedronEdgeCouple<DoubleType>(rp);
-    new TetrahedronNodeVolume<DoubleType>(rp);
+    dsModelFactory<TetrahedronEdgeCouple<DoubleType>>::create(rp);
+    dsModelFactory<TetrahedronNodeVolume<DoubleType>>::create(rp);
   }
 }
 }

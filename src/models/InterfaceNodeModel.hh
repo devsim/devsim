@@ -9,6 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 #define INTERFACENODEMODEL_HH
 
 #include "ModelDataHolder.hh"
+#include "ModelFactory.hh"
 
 #include <string>
 #include <vector>
@@ -29,10 +30,13 @@ class Interface;
 typedef Interface *InterfacePtr;
 
 /// This class has models which are always out of date and are always recalculated
-class InterfaceNodeModel {
+class InterfaceNodeModel : public std::enable_shared_from_this<InterfaceNodeModel> {
     public:
         InterfaceNodeModel(const std::string &, const InterfacePtr);
         virtual ~InterfaceNodeModel()=0;
+
+        void init();
+        virtual void derived_init() = 0;
 
         const std::string &GetName() const {
             return name;
@@ -74,12 +78,12 @@ class InterfaceNodeModel {
 
         ConstInterfaceNodeModelPtr GetConstSelfPtr() const
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         InterfaceNodeModelPtr GetSelfPtr()
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         bool IsUniform() const;
@@ -129,7 +133,6 @@ class InterfaceNodeModel {
         InterfaceNodeModel &operator=(const InterfaceNodeModel &);
 
         std::string name;
-        WeakInterfaceNodeModelPtr myself;
         InterfacePtr   myinterface;
         mutable bool uptodate = false;
         mutable bool inprocess = false;
@@ -140,14 +143,14 @@ class InterfaceNodeModel {
 template <typename T1, typename T2, typename ... Args>
 InterfaceNodeModelPtr create_interface_node_model(bool use_extended, Args &&...args)
 {
-  InterfaceNodeModel *ret;
+  InterfaceNodeModelPtr ret;
   if (use_extended)
   {
-    ret = new T2(std::forward<Args>(args)...);
+    ret = dsModelFactory<T2>::create(std::forward<Args>(args)...);
   }
   else
   {
-    ret = new T1(std::forward<Args>(args)...);
+    ret = dsModelFactory<T1>::create(std::forward<Args>(args)...);
   }
   return ret->GetSelfPtr();
 }

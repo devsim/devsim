@@ -16,9 +16,16 @@ template <typename DoubleType>
 VectorTetrahedronEdgeModel<DoubleType>::VectorTetrahedronEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TetrahedronEdgeModel(edgemodel + "_x", rp, TetrahedronEdgeModel::DisplayType::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName+ "_y"), z_ModelName(elementEdgeModelName + "_z")
 {
-  RegisterCallback(edgemodel);
-  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+}
+
+template <typename DoubleType>
+void VectorTetrahedronEdgeModel<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
+  RegisterCallback(elementEdgeModelName);
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(y_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(z_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
 template <typename DoubleType>

@@ -7,13 +7,11 @@ SPDX-License-Identifier: Apache-2.0
 
 #ifndef EDGEMODEL_HH
 #define EDGEMODEL_HH
-
 #include "ModelDataHolder.hh"
-
+#include "ModelFactory.hh"
 #include "Vector.hh"
 
 #include <memory>
-
 #include <string>
 #include <vector>
 #include <iosfwd>
@@ -47,11 +45,14 @@ class Edge;
 typedef Edge *EdgePtr;
 typedef const Edge *ConstEdgePtr;
 
-class EdgeModel {
+class EdgeModel : public std::enable_shared_from_this<EdgeModel> {
     public:
         enum class DisplayType {NODISPLAY, SCALAR, VECTOR, UNKNOWN};
         EdgeModel(const std::string &, const RegionPtr, EdgeModel::DisplayType, const ContactPtr x = nullptr);
         virtual ~EdgeModel();
+
+        void init();
+        virtual void derived_init() = 0;
 
         const std::string &GetName() const {
             return name;
@@ -126,12 +127,12 @@ class EdgeModel {
 
         ConstEdgeModelPtr GetConstSelfPtr() const
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         EdgeModelPtr GetSelfPtr()
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         bool IsUniform() const;
@@ -186,7 +187,6 @@ class EdgeModel {
         std::string name;
         // need to know my region to get database data and appropriate node and edge lists
         RegionPtr   myregion;
-        WeakEdgeModelPtr myself;
         ContactPtr  mycontact;
         mutable bool uptodate;
         mutable bool inprocess;
@@ -199,16 +199,16 @@ class EdgeModel {
 template <typename T1, typename T2, typename ... Args>
 EdgeModelPtr create_edge_model(bool use_extended, Args &&...args)
 {
-  EdgeModel *ret;
+  EdgeModelPtr ret;
   if (use_extended)
   {
-    ret = new T2(std::forward<Args>(args)...);
+    ret = dsModelFactory<T2>::create(std::forward<Args>(args)...);
   }
   else
   {
-    ret = new T1(std::forward<Args>(args)...);
+    ret = dsModelFactory<T1>::create(std::forward<Args>(args)...);
   }
-  return ret->GetSelfPtr();
+  return ret;
 }
 
 #endif

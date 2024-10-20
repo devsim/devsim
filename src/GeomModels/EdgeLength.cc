@@ -18,6 +18,10 @@ EdgeModel("EdgeLength", rp, EdgeModel::DisplayType::SCALAR)
 {
 }
 
+template <typename DoubleType>
+void EdgeLength<DoubleType>::derived_init()
+{
+}
 
 template <typename DoubleType>
 void EdgeLength<DoubleType>::calcEdgeScalarValues() const

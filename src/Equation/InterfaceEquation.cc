@@ -36,8 +36,6 @@ InterfaceEquation<DoubleType>::InterfaceEquation(const std::string &nm, const st
     {
       myname1 = myname;
     }
-    InterfaceEquationHolder tmp(this);
-    ip->AddInterfaceEquation(tmp);
 }
 
 namespace {

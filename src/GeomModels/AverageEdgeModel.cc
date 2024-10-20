@@ -30,15 +30,6 @@ AverageEdgeModelEnum::TypeNameMap_t AverageEdgeModelEnum::AverageTypeNames[] = {
 template <typename DoubleType>
 AverageEdgeModel<DoubleType>::~AverageEdgeModel()
 {
-  // We can't do this, it causes seg fault if the region is already gone
-#if 0
-  if (!edgeModel1Name.empty())
-  {
-    dsErrors::ModelModelDeletion(GetRegion(), edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::INFO);
-    ///// This is EVIL
-    //const_cast<Region &>(GetRegion()).DeleteEdgeModel(edgeModel1Name);
-  }
-#endif
 }
 
 template <typename DoubleType>
@@ -49,13 +40,6 @@ AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const 
         nodeModelName(nmodel),
         averageType(atype)
 {
-    dsAssert(rp->GetNodeModel(nmodel).get(), "UNEXPECTED");
-    RegisterCallback(nodeModelName);
-
-    if ((averageType == AverageEdgeModelEnum::GRADIENT) || (averageType == AverageEdgeModelEnum::NEGATIVE_GRADIENT))
-    {
-      RegisterCallback("EdgeInverseLength");
-    }
 }
 
 template <typename DoubleType>
@@ -68,38 +52,56 @@ AverageEdgeModel<DoubleType>::AverageEdgeModel(const std::string &emodel, const 
         variableName(deriv),
         averageType(atype)
 {
-    node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    dsAssert(!node1EdgeModel.expired(), "UNEXPECTED");
+}
 
-    if (!rp->GetNodeModel(nodeModelName))
+template <typename DoubleType>
+void AverageEdgeModel<DoubleType>::derived_init()
+{
+    auto rp = const_cast<Region *>(&GetRegion());
+
+    // This is if we are not considering a derivative
+    if (variableName.empty())
     {
-      dsErrors::MissingModelModelDependency(GetRegion(), nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
-      return;
-    }
+      dsAssert(rp->GetNodeModel(nodeModelName).get(), "UNEXPECTED");
+      RegisterCallback(nodeModelName);
 
-    RegisterCallback(nodeModelName);
-
-    if (!variableName.empty())
-    {
-      if (variableName != nodeModelName)
+      if ((averageType == AverageEdgeModelEnum::GRADIENT) || (averageType == AverageEdgeModelEnum::NEGATIVE_GRADIENT))
       {
-        derivativeModelName = nodeModelName + ":" + variableName;
-        if (!rp->GetNodeModel(derivativeModelName))
-        {
-          dsErrors::MissingModelModelDependency(GetRegion(), derivativeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
-          return;
-        }
-        RegisterCallback(derivativeModelName);
+        RegisterCallback("EdgeInverseLength");
       }
     }
-
-    if ((averageType == AverageEdgeModelEnum::GRADIENT) || (averageType == AverageEdgeModelEnum::NEGATIVE_GRADIENT))
+    else
     {
-      RegisterCallback("EdgeInverseLength");
+      node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+      dsAssert(!node1EdgeModel.expired(), "UNEXPECTED");
+
+      if (!rp->GetNodeModel(nodeModelName))
+      {
+        dsErrors::MissingModelModelDependency(GetRegion(), nodeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+        return;
+      }
+
+      RegisterCallback(nodeModelName);
+
+      if (!variableName.empty())
+      {
+        if (variableName != nodeModelName)
+        {
+          derivativeModelName = nodeModelName + ":" + variableName;
+          if (!rp->GetNodeModel(derivativeModelName))
+          {
+            dsErrors::MissingModelModelDependency(GetRegion(), derivativeModelName, dsErrors::ModelInfo::NODE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::FATAL);
+            return;
+          }
+          RegisterCallback(derivativeModelName);
+        }
+      }
+
+      if ((averageType == AverageEdgeModelEnum::GRADIENT) || (averageType == AverageEdgeModelEnum::NEGATIVE_GRADIENT))
+      {
+        RegisterCallback("EdgeInverseLength");
+      }
     }
-#if 0
-    os << "creating AverageEdgeModelModel " << edgemodel0 << " with parent " << rp->GetNodeModel(nodemodel)->GetName() << "\n";
-#endif
 }
 
 namespace {

@@ -26,7 +26,14 @@ template <typename DoubleType>
 SurfaceArea<DoubleType>::SurfaceArea(RegionPtr rp)
     : NodeModel("SurfaceArea", rp, NodeModel::DisplayType::SCALAR)
 {
-  const size_t dimension = GetRegion().GetDimension();
+}
+
+template <typename DoubleType>
+void SurfaceArea<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
+  const size_t dimension = rp->GetDimension();
 
   contact_area = CreateNodeSolution("ContactSurfaceArea", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
 

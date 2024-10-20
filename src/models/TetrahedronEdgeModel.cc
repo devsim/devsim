@@ -52,7 +52,12 @@ TetrahedronEdgeModel::TetrahedronEdgeModel(const std::string &nm, const RegionPt
       displayType(dt),
       model_data(rp->GetNumberTetrahedrons() * 6)
 {
-  myself = rp->AddTetrahedronEdgeModel(this);
+}
+
+void TetrahedronEdgeModel::init()
+{
+  myregion->AddTetrahedronEdgeModel(this->shared_from_this());
+  derived_init();
 }
 
 void TetrahedronEdgeModel::CalculateValues() const

@@ -22,13 +22,6 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 EdgeFromNodeModel<DoubleType>::~EdgeFromNodeModel()
 {
-  // We can't do this, it causes seg fault if the region is already gone
-#if 0
-  dsErrors::ModelModelDeletion(GetRegion(), edgeModel1Name, dsErrors::ModelInfo::EDGE, GetName(), dsErrors::ModelInfo::EDGE, OutputStream::OutputType::INFO);
-  ///// This is EVIL
-//// TODO: revisit the deletion issue.
-  const_cast<Region &>(GetRegion()).DeleteEdgeModel(edgeModel1Name);
-#endif
 }
 
 template <typename DoubleType>
@@ -38,25 +31,23 @@ EdgeFromNodeModel<DoubleType>::EdgeFromNodeModel(const std::string &edgemodel0, 
         nodeModelName(nodemodel),
         edgeModel1Name(edgemodel1)
 {
-    // The other model is going to be set from our model
-//// TODO: issues, use soft references by name here, just like we do other node models
-    node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgemodel1, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+}
+
+template <typename DoubleType>
+void EdgeFromNodeModel<DoubleType>::derived_init()
+{
+    auto rp = const_cast<Region *>(&GetRegion());
+
+    node1EdgeModel = EdgeSubModel<DoubleType>::CreateEdgeSubModel(edgeModel1Name, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
     dsAssert(!node1EdgeModel.expired(), "UNEXPECTED");
 
-//// This is caught by the api
-    dsAssert(rp->GetNodeModel(nodemodel).get(), "UNEXPECTED");
+    dsAssert(rp->GetNodeModel(nodeModelName).get(), "UNEXPECTED");
     RegisterCallback(nodeModelName);
-#if 0
-    os << "creating EdgeFromNodeModelModel " << edgemodel0 << " with parent " << rp->GetNodeModel(nodemodel)->GetName() << "\n";
-#endif
 }
 
 template <typename DoubleType>
 void EdgeFromNodeModel<DoubleType>::calcEdgeScalarValues() const
 {
-#if 0
-        os << "updating EdgeFromNodeModel " << GetName() << " from parent " << nodeModelName << "\n";
-#endif
     Region *rp = const_cast<Region *>(&this->GetRegion());
     ConstNodeModelPtr nm = rp->GetNodeModel(nodeModelName);
 

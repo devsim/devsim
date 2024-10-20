@@ -85,8 +85,6 @@ class InterfaceModelExprData {
 
         ScalarValuesType<DoubleType> GetScalarValues() const;
 
-        void makeUnique();
-
     private:
         typedef std::shared_ptr<InterfaceNodeScalarData<DoubleType> > nsd_ptr;
         // These are the types of data we can keep

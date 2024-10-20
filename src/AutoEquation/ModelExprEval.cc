@@ -339,10 +339,9 @@ ModelExprData<DoubleType> ModelExprEval<DoubleType>::EvaluateAddType(Eqo::EqObjP
 {
   ModelExprData<DoubleType> out;
 
-//    out = ModelExprData<DoubleType>(0.0, data_ref);
+  out = ModelExprData<DoubleType>(0.0, data_ref);
   std::vector<Eqo::EqObjPtr> values = EngineAPI::getArgs(arg);
-  out = eval_function(values[0]);
-  for (size_t i = 1; i < values.size(); ++i)
+  for (size_t i = 0; i < values.size(); ++i)
   {
     ModelExprData<DoubleType> x = eval_function(values[i]);
     out += x;

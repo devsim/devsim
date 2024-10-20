@@ -17,12 +17,15 @@ template <typename DoubleType>
 TriangleEdgeFromEdgeModel<DoubleType>::TriangleEdgeFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::DisplayType::SCALAR), edgeModelName(edgemodel), y_ModelName(edgeModelName + "_y")
 {
-  RegisterCallback(edgemodel);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
-//// Need to figure out the deleter situation from sub models
-//// Perhaps a Delete SubModels method??????
+template <typename DoubleType>
+void TriangleEdgeFromEdgeModel<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+  RegisterCallback(edgeModelName);
+  dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(y_ModelName, rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+}
 
 template <typename DoubleType>
 void TriangleEdgeFromEdgeModel<DoubleType>::calcTriangleEdgeScalarValues() const

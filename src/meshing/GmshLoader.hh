@@ -10,6 +10,7 @@ SPDX-License-Identifier: Apache-2.0
 #include "Mesh.hh"
 #include "MeshLoaderStructs.hh"
 #include "MeshLoaderUtility.hh"
+#include <memory>
 #include <vector>
 #include <map>
 #include <string>

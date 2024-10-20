@@ -6,7 +6,6 @@ SPDX-License-Identifier: Apache-2.0
 ***/
 
 #include "Equation.hh"
-#include "EquationHolder.hh"
 #include "Region.hh"
 
 #include "Node.hh"
@@ -113,8 +112,6 @@ template <typename DoubleType>
 Equation<DoubleType>::Equation(const std::string &nm, RegionPtr rp, const std::string &var, EquationEnum::UpdateType ut)
     : myname(nm), myregion(rp), variable(var), absError(0.0), relError(0.0), absErrorNodeIndex(0), relErrorNodeIndex(0), minError(defminError), updateType(ut)
 {
-    EquationHolder ptr(this);
-    rp->AddEquation(ptr);
 }
 
 template <typename DoubleType>

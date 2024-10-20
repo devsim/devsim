@@ -138,7 +138,7 @@ region : BEG_REGION WORD WORD  {
             }
             else
             {
-                dsDevsimParse::MeshRegion = new dsMesh::MeshRegion($2, $3);
+                dsDevsimParse::MeshRegion = std::make_unique<dsMesh::MeshRegion>($2, $3);
             }
         } |
         region END_REGION  {
@@ -151,8 +151,7 @@ region : BEG_REGION WORD WORD  {
             }
             else
             {
-                dsDevsimParse::DevsimLoader->AddRegion(dsDevsimParse::MeshRegion);
-                dsDevsimParse::MeshRegion = nullptr;
+                dsDevsimParse::DevsimLoader->AddRegion(std::move(dsDevsimParse::MeshRegion));
             }
         } |
         region nodes |
@@ -519,7 +518,7 @@ contact : BEG_CONTACT WORD WORD WORD  {
             }
             else
             {
-                dsDevsimParse::MeshContact = new dsMesh::MeshContact($2, $3, $4);
+                dsDevsimParse::MeshContact = std::make_unique<dsMesh::MeshContact>($2, $3, $4);
             }
         } |
         contact END_CONTACT  {
@@ -532,8 +531,7 @@ contact : BEG_CONTACT WORD WORD WORD  {
             }
             else
             {
-                dsDevsimParse::DevsimLoader->AddContact(dsDevsimParse::MeshContact);
-                dsDevsimParse::MeshContact = nullptr;
+                dsDevsimParse::DevsimLoader->AddContact(std::move(dsDevsimParse::MeshContact));
             }
         } |
         contact contact_nodes |
@@ -559,7 +557,7 @@ interface : BEG_INTERFACE WORD WORD WORD  {
             }
             else
             {
-                dsDevsimParse::MeshInterface = new dsMesh::MeshInterface($2, $3, $4);
+                dsDevsimParse::MeshInterface = std::make_unique<dsMesh::MeshInterface>($2, $3, $4);
             }
         } |
         interface END_INTERFACE  {
@@ -572,8 +570,7 @@ interface : BEG_INTERFACE WORD WORD WORD  {
             }
             else
             {
-                dsDevsimParse::DevsimLoader->AddInterface(dsDevsimParse::MeshInterface);
-                dsDevsimParse::MeshInterface = nullptr;
+                dsDevsimParse::DevsimLoader->AddInterface(std::move(dsDevsimParse::MeshInterface));
             }
         } |
         interface interface_nodes |
@@ -601,7 +598,7 @@ nodesol : BEG_NODESOL WORD  {
             }
             else
             {
-                dsDevsimParse::Sol = new dsMesh::Solution($2);
+                dsDevsimParse::Sol = std::make_unique<dsMesh::Solution>($2);
                 dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::NODE);
                 dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshRegion->GetNodes().size());
                 dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::DATA);
@@ -611,8 +608,7 @@ nodesol : BEG_NODESOL WORD  {
             dsDevsimParse::Sol->AddValue($2);
         } |
         nodesol END_NODESOL  {
-            dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = nullptr;
+            dsDevsimParse::MeshRegion->AddSolution(std::move(dsDevsimParse::Sol));
         }
         ;
 
@@ -633,13 +629,12 @@ regionequation : BEG_REGIONEQUATION WORD  {
             }
             else
             {
-              dsDevsimParse::Equation = new dsMesh::Equation($2);
+              dsDevsimParse::Equation = std::make_unique<dsMesh::Equation>($2);
             }
         } |
         regionequation equation_command |
         regionequation END_REGIONEQUATION  {
-            dsDevsimParse::MeshRegion->AddEquation(dsDevsimParse::Equation);
-            dsDevsimParse::Equation = nullptr;
+            dsDevsimParse::MeshRegion->AddEquation(std::move(dsDevsimParse::Equation));
         }
         ;
 
@@ -660,13 +655,12 @@ contactequation : BEG_CONTACTEQUATION WORD  {
             }
             else
             {
-              dsDevsimParse::Equation = new dsMesh::Equation($2);
+              dsDevsimParse::Equation = std::make_unique<dsMesh::Equation>($2);
             }
         } |
         contactequation equation_command |
         contactequation END_CONTACTEQUATION  {
-            dsDevsimParse::MeshContact->AddEquation(dsDevsimParse::Equation);
-            dsDevsimParse::Equation = nullptr;
+            dsDevsimParse::MeshContact->AddEquation(std::move(dsDevsimParse::Equation));
         }
         ;
 
@@ -687,13 +681,12 @@ interfaceequation : BEG_INTERFACEEQUATION WORD  {
             }
             else
             {
-              dsDevsimParse::Equation = new dsMesh::Equation($2);
+              dsDevsimParse::Equation = std::make_unique<dsMesh::Equation>($2);
             }
         } |
         interfaceequation equation_command |
         interfaceequation END_INTERFACEEQUATION  {
-            dsDevsimParse::MeshInterface->AddEquation(dsDevsimParse::Equation);
-            dsDevsimParse::Equation = nullptr;
+            dsDevsimParse::MeshInterface->AddEquation(std::move(dsDevsimParse::Equation));
         }
         ;
 
@@ -714,7 +707,7 @@ nodemodel : BEG_NODEMODEL WORD  {
             }
             else
             {
-                dsDevsimParse::Sol = new dsMesh::Solution($2);
+                dsDevsimParse::Sol = std::make_unique<dsMesh::Solution>($2);
                 dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::NODE);
                 dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshRegion->GetNodes().size());
             }
@@ -725,8 +718,7 @@ nodemodel : BEG_NODEMODEL WORD  {
         nodemodel uniform |
         nodemodel command |
         nodemodel END_NODEMODEL  {
-            dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = nullptr;
+            dsDevsimParse::MeshRegion->AddSolution(std::move(dsDevsimParse::Sol));
         }
         ;
 
@@ -747,7 +739,7 @@ edgemodel : BEG_EDGEMODEL WORD  {
             }
             else
             {
-                dsDevsimParse::Sol = new dsMesh::Solution($2);
+                dsDevsimParse::Sol = std::make_unique<dsMesh::Solution>($2);
                 dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::EDGE);
                 dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshRegion->GetEdges().size());
             }
@@ -758,8 +750,7 @@ edgemodel : BEG_EDGEMODEL WORD  {
         edgemodel uniform |
         edgemodel command |
         edgemodel END_EDGEMODEL  {
-            dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = nullptr;
+            dsDevsimParse::MeshRegion->AddSolution(std::move(dsDevsimParse::Sol));
         }
         ;
 
@@ -780,7 +771,7 @@ triangleedgemodel : BEG_TRIANGLEEDGEMODEL WORD  {
             }
             else
             {
-                dsDevsimParse::Sol = new dsMesh::Solution($2);
+                dsDevsimParse::Sol = std::make_unique<dsMesh::Solution>($2);
                 dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::TRIANGLEEDGE);
                 dsDevsimParse::Sol->SetReserve(3*dsDevsimParse::MeshRegion->GetTriangles().size());
             }
@@ -791,8 +782,7 @@ triangleedgemodel : BEG_TRIANGLEEDGEMODEL WORD  {
         triangleedgemodel uniform |
         triangleedgemodel command |
         triangleedgemodel END_TRIANGLEEDGEMODEL  {
-            dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = nullptr;
+            dsDevsimParse::MeshRegion->AddSolution(std::move(dsDevsimParse::Sol));
         }
         ;
 
@@ -813,7 +803,7 @@ tetrahedronedgemodel : BEG_TETRAHEDRONEDGEMODEL WORD  {
             }
             else
             {
-                dsDevsimParse::Sol = new dsMesh::Solution($2);
+                dsDevsimParse::Sol = std::make_unique<dsMesh::Solution>($2);
                 dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::TETRAHEDRONEDGE);
                 dsDevsimParse::Sol->SetReserve(6*dsDevsimParse::MeshRegion->GetTetrahedra().size());
             }
@@ -824,8 +814,7 @@ tetrahedronedgemodel : BEG_TETRAHEDRONEDGEMODEL WORD  {
         tetrahedronedgemodel uniform |
         tetrahedronedgemodel command |
         tetrahedronedgemodel END_TETRAHEDRONEDGEMODEL  {
-            dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = nullptr;
+            dsDevsimParse::MeshRegion->AddSolution(std::move(dsDevsimParse::Sol));
         }
         ;
 
@@ -846,14 +835,13 @@ interfacenodemodel : BEG_INTERFACENODEMODEL WORD  {
             }
             else
             {
-                dsDevsimParse::Sol = new dsMesh::Solution($2);
+                dsDevsimParse::Sol = std::make_unique<dsMesh::Solution>($2);
                 dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::INTERFACENODE);
             }
         } |
         interfacenodemodel command |
         interfacenodemodel END_INTERFACENODEMODEL  {
-            dsDevsimParse::MeshInterface->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = nullptr;
+            dsDevsimParse::MeshInterface->AddSolution(std::move(dsDevsimParse::Sol));
         }
         ;
 
@@ -936,7 +924,7 @@ edgesol : BEG_EDGESOL WORD  {
             }
             else
             {
-                dsDevsimParse::Sol = new dsMesh::Solution($2);
+                dsDevsimParse::Sol = std::make_unique<dsMesh::Solution>($2);
                 dsDevsimParse::Sol->SetModelType(dsMesh::Solution::ModelType::EDGE);
                 dsDevsimParse::Sol->SetReserve(dsDevsimParse::MeshRegion->GetEdges().size());
                 dsDevsimParse::Sol->SetDataType(dsMesh::Solution::DataType::DATA);
@@ -946,8 +934,7 @@ edgesol : BEG_EDGESOL WORD  {
             dsDevsimParse::Sol->AddValue($2);
         } |
         edgesol END_EDGESOL  {
-            dsDevsimParse::MeshRegion->AddSolution(dsDevsimParse::Sol);
-            dsDevsimParse::Sol = nullptr;
+            dsDevsimParse::MeshRegion->AddSolution(std::move(dsDevsimParse::Sol));
         }
         ;
 

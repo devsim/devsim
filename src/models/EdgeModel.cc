@@ -54,7 +54,12 @@ EdgeModel::EdgeModel(const std::string &nm, const RegionPtr rp, EdgeModel::Displ
       displayType(dt),
       model_data(rp->GetNumberEdges())
 {
-  myself = rp->AddEdgeModel(this);
+}
+
+void EdgeModel::init()
+{
+  myregion->AddEdgeModel(this->shared_from_this());
+  derived_init();
 }
 
 void EdgeModel::CalculateValues() const

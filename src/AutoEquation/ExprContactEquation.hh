@@ -17,6 +17,7 @@ class ExprContactEquation : public ContactEquation<DoubleType>
         /// eventually, we will need to handle time dependent case
         ExprContactEquation(
             const std::string &eq,// equation
+            const std::string &, // circuitnode
             ContactPtr,
             RegionPtr,
             const std::string &,// nodemodel

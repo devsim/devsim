@@ -16,13 +16,13 @@ TetrahedronEdgeModelPtr CreateTetrahedronEdgePairFromEdgeModel(const std::string
 template <typename DoubleType>
 class TetrahedronEdgePairFromEdgeModel : public TetrahedronEdgeModel {
     public:
-
         void Serialize(std::ostream &) const;
 
+    private:
+        friend class dsModelFactory<TetrahedronEdgePairFromEdgeModel>;
         TetrahedronEdgePairFromEdgeModel(const std::string &, RegionPtr);
 
-
-    private:
+        void derived_init();
 
         void calcTetrahedronEdgeScalarValues() const;
 

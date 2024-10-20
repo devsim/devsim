@@ -16,6 +16,13 @@ template <typename DoubleType>
 CylindricalEdgeNodeVolume<DoubleType>::CylindricalEdgeNodeVolume(RegionPtr rp)
     : EdgeModel("CylindricalEdgeNodeVolume@n0", rp, EdgeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void CylindricalEdgeNodeVolume<DoubleType>::derived_init()
+{
+    auto rp = const_cast<Region *>(&GetRegion());
+
     const size_t dimension = rp->GetDimension();
     dsAssert(dimension == 2, "CylindricalEdgeNodeVolume 2d Only");
 

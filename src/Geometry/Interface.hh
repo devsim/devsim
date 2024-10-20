@@ -127,7 +127,7 @@ class Interface {
 
 
         /// passes ownership
-        void AddInterfaceNodeModel(InterfaceNodeModel *);
+        void AddInterfaceNodeModel(InterfaceNodeModelPtr);
         ConstInterfaceNodeModelPtr GetInterfaceNodeModel(const std::string &) const;
 
         void DeleteInterfaceNodeModel(const std::string &);

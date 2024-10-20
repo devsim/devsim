@@ -9,6 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 #define NODEMODEL_HH
 
 #include "ModelDataHolder.hh"
+#include "ModelFactory.hh"
 
 #include <memory>
 
@@ -37,11 +38,14 @@ typedef const Contact *ConstContactPtr;
 class Region;
 typedef Region *RegionPtr;
 
-class NodeModel {
+class NodeModel : public std::enable_shared_from_this<NodeModel> {
     public:
         enum class DisplayType {NODISPLAY, SCALAR, UNKNOWN};
         NodeModel(const std::string &, const RegionPtr, NodeModel::DisplayType, const ContactPtr x = nullptr);
         virtual ~NodeModel()=0;
+
+        void init();
+        virtual void derived_init() = 0;
 
         const std::string &GetName() const;
 
@@ -76,10 +80,6 @@ class NodeModel {
 
         template <typename DoubleType>
         void SetValues(const NodeScalarList<DoubleType> &);
-
-#if 0
-        void SetValues(const NodeModel &);
-#endif
 
         template <typename DoubleType>
         void SetValues(const DoubleType &);
@@ -120,12 +120,12 @@ class NodeModel {
 
         ConstNodeModelPtr GetConstSelfPtr() const
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         NodeModelPtr GetSelfPtr()
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         bool IsUniform() const;
@@ -180,7 +180,6 @@ class NodeModel {
         NodeModel &operator=(const NodeModel &);
 
         std::string name;
-        WeakNodeModelPtr myself;
         RegionPtr   myregion;
         ContactPtr  mycontact;
         mutable bool uptodate;
@@ -195,16 +194,16 @@ class NodeModel {
 template <typename T1, typename T2, typename ... Args>
 NodeModelPtr create_node_model(bool use_extended, Args &&...args)
 {
-  NodeModel *ret;
+  NodeModelPtr ret;
   if (use_extended)
   {
-    ret = new T2(std::forward<Args>(args)...);
+    ret = dsModelFactory<T2>::create(std::forward<Args>(args)...);
   }
   else
   {
-    ret = new T1(std::forward<Args>(args)...);
+    ret = dsModelFactory<T1>::create(std::forward<Args>(args)...);
   }
-  return ret->GetSelfPtr();
+  return ret;
 }
 #endif
 

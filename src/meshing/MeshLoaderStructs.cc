@@ -8,28 +8,6 @@ SPDX-License-Identifier: Apache-2.0
 #include "MeshLoaderStructs.hh"
 
 namespace dsMesh {
-namespace {
-#if 0
-template <typename T> void DeletePointersFromVector(T &x)
-{
-    typename T::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete *it;
-    }
-}
-#endif
-
-template <typename T> void DeletePointersFromMap(T &x)
-{
-    typename T::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete it->second;
-    }
-}
-}
-
 const char * Solution::ModelTypeString[] = {
     "MUNDEFINED",
     "Node",
@@ -40,21 +18,15 @@ const char * Solution::ModelTypeString[] = {
 
 MeshContact::~MeshContact()
 {
-//    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
-    DeletePointersFromMap<MeshEquationList_t>(equationList);
 }
 
 
 MeshInterface::~MeshInterface()
 {
-    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
-    DeletePointersFromMap<MeshEquationList_t>(equationList);
 }
 
 MeshRegion::~MeshRegion()
 {
-    DeletePointersFromMap<MeshSolutionList_t>(solutionList);
-    DeletePointersFromMap<MeshEquationList_t>(equationList);
 }
 
 void MeshRegion::DecomposeAndUniquify()

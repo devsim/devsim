@@ -16,6 +16,13 @@ template <typename DoubleType>
 EdgeCouple<DoubleType>::EdgeCouple(RegionPtr rp) :
 EdgeModel("EdgeCouple", rp, EdgeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void EdgeCouple<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   const size_t dimension = rp->GetDimension();
   if ((dimension == 2) || (dimension == 3))
   {

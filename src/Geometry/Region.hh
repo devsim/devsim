@@ -281,10 +281,10 @@ class Region
       void UnregisterCallback(const std::string &);
 
       // note that these can be used to alias the same model with multiple names
-      NodeModelPtr AddNodeModel(NodeModel *);
-      EdgeModelPtr AddEdgeModel(EdgeModel *);
-      TriangleEdgeModelPtr AddTriangleEdgeModel(TriangleEdgeModel *);
-      TetrahedronEdgeModelPtr  AddTetrahedronEdgeModel(TetrahedronEdgeModel *);
+      void AddNodeModel(NodeModelPtr);
+      void AddEdgeModel(EdgeModelPtr);
+      void AddTriangleEdgeModel(TriangleEdgeModelPtr);
+      void AddTetrahedronEdgeModel(TetrahedronEdgeModelPtr);
       // given a models name, spit out a pointer to it
 
       ConstNodeModelPtr    GetNodeModel(const std::string &) const;

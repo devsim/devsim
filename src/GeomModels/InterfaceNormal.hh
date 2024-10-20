@@ -24,15 +24,20 @@ template <typename DoubleType>
 class InterfaceNormal : public EdgeModel
 {
     public:
-
         void Serialize(std::ostream &) const;
 
+    private:
+        friend class dsModelFactory<InterfaceNormal>;
         InterfaceNormal(const std::string &, const std::string &, const std::string &, const std::string &, const std::string &,  RegionPtr);
 
-    private:
+        void derived_init();
+
         void calcEdgeScalarValues() const;
 
         std::string interface_name;
+        std::string normx_;
+        std::string normy_;
+        std::string normz_;
         WeakEdgeModelPtr normal_x;
         WeakEdgeModelPtr normal_y;
         WeakEdgeModelPtr normal_z;

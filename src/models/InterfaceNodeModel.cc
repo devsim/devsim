@@ -17,9 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 
 
 InterfaceNodeModel::~InterfaceNodeModel() {
-#if 0
-  myinterface->UnregisterCallback(name);
-#endif
 }
 
 bool InterfaceNodeModel::IsZero() const
@@ -40,7 +37,11 @@ InterfaceNodeModel::InterfaceNodeModel(const std::string &nm, const InterfacePtr
       myinterface(ip),
       model_data(ip->GetNodes0().size())
 {
-  ip->AddInterfaceNodeModel(this);
+}
+
+void InterfaceNodeModel::init()
+{
+  myinterface->AddInterfaceNodeModel(shared_from_this());
 }
 
 void InterfaceNodeModel::CalculateValues() const

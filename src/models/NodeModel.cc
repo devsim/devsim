@@ -50,7 +50,12 @@ NodeModel::NodeModel(const std::string &nm, const RegionPtr rp, NodeModel::Displ
       displayType(dt),
       model_data(rp->GetNumberNodes())
 {
-  myself = rp->AddNodeModel(this);
+}
+
+void NodeModel::init()
+{
+  myregion->AddNodeModel(this->shared_from_this());
+  derived_init();
 }
 
 const std::string &NodeModel::GetName() const
