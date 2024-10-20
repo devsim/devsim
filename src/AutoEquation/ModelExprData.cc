@@ -306,11 +306,6 @@ void ModelExprData<DoubleType>::convertToTetrahedronEdgeData()
 template <typename DoubleType> template <typename T>
 void ModelExprData<DoubleType>::node_op_equal(const ModelExprData<DoubleType> &other, const T &func)
 {
-  if (!nodeScalarData.unique())
-  {
-    nodeScalarData = nodeScalarData_ptr<DoubleType>(new NodeScalarData<DoubleType>(*nodeScalarData));
-  }
-
   if (other.type == datatype::DOUBLE)
   {
     nodeScalarData->op_equal_scalar(other.val, func);
@@ -328,11 +323,6 @@ void ModelExprData<DoubleType>::node_op_equal(const ModelExprData<DoubleType> &o
 template <typename DoubleType> template <typename T>
 void ModelExprData<DoubleType>::edge_op_equal(const ModelExprData &other, const T &func)
 {
-  if (!edgeScalarData.unique())
-  {
-    edgeScalarData = edgeScalarData_ptr<DoubleType>(new EdgeScalarData<DoubleType>(*edgeScalarData));
-  }
-
   if (other.type == datatype::DOUBLE)
   {
     edgeScalarData->op_equal_scalar(other.val, func);
@@ -360,11 +350,6 @@ void ModelExprData<DoubleType>::edge_op_equal(const ModelExprData &other, const 
 template <typename DoubleType> template <typename T>
 void ModelExprData<DoubleType>::triangle_edge_op_equal(const ModelExprData &other, const T &func)
 {
-  if (!triangleEdgeScalarData.unique())
-  {
-    triangleEdgeScalarData = triangleEdgeScalarData_ptr<DoubleType>(new TriangleEdgeScalarData<DoubleType>(*triangleEdgeScalarData));
-  }
-
   if (other.type == datatype::DOUBLE)
   {
     triangleEdgeScalarData->op_equal_scalar(other.val, func);
@@ -388,11 +373,6 @@ void ModelExprData<DoubleType>::triangle_edge_op_equal(const ModelExprData &othe
 template <typename DoubleType> template <typename T>
 void ModelExprData<DoubleType>::tetrahedron_edge_op_equal(const ModelExprData &other, const T &func)
 {
-  if (!tetrahedronEdgeScalarData.unique())
-  {
-    tetrahedronEdgeScalarData = tetrahedronEdgeScalarData_ptr<DoubleType>(new TetrahedronEdgeScalarData<DoubleType>(*tetrahedronEdgeScalarData));
-  }
-
   if (other.type == datatype::DOUBLE)
   {
     tetrahedronEdgeScalarData->op_equal_scalar(other.val, func);

@@ -247,7 +247,6 @@ InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateP
   out = InterfaceModelExprData<DoubleType>(1.0);
   /// Premature optimization
   /// short circuit multiplication
-  //// TODO: optimize here and in ModelExprEval for case when one of these has zero data
   for (size_t i = 0; i < values.size(); ++i)
   {
       InterfaceModelExprData<DoubleType> x = eval_function(values[i]);
@@ -272,10 +271,9 @@ template <typename DoubleType>
 InterfaceModelExprData<DoubleType> InterfaceModelExprEval<DoubleType>::EvaluateAddType(Eqo::EqObjPtr arg)
 {
   InterfaceModelExprData<DoubleType> out;
-
+  out = InterfaceModelExprData<DoubleType>(0.0);
   std::vector<Eqo::EqObjPtr> values = EngineAPI::getArgs(arg);
-  out = eval_function(values[0]);
-  for (size_t i = 1; i < values.size(); ++i)
+  for (size_t i = 0; i < values.size(); ++i)
   {
       InterfaceModelExprData<DoubleType> x = eval_function(values[i]);
       out += x;

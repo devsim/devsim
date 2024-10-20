@@ -75,21 +75,9 @@ InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::operator
     return *this;
 }
 
-template <typename DoubleType>
-void InterfaceModelExprData<DoubleType>::makeUnique()
-{
-  if (nsd && (!nsd.unique()))
-  {
-    nsd = nsd_ptr(new InterfaceNodeScalarData<DoubleType>(*nsd));
-  }
-}
-
-
 template<typename DoubleType> template<typename T>
 InterfaceModelExprData<DoubleType> &InterfaceModelExprData<DoubleType>::op_equal(const InterfaceModelExprData<DoubleType> &other, const T &func)
 {
-  makeUnique();
-
   /// We were converted automatically above
   if (type == datatype::NODEDATA)
   {
