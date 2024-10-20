@@ -67,6 +67,8 @@ script:
 #before_deploy:
 
 deploy:
+  # Issue with dpl2 https://changelog.travis-ci.com/promote-dpl-to-version-2-in-travis-build-302779
+  dpl_version: 1.10.16
   provider: releases
   api_key:
     secure: "NC1eth9atMJXJzjtqvUTNFikaHZnfDEhN7b1p0RFpbBDxxzDhpRhxva5QkbiHCWp02S8BKBW1BcVg+wpyck0CJ1b66/3VjBXZaFo0e/KmPaA4+hWvyasEDOHYQUzbhZ2LFleqFYjy7uXifCcX/1u2vVNjRZFhFNRNN9WreHeaUo="
