@@ -834,8 +834,6 @@ void Region::DeleteNodeModel(const std::string &nm)
   NodeModelList_t::iterator it = nodeModels.find(nm);
   if (nodeModels.end() != it)
   {
-    //// We should be the only one with a shared pointer
-    dsAssert((it->second).unique(), "UNEXPECTED");
     UnregisterCallback(nm);
     nodeModels.erase(it);
     //// Anything depending on this model is notified it is out of date
@@ -849,8 +847,6 @@ void Region::DeleteEdgeModel(const std::string &nm)
   EdgeModelList_t::iterator it = edgeModels.find(nm);
   if (edgeModels.end() != it)
   {
-    //// We should be the only one with a shared pointer
-    dsAssert((it->second).unique(), "UNEXPECTED");
     UnregisterCallback(nm);
     edgeModels.erase(it);
     //// Anything depending on this model is notified it is out of date
@@ -864,8 +860,6 @@ void Region::DeleteTriangleEdgeModel(const std::string &nm)
   TriangleEdgeModelList_t::iterator it = triangleEdgeModels.find(nm);
   if (triangleEdgeModels.end() != it)
   {
-    //// We should be the only one with a shared pointer
-    dsAssert((it->second).unique(), "UNEXPECTED");
     UnregisterCallback(nm);
     triangleEdgeModels.erase(it);
     //// Anything depending on this model is notified it is out of date
@@ -879,8 +873,6 @@ void Region::DeleteTetrahedronEdgeModel(const std::string &nm)
   TetrahedronEdgeModelList_t::iterator it = tetrahedronEdgeModels.find(nm);
   if (tetrahedronEdgeModels.end() != it)
   {
-    //// We should be the only one with a shared pointer
-    dsAssert((it->second).unique(), "UNEXPECTED");
     UnregisterCallback(nm);
     tetrahedronEdgeModels.erase(it);
     //// Anything depending on this model is notified it is out of date
@@ -896,8 +888,6 @@ NodeModelPtr Region::AddNodeModel(NodeModel *nmp)
     const std::string &nm = nmp->GetName();
     if (nodeModels.count(nm))
     {
-        dsAssert(nodeModels[nm].unique(), "UNEXPECTED");
-        //// TODO: what happens when there is a dependency on this model???
         std::ostringstream os;
         os << "Replacing Node Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
@@ -941,7 +931,6 @@ EdgeModelPtr Region::AddEdgeModel(EdgeModel *emp)
     const std::string &nm = emp->GetName();
     if (edgeModels.count(nm))
     {
-        dsAssert(edgeModels[nm].unique(), "UNEXPECTED");
         std::ostringstream os;
         os << "Replacing Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
@@ -984,7 +973,6 @@ TriangleEdgeModelPtr Region::AddTriangleEdgeModel(TriangleEdgeModel *emp)
     const std::string &nm = emp->GetName();
     if (triangleEdgeModels.count(nm))
     {
-        dsAssert(triangleEdgeModels[nm].unique(), "UNEXPECTED");
         std::ostringstream os;
         os << "Replacing Triangle Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
@@ -1027,7 +1015,6 @@ TetrahedronEdgeModelPtr Region::AddTetrahedronEdgeModel(TetrahedronEdgeModel *em
     const std::string &nm = emp->GetName();
     if (tetrahedronEdgeModels.count(nm))
     {
-        dsAssert(tetrahedronEdgeModels[nm].unique(), "UNEXPECTED");
         std::ostringstream os;
         os << "Replacing Tetrahedron Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
