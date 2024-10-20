@@ -22,9 +22,11 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 InterfaceNodeExprModel<DoubleType>::InterfaceNodeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, InterfacePtr ip) : InterfaceNodeModel(nm, ip), equation(eq)
 {
-#if 0
-    os << "creating InterfaceNodeExprModel " << nm << " with equation " << eq << "\n";
-#endif
+}
+
+template <typename DoubleType>
+void InterfaceNodeExprModel<DoubleType>::derived_init()
+{
   RegisterModels();
 }
 
@@ -60,9 +62,6 @@ void InterfaceNodeExprModel<DoubleType>::RegisterModels()
 
     for (refmodels_t::iterator it = refs.begin(); it != refs.end(); ++it)
     {
-#if 0
-    os << "registering callback " << *it << " for NodeExprModel " << this->GetName() << "\n";
-#endif
         RegisterCallback(*it);
     }
 }
@@ -70,9 +69,6 @@ void InterfaceNodeExprModel<DoubleType>::RegisterModels()
 template <typename DoubleType>
 void InterfaceNodeExprModel<DoubleType>::calcNodeScalarValues() const
 {
-#if 0
-        os << "updating NodeExprModel " << GetName() << " from expression " << EngineAPI::getStringValue(equation) << "\n";
-#endif
     typename IMEE::InterfaceModelExprEval<DoubleType>::error_t errors;
     const Interface *ip = &(this->GetInterface());
     IMEE::InterfaceModelExprEval<DoubleType> mexp(ip, errors);

@@ -22,6 +22,12 @@ TetrahedronEdgePairFromEdgeModelDerivative<DoubleType>::TetrahedronEdgePairFromE
       edgeModelName(edgemodel),
       nodeModelName(derivative)
 {
+}
+
+template <typename DoubleType>
+void TetrahedronEdgePairFromEdgeModelDerivative<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
 
   for (size_t i = 0; i < 2; ++i)
   {
@@ -49,7 +55,7 @@ TetrahedronEdgePairFromEdgeModelDerivative<DoubleType>::TetrahedronEdgePairFromE
       {
         if ((i + j + k ) != 0)
         {
-          new TetrahedronEdgeSubModel<DoubleType>(model_names[i][j][k], rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+          dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(model_names[i][j][k], rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
         }
       }
     }

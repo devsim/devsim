@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 
 #ifndef DEVSIM_READER_HH
 #define DEVSIM_READER_HH
+#include "MeshLoaderStructs.hh"
 #include <string>
 #include <cstddef>
 
@@ -15,21 +16,6 @@ SPDX-License-Identifier: Apache-2.0
 namespace dsMesh {
 class DevsimLoader;
 typedef DevsimLoader   *DevsimLoaderPtr;
-
-class MeshRegion;
-typedef MeshRegion   *MeshRegionPtr;
-
-class MeshContact;
-typedef MeshContact   *MeshContactPtr;
-
-class MeshInterface;
-typedef MeshInterface   *MeshInterfacePtr;
-
-class Solution;
-typedef Solution   *SolutionPtr;
-
-class Equation;
-typedef Equation   *EquationPtr;
 }
 
 namespace dsDevsimParse {

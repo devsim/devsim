@@ -31,8 +31,16 @@ NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, Node
         NodeModel(nm, rp, dt),
         parentModel(nmp)
 {
-  parentModelName = parentModel.lock()->GetName();
-  RegisterCallback(parentModelName);
+}
+
+template <typename DoubleType>
+void NodeSolution<DoubleType>::derived_init()
+{
+  if (auto p = parentModel.lock()) 
+  {
+    parentModelName = p->GetName();
+    RegisterCallback(parentModelName);
+  }
 }
 
 template <typename DoubleType>
@@ -101,5 +109,4 @@ NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModel::
 {
   return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt, nmp);
 }
-
 

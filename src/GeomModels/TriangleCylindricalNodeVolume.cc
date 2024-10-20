@@ -29,6 +29,13 @@ template <typename DoubleType>
 TriangleCylindricalNodeVolume<DoubleType>::TriangleCylindricalNodeVolume(RegionPtr rp)
     : TriangleEdgeModel("ElementCylindricalNodeVolume@en0", rp, TriangleEdgeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void TriangleCylindricalNodeVolume<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   node1Volume_ = TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel("ElementCylindricalNodeVolume@en1", rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
   RegisterCallback("raxis_zero");
   RegisterCallback("raxis_variable");

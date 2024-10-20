@@ -16,6 +16,11 @@ template <typename DoubleType>
 EdgeInverseLength<DoubleType>::EdgeInverseLength(RegionPtr rp) :
 EdgeModel("EdgeInverseLength", rp, EdgeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void EdgeInverseLength<DoubleType>::derived_init()
+{
     RegisterCallback("EdgeLength");
 }
 

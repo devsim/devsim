@@ -242,7 +242,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
             if (!meshLoader->IsMeshRegion(nm))
             {
                 const std::string &m = mr->GetMaterial();
-                meshLoader->AddRegion(new MeshRegion(nm, m));
+                meshLoader->AddRegion(std::make_unique<MeshRegion>(nm, m));
 
                 std::ostringstream os;
                 os << "Creating Region " << nm << "\n";
@@ -322,7 +322,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
 
                 if (!meshLoader->IsMeshContact(nm))
                 {
-                    meshLoader->AddContact(new MeshContact(nm, r, m));
+                    meshLoader->AddContact(std::make_unique<MeshContact>(nm, r, m));
                 }
 
                 CoordinateToNode_t::iterator cn = CoordinateToNode.find(r);
@@ -364,7 +364,7 @@ bool Mesh2d::Finalize_(std::string &errorString)
 
                     if (!meshLoader->IsMeshInterface(nm))
                     {
-                        meshLoader->AddInterface(new MeshInterface(nm, r0, r1));
+                        meshLoader->AddInterface(std::make_unique<MeshInterface>(nm, r0, r1));
                     }
 
                     CoordinateToNode_t::iterator in0 = CoordinateToNode.find(r0);

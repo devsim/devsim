@@ -24,6 +24,13 @@ TriangleEdgePairFromEdgeModelDerivative<DoubleType>::TriangleEdgePairFromEdgeMod
       edgeModelName(edgemodel),
       nodeModelName(derivative)
 {
+}
+
+template <typename DoubleType>
+void TriangleEdgePairFromEdgeModelDerivative<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   const std::string tmpname = edgeModelName + ":" + nodeModelName;
   edgeModelNames[0] = tmpname + "@n0";
   edgeModelNames[1] = tmpname + "@n1";
@@ -50,7 +57,7 @@ TriangleEdgePairFromEdgeModelDerivative<DoubleType>::TriangleEdgePairFromEdgeMod
       {
         if ((i + j + k) != 0)
         {
-          new TriangleEdgeSubModel<DoubleType>(model_names[i][j][k], rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+          dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(model_names[i][j][k], rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
         }
       }
     }

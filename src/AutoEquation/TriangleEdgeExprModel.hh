@@ -22,12 +22,13 @@ template <typename DoubleType>
 class TriangleEdgeExprModel : public TriangleEdgeModel
 {
     public:
-
         void Serialize(std::ostream &) const;
 
+    private:
+        friend class dsModelFactory<TriangleEdgeExprModel>;
         TriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TriangleEdgeModel::DisplayType);
 
-    private:
+        void derived_init();
 
         void RegisterModels();
         TriangleEdgeExprModel();

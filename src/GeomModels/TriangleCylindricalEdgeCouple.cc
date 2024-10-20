@@ -22,6 +22,11 @@ template <typename DoubleType>
 TriangleCylindricalEdgeCouple<DoubleType>::TriangleCylindricalEdgeCouple(RegionPtr rp) :
 TriangleEdgeModel("ElementCylindricalEdgeCouple", rp, TriangleEdgeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void TriangleCylindricalEdgeCouple<DoubleType>::derived_init()
+{
   RegisterCallback("raxis_zero");
   RegisterCallback("raxis_variable");
 }

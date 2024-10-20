@@ -21,6 +21,10 @@ TetrahedronEdgeModel("ElementEdgeCouple", rp, TetrahedronEdgeModel::DisplayType:
 {
 }
 
+template <typename DoubleType>
+void TetrahedronEdgeCouple<DoubleType>::derived_init()
+{
+}
 
 template <typename DoubleType>
 void TetrahedronEdgeCouple<DoubleType>::calcTetrahedronEdgeScalarValues() const

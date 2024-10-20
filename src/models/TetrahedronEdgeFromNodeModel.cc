@@ -18,12 +18,22 @@ template <typename DoubleType>
 TetrahedronEdgeFromNodeModel<DoubleType>::TetrahedronEdgeFromNodeModel(const std::string &en0, const std::string &en1, const std::string &en2, const std::string &en3, const std::string &nodemodel, RegionPtr rp)
     : TetrahedronEdgeModel(en0, rp, TetrahedronEdgeModel::DisplayType::SCALAR), nodeModelName(nodemodel), edgeModel1Name(en1), edgeModel2Name(en2), edgeModel3Name(en3)
 {
-  RegisterCallback(nodemodel);
-  new TetrahedronEdgeSubModel<DoubleType>(en1, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TetrahedronEdgeSubModel<DoubleType>(en2, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TetrahedronEdgeSubModel<DoubleType>(en3, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
+template <typename DoubleType>
+void TetrahedronEdgeFromNodeModel<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
+  const auto &en1 = edgeModel1Name;
+  const auto &en2 = edgeModel2Name;
+  const auto &en3 = edgeModel3Name;
+
+  RegisterCallback(nodeModelName);
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(en1, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(en2, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(en3, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+}
 
 template <typename DoubleType>
 void TetrahedronEdgeFromNodeModel<DoubleType>::calcTetrahedronEdgeScalarValues() const

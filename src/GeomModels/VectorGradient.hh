@@ -13,12 +13,6 @@ class Node;
 typedef Node *NodePtr;
 typedef const Node *ConstNodePtr;
 
-#if 0
-class Triangle;
-typedef Triangle *TrianglePtr;
-typedef const Triangle *ConstTrianglePtr;
-#endif
-
 namespace VectorGradientEnum
 {
   enum CalcType {DEFAULT=0, AVOIDZERO};
@@ -31,13 +25,14 @@ template <typename DoubleType>
 class VectorGradient : public NodeModel
 {
     public:
-
+      friend class dsModelFactory<VectorGradient<DoubleType>>;
       void Serialize(std::ostream &) const;
 
-      VectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
 
     private:
+      VectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
 
+      void derived_init();
 
       DoubleType calcVectorGradient(ConstNodePtr) const;
       void   calcNodeScalarValues() const;

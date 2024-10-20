@@ -17,16 +17,18 @@ template <typename DoubleType>
 class TetrahedronEdgeSubModel : public TetrahedronEdgeModel
 {
     public:
-        TetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType dt);
-        // This model depends on this model to calculate values
-        TetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr);
-
         void Serialize(std::ostream &) const;
 
         static TetrahedronEdgeModelPtr CreateTetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType);
         static TetrahedronEdgeModelPtr CreateTetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType, ConstTetrahedronEdgeModelPtr);
 
     private:
+        friend class dsModelFactory<TetrahedronEdgeSubModel>;
+        TetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType dt);
+        TetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr);
+
+        void derived_init();
+
         void calcTetrahedronEdgeScalarValues() const;
         // If we are an auxilary model, create our values from the parent
         mutable WeakConstTetrahedronEdgeModelPtr parentModel;

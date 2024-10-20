@@ -8,6 +8,7 @@ SPDX-License-Identifier: Apache-2.0
 #ifndef NODESOLUTION_HH
 #define NODESOLUTION_HH
 #include "NodeModel.hh"
+#include "ModelFactory.hh"
 #include <string>
 
 NodeModelPtr CreateNodeSolution(const std::string &, RegionPtr, NodeModel::DisplayType);
@@ -20,11 +21,14 @@ class NodeSolution : public NodeModel
 
         void Serialize(std::ostream &) const;
 
+
+    private:
+        friend class dsModelFactory<NodeSolution<DoubleType>>;
         NodeSolution(const std::string &, RegionPtr, NodeModel::DisplayType);
         // This model depends on this model to calculate values
         NodeSolution(const std::string &, RegionPtr, NodeModel::DisplayType, NodeModelPtr);
 
-    private:
+        void derived_init();
 
         void calcNodeScalarValues() const;
         void setInitialValues();

@@ -12,11 +12,7 @@ SPDX-License-Identifier: Apache-2.0
 
 namespace dsGmshParse {
 int meshlineno;
-dsMesh::GmshLoaderPtr    GmshLoader = nullptr;
-//dsMesh::MeshRegionPtr    MeshRegion = nullptr;
-//dsMesh::MeshContactPtr   MeshContact = nullptr;
-//dsMesh::MeshInterfacePtr MeshInterface = nullptr;
-//dsMesh::SolutionPtr      Sol= nullptr;
+dsMesh::GmshLoaderPtr GmshLoader = nullptr;
 std::string errors;
 }
 

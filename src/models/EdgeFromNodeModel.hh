@@ -25,10 +25,11 @@ class EdgeFromNodeModel : public EdgeModel
 
         void Serialize(std::ostream &) const;
 
-        // This model depends on this Node model to calculate values
+    private:
+        friend class dsModelFactory<EdgeFromNodeModel>;
         EdgeFromNodeModel(const std::string &/*node 0 modelname*/, const std::string &/*node 1 modelname*/, const std::string &/*nodemodel*/, RegionPtr);
 
-    private:
+        void derived_init();
 
         void calcEdgeScalarValues() const;
         void setInitialValues();

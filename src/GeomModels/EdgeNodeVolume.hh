@@ -12,11 +12,14 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 class EdgeNodeVolume : public EdgeModel {
     public:
-        EdgeNodeVolume(RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<EdgeNodeVolume>;
+        explicit EdgeNodeVolume(RegionPtr);
+
+        void derived_init();
+
         EdgeNodeVolume();
         EdgeNodeVolume(const EdgeNodeVolume &);
         EdgeNodeVolume &operator=(const EdgeNodeVolume &);

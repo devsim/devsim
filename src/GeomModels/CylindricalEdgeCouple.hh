@@ -15,11 +15,14 @@ EdgeModelPtr CreateCylindricalEdgeCouple(RegionPtr);
 template <typename DoubleType>
 class CylindricalEdgeCouple : public EdgeModel {
     public:
-        CylindricalEdgeCouple(RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<CylindricalEdgeCouple>;
+        explicit CylindricalEdgeCouple(RegionPtr);
+
+        void derived_init();
+
         CylindricalEdgeCouple();
         CylindricalEdgeCouple(const CylindricalEdgeCouple &);
         CylindricalEdgeCouple &operator=(const CylindricalEdgeCouple &);

@@ -9,6 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 #define TRIANGLE_EDGE_MODEL_HH
 
 #include "ModelDataHolder.hh"
+#include "ModelFactory.hh"
 
 #include <memory>
 #include <string>
@@ -41,11 +42,14 @@ class Triangle;
 typedef Triangle *TrianglePtr;
 typedef const Triangle *ConstTrianglePtr;
 
-class TriangleEdgeModel {
+class TriangleEdgeModel : public std::enable_shared_from_this<TriangleEdgeModel> {
     public:
         enum class DisplayType {NODISPLAY, SCALAR, UNKNOWN};
         TriangleEdgeModel(const std::string &, const RegionPtr, TriangleEdgeModel::DisplayType);
         virtual ~TriangleEdgeModel();
+
+        void init();
+        virtual void derived_init() = 0;
 
         const std::string &GetName() const {
             return name;
@@ -107,12 +111,12 @@ class TriangleEdgeModel {
 
         ConstTriangleEdgeModelPtr GetConstSelfPtr() const
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         TriangleEdgeModelPtr GetSelfPtr()
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         bool IsUniform() const;
@@ -166,7 +170,6 @@ class TriangleEdgeModel {
         // (some models may be created on the fly)
 //      EdgeList data;
         std::string name;
-        WeakTriangleEdgeModelPtr myself;
         // need to know my region to get database data and appropriate node and edge lists
         RegionPtr   myregion;
         mutable bool uptodate;
@@ -180,16 +183,16 @@ class TriangleEdgeModel {
 template <typename T1, typename T2, typename ... Args>
 TriangleEdgeModelPtr create_triangle_edge_model(bool use_extended, Args &&...args)
 {
-  TriangleEdgeModel *ret;
+  TriangleEdgeModelPtr ret;
   if (use_extended)
   {
-    ret = new T2(std::forward<Args>(args)...);
+    ret = dsModelFactory<T2>::create(std::forward<Args>(args)...);
   }
   else
   {
-    ret = new T1(std::forward<Args>(args)...);
+    ret = dsModelFactory<T1>::create(std::forward<Args>(args)...);
   }
-  return ret->GetSelfPtr();
+  return ret;
 }
 #endif
 

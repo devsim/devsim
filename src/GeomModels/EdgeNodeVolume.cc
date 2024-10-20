@@ -17,6 +17,13 @@ template <typename DoubleType>
 EdgeNodeVolume<DoubleType>::EdgeNodeVolume(RegionPtr rp) :
 EdgeModel("EdgeNodeVolume", rp, EdgeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void EdgeNodeVolume<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   const size_t dimension = rp->GetDimension();
 
   if (dimension == 1)

@@ -17,9 +17,11 @@ class CylindricalNodeVolume : public NodeModel
 
       void Serialize(std::ostream &) const;
 
-      CylindricalNodeVolume(RegionPtr);
-
     private:
+      friend class dsModelFactory<CylindricalNodeVolume<DoubleType>>;
+      explicit CylindricalNodeVolume(RegionPtr);
+
+      void derived_init();
 
       void calcNodeScalarValues() const;
       void setInitialValues();

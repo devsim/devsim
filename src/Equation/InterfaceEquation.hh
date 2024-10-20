@@ -48,8 +48,6 @@ using RHSEntryVec = std::vector<RHSEntry<DoubleType>>;
 template <typename DoubleType>
 class InterfaceEquation {
     public:
-        /// The first region is the master region.  It shouldn't be permuted out
-        /// Region is already owned by the Interface
         InterfaceEquation(const std::string &/*eqn*/, const std::string &/*eqn0*/, const std::string &/*eqn1*/, InterfacePtr);
 
         virtual ~InterfaceEquation() = 0;

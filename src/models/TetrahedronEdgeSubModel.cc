@@ -31,22 +31,29 @@ TetrahedronEdgeSubModel<DoubleType>::TetrahedronEdgeSubModel(const std::string &
         TetrahedronEdgeModel(nm, rp, dt),
         parentModel(nmp)
 {
-    parentModelName = parentModel.lock()->GetName();
+}
 
+template <typename DoubleType>
+void TetrahedronEdgeSubModel<DoubleType>::derived_init()
+{
+  if (auto p = parentModel.lock())
+  {
+    parentModelName = p->GetName();
     RegisterCallback(parentModelName);
+  }
 }
 
 template <typename DoubleType>
 TetrahedronEdgeModelPtr TetrahedronEdgeSubModel<DoubleType>::CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
 {
-  TetrahedronEdgeModel *p = new TetrahedronEdgeSubModel(nm, rp, dt);
+  auto p = dsModelFactory<TetrahedronEdgeSubModel>::create(nm, rp, dt);
   return p->GetSelfPtr();
 }
 
 template <typename DoubleType>
 TetrahedronEdgeModelPtr TetrahedronEdgeSubModel<DoubleType>::CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr nmp)
 {
-  TetrahedronEdgeModel *p = new TetrahedronEdgeSubModel(nm, rp, dt, nmp);
+  auto p = dsModelFactory<TetrahedronEdgeSubModel>::create(nm, rp, dt, nmp);
   return p->GetSelfPtr();
 }
 

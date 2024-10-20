@@ -12,10 +12,14 @@ template <typename DoubleType>
 class AtContactNode : public NodeModel
 {
     public:
-      AtContactNode(RegionPtr);
       void Serialize(std::ostream &) const;
 
     private:
+      friend class dsModelFactory<AtContactNode<DoubleType>>;
+      explicit AtContactNode(RegionPtr);
+
+      void derived_init();
+
       DoubleType calcNodeVolume(ConstNodePtr) const;
       void calcNodeScalarValues() const;
       void setInitialValues();

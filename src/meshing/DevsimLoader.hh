@@ -37,17 +37,17 @@ class DevsimLoader : public Mesh {
 
         void AddRegion(MeshRegionPtr rp)
         {
-            regionList[rp->GetName()] = rp;
+            regionList[rp->GetName()] = std::move(rp);
         }
 
         void AddInterface(MeshInterfacePtr ip)
         {
-            interfaceList[ip->GetName()] = ip;
+            interfaceList[ip->GetName()] = std::move(ip);
         }
 
         void AddContact(MeshContactPtr cp)
         {
-            contactList[cp->GetName()] = cp;
+            contactList[cp->GetName()] = std::move(cp);
         }
 
         bool IsMeshRegion(const std::string &n)

@@ -17,6 +17,11 @@ template <typename DoubleType>
 TetrahedronNodeVolume<DoubleType>::TetrahedronNodeVolume(RegionPtr rp)
     : TetrahedronEdgeModel("ElementNodeVolume", rp, TetrahedronEdgeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void TetrahedronNodeVolume<DoubleType>::derived_init()
+{
     ///// 1/3 * base area time perpendicular distance to 3rd node
     ///// 1./3. * (0.5 * EdgeLength) * ElementEdgeCouple
     RegisterCallback("EdgeLength");

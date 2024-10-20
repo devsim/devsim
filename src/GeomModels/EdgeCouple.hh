@@ -12,11 +12,14 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 class EdgeCouple : public EdgeModel {
     public:
-        EdgeCouple(RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<EdgeCouple>;
+        explicit EdgeCouple(RegionPtr);
+
+        void derived_init();
+
         EdgeCouple();
         EdgeCouple(const EdgeCouple &);
         EdgeCouple &operator=(const EdgeCouple &);

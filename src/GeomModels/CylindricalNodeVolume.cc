@@ -16,6 +16,13 @@ template <typename DoubleType>
 CylindricalNodeVolume<DoubleType>::CylindricalNodeVolume(RegionPtr rp)
     : NodeModel("CylindricalNodeVolume", rp, NodeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void CylindricalNodeVolume<DoubleType>::derived_init()
+{
+    auto rp = const_cast<Region *>(&GetRegion());
+
     const size_t dimension = rp->GetDimension();
     dsAssert(dimension == 2, "CylindricalNodeVolume 2d Only");
 

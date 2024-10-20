@@ -22,12 +22,13 @@ template <typename DoubleType>
 class NodeExprModel : public NodeModel
 {
     public:
-
         void Serialize(std::ostream &) const;
 
+    private:
+        friend class dsModelFactory<NodeExprModel<DoubleType>>;
         NodeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, NodeModel::DisplayType, ContactPtr cp = nullptr);
 
-    private:
+        void derived_init();
 
         void RegisterModels();
         NodeExprModel();

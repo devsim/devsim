@@ -19,9 +19,13 @@ class CylindricalSurfaceArea : public NodeModel {
     public:
         void Serialize(std::ostream &) const;
 
-        CylindricalSurfaceArea(RegionPtr /*rp*/);
 
     private:
+        friend class dsModelFactory<CylindricalSurfaceArea<DoubleType>>;
+        explicit CylindricalSurfaceArea(RegionPtr);
+
+        void derived_init();
+
         CylindricalSurfaceArea();
         CylindricalSurfaceArea(const CylindricalSurfaceArea &);
         CylindricalSurfaceArea &operator=(const CylindricalSurfaceArea &);

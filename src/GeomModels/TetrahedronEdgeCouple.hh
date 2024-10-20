@@ -14,11 +14,14 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 class TetrahedronEdgeCouple : public TetrahedronEdgeModel {
     public:
-        TetrahedronEdgeCouple(RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<TetrahedronEdgeCouple>;
+        explicit TetrahedronEdgeCouple(RegionPtr);
+
+        void derived_init();
+
         TetrahedronEdgeCouple();
         TetrahedronEdgeCouple(const TetrahedronEdgeCouple &);
         TetrahedronEdgeCouple &operator=(const TetrahedronEdgeCouple &);

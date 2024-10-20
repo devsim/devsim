@@ -9,17 +9,18 @@ SPDX-License-Identifier: Apache-2.0
 #define MESH_LOADER_STRUCTS_HH
 #include "Vector.hh"
 #include "ObjectHolder.hh"
+#include <memory>
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
 namespace dsMesh {
 class Solution;
-typedef Solution *SolutionPtr;
+typedef std::unique_ptr<Solution> SolutionPtr;
 typedef std::map<std::string, SolutionPtr> MeshSolutionList_t;
 
 class Equation;
-typedef Equation *EquationPtr;
+typedef std::unique_ptr<Equation> EquationPtr;
 typedef std::map<std::string, EquationPtr> MeshEquationList_t;
 
 class MeshCoordinate;
@@ -39,9 +40,9 @@ class MeshRegion;
 class MeshContact;
 class MeshInterface;
 
-typedef MeshRegion *MeshRegionPtr;
-typedef MeshContact *MeshContactPtr;
-typedef MeshInterface *MeshInterfacePtr;
+typedef std::unique_ptr<MeshRegion> MeshRegionPtr;
+typedef std::unique_ptr<MeshContact> MeshContactPtr;
+typedef std::unique_ptr<MeshInterface> MeshInterfacePtr;
 
 typedef std::vector<MeshNode>        MeshNodeList_t;
 typedef std::vector<MeshEdge>        MeshEdgeList_t;
@@ -512,7 +513,7 @@ class MeshRegion {
 
         void AddSolution(SolutionPtr sp)
         {
-            solutionList[sp->GetName()] = sp;
+            solutionList[sp->GetName()] = std::move(sp);
         }
 
         const MeshSolutionList_t &GetSolutionList() const
@@ -527,7 +528,7 @@ class MeshRegion {
 
         void AddEquation(EquationPtr sp)
         {
-            equationList[sp->GetName()] = sp;
+            equationList[sp->GetName()] = std::move(sp);
         }
 
         const MeshEquationList_t &GetEquationList() const
@@ -671,7 +672,7 @@ class MeshInterface {
 
         void AddSolution(SolutionPtr sp)
         {
-            solutionList[sp->GetName()] = sp;
+            solutionList[sp->GetName()] = std::move(sp);
         }
 
         const MeshSolutionList_t &GetSolutionList() const
@@ -686,7 +687,7 @@ class MeshInterface {
 
         void AddEquation(EquationPtr sp)
         {
-            equationList[sp->GetName()] = sp;
+            equationList[sp->GetName()] = std::move(sp);
         }
 
         const MeshEquationList_t &GetEquationList() const
@@ -790,7 +791,7 @@ class MeshContact {
 
         void AddEquation(EquationPtr sp)
         {
-            equationList[sp->GetName()] = sp;
+            equationList[sp->GetName()] = std::move(sp);
         }
 
         const MeshEquationList_t &GetEquationList() const
