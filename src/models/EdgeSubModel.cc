@@ -46,15 +46,15 @@ void EdgeSubModel<DoubleType>::derived_init()
 template <typename DoubleType>
 EdgeModelPtr EdgeSubModel<DoubleType>::CreateEdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt)
 {
-  EdgeModel *p = new EdgeSubModel(nm, rp, dt);
-  return p->GetSelfPtr();
+  auto p = dsModelFactory<EdgeSubModel>::create(nm, rp, dt);
+  return p;
 }
 
 template <typename DoubleType>
 EdgeModelPtr EdgeSubModel<DoubleType>::CreateEdgeSubModel(const std::string &nm, RegionPtr rp, EdgeModel::DisplayType dt, ConstEdgeModelPtr nmp)
 {
-  EdgeModel *p = new EdgeSubModel(nm, rp, dt, nmp);
-  return p->GetSelfPtr();
+  auto p = dsModelFactory<EdgeSubModel>::create(nm, rp, dt, nmp);
+  return p;
 }
 
 template <typename DoubleType>

@@ -47,14 +47,14 @@ void TriangleEdgeSubModel<DoubleType>::derived_init()
 template <typename DoubleType>
 TriangleEdgeModelPtr TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt)
 {
-  TriangleEdgeModel *p = new TriangleEdgeSubModel(nm, rp, dt);
-  return p->GetSelfPtr();
+  auto p = dsModelFactory<TriangleEdgeSubModel>::create(nm, rp, dt);
+  return p;
 }
 
 template <typename DoubleType>
 TriangleEdgeModelPtr TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt, ConstTriangleEdgeModelPtr nmp)
 {
-  TriangleEdgeModel *p = new TriangleEdgeSubModel(nm, rp, dt, nmp);
+  TriangleEdgeModel *p = dsModelFactory<TriangleEdgeSubModel>::create(nm, rp, dt, nmp);
   return p->GetSelfPtr();
 }
 
