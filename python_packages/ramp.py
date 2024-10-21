@@ -43,7 +43,7 @@ def rampbias(
 
     On each successfull bias, the callback function is called.
 
-    Exceptions are raised if there is a failure at the last bias step attempted. 
+    Exceptions are raised if there is a failure at the last bias step attempted.
 
     """
 
