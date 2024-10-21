@@ -29,29 +29,6 @@ SPDX-License-Identifier: Apache-2.0
 
 namespace dsMesh {
 
-namespace {
-#if 0
-template <typename T> void DeletePointersFromVector(T &x)
-{
-    typename T::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete *it;
-    }
-}
-#endif
-
-template <typename T> void DeletePointersFromMap(T &x)
-{
-    typename T::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete it->second;
-    }
-}
-}
-
-
 DevsimLoader::DevsimLoader(const std::string &n) : Mesh(n)
 {
     //// Arbitrary number
@@ -60,10 +37,6 @@ DevsimLoader::DevsimLoader(const std::string &n) : Mesh(n)
 ;
 
 DevsimLoader::~DevsimLoader() {
-//    DeletePointers<MeshCoordinateList_t>(coordinateList);
-      DeletePointersFromMap<MeshRegionList_t>(regionList);
-      DeletePointersFromMap<MeshInterfaceList_t>(interfaceList);
-      DeletePointersFromMap<MeshContactList_t>(contactList);
 }
 
 namespace {
