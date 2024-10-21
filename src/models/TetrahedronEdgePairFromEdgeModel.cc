@@ -25,11 +25,11 @@ TetrahedronEdgePairFromEdgeModel<DoubleType>::TetrahedronEdgePairFromEdgeModel(c
     {edgemodel + "_node1_x", edgemodel + "_node1_y", edgemodel + "_node1_z"},
   }};
 
-  new TetrahedronEdgeSubModel<DoubleType>(model_names[0][1], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TetrahedronEdgeSubModel<DoubleType>(model_names[0][2], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TetrahedronEdgeSubModel<DoubleType>(model_names[1][0], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TetrahedronEdgeSubModel<DoubleType>(model_names[1][1], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TetrahedronEdgeSubModel<DoubleType>(model_names[1][2], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(model_names[0][1], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(model_names[0][2], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(model_names[1][0], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(model_names[1][1], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(model_names[1][2], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
 template <typename DoubleType>

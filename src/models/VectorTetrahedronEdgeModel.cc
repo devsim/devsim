@@ -17,8 +17,8 @@ VectorTetrahedronEdgeModel<DoubleType>::VectorTetrahedronEdgeModel(const std::st
     : TetrahedronEdgeModel(edgemodel + "_x", rp, TetrahedronEdgeModel::DisplayType::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName+ "_y"), z_ModelName(elementEdgeModelName + "_z")
 {
   RegisterCallback(edgemodel);
-  new TetrahedronEdgeSubModel<DoubleType>(y_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TetrahedronEdgeSubModel<DoubleType>(z_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(y_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(z_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
 template <typename DoubleType>

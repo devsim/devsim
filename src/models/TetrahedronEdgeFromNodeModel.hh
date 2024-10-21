@@ -15,12 +15,11 @@ class TetrahedronEdgeFromNodeModel : public TetrahedronEdgeModel {
     public:
         void Serialize(std::ostream &) const;
 
-        //// Out naming convention is that the name given is the edge model
-        TetrahedronEdgeFromNodeModel(const std::string &/*en0*/, const std::string &/*en1*/, const std::string &/*en2*/, const std::string &/*en3*/, const std::string &/*nodemodel*/, RegionPtr);
-
         void calcTetrahedronEdgeScalarValues() const;
 
     private:
+        friend class dsModelFactory<TetrahedronEdgeFromNodeModel>;
+        TetrahedronEdgeFromNodeModel(const std::string &/*en0*/, const std::string &/*en1*/, const std::string &/*en2*/, const std::string &/*en3*/, const std::string &/*nodemodel*/, RegionPtr);
 
         // Detect whether parent model still exists
         const std::string nodeModelName;

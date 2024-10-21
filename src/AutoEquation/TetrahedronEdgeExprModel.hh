@@ -24,9 +24,10 @@ class TetrahedronEdgeExprModel : public TetrahedronEdgeModel
     public:
         void Serialize(std::ostream &) const;
 
+    private:
+        friend class dsModelFactory<TetrahedronEdgeExprModel>;
         TetrahedronEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TetrahedronEdgeModel::DisplayType);
 
-    private:
         void RegisterModels();
         TetrahedronEdgeExprModel();
         TetrahedronEdgeExprModel(const TetrahedronEdgeExprModel &);

@@ -49,7 +49,7 @@ TetrahedronEdgePairFromEdgeModelDerivative<DoubleType>::TetrahedronEdgePairFromE
       {
         if ((i + j + k ) != 0)
         {
-          new TetrahedronEdgeSubModel<DoubleType>(model_names[i][j][k], rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+          dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(model_names[i][j][k], rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
         }
       }
     }

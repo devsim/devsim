@@ -39,14 +39,14 @@ TetrahedronEdgeSubModel<DoubleType>::TetrahedronEdgeSubModel(const std::string &
 template <typename DoubleType>
 TetrahedronEdgeModelPtr TetrahedronEdgeSubModel<DoubleType>::CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt)
 {
-  TetrahedronEdgeModel *p = new TetrahedronEdgeSubModel(nm, rp, dt);
+  TetrahedronEdgeModel *p = dsModelFactory<TetrahedronEdgeSubModel>::create(nm, rp, dt);
   return p->GetSelfPtr();
 }
 
 template <typename DoubleType>
 TetrahedronEdgeModelPtr TetrahedronEdgeSubModel<DoubleType>::CreateTetrahedronEdgeSubModel(const std::string &nm, RegionPtr rp, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr nmp)
 {
-  TetrahedronEdgeModel *p = new TetrahedronEdgeSubModel(nm, rp, dt, nmp);
+  TetrahedronEdgeModel *p = dsModelFactory<TetrahedronEdgeSubModel>::create(nm, rp, dt, nmp);
   return p->GetSelfPtr();
 }
 

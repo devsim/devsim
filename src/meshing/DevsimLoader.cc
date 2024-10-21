@@ -809,7 +809,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         }
         else if (model_type == Solution::ModelType::TETRAHEDRONEDGE)
         {
-          TetrahedronEdgeModel *tetrahedronedgesol = new TetrahedronEdgeSubModel<double>(sname, rp, TetrahedronEdgeModel::DisplayType::SCALAR);
+          auto tetrahedronedgesol = dsModelFactory<TetrahedronEdgeSubModel<double>>::create(sname, rp, TetrahedronEdgeModel::DisplayType::SCALAR);
           if (data_type == Solution::DataType::UNIFORM)
           {
             tetrahedronedgesol->SetValues<double>(sol.GetUniformValue());

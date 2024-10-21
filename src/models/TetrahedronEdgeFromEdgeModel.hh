@@ -17,12 +17,9 @@ class TetrahedronEdgeFromEdgeModel : public TetrahedronEdgeModel {
 
         void Serialize(std::ostream &) const;
 
-        //// Out naming convention is that the name given is the edge model
-        //// The element edge model is edgemodel_ex, edgemodel_ey
-        TetrahedronEdgeFromEdgeModel(const std::string &, RegionPtr);
-
-
     private:
+        friend class dsModelFactory<TetrahedronEdgeFromEdgeModel>;
+        TetrahedronEdgeFromEdgeModel(const std::string &, RegionPtr);
 
         void calcTetrahedronEdgeScalarValues() const;
 

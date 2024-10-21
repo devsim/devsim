@@ -20,18 +20,17 @@ TetrahedronEdgeModelPtr CreateTetrahedronEdgePairFromEdgeModelDerivative(
 template <typename DoubleType>
 class TetrahedronEdgePairFromEdgeModelDerivative : public TetrahedronEdgeModel {
     public:
-
         void Serialize(std::ostream &) const;
 
+    private:
+        friend class dsModelFactory<TetrahedronEdgePairFromEdgeModelDerivative>;
         TetrahedronEdgePairFromEdgeModelDerivative(
           const std::string &/*edgemodel*/,
           const std::string &/*nodemodel*/,
           RegionPtr /*rp*/
         );
 
-    private:
         void calcTetrahedronEdgeScalarValues() const;
-
 
         const std::string edgeModelName;
         const std::string nodeModelName;

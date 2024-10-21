@@ -21,11 +21,12 @@ template <typename DoubleType>
 class TetrahedronNodeVolume : public TetrahedronEdgeModel
 {
     public:
-        TetrahedronNodeVolume(RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<TetrahedronNodeVolume>;
+        explicit TetrahedronNodeVolume(RegionPtr);
+
         void   calcTetrahedronEdgeScalarValues() const;
         void   setInitialValues();
 };
