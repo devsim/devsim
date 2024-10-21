@@ -54,8 +54,8 @@ TriangleEdgeModelPtr TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubMode
 template <typename DoubleType>
 TriangleEdgeModelPtr TriangleEdgeSubModel<DoubleType>::CreateTriangleEdgeSubModel(const std::string &nm, RegionPtr rp, TriangleEdgeModel::DisplayType dt, ConstTriangleEdgeModelPtr nmp)
 {
-  TriangleEdgeModel *p = dsModelFactory<TriangleEdgeSubModel>::create(nm, rp, dt, nmp);
-  return p->GetSelfPtr();
+  auto p = dsModelFactory<TriangleEdgeSubModel>::create(nm, rp, dt, nmp);
+  return p;
 }
 
 template <typename DoubleType>
