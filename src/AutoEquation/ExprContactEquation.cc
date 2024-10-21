@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 ExprContactEquation<DoubleType>::ExprContactEquation(
             const std::string &eq,// nodemodel
+            const std::string &cnode, // circuitnode
             ContactPtr c,
             RegionPtr  r,
             const std::string &nmi,// nodemodel
@@ -30,10 +31,10 @@ ExprContactEquation<DoubleType>::ExprContactEquation(
             const std::string &nmc,// nodemodel
             const std::string &emc, // edgemodel
             const std::string &eemc, // elementedgemodel
-            const std::string &nmq,// nodemodel
-            const std::string &emq ,// edgemodel
+            const std::string &nmq, // nodemodel
+            const std::string &emq, // edgemodel
             const std::string &eemq // elementedgemodel
-            ) :  ContactEquation<DoubleType>(eq, c, r),
+            ) :  ContactEquation<DoubleType>(eq, cnode, c, r),
                  nodemodel_int(nmi),
                  edgemodel_int(emi),
                  edgevolumemodel_int(evmi),

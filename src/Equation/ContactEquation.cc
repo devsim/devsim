@@ -77,11 +77,9 @@ void ContactEquation<DoubleType>::UpdateContact()
 }
 
 template <typename DoubleType>
-ContactEquation<DoubleType>::ContactEquation(const std::string &nm, ContactPtr cp, RegionPtr rp)
-    : myname(nm), mycontact(cp), myregion(rp), charge(0.0), current(0.0)
+ContactEquation<DoubleType>::ContactEquation(const std::string &nm, const std::string &cnode, ContactPtr cp, RegionPtr rp)
+    : myname(nm), circuitnode(cnode), mycontact(cp), myregion(rp), charge(0.0), current(0.0)
 {
-    ContactEquationHolder tmp(this);
-    cp->AddEquation(tmp);
 }
 
 /////
@@ -141,13 +139,6 @@ ConstNodeList_t ContactEquation<DoubleType>::GetActiveNodes() const
 
             const ContactEquationPtrMap_t &cepm = contact.GetEquationPtrList();
 
-#if 0
-//// We now only support one contact per region
-            std::pair<Region::ContactEquationPtrMap_t::const_iterator, Region::ContactEquationPtrMap_t::const_iterator> cpair = cepm.equal_range(cname);
-
-            Region::ContactEquationPtrMap_t::const_iterator cepmit = cpair.first;
-            Region::ContactEquationPtrMap_t::const_iterator cepmend = cpair.second;
-#endif
             for (ContactEquationPtrMap_t::const_iterator cepmit = cepm.begin(); cepmit != cepm.end(); ++cepmit)
             {
               if ((cepmit->second).GetName() == eqname)

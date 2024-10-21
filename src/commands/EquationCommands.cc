@@ -125,13 +125,16 @@ createEquationCmd(CommandHandler &data)
       return;
     }
 
+    
     if (reg->UseExtendedPrecisionEquations())
     {
-      new ExprEquation<extended_type>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_node0_model, volume_node1_model, time_node_model, updateType);
+      auto eh = EquationHolder(new ExprEquation<extended_type>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_node0_model, volume_node1_model, time_node_model, updateType));
+      reg->AddEquation(eh);
     }
     else
     {
-      new ExprEquation<double>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_node0_model, volume_node1_model, time_node_model, updateType);
+      auto eh = EquationHolder(new ExprEquation<double>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_node0_model, volume_node1_model, time_node_model, updateType));
+      reg->AddEquation(eh);
     }
     data.SetEmptyResult();
 }
@@ -341,11 +344,13 @@ createInterfaceEquationCmd(CommandHandler &data)
 
     if (interface->UseExtendedPrecisionEquations())
     {
-      new InterfaceExprEquation<extended_type>(name, name0, name1, interface, interface_model, et);
+      auto ih = InterfaceEquationHolder(new InterfaceExprEquation<extended_type>(name, name0, name1, interface, interface_model, et));
+      interface->AddInterfaceEquation(ih);
     }
     else
     {
-      new InterfaceExprEquation<double>(name, name0, name1, interface, interface_model, et);
+      auto ih = InterfaceEquationHolder(new InterfaceExprEquation<double>(name, name0, name1, interface, interface_model, et));
+      interface->AddInterfaceEquation(ih);
     }
     data.SetEmptyResult();
 }
@@ -545,21 +550,15 @@ createContactEquationCmd(CommandHandler &data)
 
     if (region->UseExtendedPrecisionEquations())
     {
-      ContactEquation<extended_type> *ce = new ExprContactEquation<extended_type>(name, contact, region,
-          node_model, edge_model, edge_volume_model, element_model, volume_node0_model, volume_node1_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
-      if (!circuit_node.empty())
-      {
-          ce->SetCircuitNode(circuit_node);
-      }
+      auto ce = ContactEquationHolder(new ExprContactEquation<extended_type>(name, circuit_node, contact, region,
+          node_model, edge_model, edge_volume_model, element_model, volume_node0_model, volume_node1_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model));
+      contact->AddEquation(ce);
     }
     else
     {
-      ContactEquation<double> *ce = new ExprContactEquation<double>(name, contact, region,
-          node_model, edge_model, edge_volume_model, element_model, volume_node0_model, volume_node1_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model);
-      if (!circuit_node.empty())
-      {
-          ce->SetCircuitNode(circuit_node);
-      }
+      auto ce = ContactEquationHolder(new ExprContactEquation<double>(name, circuit_node, contact, region,
+          node_model, edge_model, edge_volume_model, element_model, volume_node0_model, volume_node1_model, node_current_model, edge_current_model, element_current_model, node_charge_model, edge_charge_model, element_charge_model));
+      contact->AddEquation(ce);
     }
     data.SetEmptyResult();
 }

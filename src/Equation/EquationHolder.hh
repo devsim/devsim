@@ -50,7 +50,7 @@ class EquationHolder {
     EquationHolder() {}
 
     template <typename DoubleType>
-    EquationHolder(Equation<DoubleType> *);
+    explicit EquationHolder(Equation<DoubleType> *);
 
     std::string GetName() const;
     std::string GetVariable() const;
