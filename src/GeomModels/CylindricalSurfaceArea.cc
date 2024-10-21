@@ -25,9 +25,11 @@ template <typename DoubleType>
 CylindricalSurfaceArea<DoubleType>::CylindricalSurfaceArea(RegionPtr rp) :
 NodeModel("CylindricalSurfaceArea", rp, NodeModel::DisplayType::SCALAR)
 {
-  //// This needs to be enforced in the Tcl API
-  //// need to validate this is an actual interface or contact name in the Tcl API
+}
 
+template <typename DoubleType>
+void CylindricalSurfaceArea<DoubleType>::derived_init()
+{
   const Region &region = this->GetRegion();
   const size_t dimension = region.GetDimension();
   dsAssert(dimension == 2, "CylindricalSurfaceArea 2d Only");

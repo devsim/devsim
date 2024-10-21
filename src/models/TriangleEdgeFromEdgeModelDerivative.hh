@@ -28,6 +28,8 @@ class TriangleEdgeFromEdgeModelDerivative : public TriangleEdgeModel {
           RegionPtr /*rp*/
         );
 
+        void derived_init();
+
         void calcTriangleEdgeScalarValues() const;
 
         const std::string edgeModelName;

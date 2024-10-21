@@ -18,6 +18,8 @@ class EdgeIndex : public EdgeModel {
         friend class dsModelFactory<EdgeIndex>;
         explicit EdgeIndex(RegionPtr);
 
+        void derived_init();
+
         EdgeIndex();
         EdgeIndex(const EdgeIndex &);
         EdgeIndex &operator=(const EdgeIndex &);

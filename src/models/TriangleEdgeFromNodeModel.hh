@@ -21,6 +21,8 @@ class TriangleEdgeFromNodeModel : public TriangleEdgeModel {
         friend class dsModelFactory<TriangleEdgeFromNodeModel>;
         TriangleEdgeFromNodeModel(const std::string &/*node0*/, const std::string &/*node1*/, const std::string &/*node2*/, const std::string &/*nodemodel*/, RegionPtr);
 
+        void derived_init();
+
         // Detect whether parent model still exists
         const std::string nodeModelName;
         const std::string edgeModel1Name;

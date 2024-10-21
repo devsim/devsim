@@ -22,9 +22,11 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 TriangleEdgeExprModel<DoubleType>::TriangleEdgeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, TriangleEdgeModel::DisplayType dt) : TriangleEdgeModel(nm, rp, dt), equation(eq)
 {
-#if 0
-  os << "creating TriangleEdgeExprModel " << nm << " with equation " << eq << "\n";
-#endif
+}
+
+template <typename DoubleType>
+void TriangleEdgeExprModel<DoubleType>::derived_init()
+{
   RegisterModels();
 }
 
@@ -59,9 +61,6 @@ void TriangleEdgeExprModel<DoubleType>::RegisterModels()
 
     for (refmodels_t::iterator it = refs.begin(); it != refs.end(); ++it)
     {
-#if 0
-    os << "registering callback " << *it << " for TriangleEdgeExprModel " << this->GetName() << "\n";
-#endif
         RegisterCallback(*it);
     }
 }
@@ -69,11 +68,6 @@ void TriangleEdgeExprModel<DoubleType>::RegisterModels()
 template <typename DoubleType>
 void TriangleEdgeExprModel<DoubleType>::calcTriangleEdgeScalarValues() const
 {
-    // need to write the calculator
-//    dsAssert(false, "UNEXPECTED");
-#if 0
-        os << "updating TriangleEdgeExprModel " << GetName() << " from expression " << EngineAPI::getStringValue(equation) << "\n";
-#endif
     typename MEE::ModelExprEval<DoubleType>::error_t errors;
     const Region *rp = &(this->GetRegion());
     MEE::ModelExprEval<DoubleType> mexp(rp, GetName(), errors);

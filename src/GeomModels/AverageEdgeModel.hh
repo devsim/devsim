@@ -48,6 +48,8 @@ class AverageEdgeModel : public EdgeModel
         AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
         AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, const std::string &/*var*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
 
+        void derived_init();
+
         template <typename T>
         void doMath(ConstNodeModelPtr, EdgeScalarList<DoubleType> &, const T &) const;
         template <typename T>

@@ -16,6 +16,12 @@ template <typename DoubleType>
 TriangleNodeVolume<DoubleType>::TriangleNodeVolume(RegionPtr rp)
     : TriangleEdgeModel("ElementNodeVolume", rp, TriangleEdgeModel::DisplayType::SCALAR)
 {
+}
+
+
+template <typename DoubleType>
+void TriangleNodeVolume<DoubleType>::derived_init()
+{
     RegisterCallback("EdgeLength");
     RegisterCallback("ElementEdgeCouple");
 }

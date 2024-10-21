@@ -29,6 +29,8 @@ class TetrahedronEdgeFromEdgeModelDerivative : public TetrahedronEdgeModel {
           RegionPtr /*rp*/
         );
 
+        void derived_init();
+
         void calcTetrahedronEdgeScalarValues() const;
 
         const std::string edgeModelName;

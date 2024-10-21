@@ -50,7 +50,12 @@ TriangleEdgeModel::TriangleEdgeModel(const std::string &nm, const RegionPtr rp, 
       displayType(dt),
       model_data(rp->GetNumberTriangles() * 3)
 {
-  myself = rp->AddTriangleEdgeModel(this);
+}
+
+void TriangleEdgeModel::init()
+{
+  myregion->AddTriangleEdgeModel(this->shared_from_this());
+  derived_init();
 }
 
 void TriangleEdgeModel::CalculateValues() const

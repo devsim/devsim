@@ -21,8 +21,15 @@ SPDX-License-Identifier: Apache-2.0
 
 template <typename DoubleType>
 InterfaceNormal<DoubleType>::InterfaceNormal(const std::string &iname, const std::string &idistname, const std::string &normx, const std::string &normy, const std::string &normz, RegionPtr rp)
-    : EdgeModel(idistname, rp, EdgeModel::DisplayType::SCALAR), interface_name(iname)
+    : EdgeModel(idistname, rp, EdgeModel::DisplayType::SCALAR), interface_name(iname), normx_(normx), normy_(normy), normz_(normz)
 {
+}
+
+template <typename DoubleType>
+void InterfaceNormal<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   const size_t dimension = GetRegion().GetDimension();
 
   if (dimension == 1)
@@ -30,8 +37,8 @@ InterfaceNormal<DoubleType>::InterfaceNormal(const std::string &iname, const std
   }
   else if (dimension == 2)
   {
-    normal_x = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normx, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    normal_y = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normy, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    normal_x = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normx_, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    normal_y = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normy_, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 
     RegisterCallback("NSurfaceNormal_x");
     RegisterCallback("NSurfaceNormal_y");
@@ -40,9 +47,9 @@ InterfaceNormal<DoubleType>::InterfaceNormal(const std::string &iname, const std
   {
     //// Actually this is off the tetrahedron, not the triangle
 //    RegisterCallback("ElementNodeVolume");
-    normal_x = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normx, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    normal_y = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normy, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-    normal_z = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normz, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    normal_x = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normx_, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    normal_y = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normy_, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    normal_z = EdgeSubModel<DoubleType>::CreateEdgeSubModel(normz_, rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 
     RegisterCallback("NSurfaceNormal_x");
     RegisterCallback("NSurfaceNormal_y");

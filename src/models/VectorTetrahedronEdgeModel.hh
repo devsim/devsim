@@ -20,6 +20,8 @@ class VectorTetrahedronEdgeModel : public TetrahedronEdgeModel {
         friend class dsModelFactory<VectorTetrahedronEdgeModel>;
         VectorTetrahedronEdgeModel(const std::string &, RegionPtr);
 
+        void derived_init();
+
         void calcTetrahedronEdgeScalarValues() const;
 
         const std::string elementEdgeModelName;

@@ -17,6 +17,9 @@ class AtContactNode : public NodeModel
     private:
       friend class dsModelFactory<AtContactNode<DoubleType>>;
       explicit AtContactNode(RegionPtr);
+
+      void derived_init();
+
       DoubleType calcNodeVolume(ConstNodePtr) const;
       void calcNodeScalarValues() const;
       void setInitialValues();

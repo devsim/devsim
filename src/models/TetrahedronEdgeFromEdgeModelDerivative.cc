@@ -22,6 +22,13 @@ TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::TetrahedronEdgeFromEdgeModel
       edgeModelName(edgemodel),
       nodeModelName(derivative)
 {
+}
+
+template <typename DoubleType>
+void TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   const std::string tmx = edgeModelName + "_x";
   const std::string tmy = edgeModelName + "_y";
   const std::string tmz = edgeModelName + "_z";
@@ -56,9 +63,6 @@ TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::TetrahedronEdgeFromEdgeModel
   dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(z_ModelName2, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
   dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(z_ModelName3, rp, TetrahedronEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
 }
-
-//// Need to figure out the deleter situation from sub models
-//// Perhaps a Delete SubModels method??????
 
 template <typename DoubleType>
 void TetrahedronEdgeFromEdgeModelDerivative<DoubleType>::calcTetrahedronEdgeScalarValues() const

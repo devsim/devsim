@@ -27,9 +27,11 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 NodeExprModel<DoubleType>::NodeExprModel(const std::string &nm, const Eqo::EqObjPtr eq, RegionPtr rp, NodeModel::DisplayType dt, ContactPtr cp) : NodeModel(nm, rp, dt, cp), equation(eq)
 {
-#if 0
-    os << "creating NodeExprModel " << nm << " with equation " << eq << "\n";
-#endif
+}
+
+template <typename DoubleType>
+void NodeExprModel<DoubleType>::derived_init()
+{
     RegisterModels();
 }
 
@@ -65,9 +67,6 @@ void NodeExprModel<DoubleType>::RegisterModels()
 
     for (refmodels_t::iterator it = refs.begin(); it != refs.end(); ++it)
     {
-#if 0
-    os << "registering callback " << *it << " for NodeExprModel " << this->GetName() << "\n";
-#endif
         RegisterCallback(*it);
     }
 }
@@ -75,11 +74,6 @@ void NodeExprModel<DoubleType>::RegisterModels()
 template <typename DoubleType>
 void NodeExprModel<DoubleType>::calcNodeScalarValues() const
 {
-    // need to write the calculator
-//    dsAssert(false, "UNEXPECTED");
-#if 0
-        os << "updating NodeExprModel " << GetName() << " from expression " << EngineAPI::getStringValue(equation) << "\n";
-#endif
     typename MEE::ModelExprEval<DoubleType>::error_t errors;
     const Region *rp = &(this->GetRegion());
     MEE::ModelExprEval<DoubleType> mexp(rp, GetName(), errors);

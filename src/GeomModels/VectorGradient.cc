@@ -31,8 +31,15 @@ template <typename DoubleType>
 VectorGradient<DoubleType>::VectorGradient(RegionPtr rp, const std::string &name, VectorGradientEnum::CalcType ct)
     : NodeModel(name + "_gradx", rp, NodeModel::DisplayType::SCALAR), parentname_(name),  calctype_(ct)
 {
+}
+
+template <typename DoubleType>
+void VectorGradient<DoubleType>::derived_init()
+{
+    auto rp = const_cast<Region *>(&GetRegion());
+
     /// This is the scalar we are taking the gradient of
-    RegisterCallback(name);
+    RegisterCallback(parentname_);
 
     RegisterCallback("EdgeInverseLength");
     RegisterCallback("unitx");
@@ -42,17 +49,16 @@ VectorGradient<DoubleType>::VectorGradient(RegionPtr rp, const std::string &name
     if (dimension == 2)
     {
       RegisterCallback("unity");
-      yfield_ = CreateNodeSolution(name + "_grady", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+      yfield_ = CreateNodeSolution(parentname_ + "_grady", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
     }
     else if (dimension == 3)
     {
       RegisterCallback("unity");
       RegisterCallback("unitz");
-      yfield_ = CreateNodeSolution(name + "_grady", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
-      zfield_ = CreateNodeSolution(name + "_gradz", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+      yfield_ = CreateNodeSolution(parentname_ + "_grady", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+      zfield_ = CreateNodeSolution(parentname_ + "_gradz", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
     }
 }
-
 
 template <typename DoubleType>
 void VectorGradient<DoubleType>::calc1d() const

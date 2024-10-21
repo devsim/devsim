@@ -23,6 +23,8 @@ class SurfaceArea : public NodeModel
       friend class dsModelFactory<SurfaceArea<DoubleType>>;
       explicit SurfaceArea(RegionPtr);
 
+      void derived_init();
+
       void calcSurfaceArea3d() const;
       void calcSurfaceArea2d() const;
       void calcSurfaceArea1d() const;

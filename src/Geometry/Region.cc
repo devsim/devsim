@@ -881,10 +881,8 @@ void Region::DeleteTetrahedronEdgeModel(const std::string &nm)
   }
 }
 
-NodeModelPtr Region::AddNodeModel(NodeModel *nmp)
+void Region::AddNodeModel(NodeModelPtr nmp)
 {
-    NodeModelPtr ret;
-
     const std::string &nm = nmp->GetName();
     if (nodeModels.count(nm))
     {
@@ -892,8 +890,7 @@ NodeModelPtr Region::AddNodeModel(NodeModel *nmp)
         os << "Replacing Node Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
-        ret = NodeModelPtr(nmp);
-        nodeModels[nm] = ret;
+        nodeModels[nm] = nmp;
     }
     else if (edgeModels.count(nm))
     {
@@ -918,16 +915,12 @@ NodeModelPtr Region::AddNodeModel(NodeModel *nmp)
     }
     else
     {
-      ret = NodeModelPtr(nmp);
-      nodeModels[nm] = ret;
+      nodeModels[nm] = nmp;
     }
-
-    return ret;
 }
 
-EdgeModelPtr Region::AddEdgeModel(EdgeModel *emp)
+void Region::AddEdgeModel(EdgeModelPtr emp)
 {
-    EdgeModelPtr ret;
     const std::string &nm = emp->GetName();
     if (edgeModels.count(nm))
     {
@@ -935,8 +928,7 @@ EdgeModelPtr Region::AddEdgeModel(EdgeModel *emp)
         os << "Replacing Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
-        ret = EdgeModelPtr(emp);
-        edgeModels[nm] = ret;
+        edgeModels[nm] = emp;
     }
     else if (nodeModels.count(nm))
     {
@@ -961,15 +953,12 @@ EdgeModelPtr Region::AddEdgeModel(EdgeModel *emp)
     }
     else
     {
-      ret = EdgeModelPtr(emp);
-      edgeModels[nm] = ret;
+      edgeModels[nm] = emp;
     }
-    return ret;
 }
 
-TriangleEdgeModelPtr Region::AddTriangleEdgeModel(TriangleEdgeModel *emp)
+void Region::AddTriangleEdgeModel(TriangleEdgeModelPtr emp)
 {
-    TriangleEdgeModelPtr ret;
     const std::string &nm = emp->GetName();
     if (triangleEdgeModels.count(nm))
     {
@@ -977,8 +966,7 @@ TriangleEdgeModelPtr Region::AddTriangleEdgeModel(TriangleEdgeModel *emp)
         os << "Replacing Triangle Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
-        ret = TriangleEdgeModelPtr(emp);
-        triangleEdgeModels[nm] = ret;
+        triangleEdgeModels[nm] = emp;
     }
     else if (nodeModels.count(nm))
     {
@@ -1003,15 +991,12 @@ TriangleEdgeModelPtr Region::AddTriangleEdgeModel(TriangleEdgeModel *emp)
     }
     else
     {
-      ret = TriangleEdgeModelPtr(emp);
-      triangleEdgeModels[nm] = ret;
+      triangleEdgeModels[nm] = emp;
     }
-    return ret;
 }
 
-TetrahedronEdgeModelPtr Region::AddTetrahedronEdgeModel(TetrahedronEdgeModel *emp)
+void Region::AddTetrahedronEdgeModel(TetrahedronEdgeModelPtr emp)
 {
-    TetrahedronEdgeModelPtr ret;
     const std::string &nm = emp->GetName();
     if (tetrahedronEdgeModels.count(nm))
     {
@@ -1019,8 +1004,7 @@ TetrahedronEdgeModelPtr Region::AddTetrahedronEdgeModel(TetrahedronEdgeModel *em
         os << "Replacing Tetrahedron Edge Model " << nm << " in region " << regionName
                   << " of material " << materialName << "\n";
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
-        ret = TetrahedronEdgeModelPtr(emp);
-        tetrahedronEdgeModels[nm] = ret;
+        tetrahedronEdgeModels[nm] = emp;
     }
     else if (nodeModels.count(nm))
     {
@@ -1045,10 +1029,8 @@ TetrahedronEdgeModelPtr Region::AddTetrahedronEdgeModel(TetrahedronEdgeModel *em
     }
     else
     {
-      ret = TetrahedronEdgeModelPtr(emp);
-      tetrahedronEdgeModels[nm] = ret;
+      tetrahedronEdgeModels[nm] = emp;
     }
-    return ret;
 }
 
 

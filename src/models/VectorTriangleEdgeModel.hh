@@ -20,6 +20,8 @@ class VectorTriangleEdgeModel : public TriangleEdgeModel {
         friend class dsModelFactory<VectorTriangleEdgeModel>;
         VectorTriangleEdgeModel(const std::string &, RegionPtr);
 
+        void derived_init();
+
         void calcTriangleEdgeScalarValues() const;
 
         // Detect whether parent model still exists

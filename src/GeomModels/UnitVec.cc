@@ -22,6 +22,13 @@ template <typename DoubleType>
 UnitVec<DoubleType>::UnitVec(RegionPtr rp) :
 EdgeModel("unitx", rp, EdgeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void UnitVec<DoubleType>::derived_init()
+{
+    auto rp = const_cast<Region *>(&GetRegion());
+
     if (rp->GetDimension() > 1)
     {
         unity = EdgeSubModel<DoubleType>::CreateEdgeSubModel("unity", rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
@@ -32,7 +39,6 @@ EdgeModel("unitx", rp, EdgeModel::DisplayType::SCALAR)
         unitz = EdgeSubModel<DoubleType>::CreateEdgeSubModel("unitz", rp, EdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
     }
 }
-
 
 template <typename DoubleType>
 void UnitVec<DoubleType>::calcEdgeScalarValues() const

@@ -18,6 +18,8 @@ class EdgeCouple : public EdgeModel {
         friend class dsModelFactory<EdgeCouple>;
         explicit EdgeCouple(RegionPtr);
 
+        void derived_init();
+
         EdgeCouple();
         EdgeCouple(const EdgeCouple &);
         EdgeCouple &operator=(const EdgeCouple &);

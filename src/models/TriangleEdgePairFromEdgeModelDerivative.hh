@@ -29,6 +29,7 @@ class TriangleEdgePairFromEdgeModelDerivative : public TriangleEdgeModel {
           RegionPtr /*rp*/
         );
 
+        void derived_init();
 
         void calcTriangleEdgeScalarValues() const;
 

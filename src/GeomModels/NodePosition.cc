@@ -20,6 +20,13 @@ template <typename DoubleType>
 NodePosition<DoubleType>::NodePosition(RegionPtr rp)
     : NodeModel("x", rp, NodeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void NodePosition<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   yposition = CreateNodeSolution("y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
   zposition = CreateNodeSolution("z", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
   node_index = CreateNodeSolution("node_index", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());

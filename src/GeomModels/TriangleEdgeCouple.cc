@@ -19,6 +19,10 @@ TriangleEdgeModel("ElementEdgeCouple", rp, TriangleEdgeModel::DisplayType::SCALA
 {
 }
 
+template <typename DoubleType>
+void TriangleEdgeCouple<DoubleType>::derived_init()
+{
+}
 
 template <typename DoubleType>
 void TriangleEdgeCouple<DoubleType>::calcTriangleEdgeScalarValues() const

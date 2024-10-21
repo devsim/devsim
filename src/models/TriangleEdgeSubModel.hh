@@ -27,6 +27,8 @@ class TriangleEdgeSubModel : public TriangleEdgeModel
         TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
         TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, ConstTriangleEdgeModelPtr);
 
+        void derived_init();
+
         void calcTriangleEdgeScalarValues() const;
         // If we are an auxilary model, create our values from the parent
         mutable WeakConstTriangleEdgeModelPtr parentModel;

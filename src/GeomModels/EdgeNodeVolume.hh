@@ -18,6 +18,8 @@ class EdgeNodeVolume : public EdgeModel {
         friend class dsModelFactory<EdgeNodeVolume>;
         explicit EdgeNodeVolume(RegionPtr);
 
+        void derived_init();
+
         EdgeNodeVolume();
         EdgeNodeVolume(const EdgeNodeVolume &);
         EdgeNodeVolume &operator=(const EdgeNodeVolume &);

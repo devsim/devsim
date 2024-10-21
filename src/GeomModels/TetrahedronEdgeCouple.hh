@@ -20,6 +20,8 @@ class TetrahedronEdgeCouple : public TetrahedronEdgeModel {
         friend class dsModelFactory<TetrahedronEdgeCouple>;
         explicit TetrahedronEdgeCouple(RegionPtr);
 
+        void derived_init();
+
         TetrahedronEdgeCouple();
         TetrahedronEdgeCouple(const TetrahedronEdgeCouple &);
         TetrahedronEdgeCouple &operator=(const TetrahedronEdgeCouple &);

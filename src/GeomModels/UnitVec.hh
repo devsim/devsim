@@ -22,6 +22,8 @@ class UnitVec : public EdgeModel {
         friend class dsModelFactory<UnitVec>;
         explicit UnitVec(RegionPtr);
 
+        void derived_init();
+
         UnitVec();
         UnitVec(const UnitVec &);
         UnitVec &operator=(const UnitVec &);

@@ -14,7 +14,12 @@ template <typename DoubleType>
 CylindricalEdgeCouple<DoubleType>::CylindricalEdgeCouple(RegionPtr rp) :
 EdgeModel("CylindricalEdgeCouple", rp, EdgeModel::DisplayType::SCALAR)
 {
-  const size_t dimension = rp->GetDimension();
+}
+
+template <typename DoubleType>
+void CylindricalEdgeCouple<DoubleType>::derived_init()
+{
+  const size_t dimension = GetRegion().GetDimension();
   dsAssert(dimension == 2, "CylindricalEdgeCouple 2d Only");
   if (dimension == 2)
   {

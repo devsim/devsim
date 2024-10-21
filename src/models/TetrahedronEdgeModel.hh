@@ -43,12 +43,15 @@ class Tetrahedron;
 typedef Tetrahedron *TetrahedronPtr;
 typedef const Tetrahedron *ConstTetrahedronPtr;
 
-class TetrahedronEdgeModel {
+class TetrahedronEdgeModel : public std::enable_shared_from_this<TetrahedronEdgeModel> {
     public:
         enum class DisplayType {NODISPLAY, SCALAR, UNKNOWN};
 
         TetrahedronEdgeModel(const std::string &, const RegionPtr, TetrahedronEdgeModel::DisplayType);
         virtual ~TetrahedronEdgeModel();
+
+        void init();
+        virtual void derived_init() = 0;
 
         const std::string &GetName() const {
             return name;
@@ -110,12 +113,12 @@ class TetrahedronEdgeModel {
 
         ConstTetrahedronEdgeModelPtr GetConstSelfPtr() const
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         TetrahedronEdgeModelPtr GetSelfPtr()
         {
-          return myself.lock();
+          return shared_from_this();
         }
 
         bool IsUniform() const;
@@ -168,7 +171,6 @@ class TetrahedronEdgeModel {
         // (some models may be created on the fly)
 //      EdgeList data;
         std::string name;
-        WeakTetrahedronEdgeModelPtr myself;
         // need to know my region to get database data and appropriate node and edge lists
         RegionPtr   myregion;
         mutable bool uptodate;
@@ -181,7 +183,7 @@ class TetrahedronEdgeModel {
 template <typename T1, typename T2, typename ... Args>
 TetrahedronEdgeModelPtr create_tetrahedron_edge_model(bool use_extended, Args &&...args)
 {
-  TetrahedronEdgeModel *ret;
+  TetrahedronEdgeModelPtr ret;
   if (use_extended)
   {
     ret = dsModelFactory<T2>::create(std::forward<Args>(args)...);
@@ -190,7 +192,7 @@ TetrahedronEdgeModelPtr create_tetrahedron_edge_model(bool use_extended, Args &&
   {
     ret = dsModelFactory<T1>::create(std::forward<Args>(args)...);
   }
-  return ret->GetSelfPtr();
+  return ret;
 }
 #endif
 

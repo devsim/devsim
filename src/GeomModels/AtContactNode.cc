@@ -16,6 +16,11 @@ template <typename DoubleType>
 AtContactNode<DoubleType>::AtContactNode(RegionPtr rp)
     : NodeModel("AtContactNode", rp, NodeModel::DisplayType::SCALAR)
 {
+}
+
+template <typename DoubleType>
+void AtContactNode<DoubleType>::derived_init()
+{
     RegisterCallback("@@@ContactChange");
 }
 
@@ -26,7 +31,6 @@ void AtContactNode<DoubleType>::calcNodeScalarValues() const
 
     const std::string &rname = region.GetName();
 
-    //// TODO: a region should probably own this
     const Device::ContactList_t &cl = region.GetDevice()->GetContactList();
 
     const ConstNodeList &nl = region.GetNodeList();
@@ -43,13 +47,6 @@ void AtContactNode<DoubleType>::calcNodeScalarValues() const
         const ConstNodeList_t &cnodes = it->second->GetNodes();
         for (ConstNodeList_t::const_iterator jt = cnodes.begin(); jt != cnodes.end(); ++jt)
         {
-
-#if 0
-            std::ostringstream os;
-            os << region.GetName() << " Node  pointer " << *jt << "\n";
-            GeometryStream::WriteOut(OutputStream::OutputType::INFO, os.str());
-#endif
-
             const size_t index = (*jt)->GetIndex();
             nv[index] += 1.0;
         }

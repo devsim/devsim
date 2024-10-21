@@ -27,6 +27,8 @@ class TetrahedronEdgeSubModel : public TetrahedronEdgeModel
         TetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType dt);
         TetrahedronEdgeSubModel(const std::string &, RegionPtr, TetrahedronEdgeModel::DisplayType dt, ConstTetrahedronEdgeModelPtr);
 
+        void derived_init();
+
         void calcTetrahedronEdgeScalarValues() const;
         // If we are an auxilary model, create our values from the parent
         mutable WeakConstTetrahedronEdgeModelPtr parentModel;

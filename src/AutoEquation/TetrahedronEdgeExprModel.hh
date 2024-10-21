@@ -28,6 +28,8 @@ class TetrahedronEdgeExprModel : public TetrahedronEdgeModel
         friend class dsModelFactory<TetrahedronEdgeExprModel>;
         TetrahedronEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TetrahedronEdgeModel::DisplayType);
 
+        void derived_init();
+
         void RegisterModels();
         TetrahedronEdgeExprModel();
         TetrahedronEdgeExprModel(const TetrahedronEdgeExprModel &);

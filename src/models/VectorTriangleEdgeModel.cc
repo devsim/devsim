@@ -17,6 +17,13 @@ template <typename DoubleType>
 VectorTriangleEdgeModel<DoubleType>::VectorTriangleEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::DisplayType::SCALAR), elementEdgeModelName(edgemodel), y_ModelName(elementEdgeModelName + "_y")
 {
+}
+
+template <typename DoubleType>
+void VectorTriangleEdgeModel<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   RegisterCallback(elementEdgeModelName);
   dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(y_ModelName, rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }

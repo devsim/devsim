@@ -20,6 +20,8 @@ class NodePosition : public NodeModel
       friend class dsModelFactory<NodePosition<DoubleType>>;
       explicit NodePosition(RegionPtr);
 
+      void derived_init();
+
       DoubleType calcNodePosition(ConstNodePtr) const;
       void calcNodeScalarValues() const;
       void setInitialValues();

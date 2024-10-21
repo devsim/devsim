@@ -24,6 +24,13 @@ TriangleEdgeFromEdgeModelDerivative<DoubleType>::TriangleEdgeFromEdgeModelDeriva
       edgeModelName(edgemodel),
       nodeModelName(derivative)
 {
+}
+
+template <typename DoubleType>
+void TriangleEdgeFromEdgeModelDerivative<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   const std::string tmx = edgeModelName + "_x";
   const std::string tmy = edgeModelName + "_y";
 
@@ -45,9 +52,6 @@ TriangleEdgeFromEdgeModelDerivative<DoubleType>::TriangleEdgeFromEdgeModelDeriva
   dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(y_ModelName1, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
   dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(y_ModelName2, rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
 }
-
-//// Need to figure out the deleter situation from sub models
-//// Perhaps a Delete SubModels method??????
 
 template <typename DoubleType>
 void TriangleEdgeFromEdgeModelDerivative<DoubleType>::calcTriangleEdgeScalarValues() const

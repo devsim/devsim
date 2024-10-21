@@ -19,6 +19,8 @@ class TriangleNodeVolume : public TriangleEdgeModel
         friend class dsModelFactory<TriangleNodeVolume>;
         explicit TriangleNodeVolume(RegionPtr);
 
+        void derived_init();
+
         TriangleNodeVolume();
         TriangleNodeVolume(const TriangleNodeVolume &);
         TriangleNodeVolume &operator=(const TriangleNodeVolume &);

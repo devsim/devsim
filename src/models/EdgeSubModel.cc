@@ -31,13 +31,16 @@ EdgeSubModel<DoubleType>::EdgeSubModel(const std::string &nm, RegionPtr rp, Edge
         EdgeModel(nm, rp, dt),
         parentModel(nmp)
 {
-    parentModelName = parentModel.lock()->GetName();
+}
 
-    //// TODO: consider making it so that we have different kinds of callbacks
+template <typename DoubleType>
+void EdgeSubModel<DoubleType>::derived_init()
+{
+  if (auto p = parentModel.lock())
+  {
+    parentModelName = p->GetName();
     RegisterCallback(parentModelName);
-#if 0
-    os << "creating EdgeSubModel " << nm << " with parent " << parentModel->GetName() << "\n";
-#endif
+  }
 }
 
 template <typename DoubleType>
@@ -59,9 +62,6 @@ void EdgeSubModel<DoubleType>::calcEdgeScalarValues() const
 {
     if (!parentModelName.empty())
     {
-#if 0
-      os << "updating EdgeSubModel " << GetName() << " from parent " << parentModel->GetName() << "\n";
-#endif
       ConstEdgeModelPtr emp = GetRegion().GetEdgeModel(parentModelName);
       if (!parentModel.expired())
       {

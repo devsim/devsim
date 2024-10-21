@@ -24,6 +24,13 @@ TriangleEdgePairFromEdgeModelDerivative<DoubleType>::TriangleEdgePairFromEdgeMod
       edgeModelName(edgemodel),
       nodeModelName(derivative)
 {
+}
+
+template <typename DoubleType>
+void TriangleEdgePairFromEdgeModelDerivative<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
   const std::string tmpname = edgeModelName + ":" + nodeModelName;
   edgeModelNames[0] = tmpname + "@n0";
   edgeModelNames[1] = tmpname + "@n1";

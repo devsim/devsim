@@ -28,6 +28,8 @@ class TriangleEdgeExprModel : public TriangleEdgeModel
         friend class dsModelFactory<TriangleEdgeExprModel>;
         TriangleEdgeExprModel(const std::string &, Eqo::EqObjPtr, RegionPtr, TriangleEdgeModel::DisplayType);
 
+        void derived_init();
+
         void RegisterModels();
         TriangleEdgeExprModel();
         TriangleEdgeExprModel(const TriangleEdgeExprModel &);

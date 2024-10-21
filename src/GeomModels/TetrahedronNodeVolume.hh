@@ -27,6 +27,8 @@ class TetrahedronNodeVolume : public TetrahedronEdgeModel
         friend class dsModelFactory<TetrahedronNodeVolume>;
         explicit TetrahedronNodeVolume(RegionPtr);
 
+        void derived_init();
+
         void   calcTetrahedronEdgeScalarValues() const;
         void   setInitialValues();
 };

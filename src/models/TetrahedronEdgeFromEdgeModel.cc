@@ -18,13 +18,17 @@ template <typename DoubleType>
 TetrahedronEdgeFromEdgeModel<DoubleType>::TetrahedronEdgeFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TetrahedronEdgeModel(edgemodel + "_x", rp, TetrahedronEdgeModel::DisplayType::SCALAR), edgeModelName(edgemodel), y_ModelName(edgeModelName+ "_y"), z_ModelName(edgeModelName + "_z")
 {
-  RegisterCallback(edgemodel);
+}
+
+template <typename DoubleType>
+void TetrahedronEdgeFromEdgeModel<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
+  RegisterCallback(edgeModelName);
   dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(y_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
   dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(z_ModelName, rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
-
-//// Need to figure out the deleter situation from sub models
-//// Perhaps a Delete SubModels method??????
 
 template <typename DoubleType>
 void TetrahedronEdgeFromEdgeModel<DoubleType>::calcTetrahedronEdgeScalarValues() const

@@ -22,6 +22,12 @@ TetrahedronEdgePairFromEdgeModelDerivative<DoubleType>::TetrahedronEdgePairFromE
       edgeModelName(edgemodel),
       nodeModelName(derivative)
 {
+}
+
+template <typename DoubleType>
+void TetrahedronEdgePairFromEdgeModelDerivative<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
 
   for (size_t i = 0; i < 2; ++i)
   {

@@ -21,6 +21,8 @@ class CylindricalEdgeCouple : public EdgeModel {
         friend class dsModelFactory<CylindricalEdgeCouple>;
         explicit CylindricalEdgeCouple(RegionPtr);
 
+        void derived_init();
+
         CylindricalEdgeCouple();
         CylindricalEdgeCouple(const CylindricalEdgeCouple &);
         CylindricalEdgeCouple &operator=(const CylindricalEdgeCouple &);

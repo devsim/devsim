@@ -28,6 +28,8 @@ class EdgeSubModel : public EdgeModel
         // This model depends on this model to calculate values
         EdgeSubModel(const std::string &, RegionPtr, EdgeModel::DisplayType, ConstEdgeModelPtr);
 
+        void derived_init();
+
         EdgeSubModel();
         EdgeSubModel(const EdgeSubModel &);
         EdgeSubModel &operator=(const EdgeSubModel &);

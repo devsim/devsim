@@ -21,6 +21,8 @@ class CylindricalNodeVolume : public NodeModel
       friend class dsModelFactory<CylindricalNodeVolume<DoubleType>>;
       explicit CylindricalNodeVolume(RegionPtr);
 
+      void derived_init();
+
       void calcNodeScalarValues() const;
       void setInitialValues();
 };

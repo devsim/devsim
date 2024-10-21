@@ -29,6 +29,8 @@ class EdgeFromNodeModel : public EdgeModel
         friend class dsModelFactory<EdgeFromNodeModel>;
         EdgeFromNodeModel(const std::string &/*node 0 modelname*/, const std::string &/*node 1 modelname*/, const std::string &/*nodemodel*/, RegionPtr);
 
+        void derived_init();
+
         void calcEdgeScalarValues() const;
         void setInitialValues();
         // If we are an auxilary model, create our values from the parent

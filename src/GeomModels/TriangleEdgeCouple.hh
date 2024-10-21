@@ -23,6 +23,8 @@ class TriangleEdgeCouple : public TriangleEdgeModel {
         friend class dsModelFactory<TriangleEdgeCouple>;
         explicit TriangleEdgeCouple(RegionPtr);
 
+        void derived_init();
+
         TriangleEdgeCouple();
         TriangleEdgeCouple(const TriangleEdgeCouple &);
         TriangleEdgeCouple &operator=(const TriangleEdgeCouple &);

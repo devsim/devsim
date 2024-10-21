@@ -22,6 +22,8 @@ class TetrahedronEdgePairFromEdgeModel : public TetrahedronEdgeModel {
         friend class dsModelFactory<TetrahedronEdgePairFromEdgeModel>;
         TetrahedronEdgePairFromEdgeModel(const std::string &, RegionPtr);
 
+        void derived_init();
+
         void calcTetrahedronEdgeScalarValues() const;
 
         const std::string edgeModelName;

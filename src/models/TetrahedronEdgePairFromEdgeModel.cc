@@ -18,11 +18,18 @@ template <typename DoubleType>
 TetrahedronEdgePairFromEdgeModel<DoubleType>::TetrahedronEdgePairFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TetrahedronEdgeModel(edgemodel + "_node0_x", rp, TetrahedronEdgeModel::DisplayType::SCALAR), edgeModelName(edgemodel)
 {
-  RegisterCallback(edgemodel);
+}
+
+template <typename DoubleType>
+void TetrahedronEdgePairFromEdgeModel<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
+  RegisterCallback(edgeModelName);
 
   model_names = {{
-    {edgemodel + "_node0_x", edgemodel + "_node0_y", edgemodel + "_node0_z"},
-    {edgemodel + "_node1_x", edgemodel + "_node1_y", edgemodel + "_node1_z"},
+    {edgeModelName + "_node0_x", edgeModelName + "_node0_y", edgeModelName + "_node0_z"},
+    {edgeModelName + "_node1_x", edgeModelName + "_node1_y", edgeModelName + "_node1_z"},
   }};
 
   dsModelFactory<TetrahedronEdgeSubModel<DoubleType>>::create(model_names[0][1], rp, TetrahedronEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());

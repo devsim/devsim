@@ -18,6 +18,8 @@ class EdgeLength : public EdgeModel {
         friend class dsModelFactory<EdgeLength>;
         explicit EdgeLength(RegionPtr);
 
+        void derived_init();
+
         EdgeLength();
         EdgeLength(const EdgeLength &);
         EdgeLength &operator=(const EdgeLength &);

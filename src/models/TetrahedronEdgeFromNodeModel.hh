@@ -21,6 +21,8 @@ class TetrahedronEdgeFromNodeModel : public TetrahedronEdgeModel {
         friend class dsModelFactory<TetrahedronEdgeFromNodeModel>;
         TetrahedronEdgeFromNodeModel(const std::string &/*en0*/, const std::string &/*en1*/, const std::string &/*en2*/, const std::string &/*en3*/, const std::string &/*nodemodel*/, RegionPtr);
 
+        void derived_init();
+
         // Detect whether parent model still exists
         const std::string nodeModelName;
         const std::string edgeModel1Name;

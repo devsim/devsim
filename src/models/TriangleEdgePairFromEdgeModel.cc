@@ -17,11 +17,18 @@ template <typename DoubleType>
 TriangleEdgePairFromEdgeModel<DoubleType>::TriangleEdgePairFromEdgeModel(const std::string &edgemodel, RegionPtr rp)
     : TriangleEdgeModel(edgemodel + "_node0_x", rp, TriangleEdgeModel::DisplayType::SCALAR), edgeModelName(edgemodel)
 {
-  RegisterCallback(edgemodel);
+}
+
+template <typename DoubleType>
+void TriangleEdgePairFromEdgeModel<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
+  RegisterCallback(edgeModelName);
 
   model_names = {{
-                  {edgemodel + "_node0_x", edgemodel + "_node0_y"},
-                  {edgemodel + "_node1_x", edgemodel + "_node1_y"}
+                  {edgeModelName + "_node0_x", edgeModelName + "_node0_y"},
+                  {edgeModelName + "_node1_x", edgeModelName + "_node1_y"}
                 }};
   dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(model_names[0][1], rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
   dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(model_names[1][0], rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());

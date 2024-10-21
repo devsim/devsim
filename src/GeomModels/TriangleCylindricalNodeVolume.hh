@@ -28,6 +28,8 @@ class TriangleCylindricalNodeVolume : public TriangleEdgeModel
         friend class dsModelFactory<TriangleCylindricalNodeVolume>;
         explicit TriangleCylindricalNodeVolume(RegionPtr);
 
+        void derived_init();
+
         TriangleCylindricalNodeVolume();
         TriangleCylindricalNodeVolume(const TriangleCylindricalNodeVolume &);
         TriangleCylindricalNodeVolume &operator=(const TriangleCylindricalNodeVolume &);

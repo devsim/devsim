@@ -32,6 +32,8 @@ class VectorGradient : public NodeModel
     private:
       VectorGradient(RegionPtr, const std::string &, VectorGradientEnum::CalcType);
 
+      void derived_init();
+
       DoubleType calcVectorGradient(ConstNodePtr) const;
       void   calcNodeScalarValues() const;
       void   calc1d() const;

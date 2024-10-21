@@ -23,6 +23,8 @@ class CylindricalEdgeNodeVolume : public EdgeModel
       friend class dsModelFactory<CylindricalEdgeNodeVolume>;
       explicit CylindricalEdgeNodeVolume(RegionPtr);
 
+      void derived_init();
+
       void calcEdgeScalarValues() const;
 
       WeakEdgeModelPtr node1Volume_;

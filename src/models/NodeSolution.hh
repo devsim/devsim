@@ -28,7 +28,7 @@ class NodeSolution : public NodeModel
         // This model depends on this model to calculate values
         NodeSolution(const std::string &, RegionPtr, NodeModel::DisplayType, NodeModelPtr);
 
-    private:
+        void derived_init();
 
         void calcNodeScalarValues() const;
         void setInitialValues();
