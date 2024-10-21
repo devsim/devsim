@@ -89,7 +89,7 @@ const Interface::NameToInterfaceNodeModelMap_t &Interface::GetInterfaceNodeModel
 }
 
 
-void Interface::AddInterfaceNodeModel(InterfaceNodeModel *nmp)
+void Interface::AddInterfaceNodeModel(InterfaceNodeModelPtr nmp)
 {
     const std::string &nm = nmp->GetName();
     if (interfaceNodeModels.count(nm))
@@ -100,7 +100,7 @@ void Interface::AddInterfaceNodeModel(InterfaceNodeModel *nmp)
         GeometryStream::WriteOut(OutputStream::OutputType::INFO, *this, os.str());
     }
 
-    interfaceNodeModels[nm] = InterfaceNodeModelPtr(nmp);
+    interfaceNodeModels[nm] = nmp;
 }
 
 ConstInterfaceNodeModelPtr Interface::GetInterfaceNodeModel(const std::string &nm) const

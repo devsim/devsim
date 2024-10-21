@@ -100,7 +100,6 @@ template class NodeSolution<double>;
 template class NodeSolution<float128>;
 #endif
 
-#if 0
 NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModel::DisplayType dt)
 {
   return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt);
@@ -110,6 +109,4 @@ NodeModelPtr CreateNodeSolution(const std::string &nm, RegionPtr rp, NodeModel::
 {
   return create_node_model<NodeSolution<double>, NodeSolution<extended_type>>(rp->UseExtendedPrecisionModels(), nm, rp, dt, nmp);
 }
-#endif
-
 

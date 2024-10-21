@@ -16,7 +16,7 @@ class dsModelFactory {
       static std::shared_ptr<T> create(Args &&...args)
       {
         auto ret = std::shared_ptr<T>(new T(std::forward<Args>(args)...));
-        //ret->init();
+        ret->init();
         return ret;
       }
 };

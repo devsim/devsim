@@ -18,24 +18,22 @@ template <typename DoubleType>
 TriangleEdgeFromNodeModel<DoubleType>::TriangleEdgeFromNodeModel(const std::string &edgemodel0, const std::string &edgemodel1, const std::string &edgemodel2, const std::string &nodemodel, RegionPtr rp)
     : TriangleEdgeModel(edgemodel0, rp, TriangleEdgeModel::DisplayType::SCALAR), nodeModelName(nodemodel), edgeModel1Name(edgemodel1), edgeModel2Name(edgemodel2)
 {
-  RegisterCallback(nodemodel);
+}
+
+template <typename DoubleType>
+void TriangleEdgeFromNodeModel<DoubleType>::derived_init()
+{
+  auto rp = const_cast<Region *>(&GetRegion());
+
+  RegisterCallback(nodeModelName);
   dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(edgeModel1Name, rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
   dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(edgeModel2Name, rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
-
-//// Need to figure out the deleter situation from sub models
-//// Perhaps a Delete SubModels method??????
 
 template <typename DoubleType>
 void TriangleEdgeFromNodeModel<DoubleType>::calcTriangleEdgeScalarValues() const
 {
   const Region &reg = GetRegion();
-
-#if 0
-  const Device &dev = *reg.GetDevice();
-  const size_t dimension = dev.GetDimension();
-  dsAssert(dimension == 2, "UNEXPECTED");
-#endif
 
   const ConstNodeModelPtr nmp = reg.GetNodeModel(nodeModelName);
   dsAssert(nmp.get(), "UNEXPECTED");
