@@ -12,12 +12,14 @@ template <typename DoubleType>
 class NodePosition : public NodeModel
 {
     public:
-      NodePosition(RegionPtr);
       ~NodePosition();
 
       void Serialize(std::ostream &) const;
 
     private:
+      friend class dsModelFactory<NodePosition<DoubleType>>;
+      explicit NodePosition(RegionPtr);
+
       DoubleType calcNodePosition(ConstNodePtr) const;
       void calcNodeScalarValues() const;
       void setInitialValues();

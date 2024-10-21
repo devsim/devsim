@@ -13,11 +13,12 @@ template <typename DoubleType>
 class NodeVolume : public NodeModel
 {
     public:
-      NodeVolume(RegionPtr);
-
       void Serialize(std::ostream &) const;
 
     private:
+      friend class dsModelFactory<NodeVolume<DoubleType>>;
+      explicit NodeVolume(RegionPtr);
+
       DoubleType calcNodeVolume(ConstNodePtr) const;
       void calcNodeScalarValues() const;
       void setInitialValues();

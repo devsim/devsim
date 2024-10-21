@@ -17,11 +17,12 @@ template <typename DoubleType>
 class SurfaceArea : public NodeModel
 {
     public:
-      SurfaceArea(RegionPtr);
-
       void Serialize(std::ostream &) const;
 
     private:
+      friend class dsModelFactory<SurfaceArea<DoubleType>>;
+      explicit SurfaceArea(RegionPtr);
+
       void calcSurfaceArea3d() const;
       void calcSurfaceArea2d() const;
       void calcSurfaceArea1d() const;
