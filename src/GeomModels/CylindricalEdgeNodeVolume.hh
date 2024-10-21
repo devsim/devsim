@@ -18,9 +18,10 @@ class CylindricalEdgeNodeVolume : public EdgeModel
 
       void Serialize(std::ostream &) const;
 
-      CylindricalEdgeNodeVolume(RegionPtr);
-
     private:
+
+      friend class dsModelFactory<CylindricalEdgeNodeVolume>;
+      explicit CylindricalEdgeNodeVolume(RegionPtr);
 
       void calcEdgeScalarValues() const;
 

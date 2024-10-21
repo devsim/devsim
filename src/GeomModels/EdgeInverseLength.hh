@@ -12,11 +12,12 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 class EdgeInverseLength : public EdgeModel {
     public:
-        EdgeInverseLength(RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<EdgeInverseLength>;
+        explicit EdgeInverseLength(RegionPtr);
+
         EdgeInverseLength();
         EdgeInverseLength(const EdgeInverseLength &);
         EdgeInverseLength &operator=(const EdgeInverseLength &);

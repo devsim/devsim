@@ -19,18 +19,16 @@ TriangleEdgeModelPtr CreateTriangleEdgePairFromEdgeModelDerivative(
 template <typename DoubleType>
 class TriangleEdgePairFromEdgeModelDerivative : public TriangleEdgeModel {
     public:
-        //// Out naming convention is that the name given is the edge model
-        //// The element edge model is edgemodel_ex, edgemodel_ey
+        void Serialize(std::ostream &) const;
+
+    private:
+        friend class dsModelFactory<TriangleEdgePairFromEdgeModelDerivative>;
         TriangleEdgePairFromEdgeModelDerivative(
           const std::string &/*edgemodel*/,
           const std::string &/*nodemodel*/,
           RegionPtr /*rp*/
         );
 
-
-        void Serialize(std::ostream &) const;
-
-    private:
 
         void calcTriangleEdgeScalarValues() const;
 

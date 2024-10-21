@@ -17,11 +17,12 @@ class Vector;
 template <typename DoubleType>
 class TriangleEdgeCouple : public TriangleEdgeModel {
     public:
-        TriangleEdgeCouple(RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<TriangleEdgeCouple>;
+        explicit TriangleEdgeCouple(RegionPtr);
+
         TriangleEdgeCouple();
         TriangleEdgeCouple(const TriangleEdgeCouple &);
         TriangleEdgeCouple &operator=(const TriangleEdgeCouple &);

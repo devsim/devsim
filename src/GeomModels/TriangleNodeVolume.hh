@@ -13,11 +13,12 @@ template <typename DoubleType>
 class TriangleNodeVolume : public TriangleEdgeModel
 {
     public:
-        TriangleNodeVolume(RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<TriangleNodeVolume>;
+        explicit TriangleNodeVolume(RegionPtr);
+
         TriangleNodeVolume();
         TriangleNodeVolume(const TriangleNodeVolume &);
         TriangleNodeVolume &operator=(const TriangleNodeVolume &);

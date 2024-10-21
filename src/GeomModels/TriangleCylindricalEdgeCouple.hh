@@ -20,12 +20,11 @@ TriangleEdgeModelPtr CreateTriangleCylindricalEdgeCouple(RegionPtr);
 template <typename DoubleType>
 class TriangleCylindricalEdgeCouple : public TriangleEdgeModel {
     public:
-
         void Serialize(std::ostream &) const;
 
-        TriangleCylindricalEdgeCouple(RegionPtr);
-
     private:
+        friend class dsModelFactory<TriangleCylindricalEdgeCouple>;
+        explicit TriangleCylindricalEdgeCouple(RegionPtr);
 
         TriangleCylindricalEdgeCouple();
         TriangleCylindricalEdgeCouple(const TriangleCylindricalEdgeCouple &);

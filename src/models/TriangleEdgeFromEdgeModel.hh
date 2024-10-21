@@ -13,13 +13,11 @@ TriangleEdgeModelPtr CreateTriangleEdgeFromEdgeModel(const std::string &, Region
 template <typename DoubleType>
 class TriangleEdgeFromEdgeModel : public TriangleEdgeModel {
     public:
-        //// Out naming convention is that the name given is the edge model
-        //// The element edge model is edgemodel_ex, edgemodel_ey
-        TriangleEdgeFromEdgeModel(const std::string &, RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<TriangleEdgeFromEdgeModel>;
+        TriangleEdgeFromEdgeModel(const std::string &, RegionPtr);
 
         void calcTriangleEdgeScalarValues() const;
 

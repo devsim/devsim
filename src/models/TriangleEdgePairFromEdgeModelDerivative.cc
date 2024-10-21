@@ -50,7 +50,7 @@ TriangleEdgePairFromEdgeModelDerivative<DoubleType>::TriangleEdgePairFromEdgeMod
       {
         if ((i + j + k) != 0)
         {
-          new TriangleEdgeSubModel<DoubleType>(model_names[i][j][k], rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
+          dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(model_names[i][j][k], rp, TriangleEdgeModel::DisplayType::NODISPLAY, this->GetSelfPtr());
         }
       }
     }

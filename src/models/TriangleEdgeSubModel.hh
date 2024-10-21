@@ -17,16 +17,16 @@ template <typename DoubleType>
 class TriangleEdgeSubModel : public TriangleEdgeModel
 {
     public:
-        TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
-        // This model depends on this model to calculate values
-        TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, ConstTriangleEdgeModelPtr);
-
         void Serialize(std::ostream &) const;
 
         static TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
         static TriangleEdgeModelPtr CreateTriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, ConstTriangleEdgeModelPtr);
 
     private:
+        friend class dsModelFactory<TriangleEdgeSubModel>;
+        TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType);
+        TriangleEdgeSubModel(const std::string &, RegionPtr, TriangleEdgeModel::DisplayType, ConstTriangleEdgeModelPtr);
+
         void calcTriangleEdgeScalarValues() const;
         // If we are an auxilary model, create our values from the parent
         mutable WeakConstTriangleEdgeModelPtr parentModel;

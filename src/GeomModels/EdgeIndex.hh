@@ -12,11 +12,12 @@ SPDX-License-Identifier: Apache-2.0
 template <typename DoubleType>
 class EdgeIndex : public EdgeModel {
     public:
-        EdgeIndex(RegionPtr);
-
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<EdgeIndex>;
+        explicit EdgeIndex(RegionPtr);
+
         EdgeIndex();
         EdgeIndex(const EdgeIndex &);
         EdgeIndex &operator=(const EdgeIndex &);

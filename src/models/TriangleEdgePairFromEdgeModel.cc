@@ -23,9 +23,9 @@ TriangleEdgePairFromEdgeModel<DoubleType>::TriangleEdgePairFromEdgeModel(const s
                   {edgemodel + "_node0_x", edgemodel + "_node0_y"},
                   {edgemodel + "_node1_x", edgemodel + "_node1_y"}
                 }};
-  new TriangleEdgeSubModel<DoubleType>(model_names[0][1], rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TriangleEdgeSubModel<DoubleType>(model_names[1][0], rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
-  new TriangleEdgeSubModel<DoubleType>(model_names[1][1], rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(model_names[0][1], rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(model_names[1][0], rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(model_names[1][1], rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
 template <typename DoubleType>

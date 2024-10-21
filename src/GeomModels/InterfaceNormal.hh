@@ -24,12 +24,12 @@ template <typename DoubleType>
 class InterfaceNormal : public EdgeModel
 {
     public:
-
         void Serialize(std::ostream &) const;
 
+    private:
+        friend class dsModelFactory<InterfaceNormal>;
         InterfaceNormal(const std::string &, const std::string &, const std::string &, const std::string &, const std::string &,  RegionPtr);
 
-    private:
         void calcEdgeScalarValues() const;
 
         std::string interface_name;

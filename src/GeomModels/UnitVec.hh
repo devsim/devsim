@@ -14,12 +14,14 @@ class Vector;
 template <typename DoubleType>
 class UnitVec : public EdgeModel {
     public:
-        UnitVec(RegionPtr);
         ~UnitVec();
 
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<UnitVec>;
+        explicit UnitVec(RegionPtr);
+
         UnitVec();
         UnitVec(const UnitVec &);
         UnitVec &operator=(const UnitVec &);

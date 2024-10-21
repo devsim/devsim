@@ -752,7 +752,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         {
           //// This creates a uniform model with value 0.0
           //// Do we need to get the display type somehow in our data format??
-          EdgeModel *edgesol = new EdgeSubModel<double>(sname, rp, EdgeModel::DisplayType::SCALAR);
+          auto edgesol = dsModelFactory<EdgeSubModel<double>>::create(sname, rp, EdgeModel::DisplayType::SCALAR);
           if (data_type == Solution::DataType::UNIFORM)
           {
             edgesol->SetValues<double>(sol.GetUniformValue());
@@ -780,7 +780,7 @@ bool DevsimLoader::Instantiate_(const std::string &deviceName, std::string &erro
         }
         else if (model_type == Solution::ModelType::TRIANGLEEDGE)
         {
-          TriangleEdgeModel *triangleedgesol = new TriangleEdgeSubModel<double>(sname, rp, TriangleEdgeModel::DisplayType::SCALAR);
+          auto triangleedgesol = dsModelFactory<TriangleEdgeSubModel<double>>::create(sname, rp, TriangleEdgeModel::DisplayType::SCALAR);
           if (data_type == Solution::DataType::UNIFORM)
           {
             triangleedgesol->SetValues<double>(sol.GetUniformValue());

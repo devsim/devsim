@@ -18,7 +18,7 @@ TriangleEdgeFromEdgeModel<DoubleType>::TriangleEdgeFromEdgeModel(const std::stri
     : TriangleEdgeModel(edgemodel + "_x", rp, TriangleEdgeModel::DisplayType::SCALAR), edgeModelName(edgemodel), y_ModelName(edgeModelName + "_y")
 {
   RegisterCallback(edgemodel);
-  new TriangleEdgeSubModel<DoubleType>(y_ModelName, rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
+  dsModelFactory<TriangleEdgeSubModel<DoubleType>>::create(y_ModelName, rp, TriangleEdgeModel::DisplayType::SCALAR, this->GetSelfPtr());
 }
 
 //// Need to figure out the deleter situation from sub models

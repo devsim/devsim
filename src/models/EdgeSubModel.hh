@@ -17,16 +17,16 @@ template <typename DoubleType>
 class EdgeSubModel : public EdgeModel
 {
     public:
-        EdgeSubModel(const std::string &, RegionPtr, EdgeModel::DisplayType);
-        // This model depends on this model to calculate values
-        EdgeSubModel(const std::string &, RegionPtr, EdgeModel::DisplayType, ConstEdgeModelPtr);
-
         static EdgeModelPtr CreateEdgeSubModel(const std::string &, RegionPtr, EdgeModel::DisplayType);
         static EdgeModelPtr CreateEdgeSubModel(const std::string &, RegionPtr, EdgeModel::DisplayType, ConstEdgeModelPtr);
 
         void Serialize(std::ostream &) const;
 
     private:
+        friend class dsModelFactory<EdgeSubModel>;
+        EdgeSubModel(const std::string &, RegionPtr, EdgeModel::DisplayType);
+        // This model depends on this model to calculate values
+        EdgeSubModel(const std::string &, RegionPtr, EdgeModel::DisplayType, ConstEdgeModelPtr);
 
         EdgeSubModel();
         EdgeSubModel(const EdgeSubModel &);

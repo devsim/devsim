@@ -24,9 +24,9 @@ class TriangleCylindricalNodeVolume : public TriangleEdgeModel
 
         void Serialize(std::ostream &) const;
 
-        TriangleCylindricalNodeVolume(RegionPtr);
-
     private:
+        friend class dsModelFactory<TriangleCylindricalNodeVolume>;
+        explicit TriangleCylindricalNodeVolume(RegionPtr);
 
         TriangleCylindricalNodeVolume();
         TriangleCylindricalNodeVolume(const TriangleCylindricalNodeVolume &);

@@ -43,10 +43,11 @@ class AverageEdgeModel : public EdgeModel
 
         void Serialize(std::ostream &) const;
 
+    private:
+        friend class dsModelFactory<AverageEdgeModel>;
         AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
         AverageEdgeModel(const std::string &/*edgemodel*/, const std::string &/*nodemodel*/, const std::string &/*var*/, AverageEdgeModelEnum::AverageType_t /*averagetype*/, RegionPtr);
 
-    private:
         template <typename T>
         void doMath(ConstNodeModelPtr, EdgeScalarList<DoubleType> &, const T &) const;
         template <typename T>

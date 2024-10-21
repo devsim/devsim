@@ -9,6 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 #define TRIANGLE_EDGE_MODEL_HH
 
 #include "ModelDataHolder.hh"
+#include "ModelFactory.hh"
 
 #include <memory>
 #include <string>
@@ -183,11 +184,11 @@ TriangleEdgeModelPtr create_triangle_edge_model(bool use_extended, Args &&...arg
   TriangleEdgeModel *ret;
   if (use_extended)
   {
-    ret = new T2(std::forward<Args>(args)...);
+    ret = dsModelFactory<T2>::create(std::forward<Args>(args)...);
   }
   else
   {
-    ret = new T1(std::forward<Args>(args)...);
+    ret = dsModelFactory<T1>::create(std::forward<Args>(args)...);
   }
   return ret->GetSelfPtr();
 }
