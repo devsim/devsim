@@ -50,6 +50,7 @@ from devsim import (
     set_node_values,
     set_parameter,
     solve,
+    edge_average_model,
 )
 
 device = "MyDevice"
@@ -261,6 +262,22 @@ print_node_values(device=device, region="MyOxRegion", name="Potential")
 print((get_contact_charge(device=device, contact="top", equation="PotentialEquation")))
 print((get_contact_charge(device=device, contact="bot", equation="PotentialEquation")))
 
+
+#
+# Edge Average Model
+#
+list1 = []
+for i in ('ElectricField', 'ElectricField:Potential@n0', 'ElectricField:Potential@n1'):
+    list1.append(get_edge_model_values(device=device, region="MySiRegion", name=i))
+print(*zip(*list1))
+
+edge_average_model(device=device, region='MySiRegion', edge_model='efield', node_model='Potential', average_type='negative_gradient')
+edge_average_model(device=device, region='MySiRegion', edge_model='efield', node_model='Potential', average_type='negative_gradient', derivative='Potential')
+
+list2 = []
+for i in ('efield', 'efield:Potential@n0', 'efield:Potential@n1'):
+    list2.append(get_edge_model_values(device=device, region="MySiRegion", name=i))
+print(*zip(*list2))
 
 def get_rlist():
     rlist = []
