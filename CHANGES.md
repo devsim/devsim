@@ -5,13 +5,19 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.9.1
+
+### C++ Code Cleanup
+
+Internal code was refactored.  While it has been tested, please report any issues you hay encounter.
+
 ## Version 2.9.0
 
-### Windows Python Support
+### Windows Python support
 
 The official ``python.org`` distribution is beter supported.  This is since the ``python.org`` distribution does not appear to ship the ``zlib.dll``.
 
-### VTK Writer
+### VTK writer
 
 [#151](https://github.com/devsim/devsim/issues/151)
 

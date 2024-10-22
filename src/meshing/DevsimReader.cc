@@ -10,10 +10,10 @@ SPDX-License-Identifier: Apache-2.0
 
 namespace dsDevsimParse {
 int meshlineno;
-dsMesh::DevsimLoaderPtr  DevsimLoader = nullptr;
+dsMesh::DevsimLoaderPtr  DevsimLoader;
 dsMesh::MeshRegionPtr    MeshRegion;
-dsMesh::MeshContactPtr   MeshContact = nullptr;
-dsMesh::MeshInterfacePtr MeshInterface = nullptr;
+dsMesh::MeshContactPtr   MeshContact;
+dsMesh::MeshInterfacePtr MeshInterface;
 dsMesh::SolutionPtr      Sol;
 dsMesh::EquationPtr      Equation;
 std::string errors;
