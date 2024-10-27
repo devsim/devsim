@@ -36,9 +36,6 @@ SET (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /SAFESEH:NO")
 
 SET (EIGEN_INCLUDE ${CMAKE_SOURCE_DIR}/external/eigen)
 
-SET (ZLIB_INCLUDE ${CONDA_PREFIX}/Library/include)
-SET (ZLIB_ARCHIVE ${CONDA_PREFIX}/Library/lib/zlib.lib)
-
 SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
 SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/${BUILDDIR}/src/engine/Release/symdiff_dynamic.lib)
 

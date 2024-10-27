@@ -12,9 +12,6 @@ SET (BLAS_ARCHIVE  -weak-lblas -weak-llapack)
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 SET (EIGEN_INCLUDE ${EXTERNAL_LIB}/eigen)
 
-SET (ZLIB_INCLUDE "/usr/include")
-SET (ZLIB_ARCHIVE "-lz")
-
 SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
 SET (ADD_LINKER_FLAGS " -flat_namespace")

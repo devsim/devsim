@@ -2,11 +2,9 @@ SET (FLEX /usr/bin/flex)
 SET (BISON /usr/bin/bison)
 SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 SET (EIGEN_INCLUDE ${EXTERNAL_LIB}/eigen)
-SET (ZLIB_INCLUDE /usr/include)
 
 SET (BLAS_ARCHIVE /usr/lib/x86_64-linux-gnu/liblapack.so.3 /usr/lib/x86_64-linux-gnu/libblas.so.3)
 SET (EXTENDED_BLAS_ARCHIVE ${EXTERNAL_LIB}/getrf/build/libgetrf.a)
-SET (ZLIB_ARCHIVE -lz )
 
 SET (BOOST_INCLUDE ${EXTERNAL_LIB}/boostorg/config/include ${EXTERNAL_LIB}/boostorg/math/include ${EXTERNAL_LIB}/boostorg/multiprecision/include)
 ADD_DEFINITIONS(-DBOOST_MP_STANDALONE -DBOOST_MATH_STANDALONE)
