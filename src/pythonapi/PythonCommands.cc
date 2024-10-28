@@ -160,7 +160,7 @@ static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, con
 
   if (!ret)
   {
-    PyErr_SetString(GETSTATE(m)->error, const_cast<char *>(errorString.c_str()));
+    PyErr_SetString(GETSTATE(m)->error, errorString.c_str());
   }
 
   return ret;
@@ -238,7 +238,7 @@ DEVSIM_MODULE_INIT(void)
 
     // TODO: modify symdiff to use this approach
     struct module_state *st = GETSTATE(module);
-    st->error = PyErr_NewException(const_cast<char *>(DEVSIM_MODULE_STRING ".error"), nullptr, nullptr);
+    st->error = PyErr_NewException(DEVSIM_MODULE_STRING ".error", nullptr, nullptr);
     if (st->error == nullptr) {
         Py_DECREF(module);
         INITERROR;

@@ -32,64 +32,64 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
 
   if (ot == OutputType::INFO)
   {
-    PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
+    PyObject *tc = PySys_GetObject("stdout");
     if (!tc)
     {
       std::cerr << "Could not find output channel!";
       Py_Exit(-1);
     }
-    PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-    PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+    PyFile_WriteString(msg.c_str(), tc);
+    PyObject_CallMethod(tc, "flush", "");
   }
   else if (ot == OutputType::VERBOSE1)
   {
     if ((verbosity == Verbosity_t::V1) || (verbosity == Verbosity_t::V2))
     {
-      PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
+      PyObject *tc = PySys_GetObject("stdout");
       if (!tc)
       {
           std::cerr << "Could not find output channel!";
           Py_Exit(-1);
       }
-      PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-      PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+      PyFile_WriteString(msg.c_str(), tc);
+      PyObject_CallMethod(tc, "flush", "");
     }
   }
   else if (ot == OutputType::VERBOSE2)
   {
     if (verbosity == Verbosity_t::V2)
     {
-      PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
+      PyObject *tc = PySys_GetObject("stdout");
       if (!tc)
       {
           std::cerr << "Could not find output channel!";
           Py_Exit(-1);
       }
-      PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-      PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+      PyFile_WriteString(msg.c_str(), tc);
+      PyObject_CallMethod(tc, "flush", "");
     }
   }
   else if (ot == OutputType::ERROR)
   {
-    PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
+    PyObject *tc = PySys_GetObject("stdout");
     if (!tc)
     {
       std::cerr << "Could not find output channel!";
       Py_Exit(-1);
     }
-    PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-    PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+    PyFile_WriteString(msg.c_str(), tc);
+    PyObject_CallMethod(tc, "flush", "");
   }
   else if (ot == OutputType::FATAL)
   {
-    PyObject *tc = PySys_GetObject(const_cast<char *>("stdout"));
+    PyObject *tc = PySys_GetObject("stdout");
     if (!tc)
     {
       std::cerr << "Could not find output channel!";
       Py_Exit(-1);
     }
-    PyFile_WriteString(const_cast<char *>(msg.c_str()), tc);
-    PyObject_CallMethod(tc, const_cast<char *>("flush"), const_cast<char *>(""));
+    PyFile_WriteString(msg.c_str(), tc);
+    PyObject_CallMethod(tc, "flush", "");
     throw dsException(msg);
   }
 }

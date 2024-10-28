@@ -259,7 +259,7 @@ ObjectHolder::LongEntry_t ObjectHolder::GetLong() const
       const std::string &s = this->GetString();
       PyErr_Clear();
       char *p;
-      PyObject *iobj = PyLong_FromString(const_cast<char *>(s.c_str()), &p, 10);
+      PyObject *iobj = PyLong_FromString(s.c_str(), &p, 10);
       if (iobj)
       {
         if ((*p) == 0)
