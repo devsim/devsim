@@ -30,66 +30,43 @@ void OutputStream::WriteOut(OutputType ot, Verbosity_t verbosity, const std::str
     verbosity = Verbosity_t::V2;
   }
 
-  if (ot == OutputType::INFO)
-  {
+
+  auto print_function = [](auto &m)->void {
     PyObject *tc = PySys_GetObject("stdout");
     if (!tc)
     {
       std::cerr << "Could not find output channel!";
       Py_Exit(-1);
     }
-    PyFile_WriteString(msg.c_str(), tc);
+    PyFile_WriteString(m.c_str(), tc);
     PyObject_CallMethod(tc, "flush", "");
+  };
+
+  if (ot == OutputType::INFO)
+  {
+    print_function(msg);
   }
   else if (ot == OutputType::VERBOSE1)
   {
     if ((verbosity == Verbosity_t::V1) || (verbosity == Verbosity_t::V2))
     {
-      PyObject *tc = PySys_GetObject("stdout");
-      if (!tc)
-      {
-          std::cerr << "Could not find output channel!";
-          Py_Exit(-1);
-      }
-      PyFile_WriteString(msg.c_str(), tc);
-      PyObject_CallMethod(tc, "flush", "");
+      print_function(msg);
     }
   }
   else if (ot == OutputType::VERBOSE2)
   {
     if (verbosity == Verbosity_t::V2)
     {
-      PyObject *tc = PySys_GetObject("stdout");
-      if (!tc)
-      {
-          std::cerr << "Could not find output channel!";
-          Py_Exit(-1);
-      }
-      PyFile_WriteString(msg.c_str(), tc);
-      PyObject_CallMethod(tc, "flush", "");
+      print_function(msg);
     }
   }
   else if (ot == OutputType::ERROR)
   {
-    PyObject *tc = PySys_GetObject("stdout");
-    if (!tc)
-    {
-      std::cerr << "Could not find output channel!";
-      Py_Exit(-1);
-    }
-    PyFile_WriteString(msg.c_str(), tc);
-    PyObject_CallMethod(tc, "flush", "");
+    print_function(msg);
   }
   else if (ot == OutputType::FATAL)
   {
-    PyObject *tc = PySys_GetObject("stdout");
-    if (!tc)
-    {
-      std::cerr << "Could not find output channel!";
-      Py_Exit(-1);
-    }
-    PyFile_WriteString(msg.c_str(), tc);
-    PyObject_CallMethod(tc, "flush", "");
+    print_function(msg);
     throw dsException(msg);
   }
 }
