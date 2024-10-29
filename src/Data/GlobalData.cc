@@ -280,7 +280,7 @@ void GlobalData::SignalCallbacksOnGlobal(const std::string &name)
             if (deviceData[device].count(name))
             {
                 std::ostringstream os;
-                os << "Device \"" << device << " shadows global parameter update " << name << "\n";
+                os << "Device \"" << device << "\" shadows global parameter update " << name << "\n";
                 OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
             }
             else
