@@ -30,8 +30,11 @@ elif [ "${1}" = "clang" ]
   export CC=clang;
   export CXX=clang++;
   export F77="";
-  export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
-  export PLAT_NAME="universal2"
+  export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64"
+  export PLAT_NAME="arm64"
+  FULL_PLAT_NAME=${PLAT_NAME}
+#  export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
+#  export PLAT_NAME="universal2"
   export PYTHON3_BIN=python3
   export PIP_BIN=pip3
 else
@@ -79,7 +82,6 @@ fi
 DIST_NAME=devsim_macos_${PLAT_NAME}_${2}
 (cd dist && bash package_macos.sh ${1} ${DIST_NAME});
 cp -f dist/bdist_wheel/setup.* dist/${DIST_NAME}
-FULL_PLAT_NAME=$(${PYTHON3_BIN} dist/bdist_wheel/fix_macos_arch.py ${PLAT_NAME})
 echo PACKAGING $FULL_PLAT_NAME
 if [[ -n "$FULL_PLAT_NAME" ]]; then
 (cd dist/${DIST_NAME} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg);
