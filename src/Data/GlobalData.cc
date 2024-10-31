@@ -274,7 +274,6 @@ void GlobalData::SignalCallbacksOnGlobal(const std::string &name)
     for (DeviceList_t::iterator it = deviceList.begin(); it != deviceList.end(); ++it)
     {
         const std::string &device = it->first;
-//      os << "signal " << device << " " << name << std::endl;
         if (deviceData.count(device))
         {
             if (deviceData[device].count(name))
@@ -285,13 +284,11 @@ void GlobalData::SignalCallbacksOnGlobal(const std::string &name)
             }
             else
             {
-//              os << __LINE__ << " signal " << device << " " << name << std::endl;
                 SignalCallbacksOnDevice(device, name);
             }
         }
         else
         {
-//              os << __LINE__ << " signal " << device << " " << name << std::endl;
                 SignalCallbacksOnDevice(device, name);
         }
     }
@@ -299,7 +296,6 @@ void GlobalData::SignalCallbacksOnGlobal(const std::string &name)
 
 void GlobalData::SignalCallbacksOnDevice(const std::string &device, const std::string &name)
 {
-//    os  << __LINE__ << " signal " << device << " " << name << std::endl;
     DeviceList_t::iterator it = deviceList.find(device);
     if (it != deviceList.end())
     {
@@ -321,19 +317,16 @@ void GlobalData::SignalCallbacksOnDevice(const std::string &device, const std::s
                     }
                     else
                     {
-//                      os  << __LINE__ << " signal " << device << " " << region << " " << name << std::endl;
                         (rit->second)->SignalCallbacks(name);
                     }
                 }
                 else
                 {
-//                  os  << __LINE__ << " signal " << device << " " << region << " " << name << std::endl;
                     (rit->second)->SignalCallbacks(name);
                 }
             }
             else
             {
-//              os  << __LINE__ << " signal " << device << " " << region << " " << name << std::endl;
                 (rit->second)->SignalCallbacks(name);
             }
         }
