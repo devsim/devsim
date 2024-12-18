@@ -363,6 +363,8 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
   ClearBlasFunctions();
 
 #if defined(__APPLE__)
+  // Intel MKL discontinued for macOS
+  return ret;
 // This should always be available through symlink
   const std::string default_name = "libmkl_rt.dylib";
   const std::string prefix_name = "libmkl_rt.";
@@ -509,10 +511,12 @@ LoaderMessages_t LoadMathLibraries(std::string &errors)
   {
     ret = LoadFromEnvironment(env, errors);
   }
+#if defined(__APPLE__)
   else
   {
     ret = LoadIntelMKL(errors);
   }
+#endif
 
   if ((ret == LoaderMessages_t::MKL_LOADED) || (ret == LoaderMessages_t::MATH_LOADED))
   {
