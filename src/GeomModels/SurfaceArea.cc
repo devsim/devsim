@@ -175,19 +175,11 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
     std::vector<DoubleType> nvy(nl.size());
 
     SurfaceAreaUtil::processEdgeList(contact_edge_list, unitx, unity, edgeLengths, nv, nvx, nvy);
-
-    contact_area.lock()->SetValues(nv);
-  }
-  {
-    //// This is the net surface area for the vector
-    //// This is the xnormal and ynormal
-    std::vector<DoubleType> nv(nl.size());
-    std::vector<DoubleType> nvx(nl.size());
-    std::vector<DoubleType> nvy(nl.size());
-
     SurfaceAreaUtil::processEdgeList(interface_edge_list, unitx, unity, edgeLengths, nv, nvx, nvy);
-
+    
+    contact_area.lock()->SetValues(nv);
     SetValues(nv);
+    
     nsurf_x.lock()->SetValues(nvx);
     nsurf_y.lock()->SetValues(nvy);
   }
@@ -261,20 +253,9 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
     std::vector<DoubleType> nvz(nl.size());
 
     SurfaceAreaUtil::processTriangleList(contact_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
-
-    contact_area.lock()->SetValues(nv);
-  }
-
-  {
-    //// This is the net surface area for the vector
-    //// This is the xnormal and ynormal
-    std::vector<DoubleType> nv(nl.size());
-    std::vector<DoubleType> nvx(nl.size());
-    std::vector<DoubleType> nvy(nl.size());
-    std::vector<DoubleType> nvz(nl.size());
-
     SurfaceAreaUtil::processTriangleList(interface_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
-
+    
+    contact_area.lock()->SetValues(nv);
     SetValues(nv);
 
     nsurf_x.lock()->SetValues(nvx);
