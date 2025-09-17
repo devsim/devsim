@@ -49,12 +49,19 @@ void SurfaceArea<DoubleType>::derived_init()
 
     nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
     nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+
+    ncontact_x = CreateNodeSolution("ContactNSurfaceNormal_x", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    ncontact_y = CreateNodeSolution("ContactNSurfaceNormal_y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
   }
   else if (dimension == 3)
   {
     nsurf_x = CreateNodeSolution("NSurfaceNormal_x", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
     nsurf_y = CreateNodeSolution("NSurfaceNormal_y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
     nsurf_z = CreateNodeSolution("NSurfaceNormal_z", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+
+    ncontact_x = CreateNodeSolution("ContactNSurfaceNormal_x", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    ncontact_y = CreateNodeSolution("ContactNSurfaceNormal_y", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
+    ncontact_z = CreateNodeSolution("ContactNSurfaceNormal_z", rp, NodeModel::DisplayType::SCALAR, this->GetSelfPtr());
   }
   RegisterCallback("@@@InterfaceChange");
   RegisterCallback("@@@ContactChange");
@@ -175,11 +182,22 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
     std::vector<DoubleType> nvy(nl.size());
 
     SurfaceAreaUtil::processEdgeList(contact_edge_list, unitx, unity, edgeLengths, nv, nvx, nvy);
-    SurfaceAreaUtil::processEdgeList(interface_edge_list, unitx, unity, edgeLengths, nv, nvx, nvy);
-    
+
     contact_area.lock()->SetValues(nv);
+
+    ncontact_x.lock()->SetValues(nvx);
+    ncontact_y.lock()->SetValues(nvy);
+  }
+  {
+    //// This is the net surface area for the vector
+    //// This is the xnormal and ynormal
+    std::vector<DoubleType> nv(nl.size());
+    std::vector<DoubleType> nvx(nl.size());
+    std::vector<DoubleType> nvy(nl.size());
+
+    SurfaceAreaUtil::processEdgeList(interface_edge_list, unitx, unity, edgeLengths, nv, nvx, nvy);
+
     SetValues(nv);
-    
     nsurf_x.lock()->SetValues(nvx);
     nsurf_y.lock()->SetValues(nvy);
   }
@@ -253,9 +271,24 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
     std::vector<DoubleType> nvz(nl.size());
 
     SurfaceAreaUtil::processTriangleList(contact_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
-    SurfaceAreaUtil::processTriangleList(interface_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
-    
+
     contact_area.lock()->SetValues(nv);
+    
+    ncontact_x.lock()->SetValues(nvx);
+    ncontact_y.lock()->SetValues(nvy);
+    ncontact_z.lock()->SetValues(nvz);
+  }
+
+  {
+    //// This is the net surface area for the vector
+    //// This is the xnormal and ynormal
+    std::vector<DoubleType> nv(nl.size());
+    std::vector<DoubleType> nvx(nl.size());
+    std::vector<DoubleType> nvy(nl.size());
+    std::vector<DoubleType> nvz(nl.size());
+
+    SurfaceAreaUtil::processTriangleList(interface_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
+
     SetValues(nv);
 
     nsurf_x.lock()->SetValues(nvx);

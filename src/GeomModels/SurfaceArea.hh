@@ -35,6 +35,11 @@ class SurfaceArea : public NodeModel
       WeakNodeModelPtr nsurf_x;
       WeakNodeModelPtr nsurf_y;
       WeakNodeModelPtr nsurf_z;
+
+      // Contact normal
+      WeakNodeModelPtr ncontact_x;
+      WeakNodeModelPtr ncontact_y;
+      WeakNodeModelPtr ncontact_z;
 };
 
 #endif
