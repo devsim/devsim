@@ -17,14 +17,14 @@ jobs:
         # TODO: use specific submodules for platform
         with:
           submodules: true
-      - name: build linux x86_64
+      - name: build ${{ runner.os }} ${{ runner.arch }}
         # TODO: make sure each part is built with the proper concurrency
         #echo "RUNNER OS"  "$RUNNER_OS" "${{ runner.os }}" "$RUNNER_ARCH" "${{ runner.arch }}"
         run:   |
                if [ "$RUNNER_OS" == "Linux" ]; then
                     bash ./scripts/build_docker_manylinux_2_28.sh test_tag;
                elif [ "$RUNNER_OS" == "macOS" ]; then
-                    bash ./scripts/build_macos.sh clang test_tag;
+                    bash ./scripts/build_macos.sh test_tag;
                else
                     echo "$RUNNER_OS not supported"
                     exit 1

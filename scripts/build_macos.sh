@@ -1,46 +1,21 @@
 #!/bin/bash
 set -e
 set -u
+# this is verbose remove
+set -x
 
-if [ "${1}" = "gcc" ]
-  then
-  # try to fix build error
-  #export HOMEBREW_NO_INSTALL_CLEANUP=1
-  #brew update > /dev/null;
-  #if brew ls --versions gcc > /dev/null;
-  #then
-  #brew outdated gcc || brew upgrade gcc;
-  #else
-  ## the overwrite is to fix the linking issue seen on travis ci
-  #brew install gcc || brew link --overwrite gcc;
-  #fi
-  export CMAKE="cmake"
-  export CMAKE_CXX_FLAGS=""
-  export CC=/usr/local/bin/gcc-9;
-  export CXX=/usr/local/bin/g++-9;
-  export F77=/usr/local/bin/gfortran-9;
-  export ARCH_ARG=""
-  export PLAT_NAME="x86_64"
-  export PYTHON3_BIN=/usr/local/bin/python3
-  export PIP_BIN=/usr/local/bin/pip3
-elif [ "${1}" = "clang" ]
-  then
-  export CMAKE="cmake"
-  export CMAKE_CXX_FLAGS=""
-  export CC=clang;
-  export CXX=clang++;
-  export F77="";
-  export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64"
-  export PLAT_NAME="arm64"
-  FULL_PLAT_NAME=${PLAT_NAME}
+export CMAKE="cmake"
+export CMAKE_CXX_FLAGS=""
+export CC=clang;
+export CXX=clang++;
+export F77="";
+export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64"
+export PLAT_NAME="arm64"
+FULL_PLAT_NAME=${PLAT_NAME}
 #  export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
 #  export PLAT_NAME="universal2"
-  export PYTHON3_BIN=python3
-  export PIP_BIN=pip3
-else
-  echo "ERROR: FIRST ARGUMENT MUST BE gcc OR clang";
-  exit 1;
-fi
+export PYTHON3_BIN=/usr/bin/python3
+export PIP_BIN=/usr/bin/pip3
 
 export MACOSX_DEPLOYMENT_TARGET=12.0
 
@@ -53,30 +28,12 @@ export PYTHON3_ARCHIVE=""
 #https://developer.apple.com/performance/accelerateframework.html
 
 # SYMDIFF build
-if [ "${1}" = "gcc" ]
-then
-(cd external/symdiff && bash ../symdiff_macos.sh && cd osx_release && make -j3)
-elif [ "${1}" = "clang" ]
-then
 (cd external/symdiff && bash  ../symdiff_macos.sh && cd osx_release && make -j3)
-fi
-
-# quad precision getrf
-if [ "${1}" = "gcc" ]
-then
-(cd external/getrf && ./setup_osx.sh && cd build && make -j3)
-fi
 
 # umfpack support
 (cd external/umfpack_lgpl && bash setup_macos.sh && cd build && make -j3)
 
-if [ "${1}" = "gcc" ]
-then
-bash ./scripts/setup_osx_gcc.sh
-elif [ "${1}" = "clang" ]
-then
 bash ./scripts/setup_osx_10.10.sh
-fi
 
 (cd osx_x86_64_release && make -j3)
 DIST_NAME=devsim_macos_${PLAT_NAME}_${2}
