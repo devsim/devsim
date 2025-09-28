@@ -18,7 +18,6 @@ jobs:
           submodules: true
       - name: build linux x86_64
         # TODO: make sure each part is built with the proper concurrency
-        if: steps.isSmoke.output.test == true
         run: |
           echo "RUNNER OS"  "$RUNNER_OS" "${{ runner.os }}"
           #bash ./scripts/build_docker_manylinux_2_28.sh test_tag;
