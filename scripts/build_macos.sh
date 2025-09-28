@@ -11,7 +11,7 @@ export CXX=clang++;
 export F77="";
 export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64"
 export PLAT_NAME="arm64"
-FULL_PLAT_NAME=${PLAT_NAME}
+#FULL_PLAT_NAME=${PLAT_NAME}
 export PYTHON3_BIN=/opt/homebrew/bin/python3
 export PIP_BIN=pip
 
@@ -40,9 +40,9 @@ bash ./scripts/setup_osx_10.10.sh
 DIST_NAME=devsim_macos_${PLAT_NAME}_${1}
 (cd dist && bash package_macos.sh ${DIST_NAME});
 cp -f dist/bdist_wheel/setup.* dist/${DIST_NAME}
-echo PACKAGING $FULL_PLAT_NAME
-if [[ -n "$FULL_PLAT_NAME" ]]; then
-(cd dist/${DIST_NAME} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg);
-fi
+#echo PACKAGING $FULL_PLAT_NAME
+#if [[ -n "$FULL_PLAT_NAME" ]]; then
+#(cd dist/${DIST_NAME} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg);
+#fi
 (cd dist/${DIST_NAME} && ${PIP_BIN} wheel .)
 (cp dist/${DIST_NAME}/*.whl dist)
