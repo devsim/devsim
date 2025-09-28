@@ -55,16 +55,16 @@ export PYTHON3_ARCHIVE=""
 # SYMDIFF build
 if [ "${1}" = "gcc" ]
 then
-(cd external/symdiff && bash ../symdiff_macos.sh && cd osx_release && make -j4)
+(cd external/symdiff && bash ../symdiff_macos.sh && cd osx_release && make -j3)
 elif [ "${1}" = "clang" ]
 then
-(cd external/symdiff && bash  ../symdiff_macos.sh && cd osx_release && make -j4)
+(cd external/symdiff && bash  ../symdiff_macos.sh && cd osx_release && make -j3)
 fi
 
 # quad precision getrf
 if [ "${1}" = "gcc" ]
 then
-(cd external/getrf && ./setup_osx.sh && cd build && make -j4)
+(cd external/getrf && ./setup_osx.sh && cd build && make -j3)
 fi
 
 # umfpack support
@@ -78,7 +78,7 @@ then
 bash ./scripts/setup_osx_10.10.sh
 fi
 
-(cd osx_x86_64_release && make -j4)
+(cd osx_x86_64_release && make -j3)
 DIST_NAME=devsim_macos_${PLAT_NAME}_${2}
 (cd dist && bash package_macos.sh ${1} ${DIST_NAME});
 cp -f dist/bdist_wheel/setup.* dist/${DIST_NAME}

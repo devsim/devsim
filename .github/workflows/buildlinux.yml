@@ -7,8 +7,9 @@ jobs:
     strategy:
       # also support macos, linux arm64
       matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14]
     runs-on: ${{matrix.os}}
+    # handle the fact we only want to build/name on tags
 
     steps:
       - name: Checkout repository
@@ -18,6 +19,13 @@ jobs:
           submodules: true
       - name: build linux x86_64
         # TODO: make sure each part is built with the proper concurrency
-        run: |
-          echo "RUNNER OS"  "$RUNNER_OS" "${{ runner.os }}" "$RUNNER_ARCH" "${{ runner.arch }}"
-          #bash ./scripts/build_docker_manylinux_2_28.sh test_tag;
+        #echo "RUNNER OS"  "$RUNNER_OS" "${{ runner.os }}" "$RUNNER_ARCH" "${{ runner.arch }}"
+        run:   |
+               if [ "$RUNNER_OS" == "Linux" ]; then
+                    bash ./scripts/build_docker_manylinux_2_28.sh test_tag;
+               elif [ "$RUNNER_OS" == "macOS" ]; then
+                    bash ./scripts/build_macos.sh clang test_tag;
+               else
+                    echo "$RUNNER_OS not supported"
+                    exit 1
+               fi
