@@ -18,7 +18,7 @@ export PIP_BIN=pip
 ${PYTHON3_BIN} -mvenv venv
 source venv/bin/activate
 
-export MACOSX_DEPLOYMENT_TARGET=12.0
+#export MACOSX_DEPLOYMENT_TARGET=12.0
 
 ${PIP_BIN} install wheel
 export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as gp; print(gp()['include'])")
