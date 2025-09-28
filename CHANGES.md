@@ -16,6 +16,8 @@ Fix issue [#158](https://github.com/devsim/devsim/issues/158), Missing Contact S
 
 Thanks to [@marc-flex](https://github.com/marc-flex) for providing a pull request for these missing models.
 
+Update to Python 3.9
+
 ## Version 2.9.1
 
 ### C++ Code Cleanup
