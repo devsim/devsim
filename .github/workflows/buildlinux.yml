@@ -1,0 +1,21 @@
+on:
+  push:
+    branches:
+      - "r2.9.2"
+jobs:
+  example_matrix:
+    strategy:
+      # also support macos, linux arm64
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        # TODO: use specific submodules for platform
+        with:
+          submodules: true
+      - name: build in image
+        run: |
+          bash ./scripts/build_docker_manylinux_2_28.sh test_tag;
