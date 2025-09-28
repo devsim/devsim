@@ -5,7 +5,6 @@ if ! [ $1 ]; then
   exit 2;
 fi
 
-
 for ARCH in `uname -m`; do
 PLATFORM=linux
 SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
@@ -29,7 +28,6 @@ mkdir -p ${DIST_DIR}
 mkdir -p ${DIST_PYDLL}
 
 cp -v ${SRC_DIR}/devsim_py3.so ${DIST_PYDLL}
-#cp -v ${SRC_DIR}/devsim_tcl ${DIST_BIN}
 cp -v __init__.py ${DIST_PYDLL}
 
 # goes to lib/symdiff
@@ -48,10 +46,6 @@ cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
 for i in *.md NOTICE LICENSE; do
 cp ../$i ${DIST_DIR}
 done
-
-#MKL library
-# $ORIGIN rpath set in src/main/CMakeLists.txt
-#cp "${CONDA_PREFIX}/lib/libmkl_rt.so.1" ${DIST_PYDLL}
 
 
 #### Python files and the examples
@@ -72,13 +66,9 @@ rsync -aqP --delete ${SYMDIFF_EXAMPLES_DIR}/ ${DIST_DIR}/examples/symdiff
 
 COMMIT=`git rev-parse --verify HEAD`
 cat <<EOF > ${DIST_DIR}/VERSION
-Package released as:
-${DIST_VER}.tgz
-
 Source available from:
-http://github.com/devsim/devsim
+https://github.com/devsim/devsim
 commit ${COMMIT}
 EOF
-tar czvf ${DIST_VER}.tgz ${DIST_DIR}
 done
 

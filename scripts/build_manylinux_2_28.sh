@@ -11,13 +11,6 @@ export DEVSIM_CONFIG="nofloat128"
 fi
 
 
-# Centos Specific
-#https://fedoraproject.org/wiki/EPEL
-#yum install -y git bison flex python3 python3-devel
-#yum install -y centos-release-scl
-#yum install -y devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-libquadmath-devel devtoolset-9-gcc-gfortran make
-#yum install -y epel-release
-#yum install -y cmake3
 yum install -y bison flex rsync
 
 export CMAKE="cmake"

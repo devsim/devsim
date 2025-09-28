@@ -12,10 +12,11 @@ export F77="";
 export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64"
 export PLAT_NAME="arm64"
 FULL_PLAT_NAME=${PLAT_NAME}
-#  export ARCH_ARG="-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
-#  export PLAT_NAME="universal2"
-export PYTHON3_BIN=/usr/bin/python3
-export PIP_BIN=/usr/bin/pip3
+export PYTHON3_BIN=/opt/homebrew/bin/python3
+export PIP_BIN=pip
+
+${PYTHON3_BIN} -mvenv venv
+source venv/bin/activate
 
 export MACOSX_DEPLOYMENT_TARGET=12.0
 
@@ -36,8 +37,8 @@ export PYTHON3_ARCHIVE=""
 bash ./scripts/setup_osx_10.10.sh
 
 (cd osx_x86_64_release && make -j3)
-DIST_NAME=devsim_macos_${PLAT_NAME}_${2}
-(cd dist && bash package_macos.sh ${1} ${DIST_NAME});
+DIST_NAME=devsim_macos_${PLAT_NAME}_${1}
+(cd dist && bash package_macos.sh ${DIST_NAME});
 cp -f dist/bdist_wheel/setup.* dist/${DIST_NAME}
 echo PACKAGING $FULL_PLAT_NAME
 if [[ -n "$FULL_PLAT_NAME" ]]; then
