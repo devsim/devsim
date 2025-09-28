@@ -1,4 +1,5 @@
 PROJECT(GETRF)
+cmake_minimum_required(VERSION 3.9)
 ENABLE_LANGUAGE(CXX Fortran)
 
 ADD_LIBRARY(getrf STATIC dgetrf.f dgetrf2.f dgetrs.f dgemm.f dlamch.f dlaswp.f dscal.f dtrsm.f ilaenv.f idamax.f lsame.f ieeeck.f iparam2stage.F iparmq.f xerbla.f)
