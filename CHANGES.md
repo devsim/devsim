@@ -18,7 +18,10 @@ Thanks to [@marc-flex](https://github.com/marc-flex) for providing a pull reques
 
 Update to Python 3.9
 
+update macOS version
+
 macOS x86_64 build files no longer present
+
 
 ## Version 2.9.1
 
