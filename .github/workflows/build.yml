@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - *
+      - "*"
     #should we prevent main branch build?
     #branches:
     #  - "r2.9.2"
