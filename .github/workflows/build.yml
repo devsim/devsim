@@ -16,7 +16,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the default GITHUB_TOKEN
         run: |
-          TAG=${GITHUB_REF#refs/tags/} # Extract the tag name from the ref
+          TAG="${{ github.ref_name }}"
           gh release create "$TAG" \
             --draft \
             --title "Release $TAG" \
