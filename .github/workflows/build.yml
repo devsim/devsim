@@ -2,9 +2,9 @@ on:
   push:
     tags:
       - "*"
-    #should we prevent main branch build?
-    #branches:
-    #  - "r2.9.2"
+    # should we prevent main branch build?
+    branches:
+      - "r2.9.2"
 #TODO: handle common code in build steps
 
 jobs:
@@ -30,38 +30,40 @@ jobs:
             --notes "Automated release for $TAG." \
             --generate-notes # Automatically generate release notes based on commits
           echo "Release $TAG created successfully."
- build_windows:
-   runs-on: windows-2025
-   needs: create_release_tag
-   steps:
-     - name: set git crlf
-       run: git config --global core.autocrlf input
-     - name: Set tags and variables
-       shell: bash
-       run: |
-         TAG=${GITHUB_REF#refs/tags/}
-         echo "TAG=$TAG" >> $GITHUB_ENV
-         echo "README_BASE_URL=\"https://github.com/devsim/devsim/blob/${TAG}\"" >> $GITHUB_ENV
-         echo "PLATFORM=x64" >> $GITHUB_ENV
-         echo "CONDA_BIN=c:\\${CONDA}\\condabin\\conda.bat" >> $GITHUB_ENV
-     - name: Checkout repository
-       uses: actions/checkout@v5
-       # TODO: use specific submodules for platform
-       with:
-         submodules: true
-# call build
-      - name: compilation
-        shell: cmd
-        scripts\build_appveyor.bat %PLATFORM% %CONDA_BIN% %TAG%
-# deploy artifact
-      - name: Upload Release Asset ${{ runner.os }} ${{ runner.arch }}
+  build_windows:
+    runs-on: windows-2025
+    needs: create_release_tag
+    steps:
+      - name: set git crlf
+        run: git config --global core.autocrlf input
+      - name: Set tags and variables
         shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload "$TAG" dist/*.whl
-          echo "Asset uploaded to release $TAG."
+          TAG=${GITHUB_REF#refs/tags/}
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "README_BASE_URL=\"https://github.com/devsim/devsim/blob/${TAG}\"" >> $GITHUB_ENV
+          echo "PLATFORM=x64" >> $GITHUB_ENV
+          echo "CONDA_BIN=c:\\${CONDA}\\condabin\\conda.bat" >> $GITHUB_ENV
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        # TODO: use specific submodules for platform
+        with:
+          submodules: true
+        # call build
+       - name: compilation
+         shell: cmd
+         scripts\build_appveyor.bat %PLATFORM% %CONDA_BIN% %TAG%
+        # deploy artifact
+       - name: Upload Release Asset ${{ runner.os }} ${{ runner.arch }}
+         shell: bash
+         env:
+           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         run: |
+           gh release upload "$TAG" dist/*.whl
+           echo "Asset uploaded to release $TAG."
   build_linux:
+    # todo: common code refactor
+    if: false
     needs: create_release_tag
     strategy:
       # also support macos, linux arm64
