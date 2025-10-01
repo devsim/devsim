@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 export PATH=/mingw64/bin:/usr/bin:${PATH}
 # msys Specific
 #pacman -Su --noconfirm rsync zip
@@ -37,6 +38,8 @@ cd "${BASEDIR}/dist"
 bash package_appveyor.sh ${PACKAGE_NAME}
 
 cd "${BASEDIR}/dist/${PACKAGE_NAME}"
+#TODO: debug
+echo "$PWD"
 cp -f ../bdist_wheel/setup.* .
 ${PIP_BIN} wheel .
 cp *.whl ..
