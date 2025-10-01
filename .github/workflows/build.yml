@@ -51,17 +51,17 @@ jobs:
         with:
           submodules: true
         # call build
-       - name: compilation
-         shell: cmd
-         scripts\build_appveyor.bat %PLATFORM% %CONDA_BIN% %TAG%
+      - name: compilation
+        shell: cmd
+        scripts\build_appveyor.bat %PLATFORM% %CONDA_BIN% %TAG%
         # deploy artifact
-       - name: Upload Release Asset ${{ runner.os }} ${{ runner.arch }}
-         shell: bash
-         env:
-           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         run: |
-           gh release upload "$TAG" dist/*.whl
-           echo "Asset uploaded to release $TAG."
+      - name: Upload Release Asset ${{ runner.os }} ${{ runner.arch }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "$TAG" dist/*.whl
+          echo "Asset uploaded to release $TAG."
   build_linux:
     # todo: common code refactor
     if: false
