@@ -53,7 +53,8 @@ jobs:
         # call build
       - name: compilation
         shell: cmd
-        scripts\build_appveyor.bat %PLATFORM% %CONDA_BIN% %TAG%
+        run: |
+          scripts\build_appveyor.bat %PLATFORM% %CONDA_BIN% %TAG%
         # deploy artifact
       - name: Upload Release Asset ${{ runner.os }} ${{ runner.arch }}
         shell: bash
