@@ -44,7 +44,7 @@ jobs:
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo "README_BASE_URL=\"https://github.com/devsim/devsim/blob/${TAG}\"" >> $GITHUB_ENV
           echo "PLATFORM=x64" >> $GITHUB_ENV
-          echo "CONDA_BIN=c:\\${CONDA}\\condabin\\conda.bat" >> $GITHUB_ENV
+          echo "CONDA_BIN=${CONDA}\\condabin\\conda.bat" >> $GITHUB_ENV
       - name: Checkout repository
         uses: actions/checkout@v5
         # TODO: use specific submodules for platform
