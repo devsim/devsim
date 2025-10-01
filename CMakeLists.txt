@@ -1,5 +1,5 @@
 PROJECT (DEVSIM CXX)
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.10)
 
 set(DEVSIM_CONFIG "unknown" CACHE STRING "configuration to load from ./cmake")
 OPTION(PYTHON3      "Build Python 3 Interpreter" ON)
