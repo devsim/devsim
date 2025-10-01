@@ -74,8 +74,8 @@ jobs:
     strategy:
       # also support macos, linux arm64
       matrix:
-        os: [ubuntu-24.04]
-        #os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14]
+        #os: [ubuntu-24.04]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14]
     runs-on: ${{matrix.os}}
     # handle the fact we only want to build/name on tags
     steps:
