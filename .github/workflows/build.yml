@@ -31,6 +31,7 @@ jobs:
             --generate-notes # Automatically generate release notes based on commits
           echo "Release $TAG created successfully."
   build_windows:
+    name: Build on Windows
     runs-on: windows-2025
     needs: create_release_tag
     steps:
