@@ -3,8 +3,10 @@ on:
     tags:
       - "*"
     # should we prevent main branch build?
-    branches:
-      - "r2.9.2"
+    # warning about tag variable when not a tag push,
+    # devsim_win64_refs/heads/r2.9.2
+    #branches:
+    #  - "r2.9.2"
 #TODO: handle common code in build steps
 
 jobs:
@@ -31,6 +33,7 @@ jobs:
             --generate-notes # Automatically generate release notes based on commits
           echo "Release $TAG created successfully."
   build_windows:
+    if: true
     name: Build on Windows
     runs-on: windows-2025
     needs: create_release_tag
@@ -65,7 +68,8 @@ jobs:
           echo "Asset uploaded to release $TAG."
   build_linux:
     # todo: common code refactor
-    if: false
+    if: true
+    name: Build on Linux or macOS
     needs: create_release_tag
     strategy:
       # also support macos, linux arm64
