@@ -6,6 +6,8 @@ SET BASEDIR=%cd%
 SET CONDA_BIN=%2
 SET TAG=%3
 
+:: TODO: suggested by github copilot
+c:\msys64\usr\bin\pacman-mirrors --fasttrack
 c:\msys64\usr\bin\pacman -Su --noconfirm rsync zip bison flex git
 
 :: now opt for explicit dll load of mkl
