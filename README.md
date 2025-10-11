@@ -1,4 +1,6 @@
 
+[![PyPI - Version]](https://img.shields.io/pypi/v/devsim)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.03898/status.svg)](https://doi.org/10.21105/joss.03898)
 
 # DEVSIM
