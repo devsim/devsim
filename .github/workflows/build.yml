@@ -82,9 +82,9 @@ jobs:
       - name: build ${{ runner.os }} ${{ runner.arch }}
         run:   |
                if [ "$RUNNER_OS" == "Linux" ]; then
-                    bash ./scripts/build_docker_manylinux_2_28.sh test_tag;
+                    bash ./scripts/build_docker_manylinux_2_28.sh ${TAG};
                elif [ "$RUNNER_OS" == "macOS" ]; then
-                    bash ./scripts/build_macos.sh test_tag;
+                    bash ./scripts/build_macos.sh ${TAG};
                else
                     echo "$RUNNER_OS not supported"
                     exit 1

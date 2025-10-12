@@ -1,4 +1,3 @@
-
 ::turn back off later
 @echo on
 :: The following line is important for proper variable expansion
