@@ -1,6 +1,7 @@
 from ctypes import *
 import platform
 import array
+import os
 
 def debug_print(arg):
     pass
@@ -96,7 +97,7 @@ def get_transpose(x):
     else:
         return UMFPACK_A
 
-def get_dll_naming():
+def _get_dll_naming():
     systems = {
       'Linux' : {"prefix" : "lib", "suffix" : ".so"},
       'Darwin' : {"prefix" : "lib", "suffix" : ".dylib"},
@@ -104,10 +105,10 @@ def get_dll_naming():
     }
     return systems[platform.system()]
 
-def get_umfpack_name():
-    return "./%(prefix)sumfpack_lgpl%(suffix)s" % get_dll_naming()
+def _get_umfpack_name():
+    return "./%(prefix)sumfpack_lgpl%(suffix)s" % _get_dll_naming()
 
-def load_umfpack_dll(dllname):
+def _load_umfpack_dll(dllname):
     dll = cdll.LoadLibrary(dllname)
     if not dll:
         raise RuntimeError("Cannot find UMFPACK dll")
@@ -119,7 +120,7 @@ def get_blas_name():
     else:
         return "%(prefix)sopenblas%(suffix)s" % get_dll_naming()
 
-def load_blas_dll(gdata, blaslib = None, noexcept = False):
+def _load_blas_dll(gdata, blaslib = None, noexcept = False):
     #print(dll.blasw_load_dll)
     if blaslib:
         dllname = blaslib
@@ -145,7 +146,7 @@ def load_blas_dll(gdata, blaslib = None, noexcept = False):
     #print(h)
     return h
 
-def load_blas_functions(gdata, h):
+def _load_blas_functions(gdata, h):
     gdata.dll.blasw_load_functions.restype = c_int
     gdata.dll.blasw_load_functions.argtypes = [c_void_p]
     i = gdata.dll.blasw_load_functions(h._handle)
@@ -176,27 +177,27 @@ class di_symbolic:
         if self.umf_control.is_complex:
             if self.Symbolic:
                 debug_print('umfpack_zi_free_symbolic 176')
-            self.umf_control.gdata.dll.umfpack_zi_free_symbolic (byref(self.Symbolic))
+                umf_dll.umfpack_zi_free_symbolic (byref(self.Symbolic))
         else:
             if self.Symbolic:
                 debug_print('umfpack_di_free_symbolic 180')
-            self.umf_control.gdata.dll.umfpack_di_free_symbolic (byref(self.Symbolic))
+                umf_dll.umfpack_di_free_symbolic (byref(self.Symbolic))
         self.umf_control = None
 
     def factor_symbolic(self, matrix):
         if self.umf_control.is_complex:
             if self.Symbolic:
                 debug_print('umfpack_zi_free_symbolic 187')
-            self.umf_control.gdata.dll.umfpack_zi_free_symbolic (byref(self.Symbolic))
+                umf_dll.umfpack_zi_free_symbolic (byref(self.Symbolic))
             NULL = c_void_p()
             debug_print('umfpack_zi_symbolic 190/u')
-            self.status = self.umf_control.gdata.dll.umfpack_zi_symbolic (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, NULL, byref(self.Symbolic), self.umf_control.Control, self.umf_control.Info)
+            self.status = umf_dll.umfpack_zi_symbolic (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, NULL, byref(self.Symbolic), self.umf_control.Control, self.umf_control.Info)
         else:
             if self.Symbolic:
                 debug_print('umfpack_di_free_symbolic 194')
-            self.umf_control.gdata.dll.umfpack_di_free_symbolic (byref(self.Symbolic))
+                umf_dll.umfpack_di_free_symbolic (byref(self.Symbolic))
             debug_print('umfpack_di_symbolic 196')
-            self.status = self.umf_control.gdata.dll.umfpack_di_symbolic (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, byref(self.Symbolic), self.umf_control.Control, self.umf_control.Info)
+            self.status = umf_dll.umfpack_di_symbolic (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, byref(self.Symbolic), self.umf_control.Control, self.umf_control.Info)
         return self.status
 
 class di_numeric:
@@ -208,26 +209,26 @@ class di_numeric:
         if self.umf_control.is_complex:
             if self.Numeric:
                 debug_print('umfpack_zi_free_numeric 209')
-            self.umf_control.gdata.dll.umfpack_zi_free_numeric (byref(self.Numeric))
+                umf_dll.umfpack_zi_free_numeric (byref(self.Numeric))
         else:
             if self.Numeric:
                 debug_print('umfpack_di_free_numeric 213')
-            self.umf_control.gdata.dll.umfpack_di_free_numeric (byref(self.Numeric))
+                umf_dll.umfpack_di_free_numeric (byref(self.Numeric))
 
     def factor_numeric(self, matrix, Symbolic):
         if self.umf_control.is_complex:
             if self.Numeric:
                 debug_print('umfpack_zi_free_numeric 219')
-            self.umf_control.gdata.dll.umfpack_zi_free_numeric (byref(self.Numeric))
+                umf_dll.umfpack_zi_free_numeric (byref(self.Numeric))
             NULL = c_void_p()
             debug_print('umfpack_zi_numeric 222')
-            self.status = self.umf_control.gdata.dll.umfpack_zi_numeric (matrix.AP, matrix.AI, matrix.AX, NULL, Symbolic.Symbolic, byref(self.Numeric), self.umf_control.Control, self.umf_control.Info)
+            self.status = umf_dll.umfpack_zi_numeric (matrix.AP, matrix.AI, matrix.AX, NULL, Symbolic.Symbolic, byref(self.Numeric), self.umf_control.Control, self.umf_control.Info)
         else:
             if self.Numeric:
                 debug_print('umfpack_di_free_numeric 226')
-            self.umf_control.gdata.dll.umfpack_di_free_numeric (byref(self.Numeric))
+                umf_dll.umfpack_di_free_numeric (byref(self.Numeric))
             debug_print('umfpack_di_numeric 228')
-            self.status = self.umf_control.gdata.dll.umfpack_di_numeric (matrix.AP, matrix.AI, matrix.AX, Symbolic.Symbolic, byref(self.Numeric), self.umf_control.Control, self.umf_control.Info)
+            self.status = umf_dll.umfpack_di_numeric (matrix.AP, matrix.AI, matrix.AX, Symbolic.Symbolic, byref(self.Numeric), self.umf_control.Control, self.umf_control.Info)
         return self.status
 
     def solve(self, matrix, x, b, transpose):
@@ -235,9 +236,9 @@ class di_numeric:
         B = c_void_p(b.buffer_info()[0])
         if self.umf_control.is_complex:
             NULL = c_void_p()
-            self.status = self.umf_control.gdata.dll.umfpack_zi_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, NULL, X, NULL, B, NULL, self.Numeric, self.umf_control.Control, self.umf_control.Info)
+            self.status = umf_dll.umfpack_zi_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, NULL, X, NULL, B, NULL, self.Numeric, self.umf_control.Control, self.umf_control.Info)
         else:
-            self.status = self.umf_control.gdata.dll.umfpack_di_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, X, B, self.Numeric, self.umf_control.Control, self.umf_control.Info)
+            self.status = umf_dll.umfpack_di_solve (get_transpose(transpose), matrix.AP, matrix.AI, matrix.AX, X, B, self.Numeric, self.umf_control.Control, self.umf_control.Info)
         return self.status
 
     def determinant(self, x, r):
@@ -245,9 +246,9 @@ class di_numeric:
         R = c_void_p(r.buffer_info()[0])
         if self.umf_control.is_complex:
             NULL = c_void_p()
-            self.status = self.umf_control.gdata.dll.umfpack_zi_get_determinant (X, NULL, R, NULL, self.Numeric, self.umf_control.Info)
+            self.status = umf_dll.umfpack_zi_get_determinant (X, NULL, R, NULL, self.Numeric, self.umf_control.Info)
         else:
-            self.status = self.umf_control.gdata.dll.umfpack_di_get_determinant (X, R, self.Numeric, self.umf_control.Info)
+            self.status = umf_dll.umfpack_di_get_determinant (X, R, self.Numeric, self.umf_control.Info)
         return self.status
 
 class di_triplet:
@@ -279,7 +280,7 @@ class matrix:
     def __del__(self):
         pass
 
-class global_data:
+class _global_data:
     def __init__(self):
         self.printcb = None
         self.blaslibs = []
@@ -289,6 +290,22 @@ class global_data:
         self.printcb = None
         self.blaslibs = None
         self.dll = None
+
+    def initialize_umfpack(self, math_libraries):
+        self.dll = _load_umfpack_dll(os.path.join(os.path.dirname(__file__), _get_umfpack_name()))
+        global umf_dll
+        umf_dll = self.dll
+        for b in math_libraries:
+            h = _load_blas_dll(self, blaslib=b, noexcept=True)
+            if h:
+                mcount = _load_blas_functions(self, h)
+                if mcount == 0:
+                    break
+        if mcount != 0:
+            raise RuntimeError('Missing %d math functions' % mcount)
+
+global_data_instance = _global_data()
+umf_dll = None
 
 class umf_control:
     def __init__(self, gdata, matrix_type):
@@ -315,18 +332,18 @@ class umf_control:
 
     def tic(self):
         self.timer = (c_double * 2)()
-        self.gdata.dll.umfpack_tic(byref(self.timer))
+        umf_dll.umfpack_tic(byref(self.timer))
 
     def toc(self):
-        self.gdata.dll.umfpack_toc (self.timer)
+        umf_dll.umfpack_toc (self.timer)
         print ("\numfpack complete.\nTotal time: %5.2f seconds (CPU time), %5.2f seconds (wallclock time)\n" % ( self.timer [1], self.timer [0]))
 
     def set_defaults(self):
         self.Control = (c_double * UMFPACK_CONTROL)()
         if self.is_complex:
-            self.gdata.dll.umfpack_zi_defaults(self.Control)
+            umf_dll.umfpack_zi_defaults(self.Control)
         else:
-            self.gdata.dll.umfpack_di_defaults(self.Control)
+            umf_dll.umfpack_di_defaults(self.Control)
         self.Info = (c_double * UMFPACK_INFO)()
 
     def init_verbose(self):
@@ -335,37 +352,37 @@ class umf_control:
         self.Control [UMFPACK_PRL] = 6
         #    /* print the license agreement */
         if self.is_complex:
-            self.gdata.dll.umfpack_zi_report_status (self.Control, UMFPACK_OK)
+            umf_dll.umfpack_zi_report_status (self.Control, UMFPACK_OK)
         else:
-            self.gdata.dll.umfpack_di_report_status (self.Control, UMFPACK_OK)
+            umf_dll.umfpack_di_report_status (self.Control, UMFPACK_OK)
         self.Control [UMFPACK_PRL] = 5
         #
         #    /* print the control parameters */
         if self.is_complex:
-            self.gdata.dll.umfpack_zi_report_control(self.Control)
+            umf_dll.umfpack_zi_report_control(self.Control)
         else:
-            self.gdata.dll.umfpack_di_report_control(self.Control)
+            umf_dll.umfpack_di_report_control(self.Control)
 
     def print_vector(self, b, label):
         #    /* print the right-hand-side */
         print ("\n%s: " % (label,), flush=True, end="")
         if self.is_complex:
             NULL = (c_void_p)()
-            self.gdata.dll.umfpack_zi_report_vector.argtypes = [c_int, c_void_p, c_void_p, c_void_p]
-            self.gdata.dll.umfpack_zi_report_vector.restype = None
-            self.gdata.dll.umfpack_zi_report_vector (len(b)//2, b.buffer_info()[0], NULL, self.Control)
+            umf_dll.umfpack_zi_report_vector.argtypes = [c_int, c_void_p, c_void_p, c_void_p]
+            umf_dll.umfpack_zi_report_vector.restype = None
+            umf_dll.umfpack_zi_report_vector (len(b)//2, b.buffer_info()[0], NULL, self.Control)
         else:
-            self.gdata.dll.umfpack_di_report_vector.argtypes = [c_int, c_void_p, c_void_p]
-            self.gdata.dll.umfpack_di_report_vector.restype = None
-            self.gdata.dll.umfpack_di_report_vector (len(b), b.buffer_info()[0], self.Control)
+            umf_dll.umfpack_di_report_vector.argtypes = [c_int, c_void_p, c_void_p]
+            umf_dll.umfpack_di_report_vector.restype = None
+            umf_dll.umfpack_di_report_vector (len(b), b.buffer_info()[0], self.Control)
 
     def print_triplet(self, tm):
         print ("\nA: ")
         if self.is_complex:
             NULL = (c_void_p)()
-            self.gdata.dll.umfpack_zi_report_triplet(tm.n, tm.n, tm.nz, tm.Ar, tm.Ac, tm.Av, NULL, self.Control)
+            umf_dll.umfpack_zi_report_triplet(tm.n, tm.n, tm.nz, tm.Ar, tm.Ac, tm.Av, NULL, self.Control)
         else:
-            self.gdata.dll.umfpack_di_report_triplet(tm.n, tm.n, tm.nz, tm.Ar, tm.Ac, tm.Av, self.Control)
+            umf_dll.umfpack_di_report_triplet(tm.n, tm.n, tm.nz, tm.Ar, tm.Ac, tm.Av, self.Control)
 
     def triplet_to_col(self, tm):
         n = tm.n
@@ -377,14 +394,14 @@ class umf_control:
         if self.is_complex:
             Ax = array.array('d', [0] * (2*nz1))
             matrix = di_matrix(self, Ap, Ai, Ax)
-            self.status = self.gdata.dll.umfpack_zi_triplet_to_col (n, n, nz, tm.Ar, tm.Ac, tm.Av, NULL, matrix.AP, matrix.AI, matrix.AX, NULL, NULL)
+            self.status = umf_dll.umfpack_zi_triplet_to_col (n, n, nz, tm.Ar, tm.Ac, tm.Av, NULL, matrix.AP, matrix.AI, matrix.AX, NULL, NULL)
         else:
             Ax = array.array('d', [0] * (nz1))
             matrix = di_matrix(self, Ap, Ai, Ax)
-            self.status = self.gdata.dll.umfpack_di_triplet_to_col (n, n, nz, tm.Ar, tm.Ac, tm.Av, matrix.AP, matrix.AI, matrix.AX, NULL)
+            self.status = umf_dll.umfpack_di_triplet_to_col (n, n, nz, tm.Ar, tm.Ac, tm.Av, matrix.AP, matrix.AI, matrix.AX, NULL)
 
         if self.status < 0:
-            self.gdata.dll.umfpack_di_report_status (self.Control, self.status)
+            umf_dll.umfpack_di_report_status (self.Control, self.status)
             raise RuntimeError("umfpack triplet_to_col failed")
 
         return matrix
@@ -393,21 +410,21 @@ class umf_control:
         print("\nA: ")
         if self.is_complex:
             NULL = (c_void_p)()
-            self.gdata.dll.umfpack_zi_report_matrix (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, NULL, 1, self.Control)
+            umf_dll.umfpack_zi_report_matrix (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, NULL, 1, self.Control)
         else:
-            self.gdata.dll.umfpack_di_report_matrix (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, 1, self.Control)
+            umf_dll.umfpack_di_report_matrix (matrix.n, matrix.n, matrix.AP, matrix.AI, matrix.AX, 1, self.Control)
 
     def print_info(self):
         if self.is_complex:
-            self.gdata.dll.umfpack_zi_report_info (self.Control, self.Info)
+            umf_dll.umfpack_zi_report_info (self.Control, self.Info)
         else:
-            self.gdata.dll.umfpack_di_report_info (self.Control, self.Info)
+            umf_dll.umfpack_di_report_info (self.Control, self.Info)
 
     def print_status(self):
         if self.is_complex:
-            self.gdata.dll.umfpack_zi_report_status (self.Control, self.status)
+            umf_dll.umfpack_zi_report_status (self.Control, self.status)
         else:
-            self.gdata.dll.umfpack_di_report_status (self.Control, self.status)
+            umf_dll.umfpack_di_report_status (self.Control, self.status)
 
     def error_on_result(self, msg):
         if self.status != 0:
@@ -424,9 +441,9 @@ class umf_control:
     def print_symbolic(self, Symbolic):
         print("\nSymbolic factorization of A: ")
         if self.is_complex:
-            self.gdata.dll.umfpack_zi_report_symbolic(Symbolic.Symbolic, self.Control)
+            umf_dll.umfpack_zi_report_symbolic(Symbolic.Symbolic, self.Control)
         else:
-            self.gdata.dll.umfpack_di_report_symbolic(Symbolic.Symbolic, self.Control)
+            umf_dll.umfpack_di_report_symbolic(Symbolic.Symbolic, self.Control)
 
     def numeric(self, matrix, Symbolic):
         Numeric = di_numeric(self)
@@ -437,9 +454,9 @@ class umf_control:
     def print_numeric(self, Numeric):
         print ("\nNumeric factorization of A: ")
         if self.is_complex:
-            self.gdata.dll.umfpack_zi_report_numeric (Numeric.Numeric, self.Control)
+            umf_dll.umfpack_zi_report_numeric (Numeric.Numeric, self.Control)
         else:
-            self.gdata.dll.umfpack_di_report_numeric (Numeric.Numeric, self.Control)
+            umf_dll.umfpack_di_report_numeric (Numeric.Numeric, self.Control)
 
     def solve(self, matrix, x, b, Numeric, transpose):
         if self.is_complex:

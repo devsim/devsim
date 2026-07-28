@@ -23,16 +23,8 @@ class dsobject:
         self.gdata=None
 
     def initialize_umfpack(self):
-        self.gdata = umf.global_data()
-        self.gdata.dll = umf.load_umfpack_dll(os.path.join(os.path.dirname(__file__), umf.get_umfpack_name()))
-        for b in devsim.get_parameter(name='info')['math_libraries']:
-            h = umf.load_blas_dll(self.gdata, blaslib=b, noexcept=True)
-            if h:
-                mcount = umf.load_blas_functions(self.gdata, h)
-                if mcount == 0:
-                    break
-        if mcount != 0:
-            raise RuntimeError('Missing %d math functions' % mcount)
+        self.gdata = umf.global_data_instance
+        self.gdata.initialize_umfpack(devsim.get_parameter(name='info')['math_libraries'])
 
     def factor(self, **kwargs):
         self.status = False

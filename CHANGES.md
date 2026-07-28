@@ -5,6 +5,12 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.10.1
+
+### UMFPACK Solver
+
+Fixed issue with `UMFPACK` solver when the dynamic library is being unloaded at program termination.
+
 ## Version 2.10.0
 
 ### Regression results
