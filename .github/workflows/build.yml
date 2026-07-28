@@ -11,6 +11,7 @@ on:
 #TODO: handle common code in build steps
 #TODO: use specific submodules for platform
 
+# https://github.blog/changelog/2025-10-28-immutable-releases-are-now-generally-available/
 jobs:
   create_release_tag:
     runs-on: ubuntu-latest
@@ -25,15 +26,18 @@ jobs:
         run: |
           TAG=${GITHUB_REF#refs/tags/} # Extract the tag name from the ref
           gh release create "$TAG" \
+            --draft \
             --prerelease \
             --title "Release $TAG" \
             --notes "Automated release for $TAG." \
             --generate-notes # Automatically generate release notes based on commits
           echo "Release $TAG created successfully."
+  # https://github.com/actions/runner-images/issues/14017
+  # must migrate to windows-2022
   build_windows:
     if: true
     name: Build on Windows
-    runs-on: windows-2025
+    runs-on: windows-2022
     needs: create_release_tag
     steps:
       - name: set git crlf
