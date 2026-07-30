@@ -8,4 +8,5 @@
 ####
 import devsim
 
-print(devsim.get_parameter(name="info"))
+for k, v in devsim.get_parameter(name="info").items():
+    print(f'{k}\t{v}')
