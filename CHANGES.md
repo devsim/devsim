@@ -11,6 +11,10 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 Fixed issue with `UMFPACK` solver when the dynamic library is being unloaded at program termination.
 
+### Windows MKL
+
+Fixed issue where users had to add `Library\bin` manually to the system path in order to load the Intel MKL when using a non Anaconda-based Python distribution.
+
 ## Version 2.10.0
 
 ### Regression results
