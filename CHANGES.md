@@ -13,7 +13,12 @@ Fixed issue with `UMFPACK` solver when the dynamic library is being unloaded at 
 
 ### Windows MKL
 
-Fixed issue where users had to add `Library\bin` manually to the system path in order to load the Intel MKL when using a non Anaconda-based Python distribution.
+Fix issue [#159](https://github.com/devsim/devsim/issues/159) where users had to add `Library\bin` manually to the system path in order to load the Intel MKL when using a non Anaconda-based Python distribution.  The proper way to install the Intel MKL using `pip` is:
+```
+pip install mkl
+```
+
+Thanks to [@JoonatanAlanampa](https://github.com/JoonatanAlanampa) for helping to diagnose this issue.
 
 ## Version 2.10.0
 
