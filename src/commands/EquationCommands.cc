@@ -125,7 +125,7 @@ createEquationCmd(CommandHandler &data)
       return;
     }
 
-    
+
     if (reg->UseExtendedPrecisionEquations())
     {
       auto eh = EquationHolder(new ExprEquation<extended_type>(name, reg, variable_name, node_model, edge_model, edge_volume_model, elementedge_model, volume_node0_model, volume_node1_model, time_node_model, updateType));

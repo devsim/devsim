@@ -273,7 +273,7 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
     SurfaceAreaUtil::processTriangleList(contact_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
 
     contact_area.lock()->SetValues(nv);
-    
+
     ncontact_x.lock()->SetValues(nvx);
     ncontact_y.lock()->SetValues(nvy);
     ncontact_z.lock()->SetValues(nvz);
