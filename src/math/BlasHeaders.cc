@@ -57,6 +57,7 @@ using PARDISO_signature = void ( void *,    const int *, const int *, const int 
                    const int *, int *, const int *, int *,
                    const int *, void *,    void *,          int * );
 using mkl_get_version_string_signature = void (char *, int);
+using mkl_set_interface_layer_signature = int (int);
 
 
 typedef void (dgetrf_signature)( int *m, int *n, double *a, int *lda, int *ipiv, int *info );
@@ -89,6 +90,7 @@ struct blas_table {
 // PARDISO
   inline static PARDISO_signature *PARDISO;
   inline static mkl_get_version_string_signature *mkl_get_version_string;
+  inline static mkl_set_interface_layer_signature *mkl_set_interface_layer;
 };
 }
 
@@ -186,6 +188,7 @@ static symtable math_function_table[] = {
   // PARDISO
   {"PARDISO",  reinterpret_cast<void **>(&blas_table::PARDISO)},
   {"mkl_get_version_string",   reinterpret_cast<void **>(&blas_table::mkl_get_version_string)},
+  {"mkl_set_interface_layer",   reinterpret_cast<void **>(&blas_table::mkl_set_interface_layer)},
 #if defined(USE_LAPACK)
   {TOSTRING(external_dgetrf), reinterpret_cast<void **>(&blas_table::dgetrf)},
   {TOSTRING(external_zgetrf), reinterpret_cast<void **>(&blas_table::zgetrf)},
@@ -365,17 +368,13 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
 #if defined(__APPLE__)
   // Intel MKL discontinued for macOS
   return ret;
-// This should always be available through symlink
-  const std::string default_name = "libmkl_rt.dylib";
   const std::string prefix_name = "libmkl_rt.";
   const std::string suffix_name = ".dylib";
 #elif defined(__linux__)
 // This should always be available through symlink
-  const std::string default_name = "libmkl_rt.so";
   const std::string prefix_name = "libmkl_rt.so.";
   const std::string suffix_name = "";
 #elif defined(_WIN32)
-  const std::string default_name = "mkl_rt.dll";
   const std::string prefix_name = "mkl_rt.";
   const std::string suffix_name = ".dll";
 #else
@@ -383,9 +382,8 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
 #endif
 
   errors.clear();
-  ret = LoadBlasDLL(default_name, errors, true);
 
-  const size_t max_tested_version = 2;
+  //const size_t max_tested_version = 2;
   const size_t min_version_to_test_for = 1;
   const size_t max_version_to_test_for = 5;
   size_t actual_version = size_t(-1);
@@ -404,7 +402,7 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
 
   if (actual_version == size_t(-1))
   {
-    std::string tested_dll_name = prefix_name + std::to_string(max_tested_version) + suffix_name;
+    std::string tested_dll_name = prefix_name + std::to_string(max_tested_version_to_test_for) + suffix_name;
     std::ostringstream os;
     os << "Could not find Intel MKL. The maximum tested version is \"" << tested_dll_name << "\"\n";
 #if __linux__
@@ -417,8 +415,8 @@ LoaderMessages_t LoadIntelMKL(std::string &errors)
 //  else if (actual_version > max_tested_version)
   {
     std::string tested_dll_name = prefix_name + std::to_string(max_tested_version) + suffix_name;
-    std::ostringstream os;
-    os << "Found Intel MKL as \"" << dll_name << "\".  The maximum tested version is \"" << tested_dll_name << "\"\n";
+    //std::ostringstream os;
+    //os << "Found Intel MKL as \"" << dll_name << "\".  The maximum tested version is \"" << tested_dll_name << "\"\n";
     //OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str().c_str());
     errors.clear();
   }
@@ -435,7 +433,7 @@ bool IsMathLoaded()
     {
       continue;
     }
-    else if ((entry.function_pointer == reinterpret_cast<void **>(&blas_table::PARDISO)) || (entry.function_pointer == reinterpret_cast<void **>(&blas_table::mkl_get_version_string)))
+    else if ((entry.function_pointer == reinterpret_cast<void **>(&blas_table::PARDISO)) || (entry.function_pointer == reinterpret_cast<void **>(&blas_table::mkl_get_version_string)) || (entry.function_pointer == reinterpret_cast<void **>(&blas_table::mkl_set_interface_layer)))
     {
       continue;
     }
@@ -449,6 +447,7 @@ bool IsMathLoaded()
 
 bool IsMKLLoaded()
 {
+  // mkl_set_interface_layer may be null if not the single dynamic library
   return blas_table::PARDISO && blas_table::mkl_get_version_string;
 }
 
@@ -516,7 +515,16 @@ LoaderMessages_t LoadMathLibraries(std::string &errors)
     ret = LoadIntelMKL(errors);
   }
 
-  if ((ret == LoaderMessages_t::MKL_LOADED) || (ret == LoaderMessages_t::MATH_LOADED))
+  if (ret == LoaderMessages_t::MKL_LOADED)
+  {
+    if (blas_table::mkl_set_interface_layer)
+    {
+      // rare condition where user environment may have ILP64 interface specified
+      blas_table::mkl_set_interface_layer(0);
+    }
+    return ret;
+  }
+  else if (ret == LoaderMessages_t::MATH_LOADED)
   {
       return ret;
   }
