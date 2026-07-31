@@ -34,7 +34,7 @@ CompressedMatrix<T> *CreateMatrix(Preconditioner<T> *preconditioner, bool is_com
 
 template <typename T>
 CompressedMatrix<T> *CreateACMatrix(Preconditioner<T> *preconditioner);
-} 
+}
 
 #endif
 

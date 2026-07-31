@@ -36,7 +36,7 @@ NodeSolution<DoubleType>::NodeSolution(const std::string &nm, RegionPtr rp, Node
 template <typename DoubleType>
 void NodeSolution<DoubleType>::derived_init()
 {
-  if (auto p = parentModel.lock()) 
+  if (auto p = parentModel.lock())
   {
     parentModelName = p->GetName();
     RegisterCallback(parentModelName);
