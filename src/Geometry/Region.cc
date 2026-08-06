@@ -24,6 +24,7 @@ SPDX-License-Identifier: Apache-2.0
 #include "EdgeData.hh"
 #include "GlobalData.hh"
 #include "ObjectHolder.hh"
+#include "NodeOppositeUtil.hh"
 
 #include "Interface.hh"
 #include "InterfaceNodeModel.hh"
@@ -43,53 +44,7 @@ template <typename T> void deleteVectorPointers(std::vector<T *> &x)
         delete x[i];
     }
 }
-
-template <typename T> void deleteMapPointers(std::map<std::string, T *> &x)
-{
-    typedef std::map<std::string, T *> mtype;
-
-    typename mtype::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete it->second;
-    }
 }
-
-#if 0
-template <typename T> void deleteMultiMapPointers(std::multimap<std::string, T *> &x)
-{
-    typedef std::map<std::string, T *> mtype;
-
-    typename mtype::iterator it = x.begin();
-    for ( ; it != x.end(); ++it)
-    {
-        delete it->second;
-    }
-}
-#endif
-}
-
-namespace {
-const Node *findNodeOppositeOfTriangleEdge(const Edge &edge, const Triangle &triangle)
-{
-  const Node * const h = edge.GetHead();
-  const Node * const t = edge.GetTail();
-
-  const Node *ret = nullptr;
-
-  const ConstNodeList &tnl = triangle.GetNodeList();
-  for (size_t i = 0; i < 3; ++i)
-  {
-    const Node *tnode = tnl[i];
-    if ((tnode != h) && (tnode != t))
-    {
-      ret = tnode;
-      break;
-    }
-  }
-  return ret;
-}
-}// anonymous namespace
 
 
 template <typename DoubleType>
@@ -161,14 +116,6 @@ Region::GeometryField<float128> &Region::GetGeometryField() const
 
 Region::~Region()
 {
-#if 0
-    deleteMapPointers(equationPointerMap);
-    //// We are now using smart pointers
-    deleteMapPointers(nodeModels);
-    deleteMapPointers(edgeModels);
-    deleteMapPointers(triangleEdgeModels);
-    deleteMapPointers(tetrahedronEdgeModels);
-#endif
     deleteVectorPointers(nodeList);
     deleteVectorPointers(edgeList);
     deleteVectorPointers(triangleList);
@@ -583,7 +530,7 @@ void Region::CreateTetrahedronToEdgeDataList()
           {
             edata->triangle[trindex] = trl[j];
             edata->triangle_index[trindex] = j;
-            edata->nodeopp[trindex] = findNodeOppositeOfTriangleEdge(*eptr, triangle);
+            edata->nodeopp[trindex] = NodeOppositeUtil::findNodeOppositeOfTriangleEdge(*eptr, triangle);
             ++trindex;
             break;
           }

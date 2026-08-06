@@ -13,6 +13,7 @@ SET (CXX_SRCS
     Tetrahedron.cc
     TetrahedronElementField.cc
     GeometryStream.cc
+    NodeOppositeUtil.cc
 )
 
 INCLUDE_DIRECTORIES (

@@ -11,3 +11,4 @@ testing/*.msh
 
 # Ignore generated directories
 linux*/
+ox_x86_64*/
