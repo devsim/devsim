@@ -142,11 +142,7 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
     const ConstContactPtr &cp = cit->second;
     if (cp && (cp->GetRegion() == &region))
     {
-      const ConstEdgeList_t &temp_edge_list = cp->GetEdges();
-      for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
-      {
-        contact_edge_list.push_back(*tit);
-      }
+      contact_edge_list = cp->GetEdges();
     }
   }
 
@@ -159,19 +155,11 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
     {
       if (ip->GetRegion0() == &region)
       {
-        const ConstEdgeList_t &temp_edge_list = ip->GetEdges0();
-        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
-        {
-          interface_edge_list.push_back(*tit);
-        }
+        interface_edge_list = ip->GetEdges0();
       }
       else if (ip->GetRegion1() == &region)
       {
-        const ConstEdgeList_t &temp_edge_list = ip->GetEdges1();
-        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
-        {
-          interface_edge_list.push_back(*tit);
-        }
+        interface_edge_list = ip->GetEdges1();
       }
     }
   }

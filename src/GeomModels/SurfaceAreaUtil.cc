@@ -23,31 +23,26 @@ void processEdge(const Edge &edge, const EdgeScalarList<DoubleType> &unitx, cons
   nv[ni1] += length;
 
 
+  // This is the normal vector for the edge, but the sign is unknown.
   Vector<DoubleType> vvec(unity[ei]*length, -unitx[ei]*length, 0.0);
 
-  Vector<DoubleType> un0(nvx[ni0], nvy[ni0]);
-  if (dot_prod(vvec, un0) < 0.0)
+  auto process_normal = [&vvec, &nvx, &nvy](size_t ni)
   {
-    nvx[ni0] -= vvec.Getx();
-    nvy[ni0] -= vvec.Gety();
-  }
-  else
-  {
-    nvx[ni0] += vvec.Getx();
-    nvy[ni0] += vvec.Gety();
-  }
+    Vector<DoubleType> un(nvx[ni], nvy[ni]);
+    if (dot_prod(vvec, un) < 0.0)
+    {
+      nvx[ni] -= vvec.Getx();
+      nvy[ni] -= vvec.Gety();
+    }
+    else
+    {
+      nvx[ni] += vvec.Getx();
+      nvy[ni] += vvec.Gety();
+    }
+  };
 
-  Vector<DoubleType> un1(nvx[ni1], nvy[ni1]);
-  if (dot_prod(vvec, un1) < 0.0)
-  {
-    nvx[ni1] -= vvec.Getx();
-    nvy[ni1] -= vvec.Gety();
-  }
-  else
-  {
-    nvx[ni1] += vvec.Getx();
-    nvy[ni1] += vvec.Gety();
-  }
+  process_normal(ni0);
+  process_normal(ni1);
 }
 
 template<typename DoubleType>
