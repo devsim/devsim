@@ -135,14 +135,76 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
   const Device::ContactList_t   &contact_list   = device.GetContactList();
   const Device::InterfaceList_t &interface_list = device.GetInterfaceList();
 
-  ConstEdgeList contact_edge_list;
+  const auto &edge_to_triangle_list = region.getEdgeToTriangleList();
+  const auto &triangle_to_edge_list = region.getTriangleToEdgeList();
+
+  auto get_opposite_node_on_triangle = [&triangle_to_edge_list](ConstTrianglePtr triangle, ConstEdgePtr edge) -> ConstNodePtr {
+
+    const auto &current_edge_nodes = edge->GetNodeList();
+    const auto &edge_list = triangle_to_edge_list[triangle->GetIndex()];
+    ConstNodePtr node = nullptr;
+
+    for (ConstEdgePtr tri_edge : edge_list)
+    {
+      if (tri_edge == edge)
+      {
+        continue;
+      }
+
+      const auto &node_list = tri_edge->GetNodeList();
+      for (auto n : node_list)
+      {
+        if (n != current_edge_nodes[0] && n != current_edge_nodes[1])
+        {
+          node = n;
+          break;
+        }
+      }
+
+      break;
+    }
+
+    return node;
+  };
+
+  auto get_opposite_node_of_edge = [&edge_to_triangle_list, &get_opposite_node](ConstEdgePtr edge) -> ConstNodePtr {
+    // get the first edge that is not the current edge and get the node that is not in the edge
+    // there should not be more than one triangle for a contact
+    // calculate the vector out from the contact
+    const auto &triangle_list = edge_to_triangle_list[edge->GetIndex()];
+    ConstNodePtr opp_node = nullptr;
+    for (ConstTrianglePtr triangle : triangle_list)
+    {
+      ConstNodePtr opp_node = get_opposite_node_on_triangle(triangle, edge);
+      break;
+    }
+    return opp_node;
+  };
+
+  auto get_opposite_node_list = [&get_opposite_node_of_edge](ConstEdgeList &edge_list) -> std::vector<ConstNodePtr> {
+    std::vector<ConstNodePtr> opp_node_list;
+    opp_node_list.reserve(edge_list.size());
+    for (ConstEdgePtr edge : edge_list)
+    {
+      ConstNodePtr opp_node = get_opposite_node_of_edge(edge);
+      if (opp_node)
+      {
+        opp_node_list.push_back(opp_node);
+      }
+    }
+    return opp_node_list;
+  };
 
   for (Device::ContactList_t::const_iterator cit = contact_list.begin(); cit != contact_list.end(); ++cit)
   {
     const ConstContactPtr &cp = cit->second;
     if (cp && (cp->GetRegion() == &region))
     {
-      contact_edge_list = cp->GetEdges();
+      const ConstEdgeList_t &temp_edge_list = cp->GetEdges();
+      for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
+      {
+        contact_edge_list.push_back(*tit);
+      }
     }
   }
 
@@ -155,11 +217,19 @@ void SurfaceArea<DoubleType>::calcSurfaceArea2d() const
     {
       if (ip->GetRegion0() == &region)
       {
-        interface_edge_list = ip->GetEdges0();
+        const ConstEdgeList_t &temp_edge_list = ip->GetEdges0();
+        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
+        {
+          interface_edge_list.push_back(*tit);
+        }
       }
       else if (ip->GetRegion1() == &region)
       {
-        interface_edge_list = ip->GetEdges1();
+        const ConstEdgeList_t &temp_edge_list = ip->GetEdges1();
+        for (ConstEdgeList_t::const_iterator tit = temp_edge_list.begin(); tit != temp_edge_list.end(); ++tit)
+        {
+          interface_edge_list.push_back(*tit);
+        }
       }
     }
   }
