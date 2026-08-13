@@ -8,7 +8,7 @@
 namespace SurfaceAreaUtil
 {
 template<typename DoubleType>
-void processEdge(const Edge &edge, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy)
+void processEdge(const Edge &edge, const Node &node_opposite, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy)
 {
   const size_t ei = edge.GetIndex();
 
@@ -25,6 +25,13 @@ void processEdge(const Edge &edge, const EdgeScalarList<DoubleType> &unitx, cons
 
   // This is the normal vector for the edge, but the sign is unknown.
   Vector<DoubleType> vvec(unity[ei]*length, -unitx[ei]*length, 0.0);
+
+  // This is from a surface node to an internal node to get outward direction
+  auto v0 = ConvertVector<DoubleType>(node0.Position() - node_opposite.Position());
+  if (dot_prod(vvec, v0) < 0.0)
+  {
+    vvec = -vvec;
+  }
 
   auto process_normal = [&vvec, &nvx, &nvy](size_t ni)
   {
@@ -46,12 +53,14 @@ void processEdge(const Edge &edge, const EdgeScalarList<DoubleType> &unitx, cons
 }
 
 template<typename DoubleType>
-void processEdgeList(ConstEdgeList &edge_list, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy)
+void processEdgeList(const ConstEdgeList &edge_list, const ConstNodeList &node_opposite_list, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy)
 {
   std::vector<size_t> edge_visited(unitx.size());
-  for (ConstEdgeList::const_iterator it = edge_list.begin(); it != edge_list.end(); ++it)
+  for (size_t i = 0; i < edge_list.size(); ++i)
   {
-    const Edge &edge = *(*it);
+    const Edge &edge = *edge_list[i];
+    // assert somewhere else if this doesn't exist
+    const Node &node_opposite = *node_opposite_list[i];
 
     //// Here we ignore edges we already visited
     const size_t ei = edge.GetIndex();
@@ -64,7 +73,7 @@ void processEdgeList(ConstEdgeList &edge_list, const EdgeScalarList<DoubleType> 
       continue;
     }
 
-    processEdge(edge, unitx, unity, edgeLengths, nv, nvx, nvy);
+    processEdge(edge, node_opposite, unitx, unity, edgeLengths, nv, nvx, nvy);
 
   }
   for (size_t i = 0; i < nv.size(); ++i)
@@ -196,7 +205,7 @@ void processTriangleList(ConstTriangleList &triangle_list, const std::vector<Vec
 
 namespace SurfaceAreaUtil {
 template
-void processEdgeList<>(ConstEdgeList &edge_list, const EdgeScalarList<double> &unitx, const EdgeScalarList<double> &unity, const EdgeScalarList<double> &edgeLengths, std::vector<double> &nv, std::vector<double> &nvx, std::vector<double> &nvy);
+void processEdgeList<>(const ConstEdgeList &edge_list, const ConstNodeList &node_opposite_list, const EdgeScalarList<double> &unitx, const EdgeScalarList<double> &unity, const EdgeScalarList<double> &edgeLengths, std::vector<double> &nv, std::vector<double> &nvx, std::vector<double> &nvy);
 
 template
 void processTriangleList<>(ConstTriangleList &triangle_list, const std::vector<Vector<double>> &triangleCenters, std::vector<double> &nv, std::vector<double> &nvx, std::vector<double> &nvy, std::vector<double> &nvz);
@@ -205,7 +214,7 @@ void processTriangleList<>(ConstTriangleList &triangle_list, const std::vector<V
 #include "Float128.hh"
 namespace SurfaceAreaUtil {
 template
-void processEdgeList<>(ConstEdgeList &edge_list, const EdgeScalarList<float128> &unitx, const EdgeScalarList<float128> &unity, const EdgeScalarList<float128> &edgeLengths, std::vector<float128> &nv, std::vector<float128> &nvx, std::vector<float128> &nvy);
+void processEdgeList<>(const ConstEdgeList &edge_list, const ConstNodeList &node_opposite_list, const EdgeScalarList<float128> &unitx, const EdgeScalarList<float128> &unity, const EdgeScalarList<float128> &edgeLengths, std::vector<float128> &nv, std::vector<float128> &nvx, std::vector<float128> &nvy);
 
 template
 void processTriangleList<>(ConstTriangleList &triangle_list, const std::vector<Vector<float128>> &triangleCenters, std::vector<float128> &nv, std::vector<float128> &nvx, std::vector<float128> &nvy, std::vector<float128> &nvz);

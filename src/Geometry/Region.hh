@@ -134,7 +134,6 @@ typedef std::map<std::string, std::string> VariableEqnMap_t;
 
 typedef std::vector<std::string> VariableList_t;
 
-
 /**
    A Region knows which mesh it belongs to.  A mesh may contain a shared_ptr to
    it.  A node may contain a weak_ptr pointing back to the region which

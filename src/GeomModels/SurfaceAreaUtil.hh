@@ -24,10 +24,10 @@ using EdgeScalarList = std::vector<T>;
 namespace SurfaceAreaUtil
 {
 template<typename DoubleType>
-void processEdge(const Edge &edge, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy);
+void processEdge(const Edge &edge, const Node &node_opposite, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy);
 
 template<typename DoubleType>
-void processEdgeList(ConstEdgeList &edge_list, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy);
+void processEdgeList(const ConstEdgeList &edge_list, const ConstNodeList &node_opposite_list, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy);
 
 template <typename DoubleType>
 void processTriangle(const Triangle &triangle, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz);
