@@ -9,19 +9,13 @@ SPDX-License-Identifier: Apache-2.0
 #include "Node.hh"
 #include "dsAssert.hh"
 
-Edge::Edge(size_t ind, ConstNodePtr n1, ConstNodePtr n2) : nodes(2)
+Edge::Edge(size_t ind, ConstNodePtr n1, ConstNodePtr n2) : nodes{n1, n2}
 {
    index = ind;
 
-   if (NodeCompIndex()(n1, n2))
+   if (!NodeCompIndex()(n1, n2))
    {
-      nodes[0] = n1;
-      nodes[1] = n2;
-   }
-   else
-   {
-      nodes[0] = n2;
-      nodes[1] = n1;
+      std::swap(nodes[0], nodes[1]);
    }
 }
 

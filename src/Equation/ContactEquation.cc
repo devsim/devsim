@@ -1030,7 +1030,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquation(const std::string
           {
             const Triangle &triangle = **ti;
             const size_t tindex = triangle.GetIndex();
-            const ConstNodeList &tnl = triangle.GetNodeList();
+            const auto &tnl = triangle.GetNodeList();
             const ConstEdgeList &edgeList = ttelist[tindex];
             for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
             {
@@ -1750,7 +1750,7 @@ void ContactEquation<DoubleType>::AssembleTriangleEdgeEquationOnCircuit(const st
             const Triangle &triangle = **ti;
             const size_t tindex = triangle.GetIndex();
             const ConstEdgeList &edgeList = ttelist[tindex];
-            const ConstNodeList &tnl = triangle.GetNodeList();
+            const auto &tnl = triangle.GetNodeList();
             for (size_t eindex = 0; eindex < edgeList.size(); ++eindex)
             {
               const Edge &edge = *edgeList[eindex];

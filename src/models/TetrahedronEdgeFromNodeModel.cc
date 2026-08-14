@@ -72,7 +72,7 @@ void TetrahedronEdgeFromNodeModel<DoubleType>::calcTetrahedronEdgeScalarValues()
       const EdgeData &edgeData = *edgeDataList[j];
       const Edge &edge = *(edgeData.edge);
 
-      const ConstNodeList &nl = edge.GetNodeList();
+      const auto &nl = edge.GetNodeList();
 
       const size_t ni0 = nl[0]->GetIndex();
       const size_t ni1 = nl[1]->GetIndex();

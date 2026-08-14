@@ -57,7 +57,7 @@ void GradientField<DoubleType>::CalcMatrices2d() const
     auto *dmp = new dsMath::RealDenseMatrix<DoubleType>(3);
     dsMath::RealDenseMatrix<DoubleType> &M = *dmp;
 
-    const std::vector<ConstNodePtr> &nl = triangle.GetNodeList();
+    const auto &nl = triangle.GetNodeList();
 
     const size_t ni0 = nl[0]->GetIndex();
     const DoubleType x0 = xvec[ni0];
@@ -112,7 +112,7 @@ void GradientField<DoubleType>::CalcMatrices3d() const
     dsMath::RealDenseMatrix<DoubleType> *dmp = new dsMath::RealDenseMatrix<DoubleType>(3);
     dsMath::RealDenseMatrix<DoubleType> &M = *dmp;
 
-    const std::vector<ConstNodePtr> &nl = tetrahedron.GetNodeList();
+    const auto &nl = tetrahedron.GetNodeList();
 
     const size_t ni0 = nl[0]->GetIndex();
     const DoubleType x0 = xvec[ni0];
@@ -149,7 +149,7 @@ Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Triangle &triang
   const size_t triangleIndex = triangle.GetIndex();
   dsMath::RealDenseMatrix<DoubleType> &M = *dense_mats_[triangleIndex];
 
-  const std::vector<ConstNodePtr> &nl = triangle.GetNodeList();
+  const auto &nl = triangle.GetNodeList();
 
   thread_local std::vector<DoubleType> B(3);
 
@@ -184,7 +184,7 @@ Vector<DoubleType> GradientField<DoubleType>::GetGradient(const Tetrahedron &tet
   const size_t tetrahedronIndex = tetrahedron.GetIndex();
   dsMath::RealDenseMatrix<DoubleType> &M = *dense_mats_[tetrahedronIndex];
 
-  const std::vector<ConstNodePtr> &nl = tetrahedron.GetNodeList();
+  const auto &nl = tetrahedron.GetNodeList();
 
   thread_local std::vector<DoubleType> B(3);
   const DoubleType nv0 = nvals[nl[0]->GetIndex()];

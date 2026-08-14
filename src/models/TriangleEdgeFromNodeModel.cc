@@ -60,13 +60,13 @@ void TriangleEdgeFromNodeModel<DoubleType>::calcTriangleEdgeScalarValues() const
   {
     const ConstEdgeList &el = ttelist[i];
     const Triangle &triangle = *triangleList[i];
-    const ConstNodeList &tnl = triangle.GetNodeList();
+    const auto &tnl = triangle.GetNodeList();
 
     for (size_t j = 0; j < el.size(); ++j)
     {
       const size_t eindex = 3 * i + j;
 
-      const ConstNodeList &nl = el[j]->GetNodeList();
+      const auto &nl = el[j]->GetNodeList();
 
       const size_t ni0 = nl[0]->GetIndex();
       const size_t ni1 = nl[1]->GetIndex();

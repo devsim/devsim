@@ -239,7 +239,7 @@ void Contact::FindTriangles() const
       continue;
     }
 
-    const std::vector<ConstNodePtr> &node_list = triangle.GetNodeList();
+    const auto &node_list = triangle.GetNodeList();
     if ((indexes.find(node_list[0]->GetIndex()) != indexes.end())
       && (indexes.find(node_list[1]->GetIndex()) != indexes.end())
       && (indexes.find(node_list[2]->GetIndex()) != indexes.end())

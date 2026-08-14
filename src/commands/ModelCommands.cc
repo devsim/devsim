@@ -1957,7 +1957,7 @@ debugTriangleCmd(CommandHandler &data)
       const Triangle &triangle = *triangleList[i];
       size_t ti = triangle.GetIndex();
       os << "Triangle: " << i << " " << ti << "\n";
-      const std::vector<ConstNodePtr> &nodeList = triangle.GetNodeList();
+      const auto &nodeList = triangle.GetNodeList();
       for (size_t ni = 0; ni < nodeList.size(); ++ni)
       {
         const Node &node = *nodeList[ni];

@@ -25,7 +25,7 @@ void createEdgeModelsFromNodeModel(const NodeScalarList<DoubleType> &nm, const R
 
     for (size_t i = 0; i < edge0.size(); ++i)
     {
-        const std::vector<ConstNodePtr> &nlist = el[i]->GetNodeList();
+        const auto &nlist = el[i]->GetNodeList();
         edge0[i] = nm[nlist[0]->GetIndex()];
         edge1[i] = nm[nlist[1]->GetIndex()];
     }

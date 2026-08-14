@@ -312,7 +312,7 @@ void WriteTriangles(const Region &reg, std::ostream &myfile)
   for (ConstTriangleList::const_iterator it = ctl.begin(); it != ctl.end(); ++it)
   {
 
-    const std::vector<ConstNodePtr> &nl = (*it)->GetNodeList();
+    const auto &nl = (*it)->GetNodeList();
 
     connectivity
               << " " << nl[0]->GetIndex()
@@ -358,7 +358,7 @@ void WriteTetrahedrons(const Region &reg, std::ostream &myfile)
   for (ConstTetrahedronList::const_iterator it = ctl.begin(); it != ctl.end(); ++it)
   {
 
-    const std::vector<ConstNodePtr> &nl = (*it)->GetNodeList();
+    const auto &nl = (*it)->GetNodeList();
 
     connectivity
               << " " << nl[0]->GetIndex()
