@@ -56,11 +56,9 @@ template<typename DoubleType>
 void processEdgeList(const ConstEdgeList &edge_list, const ConstNodeList &node_opposite_list, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy)
 {
   std::vector<size_t> edge_visited(unitx.size());
-  for (size_t i = 0; i < edge_list.size(); ++i)
+  for (auto it = edge_list.begin(); it != edge_list.end(); ++it)
   {
-    const Edge &edge = *edge_list[i];
-    // assert somewhere else if this doesn't exist
-    const Node &node_opposite = *node_opposite_list[i];
+    const Edge &edge = *(*it);
 
     //// Here we ignore edges we already visited
     const size_t ei = edge.GetIndex();
@@ -73,6 +71,8 @@ void processEdgeList(const ConstEdgeList &edge_list, const ConstNodeList &node_o
       continue;
     }
 
+    // assert somewhere else if this doesn't exist
+    const Node &node_opposite = *(node_opposite_list[it - edge_list.begin()]);
     processEdge(edge, node_opposite, unitx, unity, edgeLengths, nv, nvx, nvy);
 
   }
@@ -92,7 +92,7 @@ void processEdgeList(const ConstEdgeList &edge_list, const ConstNodeList &node_o
 }
 
 template <typename DoubleType>
-void ProcessAreaAndNormal(size_t ni0, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz, const Vector<DoubleType> &vnormal, DoubleType volume)
+void ProcessAreaAndNormal(size_t ni0, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz, const Vector<DoubleType> &vnormal, const DoubleType &volume)
 {
   nv[ni0] += volume;
 
@@ -113,7 +113,7 @@ void ProcessAreaAndNormal(size_t ni0, std::vector<DoubleType> &nv, std::vector<D
 }
 
 template <typename DoubleType>
-void processTriangle(const Triangle &triangle, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz)
+void processTriangle(const Triangle &triangle, const Node &node_opposite, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz)
 {
     const ConstNodeList &nodeList = triangle.GetNodeList();
 
@@ -123,6 +123,9 @@ void processTriangle(const Triangle &triangle, const std::vector<Vector<DoubleTy
 
     const size_t ti = triangle.GetIndex();
     const Vector<DoubleType> &triangleCenter = triangleCenters[ti];
+
+    // this is the direction from the triangle center to the opposite node, which is used to determine the outward normal direction
+    const auto &vvec = triangleCenter - ConvertVector<DoubleType>(node_opposite.Position());
 
     const auto &h0 = nodeList[0]->Position();
     const auto &h1 = nodeList[1]->Position();
@@ -138,33 +141,44 @@ void processTriangle(const Triangle &triangle, const std::vector<Vector<DoubleTy
     //// area split between both nodes
     const static DoubleType quarter = 0.25;
 
+    auto fix_sign = [](Vector<DoubleType> &vnormal, const Vector<DoubleType> &vvec)
+    {
+      if (dot_prod(vnormal, vvec) < 0.0)
+      {
+        vnormal = -vnormal;
+      }
+    };
+
     const Vector<DoubleType> &v01   = np0 - np1;
     const Vector<DoubleType> &vc01  = np0 - triangleCenter;
-    const Vector<DoubleType> &vec01 = quarter * cross_prod(v01, vc01);
+    Vector<DoubleType> vec01 = quarter * cross_prod(v01, vc01);
     const DoubleType  vol01 = magnitude(vec01);
 
+    fix_sign(vec01, vvec);
     ProcessAreaAndNormal(ni0, nv, nvx, nvy, nvz, vec01, vol01);
     ProcessAreaAndNormal(ni1, nv, nvx, nvy, nvz, vec01, vol01);
 
     const Vector<DoubleType> &v02   = np0 - np2;
     const Vector<DoubleType> &vc02  = np0 - triangleCenter;
-    const Vector<DoubleType> &vec02 = quarter * cross_prod(v02, vc02);
+    Vector<DoubleType> vec02 = quarter * cross_prod(v02, vc02);
     const DoubleType  vol02 = magnitude(vec02);
 
+    fix_sign(vec02, vvec);
     ProcessAreaAndNormal(ni0, nv, nvx, nvy, nvz, vec02, vol02);
     ProcessAreaAndNormal(ni2, nv, nvx, nvy, nvz, vec02, vol02);
 
     const Vector<DoubleType> &v12   = np1 - np2;
     const Vector<DoubleType> &vc12  = np1 - triangleCenter;
-    const Vector<DoubleType> &vec12 = quarter * cross_prod(v12, vc12);
+    Vector<DoubleType> vec12 = quarter * cross_prod(v12, vc12);
     const DoubleType  vol12 = magnitude(vec12);
 
+    fix_sign(vec12, vvec);
     ProcessAreaAndNormal(ni1, nv, nvx, nvy, nvz, vec12, vol12);
     ProcessAreaAndNormal(ni2, nv, nvx, nvy, nvz, vec12, vol12);
 }
 
 template <typename DoubleType>
-void processTriangleList(ConstTriangleList &triangle_list, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz)
+void processTriangleList(const ConstTriangleList &triangle_list, const ConstNodeList &node_opposite_list, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz)
 {
   std::vector<size_t> triangle_visited(triangleCenters.size());
   for (ConstTriangleList::const_iterator it = triangle_list.begin(); it != triangle_list.end(); ++it)
@@ -182,7 +196,8 @@ void processTriangleList(ConstTriangleList &triangle_list, const std::vector<Vec
       continue;
     }
 
-    processTriangle(triangle, triangleCenters, nv, nvx, nvy, nvz);
+    const auto &node_opp = *(node_opposite_list[it - triangle_list.begin()]);
+    processTriangle(triangle, node_opp, triangleCenters, nv, nvx, nvy, nvz);
   }
 
   for (size_t i = 0; i < nv.size(); ++i)
@@ -208,7 +223,7 @@ template
 void processEdgeList<>(const ConstEdgeList &edge_list, const ConstNodeList &node_opposite_list, const EdgeScalarList<double> &unitx, const EdgeScalarList<double> &unity, const EdgeScalarList<double> &edgeLengths, std::vector<double> &nv, std::vector<double> &nvx, std::vector<double> &nvy);
 
 template
-void processTriangleList<>(ConstTriangleList &triangle_list, const std::vector<Vector<double>> &triangleCenters, std::vector<double> &nv, std::vector<double> &nvx, std::vector<double> &nvy, std::vector<double> &nvz);
+void processTriangleList<>(const ConstTriangleList &triangle_list, const ConstNodeList &node_opposite_list, const std::vector<Vector<double>> &triangleCenters, std::vector<double> &nv, std::vector<double> &nvx, std::vector<double> &nvy, std::vector<double> &nvz);
 }
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
@@ -217,7 +232,7 @@ template
 void processEdgeList<>(const ConstEdgeList &edge_list, const ConstNodeList &node_opposite_list, const EdgeScalarList<float128> &unitx, const EdgeScalarList<float128> &unity, const EdgeScalarList<float128> &edgeLengths, std::vector<float128> &nv, std::vector<float128> &nvx, std::vector<float128> &nvy);
 
 template
-void processTriangleList<>(ConstTriangleList &triangle_list, const std::vector<Vector<float128>> &triangleCenters, std::vector<float128> &nv, std::vector<float128> &nvx, std::vector<float128> &nvy, std::vector<float128> &nvz);
+void processTriangleList<>(const ConstTriangleList &triangle_list, const ConstNodeList &node_opposite_list, const std::vector<Vector<float128>> &triangleCenters, std::vector<float128> &nv, std::vector<float128> &nvx, std::vector<float128> &nvy, std::vector<float128> &nvz);
 }
 #endif
 

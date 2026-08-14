@@ -30,10 +30,10 @@ template<typename DoubleType>
 void processEdgeList(const ConstEdgeList &edge_list, const ConstNodeList &node_opposite_list, const EdgeScalarList<DoubleType> &unitx, const EdgeScalarList<DoubleType> &unity, const EdgeScalarList<DoubleType> &edgeLengths, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy);
 
 template <typename DoubleType>
-void processTriangle(const Triangle &triangle, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz);
+void processTriangle(const Triangle &triangle, const Node &node_opposite, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz);
 
 template <typename DoubleType>
-void processTriangleList(ConstTriangleList &triangle_list, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz);
+void processTriangleList(const ConstTriangleList &triangle_list, const ConstNodeList &node_opposite_list, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz);
 }
 #endif
 

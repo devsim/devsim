@@ -251,6 +251,29 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
   Device::ContactList_t   contact_list   = device.GetContactList();
   Device::InterfaceList_t interface_list = device.GetInterfaceList();
 
+  const auto &triangle_to_tetrahedron_list = region.GetTriangleToTetrahedronList();
+
+  auto get_opposite_node_of_triangle = [&triangle_to_tetrahedron_list](ConstTrianglePtr triangle) -> ConstNodePtr {
+    const auto &tetrahedron_list = triangle_to_tetrahedron_list[triangle->GetIndex()];
+    ConstNodePtr opp_node = nullptr;
+    for (ConstTetrahedronPtr tetrahedron : tetrahedron_list)
+    {
+      opp_node = NodeOppositeUtil::findNodeOppositeOfTetrahedronTriangle(*triangle, *tetrahedron);
+      break;
+    }
+    return opp_node;
+  };
+
+  auto get_opposite_node_list = [&get_opposite_node_of_triangle](ConstTriangleList &triangle_list) -> std::vector<ConstNodePtr> {
+    std::vector<ConstNodePtr> opp_node_list;
+    opp_node_list.reserve(triangle_list.size());
+    for (ConstTrianglePtr triangle : triangle_list)
+    {
+      opp_node_list.push_back(get_opposite_node_of_triangle(triangle));
+    }
+    return opp_node_list;
+  };
+
   ConstTriangleList contact_triangle_list;
 
   for (Device::ContactList_t::const_iterator cit = contact_list.begin(); cit != contact_list.end(); ++cit)
@@ -298,7 +321,7 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
     std::vector<DoubleType> nvy(nl.size());
     std::vector<DoubleType> nvz(nl.size());
 
-    SurfaceAreaUtil::processTriangleList(contact_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
+    SurfaceAreaUtil::processTriangleList(contact_triangle_list, get_opposite_node_list(contact_triangle_list), triangleCenters, nv, nvx, nvy, nvz);
 
     contact_area.lock()->SetValues(nv);
 
@@ -315,7 +338,7 @@ void SurfaceArea<DoubleType>::calcSurfaceArea3d() const
     std::vector<DoubleType> nvy(nl.size());
     std::vector<DoubleType> nvz(nl.size());
 
-    SurfaceAreaUtil::processTriangleList(interface_triangle_list, triangleCenters, nv, nvx, nvy, nvz);
+    SurfaceAreaUtil::processTriangleList(interface_triangle_list, get_opposite_node_list(interface_triangle_list), triangleCenters, nv, nvx, nvy, nvz);
 
     SetValues(nv);
 
