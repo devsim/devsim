@@ -447,7 +447,7 @@ void Equation<DoubleType>::EdgeAssembleRHS(dsMath::RHSEntryVec<DoubleType> &v, c
     const ConstEdgeList &el = r.GetEdgeList();
     for (size_t i = 0 ; i < el.size(); ++i)
     {
-        const ConstNodeList &nl = el[i]->GetNodeList();
+        const auto &nl = el[i]->GetNodeList();
         const size_t row0 = r.GetEquationNumber(eqindex0, nl[0]);
         const size_t row1 = r.GetEquationNumber(eqindex0, nl[1]);
 
@@ -478,7 +478,7 @@ void Equation<DoubleType>::TriangleEdgeAssembleRHS(dsMath::RHSEntryVec<DoubleTyp
     const ConstEdgeList &el = ttelist[i];
     for (size_t j = 0; j < el.size(); ++j)
     {
-      const ConstNodeList &nl = el[j]->GetNodeList();
+      const auto &nl = el[j]->GetNodeList();
 
       const size_t row0 = r.GetEquationNumber(eqindex0, nl[0]);
       const size_t row1 = r.GetEquationNumber(eqindex0, nl[1]);
@@ -511,7 +511,7 @@ void Equation<DoubleType>::TetrahedronEdgeAssembleRHS(dsMath::RHSEntryVec<Double
     {
       const EdgeData &edgeData = *edgeDataList[j];
       const Edge     &edge     = *edgeData.edge;
-      const ConstNodeList &nl = edge.GetNodeList();
+      const auto &nl = edge.GetNodeList();
 
       const size_t row0 = r.GetEquationNumber(eqindex0, nl[0]);
       const size_t row1 = r.GetEquationNumber(eqindex0, nl[1]);
@@ -604,7 +604,7 @@ void Equation<DoubleType>::UnSymmetricEdgeAssembleJacobian(dsMath::RealRowColVal
     const ConstEdgeList &el = r.GetEdgeList();
     for (size_t i = 0 ; i < el.size(); ++i)
     {
-        const ConstNodeList &nl = el[i]->GetNodeList();
+        const auto &nl = el[i]->GetNodeList();
         const size_t row0 = r.GetEquationNumber(eqindex0, nl[0]);
         const size_t col0 = r.GetEquationNumber(eqindex1, nl[0]);
         const size_t row1 = r.GetEquationNumber(eqindex0, nl[1]);
@@ -656,11 +656,11 @@ void Equation<DoubleType>::UnSymmetricTriangleEdgeAssembleJacobian(dsMath::RealR
 
     const Triangle &triangle = *triangleList[i];
 
-    const ConstNodeList &tnl = triangle.GetNodeList();
+    const auto &tnl = triangle.GetNodeList();
 
     for (size_t j = 0 ; j < el.size(); ++j)
     {
-      const ConstNodeList &nl = el[j]->GetNodeList();
+      const auto &nl = el[j]->GetNodeList();
 
       const Node * const node0 = nl[0];
       const Node * const node1 = nl[1];
@@ -728,7 +728,7 @@ void Equation<DoubleType>::UnSymmetricTetrahedronEdgeAssembleJacobian(dsMath::Re
       const EdgeData &edgeData = *edgeDataList[j];
       const Edge &edge = *(edgeData.edge);
 
-      const ConstNodeList &nl = edge.GetNodeList();
+      const auto &nl = edge.GetNodeList();
 
       const Node * const node0 = nl[0];
       const Node * const node1 = nl[1];

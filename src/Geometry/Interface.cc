@@ -323,7 +323,7 @@ void Interface::FindTriangles() const
       continue;
     }
 
-    const std::vector<ConstNodePtr> &node_list = triangle.GetNodeList();
+    const auto &node_list = triangle.GetNodeList();
     if ((indexes0.find(node_list[0]->GetIndex()) != indexes0.end())
       && (indexes0.find(node_list[1]->GetIndex()) != indexes0.end())
       && (indexes0.find(node_list[2]->GetIndex()) != indexes0.end())
@@ -347,7 +347,7 @@ void Interface::FindTriangles() const
       continue;
     }
 
-    const std::vector<ConstNodePtr> &node_list = triangle.GetNodeList();
+    const auto &node_list = triangle.GetNodeList();
     if ((indexes1.find(node_list[0]->GetIndex()) != indexes1.end())
       && (indexes1.find(node_list[1]->GetIndex()) != indexes1.end())
       && (indexes1.find(node_list[2]->GetIndex()) != indexes1.end())

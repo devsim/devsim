@@ -12,6 +12,7 @@ SPDX-License-Identifier: Apache-2.0
 
 #include <cstddef>
 #include <vector>
+#include <array>
 
 class Node;
 typedef Node *NodePtr;
@@ -39,12 +40,12 @@ class Triangle {
          index = i;
       }
 
-      const std::vector<ConstNodePtr> &GetNodeList() const
+      const std::array<ConstNodePtr, 3> &GetNodeList() const
       {
         return nodes;
       }
 
-      const std::vector<ConstNodePtr> &GetFENodeList() const;
+      std::array<ConstNodePtr, 3> GetFENodeList() const;
 
 
    private:
@@ -54,8 +55,8 @@ class Triangle {
       Triangle &operator= (const Triangle &);
 
       size_t index;
-      std::vector<ConstNodePtr> nodes;
-      mutable std::vector<ConstNodePtr> fe_nodes;
+      std::array<ConstNodePtr, 3> nodes;
+      mutable int fe_sign = 0;
 };
 
 struct TriangleCompIndex

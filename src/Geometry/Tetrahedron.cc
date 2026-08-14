@@ -13,25 +13,24 @@ SPDX-License-Identifier: Apache-2.0
 #include <cmath>
 #include <array>
 //const double Tetrahedron::EPSILON=1.0e-20;
-Tetrahedron::Tetrahedron(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2, ConstNodePtr n3) : nodes(4)
+Tetrahedron::Tetrahedron(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2, ConstNodePtr n3) : nodes{n0, n1, n2, n3}
 {
     index = ind;
-    nodes[0]=n0;
-    nodes[1]=n1;
-    nodes[2]=n2;
-    nodes[3]=n3;
 }
 
-const std::vector<ConstNodePtr> &Tetrahedron::GetFENodeList() const
+std::array<ConstNodePtr, 4> Tetrahedron::GetFENodeList() const
 {
-  if (!fe_nodes.empty())
+  if (fe_sign == 1)
   {
-    return fe_nodes;
+    return nodes;
   }
-  fe_nodes.resize(4);
-  for (size_t i = 0; i < 4; ++i)
+
+  auto fe_nodes = nodes;
+
+  if (fe_sign == -1)
   {
-    fe_nodes[i] = nodes[i];
+    std::swap(fe_nodes[2], fe_nodes[3]);
+    return fe_nodes;
   }
 
   std::array<Vector<double>, 4> positions;
@@ -51,6 +50,11 @@ const std::vector<ConstNodePtr> &Tetrahedron::GetFENodeList() const
   if (dp > 0.0)
   {
     std::swap(fe_nodes[2], fe_nodes[3]);
+    fe_sign = -1;
+  }
+  else
+  {
+    fe_sign = 1;
   }
 
   return fe_nodes;
@@ -58,7 +62,7 @@ const std::vector<ConstNodePtr> &Tetrahedron::GetFENodeList() const
 
 
 template <typename DoubleType>
-Vector<DoubleType> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes)
+Vector<DoubleType> GetTetrahedronCenter(std::span<ConstNodePtr const> nodes)
 {
   const Vector<DoubleType> &v0 = ConvertPosition<DoubleType>(nodes[0]->Position());
 
@@ -103,18 +107,18 @@ Vector<DoubleType> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes)
 template <typename DoubleType>
 Vector<DoubleType> GetCenter(const Tetrahedron &tet)
 {
-  const std::vector<ConstNodePtr> &nodes = tet.GetNodeList();
+  const auto &nodes = tet.GetNodeList();
 
   return GetTetrahedronCenter<DoubleType>(nodes);
 }
 
 
-template Vector<double> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes);
+template Vector<double> GetTetrahedronCenter(std::span<ConstNodePtr const> nodes);
 template Vector<double> GetCenter(const Tetrahedron &tet);
 
 #ifdef DEVSIM_EXTENDED_PRECISION
 #include "Float128.hh"
-template Vector<float128> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes);
+template Vector<float128> GetTetrahedronCenter(std::span<ConstNodePtr const> nodes);
 template Vector<float128> GetCenter(const Tetrahedron &tet);
 #endif
 

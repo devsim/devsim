@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 #define EDGE_HH
 
 #include <cstddef>
-#include <vector>
+#include <array>
 
 class Node;
 typedef Node *NodePtr;
@@ -37,12 +37,12 @@ class Edge {
          index = i;
       }
 
-      const std::vector<ConstNodePtr> &GetNodeList() const
+      const std::array<ConstNodePtr, 2> &GetNodeList() const
       {
           return nodes;
       }
 
-      const std::vector<ConstNodePtr> &GetFENodeList() const
+      const std::array<ConstNodePtr, 2> &GetFENodeList() const
       {
           return nodes;
       }
@@ -67,7 +67,7 @@ class Edge {
       Edge &operator= (const Edge &);
 
       size_t index;
-      std::vector<ConstNodePtr> nodes;
+      std::array<ConstNodePtr, 2> nodes{};
 };
 
 struct EdgeCompIndex

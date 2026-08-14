@@ -28,6 +28,7 @@ SPDX-License-Identifier: Apache-2.0
 #include <sstream>
 #include <fstream>
 #include <iomanip>
+#include <span>
 
 namespace {
 void WriteCoordinates(std::ostream &myfile, const Device::CoordinateList_t &clist)
@@ -41,7 +42,7 @@ void WriteCoordinates(std::ostream &myfile, const Device::CoordinateList_t &clis
     myfile << "end_coordinates\n\n";
 }
 
-void WriteNodes(std::ostream &myfile, const ConstNodeList &nlist)
+void WriteNodes(std::ostream &myfile, const std::span<ConstNodePtr const> nlist)
 {
     myfile << "begin_nodes\n";
     for (ConstNodeList::const_iterator nit = nlist.begin(); nit != nlist.end(); ++nit)
@@ -59,7 +60,7 @@ void WriteEdges(std::ostream &myfile, const ConstEdgeList &elist)
     myfile << "begin_edges\n";
     for (ConstEdgeList::const_iterator eit = elist.begin(); eit != elist.end(); ++eit)
     {
-        const ConstNodeList &nlist = (*eit)->GetNodeList();
+        const auto &nlist = (*eit)->GetNodeList();
         myfile << nlist[0]->GetIndex() << "\t" << nlist[1]->GetIndex() << "\n";
     }
     myfile << "end_edges\n\n";
@@ -72,7 +73,7 @@ void WriteTriangles(std::ostream &myfile, const ConstTriangleList &tlist)
         myfile << "begin_triangles\n";
         for (ConstTriangleList::const_iterator tit = tlist.begin(); tit != tlist.end(); ++tit)
         {
-            const ConstNodeList &nlist = (*tit)->GetNodeList();
+            const auto &nlist = (*tit)->GetNodeList();
             myfile << nlist[0]->GetIndex() << "\t" << nlist[1]->GetIndex() << "\t" << nlist[2]->GetIndex() << "\n";
         }
         myfile << "end_triangles\n\n";
@@ -86,7 +87,7 @@ void WriteTetrahedra(std::ostream &myfile, const ConstTetrahedronList &tlist)
         myfile << "begin_tetrahedra\n";
         for (ConstTetrahedronList::const_iterator tit = tlist.begin(); tit != tlist.end(); ++tit)
         {
-            const ConstNodeList &nlist = (*tit)->GetNodeList();
+            const auto &nlist = (*tit)->GetNodeList();
             myfile << nlist[0]->GetIndex() << "\t" << nlist[1]->GetIndex() << "\t" << nlist[2]->GetIndex() << "\t" << nlist[3]->GetIndex() << "\n";
         }
         myfile << "end_tetrahedra\n\n";
@@ -293,7 +294,7 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
 
           for (size_t i = 0; i < ittriangles.size(); ++i)
           {
-            const std::vector<ConstNodePtr> &triangle_nodes = ittriangles[i]->GetNodeList();
+            const auto &triangle_nodes = ittriangles[i]->GetNodeList();
             myfile << triangle_nodes[0]->GetIndex() << "\t" << triangle_nodes[1]->GetIndex() << "\t" << triangle_nodes[2]->GetIndex() << "\n";
 
           }
@@ -357,8 +358,8 @@ bool WriteSingleDevice(const std::string &dname, std::ostream &myfile, std::stri
 
           for (size_t i = 0; i < ittriangles0.size(); ++i)
           {
-            const std::vector<ConstNodePtr> &triangle0_nodes = ittriangles0[i]->GetNodeList();
-            const std::vector<ConstNodePtr> &triangle1_nodes = ittriangles1[i]->GetNodeList();
+            const auto &triangle0_nodes = ittriangles0[i]->GetNodeList();
+            const auto &triangle1_nodes = ittriangles1[i]->GetNodeList();
             myfile << triangle0_nodes[0]->GetIndex() << "\t" << triangle0_nodes[1]->GetIndex() << "\t" << triangle0_nodes[2]->GetIndex() << "\t"
                    << triangle1_nodes[0]->GetIndex() << "\t" << triangle1_nodes[1]->GetIndex() << "\t" << triangle1_nodes[2]->GetIndex() << "\n";
 

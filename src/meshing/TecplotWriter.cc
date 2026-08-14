@@ -363,7 +363,7 @@ void WriteEdges(std::ostream &myfile, const Region &reg)
     const ConstEdgeList &ctl = reg.GetEdgeList();
     for (ConstEdgeList::const_iterator tit = ctl.begin(); tit != ctl.end(); ++tit)
     {
-        const ConstNodeList &nlist = (*tit)->GetNodeList();
+        const auto &nlist = (*tit)->GetNodeList();
         myfile <<  (nlist[0]->GetIndex() + 1)
         << " " <<  (nlist[1]->GetIndex() + 1)
         << "\n";
@@ -375,7 +375,7 @@ void WriteTriangles(std::ostream &myfile, const Region &reg)
     const ConstTriangleList &ctl = reg.GetTriangleList();
     for (ConstTriangleList::const_iterator tit = ctl.begin(); tit != ctl.end(); ++tit)
     {
-        const ConstNodeList &nlist = (*tit)->GetFENodeList();
+        const auto &nlist = (*tit)->GetFENodeList();
         myfile <<  (nlist[0]->GetIndex() + 1)
         << " " <<  (nlist[1]->GetIndex() + 1)
         << " " <<  (nlist[2]->GetIndex() + 1)
@@ -388,7 +388,7 @@ void WriteTetrahedra(std::ostream &myfile, const Region &reg)
     const ConstTetrahedronList &ctl = reg.GetTetrahedronList();
     for (ConstTetrahedronList::const_iterator tit = ctl.begin(); tit != ctl.end(); ++tit)
     {
-        const ConstNodeList &nlist = (*tit)->GetFENodeList();
+        const auto &nlist = (*tit)->GetFENodeList();
         myfile <<  (nlist[0]->GetIndex() + 1)
         << " " <<  (nlist[1]->GetIndex() + 1)
         << " " <<  (nlist[2]->GetIndex() + 1)

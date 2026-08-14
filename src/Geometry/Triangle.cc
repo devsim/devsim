@@ -15,19 +15,23 @@ SPDX-License-Identifier: Apache-2.0
 using std::abs;
 
 const double Triangle::EPSILON=1.0e-20;
-Triangle::Triangle(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2) : nodes(3)
+Triangle::Triangle(size_t ind, ConstNodePtr n0, ConstNodePtr n1, ConstNodePtr n2) : nodes{n0, n1, n2}
 {
     index = ind;
-    nodes[0]=n0;
-    nodes[1]=n1;
-    nodes[2]=n2;
-
 }
 
-const std::vector<ConstNodePtr> &Triangle::GetFENodeList() const
+std::array<ConstNodePtr, 3> Triangle::GetFENodeList() const
 {
-  if (!fe_nodes.empty())
+  if (fe_sign == 1)
   {
+    return nodes;
+  }
+
+  auto fe_nodes = nodes;
+
+  if (fe_sign == -1)
+  {
+    std::swap(fe_nodes[1], fe_nodes[2]);
     return fe_nodes;
   }
 
@@ -38,12 +42,6 @@ const std::vector<ConstNodePtr> &Triangle::GetFENodeList() const
     Vector<double>(0.0, 1.0, 0.0),
     Vector<double>(1.0, 0.0, 0.0)
   };
-
-  fe_nodes.resize(3);
-  for (size_t i = 0; i < 3; ++i)
-  {
-    fe_nodes[i] = nodes[i];
-  }
 
   std::array<Vector<double>, 3> positions;
   for (size_t i = 0; i < 3; ++i)
@@ -73,6 +71,11 @@ const std::vector<ConstNodePtr> &Triangle::GetFENodeList() const
   if (dir < 0.0)
   {
     std::swap(fe_nodes[1], fe_nodes[2]);
+    fe_sign = -1;
+  }
+  else
+  {
+    fe_sign = 1;
   }
 
   return fe_nodes;
@@ -81,7 +84,7 @@ const std::vector<ConstNodePtr> &Triangle::GetFENodeList() const
 template <typename DoubleType>
 Vector<DoubleType> GetCenter(const Triangle &tr)
 {
-  const std::vector<ConstNodePtr> &nodes = tr.GetNodeList();
+  const auto &nodes = tr.GetNodeList();
 
   const Vector<DoubleType> &v0 = ConvertPosition<DoubleType>(nodes[0]->Position());
   const Vector<DoubleType> &v1 = ConvertPosition<DoubleType>(nodes[1]->Position());

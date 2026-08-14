@@ -115,7 +115,7 @@ void ProcessAreaAndNormal(size_t ni0, std::vector<DoubleType> &nv, std::vector<D
 template <typename DoubleType>
 void processTriangle(const Triangle &triangle, const Node &node_opposite, const std::vector<Vector<DoubleType>> &triangleCenters, std::vector<DoubleType> &nv, std::vector<DoubleType> &nvx, std::vector<DoubleType> &nvy, std::vector<DoubleType> &nvz)
 {
-    const ConstNodeList &nodeList = triangle.GetNodeList();
+    const auto &nodeList = triangle.GetNodeList();
 
     const size_t &ni0 = nodeList[0]->GetIndex();
     const size_t &ni1 = nodeList[1]->GetIndex();

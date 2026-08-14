@@ -12,6 +12,8 @@ SPDX-License-Identifier: Apache-2.0
 
 #include <cstddef>
 #include <vector>
+#include <array>
+#include <span>
 
 class Node;
 typedef Node *NodePtr;
@@ -37,12 +39,12 @@ class Tetrahedron {
          index = i;
       }
 
-      const std::vector<ConstNodePtr> &GetNodeList() const
+      const std::array<ConstNodePtr, 4> &GetNodeList() const
       {
         return nodes;
       }
 
-      const std::vector<ConstNodePtr> &GetFENodeList() const;
+      std::array<ConstNodePtr, 4> GetFENodeList() const;
 
    private:
 
@@ -50,9 +52,9 @@ class Tetrahedron {
       Tetrahedron (const Tetrahedron &);
       Tetrahedron &operator= (const Tetrahedron &);
 
-      std::vector<ConstNodePtr> nodes;
-      mutable std::vector<ConstNodePtr> fe_nodes;
+      std::array<ConstNodePtr, 4> nodes;
       size_t index;
+      mutable int fe_sign = 0;
 };
 
 struct TetrahedronCompIndex
@@ -64,7 +66,7 @@ template <typename DoubleType>
 Vector<DoubleType> GetCenter(const Tetrahedron &);
 
 template <typename DoubleType>
-Vector<DoubleType> GetTetrahedronCenter(const std::vector<ConstNodePtr> &nodes);
+Vector<DoubleType> GetTetrahedronCenter(std::span<ConstNodePtr> nodes);
 
 #endif
 

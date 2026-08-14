@@ -53,7 +53,7 @@ void WriteEdges(std::ostream &myfile, const ConstEdgeList &elist)
     myfile << "begin_edges\n";
     for (ConstEdgeList::const_iterator eit = elist.begin(); eit != elist.end(); ++eit)
     {
-        const ConstNodeList &nlist = (*eit)->GetNodeList();
+        const auto &nlist = (*eit)->GetNodeList();
         myfile << nlist[0]->GetIndex() << "\t" << nlist[1]->GetIndex() << "\n";
     }
     myfile << "end_edges\n\n";
@@ -66,7 +66,7 @@ void WriteTriangles(std::ostream &myfile, const ConstTriangleList &tlist)
         myfile << "begin_triangles\n";
         for (ConstTriangleList::const_iterator tit = tlist.begin(); tit != tlist.end(); ++tit)
         {
-            const ConstNodeList &nlist = (*tit)->GetNodeList();
+            const auto &nlist = (*tit)->GetNodeList();
             myfile << nlist[0]->GetIndex() << "\t" << nlist[1]->GetIndex() << "\t" << nlist[2]->GetIndex() << "\n";
         }
         myfile << "end_triangles\n\n";
@@ -80,7 +80,7 @@ void WriteTetrahedra(std::ostream &myfile, const ConstTetrahedronList &tlist)
         myfile << "begin_tetrahedra\n";
         for (ConstTetrahedronList::const_iterator tit = tlist.begin(); tit != tlist.end(); ++tit)
         {
-            const ConstNodeList &nlist = (*tit)->GetNodeList();
+            const auto &nlist = (*tit)->GetNodeList();
             myfile << nlist[0]->GetIndex() << "\t" << nlist[1]->GetIndex() << "\t" << nlist[2]->GetIndex() << "\t" << nlist[3]->GetIndex() << "\n";
         }
         myfile << "end_tetrahedra\n\n";

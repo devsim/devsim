@@ -336,7 +336,7 @@ void Region::CreateNodeToTriangleList()
   for (size_t i = 0; i < triangleList.size(); ++i)
   {
     ConstTrianglePtr ctp = triangleList[i];
-    const std::vector<ConstNodePtr> &nodes = ctp->GetNodeList();
+    const auto &nodes = ctp->GetNodeList();
     for (size_t j = 0; j < nodes.size(); ++j)
     {
       nodeToTriangleList[nodes[j]->GetIndex()].push_back(ctp);
@@ -360,7 +360,7 @@ void Region::CreateNodeToTetrahedronList()
   {
     ConstTetrahedronPtr ctp = tetrahedronList[i];
 //    std::cerr << "ctp " << ctp->GetIndex() << "\n";
-    const std::vector<ConstNodePtr> &nodes = ctp->GetNodeList();
+    const auto &nodes = ctp->GetNodeList();
 //    dsAssert(nodes.size() == 4, "UNEXPECTED");
     for (size_t j = 0; j < nodes.size(); ++j)
     {
@@ -471,7 +471,7 @@ void Region::CreateTriangleToEdgeList()
     {
       const size_t tindex = (*tit)->GetIndex();
 
-      const ConstNodeList &nl = (*tit)->GetNodeList();
+      const auto &nl = (*tit)->GetNodeList();
       ConstEdgeList &el = triangleToEdgeList[tindex];
 
       for (size_t j = 0; j < 3; ++j)
@@ -566,7 +566,7 @@ void Region::CreateTriangleToTetrahedronList()
   for (size_t i = 0; i < triangleList.size(); ++i)
   {
     const Triangle &triangle = *triangleList[i];
-    const ConstNodeList &cnl = triangle.GetNodeList();
+    const auto &cnl = triangle.GetNodeList();
 
     const size_t n0 = cnl[0]->GetIndex();
     const size_t n1 = cnl[1]->GetIndex();
@@ -616,9 +616,9 @@ void Region::CreateTetrahedronToTriangleList()
     {
       const size_t tindex = (*tit)->GetIndex();
 
-      const ConstNodeList &nl = (*tit)->GetNodeList();
+      const auto &nl = (*tit)->GetNodeList();
 
-      const ConstNodeList &trnl = (tptr)->GetNodeList();
+      const auto &trnl = (tptr)->GetNodeList();
 
       ConstTriangleList &el = tetrahedronToTriangleList[tindex];
       for (size_t j = 0; j < 4; ++j)
