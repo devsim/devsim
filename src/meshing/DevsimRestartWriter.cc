@@ -45,7 +45,7 @@ void WriteCoordinates(std::ostream &myfile, const Device::CoordinateList_t &clis
 void WriteNodes(std::ostream &myfile, const std::span<ConstNodePtr const> nlist)
 {
     myfile << "begin_nodes\n";
-    for (ConstNodeList::const_iterator nit = nlist.begin(); nit != nlist.end(); ++nit)
+    for (auto nit = nlist.cbegin(); nit != nlist.cend(); ++nit)
     {
         const Node &n = **nit;
         const Coordinate &c = n.GetCoordinate();
