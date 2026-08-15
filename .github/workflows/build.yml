@@ -37,7 +37,7 @@ jobs:
   build_windows:
     if: true
     name: Build on Windows
-    runs-on: windows-2022
+    runs-on: windows-2025
     needs: create_release_tag
     steps:
       - name: set git crlf
