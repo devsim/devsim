@@ -5,6 +5,13 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.11.0
+
+* [#165](https://github.com/devsim/devsim/issues/165) Update c++20
+* [#164](https://github.com/devsim/devsim/issues/164) use std array for basic shapes
+* [#162](https://github.com/devsim/devsim/issues/162) surface normal models should point outward
+* [#160](https://github.com/devsim/devsim/issues/160) Visual Studio 2026
+
 ## Version 2.10.1
 
 ### UMFPACK Solver

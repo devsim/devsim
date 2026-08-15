@@ -24,7 +24,7 @@ IF "%1"=="msys" (
 )
 
 IF "%1"=="clangx64" (
-  SET GENERATOR="Visual Studio 17 2022"
+  SET GENERATOR="Visual Studio 18 2026"
   SET AOPTION="x64"
   SET TOOLSET="ClangCL"
   SET BUILDDIR="clangwin64"
@@ -35,7 +35,7 @@ IF "%1"=="clangx64" (
 
 
 IF "%1"=="x64" (
-  SET GENERATOR="Visual Studio 17 2022"
+  SET GENERATOR="Visual Studio 18 2026"
   SET AOPTION="x64"
   SET TOOLSET="v143"
   SET BUILDDIR=win64
@@ -45,7 +45,7 @@ IF "%1"=="x64" (
 )
 
 IF "%1"=="x86" (
-  SET GENERATOR="Visual Studio 17 2022"
+  SET GENERATOR="Visual Studio 18 2026"
   SET AOPTION="Win32"
   SET TOOLSET="v143"
   SET BUILDDIR=win32
