@@ -5,6 +5,14 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.11.1
+
+### Platform Support
+
+#### macOS
+
+Due to the deprecation of the macOS 14 image on GitHub Actions, the software is now built on macOS 15 Sequoia.
+
 ## Version 2.11.0
 
 ### Surface Normal Models
