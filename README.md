@@ -55,7 +55,7 @@ The repository for the documentation is at [https://github.com/devsim/devsim_doc
 
 | OS | Version | Architecture |
 | --- | --- | --- |
-| macOS | Sonoma 14.7.6 | `arm64` |
+| macOS | Sequoia 15 | `arm64` |
 | Microsoft Windows | Windows 10 | `x64` |
 | Linux | AlmaLinux 8 (Red Hat Enterprise Linux 8 Compatible) | `aarch64`, `x86_64` |
 
