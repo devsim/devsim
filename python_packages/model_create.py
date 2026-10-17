@@ -199,7 +199,7 @@ def EnsureEdgeFromNodeModelExists(device, region, nodemodel):
     Checks if the edge models exists
     """
     if not InNodeModelList(device, region, nodemodel):
-        raise "{} must exist"
+        raise RuntimeError(f"{nodemodel} must exist")
 
     _emlist = get_edge_model_list(device=device, region=region)
     emtest = (f"{nodemodel}@n0" in _emlist) and (f"{nodemodel}@n1" in _emlist)
