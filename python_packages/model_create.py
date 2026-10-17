@@ -208,6 +208,7 @@ def EnsureEdgeFromNodeModelExists(device, region, nodemodel):
             print(f"INFO: Creating {nodemodel}@n0 and {nodemodel}@n1")
         edge_from_node_model(device=device, region=region, node_model=nodemodel)
 
+
 def CreateElementModel2d(device, region, model, expression):
     result = element_model(
         device=device, region=region, name=model, equation=expression
