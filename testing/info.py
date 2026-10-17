@@ -9,4 +9,7 @@
 import devsim
 
 for k, v in devsim.get_parameter(name="info").items():
-    print(f"{k}\t{v}")
+    if isinstance(v, str):
+        print(f'"{k}"\t"{v}"')
+    else:
+        print(f'"{k}"\t{v}')
