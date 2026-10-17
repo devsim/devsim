@@ -31,14 +31,14 @@ void devsim_initialization()
 #else
     features["extended_precision"] = ObjectHolder(false);
 #endif
-    ObjectHolderList_t solvers;
+
+    std::string direct_solver;
 #if defined (USE_MKL_PARDISO)
-    solvers.push_back(ObjectHolder("mkl_pardiso"));
+    direct_solver = "mkl_pardiso";
 #endif
 #if defined (USE_SUPERLU_PRECONDITIONER)
-    solvers.push_back(ObjectHolder("superlu"));
+    direct_solver = "superlu";
 #endif
-    features["direct_solver"] = ObjectHolder(solvers);
     features["license"] = ObjectHolder("Apache License, Version 2.0");
     features["website"] = ObjectHolder("https://devsim.org");
 
@@ -48,11 +48,12 @@ void devsim_initialization()
     if (ret == MathLoader::LoaderMessages_t::MKL_LOADED)
     {
       features["mkl_version"] = ObjectHolder(MathLoader::GetMKLVersion());
-      gdata.AddDBEntryOnGlobal("direct_solver", ObjectHolder("mkl_pardiso"));
+      direct_solver = "mkl_pardiso";
     }
     else if (ret == MathLoader::LoaderMessages_t::MATH_LOADED)
     {
       gdata.AddDBEntryOnGlobal("direct_solver", ObjectHolder("unknown"));
+      direct_solver = "unknown";
     }
     else
     {
@@ -61,11 +62,15 @@ void devsim_initialization()
       OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
       OutputStream::WriteOut(OutputStream::OutputType::FATAL, errors);
     }
-    features["math_libraries"] = CreateObjectHolderList(MathLoader::GetLoadedMathDLLs());
 #elif defined(USE_SUPERLU_PRECONDITIONER)
-    gdata.AddDBEntryOnGlobal("direct_solver", ObjectHolder("superlu"));
+    direct_solver = "superlu";
 #endif
 
+    features["direct_solver"] = ObjectHolder(direct_solver);
+    features["math_libraries"] = CreateObjectHolderList(MathLoader::GetLoadedMathDLLs());
+    features["blas_symbol_prefix"] = ObjectHolder(MathLoader::GetBLASPrefix());
+    features["blas_symbol_suffix"] = ObjectHolder(MathLoader::GetBLASSuffix());
+    gdata.AddDBEntryOnGlobal("direct_solver", ObjectHolder(direct_solver));
     gdata.AddDBEntryOnGlobal("info", ObjectHolder(features));
     gdata.AddDBEntryOnGlobal("symbolic_iteration_limit", ObjectHolder(1));
 }

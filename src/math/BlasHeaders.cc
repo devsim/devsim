@@ -89,6 +89,11 @@ struct blas_table {
 // PARDISO
   inline static PARDISO_signature *PARDISO;
   inline static mkl_get_version_string_signature *mkl_get_version_string;
+
+// BLAS SYMBOL MANGLING
+  inline static std::string blas_prefix_name;
+  inline static std::string blas_suffix_name;
+  inline static bool        blas_default_name = true;
 };
 }
 
@@ -171,11 +176,6 @@ void zrotg(std::complex<double> *a, std::complex<double> *b, std::complex<double
 }
 
 namespace {
-#if 0
-// These are available in dsAssert
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x)
-#endif
 
 struct symtable {
   const char *symbol_name;
@@ -207,6 +207,35 @@ void clear_table()
 }
 
 namespace MathLoader {
+
+std::string get_symbol_name(std::string orig)
+{
+  std::string ret;
+
+  if (blas_table::blas_default_name)
+  {
+    ret.swap(orig);
+  }
+  else
+  {
+#if defined(__linux__) || defined(__APPLE__) || defined(_WIN32)
+    // remove "_" suffix (non PARDISO)
+    if ((!orig.empty()) && orig.back() == '_')
+    {
+      orig.pop_back();
+    }
+#else
+#error "NOT IMPLEMENTED"
+#endif
+
+    ret  = blas_table::blas_prefix_name;
+    ret += orig;
+    ret += blas_table::blas_suffix_name;
+  }
+
+  return ret;
+}
+
 LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool replace)
 {
   // consider if the dll is already open, by using RTLD_NOLOAD first
@@ -245,7 +274,6 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
 
   blas_table::dll_handles.push_back({dllname, dll_p});
 
-
   for (auto &entry : math_function_table)
   {
     if ((!replace) && *entry.function_pointer)
@@ -254,10 +282,11 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
     }
 
 
+    const auto &symbol_name = get_symbol_name(std::string(entry.symbol_name));
 #ifdef _WIN32
-    void *h = (void *) GetProcAddress(dll_p, entry.symbol_name);
+    void *h = (void *) GetProcAddress(dll_p, symbol_name.c_str());
 #else
-    void *h = dlsym(dll_p, entry.symbol_name);
+    void *h = dlsym(dll_p, symbol_name.c_str());
 #endif
     if (h)
     {
@@ -268,13 +297,13 @@ LoaderMessages_t LoadBlasDLL(std::string dllname, std::string &errors, bool repl
   return GetMathStatus();
 }
 
-LoaderMessages_t LoadFromEnvironment(const std::string &environment_var, std::string &errors)
+LoaderMessages_t LoadFromEnvironment(const std::string &devsim_math_libs, std::string &errors)
 {
   ClearBlasFunctions();
   std::string search_path;
-  if (!environment_var.empty())
+  if (!devsim_math_libs.empty())
   {
-    search_path = environment_var;
+    search_path = devsim_math_libs;
     std::stringstream os;
     os << "Searching DEVSIM_MATH_LIBS=\"" << search_path << "\"\n";
     OutputStream::WriteOut(OutputStream::OutputType::INFO, os.str());
@@ -471,11 +500,36 @@ LoaderMessages_t GetMathStatus()
 
 std::vector<std::string> GetLoadedMathDLLs()
 {
-  std::vector<std::string> dll_names(blas_table::dll_handles.size());
-  std::transform(blas_table::dll_handles.begin(), blas_table::dll_handles.end(), dll_names.begin(), [](auto &a){return a.first;});
+  std::vector<std::string> dll_names;
+  dll_names.reserve(blas_table::dll_handles.size());
+  for (const auto &d : blas_table::dll_handles)
+  {
+    if (d.second)
+    {
+      dll_names.push_back(d.first);
+    }
+  }
   return dll_names;
 }
 
+std::string GetBLASPrefix()
+{
+  return blas_table::blas_prefix_name;
+}
+
+std::string GetBLASSuffix()
+{
+#if defined(__linux__) || defined(__APPLE__) || defined(_WIN32)
+  std::string blas_suffix = "_";
+#else
+#error "NOT IMPLEMENTED"
+#endif
+  if (!blas_table::blas_default_name)
+  {
+    blas_suffix = blas_table::blas_suffix_name;
+  }
+  return blas_suffix;
+}
 
 std::string GetMKLVersion()
 {
@@ -505,11 +559,31 @@ std::string GetMKLVersion()
 LoaderMessages_t LoadMathLibraries(std::string &errors)
 {
   LoaderMessages_t ret = LoaderMessages_t::NO_ENVIRONMENT;
-  const char *env = std::getenv("DEVSIM_MATH_LIBS");
+  const char *devsim_math_libs = std::getenv("DEVSIM_MATH_LIBS");
+  blas_table::blas_default_name = true;
+  blas_table::blas_prefix_name.clear();
+  blas_table::blas_suffix_name.clear();
 
-  if (env)
+  if (devsim_math_libs)
   {
-    ret = LoadFromEnvironment(env, errors);
+    const char *devsim_blas_prefix = std::getenv("DEVSIM_BLAS_PREFIX");
+    const char *devsim_blas_suffix = std::getenv("DEVSIM_BLAS_SUFFIX");
+
+    if (devsim_blas_prefix != nullptr)
+    {
+      blas_table::blas_prefix_name = devsim_blas_prefix;
+      blas_table::blas_default_name = false;
+    }
+    if (devsim_blas_suffix != nullptr)
+    {
+      blas_table::blas_suffix_name = devsim_blas_suffix;
+      blas_table::blas_default_name = false;
+    }
+  }
+
+  if (devsim_math_libs)
+  {
+    ret = LoadFromEnvironment(devsim_math_libs, errors);
   }
   else
   {
@@ -531,7 +605,7 @@ LoaderMessages_t LoadMathLibraries(std::string &errors)
 #error "SET MATH LIBRARIES TEST FOR NEW PLATFORM"
 #endif
 
-  if (!env)
+  if (!devsim_math_libs)
   {
     ret = LoadFromEnvironment(teststring, errors);
   }

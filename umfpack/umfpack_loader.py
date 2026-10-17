@@ -146,10 +146,10 @@ def _load_blas_dll(gdata, blaslib = None, noexcept = False):
     #print(h)
     return h
 
-def _load_blas_functions(gdata, h):
-    gdata.dll.blasw_load_functions.restype = c_int
-    gdata.dll.blasw_load_functions.argtypes = [c_void_p]
-    i = gdata.dll.blasw_load_functions(h._handle)
+def _load_blas_functions(gdata, h, blas_prefix, blas_suffix):
+    gdata.dll.blasw_load_functions_v2.restype = c_int
+    gdata.dll.blasw_load_functions_v2.argtypes = [c_void_p, c_char_p, c_char_p]
+    i = gdata.dll.blasw_load_functions_v2(h._handle, blas_prefix, blas_suffix)
     return i
 
 def myprintcb(msg):
@@ -291,14 +291,16 @@ class _global_data:
         self.blaslibs = None
         self.dll = None
 
-    def initialize_umfpack(self, math_libraries):
+    def initialize_umfpack(self, math_libraries, blas_symbol_prefix, blas_symbol_suffix):
         self.dll = _load_umfpack_dll(os.path.join(os.path.dirname(__file__), _get_umfpack_name()))
         global umf_dll
         umf_dll = self.dll
+        b_prefix = blas_symbol_prefix.encode('utf-8')
+        b_suffix = blas_symbol_suffix.encode('utf-8')
         for b in math_libraries:
             h = _load_blas_dll(self, blaslib=b, noexcept=True)
             if h:
-                mcount = _load_blas_functions(self, h)
+                mcount = _load_blas_functions(self, h, b_prefix, b_suffix)
                 if mcount == 0:
                     break
         if mcount != 0:

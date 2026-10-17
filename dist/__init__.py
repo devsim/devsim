@@ -21,8 +21,9 @@ else:
 if original_path != os.environ['PATH']:
     os.environ['PATH'] = original_path
 
+del original_path
+
 if get_parameter(name='direct_solver') == 'unknown':
   print("loading UMFPACK 5.1 as direct solver")
   from .umfpack import umfshim
-
 

@@ -27,6 +27,8 @@ bool IsMathLoaded();
 bool IsMKLLoaded();
 LoaderMessages_t GetMathStatus();
 std::string GetMKLVersion();
+std::string GetBLASPrefix();
+std::string GetBLASSuffix();
 std::vector<std::string> GetLoadedMathDLLs();
 }
 

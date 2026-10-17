@@ -24,7 +24,8 @@ class dsobject:
 
     def initialize_umfpack(self):
         self.gdata = umf.global_data_instance
-        self.gdata.initialize_umfpack(devsim.get_parameter(name='info')['math_libraries'])
+        info = devsim.get_parameter(name='info')
+        self.gdata.initialize_umfpack(info['math_libraries'], info['blas_symbol_prefix'], info['blas_symbol_suffix'])
 
     def factor(self, **kwargs):
         self.status = False
@@ -99,7 +100,11 @@ def local_solver_callback(**kwargs):
 
 devsim.set_parameter(name="direct_solver", value="custom")
 devsim.set_parameter(name="solver_callback", value=local_solver_callback)
-#print(devsim.get_parameter(name="info"))
+info = devsim.get_parameter(name="info")
+info["direct_solver"] = "custom"
+info["custom_solver"] = "UMFPACK 5.1"
+devsim.set_parameter(name="info", value=info)
+del info
 
 if __name__ == "__main__":
   #print(sys.argv)

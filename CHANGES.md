@@ -7,13 +7,53 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ## Version 2.11.1
 
-### Platform Support
+### Math Library Support
+
+#### BLAS Symbol Naming
+
+* [#167](https://github.com/devsim/devsim/issues/167) Accept scipy-openblas32 as a BLAS/LAPACK provider
+
+When `DEVSIM_MATH_LIBS` is set, a user may specify `DEVSIM_BLAS_PREFIX` and `DEVSIM_BLAS_SUFFIX` to math symbols not using the standard form.
+
+```
+import os
+os.environ['DEVSIM_MATH_LIBS'] = os.path.join(scipy_openblas32.get_lib_dir(), 'libscipy_openblas.dylib')
+os.environ['DEVSIM_BLAS_PREFIX'] = 'scipy_'
+os.environ['DEVSIM_BLAS_SUFFIX'] = '_'
+import devsim
+```
+
+Thanks to [@benvial](https://github.com/benvial) for suggesting this feature.
+
+#### Info strings with more math informaiton
+
+As part of this work, more information is returned via the `info` parameter:
+
+```
+>>> _ = [print(x) for x in devsim.get_parameter(name="info").items()]
+('blas_symbol_prefix', 'scipy_')
+('blas_symbol_suffix', '_')
+('copyright', 'Copyright © 2009-2026 DEVSIM LLC')
+('direct_solver', 'custom')
+('extended_precision', True)
+('license', 'Apache License, Version 2.0')
+('math_libraries', ('/Users/user/git/venv/lib/python3.14/site-packages/scipy_openblas32/lib/libscipy_openblas.dylib',))
+('version', '2.11.1')
+('website', 'https://devsim.org')
+('custom_solver', 'UMFPACK 5.1')
+```
+
+
+
+### Bugs
 
 #### Helper function for model creation bug
 
 * [#168](https://github.com/devsim/devsim/issues/168) `model_create.EnsureEdgeFromNodeModelExists` never creates the `X@n0/X@n1` edge models
 
 Thanks to [@NooriDan](https://github.com/NooriDan) for reporting this issue.
+
+### Platform Support
 
 #### macOS
 
