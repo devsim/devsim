@@ -194,7 +194,6 @@ def InNodeModelList(device, region, model):
     return model in get_node_model_list(device=device, region=region)
 
 
-#### Make sure that the model exists, as well as it's node model
 def EnsureEdgeFromNodeModelExists(device, region, nodemodel):
     """
     Checks if the edge models exists
@@ -203,12 +202,11 @@ def EnsureEdgeFromNodeModelExists(device, region, nodemodel):
         raise "{} must exist"
 
     _emlist = get_edge_model_list(device=device, region=region)
-    emtest = "{0}@n0".format(nodemodel) and "{0}@n1".format(nodemodel)
+    emtest = (f"{nodemodel}@n0" in _emlist) and (f"{nodemodel}@n1" in _emlist)
     if not emtest:
         if debug:
-            print("INFO: Creating ${0}@n0 and ${0}@n1".format(nodemodel))
+            print(f"INFO: Creating {nodemodel}@n0 and {nodemodel}@n1")
         edge_from_node_model(device=device, region=region, node_model=nodemodel)
-
 
 def CreateElementModel2d(device, region, model, expression):
     result = element_model(

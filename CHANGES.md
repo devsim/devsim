@@ -9,6 +9,10 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ### Platform Support
 
+#### Helper function for model creation bug
+
+* [#168](https://github.com/devsim/devsim/issues/168) `model_create.EnsureEdgeFromNodeModelExists` never creates the `X@n0/X@n1` edge models
+
 #### macOS
 
 Due to the deprecation of the macOS 14 image on GitHub Actions, the software is now built on macOS 15 Sequoia.
