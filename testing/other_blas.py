@@ -11,17 +11,15 @@ import platform
 
 system = platform.system()
 if system == "Darwin":
-    os.environ["DEVSIM_MATH_LIBS"] = os.path.join(
-        scipy_openblas32.get_lib_dir(), "libscipy_openblas.dylib"
-    )
+    suffix = 'dylib'
 elif system == "Windows":
-    os.environ["DEVSIM_MATH_LIBS"] = os.path.join(
-        scipy_openblas32.get_lib_dir(), "libscipy_openblas.dll"
-    )
+    suffix = 'dll'
 elif system == "Linux":
-    os.environ["DEVSIM_MATH_LIBS"] = os.path.join(
-        scipy_openblas32.get_lib_dir(), "libscipy_openblas.so"
-    )
+    suffix = 'so'
+
+os.environ["DEVSIM_MATH_LIBS"] = os.path.join(
+    scipy_openblas32.get_lib_dir(), f"libscipy_openblas.{suffix}"
+)
 os.environ["DEVSIM_BLAS_PREFIX"] = "scipy_"
 os.environ["DEVSIM_BLAS_SUFFIX"] = "_"
 
