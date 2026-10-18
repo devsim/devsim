@@ -26,4 +26,8 @@ del original_path
 if get_parameter(name='direct_solver') == 'unknown':
   print("loading UMFPACK 5.1 as direct solver")
   from .umfpack import umfshim
+  original_reset_devsim = reset_devsim
+  def reset_devsim():
+    original_reset_devsim()
+    umfshim.reload_umfpack()
 

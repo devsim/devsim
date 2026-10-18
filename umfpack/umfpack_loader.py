@@ -285,6 +285,7 @@ class _global_data:
         self.printcb = None
         self.blaslibs = []
         self.dll = None
+        self.is_initialized = False
 
     def __del__(self):
         self.printcb = None
@@ -305,6 +306,7 @@ class _global_data:
                     break
         if mcount != 0:
             raise RuntimeError('Missing %d math functions' % mcount)
+        self.is_initialized = True
 
 global_data_instance = _global_data()
 umf_dll = None
