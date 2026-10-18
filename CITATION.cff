@@ -1,0 +1,32 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: devsim
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Juan
+    family-names: Sanchez
+    email: jsanchez@devsim.com
+    affiliation: DEVSIM LLC
+    orcid: 'https://orcid.org/0000-0002-6783-0194'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.21952222
+repository-code: 'https://github.com/devsim/devsim'
+url: 'https://devsim.org'
+license: Apache-2.0
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Sanchez"
+      given-names: "Juan"
+  title: "DEVSIM: A TCAD Semiconductor Device Simulator"
+  journal: "Journal of Open Source Software"
+  volume: 7
+  number: 70
+  year: 2022
+  doi: "10.21105/joss.03898"
