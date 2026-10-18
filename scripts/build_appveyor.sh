@@ -16,14 +16,15 @@ BASEDIR=$(pwd)
 export PYTHON3_BIN=python
 export PIP_BIN=pip
 ${PIP_BIN} install wheel
-export PYTHON3_INCLUDE="${CONDA_PREFIX}/include"
+export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "import sysconfig; print(sysconfig.get_path('include'))")
 export PYTHON3_ARCHIVE=$(cygpath -w ${CONDA_PREFIX}/libs/python3.lib)
 
 cd "${BASEDIR}/external/umfpack_lgpl"
 bash build_appveyor.sh "${GENERATOR}" "${AOPTION}" "${TOOLSET}" "${BUILDDIR}" "${CONDA_PREFIX}"
 
 cd "${BASEDIR}/external/symdiff"
-bash ../symdiff_appveyor.sh "${GENERATOR}" "${AOPTION}" "${TOOLSET}" "${BUILDDIR}" "${CONDA_PREFIX}"
+mkdir -p ${BUILDDIR}
+(cd ${BUILDDIR}; cmake -G "${GENERATOR}" -A "${AOPTION}" -T "${TOOLSET}" -DSYMDIFF_CONFIG="${SYMDIFF_CONFIG}" -DANACONDA_PATH="${CONDA_PREFIX}" -DTCLMAIN=OFF -DPYTHON3=OFF ..)
 
 cd "${BUILDDIR}"
 cmake --build . --config Release --parallel 4 -- //nologo //verbosity:minimal
