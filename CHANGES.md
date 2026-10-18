@@ -5,6 +5,12 @@
 
 Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.11.2
+
+### Citing DEVSIM
+
+* [CITATION.cff](CITATION.cff) with suggested citations for the simulator.  [CITATION.md](CITATION.md) contains some additional references.
+
 ## Version 2.11.1
 
 ### Math Library Support
@@ -16,6 +22,7 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 When ``DEVSIM_MATH_LIBS`` is set, a user may specify ``DEVSIM_BLAS_PREFIX`` and ``DEVSIM_BLAS_SUFFIX`` to math symbols not using the standard form.
 
 ```
+import scipy_openblas32
 import os
 os.environ['DEVSIM_MATH_LIBS'] = os.path.join(scipy_openblas32.get_lib_dir(), 'libscipy_openblas.dylib')
 os.environ['DEVSIM_BLAS_PREFIX'] = 'scipy_'
