@@ -24,6 +24,7 @@ preferred-citation:
   authors:
     - family-names: "Sanchez"
       given-names: "Juan"
+      middle-names: "E."
   title: "DEVSIM: A TCAD Semiconductor Device Simulator"
   journal: "Journal of Open Source Software"
   volume: 7
