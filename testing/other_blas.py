@@ -11,11 +11,11 @@ import platform
 
 system = platform.system()
 if system == "Darwin":
-    suffix = 'dylib'
+    suffix = "dylib"
 elif system == "Windows":
-    suffix = 'dll'
+    suffix = "dll"
 elif system == "Linux":
-    suffix = 'so'
+    suffix = "so"
 
 os.environ["DEVSIM_MATH_LIBS"] = os.path.join(
     scipy_openblas32.get_lib_dir(), f"libscipy_openblas.{suffix}"
