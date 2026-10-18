@@ -13,7 +13,7 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 * [#167](https://github.com/devsim/devsim/issues/167) Accept scipy-openblas32 as a BLAS/LAPACK provider
 
-When `DEVSIM_MATH_LIBS` is set, a user may specify `DEVSIM_BLAS_PREFIX` and `DEVSIM_BLAS_SUFFIX` to math symbols not using the standard form.
+When ``DEVSIM_MATH_LIBS`` is set, a user may specify ``DEVSIM_BLAS_PREFIX`` and ``DEVSIM_BLAS_SUFFIX`` to math symbols not using the standard form.
 
 ```
 import os
@@ -22,6 +22,8 @@ os.environ['DEVSIM_BLAS_PREFIX'] = 'scipy_'
 os.environ['DEVSIM_BLAS_SUFFIX'] = '_'
 import devsim
 ```
+
+Please see ``testing/other_blas.py`` for an example using the ``scipy_openblas32`` package as an alternative to the default math packages on each system.  This example is fragile as the math package maintainers make no guarantess for a stable abi.
 
 Thanks to [@benvial](https://github.com/benvial) for suggesting this feature.
 
@@ -58,6 +60,10 @@ Thanks to [@NooriDan](https://github.com/NooriDan) for reporting this issue.
 #### macOS
 
 Due to the deprecation of the macOS 14 image on GitHub Actions, the software is now built on macOS 15 Sequoia.
+
+#### Windows
+
+Due to changes to the file location of shared libraries and include files in Anaconda Python, the automated build has been updated.
 
 ## Version 2.11.0
 
