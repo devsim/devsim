@@ -44,7 +44,15 @@ void devsim_initialization()
 
 #if defined(LOAD_MATHLIBS)
     std::string errors;
-    auto ret = MathLoader::LoadMathLibraries(errors);
+    MathLoader::LoaderMessages_t ret = MathLoader::LoaderMessages_t::NO_ENVIRONMENT;
+    if (MathLoader::IsMathLoaded())
+    {
+      ret = MathLoader::GetMathStatus();
+    }
+    else
+    {
+      ret = MathLoader::LoadMathLibraries(errors);
+    }
     if (ret == MathLoader::LoaderMessages_t::MKL_LOADED)
     {
       features["mkl_version"] = ObjectHolder(MathLoader::GetMKLVersion());
@@ -52,7 +60,6 @@ void devsim_initialization()
     }
     else if (ret == MathLoader::LoaderMessages_t::MATH_LOADED)
     {
-      gdata.AddDBEntryOnGlobal("direct_solver", ObjectHolder("unknown"));
       direct_solver = "unknown";
     }
     else
