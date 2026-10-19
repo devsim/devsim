@@ -7,6 +7,7 @@
 #### tests physics of cap made of two insulating regions
 ####
 import array
+import devsim.umfpack.umfpack_loader
 from devsim import (
     add_1d_contact,
     add_1d_interface,

@@ -24,8 +24,9 @@ class dsobject:
 
     def initialize_umfpack(self):
         self.gdata = umf.global_data_instance
-        info = devsim.get_parameter(name='info')
-        self.gdata.initialize_umfpack(info['math_libraries'], info['blas_symbol_prefix'], info['blas_symbol_suffix'])
+        if not self.gdata.is_initialized:
+          info = devsim.get_parameter(name='info')
+          self.gdata.initialize_umfpack(info['math_libraries'], info['blas_symbol_prefix'], info['blas_symbol_suffix'])
 
     def factor(self, **kwargs):
         self.status = False
