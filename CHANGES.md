@@ -13,14 +13,11 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 ### Resetting DEVSIM while using umfpack
 
-When using the `reset_devsim` command to reset the simulator, it may be necessary to reload the umfpack solver.  The `reload_umfpack` command is now available.
+* [#169](https://github.com/devsim/devsim/issues/169) umfpack loading
 
-```
-from devsim import reset_devsim
-from devsim.umfpack.umfshim import reload_umfpack
-reset_devsim()
-reload_umfpack()
-```
+When using the ``reset_devsim`` command to reset the simulator, the ``umfpack`` solver was not being reloaded.  The command is modified so that ``umfpack`` is reinitialized if was being used already with the same ``BLAS`` library it was using before.
+
+Internally, the ``umfpack`` hook in devsim will no longer reload the ``BLAS`` library with each call to the ``solve`` command.
 
 ## Version 2.11.1
 
