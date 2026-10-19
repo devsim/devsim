@@ -11,6 +11,17 @@ Please see the release notes in ``doc/devsim.pdf`` or at [https://devsim.net](ht
 
 * [CITATION.cff](CITATION.cff) with suggested citations for the simulator.  [CITATION.md](CITATION.md) contains some additional references.
 
+### Resetting DEVSIM while using umfpack
+
+When using the `reset_devsim` command to reset the simulator, it may be necessary to reload the umfpack solver.  The `reload_umfpack` command is now available.
+
+```
+from devsim import reset_devsim
+from devsim.umfpack.umfshim import reload_umfpack
+reset_devsim()
+reload_umfpack()
+```
+
 ## Version 2.11.1
 
 ### Math Library Support
@@ -51,9 +62,6 @@ As part of this work, more information is returned via the `info` parameter:
 ('website', 'https://devsim.org')
 ('custom_solver', 'UMFPACK 5.1')
 ```
-
-
-
 ### Bugs
 
 #### Helper function for model creation bug
