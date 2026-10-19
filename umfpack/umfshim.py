@@ -97,14 +97,15 @@ def local_solver_callback(**kwargs):
         raise RuntimeError('Unsupported action, ' + kwargs['action'])
     return False
 
+def reload_umfpack():
+  devsim.set_parameter(name="direct_solver", value="custom")
+  devsim.set_parameter(name="solver_callback", value=local_solver_callback)
+  info = devsim.get_parameter(name="info")
+  info["direct_solver"] = "custom"
+  info["custom_solver"] = "UMFPACK 5.1"
+  devsim.set_parameter(name="info", value=info)
 
-devsim.set_parameter(name="direct_solver", value="custom")
-devsim.set_parameter(name="solver_callback", value=local_solver_callback)
-info = devsim.get_parameter(name="info")
-info["direct_solver"] = "custom"
-info["custom_solver"] = "UMFPACK 5.1"
-devsim.set_parameter(name="info", value=info)
-del info
+reload_umfpack()
 
 if __name__ == "__main__":
   #print(sys.argv)
