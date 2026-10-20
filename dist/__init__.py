@@ -29,6 +29,5 @@ if get_parameter(name='direct_solver') == 'unknown':
   original_reset_devsim = reset_devsim
   def reset_devsim():
     original_reset_devsim()
-    print("reloading UMFPACK 5.1 as direct solver")
     umfshim.reload_umfpack()
 
