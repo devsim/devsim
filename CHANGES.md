@@ -9,15 +9,15 @@ Please see the release notes in `doc/devsim.pdf` or at [https://devsim.net](http
 
 ### Citing DEVSIM
 
-* [CITATION.cff](CITATION.cff) with suggested citations for the simulator.  [CITATION.md](CITATION.md) contains some additional references.
+* [CITATION.cff](CITATION.cff) with suggested citations for the simulator.  It also contains some additional references.
 
 ### Resetting DEVSIM while using umfpack
 
 * [#169](https://github.com/devsim/devsim/issues/169) umfpack reload after `devsim_reset`
 
-When using the `reset_devsim` command to reset the simulator, the `umfpack` solver was not being reloaded.  The command is modified so that `umfpack` is reinitialized if was being used already with the same `BLAS` library it was using before.  In addition, the math libraries used by `devsim` will only be initialized when it is first imported.
+When using the `reset_devsim` command to reset the simulator, the `UMFPACK 5.1` solver was not being reloaded.  The command is modified so that the solver will now continue to with the same `BLAS` library when `devsim` is first loaded.
 
-Internally, the `umfpack` hook in devsim will no longer reload the `BLAS` library with each call to the `solve` command.
+Internally, the `UMFPACK 5.1` hook in devsim will no longer reload the `BLAS` library with each call to the `solve` command.  In addition, the math libraries used by `devsim` will only be loaded when the module is first imported.
 
 ## Version 2.11.1
 
@@ -59,13 +59,6 @@ As part of this work, more information is returned via the `info` parameter:
 ('website', 'https://devsim.org')
 ('custom_solver', 'UMFPACK 5.1')
 ```
-### Bugs
-
-#### Helper function for model creation bug
-
-* [#168](https://github.com/devsim/devsim/issues/168) `model_create.EnsureEdgeFromNodeModelExists` never creates the `X@n0/X@n1` edge models
-
-Thanks to [@NooriDan](https://github.com/NooriDan) for reporting this issue.
 
 ### Platform Support
 
@@ -76,6 +69,15 @@ Due to the deprecation of the macOS 14 image on GitHub Actions, the software is 
 #### Windows
 
 Due to changes to the file location of shared libraries and include files in Anaconda Python, the automated build has been updated.
+
+### Bugs
+
+#### Helper function for model creation bug
+
+* [#168](https://github.com/devsim/devsim/issues/168) `model_create.EnsureEdgeFromNodeModelExists` never creates the `X@n0/X@n1` edge models
+
+Thanks to [@NooriDan](https://github.com/NooriDan) for reporting this issue.
+
 
 ## Version 2.11.0
 

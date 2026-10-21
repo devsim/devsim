@@ -43,7 +43,7 @@ mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
 cp ${SYMDIFF_DOCUMENTATION_DIR}/symdiff.pdf ${DIST_DIR}/doc
 
-for i in *.md NOTICE LICENSE; do
+for i in *.md CITATION.cff NOTICE LICENSE; do
 cp ../$i ${DIST_DIR}
 done
 
