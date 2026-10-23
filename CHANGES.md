@@ -7,6 +7,13 @@ Please see the release notes in `doc/devsim.pdf` or at [https://devsim.net](http
 
 ## Version 2.11.2
 
+### Trusted Publishing
+
+* [#170](https://github.com/devsim/devsim/issues/170) add trusted publishing to pypi
+
+Python wheels are now published directly from GitHub Actions to PyPI.  This makes the released files more secure in the their handling.  Tools are available to verify the provenance.  More info is available from [https://docs.pypi.org/trusted-publishers/](https://docs.pypi.org/trusted-publishers/).
+
+
 ### Citing DEVSIM
 
 * [CITATION.cff](CITATION.cff) with suggested citations for the simulator.  It also contains some additional references.
