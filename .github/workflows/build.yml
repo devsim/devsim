@@ -65,6 +65,13 @@ jobs:
         run: |
           gh release upload "$TAG" dist/*.whl
           echo "Asset uploaded to release $TAG."
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ runner.os }}-${{ runner.arch }}
+          path: dist/*.whl
+          if-no-files-found: error
+          retention-days: 7
   build_linux:
     if: true
     name: Build on Linux or macOS
@@ -99,3 +106,32 @@ jobs:
         run: |
           gh release upload "$TAG" dist/*.whl
           echo "Asset uploaded to release $TAG."
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ runner.os }}-${{ runner.arch }}
+          path: dist/*.whl
+          if-no-files-found: error
+          retention-days: 7
+  publish_pypi:
+    name: Publish to PyPI
+    needs: [build_windows, build_linux]
+    runs-on: ubuntu-latest
+    # Configure required reviewers on the "pypi" environment (repo Settings > Environments)
+    # to require manual approval before this job runs.
+    environment:
+      name: pypi
+      url: https://pypi.org/p/devsim
+    permissions:
+      id-token: write # trusted publishing
+    steps:
+      - name: Download wheel artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          merge-multiple: true
+          path: dist
+      - name: List wheels
+        run: ls -l dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
