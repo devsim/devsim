@@ -27,6 +27,7 @@ mkdir -p ${DIST_DIR}
 mkdir -p ${DIST_PYDLL}
 
 cp -v __init__.py ${DIST_PYDLL}
+cp -v __init__.pyi ${DIST_PYDLL}
 
 # goes to lib/symdiff
 rsync -aqP --delete ${SYMDIFF_LIBRARY_DIR} ${DIST_LIB}

@@ -13,7 +13,6 @@ Please see the release notes in `doc/devsim.pdf` or at [https://devsim.net](http
 
 Python wheels are now published directly from GitHub Actions to PyPI.  This makes the released files more secure in the their handling.  Tools are available to verify the provenance.  More info is available from [https://docs.pypi.org/trusted-publishers/](https://docs.pypi.org/trusted-publishers/).
 
-
 ### Citing DEVSIM
 
 * [CITATION.cff](CITATION.cff) with suggested citations for the simulator.  It also contains some additional references.
@@ -25,6 +24,12 @@ Python wheels are now published directly from GitHub Actions to PyPI.  This make
 When using the `reset_devsim` command to reset the simulator, the `UMFPACK 5.1` solver was not being reloaded.  The command is modified so that the solver will now continue to with the same `BLAS` library when `devsim` is first loaded.
 
 Internally, the `UMFPACK 5.1` hook in devsim will no longer reload the `BLAS` library with each call to the `solve` command.  In addition, the math libraries used by `devsim` will only be loaded when the module is first imported.
+
+### pylance compatible docstrings
+
+* [#155](https://github.com/devsim/devsim/issues/155) pylance compatible docstrings
+
+A `__init__.pyi` file is included in `devsim` to provide documentation in IDEs which cannot get them from the compiled shared libraries.  This file should be automatically detected and used within the IDE.  It is generated in the `devsim/devsim_documenation` project.
 
 ## Version 2.11.1
 

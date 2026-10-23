@@ -85,6 +85,7 @@ done
 cp /mingw64/bin/libwinpthread-1.dll ${DIST_LIB}/symdiff/
 
 cp -v __init__.py ${DIST_PYDLL}
+cp -v __init__.pyi ${DIST_PYDLL}
 
 # Intel MKL
 #cp -v ${CONDA_PREFIX}/Library/bin/mkl_rt.1.dll ${DIST_PYDLL}
