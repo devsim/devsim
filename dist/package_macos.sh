@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 if ! [ $1 ]; then
   echo "must specify dir name"
   exit 2;
@@ -13,35 +14,21 @@ DIST_BIN=${DIST_DIR}/bin
 DIST_LIB=${DIST_DIR}/lib
 DIST_PYDLL=${DIST_LIB}/devsim
 DIST_VER=${DIST_DIR}
+
+DLL_EXT=dylib
+PYDLL_EXT=so
 # DO NOT HAVE TRAILING SLASHES!
-SYMDIFF_LIBRARY_DIR=../external/symdiff/lib/symdiff
-SYMDIFF_EXAMPLES_DIR=../external/symdiff/examples
 SYMDIFF_DOCUMENTATION_DIR=../external/symdiff/doc
-UMFPACK_LIBRARY_FILE=../external/umfpack_lgpl/build/libumfpack_lgpl.dylib
+UMFPACK_LIBRARY_FILE=../external/umfpack_lgpl/build/libumfpack_lgpl.${DLL_EXT}
 
 # make the bin directory and copy binary in
-# Assume libstdc++ is a standard part of the system
-#http://developer.apple.com/library/mac/#documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/CPPROverview.html
 mkdir -p ${DIST_BIN}
 mkdir -p ${DIST_DIR}
 mkdir -p ${DIST_PYDLL}
 
+cp -v ${DEVSIM_SRC_DIR}/devsim_py3.${PYDLL_EXT} ${DIST_PYDLL}
 cp -v __init__.py ${DIST_PYDLL}
 cp -v __init__.pyi ${DIST_PYDLL}
-
-# goes to lib/symdiff
-rsync -aqP --delete ${SYMDIFF_LIBRARY_DIR} ${DIST_LIB}
-
-# because the non gcc build uses the system python interpreter and python 3 is not available
-cp -v ${DEVSIM_SRC_DIR}/devsim_py3.so ${DIST_PYDLL}
-
-# strip unneeded symbols
-#strip -arch all -u -r ${DIST_DIR}/bin/$i
-#done
-# keep a copy of unstripped binary
-#cp ${SRC_BIN} ${DIST_VER}_unstripped
-
-cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}
 
 
 mkdir -p ${DIST_DIR}/doc
@@ -57,17 +44,14 @@ done
 for i in examples testing
 do
 (cd ../$i; git clean -f -d -x )
-rsync -aqP --delete ../$i ${DIST_DIR}
+cp -R ../$i ${DIST_DIR}
 done
-rsync -aqP --delete ../python_packages ${DIST_PYDLL}
-rsync -aqP --delete ../umfpack ${DIST_PYDLL}
+cp -R ../python_packages ${DIST_PYDLL}
+cp -R ../umfpack ${DIST_PYDLL}/umfpack
 
 # Copy UMFPACK DLL
 cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}/umfpack
 
-mkdir -p ${DIST_DIR}/examples/symdiff
-# add trailing slash for rsync
-rsync -aqP --delete ${SYMDIFF_EXAMPLES_DIR}/ ${DIST_DIR}/examples/symdiff
 
 COMMIT=`git rev-parse --verify HEAD`
 cat <<EOF > ${DIST_DIR}/VERSION

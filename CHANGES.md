@@ -31,6 +31,12 @@ Internally, the `UMFPACK 5.1` hook in devsim will no longer reload the `BLAS` li
 
 A `__init__.pyi` file is included in `devsim` to provide documentation in IDEs which cannot get them from the compiled shared libraries.  This file should be automatically detected and used within the IDE.  It is generated in the `devsim/devsim_documenation` project.
 
+### misc changes
+
+The `symdiff` manual and example files are no longer included in the distribution.  These files can be downloaded by installing `symdiff` via `pip`.
+
+An extra copy of the `umfpack_lgpl` dynamic library was being distributed in the `macOS` package and has been removed.
+
 ## Version 2.11.1
 
 ### Math Library Support
