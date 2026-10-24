@@ -71,6 +71,7 @@ jobs:
     name: Build on Linux or macOS
     needs: create_release_tag
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
     runs-on: ${{matrix.os}}
