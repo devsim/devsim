@@ -8,7 +8,7 @@ fi
 
 ARCH=x86_64
 PLATFORM=osx
-DEVSIM_SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
+DEVSIM_SRC_DIR=../build/devsim/src/main
 
 DIST_DIR=$1
 DIST_BIN=${DIST_DIR}/bin

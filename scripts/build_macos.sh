@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 set -u
-# this is verbose remove
-set -x
+DEVSIM_CONFIG="osx_10.10"
 
 export CMAKE="cmake"
 export CMAKE_CXX_FLAGS=""
@@ -29,17 +28,14 @@ export PYTHON3_ARCHIVE=""
 #https://developer.apple.com/performance/accelerateframework.html
 
 # SYMDIFF build
-(cd external/symdiff && bash  ../symdiff_macos.sh && cd osx_release && make -j3)
-
 mkdir -p build/symdiff
 ${CMAKE} \
     ${ARCH_ARG} \
     -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
     -DCMAKE_BUILD_TYPE=RELEASE \
     -DCMAKE_CXX_COMPILER=${CXX} \
-    -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
-    -DPYTHON3=ON \
     -DTCLMAIN=OFF \
+    -DPYTHON3=OFF \
     -B build/symdiff \
     -S external/symdiff
 
@@ -53,10 +49,8 @@ ${CMAKE} \
     -DCMAKE_BUILD_TYPE=RELEASE \
     -B build/umfpack_lgpl \
     -S external/umfpack_lgpl/umfpack
-
 (cd build/umfpack_lgpl && ${CMAKE} --build . -- -j2)
 
-DEVSIM_CONFIG="osx_10.10"
 mkdir -p build/devsim
 ${CMAKE} \
     ${ARCH_ARG} \
