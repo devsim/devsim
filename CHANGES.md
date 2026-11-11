@@ -5,6 +5,10 @@
 
 Please see the release notes in `doc/devsim.pdf` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.11.3
+
+* [#175](https://github.com/devsim/devsim/issues/175) file reorganization
+
 ## Version 2.11.2
 
 ### Trusted Publishing

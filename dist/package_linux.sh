@@ -8,7 +8,7 @@ fi
 
 ARCH=`uname -m`
 PLATFORM=linux
-DEVSIM_SRC_DIR=../${PLATFORM}_${ARCH}_release/src/main
+DEVSIM_SRC_DIR=../build/devsim/src/main
 
 DIST_DIR=$1
 DIST_BIN=${DIST_DIR}/bin
@@ -20,17 +20,15 @@ DLL_EXT=so
 PYDLL_EXT=so
 # DO NOT HAVE TRAILING SLASHES!
 SYMDIFF_DOCUMENTATION_DIR=../external/symdiff/doc
-UMFPACK_LIBRARY_FILE=../external/umfpack_lgpl/build/libumfpack_lgpl.${DLL_EXT}
+UMFPACK_LIBRARY_FILE=../build/umfpack_lgpl/libumfpack_lgpl.${DLL_EXT}
 
 # make the bin directory and copy binary in
 mkdir -p ${DIST_BIN}
 mkdir -p ${DIST_DIR}
-mkdir -p ${DIST_PYDLL}
+mkdir -p ${DIST_LIB}
 
+cp -R ../lib/devsim ${DIST_LIB}
 cp -v ${DEVSIM_SRC_DIR}/devsim_py3.${PYDLL_EXT} ${DIST_PYDLL}
-cp -v __init__.py ${DIST_PYDLL}
-cp -v __init__.pyi ${DIST_PYDLL}
-
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
@@ -47,12 +45,9 @@ do
 (cd ../$i; git clean -f -d -x )
 cp -R ../$i ${DIST_DIR}
 done
-cp -R ../python_packages ${DIST_PYDLL}
-cp -R ../umfpack ${DIST_PYDLL}/umfpack
 
 # Copy UMFPACK DLL
 cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}/umfpack
-
 
 COMMIT=`git rev-parse --verify HEAD`
 cat <<EOF > ${DIST_DIR}/VERSION

@@ -31,12 +31,50 @@ export PYTHON3_ARCHIVE=""
 # SYMDIFF build
 (cd external/symdiff && bash  ../symdiff_macos.sh && cd osx_release && make -j3)
 
+mkdir -p build/symdiff
+${CMAKE} \
+    ${ARCH_ARG} \
+    -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_CXX_COMPILER=${CXX} \
+    -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
+    -DPYTHON3=ON \
+    -DTCLMAIN=OFF \
+    -B build/symdiff \
+    -S external/symdiff
+
+(cd build/symdiff && ${CMAKE} --build . -- -j2)
+
 # umfpack support
-(cd external/umfpack_lgpl && bash setup_macos.sh && cd build && make -j3)
+mkdir -p build/umfpack_lgpl
+${CMAKE} \
+    ${ARCH_ARG} \
+    -DCMAKE_C_COMPILER=${CC} \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -B build/umfpack_lgpl \
+    -S external/umfpack_lgpl/umfpack
 
-bash ./scripts/setup_osx_10.10.sh
+(cd build/umfpack_lgpl && ${CMAKE} --build . -- -j2)
 
-(cd osx_x86_64_release && make -j3)
+DEVSIM_CONFIG="osx_10.10"
+mkdir -p build/devsim
+${CMAKE} \
+    ${ARCH_ARG} \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_CXX_COMPILER=${CXX} \
+    -DCMAKE_C_COMPILER=${CC} \
+    -DDEVSIM_CONFIG=${DEVSIM_CONFIG} \
+    -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
+    -DDEVSIM_EXTENDED_PRECISION=ON \
+    -DDEVSIM_CPP_BIN_FLOAT=ON \
+    -DEIGEN_DENSE_EXTENDED=ON \
+    -DMKL_PARDISO=ON \
+    -DPYTHON3=ON \
+    -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
+    -B build/devsim \
+    -S .
+(cd build/devsim && ${CMAKE} --build . -- -j2)
+
 DIST_NAME=devsim_macos_${PLAT_NAME}_${1}
 (cd dist && bash package_macos.sh ${DIST_NAME});
 cp -f dist/bdist_wheel/setup.* dist/${DIST_NAME}

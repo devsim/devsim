@@ -9,7 +9,7 @@ fi
 
 for ARCH in win32 win64 clangwin64; do
 PLATFORM=windows
-DEVSIM_SRC_DIR=../${ARCH}/src/main/Release
+DEVSIM_SRC_DIR=../${ARCH}/devsim/src/main/Release
 
 # skip this directory if it was not built
 if [ ! -d "${DEVSIM_SRC_DIR}" ]; then
@@ -26,17 +26,15 @@ DLL_EXT=dll
 PYDLL_EXT=pyd
 # DO NOT HAVE TRAILING SLASHES!
 SYMDIFF_DOCUMENTATION_DIR=../external/symdiff/doc
-UMFPACK_LIBRARY_FILE=../external/umfpack_lgpl/${ARCH}/umfpack_lgpl.${DLL_EXT}
+UMFPACK_LIBRARY_FILE=../${ARCH}/umfpack_lgpl/umfpack_lgpl.${DLL_EXT}
 
 # make the bin directory and copy binary in
 mkdir -p ${DIST_BIN}
 mkdir -p ${DIST_DIR}
-mkdir -p ${DIST_PYDLL}
+mkdir -p ${DIST_LIB}
 
+cp -R ../lib/devsim ${DIST_LIB}
 cp -v ${DEVSIM_SRC_DIR}/devsim_py3.${PYDLL_EXT} ${DIST_PYDLL}
-cp -v __init__.py ${DIST_PYDLL}
-cp -v __init__.pyi ${DIST_PYDLL}
-
 
 mkdir -p ${DIST_DIR}/doc
 cp ../doc/devsim.pdf ${DIST_DIR}/doc
@@ -53,12 +51,9 @@ do
 (cd ../$i; git clean -f -d -x )
 cp -R ../$i ${DIST_DIR}
 done
-cp -R ../python_packages ${DIST_PYDLL}
-cp -R ../umfpack ${DIST_PYDLL}/umfpack
 
 # Copy UMFPACK DLL
 cp -vf ${UMFPACK_LIBRARY_FILE} ${DIST_PYDLL}/umfpack
-
 
 COMMIT=`git rev-parse --verify HEAD`
 cat <<EOF > ${DIST_DIR}/VERSION

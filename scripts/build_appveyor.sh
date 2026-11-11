@@ -18,22 +18,44 @@ export PIP_BIN=pip
 ${PIP_BIN} install wheel
 export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "import sysconfig; print(sysconfig.get_path('include'))")
 export PYTHON3_ARCHIVE=$(cygpath -w ${CONDA_PREFIX}/libs/python3.lib)
+export DEVSIM_CONFIG=appveyor
 
-cd "${BASEDIR}/external/umfpack_lgpl"
-bash build_appveyor.sh "${GENERATOR}" "${AOPTION}" "${TOOLSET}" "${BUILDDIR}" "${CONDA_PREFIX}"
+mkdir -p ${BUILDDIR}/umfpack_lgpl
+cmake -G "${GENERATOR}" \
+      -A "${AOPTION}" \
+      -T "${TOOLSET}" \
+      -B "${BUILDDIR}/umfpack_lgpl" \
+      -S "${BASEDIR}/external/umfpack_lgpl/umfpack"
+cmake --build ${BUILDDIR}/umfpack_lgpl --config Release --parallel 4 -- //nologo //verbosity:minimal \
 
-cd "${BASEDIR}/external/symdiff"
-mkdir -p ${BUILDDIR}
-(cd ${BUILDDIR}; cmake -G "${GENERATOR}" -A "${AOPTION}" -T "${TOOLSET}" -DSYMDIFF_CONFIG="${SYMDIFF_CONFIG}" -DANACONDA_PATH="${CONDA_PREFIX}" -DTCLMAIN=OFF -DPYTHON3=OFF ..)
+mkdir -p ${BUILDDIR}/symdiff
+cmake -G "${GENERATOR}" \
+      -A "${AOPTION}" \
+      -T "${TOOLSET}" \
+      -DSYMDIFF_CONFIG="${SYMDIFF_CONFIG}" \
+      -DANACONDA_PATH="${CONDA_PREFIX}" \
+      -DTCLMAIN=OFF \
+      -DPYTHON3=OFF \
+      -B "${BUILDDIR}/symdiff" \
+      -S "${BASEDIR}/external/symdiff"
 
-cd "${BUILDDIR}"
-cmake --build . --config Release --parallel 4 -- //nologo //verbosity:minimal
+cmake --build ${BUILDDIR}/symdiff --config Release --parallel 4 -- //nologo //verbosity:minimal
 
-cd "${BASEDIR}"
-bash scripts/setup_appveyor.sh "${GENERATOR}" "${AOPTION}" "${TOOLSET}" "${BUILDDIR}" "${CONDA_PREFIX}"
-
-cd "${BUILDDIR}"
-cmake --build . --config Release --parallel 4 -- //nologo //verbosity:minimal
+mkdir -p ${BUILDDIR}/devsim
+cmake -G "${GENERATOR}" \
+    -A ${AOPTION} \
+    -T ${TOOLSET} \
+    -DDEVSIM_EXTENDED_PRECISION=ON \
+    -DEIGEN_DENSE_EXTENDED=ON \
+    -DDEVSIM_CPP_BIN_FLOAT=ON \
+    -DDEVSIM_CONFIG=${DEVSIM_CONFIG} \
+    -DMKL_PARDISO=ON \
+    -DPYTHON3=ON \
+    -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
+    -DPYTHON3_ARCHIVE=${PYTHON3_ARCHIVE} \
+    -B ${BUILDDIR}/devsim \
+    -S ${BASEDIR}
+cmake --build ${BUILDDIR}/devsim --config Release --parallel 4 -- //nologo //verbosity:minimal
 
 cd "${BASEDIR}/dist"
 bash package_appveyor.sh ${PACKAGE_NAME}

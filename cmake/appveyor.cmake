@@ -34,8 +34,8 @@ SET (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /SAFESEH:NO")
 
 # windows build
 
-SET (EIGEN_INCLUDE ${CMAKE_SOURCE_DIR}/external/eigen)
+SET (EIGEN_INCLUDE ${EXTERNAL_LIB}/eigen)
 
-SET (SYMDIFF_INCLUDE ${CMAKE_SOURCE_DIR}/external/symdiff/include)
-SET (SYMDIFF_ARCHIVE ${CMAKE_SOURCE_DIR}/external/symdiff/${BUILDDIR}/src/engine/Release/symdiff_dynamic.lib)
+SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
+SET (SYMDIFF_ARCHIVE ${CMAKE_BINARY_DIR}/../symdiff/src/engine/Release/symdiff_dynamic.lib)
 
