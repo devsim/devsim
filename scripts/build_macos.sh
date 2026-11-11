@@ -77,4 +77,4 @@ cp -f dist/bdist_wheel/setup.* dist/${DIST_NAME}
 #(cd dist/${DIST_NAME} &&  perl -p -i -e "s/^#plat-name.*/plat-name = ${FULL_PLAT_NAME}/" setup.cfg);
 #fi
 (cd dist/${DIST_NAME} && ${PIP_BIN} wheel .)
-(cp dist/${DIST_NAME}/*.whl dist)
+(mv dist/${DIST_NAME}/*.whl dist)

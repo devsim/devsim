@@ -65,4 +65,4 @@ cd "${BASEDIR}/dist/${PACKAGE_NAME}"
 echo "$PWD"
 cp -f ../bdist_wheel/setup.* .
 ${PIP_BIN} wheel .
-cp *.whl ..
+mv *.whl ..
