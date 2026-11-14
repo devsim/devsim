@@ -1,20 +1,11 @@
 ::turn back off later
 @echo on
-:: The following line is important for proper variable expansion
 @SETLOCAL EnableDelayedExpansion
 SET BASEDIR=%cd%
-SET CONDA_BIN=%2
+SET PYTHON3_BIN=%2
 SET TAG=%3
 
-:: TODO: suggested by github copilot
-c:\msys64\usr\bin\pacman -Su --noconfirm rsync zip bison flex git
-
-:: now opt for explicit dll load of mkl
-call %CONDA_BIN% create -y -n python3_devsim_build python=3 cmake
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-call %CONDA_BIN% activate python3_devsim_build
-if %errorlevel% neq 0 exit /b %errorlevel%
+c:\msys64\usr\bin\pacman -Su --noconfirm bison flex git
 
 IF "%1"=="msys" (
   SET BUILDDIR=msys
@@ -37,27 +28,16 @@ IF "%1"=="clangx64" (
 IF "%1"=="x64" (
   SET GENERATOR="Visual Studio 18 2026"
   SET AOPTION="x64"
-  SET TOOLSET="v143"
+  SET TOOLSET="v145"
   SET BUILDDIR=win64
   SET USE_VISUAL_STUDIO=true
   SET PACKAGE_NAME="devsim_win64_%TAG%"
   SET BASH_SCRIPT=%BASEDIR%\scripts\build_appveyor.sh
 )
 
-IF "%1"=="x86" (
-  SET GENERATOR="Visual Studio 18 2026"
-  SET AOPTION="Win32"
-  SET TOOLSET="v143"
-  SET BUILDDIR=win32
-  SET USE_VISUAL_STUDIO=true
-  SET PACKAGE_NAME="devsim_win32_%TAG%"
-  SET BASH_SCRIPT=%BASEDIR%\scripts\build_appveyor.sh
-)
-
 cd %BASEDIR%
-IF DEFINED USE_VISUAL_STUDIO c:\msys64\usr\bin\bash %BASH_SCRIPT% %GENERATOR% %AOPTION% %TOOLSET% %BUILDDIR% %CONDA_PREFIX% %PACKAGE_NAME%
+IF DEFINED USE_VISUAL_STUDIO c:\msys64\usr\bin\bash %BASH_SCRIPT% %GENERATOR% %AOPTION% %TOOLSET% %BUILDDIR% %PYTHON3_BIN% %PACKAGE_NAME%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 IF DEFINED USE_MSYS c:\msys64\usr\bin\bash %BASH_SCRIPT% %PACKAGE_NAME%
 if %errorlevel% neq 0 exit /b %errorlevel%
-

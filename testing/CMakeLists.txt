@@ -172,4 +172,3 @@ ENDFOREACH(I)
 
 set_tests_properties("testing/laux1" PROPERTIES DEPENDS testing/trimesh2)
 
-

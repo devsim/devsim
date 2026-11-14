@@ -1,58 +1,64 @@
-from setuptools import setup, Distribution
-from glob import glob
-from itertools import chain
 import os
 import re
+from glob import glob
+from itertools import chain
 
-#https://stackoverflow.com/questions/35112511/pip-setup-py-bdist-wheel-no-longer-builds-forced-non-pure-wheels/36886459#36886459
-#https://stackoverflow.com/questions/24071491/how-can-i-make-a-python-wheel-from-an-existing-native-library/24793171#24793171
-#https://github.com/google/or-tools/issues/616
+from setuptools import Distribution, setup
+
+wheel_abi = os.environ.get("DEVSIM_WHEEL_ABI", "abi3")
+if wheel_abi not in ("abi3", "abi3t"):
+    raise ValueError(f"Unsupported DEVSIM_WHEEL_ABI: {wheel_abi}")
+
+cmdclass = {}
+if wheel_abi == "abi3t":
+    from setuptools.command.bdist_wheel import bdist_wheel
+
+    class Abi3tWheel(bdist_wheel):
+        def get_tag(self):
+            _, _, platform = super().get_tag()
+            return "cp315", "abi3t", platform
+
+    cmdclass["bdist_wheel"] = Abi3tWheel
+
+
 class BinaryDistribution(Distribution):
-    """Distribution which always forces a binary package with platform name"""
-    def has_ext_modules(foo):
+    def has_ext_modules(self):
         return True
+
     def is_pure(self):
         return False
 
-#https://stackoverflow.com/questions/27829754/include-entire-directory-in-python-setup-py-data-files/65432634#65432634
+
 def generate_data_files():
-    data_files = []
-    data_dirs = ('doc', 'testing', 'examples')
-    for path, dirs, files in chain.from_iterable(os.walk(data_dir) for data_dir in data_dirs):
-        install_dir = os.path.join('devsim_data', path)
-        list_entry = (install_dir, [os.path.join(path, f) for f in files])
-        data_files.append(list_entry)
+    data_dirs = ("doc", "testing", "examples")
+    root_files = [path for path in glob("*") if os.path.isfile(path)]
+    data_files = [("devsim_data", root_files)]
+    for path, _, files in chain.from_iterable(os.walk(data_dir) for data_dir in data_dirs):
+        install_dir = os.path.join("devsim_data", path)
+        data_files.append((install_dir, [os.path.join(path, name) for name in files]))
     return data_files
 
-data_files = [('devsim_data', glob('*.*'))]
-data_files.extend(generate_data_files())
 
+with open("README.md", encoding="utf-8") as readme_file:
+    readme = readme_file.read()
 
-def fix_readme(text):
-    regex = re.compile('\[([^]]+)\]+\((?!http[s]:\/\/)([^)]+)\)')
-    base_url = os.environ.get('README_BASE_URL')
-    if base_url:
-        if base_url[-1] != '/':
-            base_url += '/'
-        print("Fixing up base url for long description {0}".format(base_url))
-        text = regex.sub(lambda m, urlbase=base_url : r'[{0}]({1})'.format(m.group(1), urlbase + m.group(2)), text)
-    return text
-
-with open('README.md', 'r') as ifile:
-    text = ifile.read()
-    text = fix_readme(text)
+readme_base_url = os.environ.get("README_BASE_URL")
+if readme_base_url:
+    if not readme_base_url.endswith("/"):
+        readme_base_url += "/"
+    print(f"Fixing up base url for long description {readme_base_url}")
+    readme = re.sub(
+        r"\[([^]]+)\]+\((?!http[s]://)([^)]+)\)",
+        lambda match: f"[{match.group(1)}]({readme_base_url}{match.group(2)})",
+        readme,
+    )
 
 setup(
-      packages=['devsim', 'devsim.python_packages', 'devsim.umfpack'],
-      package_dir = {
-        '' : 'lib',
-      },
-      package_data={
-        'devsim' : ['./*.so', './*.dll', './*.dylib', './*.pyd',],
-        'devsim.umfpack' : ['./*.so', './*.dll', './*.dylib', './*.pyd',],
-      },
-      distclass=BinaryDistribution,
-      data_files = data_files,
-      long_description = text,
-      long_description_content_type="text/markdown",
-    )
+    data_files=generate_data_files(),
+    distclass=BinaryDistribution,
+    long_description=readme,
+    long_description_content_type="text/markdown",
+    cmdclass=cmdclass,
+    options={"bdist_wheel": {"py_limited_api": "cp39" if wheel_abi == "abi3" else "cp315"}},
+    url="https://devsim.org",
+)

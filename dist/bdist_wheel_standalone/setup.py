@@ -43,6 +43,8 @@ with open('README.md', 'r') as ifile:
     text = fix_readme(text)
 
 setup(
+      author = "DEVSIM LLC",
+      author_email = "info@devsim.com",
       packages=['devsim', 'devsim.python_packages'],
       package_dir = {
         '' : 'lib',
@@ -54,4 +56,6 @@ setup(
       data_files = data_files,
       long_description = text,
       long_description_content_type="text/markdown",
+      options={"bdist_wheel": {"py_limited_api": "cp39"}},
+      url = "https://devsim.org",
     )

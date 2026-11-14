@@ -598,7 +598,7 @@ bool ObjectHolder::GetHashKeys(ObjectHolderList_t &keys) const
 
   bool ret = false;
   keys.clear();
-  if (object_ && PyDict_CheckExact(object_))
+  if (object_ && PyDict_CheckExact(reinterpret_cast<PyObject *>(object_)))
   {
     ObjectHolder key_holder(PyDict_Keys(reinterpret_cast<PyObject *>(object_)));
     key_holder.GetListOfObjects(keys);
@@ -613,7 +613,7 @@ bool ObjectHolder::GetHashMap(ObjectHolderMap_t &hashmap) const
 
   bool ret = false;
   hashmap.clear();
-  if (object_ && PyDict_CheckExact(object_))
+  if (object_ && PyDict_CheckExact(reinterpret_cast<PyObject *>(object_)))
   {
     ret = true;
     ObjectHolder items_holder(PyDict_Items(reinterpret_cast<PyObject *>(object_)));

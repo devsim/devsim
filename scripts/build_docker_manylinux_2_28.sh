@@ -4,6 +4,12 @@ if [[ $# -eq 0 ]]; then
     echo 'no tag name!'
     exit -1
 fi
+case "$1" in
+    ""|*[!a-zA-Z0-9._-]*)
+        echo "tag must contain only letters, numbers, dots, underscores, and hyphens" >&2
+        exit 2
+        ;;
+esac
 
 export DEVSIM_ARCH=$(uname -m)
 
@@ -19,6 +25,6 @@ docker exec manylinux_2_28 bash -c "git config --global --add safe.directory /ro
 docker exec manylinux_2_28 bash -c "cd /root && tar xzf devsim.tgz";
 docker exec manylinux_2_28 bash -c "cd /root/devsim && bash scripts/build_manylinux_2_28.sh ${DEVSIM_TAR_NAME}";
 #(cd dist && docker cp manylinux_2_28:/root/devsim/dist/${DEVSIM_TAR_NAME}.tgz .);
-(cd dist && for i in $(docker exec manylinux_2_28 bash -c "ls /root/devsim/dist/*.whl"); do docker cp manylinux_2_28:${i} .; done)
+(cd dist && docker cp "manylinux_2_28:/root/devsim/dist/${DEVSIM_TAR_NAME}_abi3/wheelhouse/." .)
+(cd dist && docker cp "manylinux_2_28:/root/devsim/dist/${DEVSIM_TAR_NAME}_abi3t/wheelhouse/." .)
 docker stop manylinux_2_28
-

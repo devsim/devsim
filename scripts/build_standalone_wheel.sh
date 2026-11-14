@@ -26,7 +26,7 @@ mkdir -p ${DIST_BIN}
 mkdir -p ${DIST_DIR}
 mkdir -p ${DIST_PYDLL}
 
-cp -v ${SRC_DIR}/devsim_py3.so ${DIST_PYDLL}
+cp -v ${SRC_DIR}/devsim_py3.abi3.so ${DIST_PYDLL}
 cp -v dist/__init__.py ${DIST_PYDLL}
 
 mkdir -p ${DIST_DIR}/doc
@@ -56,7 +56,6 @@ EOF
 tar czvf ${DIST_VER}.tgz ${DIST_DIR}
 
 cp -f dist/bdist_wheel_standalone/setup.py ${1}/
-cp -f dist/bdist_wheel/setup.cfg ${1}/
+cp -f dist/bdist_wheel_standalone/pyproject.toml ${1}/
 (cd ${1} && ${PIP_BIN} wheel .)
 (cd ${1} && mv -v *.whl ..)
-

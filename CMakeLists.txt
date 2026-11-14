@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(DEVSIM_CONFIG "unknown" CACHE STRING "configuration to load from ./cmake")
 OPTION(PYTHON3      "Build Python 3 Interpreter" ON)
+OPTION(PYTHON3T     "Build against a free-threaded Python 3 interpreter" OFF)
 OPTION(DEVSIM_EXTENDED_PRECISION "Build with extended precision" OFF)
 OPTION(DEVSIM_CPP_BIN_FLOAT "Build with boost quadmath emulation" OFF)
 OPTION(MKL_PARDISO  "Build with MKL Pardiso" ON)
@@ -18,8 +19,8 @@ set (CMAKE_CXX_STANDARD 20)
 INCLUDE(${PROJECT_SOURCE_DIR}/cmake/${DEVSIM_CONFIG}.cmake OPTIONAL)
 INCLUDE(${PROJECT_SOURCE_DIR}/local.cmake OPTIONAL)
 
-#also change this in setup.cfg
-ADD_DEFINITIONS(-DDEVSIM_VERSION_STRING=\"2.11.2\")
+#also change this in dist/bdist_wheel/pyproject.toml
+ADD_DEFINITIONS(-DDEVSIM_VERSION_STRING=\"2.12.0\")
 ADD_DEFINITIONS(-DDEVSIM_COPYRIGHT_YEAR=\"2009-2026\")
 
 IF (MKL_PARDISO)
@@ -75,4 +76,3 @@ ENABLE_TESTING()
 FOREACH (SUB ${SUBDIRS})
     ADD_SUBDIRECTORY(${SUB})
 ENDFOREACH (SUB ${SUBDIRS})
-

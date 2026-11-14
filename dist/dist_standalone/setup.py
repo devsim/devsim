@@ -18,10 +18,13 @@ with open('README.md', 'r') as ifile:
     text = fix_readme(text)
 
 setup(
+      author = "DEVSIM LLC",
+      author_email = "info@devsim.com",
       packages=['devsim', 'devsim.python_packages'],
       package_data={
         'devsim' : ['./*.so',],
       },
       long_description = text,
       long_description_content_type="text/markdown",
+      url = "https://devsim.org",
     )

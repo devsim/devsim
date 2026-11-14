@@ -5,6 +5,38 @@
 
 Please see the release notes in `doc/devsim.pdf` or at [https://devsim.net](https://devsim.net) for more detailed information about changes.
 
+## Version 2.12.0
+
+### Free-Threaded Python Support
+
+* [#173](https://github.com/devsim/devsim/issues/173) python threaded version
+
+Support for free-threaded Python 3.15 and higher has been added via the CMake option `-DPYTHON3T=ON`. A new `devsim_py3t` target is built against the CPython 3.15 stable ABI (`abi3t`). This allows DEVSIM to run with the Python GIL disabled. The release scripts now build separate `cp39-abi3` and `cp315-abi3t` wheels for each platform.
+
+### Thread Safety
+
+* [#177](https://github.com/devsim/devsim/issues/177) thread safety
+
+A recursive mutex has been added to the dispatch function in the Python API to serialize module function calls. Concurrent calls from different threads will raise a `RuntimeError` with the message "Multithreaded calls to the devsim module functions are not supported". Recursive calls from the same thread are allowed, supporting use cases where internal module code spawns threads. This approach prevents deadlocks while ensuring safe operation in free-threaded Python environments.
+
+### Packaging Changes
+
+* [#174](https://github.com/devsim/devsim/issues/174) move to pyproject.toml
+
+The wheel packaging configuration has been migrated from `setup.py` to `pyproject.toml` for both the regular and free-threaded variants. This modernizes the packaging approach and improves compatibility with current Python tooling. The build metadata and versioning are now centralized in the project configuration file.
+
+### File Organization
+
+* [#175](https://github.com/devsim/devsim/issues/175) file reorganization
+
+The source tree has been reorganized to improve maintainability. Documentation, examples, and wheel staging directories have been restructured. This change consolidates related files and improves the overall project structure without affecting functionality.
+
+### Windows Python Support
+
+* [#176](https://github.com/devsim/devsim/issues/176) use other Python on windows
+
+The Windows build process has been updated to support alternative Python installations beyond Anaconda. Users can now specify a custom Python installation path via the `PYTHON3_INCLUDE` and `PYTHON3T_ARCHIVE` CMake variables. This improves compatibility with various Python distributions on Windows, including standalone CPython installations.
+
 ## Version 2.11.2
 
 ### Trusted Publishing

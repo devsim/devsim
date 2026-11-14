@@ -10,7 +10,7 @@ SET (EXTERNAL_LIB ${PROJECT_SOURCE_DIR}/external)
 SET (EIGEN_INCLUDE ${EXTERNAL_LIB}/eigen)
 
 SET (SYMDIFF_INCLUDE ${EXTERNAL_LIB}/symdiff/include)
-SET (SYMDIFF_ARCHIVE ${EXTERNAL_LIB}/symdiff/lib/libsymdiff_dynamic.a)
+SET (SYMDIFF_ARCHIVE ${CMAKE_BINARY_DIR}/../symdiff/src/engine/libsymdiff_dynamic.a)
 
 
 ADD_COMPILE_OPTIONS(-Wall -fvisibility=hidden)

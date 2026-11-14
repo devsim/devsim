@@ -30,6 +30,10 @@ SPDX-License-Identifier: Apache-2.0
 
 #include <new>
 #include <sstream>
+#include <mutex>
+#ifdef DEVSIM_PYTHON3T
+#include <atomic>
+#endif
 
 // Stringify
 // borrowed from dsAssert.hh
@@ -39,6 +43,8 @@ SPDX-License-Identifier: Apache-2.0
 // Module initialization function
 #define HELPER1(x) PASTETOKENS(PyInit_, x)
 #define DEVSIM_MODULE_INIT HELPER1(DEVSIM_MODULE_NAME)
+#define HELPER2(x) PASTETOKENS(PyModExport_, x)
+#define DEVSIM_MODULE_EXPORT HELPER2(DEVSIM_MODULE_NAME)
 #define DEVSIM_MODULE_STRING TOSTRING(DEVSIM_MODULE_NAME)
 
 // Defined in devsim_py.cc
@@ -54,17 +60,28 @@ struct module_state {
 };
 
 #define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
-}
 
+// Recursive mutex for thread safety
+std::recursive_mutex command_mutex;
+}
 
 static PyObject * CmdDispatch(PyObject *m, PyObject *args, PyObject *kwargs, const char *name, newcmd fptr)
 {
+  // Attempt non-blocking lock acquisition
+  if (!command_mutex.try_lock())
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Multithreaded calls to the devsim module functions are not supported");
+    return nullptr;
+  }
+
+  // Adopt the lock with a lock_guard for RAII
+  std::lock_guard<std::recursive_mutex> lock(command_mutex, std::adopt_lock);
+
   PyObject *ret = nullptr;
 
   FPECheck::ClearFPE();
 
   std::string command_name = name;
-
 
   if (args)
   {
@@ -192,7 +209,7 @@ static struct PyMethodDef devsim_methods[] = {
 };
 #undef   DS_FUNCTION_TABLE
 
-#ifndef _WIN32
+#if !defined(_WIN32) || defined(DEVSIM_PYTHON3T)
 static int devsim_traverse(PyObject *m, visitproc visit, void *arg) {
     Py_VISIT(GETSTATE(m)->error);
     return 0;
@@ -204,6 +221,7 @@ static int devsim_clear(PyObject *m) {
 }
 #endif
 
+#ifndef DEVSIM_PYTHON3T
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
         DEVSIM_MODULE_STRING,
@@ -261,5 +279,55 @@ DEVSIM_MODULE_INIT(void)
 
   return module;
 }
+#else
+static std::atomic<bool> module_loaded{false};
+
+static int devsim_exec(PyObject *module)
+{
+  if (module_loaded.exchange(true))
+  {
+    PyErr_SetString(PyExc_ImportError, DEVSIM_MODULE_STRING " cannot be loaded more than once per process");
+    return -1;
+  }
+
+  struct module_state *st = GETSTATE(module);
+  st->error = PyErr_NewException(DEVSIM_MODULE_STRING ".error", nullptr, nullptr);
+  if (!st->error)
+    return -1;
+  if (PyModule_AddObjectRef(module, "error", st->error) < 0)
+    return -1;
+  if (PyModule_AddStringConstant(module, "__version__", DEVSIM_VERSION_STRING) < 0)
+    return -1;
+
+  try {
+    devsim_initialization();
+  }
+  catch (...) {
+    PyErr_SetString(PyExc_RuntimeError, "Issues initializing DEVSIM.");
+    return -1;
+  }
+  return 0;
 }
 
+PyABIInfo_VAR(devsim_abi);
+static char devsim_module_name[] = DEVSIM_MODULE_STRING;
+static PySlot devsim_slots[] = {
+  PySlot_STATIC_DATA(Py_mod_abi, &devsim_abi),
+  PySlot_STATIC_DATA(Py_mod_name, devsim_module_name),
+  PySlot_SIZE(Py_mod_state_size, sizeof(struct module_state)),
+  PySlot_STATIC_DATA(Py_mod_methods, devsim_methods),
+  PySlot_DATA(Py_mod_gil, Py_MOD_GIL_NOT_USED),
+  PySlot_DATA(Py_mod_multiple_interpreters, Py_MOD_MULTIPLE_INTERPRETERS_NOT_SUPPORTED),
+  PySlot_FUNC(Py_mod_exec, devsim_exec),
+  PySlot_FUNC(Py_mod_state_traverse, devsim_traverse),
+  PySlot_FUNC(Py_mod_state_clear, devsim_clear),
+  PySlot_END
+};
+
+extern "C" DLL_PUBLIC PySlot *
+DEVSIM_MODULE_EXPORT(void)
+{
+  return devsim_slots;
+}
+#endif
+}

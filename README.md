@@ -61,7 +61,7 @@ The repository for the documentation is at [https://github.com/devsim/devsim_doc
 
 ## Supported Python Versions
 
-DEVSIM is designed to work with Python versions 3.9 or higher.
+DEVSIM is designed to work with Python versions 3.9 or higher.  The software will also work with free threading versions of Python versions 3.15t or higher.
 
 ## Code of Conduct:
 

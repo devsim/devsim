@@ -1,7 +1,15 @@
 #!/bin/bash
 set -e
 set -u
-export DEVSIM_CONFIG="ubuntu_18.04"
+export DEVSIM_ARCH=$(uname -m)
+if [ ${DEVSIM_ARCH} = "x86_64" ]
+then
+export DEVSIM_CONFIG="centos_6"
+elif [ ${DEVSIM_ARCH} = "aarch64" ]
+then
+export DEVSIM_CONFIG="nofloat128"
+fi
+
 export CMAKE="cmake"
 export CMAKE_CXX_FLAGS=""
 export CC="/usr/bin/gcc"
@@ -10,23 +18,84 @@ export F77="/usr/bin/gfortran"
 export PYTHON3_BIN=python3
 export PIP_BIN=pip
 ${PIP_BIN} install wheel auditwheel
-export PYTHON3_INCLUDE=$(python3 -c "from sysconfig import get_paths as gp; print(gp()['include'])")
+export PYTHON3_INCLUDE=$(${PYTHON3_BIN} -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 export PYTHON3_ARCHIVE=""
 
 # SYMDIFF build
-(cd external/symdiff && bash ../symdiff_centos.sh && cd linux_x86_64_release && make -j3);
+mkdir -p build/symdiff
+${CMAKE} \
+    -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_CXX_COMPILER=${CXX} \
+    -DTCLMAIN=OFF \
+    -DPYTHON3=OFF \
+    -B build/symdiff \
+    -S external/symdiff
 
+(cd build/symdiff && ${CMAKE} --build . -- -j2)
+
+if [ ${DEVSIM_ARCH} = "x86_64" ]
+then
 # quad precision getrf
-(cd external/getrf && bash setup_centos6.sh && cd build && make -j3)
+mkdir -p build/getrf
+${CMAKE} \
+    -DCMAKE_C_COMPILER=${CC} \
+    -DCMAKE_CXX_COMPILER=${CXX} \
+    -DCMAKE_Fortran_COMPILER=${F77} \
+    -DCMAKE_Fortran_FLAGS="-freal-8-real-16 -ffixed-line-length-0 -fPIC" \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -B build/getrf \
+    -S external/getrf
+(cd build/getrf && ${CMAKE} --build . -- -j2)
+fi
 
 # umfpack support
-(cd external/umfpack_lgpl && bash setup_centos6.sh && cd build && make -j3)
+mkdir -p build/umfpack_lgpl
+${CMAKE} \
+    -DCMAKE_C_COMPILER=${CC} \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -B build/umfpack_lgpl \
+    -S external/umfpack_lgpl/umfpack
+(cd build/umfpack_lgpl && ${CMAKE} --build . -- -j2)
 
 # start devsim build
-bash scripts/setup_centos_6.sh
-(cd linux_x86_64_release && make -j3)
+mkdir -p build/devsim
+if [ ${DEVSIM_ARCH} = "x86_64" ]
+then
+${CMAKE} \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_CXX_COMPILER=${CXX} \
+    -DCMAKE_C_COMPILER=${CC} \
+    -DDEVSIM_CONFIG=${DEVSIM_CONFIG} \
+    -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
+    -DDEVSIM_EXTENDED_PRECISION=ON \
+    -DMKL_PARDISO=ON \
+    -DPYTHON3=ON \
+    -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
+    -B build/devsim \
+    -S .
+(cd build/devsim && ${CMAKE} --build . -- -j2)
+elif [ ${DEVSIM_ARCH} = "aarch64" ]
+then
+${CMAKE} \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_CXX_COMPILER=${CXX} \
+    -DCMAKE_C_COMPILER=${CC} \
+    -DDEVSIM_CONFIG=${DEVSIM_CONFIG} \
+    -DCMAKE_CXX_FLAGS:STRING="${CMAKE_CXX_FLAGS}" \
+    -DDEVSIM_EXTENDED_PRECISION=ON \
+    -DDEVSIM_CPP_BIN_FLOAT=ON \
+    -DEIGEN_DENSE_EXTENDED=ON \
+    -DMKL_PARDISO=OFF \
+    -DPYTHON3=ON \
+    -DPYTHON3_INCLUDE=${PYTHON3_INCLUDE} \
+    -B build/devsim \
+    -S .
+(cd build/devsim && ${CMAKE} --build . -- -j2)
+fi
+
 (cd dist && bash package_linux.sh ${1})
-cp -f dist/bdist_wheel/setup.* dist/${1}/
+cp -f dist/bdist_wheel/pyproject.toml dist/bdist_wheel/setup.py dist/${1}/
 (cd dist/${1} && ${PIP_BIN} wheel .)
 #${PIP_BIN} install auditwheel
 #(cd dist/${1} && ${PYTHON3_BIN} ../bdist_wheel/myauditwheel.py repair *.whl)

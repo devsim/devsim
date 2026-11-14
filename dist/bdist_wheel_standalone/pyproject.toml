@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devsim"
+version = "2.11.3"
+description = "DEVSIM: TCAD Device Simulator"
+dynamic = ["readme"]
+authors = [{ name = "DEVSIM LLC" }]
+license = { text = "Apache License, Version 2.0" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+]
+
+[project.urls]
+"Bug Tracker" = "https://github.com/devsim/devsim/issues"
+Documentation = "https://devsim.net"
+"Source Code" = "https://github.com/devsim/devsim"
+"Online Forum" = "https://forum.devsim.org"
