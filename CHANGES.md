@@ -11,7 +11,7 @@ Please see the release notes in `doc/devsim.pdf` or at [https://devsim.net](http
 
 * [#173](https://github.com/devsim/devsim/issues/173) python threaded version
 
-Support for free-threaded Python 3.15 and higher has been added via the CMake option `-DPYTHON3T=ON`. A new `devsim_py3t` target is built against the CPython 3.15 stable ABI (`abi3t`). This allows DEVSIM to run with the Python GIL disabled. The release scripts now build separate `cp39-abi3` and `cp315-abi3t` wheels for each platform.
+Support for free-threaded Python 3.15t and higher has been added. This allows DEVSIM to run with the Python GIL disabled. The release scripts now build separate `cp39-abi3` and `cp315-abi3t` wheels for each platform.
 
 ### Thread Safety
 
@@ -35,7 +35,7 @@ The source tree has been reorganized to improve maintainability. Documentation, 
 
 * [#176](https://github.com/devsim/devsim/issues/176) use other Python on windows
 
-The Windows build process has been updated to support alternative Python installations beyond Anaconda. Users can now specify a custom Python installation path via the `PYTHON3_INCLUDE` and `PYTHON3T_ARCHIVE` CMake variables. This improves compatibility with various Python distributions on Windows, including standalone CPython installations.
+The Windows build process has been updated to support alternative Python installations beyond Anaconda Python. Please see [BUILD.md](BUILD.md) for more information.
 
 ## Version 2.11.2
 
