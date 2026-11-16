@@ -17,7 +17,7 @@ Support for free-threaded Python 3.15t and higher has been added. This allows DE
 
 * [#177](https://github.com/devsim/devsim/issues/177) thread safety
 
-A recursive mutex has been added to the dispatch function in the Python API to serialize module function calls. Concurrent calls from different threads will raise a `RuntimeError` with the message "Multithreaded calls to the devsim module functions are not supported". Recursive calls from the same thread are allowed, supporting use cases where internal module code spawns threads. This approach prevents deadlocks while ensuring safe operation in free-threaded Python environments.
+A recursive mutex has been added to the dispatch function in the Python API to serialize module function calls. Concurrent calls from different threads will raise a `RuntimeError` with the message "Multithreaded calls to the devsim module functions are not supported". Recursive calls from the same thread are allowed, supporting use cases where internal module code calls devsim public functions. This approach prevents deadlocks while ensuring safe operation in free-threaded Python environments.
 
 ### Packaging Changes
 
