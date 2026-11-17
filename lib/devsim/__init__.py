@@ -1,33 +1,34 @@
-import sys
-import os
+# ruff: noqa: E402
+import sys as _sys
+import os as _os
 
-#TODO:
-#https://stackoverflow.com/questions/6677424/how-do-i-import-variable-packages-in-python-like-using-variable-variables-i
-#imported = getattr(__import__(package, fromlist=[name]), name)
 
-original_path = os.environ['PATH']
+def _fix_windows_path():
+    original_path = None
+    if (_os.name == "nt") and ("DEVSIM_MATH_LIBS" not in _os.environ):
+        libbin = _os.path.join("Library", "bin")
+        if libbin not in _os.environ["PATH"]:
+            original_path = _os.environ["PATH"]
+            _os.environ["PATH"] += _os.pathsep + _os.path.join(_sys.prefix, libbin)
+    return original_path
 
-if (os.name == 'nt') and ('DEVSIM_MATH_LIBS' not in os.environ):
-    libbin = os.path.join('Library', 'bin')
-    if libbin not in os.environ['PATH']:
-        os.environ['PATH'] += os.pathsep + os.path.join(sys.prefix, libbin)
 
-if sys.version_info[0] == 3:
-    from .devsim_py3 import *
-    from .devsim_py3 import __version__
-else:
-    raise ImportError('module not available for Python %d.%d please contact technical support' % sys.version_info[0:2])
+_original_path = _fix_windows_path()
 
-if original_path != os.environ['PATH']:
-    os.environ['PATH'] = original_path
+from .devsim_py3 import *  # noqa: F403
+from .devsim_py3 import __version__  # noqa: F401
+from .devsim_py3 import get_parameter
+from .devsim_py3 import reset_devsim
 
-del original_path
+if _original_path is not None:
+    _os.environ["PATH"] = _original_path
 
-if get_parameter(name='direct_solver') == 'unknown':
-  print("loading UMFPACK 5.1 as direct solver")
-  from .umfpack import umfshim
-  original_reset_devsim = reset_devsim
-  def reset_devsim():
-    original_reset_devsim()
-    umfshim.reload_umfpack()
+if get_parameter(name="direct_solver") == "unknown":
+    print("loading UMFPACK 5.1 as direct solver")
+    from .umfpack import umfshim as _umfshim
 
+    _original_reset_devsim = reset_devsim
+
+    def reset_devsim():
+        _original_reset_devsim()
+        _umfshim.reload_umfpack()
