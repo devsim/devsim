@@ -37,6 +37,14 @@ The source tree has been reorganized to improve maintainability. Documentation, 
 
 The Windows build process has been updated to support alternative Python installations beyond Anaconda Python. Please see [BUILD.md](BUILD.md) for more information.
 
+### Math Library Fallback
+
+* Follow-up to [#167](https://github.com/devsim/devsim/issues/167) and [#176](https://github.com/devsim/devsim/issues/176)
+
+When `DEVSIM_MATH_LIBS` is not set, and neither the Intel MKL nor `libopenblas`, `liblapack` and `libblas` can be found, `import devsim` now uses the `scipy_openblas32` package if it is installed.  The environment variables `DEVSIM_MATH_LIBS`, `DEVSIM_BLAS_PREFIX` and `DEVSIM_BLAS_SUFFIX` described for version 2.11.1 are set automatically for the import, and removed again afterwards.  The `info` parameter reports the library in use.
+
+The Intel MKL, or any other library found by the default search, is still used first.  A user supplied `DEVSIM_MATH_LIBS` is never changed.  Setting `DEVSIM_NO_SCIPY_OPENBLAS=1` turns the fallback off.  `scipy_openblas32` is not a dependency of `devsim` and is only imported when it is needed.
+
 ## Version 2.11.2
 
 ### Trusted Publishing
