@@ -15,10 +15,20 @@ def _fix_windows_path():
 
 _original_path = _fix_windows_path()
 
-from .devsim_py3 import *  # noqa: F403
-from .devsim_py3 import __version__  # noqa: F401
-from .devsim_py3 import get_parameter
-from .devsim_py3 import reset_devsim
+# Last resort when no BLAS/LAPACK is found: use scipy-openblas32 if it is
+# installed.  The compiled module reads the environment while it is imported,
+# so this has to be decided here.  See _math_libs.py.
+from . import _math_libs
+
+_blas_env = _math_libs.apply_scipy_openblas_fallback()
+
+try:
+    from .devsim_py3 import *  # noqa: F403
+    from .devsim_py3 import __version__  # noqa: F401
+    from .devsim_py3 import get_parameter
+    from .devsim_py3 import reset_devsim
+finally:
+    _math_libs.restore_environment(_blas_env)
 
 if _original_path is not None:
     _os.environ["PATH"] = _original_path

@@ -50,6 +50,8 @@ pip install scipy_openblas32
 
 and can be loaded using these environment variables, as set in ``testing/other_blas.py``.
 
+If no other math library is found and ``DEVSIM_MATH_LIBS`` is not set, ``devsim`` uses ``scipy_openblas32`` automatically when it is installed, so setting the variables is not needed.  The Intel MKL and the libraries found by the default search are still preferred.  Set ``DEVSIM_NO_SCIPY_OPENBLAS=1`` to turn this off.
+
 However, this particular library is fragile and makes no guarantees about future naming compatibility for the symbols.  The environment variables would need to be adapted in the case that the symbol naming convention has changed.
 
 ### Install DEVSIM
